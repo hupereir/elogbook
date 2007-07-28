@@ -236,6 +236,10 @@ class SelectionFrame: public TopWidget, public BASE::Key
   virtual void _deleteEntries ( void );
 
   //! change selected entries color
+  virtual void _changeEntryColor( QColor );
+
+
+  //! change selected entries color
   // virtual void _changeEntryColor( const std::string& color );
 
   //! store sorting method when changed via list header

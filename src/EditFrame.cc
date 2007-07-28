@@ -643,7 +643,9 @@ void EditFrame::_spellCheck( void )
 {
 #if WITH_ASPELL
   Debug::Throw( "EditFrame::_spellCheck.\n" );
-  SPELLCHECK::SpellDialog( text_ ).exec();
+  SPELLCHECK::SpellDialog dialog( text_ );
+  dialog.nextWord();
+  dialog.exec();
 #endif
 }
 

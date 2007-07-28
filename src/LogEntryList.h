@@ -104,9 +104,18 @@ class LogEntryList: public CustomListView
     //! update item text using associated entry
     void update( void );
    
+    //! repaint, accounting for entry color
+    void repaint( void )
+    {}
+    
     //! order operator
     virtual bool operator<( const QTreeWidgetItem &other ) const;
-              
+          
+    private:
+    
+    //! entry color
+    QColor entry_color_;
+    
   };
   
   //! retrieve Item associated to given entry

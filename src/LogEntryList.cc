@@ -31,6 +31,7 @@
 
 #include "Debug.h"
 #include "Logbook.h"
+#include "ColorMenu.h"
 #include "LogEntryList.h"
 
 using namespace std;
@@ -263,6 +264,16 @@ void LogEntryList::Item::update( void )
   setText( LogEntryList::MODIFICATION, string( entry->modification().string()+" ").c_str() );
   setText( LogEntryList::AUTHOR, string( entry->author()+" ").c_str() );
   setText( LogEntryList::COLOR, string( entry->color()+" ").c_str() );
+  
+  if( entry->color() == ColorMenu::NONE ) entry_color_ = treeWidget()->palette().color( QPalette::Foreground );
+  else 
+  {
+    entry_color_ = QColor( entry->color().c_str() );  
+    if( !entry_color_.isValid() ) entry_color_ = treeWidget()->palette().color( QPalette::Foreground );
+  }
+  
+  for( int i=0; i<treeWidget()->columnCount(); i++ )
+  { setTextColor( i, entry_color_ ); }
   
 }
 
