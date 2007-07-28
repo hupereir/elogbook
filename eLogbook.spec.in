@@ -1,0 +1,56 @@
+%define ver      @VERSION@
+%define rel      0
+%define prefix   /usr
+
+Summary: electronic logbook
+Name: eLogbook
+Version: %{ver}
+Release: %{rel}
+License: GPL
+Group: User Interface/X
+Source: %{name}-%{ver}.tar.gz
+BuildRoot: /var/tmp/%{name}-buildroot
+
+%description
+Qt-based electronic logbook
+
+%prep
+%setup -q -n %{name}-%{ver} %{rel}
+
+%build
+./autogen.sh --prefix=%{prefix}
+make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+
+%install
+make prefix=$RPM_BUILD_ROOT%{prefix} install-strip
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%doc COPYING INSTALL
+%{prefix}/bin/eLogbook
+%{prefix}/share/eLogbook/icon.png
+%{prefix}/share/eLogbook/pixmaps/1leftarrow.png
+%{prefix}/share/eLogbook/pixmaps/1rightarrow.png
+%{prefix}/share/eLogbook/pixmaps/attach.png
+%{prefix}/share/eLogbook/pixmaps/color.png
+%{prefix}/share/eLogbook/pixmaps/editcopy.png
+%{prefix}/share/eLogbook/pixmaps/edit.png
+%{prefix}/share/eLogbook/pixmaps/filenew.png
+%{prefix}/share/eLogbook/pixmaps/filesave.png
+%{prefix}/share/eLogbook/pixmaps/fonts.png
+%{prefix}/share/eLogbook/pixmaps/homeB.png
+%{prefix}/share/eLogbook/pixmaps/html.png
+%{prefix}/share/eLogbook/pixmaps/info.png
+%{prefix}/share/eLogbook/pixmaps/lock.png
+%{prefix}/share/eLogbook/pixmaps/redo.png
+%{prefix}/share/eLogbook/pixmaps/text_bold.png
+%{prefix}/share/eLogbook/pixmaps/text_italic.png
+%{prefix}/share/eLogbook/pixmaps/text_strike.png
+%{prefix}/share/eLogbook/pixmaps/text_under.png
+%{prefix}/share/eLogbook/pixmaps/trashcan_empty.png
+%{prefix}/share/eLogbook/pixmaps/undo.png
+
+%changelog
