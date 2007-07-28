@@ -51,6 +51,7 @@ class Logbook;
 class Menu;
 class SearchPanel;
 class StatusBar;
+class ColorMenu;
 
 //! display a set of log entries, allows selection of one
 class SelectionFrame: public TopWidget, public BASE::Key
@@ -154,7 +155,7 @@ class SelectionFrame: public TopWidget, public BASE::Key
     Exception::checkPointer( list_, DESCRIPTION( "list_ not initialized" ) );
     return *list_;
   }
-
+    
   signals:
 
   //! emmited when a message is available from logbook
@@ -167,6 +168,9 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! configuration
   virtual void updateConfiguration( void );
+
+  //! save configuration
+  void saveConfiguration( void );
   
   //! opens a logbook merge it to the existing onecomments
   virtual void synchronize( void );
@@ -287,7 +291,10 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! clear list and reinitialize from logbook entries
   virtual void _resetKeywordList( void );
-
+  
+  //! load colors (from current logbook)
+  void _loadColors( void );
+  
   //! main menu
   Menu* menu_;
 
@@ -308,6 +315,9 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! Keyword list
   KeywordList *keyword_list_;
+
+  //! color menu
+  ColorMenu* color_menu_;
   
   //! autoSaveTimer
   QTimer autosave_timer_;

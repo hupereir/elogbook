@@ -171,7 +171,7 @@ class LogEntry:public Counter, public BASE::Key
   { color_ = color; }  
   
   //! LogEntry color
-  std::string color( void ) const 
+  const std::string& color( void ) const 
   { return color_; }    
   
   //! add TextFormatBlock

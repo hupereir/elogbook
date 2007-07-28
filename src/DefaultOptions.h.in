@@ -40,7 +40,6 @@ void installDefaultOptions( void )
   
   // COLOR options are special. Keep the full list
   XmlOptions::get().keep( "COLOR" );
-  XmlOptions::get().add( Option( "COLOR", "None" , "special entry display color [default value. Do not remove]"  ));
   XmlOptions::get().add( Option( "COLOR", "#FF0000" , "entry display color"  ));
   XmlOptions::get().add( Option( "COLOR", "#FF9900" , "entry display color"  ));
   XmlOptions::get().add( Option( "COLOR", "#009900" , "entry display color"  ));
@@ -55,6 +54,7 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "ATC_FRAME_HEIGHT", "400" , "requested AttachmentFrame height [pixels]"  ));
   XmlOptions::get().add( Option( "ATC_FRAME_WIDTH", "600" , "requested AttachmentFrame width [pixels]"  ));
   XmlOptions::get().add( Option( "ATC_HEIGHT", "100" , "requested height of attachment list in editor [pixels]"  ));
+  XmlOptions::get().add( Option( "EDT_HEIGHT", "400" , "requested EditFrame height [pixels]"  ));
 
   XmlOptions::get().add( Option( "CHECK_ATTACHMENT", "0", "check if attachment exists at startup" ) );
   
@@ -64,7 +64,7 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "BACKUP_ITV", "30" , "interval between two consecutive auto backup [days]"  ));
   XmlOptions::get().add( Option( "CASE_SENSITIVE", "0" , "1 to distinguish upper and lower case when sorting/selecting text"  ));
   XmlOptions::get().add( Option( "DB_SIZE", "10" , "max number of files stored in the open previous menu"  ));
-  XmlOptions::get().add( Option( "EDIT_FRAME_HEIGHT", "400" , "requested EditFrame height [pixels]"  ));
+  XmlOptions::get().add( Option( "EDIT_FRAME_HEIGHT", "600" , "requested EditFrame height [pixels]"  ));
   XmlOptions::get().add( Option( "EDIT_FRAME_WIDTH", "600" , "requested EditFrame width [pixels]"  ));
   XmlOptions::get().add( Option( "EDIT_HTML_ATC", "@KONQUEROR@" , "to edit html attachments"  ));
   XmlOptions::get().add( Option( "EDIT_IMAGE_ATC", "@KUICKSHOW@" , "to edit image type attachments"  ));
@@ -76,6 +76,9 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "SIDE_EDITOR_TOOLBAR", "1" , "if true, editor toolbar is on the left instead of top"  ));
   XmlOptions::get().add( Option( "SELECTION_FRAME_HEIGHT", "400" , "requested SelectionFrame height [pixels]"  ));
   XmlOptions::get().add( Option( "SELECTION_FRAME_WIDTH", "600" , "requested SelectionFrame width [pixels]"  ));
+  XmlOptions::get().add( Option( "KEYWORD_LIST_WIDTH", "250" , "requested keyword list width [pixels]"  ));
+  XmlOptions::get().add( Option( "ENTRY_LIST_WIDTH", "350" , "requested entry list width [pixels]"  ));
+  XmlOptions::get().add( Option( "ENTRY_LIST_MASK", "350" , "requested entry list width [pixels]"  ));
   XmlOptions::get().add( Option( "SPLASH_SCREEN", "1" , "1 to show splash screen"  ));
   XmlOptions::get().add( Option( "SHOW_KEYWORD", "0" , "show keyword in editor"  ));
   XmlOptions::get().add( Option( "WRAP_TEXT", "1", "wrap text in entry edition window" ));

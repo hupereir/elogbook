@@ -33,6 +33,7 @@
 */
 
 #include <QMainWindow>
+#include <QSplitter>
 #include <string>
 #include <set>
 #include <map>
@@ -155,6 +156,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! configuration
   void updateConfiguration( void );
   
+  //! configuration
+  void saveConfiguration( void );
+
   //! Save Current entry
   void saveEntry( bool update_selection = true );
   
@@ -272,6 +276,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     
   //! lock toolbutton
   QAction* lock_;
+
+  //! main splitter
+  QSplitter *splitter_;
   
   //! LogEntry title Object
   CustomLineEdit *title_;          

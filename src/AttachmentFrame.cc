@@ -69,9 +69,10 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   connect( new QShortcut( CTRL+Key_W, this ), SIGNAL( activated() ), SLOT( close() ) );
   
   // configuration
-  updateConfiguration();
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
-
+  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
+  updateConfiguration();
+  
 };
 
 //________________________________________
@@ -84,6 +85,18 @@ void AttachmentFrame::updateConfiguration( void )
   resize( XmlOptions::get().get<int>( "ATC_FRAME_WIDTH" ), XmlOptions::get().get<int>( "ATC_FRAME_HEIGHT" ) );  
   
 }    
+
+//________________________________________
+void AttachmentFrame::saveConfiguration( void )
+{
+  
+  Debug::Throw( "AttachmentFrame::saveConfiguration.\n" );
+  
+  // resize window
+  XmlOptions::get().set<int>( "ATC_FRAME_WIDTH", width() );
+  XmlOptions::get().set<int>( "ATC_FRAME_HEIGHT", height() );
+  
+}  
 
 //________________________________________
 void AttachmentFrame::show( void )

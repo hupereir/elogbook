@@ -88,7 +88,16 @@ MainFrame::MainFrame( int argc, char*argv[] ) :
 
 //____________________________________________
 MainFrame::~MainFrame( void ) 
-{} 
+{
+  Debug::Throw( "MainFrame::~MainFrame.\n" );
+  XmlOptions::write();
+  
+  if( application_manager_ ) {
+    delete application_manager_; 
+    application_manager_ = 0;
+  }
+
+} 
 
 //____________________________________________
 void MainFrame::initApplicationManager(  void )
@@ -329,47 +338,6 @@ void MainFrame::_applicationManagerStateChanged( SERVER::ApplicationManager::Sta
 //_______________________________________________
 void MainFrame::_aboutToQuit( void )
 { 
-  Debug::Throw( "MainFrame::_AboutToQuit.\n" );
-  
-  if( selection_frame_ )
-  {
-    
-    // list view configuration
-    selection_frame_->menu().openPreviousMenu().write();
-
-    // entry list mask
-    XmlOptions::get().set<unsigned int>( "ENTRYLIST_MASK", selection_frame_->logEntryList().mask() ); 
-    
-    // window size
-    XmlOptions::get().set<int>( "SELECTION_FRAME_HEIGHT", selection_frame_->height() );
-    XmlOptions::get().set<int>( "SELECTION_FRAME_WIDTH", selection_frame_->width() );
-    XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", selection_frame_->keywordList().width() );
-    XmlOptions::get().set<int>( "ENTRY_LIST_WIDTH", selection_frame_->logEntryList().width() );
-    
-    KeySet<EditFrame> frames( selection_frame_ );
-    if( !frames.empty() )
-    {
-      XmlOptions::get().set<int>( "EDIT_FRAME_HEIGHT", (*frames.begin())->height() );
-      XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", (*frames.begin())->width() );
-    }
-    
-  }
-  
-  if( attachment_frame_ )
-  {
-    
-    // window size 
-    XmlOptions::get().set<int>( "ATC_FRAME_HEIGHT", attachment_frame_->height() );
-    XmlOptions::get().set<int>( "ATC_FRAME_WIDTH", attachment_frame_->width() );
-  
-  }
-    
-  XmlOptions::write();
-  
-  if( application_manager_ ) {
-    delete application_manager_; 
-    application_manager_ = 0;
-  }
-    
+  Debug::Throw( "MainFrame::_AboutToQuit.\n" );    
 }
   

@@ -31,7 +31,6 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <QSplitter>
 
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
@@ -103,31 +102,23 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
 //   QtUtil::Expand( color_label_, "    " );
 
   // splitter for EditFrame and attachment list
-  QSplitter *splitter( new QSplitter( main ) );
-  splitter->setOrientation( Qt::Vertical );
-  layout->addWidget( splitter, 1 );
+  splitter_ = new QSplitter( main );
+  splitter_->setOrientation( Qt::Vertical );
+  layout->addWidget( splitter_, 1 );
   
   // create text
-  text_ = new CustomTextEdit( splitter );
-  splitter->addWidget( text_ );
+  text_ = new CustomTextEdit( splitter_ );
   
   connect( text_, SIGNAL( textChanged() ), SLOT( _modified() ) );
   connect( text_, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
   connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
   // create attachment list
-  AttachmentList *attachment_list = new AttachmentList( splitter, isReadOnly() );
-  splitter->addWidget( attachment_list );
+  AttachmentList *attachment_list = new AttachmentList( splitter_, isReadOnly() );
   attachment_list->hide();
 
   // associate EditFrame and attachment list
   Key::associate( this, attachment_list );
-
-  // set splitter default size
-  QList<int> sizes;
-  sizes << XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" );
-  sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
-  splitter->setSizes( sizes );
 
   // state frame for tooltips
   layout->addWidget( statusbar_ = new StatusBar( main ) );
@@ -277,6 +268,7 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
   
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
+  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
   updateConfiguration();
     
   // display selected entry
@@ -423,7 +415,24 @@ void EditFrame::updateConfiguration( void )
   
   // window size
   resize( XmlOptions::get().get<int>( "EDIT_FRAME_WIDTH" ), XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" ) );
+
+  // set splitter default size
+  QList<int> sizes;
+  sizes << XmlOptions::get().get<int>( "EDT_HEIGHT" );
+  sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
+  splitter_->setSizes( sizes );
   
+}
+
+//_____________________________________________
+void EditFrame::saveConfiguration( void )
+{
+  
+  Debug::Throw( "EditFrame::saveConfiguration.\n" );
+  XmlOptions::get().set<int>( "EDIT_FRAME_HEIGHT", height() );
+  XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
+  XmlOptions::get().set<int>( "EDT_HEIGHT", text_->height() );
+  XmlOptions::get().set<int>( "ATC_HEIGHT", (*KeySet<AttachmentList>(this).begin())->height() );
 }
 
 //_____________________________________________
@@ -521,7 +530,11 @@ void EditFrame::closeEvent( QCloseEvent *event )
   
   // ask for save if entry is modified
   if( !isReadOnly() && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
-  else event->accept();
+  else
+  {
+    saveConfiguration();
+    event->accept();
+  }
   
   return;
 }

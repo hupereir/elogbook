@@ -31,6 +31,7 @@
 
 
 #include "AttachmentFrame.h"
+#include "ColorMenu.h"
 #include "CustomDialog.h"
 #include "CustomLineEdit.h"
 #include "CustomPixmap.h"
@@ -179,6 +180,13 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( button, SIGNAL( clicked() ), SLOT( save() ) );
   button->setText( "Save" );
   toolbar->addWidget( button );
+
+  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ColorMenu::COLOR_ICON, path_list ) ), "Change entry color", &statusBar().label() );
+  button->setText( "Entry color" );
+  color_menu_ = new ColorMenu( this );
+  button->setMenu( color_menu_ );
+  button->setPopupMode( QToolButton::InstantPopup );
+  toolbar->addWidget( button );
   
   // create logEntry list
   v_layout->addWidget( list_ = new LogEntryList( right, "log_entry_list" ), 1 );
@@ -203,6 +211,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
  
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
+  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
   updateConfiguration();
 
   // autosave_timer_
@@ -566,8 +575,42 @@ void SelectionFrame::updateConfiguration( void )
   sizes.push_back( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
   sizes.push_back( XmlOptions::get().get<int>( "ENTRY_LIST_WIDTH" ) );
   splitter_->setSizes( sizes );
+  
+  // entry list mask
+  if( XmlOptions::get().find( "ENTRY_LIST_MASK" ) );
+  logEntryList().setMask( XmlOptions::get().get<unsigned int>( "ENTRY_LIST_MASK" ) );
+  
+  // colors
+  list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );
+  for( list<string>::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
+  { color_menu_->add( *iter ); }
+  
 }
 
+//_______________________________________________
+void SelectionFrame::saveConfiguration( void )
+{
+  
+  Debug::Throw( "SelectionFrame::saveConfiguration.\n" );
+  
+  // sizes
+  XmlOptions::get().set<int>( "SELECTION_FRAME_WIDTH", width() );
+  XmlOptions::get().set<int>( "SELECTION_FRAME_HEIGHT", height() );
+  XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
+  XmlOptions::get().set<int>( "ENTRY_LIST_WIDTH", logEntryList().width() );
+  
+  // entry list mask
+  XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", logEntryList().mask() );
+  
+  // colors
+  const ColorMenu::ColorSet& colors( color_menu_->colors() );
+  for( set<QColor>::iterator iter = colors.begin(); iter != colors.end(); iter++ )
+  { XmlOptions::get().add( Option( "COLOR", qPrintable( iter->name() ) ) ); }
+  
+  // open previous menu
+  menu().openPreviousMenu().write();
+  
+}
 //_______________________________________________
 void SelectionFrame::synchronize( void )
 {
@@ -1468,7 +1511,7 @@ void SelectionFrame::_storeSortMethod( int column )
   }
 
   // Save logbook if needed
-  if( !logbook_->file().empty() ) save();
+  // if( !logbook_->file().empty() ) save();
 
 }
 
@@ -2051,4 +2094,19 @@ void SelectionFrame::_resetKeywordList( void )
   for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )  
   if( (*it)->isFindSelected() ) keywordList().addKeyword( (*it)->keyword() );  
   
+}
+
+//_______________________________________________
+void SelectionFrame::_loadColors( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_loadColors.\n" );
+  
+  if( !logbook_ ) return;
+  
+  //! retrieve all entries
+  KeySet<LogEntry> entries( logbook_->entries() );
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  { color_menu_->add( (*iter)->color() ); }
+
 }

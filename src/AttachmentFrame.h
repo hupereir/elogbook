@@ -74,6 +74,9 @@ class AttachmentFrame: public QWidget, public Counter
   //! update configuration
   void updateConfiguration( void );
   
+  //! save configuration
+  void saveConfiguration( void );
+  
   //! uniconify window
   void uniconify( void );
 
