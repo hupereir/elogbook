@@ -127,7 +127,7 @@ class KeywordList: public CustomListView
     }
     
     //! retrieves backup keyword
-    const std::string& backup( void ) const
+    const QString& backup( void ) const
     { return backup_; }
 
 //     //! stores original keyword when renaming [overloaded]

@@ -48,7 +48,6 @@
 #include "OpenPreviousMenu.h"
 #include "QtUtil.h"
 #include "SelectionFrame.h"
-#include "SplashScreen.h"
 #include "Str.h"
 #include "Util.h"
 #include "XmlOptions.h"
@@ -94,7 +93,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu->addAction( "&View HTML", selection_frame, SLOT( viewHtml() ), 0 );
   menu->addSeparator();
   menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W );
-  menu->addAction( "E&xit", qApp, SLOT( closeAllWindows() ), CTRL+Key_Q );
+  menu->addAction( "E&xit", qApp, SLOT( exit() ), CTRL+Key_Q );
 
   // preferences menu
   menu = addMenu( "&Preferences" );
@@ -136,8 +135,8 @@ void Menu::_updateEditorMenu( void )
   
   // editor attachments and logbook information
   menu->addAction( "&Attachments", attachment_frame, SLOT( uniconify() ), CTRL+Key_T );
-  menu->addAction( "&Logbook informations", selection_frame, SLOT( editLogbookInfo() ) );
-  menu->addAction( "&Logbook statistics", selection_frame, SLOT( viewLogbookStat() ) );
+  menu->addAction( "&Logbook informations", selection_frame, SLOT( editLogbookInformations() ) );
+  menu->addAction( "&Logbook statistics", selection_frame, SLOT( viewLogbookStatistics() ) );
 
   bool found ( false );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )

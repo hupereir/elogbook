@@ -46,7 +46,9 @@ LogbookInfoDialog::LogbookInfoDialog( QWidget* parent, Logbook* logbook ):
     CustomDialog( parent )
 {
   Debug::Throw( "LogbookInfoDialog::LogbookInfoDialog.\n" );
-          
+  
+  setWindowTitle( "eLogbook - logbook informations" );
+  
   QGridLayout *grid_layout( new QGridLayout() );
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);

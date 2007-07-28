@@ -31,9 +31,6 @@
   \date $Date$
 */
 
-#include <qlayout.h>
-#include <qwidget.h>
-
 #include "AskForSaveDialog.h"
 #include "Counter.h"
 #include "Debug.h"
@@ -83,7 +80,7 @@ class SelectionFrame: public TopWidget, public BASE::Key
   }
 
   //! retrive state frame
-  StatuBar& statusBar( void )
+  StatusBar& statusBar( void )
   {
     Exception::checkPointer( statusbar_, DESCRIPTION( "statusbar_ not initialized" ) );
     return *statusbar_;
@@ -203,10 +200,10 @@ class SelectionFrame: public TopWidget, public BASE::Key
   virtual void showDuplicatedEntries( void );
 
   //! edit current logbook informations
-  virtual void editLogbookInfo( void );
+  virtual void editLogbookInformations( void );
 
   //! view logbook statistics
-  virtual void viewLogbookStat( void );
+  virtual void viewLogbookStatistics( void );
 
   //! reorganize logbook to entries associations
   virtual void reorganize( void );
@@ -233,6 +230,10 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! change selected entries color
   // virtual void _changeEntryColor( const std::string& color );
+
+  //! store sorting method when changed via list header
+  virtual void _storeSortMethod( void )
+  { _storeSortMethod( logEntryList().sortColumn() ); }
 
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int column );

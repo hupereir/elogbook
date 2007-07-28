@@ -50,6 +50,8 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 {
   Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
+  setWindowTitle( "eLogbook - logbook statistics" );
+  
   QVBoxLayout* layout( new QVBoxLayout() );
   layout->setMargin( 10 );
   layout->setSpacing( 10 );

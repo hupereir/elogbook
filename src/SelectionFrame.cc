@@ -81,7 +81,7 @@ SelectionFrame::SelectionFrame( QWidget *parent, const std::string& name ):
   setMenuBar( menu );
   
   connect( menu_, SIGNAL( save() ), SLOT( saveLogbook() ) );
-  connect( menu, SIGNAL( qApp(), SLOT( closeAllWindows() ) );
+  connect( menu, SIGNAL( qApp(), SLOT( exit() ) );
   
   // splitter for KeywordList/LogEntryList
   QSplitter *splitter( new QSplitter( main ) );  
@@ -125,9 +125,9 @@ SelectionFrame::SelectionFrame( QWidget *parent, const std::string& name ):
   connect( keyword_list_, SIGNAL( itemRenamed( QTreeWidgetItem*, int ) ), SLOT( _renameKeyword( QTreeWidgetItem*, int ) ) );
     
   // popup menu for keyword list
-  keyword_list_->addMenuAction( "&New keyword", this, SLOT( _newKeyword() ) );
-  keyword_list_->addMenuAction( "&Rename keyword", this, SLOT( _renameKeyword() ), true );
-  keyword_list_->addMenuAction( "&Delete keyword", this, SLOT( _deleteKeyword() ), true );
+  keywordList().addMenuAction( "&New keyword", this, SLOT( _newKeyword() ) );
+  keywordList().addMenuAction( "&Rename keyword", this, SLOT( _renameKeyword() ), true );
+  keywordList().addMenuAction( "&Delete keyword", this, SLOT( _deleteKeyword() ), true );
   
   // right box for entries and buttons
   QWidget* right = new QWidget( splitter );
@@ -166,16 +166,16 @@ SelectionFrame::SelectionFrame( QWidget *parent, const std::string& name ):
   
   // create logEntry list
   list_ = new LogEntryList( right_vbox, "log_entry_list" );
-  // connect( list_->header(), SIGNAL( clicked( int ) ), SLOT( _StoreSortMethod( int ) ) );
+  // connect( logEntryList().header(), SIGNAL( clicked( int ) ), SLOT( _StoreSortMethod( int ) ) );
   //connect( list_, SIGNAL( itemRenamed( QTreeWidgetItem*, int ) ), SLOT( _RenameEntry( QTreeWidgetItem*, int ) ) );
   connect( list_, SIGNAL( itemActivated( QTreeWidgetItem* ) ), SLOT( _ShowEditFrame( QTreeWidgetItem* ) ) );
   connect( new QShortCut( Key_Delete, list_ ), SLOT( _deleteEntries() ) );
 
   // create popup menu for list
-  list_->addMenuAction( "&New entry", this, SLOT( _newEntry() ) );
-  list_->addMenuAction( "&Edit entries", this, SLOT( _editEntries() ), true ); 
-  list_->addMenuAction( "&Delete entries", this, SLOT( _deleteEntries() ), true ); 
-  list_->addMenuAction( "&Change keyword", this, SLOT( _changeEntryKeyword() ), true );
+  logEntryList().addMenuAction( "&New entry", this, SLOT( _newEntry() ) );
+  logEntryList().addMenuAction( "&Edit entries", this, SLOT( _editEntries() ), true ); 
+  logEntryList().addMenuAction( "&Delete entries", this, SLOT( _deleteEntries() ), true ); 
+  logEntryList().addMenuAction( "&Change keyword", this, SLOT( _changeEntryKeyword() ), true );
   
   // search panel
   search_panel_ = new SearchPanel( main );
@@ -238,11 +238,11 @@ void SelectionFrame::setLogbook( const File& file )
   // change sorting
   switch( logbook_->sortingMethod() ) 
   {
-    case Logbook::SORT_KEYWORD: list_->sortItems( LogEntryList::KEYWORD ); break;
-    case Logbook::SORT_TITLE: list_->sortItems( LogEntryList::TITLE ); break;
-    case Logbook::SORT_CREATION: list_->sortItems( LogEntryList::CREATION ); break;
-    case Logbook::SORT_MODIFICATION: list_->sortItems( LogEntryList::MODIFICATION ); break;
-    case Logbook::SORT_AUTHOR: list_->sortItems( LogEntryList::AUTHOR ); break;
+    case Logbook::SORT_KEYWORD: logEntryList().sortItems( LogEntryList::KEYWORD ); break;
+    case Logbook::SORT_TITLE: logEntryList().sortItems( LogEntryList::TITLE ); break;
+    case Logbook::SORT_CREATION: logEntryList().sortItems( LogEntryList::CREATION ); break;
+    case Logbook::SORT_MODIFICATION: logEntryList().sortItems( LogEntryList::MODIFICATION ); break;
+    case Logbook::SORT_AUTHOR: logEntryList().sortItems( LogEntryList::AUTHOR ); break;
     default: break;
   }
 
@@ -253,7 +253,7 @@ void SelectionFrame::setLogbook( const File& file )
   KeySet<LogEntry> entries( logbook_->entries() );
   KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::lastModifiedFTor() );
   selectEntry( *iter );
-  list_->setFocus();
+  logEntryList().setFocus();
 
   // see if logbook has parent file
   if( logbook_->parentFile().size() ) {
@@ -294,7 +294,7 @@ void SelectionFrame::checkLogbookBackup( void )
   // check if oppened logbook needs backup
   if(
     XmlOptions::get()get<bool>( "AUTO_BACKUP" ) &&
-    logbook_->file().size() &&
+    !logbook_->file().empty() &&
     logbook_->needsBackup() ) 
   {
 
@@ -343,8 +343,8 @@ void SelectionFrame::reset( void )
   }
     
   // clear list of entries
-  keyword_list_->clear();
-  list_->clear();
+  keywordList().clear();
+  logEntryList().clear();
     
   // clear the AttachmentFrame
   static_cast<MainFrame*>(qApp)->attachmentFrame().list().clear();
@@ -376,13 +376,13 @@ AskForSaveDialog::ReturnCode SelectionFrame::askForSave( const bool& enable_canc
 }
 
 //_______________________________________________
-void TreeSelectionFrame::selectEntry( LogEntry* entry )
+void SelectionFrame::selectEntry( LogEntry* entry )
 {
   Debug::Throw( "SelectionFrame::selectEntry.\n" );
   
   if( !entry ) return;
-  keyword_list_->selectKeyword( entry->keyword() );
-  list_->selectEntry( entry );
+  keywordList().selectKeyword( entry->keyword() );
+  logEntryList().selectEntry( entry );
   return;
   
 }
@@ -394,14 +394,14 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
   Debug::Throw( "SelectionFrame::updateEntry.\n" );
   
   // add entry into frame list or update existing    
-  if( entry-keyword() != keyword_list_->currentKeyword() )
+  if( entry-keyword() != keywordList().currentKeyword() )
   {
-    keyword_list_->addKeyword( entry->keyword() );
-    keyword_list_->selectKeyword( entry->keyword() );
+    keywordList().addKeyword( entry->keyword() );
+    keywordList().selectKeyword( entry->keyword() );
   }
 
-  if( !KeySet<LogEntryList::LocalItem>( entry ).empty() ) list_->updateEntry( entry, update_selection );
-  else list_->addEntry( entry, update_selection );
+  if( !KeySet<LogEntryList::Item>( entry ).empty() ) logEntryList().updateEntry( entry, update_selection );
+  else logEntryList().addEntry( entry, update_selection );
   
 }
 
@@ -419,8 +419,8 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   {
 
     // retrieve/delete associated attachmentlist items
-    KeySet<AttachmentList::LocalItem> items( *iter );
-    for( KeySet<AttachmentList::LocalItem>::iterator attachment_iter = items.begin(); attachment_iter != items.end(); attachment_iter++ )
+    KeySet<AttachmentList::Item> items( *iter );
+    for( KeySet<AttachmentList::Item>::iterator attachment_iter = items.begin(); attachment_iter != items.end(); attachment_iter++ )
     delete *attachment_iter;
 
     // delete attachment
@@ -429,8 +429,8 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   };
 
   // get associated logentrylist items
-  KeySet<LogEntryList::LocalItem> items( entry );
-  for( KeySet<LogEntryList::LocalItem>::iterator iter = items.begin(); iter != items.end(); iter++ )
+  KeySet<LogEntryList::Item> items( entry );
+  for( KeySet<LogEntryList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ )
   delete *iter;
 
   /*
@@ -483,7 +483,7 @@ LogEntry* SelectionFrame::previousEntry( LogEntry* entry, const bool& update_sel
 
   Debug::Throw( "SelectionFrame::previousEntry.\n" );
   
-  LogEntryList::LocalItem *item( list_->item( entry ) );
+  LogEntryList::Item *item( logEntryList().item( entry ) );
   if( !( item && (item = item->itemAbove( update_selection ) ) ) ) return 0;
   return item->entry();
 
@@ -494,7 +494,7 @@ LogEntry* SelectionFrame::nextEntry( LogEntry* entry, const bool& update_selecti
 {
 
   Debug::Throw( "SelectionFrame::nextEntry.\n" );
-  LogEntryList::LocalItem *item( list_->item( entry ) );
+  LogEntryList::Item *item( logEntryList().item( entry ) );
   if( !( item && (item = item->itemBelow( update_selection ) ) ) ) return 0;
   return item->entry();
 
@@ -639,7 +639,7 @@ void SelectionFrame::synchronize( void )
   KeySet<LogEntry> entries( logbook_->entries() );
   KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
   selectEntry( *iter );
-  list_->setFocus();
+  logEntryList().setFocus();
 
   // save current logbook if needed
   if( !logbook_->file().empty() )
@@ -817,9 +817,9 @@ void SelectionFrame::save( void )
 }
 
 //_______________________________________________
-bool SelectionFrame::saveLogbookAs( File default_file )
+bool SelectionFrame::saveAs( File default_file )
 {
-  Debug::Throw( "SelectionFrame::SaveLogbookAs.\n");
+  Debug::Throw( "SelectionFrame::saveAs.\n");
 
   // check current logbook
   if( !logbook_ ) {
@@ -834,31 +834,35 @@ bool SelectionFrame::saveLogbookAs( File default_file )
   // create file dialog
   CustomFileDialog dialog( this, TRUE );
   dialog.setFileMode( QFileDialog::AnyFile );
-  dialog.setSelection( default_file.c_str() );
-  QtUtil::CenterOnPointer( &dialog, false );
+  dialog.selectFile( default_file.c_str() );
+  QtUtil::centerOnPointer( &dialog, false );
   if( dialog.exec() == QDialog::Rejected ) return false;
 
+  // retrieve files
+  QStringList files( dialog.selectedFiles() );
+  if( files.empty() ) return;
+  
   // retrieve filename
-  File fullname = File( (const char*) dialog.selectedFile() ).Expand();
+  File fullname = File( qPrintable( files.back() ).expand();
 
   // update working directory
-  working_directory_ = fullname.GetPath();
+  working_directory_ = fullname.path();
 
   // check if file exist
   if(
-    fullname.Exist() &&
+    fullname.exist() &&
     !QtUtil::questionDialog( this, "selected file already exist. Overwrite ?" ) )
   return false;
 
   // change logbook filename and save
-  logbook_->SetFile( fullname );
-  _SaveLogbookForced( );
+  logbook_->setFile( fullname );
+  _saveLogbookForced( );
 
   /*
     force logbook state to unmodified since
     some children state may not have been reset properly
   */
-  logbook_->SetModifiedRecursive( false );
+  logbook_->setModifiedRecursive( false );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -867,53 +871,54 @@ bool SelectionFrame::saveLogbookAs( File default_file )
 }
 
 //_______________________________________________
-void SelectionFrame::SaveLogbookBackup( void )
+void SelectionFrame::saveBackup( void )
 {
-  Debug::Throw( "SelectionFrame::SaveLogbookBackup.\n");
+  Debug::Throw( "SelectionFrame::saveBackup.\n");
 
   // check current logbook
   if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no logbook opened. <Save Logbook> canceled." );
+    QtUtil::infoDialog( this, "no logbook opened. <Save Backup> canceled." );
     return;
   }
 
-  string filename( logbook_->MakeBackupFilename( ) );
+  string filename( logbook_->makeBackupFilename( ) );
   if( filename.empty() ) {
     QtUtil::infoDialog( this, "no valid filename. Use <Save As> first." );
     return;
   }
 
   // store last backup time and update
-  TimeStamp last_backup( logbook_->GetBackup() );
+  TimeStamp last_backup( logbook_->backup() );
 
   // stores current logbook filename
   string current_filename( logbook_->file() );
 
   // save logbook as backup
-  bool saved( SaveLogbookAs( filename ) );
+  bool saved( saveLogbookAs( filename ) );
 
   // remove the "backup" filename from the openPrevious list
-  GetMenu().GetOpenPreviousMenu().Remove( filename );
+  // to avoid confusion
+  menu().openPreviousMenu().remove( filename );
 
-  // set logbook filename back to initial filename
-  logbook_->SetFile( current_filename );
+  // restore initial filename
+  logbook_->setFile( current_filename );
 
   if( saved ) {
 
-    logbook_->SetBackup( TimeStamp::Now() );
-    logbook_->SetModified( true );
-    static_cast<MainFrame*>(qApp)->SetWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+    logbook_->setBackup( TimeStamp::now() );
+    logbook_->setModified( true );
+    setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
 
-    // Save logbook if needed
-    if( logbook_->file().size() ) SaveLogbook();
+    // Save logbook if needed (to make sure the backup stamp is updated)
+    if( !logbook_->file().empty() ) saveLogbook();
   }
 
 }
 
 //_____________________________________________
-void SelectionFrame::RevertToSavedLogbook( void )
+void SelectionFrame::revertToSaved( void )
 {
-  Debug::Throw( "SelectionFrame::RevertToSavedLogbook.\n" );
+  Debug::Throw( "SelectionFrame::revertToSaved.\n" );
 
   // check logbook
   if( !logbook_ ){
@@ -921,62 +926,62 @@ void SelectionFrame::RevertToSavedLogbook( void )
     return;
   }
 
-  // ask for confirmed
+  // ask for confirmation
   if(
-    logbook_->GetModified() &&
-    !QtUtil::questionDialog( this, "Discard changes to current logbook ?" )
+    logbook_->modified() &&
+    !QtUtil::questionDialog( this, "discard changes to current logbook ?" )
   ) return;
 
-  // stores logbook filename
-  string filename( logbook_->file() );
-
   // reinit SelectionFrame
-  static_cast<MainFrame*>(qApp)->Busy();
-  SetLogbook( filename );
+  static_cast<MainFrame*>(qApp)->busy();
+  setLogbook( logbook_->file() );
   static_cast<MainFrame*>(qApp)->Idle();
 
-  CheckLogbookBackup();
-
+  checkLogbookBackup();
+  ignore_warnings_ = false;
+  
 }
 
 //_____________________________________________
-void SelectionFrame::ViewHtml( void )
+void SelectionFrame::viewHtml( void )
 {
-  Debug::Throw( "SelectionFrame::ViewHtml.\n" );
+  Debug::Throw( "SelectionFrame::viewHtml.\n" );
 
   // check logbook
-  if( !logbook_ ){
+  if( !logbook_ )
+  {
     QtUtil::infoDialog( this, "No logbook opened. <View HTML> canceled." );
     return;
   }
 
   // create custom dialog, retrieve check vbox child
   ViewHtmlLogbookDialog dialog( this );
-  dialog.SetSelection( ViewHtmlLogbookDialog::ALL );
-  dialog.SetLogbookMask( Logbook::HTML_ALL_MASK );
-  dialog.SetEntryMask( LogEntry::HTML_ALL_MASK );
-  dialog.SetCommand(
-    ( AttachmentType::HTML.GetEditCommand().size() ) ?
-    AttachmentType::HTML.GetEditCommand():"" );
+  dialog.setSelection( ViewHtmlLogbookDialog::ALL );
+  dialog.setLogbookMask( Logbook::HTML_ALL_MASK );
+  dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
+  dialog.setCommand(
+    ( AttachmentType::HTML.editCommand().size() ) ?
+    AttachmentType::HTML.editCommand():"" );
 
   ostringstream what;
-  what << "/tmp/_eLogbook_" << TimeStamp::Now().GetUnixTime() << "_" << Util::GetPid() << ".html";
-  dialog.SetFile( File( what.str() ) );
+  what << "/tmp/_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+  dialog.setFile( File( what.str() ) );
 
   // map dialog
-  QtUtil::CenterOnParent( &dialog, false );
+  QtUtil::centerOnParent( &dialog, false );
   if( dialog.exec() == QDialog::Rejected ) return;
 
   // retrieve/check file
   File file( dialog.file() );
-  if( file.empty() ) {
+  if( file.empty() ) 
+  {
     QtUtil::infoDialog(this, "No output file specified. <View HTML> canceled." );
     return;
   }
 
   // open/check temp file
-  ofstream out( file.c_str() );
-  if( !out ) {
+  QFile out( file.c_str() );
+  if( !out.open( QIODevice::WriteOnly ) {
     ostringstream o;
     o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
     QtUtil::infoDialog( this, o.str() );
@@ -985,7 +990,7 @@ void SelectionFrame::ViewHtml( void )
 
   // retrieve mask
   unsigned int html_log_mask = dialog.GetLogbookMask();
-  unsigned int html_entry_mask = dialog.GetEntryMask();
+  unsigned int html_entry_mask = dialog.entryMask();
 
  QDomDocument document( "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"" );
   
@@ -1003,25 +1008,29 @@ void SelectionFrame::ViewHtml( void )
   logbook_->HtmlElement( body, document, html_log_mask );
 
   // retrieve entries to write
-  vector<LogEntry*> entries;
-  if( dialog.AllEntries() )
+  list<LogEntry*> entries;
+  if( dialog.allEntries() )
   {
 
-    KeySet<LogEntry> entry_set( logbook_->GetAllEntries() );
-    for( KeySet<LogEntry>::iterator iter = entry_set.begin(); iter != entry_set.end(); iter++ )
-    entries.push_back( *iter );
+    KeySet<LogEntry> entry_set( logbook_->entries() );
+    entries.insert( entry_set.begin(), entry_set.end() );
+    //for( KeySet<LogEntry>::iterator iter = entry_set.begin(); iter != entry_set.end(); iter++ )
+    //entries.push_back( *iter );
 
   } else if( dialog.VisibleEntries() ) {
 
-    list<LogEntry*> entry_list = ( list_->GetAllEntries() );
-    for( list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); iter++ )
-    entries.push_back( *iter );
+    list<LogEntry*> entry_list = ( logEntryList().entries() );
+    entries.insert( entry_list.begin(), entry_list.end() );
+    //for( list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); iter++ )
+    //entries.push_back( *iter );
 
   } else {
 
-    list<LogEntryList::LocalItem*> items( list_->GetSelectedItems<LogEntryList::LocalItem>() );
-    for( list<LogEntryList::LocalItem*>::iterator iter = items.begin(); iter!=items.end(); iter++ )
-    entries.push_back( (*iter)->GetEntry() );
+    list<LogEntry*> entry_list = ( logEntryList().selectedEntries() );
+    entries.insert( entry_list.begin(), entry_list.end() );
+    //list<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
+    //for( list<LogEntryList::Item*>::iterator iter = items.begin(); iter!=items.end(); iter++ )
+    //entries.push_back( (*iter)->entry() );
 
   }
 
@@ -1071,65 +1080,49 @@ void SelectionFrame::ViewHtml( void )
       appendChild( document.createElement( "b" ) ).
       appendChild( document.createTextNode( "last modified" ) );
     
-    for( vector< LogEntry* >::iterator it=entries.begin(); it != entries.end(); it++ )
-    { (*it)->HtmlSummary( table, document ); }
+    for( list< LogEntry* >::iterator it=entries.begin(); it != entries.end(); it++ )
+    { table.appendChild( (*it)->htmlSummary( document ); }
     
   }
     
   // dump full logbook
   if( html_log_mask & Logbook::HTML_CONTENT )
-  for( vector<LogEntry*>::iterator it=entries.begin(); it != entries.end(); it++ )
-  (*it)->HtmlElement( body, document, html_entry_mask );
+  { 
+    for( vector<LogEntry*>::iterator it=entries.begin(); it != entries.end(); it++ )
+    { body.appendChild( (*it)->htmlElement( document, html_entry_mask ); }
+  }
 
-  out << document.toString();
+  out.write( document.toByteArray() );
   out.close();
 
   // retrieve command
-  string command( dialog.GetCommand() );
+  string command( dialog.command() );
   if( command.empty() ) return;
 
   // execute command
   what.str("");
   what << command << " " << file << " &";
-  Util::Run( what.str() );
+  Util::run( what.str() );
   return;
 }
 
 //_______________________________________________
-void SelectionFrame::ResizeEditors( const int& width, const int& height )
+void SelectionFrame::showDuplicatedEntries( void )
 {
-  Debug::Throw( "SelectionFrame::ResizeEditors.\n" );
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  { (*iter)->resize( width, height ); }
-}
-
-//_______________________________________________
-void SelectionFrame::SetTabEmulation( const bool& active, const unsigned int& size )
-{
-  Debug::Throw( "SelectionFrame::ResizeEditors.\n" );
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  { (*iter)->GetEditor().SetTabEmulation( active, size ); }
-}
-
-//_______________________________________________
-void SelectionFrame::ShowDuplicatedEntries( void )
-{
-  Debug::Throw( "SelectionFrame::ShowDuplicatedEntries.\n" );
+  Debug::Throw( "SelectionFrame::showDuplicatedEntries.\n" );
 
   // keep track of the last visible entry
   LogEntry *last_visible_entry( 0 );
 
   // keep track of the current selected entry
-  LogEntryList::LocalItem* item( dynamic_cast<LogEntryList::LocalItem*>( list_->selectedItem() ) );
-  LogEntry *selected_entry( (item) ? item->GetEntry():0 );
+  LogEntryList::Item* item( dynamic_cast<LogEntryList::Item*>( logEntryList().currentItem() ) );
+  LogEntry *selected_entry( (item) ? item->entry():0 );
 
   // keep track of found entries
   int found( 0 );
 
   // retrieve all logbook entries
-  KeySet<LogEntry> entries( logbook_->GetAllEntries() );
+  KeySet<LogEntry> entries( logbook_->entries() );
   KeySet<LogEntry> turned_off_entries;
   for( KeySet<LogEntry>::iterator iter=entries.begin(); iter!= entries.end(); iter++ )
   {
@@ -1137,17 +1130,21 @@ void SelectionFrame::ShowDuplicatedEntries( void )
     // retrieve entry
     LogEntry* entry( *iter );
 
-    // if entry is already hidder, skipp
-    if( !entry->IsSelected() ) continue;
+    // if entry is already hidden, skipp
+    if( !entry->isSelected() ) continue;
 
     // check duplicated entries
     int n_duplicates( count_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( (*iter)->GetCreation() ) ) );
     if( n_duplicates < 2 ) {
-      entry->SetFindSelected( false );
+      
+      entry->setFindSelected( false );
       turned_off_entries.insert( entry );
+    
     } else {
+    
       found++;
       last_visible_entry = entry;
+    
     }
 
   }
@@ -1160,106 +1157,85 @@ void SelectionFrame::ShowDuplicatedEntries( void )
 
     // reset flag for the turned off entries to true
     for( KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
-    (*it)->SetFindSelected( true );
+    (*it)->setFindSelected( true );
 
     return;
   }
 
   // reinitialize logEntry list
-  _ResetKeywordList();
-  _ResetList();
+  _resetKeywordList();
+  _resetList();
 
   // if EditFrame current entry is visible, select it;
-  if( selected_entry && selected_entry->IsSelected() ) SelectEntry( selected_entry );
-  else if( last_visible_entry ) SelectEntry( last_visible_entry );
+  if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
+  else if( last_visible_entry ) selectEntry( last_visible_entry );
 
   return;
 }
 
 //_______________________________________________
-void SelectionFrame::EditLogbookInfo( void )
+void SelectionFrame::editLogbookInformations( void )
 {
-  Debug::Throw( "SelectionFrame::EditLogbookInfo.\n" );
-    if( !logbook_ ) {
+  Debug::Throw( "SelectionFrame::editLogbookInformations.\n" );
+  
+  if( !logbook_ ) 
+  {
     QtUtil::infoDialog( this, "No logbook opened." );
     return;
   }
 
   // create dialog
-  LogbookInfoDialog dialog( 0, logbook_ );
-  dialog.setCaption( "Logbook information" );
-  dialog.resize( 350, 300 );
+  LogbookInfoDialog dialog( this, logbook_ );
   if( dialog.exec() == QDialog::Rejected ) return;
 
   // keep track of logbook modifications
   bool modified( false );
 
-  // retrieve, update logbook title
-  string title( dialog.Title() );
-  if( title.size() ) modified |= logbook_->SetTitle( title );
-
-  // update logbook author
-  string author( dialog.Author() );
-  modified |= logbook_->SetAuthor( author );
+  modified |= logbook_->setTitle( dialog.title() );
+  modified |= logbook_->setAuthor( dialog.author() );
+  modified |= logbook_->setComments( dialog.comments() );
 
   // retrieve logbook directory
   File directory = dialog.AttachmentDirectory();
 
   // check if fulldir is not a non directory existing file
-  if( directory.Exist() &&  !directory.IsDirectory() )
+  if( directory.Exist() &&  !directory.isDirectory() )
   {
 
     ostringstream o;
     o << "File \"" << directory << "\" is not a directory.";
     QtUtil::infoDialog( this, o.str() );
 
-  } else {
+  } else modified |= logbook_->setDirectory( directory );
 
-    // set logbook directory, check it, ask for creation
-    modified |= logbook_->SetDirectory( directory );
-    if( !File( logbook_->GetDirectory() ).Exist() ) {
-      ostringstream o;
-      o << "Directory \"" << logbook_->GetDirectory() << "\" does not exist. Create ?";
-      if( QtUtil::questionDialog( this, o.str() ) ) {
-
-        ostringstream o;
-        o << "mkdir \"" << logbook_->GetDirectory() << "\"";
-        Util::Run( o.str() );
-
-      }
-    }
-  }
-
-  // update logbook comments
-  modified |= logbook_->SetComments( dialog.Comments() );
 
   // save Logbook, if needed
-  if( modified ) logbook_->SetModified( true );
-
-  // Save logbook if needed
-  if( logbook_->file().size() ) SaveLogbook();
+  if( modified ) logbook_->setModified( true );
+  if( !logbook_->file().empty() ) saveLogbook();
 
 }
 
 //_______________________________________________
-void SelectionFrame::ViewLogbookStat( void )
+void SelectionFrame::viewLogbookStatistics( void )
 {
-  Debug::Throw( "SelectionFrame::ViewLogbookStat.\n" );
-    if( !logbook_ ) {
+  Debug::Throw( "SelectionFrame::viewLogbookStatistics.\n" );
+  
+  if( !logbook_ ) 
+  {
     QtUtil::infoDialog( this, "No logbook opened." );
     return;
   }
 
   // create dialog
-  LogbookStatisticsDialog dialog( 0, logbook_ );
-  dialog.setCaption( "Logbook information" );
+  LogbookStatisticsDialog dialog( this, logbook_ );
   dialog.exec();
 }
 
 //_______________________________________________
-void SelectionFrame::ReorganizeLogbook( void )
+void SelectionFrame::reorganize( void )
 {
-  Debug::Throw( "SelectionFrame::ReorganizeLogbook.\n" );
+  Debug::Throw( "SelectionFrame::reorganize.\n" );
+
   if( !logbook_ )
   {
     QtUtil::infoDialog( this,"No valid logbook. Canceled.\n");
@@ -1267,15 +1243,18 @@ void SelectionFrame::ReorganizeLogbook( void )
   }
 
   // retrieve all entries
-  KeySet<LogEntry> entries( logbook_->GetAllEntries() );
+  KeySet<LogEntry> entries( logbook_->entries() );
 
   // dissasociate from logbook
   for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   {
+    
     KeySet<Logbook> logbooks( *iter );
     for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter != logbooks.end(); log_iter++ )
-    (*log_iter)->SetModified( true );
-    (*iter)->ClearAssociations<Logbook>();
+    { (*log_iter)->SetModified( true ); }
+    
+    (*iter)->clearAssociations<Logbook>();
+    
   }
 
   //! put entry set into a list and sort by creation time. 
@@ -1286,22 +1265,22 @@ void SelectionFrame::ReorganizeLogbook( void )
   // put entries in logbook
   for( list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); iter++ )
   {
-    Logbook *logbook( logbook_->GetLatestChild() );
+    Logbook *logbook( logbook_->latestChild() );
     Key::Associate( *iter, logbook );
-    logbook->SetModified( true );
+    logbook->setModified( true );
   }
   
   // remove empty logbooks
-  logbook_->RemoveEmptyChildren();
+  logbook_->removeEmptyChildren();
   
   // save
-  logbook_->SetModified( true );
-  if( logbook_->file().size() ) SaveLogbook();
+  logbook_->setModified( true );
+  if( !logbook_->file().empty() ) saveLogbook();
 
 }
 
 //_______________________________________________
-void SelectionFrame::CloseEditFrames( void ) const
+void SelectionFrame::closeEditFrames( void ) const
 {
   Debug::Throw( "SelectionFrame::CloseEditFrames.\n" );
 
@@ -1309,113 +1288,30 @@ void SelectionFrame::CloseEditFrames( void ) const
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
-    if( (*iter)->Modified() && !((*iter)->ReadOnly() || (*iter)->isHidden() ) && (*iter)->AskForSave() == AskForSaveDialog::CANCEL ) return;
+    if( (*iter)->modified() && !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
     delete *iter;
   }
   return;
 }
 
-//____________________________________________
-void SelectionFrame::_LoadColors( void )
-{
-  Debug::Throw( "SelectionFrame::_LoadColors.\n" );
-
-  // clear menu
-  color_menu_->clear();
-
-  list<string> colors( Options::GetSpecialOptions<string>( "COLOR" ) );
-  colors.sort();
-  colors.unique();
-  for( list<string>::iterator iter = colors.begin(); iter != colors.end(); iter++ )
-  color_menu_->AddColor( *iter );
-  color_menu_->DisplayColors();
-
-  return;
-
-}
-
 //_______________________________________________
-void SelectionFrame::_StoreSortMethod( int column )
+void SelectionFrame::selectEntries( QString selection, unsigned int mode )
 {
-  Debug::Throw( "SelectionFrame::_StoreSortMethod.\n");
-  if( !logbook_ ) return;
-
-  switch( column ) {
-    case LogEntryList::KEYWORD: logbook_->SetSortingMethod( Logbook::SORT_KEYWORD ); break;
-    case LogEntryList::TITLE: logbook_->SetSortingMethod( Logbook::SORT_TITLE ); break;
-    case LogEntryList::CREATION: logbook_->SetSortingMethod( Logbook::SORT_CREATION ); break;
-    case LogEntryList::MODIFICATION: logbook_->SetSortingMethod( Logbook::SORT_MODIFICATION ); break;
-    case LogEntryList::AUTHOR: logbook_->SetSortingMethod( Logbook::SORT_AUTHOR ); break;
-    default: break;
-  }
-
-  // Save logbook if needed
-  if( logbook_->file().size() ) SaveLogbook();
-
-}
-
-//_______________________________________________
-void SelectionFrame::_ShowEditFrame( QTreeWidgetItem* item )
-{
-
-  Debug::Throw( "SelectionFrame::_ShowEditFrame.\n" );
-
-  // cast item to LogEntryList::Item
-  LogEntryList::LocalItem *local_item( dynamic_cast<LogEntryList::LocalItem*>(item) );
-  Exception::Assert( local_item, DESCRIPTION( "invalid item" ) );
-
-  // retrieve associated entries
-  KeySet<LogEntry> entries( local_item );
-  Exception::Assert( entries.size()==1, DESCRIPTION( "invalid association to entry" ) );
-  LogEntry *entry( *entries.begin() );
-
-  // retrieve associated EditFrames, check if one matches the selected entry
-  EditFrame *edit_frame( 0 );
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
-  {
-    /*
-      if Editframe is to be deleted, delete it. This is to avoid memory leak
-      for EditFrames which should have been deleted before but could not to avoid crash
-    */
-    if( (*iter)->isHidden() ) delete *iter;
-
-    //! check if EditFrame is editable and match editor
-    else if( !((*iter)->ReadOnly() || (*iter)->isHidden() ) && (*iter)->GetEntry() == entry ) {
-      edit_frame = *iter;
-      break;
-    }
-
-  }
-
-  // create editFrame if not found
-  if( !edit_frame )
-  {
-    edit_frame = new EditFrame( this, "edit_frame", entry, false );
-    Key::Associate( this, edit_frame );
-  }
-
-  // show edit_frame
-  edit_frame->Uniconify();
-
-}
-
-//_______________________________________________
-void SelectionFrame::SelectEntries( const string& selection, const unsigned int& mode )
-{
-  Debug::Throw() << "SelectionFrame::_SelectEntries - selection: " << selection << " mode:" << mode << endl;
+  Debug::Throw() << "SelectionFrame::selectEntries - selection: " << selection << " mode:" << mode << endl;
 
   // check logbook
   if( !logbook_ ) return;
 
   // check selection text
-  if( selection.empty() ){
-    ShowAllEntries();
+  if( selection.empty() )
+  {
+    showAllEntries();
     return;
   }
 
   // retrieve selection source
-  if( mode == SearchPanel::NONE ) {
+  if( mode == SearchPanel::NONE ) 
+  {
     QtUtil::infoDialog( this, "At least on field must be selected" , QtUtil::CENTER_ON_PARENT );
     return;
   }
@@ -1428,11 +1324,11 @@ void SelectionFrame::SelectEntries( const string& selection, const unsigned int&
   LogEntry *last_visible_entry( 0 );
 
   // keep track of the current selected entry
-  LogEntryList::LocalItem* item( dynamic_cast<LogEntryList::LocalItem*>( list_->selectedItem() ) );
-  LogEntry *selected_entry( (item) ? item->GetEntry():0 );
+  LogEntryList::Item* item( dynamic_cast<LogEntryList::Item*>( logEntryList().currentItem() ) );
+  LogEntry *selected_entry( (item) ? item->entry():0 );
 
   // retrieve all logbook entries
-  KeySet<LogEntry> entries( logbook_->GetAllEntries() );
+  KeySet<LogEntry> entries( logbook_->entries() );
   KeySet<LogEntry> turned_off_entries;
   for( KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
   {
@@ -1442,128 +1338,551 @@ void SelectionFrame::SelectEntries( const string& selection, const unsigned int&
     total++;
 
     // if entry is already hidder, skipp
-    if( !entry->IsFindSelected() ) continue;
+    if( !entry->isFindSelected() ) continue;
 
     // check entry
     bool accept( false );
-    if( (mode&SearchPanel::TITLE ) && entry->MatchTitle( selection ) ) accept = true;
-    if( (mode&SearchPanel::KEYWORD ) && entry->MatchKeyword( selection ) ) accept = true;
-    if( (mode&SearchPanel::TEXT ) && entry->MatchText( selection ) ) accept = true;
-    if( (mode&SearchPanel::ATTACHMENT ) && entry->MatchAttachment( selection ) ) accept = true;
-    if( (mode&SearchPanel::COLOR ) && entry->MatchColor( selection ) ) accept = true;
+    if( (mode&SearchPanel::TITLE ) && entry->matchTitle( selection ) ) accept = true;
+    if( (mode&SearchPanel::KEYWORD ) && entry->matchKeyword( selection ) ) accept = true;
+    if( (mode&SearchPanel::TEXT ) && entry->matchText( selection ) ) accept = true;
+    if( (mode&SearchPanel::ATTACHMENT ) && entry->matchAttachment( selection ) ) accept = true;
+    if( (mode&SearchPanel::COLOR ) && entry->matchColor( selection ) ) accept = true;
 
-    if( accept ) {
+    if( accept ) 
+    {
+    
       found++;
-      if( entry->IsKeywordSelected() || !(last_visible_entry && last_visible_entry->IsKeywordSelected()) )
-      last_visible_entry = entry;
+      if( entry->isKeywordSelected() || !(last_visible_entry && last_visible_entry->isKeywordSelected()) )
+      { last_visible_entry = entry; }
+    
     } else {
+    
       turned_off_entries.insert( entry );
-      entry->SetFindSelected( false );
+      entry->setFindSelected( false );
+    
     }
 
   }
 
   // if no entries are found, restore the disabled entries and abort
-  if( !found ) {
+  if( !found ) 
+  {
 
     statusBar().label().setText( "no match found. Find canceled" );
 
     // reset flag for the turned off entries to true
     for( KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
-    (*it)->SetFindSelected( true );
+    (*it)->setFindSelected( true );
 
     return;
+    
   }
 
   // reinitialize logEntry list
-  _ResetKeywordList();
-  _ResetList();
+  _resetKeywordList();
+  _resetList();
 
   // if EditFrame current entry is visible, select it;
-  if( selected_entry && selected_entry->IsSelected() ) SelectEntry( selected_entry );
-  else if( last_visible_entry ) SelectEntry( last_visible_entry );
+  if( selected_entry && selected_entry->ssSelected() ) selectEntry( selected_entry );
+  else if( last_visible_entry ) selectEntry( last_visible_entry );
 
   ostringstream out;
   out << found << " out of " << total;
   if( found > 1 ) out << " entries selected";
   else out << " entry selected";
+  
   statusBar().label().setText( out.str() );
 
   return;
 }
 
 //_______________________________________________
-void SelectionFrame::ShowAllEntries( void )
+void SelectionFrame::showAllEntries( void )
 {
-  Debug::Throw( "SelectionFrame::ShowAllEntries.\n" );
+  Debug::Throw( "SelectionFrame::showAllEntries.\n" );
 
   // keep track of the current selected entry
-  LogEntryList::LocalItem* item( dynamic_cast<LogEntryList::LocalItem*>( list_->selectedItem() ) );
-  LogEntry *selected_entry( (item) ? item->GetEntry():0 );
+  LogEntryList::Item* item( dynamic_cast<LogEntryList::Item*>( logEntryList().currentItem() ) );
+  LogEntry *selected_entry( (item) ? item->entry():0 );
 
   // set all logbook entries to find_visible
-  KeySet<LogEntry> entries( logbook_->GetAllEntries() );
+  KeySet<LogEntry> entries( logbook_->entries() );
   for( KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
-  (*it)->SetFindSelected( true );
+  { (*it)->SetFindSelected( true ); }
 
   // reinitialize logEntry list
-  _ResetKeywordList();
-  _ResetList();
+  _resetKeywordList();
+  _resetList();
 
-  if( selected_entry && selected_entry->IsSelected() ) SelectEntry( selected_entry );
+  if( selected_entry && selected_entry->IsSelected() ) selectEntry( selected_entry );
   else {
-    LogEntryList::LocalItem *item( dynamic_cast<LogEntryList::LocalItem*>( list_->lastItem() ));
-    if( item ) SelectEntry( item->GetEntry() );;
+    LogEntryList::Item *item( dynamic_cast<LogEntryList::Item*>( logEntryList().lastItem() ));
+    if( item ) selectEntry( item->entry() );;
   }
 
   statusBar().label().setText( "" );
   return;
 }
 
-//____________________________________________
-void SelectionFrame::_NewEntry( void )
+// //____________________________________________
+// void SelectionFrame::_LoadColors( void )
+// {
+//   Debug::Throw( "SelectionFrame::_LoadColors.\n" );
+// 
+//   // clear menu
+//   color_menu_->clear();
+// 
+//   list<string> colors( Options::GetSpecialOptions<string>( "COLOR" ) );
+//   colors.sort();
+//   colors.unique();
+//   for( list<string>::iterator iter = colors.begin(); iter != colors.end(); iter++ )
+//   color_menu_->AddColor( *iter );
+//   color_menu_->DisplayColors();
+// 
+//   return;
+// 
+// }
+
+//_______________________________________________
+void SelectionFrame::_storeSortMethod( int column )
 {
-  Debug::Throw( "SelectionFrame::_NewEntry.\n" );
+  
+  Debug::Throw( "SelectionFrame::_storeSortMethod.\n");
+  if( !logbook_ ) return;
 
-  // create new EditFrame
-  EditFrame *frame = new EditFrame( this, "edit_frame", 0, false );
-  frame->SetWrapText( WrapText() );
-  Key::Associate( this, frame );
+  switch( column ) {
+    
+    case LogEntryList::KEYWORD: logbook_->setSortingMethod( Logbook::SORT_KEYWORD ); break;
+    case LogEntryList::TITLE: logbook_->setSortingMethod( Logbook::SORT_TITLE ); break;
+    case LogEntryList::CREATION: logbook_->setSortingMethod( Logbook::SORT_CREATION ); break;
+    case LogEntryList::MODIFICATION: logbook_->setSortingMethod( Logbook::SORT_MODIFICATION ); break;
+    case LogEntryList::AUTHOR: logbook_->setSortingMethod( Logbook::SORT_AUTHOR ); break;
+    default: break;
+    
+  }
 
-  // call NewEntry for the selected frame
-  frame->NewEntry();
-  frame->Uniconify();
+  // Save logbook if needed
+  if( !logbook_->file().empty() ) SaveLogbook();
+
+}
+
+//_______________________________________________
+void SelectionFrame::_showEditFrame( QTreeWidgetItem* item )
+{
+
+  Debug::Throw( "SelectionFrame::_showEditFrame.\n" );
+
+  // cast item to LogEntryList::Item
+  LogEntryList::Item *local_item( dynamic_cast<LogEntryList::Item*>(item) );
+  Exception::assert( local_item, DESCRIPTION( "invalid item" ) );
+
+  // retrieve associated entries
+  KeySet<LogEntry> entries( local_item );
+  Exception::assert( entries.size()==1, DESCRIPTION( "invalid association to entry" ) );
+  LogEntry *entry( *entries.begin() );
+
+  // retrieve associated EditFrames, check if one matches the selected entry
+  EditFrame *edit_frame( 0 );
+  KeySet<EditFrame> frames( this );
+  for( KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
+  {
+    
+    // if Editframe is hidden, delete it. Hidden frames are used for delayed deletion
+    if( (*iter)->isHidden() ) delete *iter;
+
+    //! check if EditFrame is editable and match editor
+    else if( !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->entry() == entry ) 
+    {
+      edit_frame = *iter;
+      break;
+    }
+
+  }
+
+  // create editFrame if not found
+  if( !edit_frame )
+  {
+    edit_frame = new EditFrame( this, entry, false );
+    Key::Associate( this, edit_frame );
+  }
+
+  // show edit_frame
+  edit_frame->uniconify();
+
+}
+
+//_______________________________________________
+void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem *qitem )
+{
+
+  Debug::Throw( "SelectionFrame::_keywordSelectionChanged.\n" );
+  if( !logbook_ ) return; 
+  
+  string keyword = keywordList().currentKeyword();
+      
+  // keep track of the last visible entry
+  LogEntry *last_visible_entry( 0 );
+  
+  // keep track of the current selected entry
+  LogEntryList::Item* item( dynamic_cast<LogEntryList::Item*>( logEntryList().currentItem() ) );
+  LogEntry *selected_entry( (item) ? item->entry():0 );
+  
+  // retrieve all logbook entries
+  KeySet<LogEntry> entries( logbook_->entries() );
+  KeySet<LogEntry> turned_off_entries;
+  for( KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
+  {
+  
+    // retrieve entry
+    LogEntry* entry( *it );
+    if( entry->keyword() == keyword ) 
+    {  
+      entry->setKeywordSelected( true );
+      if( entry->isFindSelected() ) last_visible_entry = entry;
+    } else entry->setKeywordSelected( false );
+    
+  }
+  
+  // reinitialize logEntry list
+  _resetList();
+  
+  // if EditFrame current entry is visible, select it;
+  if( selected_entry && selected_entry->IsSelected() ) logEntryList().selectEntry( selected_entry );
+  else if( last_visible_entry ) logEntryList().selectEntry( last_visible_entry );
+  
+  return;
+} 
+    
+//____________________________________________
+void SelectionFrame::_newKeyword( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_newKeyword.\n" );
+  
+  //! create CustomDialog
+  EditKeywordDialog dialog( this );
+  dialog.setWindowTitle( "New keyword" );
+
+  const set<string>& keywords( keywordList().keywords() );
+  for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+  dialog.addKeyword( *iter );
+  dialog.setKeyword( keywordList().currentKeyword() );
+  
+  // map dialog
+  QtUtil::centerOnParent( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return;
+
+  // retrieve keyword from line_edit
+  string keyword = LogEntry::formatKeyword( dialog.keyword() );
+  if( !keyword.empty() ) {
+    keywordList().addKeyword( keyword );
+    keywordList().selectKeyword( keyword );
+  }
+}
+  
+//____________________________________________
+void SelectionFrame::_renameKeyword( void )
+{
+  Debug::Throw("SelectionFrame::_renameKeyword.\n" );
+  
+  //! check that keywordlist has selected item
+  if( !keywordList().currentItem() )
+  {
+    QtUtil::InfoDialogExclusive( this, "no keyword selected. Request canceled" );
+    return;
+  }
+  
+  //! check that keywordlist selection is not root
+  if( keywordList().currentItem() == keywordList().rootItem() ) 
+  {
+    QtUtil::InfoDialogExclusive( this, "can't rename root keyword. Request canceled" );
+    return;
+  }
+
+  // get current selected keyword
+  string keyword( keywordList().currentKeyword() );
+      
+  //! create CustomDialog
+  EditKeywordDialog dialog( this );
+  dialog.setWindowTitle( "Edit keyword" );
+
+  const set<string>& keywords( keywordList().keywords() );
+  for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+  dialog.addKeyword( *iter );
+  dialog.setKeyword( keyword );
+  
+  // map dialog
+  QtUtil::centerOnParent( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return;
+
+  // retrieve keyword from line_edit
+  _renameKeyword( keyword, LogEntry::formatKeyword( dialog.keyword() ) );
+  
+}
+
+//____________________________________________
+void SelectionFrame::_deleteKeyword( void )
+{
+  Debug::Throw("SelectionFrame::_deleteKeyword.\n" );
+  
+  //! check that keywordlist has selected item
+  if( !keywordList().currentItem() )
+  {
+    QtUtil::InfoDialogExclusive( this, "no keyword selected. Request canceled" );
+    return;
+  }
+  
+  //! check that keywordlist selection is not root
+  if( keywordList().currentItem() == keywordList().rootItem() ) 
+  {
+    QtUtil::InfoDialogExclusive( this, "can't delete root keyword. Request canceled" );
+    return;
+  }
+
+  // get current selected keyword
+  QTreeWidgetItem *selected_item( keywordList().currentItem() );
+  string keyword( keywordList().currentKeyword() );
+
+  // retrieve associated entries
+  KeySet<LogEntry> entries( logbook_->entries() );
+  KeySet<LogEntry> associated_entries;
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  if( (*iter)->keyword().find( keyword ) == 0 )
+  associated_entries.insert( *iter );    
+                 
+  //! create CustomDialog
+  DeleteKeywordDialog dialog( this, keyword, associated_entries.size() );
+    
+  // map dialog
+  QtUtil::centerOnParent( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return;
+  
+  // retrieve parent keyword
+  selected_item->setText(0, "");
+  string new_keyword( LogEntry::formatKeyword( keywordList().keyword( selected_item ) ) );  
+
+  // move entries
+  if( dialog.moveEntries() && associated_entries.size() ) 
+  { 
+
+    _renameKeyword( keyword, new_keyword ); 
+    return;
+    
+  } else if( dialog.deleteEntries() ) {
+    
+    for( KeySet<LogEntry>::iterator iter = associated_entries.begin(); iter != associated_entries.end(); iter++ )
+    deleteEntry( *iter, false );
+  
+  }
+
+  _resetKeywordList();
+  keywordList().selectKeyword( new_keyword );
+
+  _resetList();
+    
+  // Save logbook
+  if( !logbook_->file().empty() ) saveLogbook();  
+  
+  return;
+  
+}
+
+//____________________________________________
+void SelectionFrame::_renameKeyword( QTreeWidgetItem *item, int column )
+{
+  Debug::Throw("SelectionFrame::_RenameKeyword.\n" );
+  if( !column == KeywordList::KEYWORD ) return;
+  
+  KeywordList::Item *local_item( dynamic_cast<KeywordList::Item*>(item));
+  Exception::assert( local_item, DESCRIPTION( "invalid cast to KeywordList::Item" ) );
+  
+  const string& old_keyword( local_item->backup() );
+  string new_keyword( keywordList().GetKeyword( local_item ) );
+  Debug::Throw() << "SelectionFrame::_RenameKeyword - old=" << old_keyword << " new=" << new_keyword << endl;
+  
+  // check if old differ from new
+  _renameKeyword( old_keyword, new_keyword );
+  
+  return;
 
 }
 
 //____________________________________________
-void SelectionFrame::_EditEntries( void )
+void SelectionFrame::_renameKeyword( const string& keyword, const string& new_keyword )
+{
+  
+  Debug::Throw("SelectionFrame::_renameKeyword.\n" );
+  
+  // check keywords are different
+  if( keyword == new_keyword ) return;
+    
+  // get entries matching the old_keyword, change the keyword
+  KeySet<LogEntry> entries( logbook_->entries() );
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  {
+    LogEntry* entry( *iter );
+    
+    /* 
+      if keyword to modify is a leading subset of current entry keyword, 
+      update entry with new keyword
+    */
+    if( entry->keyword().find( keyword ) == 0 ) 
+    {
+      entry->SetKeyword( Str( entry->GetKeyword() ).Replace( keyword, new_keyword ) );
+      entry->Modified();
+      KeySet<Logbook> logbooks( entry );
+      for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
+      (*log_iter)->SetModified( true );
+    }
+    
+  }
+
+  // reset lists
+  _resetKeywordList();
+  _resetList();
+  keywordList().AddKeyword( new_keyword );
+  keywordList().SelectKeyword( new_keyword );
+    
+  // Save logbook if needed
+  if( !logbook_->file().empty() ) SaveLogbook();     
+  
+}
+
+//_______________________________________________
+void SelectionFrame::_changeEntryKeyword( void )
+{
+  Debug::Throw( "SelectionFrame::_changeEntryKeyword.\n" );  
+      
+  // check if selected item make sense
+  QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
+  if( items.empty() ) 
+  {
+    QtUtil::InfoDialogExclusive( this, "no entry selected. Request canceled.");
+    return;
+  }
+      
+  //! create CustomDialog
+  CustomDialog dialog( this );
+  dialog.setWindowTitle( "Edit keyword" );
+  
+  dialog.mainLayout()->addWidget( QComboBox *combo( new QComboBox( &dialog ) ) );
+  combo->setAutoCompletion( true );
+  combo->setEditable( true );
+
+  string keyword( keywordList().currentKeyword() );
+  const set<string>& keywords( keywordList().keywords() );
+  for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+  combo->addItem(iter->c_str() );
+  combo->setCurrentItem( combo->findText( keyword.c_str() ) );
+  
+  dialog.mainLayout()->addWidget(new QLabel( "use \"/\" characters to add keyword to a specific branch", &dialog ) );
+       
+  // map dialog
+  QtUtil::centerOnPointer( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return;
+
+  // retrieve keyword from line_edit
+  string new_keyword = LogEntry::formatKeyword( (const char*) combo->currentText() );
+  _changeEntryKeyword( new_keyword );
+    
+}
+ 
+//_______________________________________________
+void SelectionFrame::_changeEntryKeyword( const string& new_keyword )
+{
+      
+  // check if selected item make sense
+  QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
+  KeySet<LogEntry> entries;
+  
+  for( QList<LogEntryList::Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
+  {
+    
+    // retrieve entry
+    LogEntry* entry( (*iter)->entry() );
+    
+    // change keyword and set as modified
+    entry->setKeyword( new_keyword );
+    entry->modified();
+    
+    // keep track of modified entries
+    entries.insert( entry );
+    
+    // set associated logbooks as modified
+    KeySet<Logbook> logbooks( entry );
+    for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
+    { (*log_iter)->setModified( true ); }
+  
+  }  
+
+  // reset lists
+  _resetKeywordList();
+  _resetList();
+  keywordList().addKeyword( new_keyword );
+  keywordList().SelectKeyword( new_keyword );
+  
+  // update selection
+  logEntryList().clearSelection();
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  {
+    LogEntryList::Item* item( logEntryList().item( *iter ) );
+    logEntryList().setSelected( item, true );  
+  }
+  
+  // scroll to last item
+  if( !entries.empty() ) logEntryList().scrollToItem( *items.rbegin() );
+    
+  // Save logbook if needed
+  if( !logbook_->file().empty() ) saveLogbook();
+  return;    
+  
+}
+
+//____________________________________________
+void SelectionFrame::_newEntry( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_NewEntry.\n" );
+
+  // create new EditFrame
+  EditFrame *frame = new EditFrame( this, "edit_frame", 0, false );
+  Key::associate( this, frame );
+
+  // call NewEntry for the selected frame
+  frame->newEntry();
+  frame->uniconify();
+
+}
+
+//____________________________________________
+void SelectionFrame::_editEntries( void )
 {
   Debug::Throw( "SelectionFrame::_EditEntries .\n" );
 
   // retrieve current selection
-  list<LogEntryList::LocalItem*> items( list_->GetSelectedItems<LogEntryList::LocalItem>() );
+  QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
   if( items.empty() ) {
     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
     return;
   }
 
   // retrieve associated entry
-  for( list<LogEntryList::LocalItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
-  _ShowEditFrame( *iter );
+  for( QList<LogEntryList::Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
+  _showEditFrame( *iter );
 
   return;
 
 }
 
 //____________________________________________
-void SelectionFrame::_DeleteEntries ( void )
+void SelectionFrame::_deleteEntries ( void )
 {
   Debug::Throw( "SelectionFrame::_DeleteEntries .\n" );
 
   // retrieve current selection
-  list<LogEntryList::LocalItem*> items( list_->GetSelectedItems<LogEntryList::LocalItem>() );
-  if( items.empty() ) {
+  QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
+  if( items.empty() ) 
+  {
     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
     return;
   }
@@ -1572,87 +1891,90 @@ void SelectionFrame::_DeleteEntries ( void )
    if( !QtUtil::questionDialog( this, "Delete selected entries ?" ) ) return;
 
   // retrieve associated entry
-  for( list<LogEntryList::LocalItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
+  for( QList<LogEntryList::Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
   {
-    LogEntryList::LocalItem* item( *iter );
+    LogEntryList::Item* item( *iter );
 
     KeySet<LogEntry> entries( item );
-    Exception::Assert( entries.size()==1, DESCRIPTION( "invalid association to LogEntry" ) );
-    DeleteEntry( *entries.begin(), false );
+    Exception::assert( entries.size()==1, DESCRIPTION( "invalid association to LogEntry" ) );
+    deleteEntry( *entries.begin(), false );
 
   }
 
   // Save logbook if needed
-  if( logbook_->file().size() ) SaveLogbook();
+  if( !logbook_->file().empty() ) saveLogbook();
 
   return;
 
 }
 
+// //_______________________________________________
+// void SelectionFrame::_ChangeEntryColor( const std::string& color )
+// {
+//   Debug::Throw( "SelectionFrame::_ChangeEntryColor.\n" );
+// 
+//   // try add color to options
+//   list<string> colors( Options::GetSpecialOptions<string>( "COLOR" ) );
+//   if( std::find( colors.begin(), colors.end(), color ) == colors.end() )
+//   {
+//     Options::Get().Add( Option( "COLOR", color ) );
+//     if( Options::Get().file().size() ) Options::Get().Write();
+//   }
+// 
+//   // check if selected item make sense
+//   QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
+//   if( items.empty() )
+//   {
+//     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
+//     return;
+//   }
+// 
+//   // retrieve associated entry
+//   for( QList<LogEntryList::Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
+//   {
+//     // get associated entry
+//     LogEntryList::Item *item( *iter );
+//     LogEntry* entry( item->entry() );
+// 
+//     entry->SetColor( color );
+//     entry->Modified();
+// 
+//     // redraw item
+//     item->repaint();
+// 
+//     // update EditFrame color
+//     KeySet<EditFrame> frames( entry );
+//     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+//     if( !(*iter)->isHidden() ) (*iter)->DisplayColor();
+// 
+//     // set logbooks as modified
+//     KeySet<Logbook> logbooks( entry );
+//     for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+//     (*iter)->SetModified( true );
+// 
+//   }
+// 
+//   // save Logbook
+//   if( GetLogbook()->file().size() ) SaveLogbook();
+// 
+// }
+
 //_______________________________________________
-void SelectionFrame::_ChangeEntryColor( const std::string& color )
-{
-  Debug::Throw( "SelectionFrame::_ChangeEntryColor.\n" );
-
-  // try add color to options
-  list<string> colors( Options::GetSpecialOptions<string>( "COLOR" ) );
-  if( std::find( colors.begin(), colors.end(), color ) == colors.end() )
-  {
-    Options::Get().Add( Option( "COLOR", color ) );
-    if( Options::Get().file().size() ) Options::Get().Write();
-  }
-
-  // check if selected item make sense
-  list<LogEntryList::LocalItem*> items( list_->GetSelectedItems<LogEntryList::LocalItem>() );
-  if( items.empty() )
-  {
-    QtUtil::infoDialog( this, "no entry selected. Request canceled.");
-    return;
-  }
-
-  // retrieve associated entry
-  for( list<LogEntryList::LocalItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
-  {
-    // get associated entry
-    LogEntryList::LocalItem *item( *iter );
-    LogEntry* entry( item->GetEntry() );
-
-    entry->SetColor( color );
-    entry->Modified();
-
-    // redraw item
-    item->repaint();
-
-    // update EditFrame color
-    KeySet<EditFrame> frames( entry );
-    for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    if( !(*iter)->isHidden() ) (*iter)->DisplayColor();
-
-    // set logbooks as modified
-    KeySet<Logbook> logbooks( entry );
-    for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
-    (*iter)->SetModified( true );
-
-  }
-
-  // save Logbook
-  if( GetLogbook()->file().size() ) SaveLogbook();
-
-}
-
-//_______________________________________________
-void SelectionFrame::_AutoSave( void )
+void SelectionFrame::_autoSave( void )
 {
 
-  if( logbook_ && logbook_->file().size() ) {
+  if( logbook_ && !logbook_->file().empty() ) 
+  {
+  
     statusBar().label().setText( "performing autoSave" );
 
     // retrieve non read only editors; perform save
     KeySet<EditFrame> frames( this );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    if( !( (*iter)->ReadOnly() || (*iter)->isHidden() ) ) (*iter)->SaveEntry();
+    if( !( (*iter)->isReadOnly() || (*iter)->isHidden() ) ) (*iter)->saveEntry();
 
-    SaveLogbook();
+    saveLogbook();
+  
   } else
   statusBar().label().setText( "no logbook filename. <Autosave> skipped" );
 
@@ -1672,9 +1994,9 @@ void SelectionFrame::enterEvent( QEvent *event )
 }
 
 //_____________________________________________
-void SelectionFrame::_SaveLogbookForced( void )
+void SelectionFrame::_saveLogbookForced( void )
 {
-  Debug::Throw( "SelectionFrame::_SaveLogbookForced.\n" );
+  Debug::Throw( "SelectionFrame::_saveLogbookForced.\n" );
 
   // retrieve/check SelectionFrame/Logbook
   if( !logbook_ ) {
@@ -1683,6 +2005,39 @@ void SelectionFrame::_SaveLogbookForced( void )
   }
 
   // set all logbooks as modified
-  logbook_->SetModifiedRecursive( true );
-  SaveLogbook( );
+  logbook_->setModifiedRecursive( true );
+  saveLogbook();
+
+}
+
+//_______________________________________________
+void SelectionFrame::_resetList( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_resetList.\n" );
+      
+  // clear list of entries
+  logEntryList().clear();
+  
+  if( !logbook_ ) return;
+  KeySet<LogEntry> entries( logbook_->entries() );
+  for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
+  if( (*it)->isSelected() ) logEntryList().AddEntry( *it );
+      
+}
+
+//_______________________________________________
+void SelectionFrame::_resetKeywordList( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
+      
+  // clear list of entries
+  keywordList().clear();
+  
+  if( !logbook_ ) return;
+  KeySet<LogEntry> entries( logbook_->entries() );
+  for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )  
+  if( (*it)->isFindSelected() ) keywordList().addKeyword( (*it)->keyword() );  
+  
 }

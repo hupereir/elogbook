@@ -65,7 +65,7 @@ class Menu:public QMenuBar, public Counter
   //! retrieve OpenPreviousMenu
   OpenPreviousMenu& openPreviousMenu( void ) const
   {
-    Exception::CheckPointer( open_previous_menu_, DESCRIPTION( "open_previous_menu_ not initialized.\n" ) );
+    Exception::checkPointer( open_previous_menu_, DESCRIPTION( "open_previous_menu_ not initialized.\n" ) );
     return *open_previous_menu_;
   }
   

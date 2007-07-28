@@ -211,7 +211,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _modified( void );
   
   //! display cursor position
-  void _displayCursorPosition( void );
+  void _displayCursorPosition( void )
   { _displayCursorPosition( text_->textPosition() ); }
 
   //! display cursor position
@@ -285,7 +285,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   CustomTextEdit *text_;            
     
   //! pointer to statusbar    
-  StatuBar statusbar_;            
+  StatusBar* statusbar_;            
   
 };
 

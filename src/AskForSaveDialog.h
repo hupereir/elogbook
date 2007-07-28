@@ -45,7 +45,7 @@ class AskForSaveDialog: public QDialog, public Counter
   public:
   
   //! return codes
-  enum Buttons {
+  enum ReturnCode {
     
     //! file is to be saved
     YES = 1<<0,
