@@ -116,7 +116,7 @@ LogEntry::~LogEntry( void )
 //__________________________________
 QDomElement LogEntry::domElement( QDomDocument& parent ) const
 {
-  Debug::Throw( "LogEntry::DomElement.\n" );
+  Debug::Throw( "LogEntry::domElement.\n" );
   QDomElement out( parent.createElement( XML::ENTRY.c_str() ) );
   if( title().size() ) out.setAttribute( XML::TITLE.c_str(), XmlUtil::textToXml(title()).c_str() );
   if( keyword().size() ) out.setAttribute( XML::KEYWORD.c_str(), XmlUtil::textToXml(keyword()).c_str() );
@@ -263,17 +263,17 @@ void LogEntry::modified( void )
 }
 
 //__________________________________
-void LogEntry::htmlElement( QDomElement& parent, QDomDocument& document, const unsigned int &mask )
+QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &mask )
 {
   Debug::Throw( "LogEntry::HtmlElement.\n" );
 
+  QDomElement out = document.createElement( "div" );
+  
   // logbook entry header
   if( mask & HTML_HEADER_MASK ) {
     
     // surrounding table
-    QDomElement table = parent
-      .appendChild( document.createElement( "div" ) ) 
-      .appendChild( document.createElement( "table" ) ).toElement();
+    QDomElement table = out.appendChild( document.createElement( "table" ) ).toElement();
     table.setAttribute( "class", "header_outer_table" );
     table.setAttribute( "width", "100%" );
     if( color()!="None" )
@@ -367,7 +367,7 @@ void LogEntry::htmlElement( QDomElement& parent, QDomDocument& document, const u
   KeySet<Attachment> attachments( this );
   if( attachments.size() && ( mask &  HTML_ATTACHMENT ) )
   {
-    QDomElement par = parent.appendChild( document.createElement("p") ).toElement();
+    QDomElement par = out.appendChild( document.createElement("p") ).toElement();
     for( KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
     (*iter)->htmlElement( par, document );
   }
@@ -375,20 +375,22 @@ void LogEntry::htmlElement( QDomElement& parent, QDomDocument& document, const u
   // write text
   if( text().size() && ( mask & HTML_TEXT ) )
   {
-    QDomElement par = parent.appendChild( document.createElement("p") ).toElement();
+    QDomElement par = out.appendChild( document.createElement("p") ).toElement();
     _htmlTextNode( par, document );
   }
 
-  parent.appendChild( document.createElement( "br" ) );
-
+  out.appendChild( document.createElement( "br" ) );
+  return out;
+  
 }
 
 //__________________________________
-void LogEntry::htmlSummary( QDomElement& parent, QDomDocument& document, const unsigned int& mask ) const
+QDomElement LogEntry::htmlSummary( QDomDocument& document, const unsigned int& mask ) const
 {
 
-  Debug::Throw( "LogEntry::HtmlSummary.\n" );
-  QDomElement row = parent.appendChild( document.createElement( "tr" ) ).toElement();
+  Debug::Throw( "LogEntry::htmlSummary.\n" );
+  
+  QDomElement row = document.createElement( "tr" );
   if( mask & HTML_KEYWORD )
   {
     QDomElement ref = ((row.
@@ -414,7 +416,7 @@ void LogEntry::htmlSummary( QDomElement& parent, QDomDocument& document, const u
   if( mask & HTML_MODIFICATION ) row.
     appendChild( document.createElement( "td" )).
     appendChild( document.createTextNode( modification().string().c_str() ) );
-  return;
+  return row;
 }
 
 //__________________________________

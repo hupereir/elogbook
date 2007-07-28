@@ -68,7 +68,7 @@ class AttachmentFrame: public QWidget, public Counter
   //! retrieve associated List
   AttachmentList& list()
   { 
-    Exception::CheckPointer( list_, DESCRIPTION("list_ not initialized") );
+    Exception::checkPointer( list_, DESCRIPTION("list_ not initialized") );
     return *list_; 
   }
     

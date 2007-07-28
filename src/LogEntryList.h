@@ -132,6 +132,9 @@ class LogEntryList: public CustomListView
   
   //! retrieve all entries
   std::list< LogEntry* > entries( void );
+
+  //! retrieve selected entries
+  std::list< LogEntry* > selectedEntries( void );
     
   // protected:
 

@@ -40,6 +40,7 @@
 
 #include "AskForSaveDialog.h"
 #include "AttachmentList.h"
+#include "CustomMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
 #include "Exception.h"
@@ -65,7 +66,7 @@ class StatusBar;
   garbage collector
 */
   
-class EditFrame: public QMainWindow, public Counter, public BASE::Key
+class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 {
 
   //! Qt meta object declaration

@@ -122,9 +122,30 @@ void LogEntryList::selectEntry( LogEntry* entry )
 }
 
 //___________________________________
+list< LogEntry* > LogEntryList::selectedEntries( void )
+{ 
+  Debug::Throw( "LogEntryList::entries" );
+
+  // retrieve logbook entries
+  list< LogEntry* > entries; 
+  QList<Item*> items( LogEntryList::selectedItems<Item>() );
+  for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
+  {
+    
+    // check item visibility
+    if( isItemHidden( *iter ) ) continue;
+    entries.push_back( (*iter)->entry() );
+
+  }
+  
+  return entries;
+  
+} 
+
+//___________________________________
 list< LogEntry* > LogEntryList::entries( void )
 { 
-  Debug::Throw( "LogEntryList::GetAllEntries\n" );
+  Debug::Throw( "LogEntryList::entries" );
 
   // retrieve logbook entries
   list< LogEntry* > entries; 

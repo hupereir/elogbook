@@ -126,10 +126,10 @@ class KeywordList: public CustomListView
       if( background_.isValid() ) setBackgroundColor( column, background_ ); 
     }
     
-//     //! retrieves backup keyword
-//     const std::string& backup( void ) const
-//     { return backup_; }
-//     
+    //! retrieves backup keyword
+    const std::string& backup( void ) const
+    { return backup_; }
+
 //     //! stores original keyword when renaming [overloaded]
 //     void startRename( int column )
 //     {

@@ -218,10 +218,10 @@ class LogEntry:public Counter, public BASE::Key
   bool matchAttachment( const std::string& buf ); 
   
   //! write text in html format to stream 
-  void htmlElement( QDomElement& parent, QDomDocument& document, const unsigned int &mask = HTML_ALL_MASK );  
+  QDomElement htmlElement( QDomDocument& document, const unsigned int &mask = HTML_ALL_MASK );  
   
   //! write text in html format to stream 
-  void htmlSummary( QDomElement& parent, QDomDocument& document, const unsigned int& mask = HTML_HEADER_MASK ) const;
+  QDomElement htmlSummary( QDomDocument& document, const unsigned int& mask = HTML_HEADER_MASK ) const;
       
   //! set if entry is said visible by the find bar
   void setFindSelected( bool value )

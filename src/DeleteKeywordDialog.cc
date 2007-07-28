@@ -47,6 +47,8 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const string& keyword
   
   Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
 
+  setWindowTitle( "delete keyword" );
+  
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
   group->set( true );

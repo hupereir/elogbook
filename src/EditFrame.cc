@@ -81,7 +81,7 @@ const string EditFrame::EDIT_TITLE = "Electronic logbook editor";
 
 //_______________________________________________
 EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
-  QMainWindow( parent ),
+  CustomMainWindow( parent ),
   Counter( "EditFrame" ),
   read_only_( read_only ),
   modified_( false )
@@ -284,6 +284,7 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
  
   // configuration
   connect( qApp, SIGNAL( configurationChanged ), SLOT( updateConfiguration() ) );
+  updateConfiguration();
   
   // display selected entry
   displayEntry( entry );
@@ -721,10 +722,10 @@ void EditFrame::_viewHtml( void )
   // dump logbook header
   KeySet<Logbook> logbooks( entry );
   for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
-  (*iter)->htmlElement( body, document, html_log_mask );
+  { body.appendChild( (*iter)->htmlElement( document, html_log_mask ); }
 
   // dump entry
-  entry->htmlElement( body, document, html_entry_mask );
+  body.appendChild( entry->htmlElement( document, html_entry_mask ) );
 
   out.write( document.toByteArray() );
   out.close();

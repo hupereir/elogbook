@@ -29,7 +29,7 @@
   \date    $Date$
 */
 
-#include <QShortCut>
+#include <QShortcut>
 
 #include "AttachmentFrame.h"
 #include "EditFrame.h"
@@ -71,6 +71,7 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   connect( new QShortCut( CTRL+Key_W, this ), SLOT( close() ) );
   
   // configuration
+  updateConfiguration();
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
 
 };
