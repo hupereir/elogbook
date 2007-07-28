@@ -1,5 +1,5 @@
-#ifndef LogbookInfoDialog_h
-#define LogbookInfoDialog_h
+#ifndef LogEntryInfoDialog_h
+#define LogEntryInfoDialog_h
 // $Id$
 
 /******************************************************************************
@@ -24,58 +24,28 @@
 *******************************************************************************/
 
 /*!
-  \file LogbookInfoDialog.h
-  \brief  logbook informations
+  \file LogEntryInfoDialog.h
+  \brief  logbook entry informations
   \author Hugo Pereira
   \version $Revision$
   \date $Date$
 */
 
-#include "BrowsedLineEdit.h"
-#include "CustomDialog.h"
-#include "CustomLineEdit.h"
-#include "CustomTextEdit.h"
+#include <QDialog>
 
-class Logbook;
+#include "Counter.h"
 
-class LogbookInfoDialog: public CustomDialog
+class LogEntry;
+
+//! logbook entry informations
+class LogEntryInfoDialog: public QDialog, public Counter
 {
   
   public:
       
   //! constructor
-  LogbookInfoDialog( QWidget* parent, Logbook* logbook  );
+  LogEntryInfoDialog( QWidget* parent, LogEntry* entry  );
   
-  //! title
-  std::string title( void ) const
-  { return qPrintable( title_->text() ); }
-  
-  //! author
-  std::string author( void ) const
-  { return qPrintable( author_->text() ); }
-  
-  //! attachment directory
-  File AttachmentDirectory( void ) const
-  { return File( qPrintable( attachment_directory_->editor().text() ) ); }
-  
-  //! comments
-  std::string comments( void ) const
-  { return qPrintable( comments_->toPlainText() ); }
-  
-  private:
-  
-  //! title line edit
-  CustomLineEdit* title_;
-  
-  //! author
-  CustomLineEdit* author_;
-  
-  //! attachment directory
-  BrowsedLineEdit* attachment_directory_;
-
-  //! comments
-  CustomTextEdit* comments_;
-    
 };
 
 #endif

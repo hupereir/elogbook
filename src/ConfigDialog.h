@@ -40,7 +40,7 @@ class ConfigDialog: public ConfigDialogBase
   public:
    
   //! creator
-  ConfigDialog( QWidget *parent, const std::string& name = "config_dialog" );
+  ConfigDialog( QWidget *parent );
     
 };
 

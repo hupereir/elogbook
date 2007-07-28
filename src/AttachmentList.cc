@@ -63,32 +63,32 @@ char* AttachmentList::column_titles_[ AttachmentList::n_columns ] =
 };
 
 //_____________________________________________
-AttachmentList::AttachmentList( QWidget *parent, const string& name, bool read_only ):
-  CustomListView( parent, name ),
+AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
+  CustomListView( parent ),
   read_only_( read_only )
 { 
   Debug::Throw( "AttachmentList::AttachmentList.\n" ); 
 
   setColumnCount( n_columns );
   for( unsigned int i=0; i<n_columns; i++ ) 
-  { setColumnName( column_titles_[i] ); }
-
+  { setColumnName( i, column_titles_[i] ); }
+  
   setRootIsDecorated( false );
   setSortingEnabled( true );
   setSelectionMode( QAbstractItemView::ContiguousSelection );
 
-  new_attachment_ = addMenuAction( "&New", this, SLOT( newAttachment() ) );
+  new_attachment_ = &addMenuAction( "&New", this, SLOT( newAttachment() ) );
   menu().addSeparator();
   
-  view_attachment_ = addMenuAction( "&Open", this, SLOT( _openAttachment() ) );
-  edit_attachment_ = addMenuAction( "&Edit", this, SLOT( _editAttachment() ) );
-  delete_attachment_ = addMenuAction( "&Delete", this, SLOT( _deleteAttachment() ) );
+  view_attachment_ = &addMenuAction( "&Open", this, SLOT( _openAttachment() ) );
+  edit_attachment_ = &addMenuAction( "&Edit", this, SLOT( _editAttachment() ) );
+  delete_attachment_ = &addMenuAction( "&Delete", this, SLOT( _deleteAttachment() ) );
   
   // connections
   connect( &menu(), SIGNAL( aboutToShow() ), SLOT( _updateMenu() ) );
-  connect( this, SIGNAL( itemActivated( QTreeWidgetItem* ) ), SLOT( _openAttachment( QTreeWidgetItem* ) ) );
+  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _openAttachment( QTreeWidgetItem* ) ) );
 
-  connect( new QShortCut( Key_Delete, this ), SLOT( _deleteAttachment() ) );
+  connect( new QShortcut( Qt::Key_Delete, this ), SIGNAL( activated() ), SLOT( _deleteAttachment() ) );
 
 }
 
@@ -116,7 +116,7 @@ void AttachmentList::updateAttachment( Attachment* attachment )
   KeySet<Item> items( attachment );
   Exception::assert( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
   
-  (*items.begin())->Update();
+  (*items.begin())->update();
 
 }
 
@@ -305,7 +305,7 @@ void AttachmentList::newAttachment(
     edit_frames = KeySet<EditFrame>( entry );
     for( KeySet<EditFrame>::iterator iter = edit_frames.begin(); iter != edit_frames.end(); iter++ )
     {
-      if( !(*iter)->attachmentList().childCount() ) (*iter)->attachmentList().show();
+      if( !(*iter)->attachmentList().topLevelItemCount() ) (*iter)->attachmentList().show();
       (*iter)->attachmentList().addAttachment( attachment );
     }
     
@@ -337,7 +337,7 @@ void AttachmentList::newAttachment(
 void AttachmentList::_updateMenu( void )
 {
   
-  bool has_selection( selectedItems().size() );
+  bool has_selection( !QTreeWidget::selectedItems().empty() );
   new_attachment_->setEnabled( !read_only_ );
   view_attachment_->setEnabled( has_selection );
   edit_attachment_->setEnabled( has_selection && !read_only_ );
@@ -352,12 +352,12 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
   Debug::Throw( "AttachmentList::_openAttachment.\n" );  
 
   // select item if valid
-  QList<Items> items;
+  QList<Item*> items;
   Item* local_item( dynamic_cast<Item*>( item ) );
   if( item ) 
   {
-    items->push_back( item );
-    setItemSelected( item, true );
+    items.push_back( local_item );
+    setItemSelected( local_item, true );
   } else items = selectedItems<Item>();
   
   // check items
@@ -372,9 +372,9 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
   {
     Item& current( **iter );
     Attachment& attachment( *current.attachment() ); 
-    AttachmentType type = attachment.GetType();
-    File fullname( ( type == AttachmentType::URL ) ? attachment.GetFile():attachment.GetFile().Expand() );
-    if( !( type == AttachmentType::URL || fullname.exit() ) )
+    AttachmentType type = attachment.type();
+    File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
+    if( !( type == AttachmentType::URL || fullname.exist() ) )
     {
       ostringstream what; 
       what << "Cannot find file \"" << fullname << "\". <View Attachment> canceled.";
@@ -412,7 +412,7 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
       if( files.empty() ) return;
       
       destname = File( qPrintable( files.front() ) ).expand();
-      if( destname.exit() && !QtUtil::QuestionDialog( this, "selected file already exist. Overwrite ?" ) ) return;
+      if( destname.exist() && !QtUtil::questionDialog( this, "selected file already exist. Overwrite ?" ) ) return;
       
       // make the copy
       Util::run( string("cp ") + "\"" + fullname + "\" \"" + destname + "\"" );
@@ -464,7 +464,6 @@ void AttachmentList::_editAttachment( void )
     // set associated entry modified
     KeySet<LogEntry> entries( &attachment );
     Exception::assert( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
-    LogEntry& entry( **entries.begin() );
 
     // update attachment associated list items
     KeySet<AttachmentList::Item> items( &attachment );
@@ -504,7 +503,7 @@ void AttachmentList::_deleteAttachment( void )
   {
 
     Item& current( **iter );
-    Attachment* attachment( *current.attachment() ); 
+    Attachment* attachment( current.attachment() ); 
   
     // dialog
     DeleteAttachmentDialog dialog( this, *attachment );
@@ -517,7 +516,7 @@ void AttachmentList::_deleteAttachment( void )
     KeySet<AttachmentList::Item> items( attachment );
     for( KeySet<AttachmentList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
     {
-      if( (*iter)->listView()->childCount() == 1 ) (*iter)->listView()->hide();
+      if( (*iter)->treeWidget()->topLevelItemCount() == 1 ) (*iter)->treeWidget()->hide();
       delete *iter;
     }
   
@@ -525,7 +524,7 @@ void AttachmentList::_deleteAttachment( void )
     KeySet<LogEntry> entries( attachment );
     Exception::assert( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
     LogEntry* entry( *entries.begin() );
-    entry->Modified();
+    entry->modified();
     
     // retrieve associated logbooks
     KeySet<Logbook> logbooks( entry );
@@ -545,9 +544,9 @@ void AttachmentList::_deleteAttachment( void )
     }
   
     // remove file from disk, if required
-    File file = attachment.file().expand();
-    if( from_disk && ( !( attachment.GetType() == AttachmentType::URL ) ) && file.IsWritable() ) 
-    { file.Remove(); }
+    File file( attachment->file().expand() );
+    if( from_disk && ( !( attachment->type() == AttachmentType::URL ) ) && file.isWritable() ) 
+    { file.remove(); }
     
     // delete attachment
     delete attachment;
@@ -572,7 +571,31 @@ void AttachmentList::Item::update( void )
   setText( AttachmentList::FILE, string( attachment.shortFile()+" ").c_str() );
   setText( AttachmentList::TYPE, attachment.isValid() ? attachment.type().name().c_str():"not found" );
   setText( AttachmentList::SIZE, attachment.sizeString().c_str() );
-  setText( AttachmentList::MODIFICATION, (attachment.modification().valid() ) ? 
+  setText( AttachmentList::MODIFICATION, (attachment.modification().isValid() ) ? 
       attachment.modification().string().c_str():
       "-" );
 }    
+
+//___________________________________
+bool AttachmentList::Item::operator < (const QTreeWidgetItem& item ) const
+{
+
+  // cast parent to custom list view
+  const CustomListView* parent( dynamic_cast<const CustomListView*>( treeWidget() ) );
+  if( !parent ) return QTreeWidgetItem::operator < (item);
+  
+  // try cast other
+  const Item* local( dynamic_cast<const Item*>( &item ) );
+  if( !local )  return QTreeWidgetItem::operator < (item);
+  
+  // retrieve column type
+  int column( parent->sortColumn() );  
+  
+  // check if column is a TimeStamp
+  if( column == SIZE ) return attachment()->size() < local->attachment()->size();
+  if( column == MODIFICATION ) return attachment()->modification() < local->attachment()->modification();
+
+  // default case
+  return QTreeWidgetItem::operator < (item);
+  
+}

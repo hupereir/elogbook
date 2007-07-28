@@ -32,7 +32,6 @@
 #include <QLabel>
 #include <QLayout>
 #include <QSplitter>
-#include <QToolBar>
 
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
@@ -41,6 +40,7 @@
 #include "CustomLineEdit.h"
 #include "CustomPixmap.h"
 #include "CustomTextEdit.h"
+#include "CustomToolBar.h"
 #include "CustomToolButton.h"
 #include "EditFrame.h"
 #include "File.h"
@@ -57,7 +57,7 @@
 #include "Options.h"
 #include "QtUtil.h"
 #include "SelectionFrame.h"
-#include "StateFrame.h"
+#include "StatusBar.h"
 #include "Str.h"
 #include "Util.h"
 #include "ViewHtmlEntryDialog.h"
@@ -70,15 +70,6 @@
 using namespace std;
 using namespace BASE;
 
-//! (modified) window title name
-const string EditFrame::EDIT_TITLE_MODIFIED = "Electronic logbook editor (modified)";
-
-//! (read only) window title name
-const string EditFrame::EDIT_TITLE_READONLY = "Electronic logbook editor (read only)";
-
-//! window title name
-const string EditFrame::EDIT_TITLE = "Electronic logbook editor";
-
 //_______________________________________________
 EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
   CustomMainWindow( parent ),
@@ -88,28 +79,22 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
 
-  QWidget* main_widget( new QWidget( this ) ); 
-  QLayout *layout = new QLayout();
-  layout->setMargin(2);
-  layout->setSpacing( 2 );
-  main_widget->setLayout( layout );
-  setCentralWidget( main_widget );
+  QWidget* main( new QWidget( this ) ); 
+  setCentralWidget( main );
 
-  // create menu if requested
-  Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
-  setMenuBar( menu );
+  QVBoxLayout *layout = new QVBoxLayout();
+  layout->setMargin(5);
+  layout->setSpacing( 5 );
+  main->setLayout( layout );
   
-  connect( menu, SIGNAL( save() ), SLOT( saveEntry() ) );
-  connect( menu, SIGNAL( closeWindow(), SLOT( close ) );
-  
-  QHBoxLayout* h_layout = new QHBoxLayout( this );
+  QHBoxLayout* h_layout = new QHBoxLayout();
   h_layout->setMargin(0);
   h_layout->setSpacing(2);
   layout->addLayout( h_layout );
   
   // title label and line
-  h_layout->addWidget( new QLabel( " Title: ", this ) );
-  h_layout->addWidget( title_ = new CustomLineEdit( this ), 1 );
+  h_layout->addWidget( new QLabel( " Title: ", main ) );
+  h_layout->addWidget( title_ = new CustomLineEdit( main ), 1 );
   connect( title_, SIGNAL( textChanged( const QString&) ), SLOT( _modified() ) );
   
 //   color_label_ = new CustomLabel( h_box );
@@ -118,53 +103,54 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
 //   QtUtil::Expand( color_label_, "    " );
 
   // splitter for EditFrame and attachment list
-  QSplitter *splitter( new QSplitter( this ) );
+  QSplitter *splitter( new QSplitter( main ) );
   splitter->setOrientation( Qt::Vertical );
   layout->addWidget( splitter, 1 );
   
   // create text
-  text_ = new CustomTextEdit( splitter, "edit_frame_text" );
-  connect( text_, SIGNAL( textChanged() ), SLOT( _Modified() ) );
-
-  // connect cursor position changed signals
+  text_ = new CustomTextEdit( splitter );
+  splitter->addWidget( text_ );
+  
+  connect( text_, SIGNAL( textChanged() ), SLOT( _modified() ) );
   connect( text_, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
-  connect( text_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
+  connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
   // create attachment list
   AttachmentList *attachment_list = new AttachmentList( splitter, isReadOnly() );
+  splitter->addWidget( attachment_list );
   attachment_list->hide();
 
   // associate EditFrame and attachment list
   Key::associate( this, attachment_list );
 
   // set splitter default size
-  QValueList<int> sizes;
-  sizes << Options::Get<int>( "EDIT_FRAME_HEIGHT" );
-  sizes << Options::Get<int>( "ATC_HEIGHT" );
+  QList<int> sizes;
+  sizes << XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" );
+  sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
   splitter->setSizes( sizes );
 
   // state frame for tooltips
-  layout->addWidget( statusbar_ = new StatusBar( this ) );
+  layout->addWidget( statusbar_ = new StatusBar( main ) );
   statusBar().addLabel( 2 );
   statusBar().addLabels( 2, 0 );
   statusBar().addClock();
 
   // toolbars
-  QToolBar* toolbar( new QToolBar( "Editor main toolbar", this ) );
-  addToolBar( Qt::TopToolBarArea, toolbar );
-  
+  CustomToolBar* toolbar( new CustomToolBar( "Editor main toolbar", this ) );
+  addToolBar( Qt::LeftToolBarArea, toolbar );
+  CustomToolButton *button;
+
   // toolbar buttons pixmaps
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-
+  
   // lock button. is visible only when window is not editable
-  lock_ = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::LOCK, path_list ) ), "Unlock current editor", &statusbar_->label() );
-  connect( lock_, SIGNAL( clicked() ), SLOT( _unlock() ) );
-  lock_->setText("Unlock");
-  toolbar->addWidget( lock_ );
+  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::LOCK, path_list ) ), "Unlock current editor", &statusbar_->label() );
+  connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
+  button->setText("Unlock");
+  lock_ = toolbar->addWidget( button );
   
   // generic tool button
-  CustomToolButton *button;
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "Create a new entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( newEntry() ) );
   button->setText("New");
@@ -216,8 +202,8 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
 //   connect( &format_bar->GetColorMenu(), SIGNAL( ColorSelected( const std::string& ) ), text_format_, SLOT( ColorChanged( const std::string& ) ) );
 
 //   // toolbars
-//   QToolBar* toolbar( new QToolBar( "Editor edition toolbar", this ) );
-//   addToolBar( Qt::TopToolBarArea, toolbar );
+//   CustomToolBar* toolbar( new CustomToolBar( "Editor edition toolbar", this ) );
+//   addToolBar( Qt::LeftToolBarArea, toolbar );
 // 
 //   // undo button
 //   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::UNDO, path_list ) ), "Undo last text modification", &statusbar_->label() );
@@ -234,8 +220,8 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
 //   read_only_widgets_.push_back( button );
 
   // extra toolbar
-  QToolBar* toolbar( new QToolBar( "Editor extra toolbar (1)", this ) );
-  addToolBar( Qt::TopToolBarArea, toolbar );
+  toolbar = new CustomToolBar( "Editor extra toolbar (1)", this );
+  addToolBar( Qt::LeftToolBarArea, toolbar );
 
   // main_window button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HOME, path_list ) ), "Raise the main window", &statusbar_->label() );
@@ -256,8 +242,8 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
   toolbar->addWidget( button );
 
   // extra toolbar
-  QToolBar* toolbar( new QToolBar( "Editor extra toolbar (2)", this ) );
-  addToolBar( Qt::TopToolBarArea, toolbar );
+  toolbar = new CustomToolBar( "Editor extra toolbar (2)", this );
+  addToolBar( Qt::LeftToolBarArea, toolbar );
 
   // previous_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::PREV, path_list ) ), "Display the previous entry", &statusbar_->label() );
@@ -279,13 +265,20 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
   button->setText("Info");
   toolbar->addWidget( button );
 
+  // create menu if requested
+  Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
+  setMenuBar( menu );
+  
+  connect( menu, SIGNAL( save() ), SLOT( saveEntry() ) );
+  connect( menu, SIGNAL( closeWindow() ), SLOT( close() ) );
+
   // changes display according to read_only flag
   setReadOnly( read_only_ );
- 
-  // configuration
-  connect( qApp, SIGNAL( configurationChanged ), SLOT( updateConfiguration() ) );
-  updateConfiguration();
   
+  // configuration
+  connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
+  updateConfiguration();
+    
   // display selected entry
   displayEntry( entry );
 
@@ -311,9 +304,9 @@ void EditFrame::displayEntry( LogEntry *entry )
 
   // update all display
   displayTitle();
-  displayColor();
+  // displayColor();
   _displayText();
-  _displayAttachments();
+  // _displayAttachments();
 
   // reset modify flag; change title accordingly
   modified_ = false;
@@ -327,6 +320,8 @@ void EditFrame::displayEntry( LogEntry *entry )
 void EditFrame::setReadOnly( const bool& value )
 {
 
+  Debug::Throw() << "EditFrame::setReadOnly - " << (value ? "true":"false" ) << endl;
+  
   // update read_only value
   read_only_ = value;
 
@@ -335,8 +330,7 @@ void EditFrame::setReadOnly( const bool& value )
   { (*it)->setEnabled( !isReadOnly() ); }
 
   // changes lock button state
-  if( isReadOnly() ) lock_->show();
-  else lock_->hide();
+  lock_->setVisible( isReadOnly() );
 
   // changes TextEdit readOnly status
   title_->setReadOnly( isReadOnly() );
@@ -375,6 +369,8 @@ string EditFrame::windowTitle( void ) const
 AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
 {
   
+  Debug::Throw( "EditFrame::askForSave.\n" );
+  
   // create dialog
   unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
   if( enable_cancel ) buttons |= AskForSaveDialog::CANCEL;
@@ -393,7 +389,7 @@ void EditFrame::displayTitle( void )
   Debug::Throw( "EditFrame::displayTitle.\n" );
 
   LogEntry* entry( EditFrame::entry() );
-  title_->setText( entry && entry->title().size() ) ? entry->title().c_str(): LogEntry::UNTITLED.c_str()  );
+  title_->setText( ( entry && entry->title().size() ) ? entry->title().c_str(): LogEntry::UNTITLED.c_str()  );
   title_->setCursorPosition( 0 );
   return;
 }
@@ -423,6 +419,8 @@ void EditFrame::updateConfiguration( void )
   
   Debug::Throw( "EditFrame::updateConfiguration.\n" );
   
+  CustomMainWindow::updateConfiguration();
+  
   // window size
   resize( XmlOptions::get().get<int>( "EDIT_FRAME_WIDTH" ), XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" ) );
   
@@ -439,7 +437,7 @@ void EditFrame::saveEntry( bool update_selection )
   LogEntry *entry( EditFrame::entry() );
 
   // see if entry is new
-  bool entry_is_new( !entry || KeySet<Logbook>( entry ).empty() ) );
+  bool entry_is_new( !entry || KeySet<Logbook>( entry ).empty() );
   
   // create entry if none set
   if( !entry ) entry = new LogEntry();
@@ -453,11 +451,11 @@ void EditFrame::saveEntry( bool update_selection )
   }
 
   //! update entry text
-  entry->setText( qPrintable( text_->text() ) );
+  entry->setText( qPrintable( text_->toPlainText() ) );
   //entry->SetTextFormat( text_format_->Write() );
 
   //! update entry title
-  entry->SetTitle( qPrintable( title_->text() ) );
+  entry->setTitle( qPrintable( title_->text() ) );
 
   // update author
   entry->setAuthor( XmlOptions::get().get<string>( "USER" ) );
@@ -520,10 +518,11 @@ void EditFrame::newEntry( void )
 void EditFrame::closeEvent( QCloseEvent *event )
 {
   Debug::Throw( "EditFrame::closeEvent.\n" );
-
+  
   // ask for save if entry is modified
   if( !isReadOnly() && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   else event->accept();
+  
   return;
 }
 
@@ -534,7 +533,7 @@ void EditFrame::enterEvent( QEvent *event )
 
   // base class enterEvent
   QMainWindow::enterEvent( event );
-  _selectionFrame().checkLogbookModified();
+  _selectionFrame()->checkLogbookModified();
 
 }
 
@@ -546,7 +545,7 @@ void EditFrame::_previousEntry( void )
   if( isReadOnly() ) return;
     
   SelectionFrame *frame( _selectionFrame() );
-  LogEntry* entry( frame->previousEntry( EditFrame::entry() ) );
+  LogEntry* entry( frame->previousEntry( EditFrame::entry(), true ) );
   if( !( entry  || frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
 
@@ -560,8 +559,8 @@ void EditFrame::_nextEntry( void )
   if( isReadOnly() ) return;
 
   SelectionFrame *frame( _selectionFrame() );
-  LogEntry* entry( frame->NextEntry( EditFrame::entry() ) );
-  if( !( entry || frame->LockEntry( entry ) ) ) return;
+  LogEntry* entry( frame->nextEntry( EditFrame::entry(), true ) );
+  if( !( entry || frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
 
 }
@@ -694,7 +693,7 @@ void EditFrame::_viewHtml( void )
   }
 
   QFile out( file.c_str() );
-  if( !out.open( QIODevice::WriteOnly ) 
+  if( !out.open( QIODevice::WriteOnly ) )
   {
     ostringstream o;
     o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
@@ -714,7 +713,7 @@ void EditFrame::_viewHtml( void )
   html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
   
   // head
-  HtmlUtil::Header( html, document );
+  HtmlUtil::header( html, document );
   
   // body
   QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
@@ -722,7 +721,7 @@ void EditFrame::_viewHtml( void )
   // dump logbook header
   KeySet<Logbook> logbooks( entry );
   for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
-  { body.appendChild( (*iter)->htmlElement( document, html_log_mask ); }
+  { body.appendChild( (*iter)->htmlElement( document, html_log_mask ) ); }
 
   // dump entry
   body.appendChild( entry->htmlElement( document, html_entry_mask ) );
@@ -788,7 +787,7 @@ void EditFrame::_displayCursorPosition( const TextPosition& position)
 
   what.str("");
   what << "column : " << position.index()+1;
-  statusbar_->label(2).setText( what.str(), true, 2 );
+  statusbar_->label(2).setText( what.str().c_str(), true );
   
   return;
 }
@@ -809,7 +808,7 @@ void EditFrame::_displayText( void )
   if( !text_ ) return;
 
   LogEntry* entry( EditFrame::entry() );
-  text_->setText( (entry) ? entry->GetText().c_str() : "" );
+  text_->setPlainText( (entry) ? entry->text().c_str() : "" );
   // text_format_->Read( entry->GetTextFormat() );
 
   return;

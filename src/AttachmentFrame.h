@@ -56,9 +56,6 @@ class AttachmentFrame: public QWidget, public Counter
   
   public:
 
-  //! window title
-  static const std::string ATTACHMENT_TITLE;
-    
   //! creator 
   AttachmentFrame( QWidget* parent );
     
@@ -72,11 +69,6 @@ class AttachmentFrame: public QWidget, public Counter
     return *list_; 
   }
     
-  protected:
-  
-  //! overloaded enter event handler
-  void enterEvent( QEvent *event );
-
   public slots:
   
   //! update configuration
@@ -84,6 +76,12 @@ class AttachmentFrame: public QWidget, public Counter
   
   //! uniconify window
   void uniconify( void );
+
+  protected:
+  
+  //! overloaded enter event handler
+  void enterEvent( QEvent *event );
+
 
   private slots:
 

@@ -308,7 +308,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     \brief checks if logbook/children files has been modified
     by another application. Returns list of modified files. [recursive]
   */
-  std::list<std::string> checkFiles( void );
+  std::list<File> checkFiles( void );
   
   //! sets logbook modified value
   void setModified( const bool& value );

@@ -40,6 +40,7 @@
 #include "CustomTextEdit.h"
 #include "File.h"
 #include "QtUtil.h"
+#include "Debug.h"
 
 //! new attachment popup dialog
 class NewLogbookDialog: public CustomDialog
@@ -52,59 +53,81 @@ class NewLogbookDialog: public CustomDialog
   
   //! destructor
   virtual ~NewLogbookDialog( void )
-  {}
+  { Debug::Throw( "NewLogbookDialog::~NewLogbookDialog\n" ); }
 
   //! title
   void setTitle( const std::string& title )
   {
+    Debug::Throw( "NewLogbookDialog::setTitle.\n" ); 
     title_->setText( title.c_str() );
     QtUtil::expand( title_ );
   }
   
   //! title
   std::string title( void ) const
-  { return qPrintable( title_->text() ); }
+  { 
+    Debug::Throw( "NewLogbookDialog::title.\n" ); 
+    return qPrintable( title_->text() ); 
+  }
 
   //! author
   void setAuthor( const std::string& author )
   {
+    Debug::Throw( "NewLogbookDialog::setAuthor.\n" ); 
     author_->setText( author.c_str() );
     QtUtil::expand( author_ );
   }
   
   //! filename
   std::string author( void ) const
-  { return qPrintable( author_->text() ); }
+  { 
+    Debug::Throw( "NewLogbookDialog::author.\n" ); 
+    return qPrintable( author_->text() ); 
+  }
   
   //! filename
   void setFile( const File& file )
   {
+    Debug::Throw( "NewLogbookDialog::setFile.\n" ); 
     file_->setFile( file );
     QtUtil::expand( &file_->editor() );
   }
   
   //! filename
   File file( void ) const
-  { return File( qPrintable( file_->editor().text() ) ).expand(); }
+  { 
+    Debug::Throw( "NewLogbookDialog::file.\n" ); 
+    return File( qPrintable( file_->editor().text() ) ).expand(); 
+  }
   
   //! attachment directory
   void setAttachmentDirectory( const File& file )
   {
+    Debug::Throw( "NewLogbookDialog::setAttachmentDirectory.\n" ); 
     attachment_directory_->setFile( file );
     QtUtil::expand( &attachment_directory_->editor() );
   }
   
   //! attachment directory
   File attachmentDirectory( void ) const
-  { return File( qPrintable( attachment_directory_->editor().text() ) ).expand(); }
+  { 
+    Debug::Throw( "NewLogbookDialog::attachmentDirectory.\n" ); 
+    return File( qPrintable( attachment_directory_->editor().text() ) ).expand(); 
+  }
   
   //! comments
   void setComments( const std::string& comments )
-  { comments_->setPlainText( comments.c_str() ); }
+  { 
+    Debug::Throw( "NewLogbookDialog::setComments.\n" ); 
+    comments_->setPlainText( comments.c_str() ); 
+  }
   
   //! comments
   std::string comments( void ) const
-  { return qPrintable( comments_->toPlainText() ); }
+  {
+    Debug::Throw( "NewLogbookDialog::comments.\n" ); 
+    return qPrintable( comments_->toPlainText() ); 
+  }
       
   private:
   

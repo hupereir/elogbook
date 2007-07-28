@@ -59,7 +59,7 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
 
   // entries
   QButtonGroup* group( new QButtonGroup( this ) );
-  group->set( true );  
+  group->setExclusive( true );  
 
   QGroupBox* group_box = new QGroupBox( this );
   group_box->setLayout( new QHBoxLayout() );

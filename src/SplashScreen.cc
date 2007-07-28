@@ -91,7 +91,7 @@ void SplashScreen::realizeWidget( void )
   QHBoxLayout* h_layout = new QHBoxLayout();
   h_layout->setSpacing(10);
   h_layout->setMargin(0);
-  layout->addLayout( layout );
+  layout->addLayout( h_layout );
     
   if( !icon_.isNull() )
   { 

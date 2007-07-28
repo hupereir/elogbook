@@ -29,6 +29,8 @@
   \date $Date$
 */
 
+#include <QCloseEvent>
+
 #include "TopWidget.h"
 #include "QtUtil.h"
 #include "MainFrame.h"

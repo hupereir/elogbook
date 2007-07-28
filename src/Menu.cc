@@ -39,10 +39,10 @@
 #include "EditFrame.h"
 #include "Exception.h"
 #include "File.h"
-#include "Help.h"
+#include "HelpManager.h"
+#include "HelpText.h"
 #include "Logbook.h"
 #include "LogEntryList.h"
-#include "LogHelp.h"
 #include "MainFrame.h"
 #include "Menu.h"
 #include "OpenPreviousMenu.h"
@@ -54,6 +54,8 @@
 
 using namespace std;
 using namespace BASE;
+using namespace Qt;
+using namespace HELP;
 
 //_______________________________________________
 Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
@@ -62,9 +64,6 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 {
   
   Debug::Throw( "Menu::Menu.\n" );
-
-  // selection frame
-  SelectionFrame *selection_frame( static_cast<MainFrame*>(qApp)->selectionFrame() );
 
   // generic menu
   QMenu *menu;
@@ -104,17 +103,22 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   connect( editor_menu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
   // help menu
-  menu = addMenu( "&Help", menu, -1 );
+  menu = addMenu( "&Help" );
   menu->addAction( "&Reference Manuel", &HelpManager::get(), SLOT( display() ) );
-  //HelpManager::Get().Install( HelpText );
-  //HelpManager::Get().setaption( "eLogbook reference manual" );
-
   menu->addSeparator();
   menu->addAction( "About &Qt", qApp, SLOT( aboutQt() ), 0 );
   menu->addAction( "About &eLogbook", qApp, SLOT( about() ), 0 );
-
   menu->addSeparator();
 
+  // install help
+  File help_file( XmlOptions::get().get<File>( "HELP_FILE" ) );
+  if( help_file.exist() ) HelpManager::get().install( help_file );
+  else
+  {
+    HelpManager::get().setFile( help_file );
+    HelpManager::get().install( HelpText );
+  }
+  
   // debug menu
   DebugMenu *debug_menu( new DebugMenu( this ) );
   debug_menu->setTitle( "&Debug" );
@@ -134,11 +138,12 @@ void Menu::_updateEditorMenu( void )
   AttachmentFrame *attachment_frame( &static_cast<MainFrame*>(qApp)->attachmentFrame() );
   
   // editor attachments and logbook information
-  menu->addAction( "&Attachments", attachment_frame, SLOT( uniconify() ), CTRL+Key_T );
-  menu->addAction( "&Logbook informations", selection_frame, SLOT( editLogbookInformations() ) );
-  menu->addAction( "&Logbook statistics", selection_frame, SLOT( viewLogbookStatistics() ) );
+  editor_menu_->addAction( "&Attachments", attachment_frame, SLOT( uniconify() ), CTRL+Key_T );
+  editor_menu_->addAction( "&Logbook informations", selection_frame, SLOT( editLogbookInformations() ) );
+  editor_menu_->addAction( "&Logbook statistics", selection_frame, SLOT( viewLogbookStatistics() ) );
 
   bool found ( false );
+  KeySet<EditFrame> frames( selection_frame );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
     // hidden EditFrames will be deleted. Do not allow for opening

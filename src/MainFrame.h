@@ -68,10 +68,13 @@ class MainFrame: public QApplication, public Counter
   ~MainFrame( void );
   
   //! window title for modified logbook
-  static const std::string MAIN_TITLE_MODIFIED;
+  static const QString MAIN_TITLE_MODIFIED;
 
   //! default window title
-  static const std::string MAIN_TITLE;
+  static const QString MAIN_TITLE;
+
+  //! default window title
+  static const QString ATTACHMENT_TITLE;
     
   //! initialize application manager
   void initApplicationManager( void );
@@ -132,7 +135,7 @@ class MainFrame: public QApplication, public Counter
   void _processRequest( const ArgList&);
   
   //! application manager state is changed
-  void _applicationManagerStateChanged( const int & );
+  void _applicationManagerStateChanged( SERVER::ApplicationManager::State );
   
   //! actions called when application is about to quit
   void _aboutToQuit( void );

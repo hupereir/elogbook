@@ -96,7 +96,7 @@ class Menu:public QMenuBar, public Counter
   OpenPreviousMenu* open_previous_menu_;      
  
   //! editor windows menu
-  QPopupMenu* editor_menu_;
+  QMenu* editor_menu_;
  
 };
 

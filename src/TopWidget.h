@@ -50,7 +50,8 @@ class TopWidget: public CustomMainWindow, public Counter
   
   //! constructor;
   TopWidget( QWidget* parent ):
-    CustomMainWindow( parent )
+    CustomMainWindow( parent ),
+    Counter( "TopWidget" )
   {} 
   
   public slots:

@@ -81,13 +81,16 @@ noinst_HEADERS = \
   EditAttachmentDialog.h \
   EditFrame.h \
   EditKeywordDialog.h \
+  HelpText.h \
   HtmlUtil.h \
+  Icons.h \
   KeywordList.h \
   Logbook.h \
   LogbookInfoDialog.h \
   LogbookModifiedDialog.h \
   LogbookStatisticsDialog.h \
   LogEntry.h \
+  LogEntryInfoDialog.h \
   LogEntryList.h \
   MainFrame.h \
   Menu.h \
@@ -125,6 +128,7 @@ libeLogbook_a_SOURCES = \
   LogbookModifiedDialog.cc \
   LogbookStatisticsDialog.cc \
   LogEntry.cc \
+  LogEntryInfoDialog.cc \
   LogEntryList.cc \
   MainFrame.cc \
   Menu.cc \
@@ -136,23 +140,23 @@ libeLogbook_a_SOURCES = \
   SplashScreen.cc \
   TopWidget.cc \
   ViewHtmlEntryDialog.cc \
-  ViewHtmlLogbookDialog
+  ViewHtmlLogbookDialog.cc
 
 nodist_libeLogbook_a_SOURCES = \
-  moc_AskForSaveDialog.h.cc \
-  moc_AttachmentFrame.h.cc \
-  moc_AttachmentList.h.cc \
-  moc_EditFrame.h.cc \
-  moc_KeywordList.h.cc \
-  moc_Logbook.h.cc \
-  moc_LogbookModifiedDialog.h.cc \
-  moc_MainFrame.h.cc \
-  moc_Menu.h.cc \
-  moc_NewAttachmentDialog.h.cc \
-  moc_SearchPanel.h.cc \
-  moc_SelectionFrame.h.cc \
-  moc_SplashScreen.h.cc \
-  moc_TopWidget.h.cc
+  moc_AskForSaveDialog.cc \
+  moc_AttachmentFrame.cc \
+  moc_AttachmentList.cc \
+  moc_EditFrame.cc \
+  moc_KeywordList.cc \
+  moc_Logbook.cc \
+  moc_LogbookModifiedDialog.cc \
+  moc_MainFrame.cc \
+  moc_Menu.cc \
+  moc_NewAttachmentDialog.cc \
+  moc_SearchPanel.cc \
+  moc_SelectionFrame.cc \
+  moc_SplashScreen.cc \
+  moc_TopWidget.cc
 
 ### rule to generate qt meta objects
 moc_%.cc: %.h

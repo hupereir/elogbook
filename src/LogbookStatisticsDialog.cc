@@ -81,7 +81,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   // modification time
   if( logbook->modification().isValid() ) {
     grid_layout->addWidget( new QLabel( "Last modified: ", this ), 2, 0 );
-    grid_layout->addWidget( new QLabel( logbook->modification().string().c_str(), this ), 2, 2 );
+    grid_layout->addWidget( new QLabel( logbook->modification().string().c_str(), this ), 2, 1 );
   }
    
   // backup time

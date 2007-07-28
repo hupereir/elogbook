@@ -51,7 +51,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const string& keyword
   
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
-  group->set( true );
+  group->setExclusive( true );
 
   ostringstream what;
   what << "Delete keyword " << keyword << " ?";

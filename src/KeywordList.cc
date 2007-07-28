@@ -54,7 +54,7 @@ KeywordList::KeywordList( QWidget *parent ):
   // configurate drop timer
   drop_item_timer_.setSingleShot( true );
   drop_item_timer_.setInterval( drop_item_delay_ );
-  connect( &drop_item_timer_, SIGNAL( timeout() ), SLOT( _OpenDropItem() ) );
+  connect( &drop_item_timer_, SIGNAL( timeout() ), SLOT( _openDropItem() ) );
   
   setRootIsDecorated( true );  
 
@@ -133,7 +133,7 @@ void KeywordList::selectKeyword( string keyword )
   { 
     if( keyword == qPrintable( (*iter)->text(KEYWORD) ) )
     {
-      emit currentItemChanged( *iter, currentItem() );
+      emit currentItemChanged( *iter, QTreeWidget::currentItem() );
       break;
     }
   }
@@ -286,7 +286,7 @@ void KeywordList::dropEvent( QDropEvent* event )
   {
    
     // retrieve current Selection
-    Item *old_item( dynamic_cast<Item*>(currentItem()) );
+    Item *old_item( dynamic_cast<Item*>(QTreeWidget::currentItem()) );
     if( !old_item || old_item == item ) return;
     
     // retrieve and cat keywords

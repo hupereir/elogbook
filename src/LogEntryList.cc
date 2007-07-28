@@ -57,7 +57,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   for( unsigned int i=0; i<n_columns; i++ )
   { setColumnName( i, column_titles_[i] ); }
 
-  setSelectionMode( QAbstractItemView::ContiguousSelection );
+  //setSelectionMode( QAbstractItemView::ContiguousSelection );
 
 }
  

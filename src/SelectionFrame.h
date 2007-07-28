@@ -35,6 +35,7 @@
 #include "Counter.h"
 #include "Debug.h"
 #include "Exception.h"
+#include "FileRecord.h"
 #include "Key.h"
 #include "KeywordList.h"
 #include "LogEntry.h"
@@ -47,7 +48,7 @@ class EditFrame;
 class Logbook;
 class Menu;
 class SearchPanel;
-class StateFrame;
+class StatusBar;
 
 //! display a set of log entries, allows selection of one
 class SelectionFrame: public TopWidget, public BASE::Key
@@ -126,10 +127,10 @@ class SelectionFrame: public TopWidget, public BASE::Key
   virtual bool lockEntry( LogEntry* entry ) const;
 
   //! retrieve previous entry (if any)
-  virtual LogEntry* previousEntry( LogEntry* entry, const bool& update_selection ) const;
+  virtual LogEntry* previousEntry( LogEntry* entry, const bool& update_selection );
 
   //! retrieve next entry (if any)
-  virtual LogEntry* nextEntry( LogEntry* entry, const bool& update_selection ) const;
+  virtual LogEntry* nextEntry( LogEntry* entry, const bool& update_selection );
 
   //! retrieve current keyword if any
   virtual std::string currentKeyword( void )
@@ -190,7 +191,7 @@ class SelectionFrame: public TopWidget, public BASE::Key
   virtual void revertToSaved( void );
 
   //! create HTML file from logbook
-  virtual void wiewHtml( void );
+  virtual void viewHtml( void );
 
   /*! \brief
     show all entries which have equal creation time
@@ -259,6 +260,9 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! rename keyword from keyword list using arguments
   void _renameKeyword( const std::string& old_keyword, const std::string& new_keyword );
    
+  //! keyword selection changed
+  void _keywordSelectionChanged( void );
+    
   //! change selected entries keyword using custom dialog
   void _changeEntryKeyword( void );
   
@@ -274,7 +278,7 @@ class SelectionFrame: public TopWidget, public BASE::Key
   virtual void enterEvent( QEvent *event );
 
   //! save logbook and children whether they are modified or not
-  virtual void _saveLogbookForced( void );
+  virtual void _saveForced( void );
 
   //! clear list and reinitialize from logbook entries
   virtual void _resetList( void );
@@ -289,10 +293,10 @@ class SelectionFrame: public TopWidget, public BASE::Key
   SearchPanel *search_panel_;
 
   //! state frame
-  StateFrame* statusbar_;
+  StatusBar* statusbar_;
 
   //! LogEntry color popup menu
-  ColorMenu *color_menu_;
+  // ColorMenu *color_menu_;
 
   //! logEntry list
   LogEntryList* list_;

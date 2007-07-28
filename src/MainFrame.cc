@@ -34,6 +34,8 @@
 
 #include "AttachmentFrame.h"
 #include "AttachmentType.h"
+#include "Config.h"
+#include "ConfigDialog.h"
 #include "Debug.h"
 #include "EditFrame.h"
 #include "File.h"
@@ -44,7 +46,6 @@
 #include "OpenPreviousMenu.h"
 #include "QtUtil.h"
 #include "SelectionFrame.h"
-#include "StateFrame.h"
 #include "SplashScreen.h"
 
 using namespace std;
@@ -52,13 +53,15 @@ using namespace BASE;
 using namespace SERVER;
 
 //____________________________________________
-const string MainFrame::MAIN_TITLE_MODIFIED = "Electronic logbook (modified)";
-const string MainFrame::MAIN_TITLE = "Electronic logbook ";
+const QString MainFrame::MAIN_TITLE_MODIFIED = "eLogbook (modified)";
+const QString MainFrame::MAIN_TITLE = "eLogbook";
+const QString MainFrame::ATTACHMENT_TITLE = "eLogbook - attachments";
+
 
 //____________________________________________
-void MainFrame::Usage( void )
+void MainFrame::usage( void )
 {
-  std::cout << "Usage : eLogbook [options] [file]" << std::endl;
+  std::cout << "usage : eLogbook [options] [file]" << std::endl;
   std::cout << std::endl;
   std::cout << "Options : " << std::endl;
   std::cout << "  --help\t\tdisplays this help and exit" << std::endl;
@@ -79,7 +82,7 @@ MainFrame::MainFrame( int argc, char*argv[] ) :
   Debug::Throw( "MainFrame::MainFrame.\n" ); 
     
   // about to quit connection
-  connect( this, SIGNAL( aboutToQuit() ), this, SLOT( _AboutToQuit() ) );
+  connect( this, SIGNAL( aboutToQuit() ), this, SLOT( _aboutToQuit() ) );
   
 } 
 
@@ -104,8 +107,8 @@ void MainFrame::initApplicationManager(  void )
   application_manager_ = new ApplicationManager( this );
   application_manager_->setApplicationName( "ELOGBOOK" );
   connect( 
-    application_manager_, SIGNAL( stateChanged( const int & ) ),
-    this, SLOT( _applicationManagerStateChanged( const int & ) ) );
+    application_manager_, SIGNAL( stateChanged( SERVER::ApplicationManager::State ) ),
+    this, SLOT( _applicationManagerStateChanged( SERVER::ApplicationManager::State ) ) );
     
   connect( application_manager_, SIGNAL( serverRequest( const ArgList& ) ), this, SLOT( _processRequest( const ArgList& ) ) );
     
@@ -123,12 +126,10 @@ void MainFrame::realizeWidget( void )
   realized_ = true;
 
   // create attachment window
-  attachment_frame_ = new AttachmentFrame( 0, "attachment_frame" );
-  attachment_frame_->setWindowTitle( MAIN_TITLE );
+  attachment_frame_ = new AttachmentFrame( 0 );
   
   // create selection frame
-  selection_frame_ = new TreeSelectionFrame( 0 );
-  selection_frame_->setWindowTitle( MAIN_TITLE );
+  selection_frame_ = new SelectionFrame( 0 );
 
   // update configuration
   updateConfiguration();
@@ -159,7 +160,7 @@ void MainFrame::realizeWidget( void )
   processEvents();
     
   // try open file from argument
-  File file( args_.Last() );
+  File file( args_.last() );
   if( file.size() ) selection_frame_->setLogbook( file );
   else if( !selection_frame_->menu().openPreviousMenu().openLastValidFile() )
   { 
@@ -167,6 +168,17 @@ void MainFrame::realizeWidget( void )
     selection_frame_->newLogbook();
   }
   
+}
+
+//_________________________________________________
+void MainFrame::configuration( void )
+{
+  
+  Debug::Throw( "MainFrame::configuration" );
+  ConfigDialog dialog(0);
+  connect( &dialog, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
+  dialog.exec();
+
 }
 
 //_________________________________________________
@@ -187,32 +199,60 @@ void MainFrame::updateConfiguration( void )
   // debug
   Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
 
+  // window icon
+  setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
+  
   emit configurationChanged();
+}
+
+//_______________________________________________
+void MainFrame::about( void )
+{
+
+  Debug::Throw( "MainFrame::about.\n" );
+  ostringstream what;
+  what << "<b>eLogbook</b> version " << VERSION << " (" << BUILD_TIMESTAMP << ")<br>";
+  what 
+    << "<p>This application was written for personal use only. "
+    << "It is not meant to be bug free, although all efforts "
+    << "are made so that it remains/becomes so. "
+    
+    << "<p>Suggestions, comments and bug reports are welcome. "
+    << "Please use the following e-mail address:"
+
+    << "<p><a href=\"mailto:hugo.pereira@free.fr\">hugo.pereira@free.fr</a>";
+
+  QMessageBox dialog;
+  dialog.setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
+  dialog.setIconPixmap( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
+  dialog.setText( what.str().c_str() );
+  dialog.exec();
+
 }
 
 //_______________________________________________
 void MainFrame::showSplashScreen( void )
 {
 
-  QPixmap pixmap( (File( XmlOptions::get().getRaw( "ICON_PIXMAP" ) )).expand().c_str() );
+  QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
 
   ostringstream what;
   what << "<B>eLogbook</B><BR> version " << VERSION;
-  SplashScreen *splash_screen = new SplashScreen( this, what.str() );
-  splash_screen->SetOpacity( 0.7 );
-  splash_screen->SetMinimumSize( QSize( 350, 150 ) );
+  SplashScreen *splash_screen = new SplashScreen( 0, what.str() );
+  splash_screen->setOpacity( 0.3 );
+  splash_screen->setMinimumSize( QSize( 350, 150 ) );
   splash_screen->setIcon( pixmap );
-  splash_screen->RealizeWidget();
+  splash_screen->realizeWidget();
   splash_screen->show();
   splash_screen->displayMessage( "click on the window to close" );
-  QtUtil::CenterOnParent( splash_screen );
+  QtUtil::centerOnParent( splash_screen );
 
   processEvents();
 
 }
 
 //_________________________________________________
-void MainFrame:exit( void )
+void MainFrame::exit( void )
 {
   
   Debug::Throw( "MainFrame::exit.\n" );
@@ -224,7 +264,7 @@ void MainFrame:exit( void )
     KeySet<EditFrame> frames( selection_frame_ );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
-      if( (!(*iter)->isReadOnly()) && (*iter)->Modified() && (*iter)->AskForSave() == AskForSaveDialog::CANCEL ) 
+      if( (!(*iter)->isReadOnly()) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) 
       { return; }
     }
     
@@ -232,9 +272,9 @@ void MainFrame:exit( void )
     
     // check if current logbook is modified
     if( 
-      selection_frame_->GetLogbook() &&
-      selection_frame_->GetLogbook()->GetModified() &&
-      selection_frame_->AskForSave() == AskForSaveDialog::CANCEL ) 
+      selection_frame_->logbook() &&
+      selection_frame_->logbook()->modified() &&
+      selection_frame_->askForSave() == AskForSaveDialog::CANCEL ) 
     return;
   }
   
@@ -251,8 +291,10 @@ void MainFrame::_processRequest( const ArgList& args )
   if( selection_frame_ ) selection_frame_->uniconify();
 
   // check argument. Last argument, if starting with a "-" is possibly a filename
-  string filename( args.Last() );
-  if( filename.size() ) {
+  string filename( args.last() );
+  
+  if( !filename.empty() ) 
+  {
     ostringstream what;
     what << "Accept request for file \"" << filename << "\" ?";
     if( QtUtil::questionDialog( selection_frame_, what.str(), QtUtil::CENTER_ON_PARENT ) )
@@ -262,7 +304,7 @@ void MainFrame::_processRequest( const ArgList& args )
 }
 
 //________________________________________________
-void MainFrame::_applicationManagerStateChanged( const int & state )
+void MainFrame::_applicationManagerStateChanged( SERVER::ApplicationManager::State state )
 {
 
   Debug::Throw() << "MainFrame::_applicationManagerStateChanged - state=" << state << endl;

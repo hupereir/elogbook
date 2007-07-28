@@ -30,6 +30,7 @@
 */
 
 #include <QShortcut>
+#include <QLayout>
 
 #include "AttachmentFrame.h"
 #include "EditFrame.h"
@@ -46,16 +47,13 @@ using namespace std;
 using namespace Qt;
 
 //________________________________________
-string AttachmentFrame::ATTACHMENT_TITLE( "Electronic logbook attachments" );
-
-//________________________________________
 AttachmentFrame::AttachmentFrame( QWidget* parent ):
   QWidget( parent ),
   Counter( "AttachmentFrame" )
 {
   
   Debug::Throw( "AttachmentFrame::AttachmentFrame.\n" );
-  setWindowTitle( ATC_TITLE.c_str() );
+  setWindowTitle( MainFrame::ATTACHMENT_TITLE );
   
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout(this);
@@ -67,8 +65,8 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   connect( list_, SIGNAL( currentItemChanged ( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _displayEntry( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
   
   // shortcuts
-  connect( new QShortCut( CTRL+Key_Q, this ), qApp, SLOT( closeAllWindows() ) ) );
-  connect( new QShortCut( CTRL+Key_W, this ), SLOT( close() ) );
+  connect( new QShortcut( CTRL+Key_Q, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
+  connect( new QShortcut( CTRL+Key_W, this ), SIGNAL( activated() ), SLOT( close() ) );
   
   // configuration
   updateConfiguration();
@@ -77,7 +75,7 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
 };
 
 //________________________________________
-void AttachmentFrame::updateConfiguraton( void )
+void AttachmentFrame::updateConfiguration( void )
 {
   
   Debug::Throw( "AttachmentFrame::updateConfiguration.\n" );
@@ -109,27 +107,27 @@ void AttachmentFrame::enterEvent( QEvent *event )
 }
 
 //_______________________________________________
-void AttachmentFrame::Uniconify( void )
+void AttachmentFrame::uniconify( void )
 {
-  Debug::Throw( "AttachmentFrame::Uniconify.\n" );
+  Debug::Throw( "AttachmentFrame::uniconify.\n" );
   show();
-  QtUtil::Uniconify( topLevelWidget() );
+  QtUtil::uniconify( window() );
   return;
 }
 
 //________________________________________
-void AttachmentFrame::_displayEntry( QTreeWidgetItem *item current, QTreeWidgetItem* old )
+void AttachmentFrame::_displayEntry( QTreeWidgetItem *current, QTreeWidgetItem* old )
 {
   
   Debug::Throw( "AttachmentFrame::_displayEntry.\n");
   
   if( !current ) current = old;
   
-  AttachmentList::Item *local_item = static_cast<AttachmentList::Item*>( item );
-  Exception::CheckPointer( local_item, DESCRIPTION( "wrong item" ) );
+  AttachmentList::Item *item = static_cast<AttachmentList::Item*>( current );
+  Exception::checkPointer( item, DESCRIPTION( "wrong item" ) );
   
   // retrieve associated entry
-  LogEntry *entry( local_item->attachment()->entry() );
+  LogEntry *entry( item->attachment()->entry() );
   
   // check if entry is visible
   static_cast<MainFrame*>(qApp)->selectionFrame().clearSelection();

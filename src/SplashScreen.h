@@ -33,8 +33,11 @@
 */
 
 #include <QIcon>
+#include <QLabel>
 #include <QPixmap>
+#include <QWidget>
 #include <string>
+
 #include "Counter.h"
 #include "Exception.h"
 

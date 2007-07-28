@@ -677,11 +677,11 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
 }
 
 //_________________________________
-list<string> Logbook::checkFiles( void )
+list<File> Logbook::checkFiles( void )
 {
   Debug::Throw( "Logbook::checkFiles.\n" );
 
-  list<string> out;
+  list<File> out;
 
   TimeStamp file_modified( file().lastModified() );
   bool modified = file_modified.isValid() && saved().isValid() && file_modified > saved();
@@ -691,7 +691,7 @@ list<string> Logbook::checkFiles( void )
 
   for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
   {
-    list<string> tmp = (*it)->checkFiles();
+    list<File> tmp = (*it)->checkFiles();
     out.merge( tmp );
   }
 

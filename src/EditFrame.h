@@ -40,6 +40,7 @@
 
 #include "AskForSaveDialog.h"
 #include "AttachmentList.h"
+#include "CustomTextEdit.h"
 #include "CustomMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
@@ -51,7 +52,6 @@
 
 class Attachment;
 class CustomLineEdit;
-class CustomTextEdit;
 class CustomToolButton;
 class SelectionFrame;
 class StatusBar;
@@ -105,20 +105,18 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     return **attachment_list.begin(); 
   }
   
-  //! window title for modified entry
-  static const std::string EDIT_TITLE_MODIFIED;  
-  
-  //! window title for read only editor
-  static const std::string EDIT_TITLE_READONLY;  
-    
-  //! default window title
-  static const std::string EDIT_TITLE;            
-  
   //! get text editor
   CustomTextEdit& editor( void ) 
   { 
-    Exception::assert( text_, DESCRIPTION( "text_ not initialized" ) );
+    Exception::checkPointer( text_, DESCRIPTION( "text_ not initialized" ) );
     return *text_;
+  }
+  
+  //! status bar
+  StatusBar& statusBar( void )
+  {
+    Exception::checkPointer( statusbar_, DESCRIPTION( "statusbar_ not initialized" ) );
+    return *statusbar_;
   }
   
   //! check if this editor is read_only or not
@@ -273,7 +271,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   // FORMAT::TextFormat* text_format_;
     
   //! lock toolbutton
-  CustomToolButton* lock_;
+  QAction* lock_;
   
   //! LogEntry title Object
   CustomLineEdit *title_;          
