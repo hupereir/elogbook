@@ -29,6 +29,7 @@
   \date $Date$
 */
 
+#include <QHeaderView>
 
 #include "AttachmentFrame.h"
 #include "ColorMenu.h"
@@ -195,7 +196,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   // create logEntry list
   v_layout->addWidget( list_ = new LogEntryList( right, "log_entry_list" ), 1 );
   
-  // connect( logEntryList().header(), SIGNAL( clicked( int ) ), SLOT( _StoreSortMethod( int ) ) );
+  connect( logEntryList().header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
   //connect( list_, SIGNAL( itemRenamed( QTreeWidgetItem*, int ) ), SLOT( _RenameEntry( QTreeWidgetItem*, int ) ) );
   connect( list_, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _showEditFrame( QTreeWidgetItem* ) ) );
   connect( new QShortcut( Key_Delete, list_ ), SIGNAL( activated() ), SLOT( _deleteEntries() ) );
@@ -259,15 +260,17 @@ void SelectionFrame::setLogbook( const File& file )
   // update listView with new entries
   _resetKeywordList();
   _resetList();
+  _loadColors();
+  
   Debug::Throw( "SelectionFrame::setLogbook - lists set.\n" );
   
   // change sorting
   switch( logbook()->sortingMethod() ) 
   {
-    case Logbook::SORT_TITLE: logEntryList().sortItems( LogEntryList::TITLE ); break;
-    case Logbook::SORT_CREATION: logEntryList().sortItems( LogEntryList::CREATION ); break;
-    case Logbook::SORT_MODIFICATION: logEntryList().sortItems( LogEntryList::MODIFICATION ); break;
-    case Logbook::SORT_AUTHOR: logEntryList().sortItems( LogEntryList::AUTHOR ); break;
+    case Logbook::SORT_TITLE: logEntryList().sortItems( LogEntryList::TITLE, Qt::AscendingOrder ); break;
+    case Logbook::SORT_CREATION: logEntryList().sortItems( LogEntryList::CREATION, Qt::AscendingOrder ); break;
+    case Logbook::SORT_MODIFICATION: logEntryList().sortItems( LogEntryList::MODIFICATION , Qt::AscendingOrder); break;
+    case Logbook::SORT_AUTHOR: logEntryList().sortItems( LogEntryList::AUTHOR, Qt::AscendingOrder ); break;
     default: break;
   }
 
@@ -521,7 +524,12 @@ LogEntry* SelectionFrame::previousEntry( LogEntry* entry, const bool& update_sel
   Debug::Throw( "SelectionFrame::previousEntry.\n" );
   
   LogEntryList::Item *item( logEntryList().item( entry ) );
-  if( !( item && (item = logEntryList().itemAbove( item, update_selection ) ) ) ) return 0;
+  if( !( item && (item = logEntryList().itemAbove( item, update_selection ) ) ) )
+  {
+    Debug::Throw() << "SelectionFrame::previousEntry - no entry found" << endl;
+    return 0;
+  }
+  
   return item->entry();
 
 }
@@ -532,7 +540,12 @@ LogEntry* SelectionFrame::nextEntry( LogEntry* entry, const bool& update_selecti
 
   Debug::Throw( "SelectionFrame::nextEntry.\n" );
   LogEntryList::Item *item( logEntryList().item( entry ) );
-  if( !( item && (item = logEntryList().itemBelow( item, update_selection ) ) ) ) return 0;
+  if( !( item && (item = logEntryList().itemBelow( item, update_selection ) ) ) )
+  {
+    Debug::Throw() << "SelectionFrame::previousEntry - no entry found" << endl;
+    return 0;
+  }
+  
   return item->entry();
 
 }
@@ -1556,8 +1569,9 @@ void SelectionFrame::_showEditFrame( QTreeWidgetItem* item )
   // create editFrame if not found
   if( !edit_frame )
   {
-    edit_frame = new EditFrame( this, entry, false );
+    edit_frame = new EditFrame( this, false );
     Key::associate( this, edit_frame );
+    edit_frame->displayEntry( entry );
   }
 
   // show edit_frame
@@ -1904,7 +1918,7 @@ void SelectionFrame::_newEntry( void )
   Debug::Throw( "SelectionFrame::_NewEntry.\n" );
 
   // create new EditFrame
-  EditFrame *frame = new EditFrame( this, 0, false );
+  EditFrame *frame = new EditFrame( this, false );
   Key::associate( this, frame );
 
   // call NewEntry for the selected frame
@@ -1988,7 +2002,7 @@ void SelectionFrame::_changeEntryColor( QColor color )
     LogEntryList::Item *item( *iter );
     LogEntry* entry( item->entry() );
 
-    entry->setColor( qPrintable( color.name() ) );
+    entry->setColor( color.isValid() ? qPrintable( color.name() ):ColorMenu::NONE );
     entry->modified();
     
     // update list items
@@ -1996,13 +2010,10 @@ void SelectionFrame::_changeEntryColor( QColor color )
     for( KeySet<LogEntryList::Item>::iterator it = entry_items.begin(); it != entry_items.end(); it++ )
     { (*it)->update(); }
     
-//     // redraw item
-//     item->repaint();
-
-//     // update EditFrame color
-//     KeySet<EditFrame> frames( entry );
-//     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-//     if( !(*iter)->isHidden() ) (*iter)->DisplayColor();
+    // update EditFrame color
+    KeySet<EditFrame> frames( entry );
+    for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    { if( !(*iter)->isHidden() ) (*iter)->displayColor(); }
 
     // set logbooks as modified
     KeySet<Logbook> logbooks( entry );
@@ -2130,8 +2141,13 @@ void SelectionFrame::_resetList( void )
   if( !logbook_ ) return;
   KeySet<LogEntry> entries( logbook()->entries() );
   for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
-  if( (*it)->isSelected() ) logEntryList().addEntry( *it );
-      
+  { if( (*it)->isSelected() ) logEntryList().addEntry( *it ); }
+  
+  logEntryList().sort();
+  logEntryList().resizeColumnToContents( LogEntryList::MODIFICATION );
+  logEntryList().resizeColumnToContents( LogEntryList::CREATION );
+  logEntryList().resizeColumnToContents( LogEntryList::TITLE );
+     
 }
 
 //_______________________________________________
@@ -2148,6 +2164,8 @@ void SelectionFrame::_resetKeywordList( void )
   for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )  
   if( (*it)->isFindSelected() ) keywordList().addKeyword( (*it)->keyword() );  
   
+  keywordList().sort();
+
 }
 
 //_______________________________________________

@@ -67,8 +67,8 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   QLabel* label;
 
   // attachment editors
-  QWidget* page = &addPage( "attachments" );
-  box = new QGroupBox( "editors", page );
+  QWidget* page = &addPage( "Qttachments" );
+  box = new QGroupBox( "Editors", page );
   page->layout()->addWidget( box );
 
   QGridLayout* grid_layout = new QGridLayout();
@@ -78,7 +78,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
 
   OptionBrowsedLineEdit *editor;
   
-  grid_layout->addWidget( new QLabel( "default: ", box ), 0, 0 );
+  grid_layout->addWidget( new QLabel( "Default: ", box ), 0, 0 );
   grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_UNKNOWN_ATC" ), 0, 1 );
   addOptionWidget( editor );
   
@@ -90,33 +90,33 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_URL_ATC" ), 2, 1 );
   addOptionWidget( editor );
 
-  grid_layout->addWidget( new QLabel( "text: ", box ), 3, 0 );
+  grid_layout->addWidget( new QLabel( "Text: ", box ), 3, 0 );
   grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_PLAIN_TEXT_ATC" ), 3, 1 );
   addOptionWidget( editor );
 
-  grid_layout->addWidget( new QLabel( "postscript: ", box ), 4, 0 );
+  grid_layout->addWidget( new QLabel( "Postscript: ", box ), 4, 0 );
   grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_POSTSCRIPT_ATC" ), 4, 1 );
   addOptionWidget( editor );
 
-  grid_layout->addWidget( new QLabel( "image: ", box ), 5, 0 );
+  grid_layout->addWidget( new QLabel( "Image: ", box ), 5, 0 );
   grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_IMAGE_ATC" ), 5, 1 );
   addOptionWidget( editor );
   
   grid_layout->setColumnStretch( 1, 1 );
   
-  box = new QGroupBox( "misc", page );
+  box = new QGroupBox( "Misc", page );
   box->setLayout( new QVBoxLayout() );
   box->layout()->setMargin(5);
   box->layout()->setSpacing(5);
   page->layout()->addWidget( box );
   
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "check attached file", box, "CHECK_ATTACHMENT" ) );
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Check attached file", box, "CHECK_ATTACHMENT" ) );
   addOptionWidget( checkbox );
-  checkbox->setToolTip( "check if attached file exists at start-up" );
+  checkbox->setToolTip( "Check if attached file exists at start-up" );
 
   // window sizes
-  page = &addPage( "window size" );
-  box = new QGroupBox( "window size", page );
+  page = &addPage( "Window sizes" );
+  box = new QGroupBox( "Window sizes", page );
   page->layout()->addWidget( box );
 
   grid_layout = new QGridLayout();
@@ -124,11 +124,11 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   grid_layout->setMargin(5);
   box->setLayout( grid_layout );
 
-  grid_layout->addWidget( new QLabel( "width", box ), 0, 1 );
-  grid_layout->addWidget( new QLabel( "height", box ), 0, 2 );
+  grid_layout->addWidget( new QLabel( "Width", box ), 0, 1 );
+  grid_layout->addWidget( new QLabel( "Height", box ), 0, 2 );
 
-  grid_layout->addWidget( label = new QLabel( "main window: ", box ), 1, 0 );
-  label->setToolTip( "main window size (width x height)" );
+  grid_layout->addWidget( label = new QLabel( "Main window: ", box ), 1, 0 );
+  label->setToolTip( "Main window size (width x height)" );
 
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SELECTION_FRAME_WIDTH" ), 1, 1 );
   spinbox->setMinimum( 5 );
@@ -140,8 +140,8 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   spinbox->setMaximum( 2048 );
   addOptionWidget( spinbox );
 
-  grid_layout->addWidget( label = new QLabel( "editor: ", box ), 2, 0 );
-  label->setToolTip( "editor window size (width x height)" );
+  grid_layout->addWidget( label = new QLabel( "Editor: ", box ), 2, 0 );
+  label->setToolTip( "Editor window size (width x height)" );
   
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "EDIT_FRAME_WIDTH" ), 2, 1 );
   spinbox->setMinimum( 5 );
@@ -153,7 +153,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   spinbox->setMaximum( 2048 );
   addOptionWidget( spinbox );
 
-  grid_layout->addWidget( label = new QLabel( "attachment: ", box ), 3, 0 );
+  grid_layout->addWidget( label = new QLabel( "Attachment: ", box ), 3, 0 );
   label->setToolTip( "attachment window size (width x height)" );
   
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "ATC_FRAME_WIDTH" ), 3, 1 );
@@ -167,7 +167,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   addOptionWidget( spinbox );
 
   // listview configuration
-  ListViewConfig *listview_config = new ListViewConfig( &addPage( "list configuration" ), &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList() );
+  ListViewConfig *listview_config = new ListViewConfig( &addPage( "List configuration" ), &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList() );
 
 //   // toolbars
 //   box = new QGroupBox( "toolbars", &addPage( "toolbars" ) );
@@ -192,8 +192,8 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
 //   addOptionWidget( new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_2_LOCATION" ));
 
   // colors
-  page = &addPage( "colors" ); 
-  box = new QGroupBox( "logbook entry colors", page );
+  page = &addPage( "Colors" ); 
+  box = new QGroupBox( "Logbook entry colors", page );
   box->setLayout( new QVBoxLayout() );
   box->layout()->setMargin(5);
   box->layout()->setSpacing(5);
@@ -201,22 +201,22 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
  
   OptionListBox* listbox;
   box->layout()->addWidget( listbox = new OptionListBox( box, "COLOR" ) );
-  listbox->setToolTip( "colors used for logbook entry display" );
+  listbox->setToolTip( "Colors used for logbook entry display" );
   addOptionWidget( listbox );
 
-  box = new QGroupBox( "text colors", page );
+  box = new QGroupBox( "Text colors", page );
   box->setLayout( new QVBoxLayout() );
   box->layout()->setMargin(5);
   box->layout()->setSpacing(5);
   page->layout()->addWidget( box );
 
   box->layout()->addWidget( listbox = new OptionListBox( box, "TEXT_COLOR" ) );
-  listbox->setToolTip( "colors used for text formatting" );
+  listbox->setToolTip( "Colors used for text formatting" );
   addOptionWidget( listbox );
 
   // auto save
-  page = &addPage( "backup" );
-  box = new QGroupBox( "auto save", page );
+  page = &addPage( "Backup" );
+  box = new QGroupBox( "Auto save", page );
   page->layout()->addWidget( box );
 
   QVBoxLayout* layout = new QVBoxLayout();
@@ -224,32 +224,32 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   layout->setSpacing(5);
   box->setLayout( layout );
 
-  layout->addWidget( checkbox = new OptionCheckBox( "auto save", box, "AUTO_SAVE" ) );
+  layout->addWidget( checkbox = new OptionCheckBox( "Auto save", box, "AUTO_SAVE" ) );
   addOptionWidget( checkbox );
-  checkbox->setToolTip( "automaticaly save logbook at fixed time interval" );
+  checkbox->setToolTip( "Automatically save logbook at fixed time interval" );
 
   grid_layout = new QGridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   layout->addLayout( grid_layout );
 
-  grid_layout->addWidget( new QLabel( "auto save interval (seconds): ", box ), 0, 0 );
+  grid_layout->addWidget( new QLabel( "Auto save interval (seconds): ", box ), 0, 0 );
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "AUTO_SAVE_ITV" ), 0, 1 );
   spinbox->setMinimum( 0 );
   spinbox->setMaximum( 3600 );
-  spinbox->setToolTip( "time interval between two automatic save" );
+  spinbox->setToolTip( "Time interval between two automatic save" );
   addOptionWidget( spinbox );
 
   // auto backup
-  box = new QGroupBox( "auto backup", page );
+  box = new QGroupBox( "Auto backup", page );
   layout = new QVBoxLayout();
   layout->setMargin(5);
   layout->setSpacing(5);
   box->setLayout( layout );
   page->layout()->addWidget( box );
 
-  layout->addWidget( checkbox = new OptionCheckBox( "auto backup", box, "AUTO_BACKUP" ) );
-  checkbox->setToolTip( "make a backup of the logbook at fixed time schedule" );
+  layout->addWidget( checkbox = new OptionCheckBox( "Auto backup", box, "AUTO_BACKUP" ) );
+  checkbox->setToolTip( "Make a backup of the logbook at fixed time schedule" );
   addOptionWidget( checkbox );
  
   grid_layout = new QGridLayout();
@@ -257,50 +257,50 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   grid_layout->setMargin(5);
   layout->addLayout( grid_layout );
   
-  grid_layout->addWidget( new QLabel( "backup interval (days): ", box ), 0, 0 );
+  grid_layout->addWidget( new QLabel( "Backup interval (days): ", box ), 0, 0 );
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ), 0, 1 );
   spinbox->setMinimum( 0 );
   spinbox->setMaximum( 365 );
-  spinbox->setToolTip( "time interval between two backups" );
+  spinbox->setToolTip( "Time interval between two backups" );
   addOptionWidget( spinbox );
 
   // spelling
   #if WITH_ASPELL
-  page = &addPage( "spell checking" );
+  page = &addPage( "Spell checking" );
   SpellConfig* spell_config = new SpellConfig( page );
   page->layout()->addWidget( spell_config );
   addOptionWidget( spell_config );
   #endif
 
   // misc
-  page = &addPage( "misc" );
+  page = &addPage( "Misc" );
   tabConfiguration( page );
   
-  box = new QGroupBox( "misc", page );
+  box = new QGroupBox( "Misc", page );
   box->setLayout( new QVBoxLayout() );
   box->layout()->setSpacing(5);
   box->layout()->setMargin(5);
   page->layout()->addWidget( box );
   
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "show menu", box, "SHOW_EDITFRAME_MENU" ) );
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show menu", box, "SHOW_EDITFRAME_MENU" ) );
   addOptionWidget( checkbox );
-  checkbox->setToolTip( "show/hide menu in editor window" );
+  checkbox->setToolTip( "Show/hide menu in editor window" );
   
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "show keyword", box, "SHOW_KEYWORD" ) );
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show keyword", box, "SHOW_KEYWORD" ) );
   addOptionWidget( checkbox );
-  checkbox->setToolTip( "show/hide keyword line in editor window" );
+  checkbox->setToolTip( "Show/hide keyword line in editor window" );
 
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "wrap text", box, "WRAP_TEXT" ) ); 
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Wrap text", box, "WRAP_TEXT" ) ); 
   addOptionWidget( checkbox ); 
-  checkbox->setToolTip( "wrap text in entry edition window" ); 
+  checkbox->setToolTip( "Wrap text in entry edition window" ); 
 
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "case sensitive", box, "CASE_SENSITIVE" ) );
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Case sensitive", box, "CASE_SENSITIVE" ) );
   addOptionWidget( checkbox );
-  checkbox->setToolTip( "toggle case sensitive text search" );
+  checkbox->setToolTip( "Toggle case sensitive text search" );
 
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "splash screen", box, "SPLASH_SCREEN" ) );
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Splash screen", box, "SPLASH_SCREEN" ) );
   addOptionWidget( checkbox );
-  checkbox->setToolTip( "show splash screen at startup" );
+  checkbox->setToolTip( "Show splash screen at startup" );
   
   // connect buttons
   connect( this, SIGNAL( apply() ), listview_config, SLOT( update() ) );

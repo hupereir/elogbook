@@ -103,19 +103,10 @@ class LogEntryList: public CustomListView
     
     //! update item text using associated entry
     void update( void );
-   
-    //! repaint, accounting for entry color
-    void repaint( void )
-    {}
-    
+       
     //! order operator
     virtual bool operator<( const QTreeWidgetItem &other ) const;
-          
-    private:
-    
-    //! entry color
-    QColor entry_color_;
-    
+              
   };
   
   //! retrieve Item associated to given entry
@@ -127,7 +118,8 @@ class LogEntryList: public CustomListView
     
     // retrieve associated entries
     BASE::KeySet<Item> items( entry );
-    Exception::assert( items.size()==1, DESCRIPTION( "invalid association to Item" ) );
+    if( items.empty() ) return 0;
+    if( items.size() > 1 ) throw std::logic_error( DESCRIPTION( "invalid association to Item" ) );
     return *items.begin();    
     
   }
@@ -146,9 +138,9 @@ class LogEntryList: public CustomListView
 
   //! retrieve selected entries
   std::list< LogEntry* > selectedEntries( void );
-    
-  // protected:
-
+   
+  protected:
+  
   //! dragging [overloaded]
   //QDragObject* dragObject( void )
   //{ return new QTextDrag( LogEntry::DRAG.c_str(), this ); }

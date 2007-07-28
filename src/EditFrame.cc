@@ -35,7 +35,7 @@
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
 #include "BrowsedLineEdit.h"
-// #include "ColorMenu.h"
+#include "ColorMenu.h"
 #include "CustomLineEdit.h"
 #include "CustomPixmap.h"
 #include "CustomTextEdit.h"
@@ -70,7 +70,7 @@ using namespace std;
 using namespace BASE;
 
 //_______________________________________________
-EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
+EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
   read_only_( read_only ),
@@ -94,6 +94,7 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
   // title label and line
   h_layout->addWidget( new QLabel( " Title: ", main ) );
   h_layout->addWidget( title_ = new CustomLineEdit( main ), 1 );
+  h_layout->addWidget( color_label_ = new QLabel() );
   connect( title_, SIGNAL( textChanged( const QString&) ), SLOT( _modified() ) );
   
 //   color_label_ = new CustomLabel( h_box );
@@ -241,14 +242,16 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
   connect( button, SIGNAL( clicked() ), SLOT( _previousEntry() ) );
   button->setText("Previous");
   toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
+  previous_entry_ = button;
+  //read_only_widgets_.push_back( button );
 
   // next_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEXT, path_list ) ), "Display the next entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _nextEntry() ) );
   button->setText("Next");
   toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
+  next_entry_ = button;
+  //read_only_widgets_.push_back( button );
 
   // entry_info button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Display the current entry informations", &statusbar_->label() );
@@ -270,10 +273,7 @@ EditFrame::EditFrame( QWidget* parent, LogEntry* entry, bool read_only ):
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
   updateConfiguration();
-    
-  // display selected entry
-  displayEntry( entry );
-
+ 
 }
 
 //____________________________________________
@@ -296,10 +296,18 @@ void EditFrame::displayEntry( LogEntry *entry )
 
   // update all display
   displayTitle();
-  // displayColor();
+  displayColor();
   _displayText();
-  // _displayAttachments();
+  _displayAttachments();
 
+  // retrieve selection frame
+  SelectionFrame *frame( _selectionFrame() );
+  
+  // update previous and next action states
+  Debug::Throw( "EditFrame::displayEntry - setting button states.\n" );
+  previous_entry_->setEnabled( frame->previousEntry(entry, false) );
+  next_entry_->setEnabled( frame->nextEntry(entry, false) );
+  
   // reset modify flag; change title accordingly
   modified_ = false;
   updateWindowTitle();
@@ -386,24 +394,22 @@ void EditFrame::displayTitle( void )
   return;
 }
 
-// //_____________________________________________
-// void EditFrame::DisplayColor( void )
-// {
-//   Debug::Throw( "EditFrame::DisplayColor.\n" );
-//   if( !color_label_ ) return;
-// 
-//   Str color( EditFrame::entry()->GetColor() );
-//   if( color.IsEqual( "None", false ) ) {
-//     color_label_->hide();
-//   } else {
-// 
-//     color_label_->SetColor( color );
-//     color_label_->update();
-//     color_label_->show();
-// 
-//   }
-//   return;
-// }
+//_____________________________________________
+void EditFrame::displayColor( void )
+{
+  Debug::Throw( "EditFrame::DisplayColor.\n" );
+    
+  string colorname( EditFrame::entry()->color() );
+  QColor color;
+  if( colorname != ColorMenu::NONE ) color = QColor( colorname.c_str() );
+  if( !color.isValid() ) color_label_->hide();
+  else
+  {
+    color_label_->setPixmap( CustomPixmap().empty( ColorMenu::PixmapSize , color, false ) );
+    color_label_->show();
+  }
+  
+}
 
 //_____________________________________________
 void EditFrame::updateConfiguration( void )
@@ -559,7 +565,7 @@ void EditFrame::_previousEntry( void )
     
   SelectionFrame *frame( _selectionFrame() );
   LogEntry* entry( frame->previousEntry( EditFrame::entry(), true ) );
-  if( !( entry  || frame->lockEntry( entry ) ) ) return;
+  if( !( entry  && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
 
 }
@@ -573,7 +579,7 @@ void EditFrame::_nextEntry( void )
 
   SelectionFrame *frame( _selectionFrame() );
   LogEntry* entry( frame->nextEntry( EditFrame::entry(), true ) );
-  if( !( entry || frame->lockEntry( entry ) ) ) return;
+  if( !( entry && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
 
 }

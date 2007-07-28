@@ -29,6 +29,8 @@
    \date $Date$
 */
 
+#include <QPainter>
+
 #include "Debug.h"
 #include "Logbook.h"
 #include "ColorMenu.h"
@@ -59,7 +61,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   { setColumnName( i, column_titles_[i] ); }
 
   setSelectionMode( QAbstractItemView::ContiguousSelection );
-
+  
 }
  
 //_______________________________________________
@@ -168,7 +170,7 @@ list< LogEntry* > LogEntryList::entries( void )
 LogEntryList::Item* LogEntryList::itemBelow( QTreeWidgetItem* item, bool update_selection )
 {
   
-  Debug::Throw( "LogEntryList::ItemBelow.\n" );
+  Debug::Throw( "LogEntryList::itemBelow.\n" );
   
   QTreeWidgetItem* tmp = 0;
   
@@ -209,7 +211,7 @@ LogEntryList::Item* LogEntryList::itemBelow( QTreeWidgetItem* item, bool update_
 LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_selection )
 {
   
-  Debug::Throw( "LogEntryList::ItemBelow.\n" );
+  Debug::Throw( "LogEntryList::itemAbove.\n" );
   
   QTreeWidgetItem* tmp = 0;
   
@@ -218,6 +220,7 @@ LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_
   { 
     
     int index = indexOfTopLevelItem( item );
+    Debug::Throw() << "LogEntryList::itemAbove - topLevelItem - index: " << index << endl;
     if( index > 0 ) tmp = topLevelItem( index-1 );
     
   } else {
@@ -228,6 +231,13 @@ LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_
     if( index > 0 ) tmp = item->parent()->child(index-1);
     else tmp = item->parent();
     
+  }
+  
+  // no item found.
+  if( !tmp ) 
+  {
+    Debug::Throw() << "LogEntryList::itemAbove - no item found" << endl;
+    return 0;
   }
   
   // see if found item has children
@@ -265,15 +275,10 @@ void LogEntryList::Item::update( void )
   setText( LogEntryList::AUTHOR, string( entry->author()+" ").c_str() );
   setText( LogEntryList::COLOR, string( entry->color()+" ").c_str() );
   
-  if( entry->color() == ColorMenu::NONE ) entry_color_ = treeWidget()->palette().color( QPalette::Foreground );
-  else 
-  {
-    entry_color_ = QColor( entry->color().c_str() );  
-    if( !entry_color_.isValid() ) entry_color_ = treeWidget()->palette().color( QPalette::Foreground );
-  }
+  if( entry->color() != ColorMenu::NONE ) setColor( QColor( entry->color().c_str() ) );
+  else setColor( QColor() );
   
-  for( int i=0; i<treeWidget()->columnCount(); i++ )
-  { setTextColor( i, entry_color_ ); }
+  treeWidget()->update();
   
 }
 

@@ -76,16 +76,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   public:
   
   //! creator 
-  EditFrame( QWidget* parent, LogEntry* entry=0, bool read_only = true );
+  EditFrame( QWidget* parent, bool read_only = true );
   
   //! destructor
   ~EditFrame( void );
-
-//   //! shortcut to color pair
-//   typedef std::pair< std::string, QIconSet > ColorPair;
-//   
-//   //! shortcut to color pair iterator
-//   typedef std::map< std::string, QIconSet >::const_iterator ColorIterator;
   
   //! display all entries informations
   void displayEntry( LogEntry *entry = 0 );
@@ -149,7 +143,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void displayTitle( void );    
   
   //! update color Widget from current entry
-  // void displayColor( void );    
+  void displayColor( void );    
   
   public slots:  
   
@@ -273,24 +267,35 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! text formating bar
   // FORMAT::TextFormat* text_format_;
-    
+   
+  //!@name stored actions to toggle visibility
+  //@{
+  
   //! lock toolbutton
   QAction* lock_;
+  
+  //! previous entry action
+  QWidget* previous_entry_;
+  
+  //! next entry action
+  QWidget* next_entry_;
 
+  //@}
+  
   //! main splitter
   QSplitter *splitter_;
   
   //! LogEntry title Object
   CustomLineEdit *title_;          
-  
-  //! LogEntry attachment list bounding box
-  // QVBox *attachment_box_;          
-  
+    
   //! LogEntry text Object
   CustomTextEdit *text_;            
     
   //! pointer to statusbar    
   StatusBar* statusbar_;            
+  
+  //! color label
+  QLabel* color_label_;
   
 };
 

@@ -45,7 +45,11 @@ using namespace std;
 ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   CustomDialog( parent )
 {
+  
   Debug::Throw( "ViewHtmlLogbookDialog::ViewHtmlLogbookDialog.\n" );
+  
+  setWindowTitle( "eLogbook - HTML" );
+  mainLayout().setSpacing(2);
 
   // command
   mainLayout().addWidget( new QLabel( "Command:", this ) );
@@ -61,7 +65,7 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   QButtonGroup* group( new QButtonGroup( this ) );
   group->setExclusive( true );  
 
-  QGroupBox* group_box = new QGroupBox( this );
+  QGroupBox* group_box = new QGroupBox( "Entries", this );
   group_box->setLayout( new QHBoxLayout() );
   group_box->layout()->setSpacing( 5 );
   group_box->layout()->setMargin( 5 );
@@ -76,7 +80,7 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   group->addButton( radio_buttons_[SELECTED] );
   
   // configuration  
-  group_box = new QGroupBox( this );
+  group_box = new QGroupBox( "Configuration", this );
   group_box->setLayout( new QHBoxLayout() );
   group_box->layout()->setSpacing( 5 );
   group_box->layout()->setMargin( 5 );
@@ -85,15 +89,21 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_TABLE] = new QCheckBox( "&Table of content", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_CONTENT] = new QCheckBox( "&Content", group_box ) );
 
+  QPushButton* button = new QPushButton( "more ... ", group_box );
+  button->setCheckable( true );
+  group_box->layout()->addWidget( button );
+  connect( button, SIGNAL( toggled( bool ) ), SLOT( showExtension( bool ) ) );
+  
   // extension widget
   QWidget *extension = new QWidget( this );
-  extension->setLayout( new QVBoxLayout() );
-  extension->layout()->setMargin(0);
-  extension->layout()->setSpacing(10);
+  extension->setLayout( new QHBoxLayout() );
+  extension->layout()->setMargin(10);
+  extension->layout()->setSpacing(5);
   setExtension( extension );
+  setOrientation( Qt::Vertical );
   
-  group_box = new QGroupBox( "logbook configuration", extension );
-  group_box->setLayout( new QHBoxLayout() );
+  group_box = new QGroupBox( "Logbook configuration", extension );
+  group_box->setLayout( new QVBoxLayout() );
   group_box->layout()->setSpacing( 5 );
   group_box->layout()->setMargin( 5 );
   extension->layout()->addWidget( group_box );
@@ -106,10 +116,9 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_FILE] = new QCheckBox( "File", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_DIRECTORY] = new QCheckBox( "Attachment directory", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_COMMENTS] = new QCheckBox( "Comments", group_box ) );
-      
   
-  group_box = new QGroupBox( "entry configuration", extension );
-  group_box->setLayout( new QHBoxLayout() );
+  group_box = new QGroupBox( "Entry configuration", extension );
+  group_box->setLayout( new QVBoxLayout() );
   group_box->layout()->setSpacing( 5 );
   group_box->layout()->setMargin( 5 );
   extension->layout()->addWidget( group_box );
