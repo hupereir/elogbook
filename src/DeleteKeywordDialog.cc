@@ -49,7 +49,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const string& keyword
 
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
-  group->setExclusive( true );
+  group->set( true );
 
   ostringstream what;
   what << "Delete keyword " << keyword << " ?";

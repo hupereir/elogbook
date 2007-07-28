@@ -189,7 +189,7 @@ void AttachmentList::newAttachment(
   KeySet<LogEntry> entries( edit_frame );
   if( entries.size() != 1 )
   {
-    QtUtil::infoDialogExclusive( this, "No valid entry found. <New Attachment> canceled." );
+    QtUtil::infoDialog( this, "No valid entry found. <New Attachment> canceled." );
     return;
   }
   
@@ -230,7 +230,7 @@ void AttachmentList::newAttachment(
     
       ostringstream o;
       o << "File \"" << full_directory << "\" is not a directory.";
-      QtUtil::infoDialogExclusive( this, o.str() );
+      QtUtil::infoDialog( this, o.str() );
     
     } else {
   
@@ -238,7 +238,7 @@ void AttachmentList::newAttachment(
       if( !full_directory.exist() ) {
         ostringstream o; 
         o << "Directory \"" << full_directory << "\" does not exist. Create ?";
-        if( QtUtil::questionDialogExclusive( this, o.str() ) ) {
+        if( QtUtil::questionDialog( this, o.str() ) ) {
     
           ostringstream o;
           o << "mkdir \"" << full_directory << "\"";
@@ -253,7 +253,7 @@ void AttachmentList::newAttachment(
   File file( dialog.file() );
   if( file.empty() ) 
   {
-    QtUtil::infoDialogExclusive( this, "Invalid name. <New Attachment> canceled." );
+    QtUtil::infoDialog( this, "Invalid name. <New Attachment> canceled." );
     return;
   }
 
@@ -274,25 +274,25 @@ void AttachmentList::newAttachment(
   
     case Attachment::SOURCE_NOT_FOUND:
     o << "Cannot find file \"" << file << "\" - <Add Attachment> canceled.";
-    QtUtil::infoDialogExclusive( this, o.str() );
+    QtUtil::infoDialog( this, o.str() );
     delete attachment;
     break;
     
     case Attachment::DEST_NOT_FOUND:
     o << "Cannot find directory \"" << full_directory << "\" - <Add Attachment> canceled.";
-    QtUtil::infoDialogExclusive( this, o.str() );
+    QtUtil::infoDialog( this, o.str() );
     delete attachment;
     break;
     
     case Attachment::SOURCE_IS_DIR:
     o << "File \"" << file << "\" is a directory - <Add Attachment> canceled.";
-    QtUtil::infoDialogExclusive( this, o.str() );
+    QtUtil::infoDialog( this, o.str() );
     delete attachment;
     break;
     
     case Attachment::DEST_EXIST:
     o << "File \"" << file << "\" is allready in list.";
-    QtUtil::infoDialogExclusive( this, o.str() );
+    QtUtil::infoDialog( this, o.str() );
     delete attachment;
     break;
     
@@ -363,7 +363,7 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
   // check items
   if( items.empty() ) 
   {
-    QtUtil::infoDialogExclusive( this, "No attachment selected. <View Attachment> canceled.\n" );
+    QtUtil::infoDialog( this, "No attachment selected. <View Attachment> canceled.\n" );
     return;
   }
  
@@ -378,7 +378,7 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
     {
       ostringstream what; 
       what << "Cannot find file \"" << fullname << "\". <View Attachment> canceled.";
-      QtUtil::infoDialogExclusive( this, what.str() );
+      QtUtil::infoDialog( this, what.str() );
       return;
     }
     
@@ -412,7 +412,7 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
       if( files.empty() ) return;
       
       destname = File( qPrintable( files.front() ) ).expand();
-      if( destname.exit() && !QtUtil::QuestionDialogExclusive( this, "selected file already exist. Overwrite ?" ) ) return;
+      if( destname.exit() && !QtUtil::QuestionDialog( this, "selected file already exist. Overwrite ?" ) ) return;
       
       // make the copy
       Util::run( string("cp ") + "\"" + fullname + "\" \"" + destname + "\"" );
@@ -434,7 +434,7 @@ void AttachmentList::_editAttachment( void )
   QList<Item*> items( selectedItems<Item>() );
   if( items.empty() ) 
   {
-    QtUtil::infoDialogExclusive( this, "No attachment selected. <Edit Attachment> canceled.\n" );
+    QtUtil::infoDialog( this, "No attachment selected. <Edit Attachment> canceled.\n" );
     return;
   }
 
@@ -490,7 +490,7 @@ void AttachmentList::_deleteAttachment( void )
   QList<Item*> items( selectedItems<Item>() );
   if( items.empty() ) 
   {
-    QtUtil::infoDialogExclusive( this, "No attachment selected. <Edit Attachment> canceled.\n" );
+    QtUtil::infoDialog( this, "No attachment selected. <Edit Attachment> canceled.\n" );
     return;
   }
 
@@ -538,7 +538,7 @@ void AttachmentList::_deleteAttachment( void )
       unsigned int n_share = count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) ); 
       if( n_share > 1 ) {
         
-        QtUtil::infoDialogExclusive( this, "Attachment still in use by other entries. Kept on disk." );
+        QtUtil::infoDialog( this, "Attachment still in use by other entries. Kept on disk." );
         from_disk = false;
       }
     

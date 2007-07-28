@@ -73,7 +73,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
     
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
-  group->setExclusive( true );
+  group->set( true );
   
   QGroupBox *group_box = new QGroupBox( this );
   mainLayout().addWidget( group_box, 0 );

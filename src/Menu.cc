@@ -64,23 +64,23 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   
   Debug::Throw( "Menu::Menu.\n" );
 
+  // selection frame
+  SelectionFrame *selection_frame( static_cast<MainFrame*>(qApp)->selectionFrame() );
+
   // generic menu
   QMenu *menu;
+
+  // file menu
+  menu = addMenu( "&File" );
+  menu->addAction( "&New",  selection_frame, SLOT( newLogbook() ), CTRL+Key_N );
+  menu->addAction( "&Open", selection_frame, SLOT( open() ), CTRL+Key_O );
 
   // file menu
   open_previous_menu_ = new OpenPreviousMenu( this );
   open_previous_menu_->setTitle( "Open pre&vious" );
   open_previous_menu_->setCheck( true );
-  menu->addMenu( open_previous_menu_ );
-
-  SelectionFrame *selection_frame( static_cast<MainFrame*>(qApp)->selectionFrame() );
-  
-  // assign DBFile
-  open_previous_menu_->setDBFile( XmlOptions::get().get<string>("DB_FILE") );
-  if( XmlOptions::get().find( "DB_SIZE" ) ) open_previous_menu_->setMaxSize( XmlOptions::get().get<int>( "DB_SIZE" ) );
-
-  // open previous menu
   connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selection_frame, SLOT( open( FileRecord ) ) );  
+  menu->addMenu( open_previous_menu_ );
 
   menu->addAction( "&Synchronize", selection_frame, SLOT( synchronize() ) )->setToolTip( "synchronize current logbook with remove logbook" );
   menu->addAction( "&Reorganize", selection_frame, SLOT( reorganize() ) )->setToolTip( "reorganize entries in sublogbook to minimize number of files" );

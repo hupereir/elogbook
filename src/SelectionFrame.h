@@ -168,17 +168,14 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! configuration
   virtual void updateConfiguration( void );
   
-  //! opens a logbook merge it to the existing one
+  //! opens a logbook merge it to the existing onecomments
   virtual void synchronize( void );
 
   //! create a new logbook
   virtual void newLogbook( void );
 
   //! open existing logbook
-  virtual void open( void );
-
-  //! open existing logbook
-  virtual void open( const FileRecord& file );
+  virtual void open( FileRecord file = FileRecord() );
 
   //! save current logbook
   virtual void save( void );

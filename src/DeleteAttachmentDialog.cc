@@ -49,7 +49,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
       
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
-  group->setExclusive( true );
+  group->set( true );
 
   mainLayout().addWidget( new QLabel( "Delete attachment ?", this ) );
   

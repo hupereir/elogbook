@@ -447,7 +447,7 @@ void EditFrame::saveEntry( bool update_selection )
   SelectionFrame *frame( _selectionFrame() );
   Logbook *logbook( frame->logbook() );
   if( !logbook ) {
-    QtUtil::infoDialogExclusive( this, "No logbook opened. <Save> canceled." );
+    QtUtil::infoDialog( this, "No logbook opened. <Save> canceled." );
     return;
   }
 
@@ -574,7 +574,7 @@ void EditFrame::_entryInfo( void )
   // check entry
   LogEntry *entry( EditFrame::entry() );
   if( !entry ) {
-    QtUtil::infoDialogExclusive( this, "No valid entry."  );
+    QtUtil::infoDialog( this, "No valid entry."  );
     return;
   }
 
@@ -611,12 +611,12 @@ void EditFrame::_deleteEntry( void )
   LogEntry *entry( EditFrame::entry() );
 
   if( !entry ) {
-    QtUtil::infoDialogExclusive( this, "No entry selected. <Delete Entry> canceled." );
+    QtUtil::infoDialog( this, "No entry selected. <Delete Entry> canceled." );
     return;
   }
 
   // ask confirmation
-  if( !QtUtil::questionDialogExclusive( this, "Delete current entry ?" ) ) return;
+  if( !QtUtil::questionDialog( this, "Delete current entry ?" ) ) return;
 
   // get associated attachments
   _selectionFrame()->deleteEntry( entry );
@@ -641,7 +641,7 @@ void EditFrame::_newWindow( void )
   Debug::Throw( "EditFrame::_newWindow.\n" );
   LogEntry *entry( EditFrame::entry() );
   if( !entry ) {
-    QtUtil::infoDialogExclusive( this, "No valid entry found. <New window> canceled." );
+    QtUtil::infoDialog( this, "No valid entry found. <New window> canceled." );
     return;
   }
 
@@ -666,7 +666,7 @@ void EditFrame::_viewHtml( void )
   // check logbook entry
   LogEntry *entry( EditFrame::entry() );
   if( !entry ){
-    QtUtil::infoDialogExclusive( this, "No entry. <View HTML> canceled." );
+    QtUtil::infoDialog( this, "No entry. <View HTML> canceled." );
     return;
   }
 
@@ -688,7 +688,7 @@ void EditFrame::_viewHtml( void )
   // retrieve/check file
   File file( dialog.file() );
   if( file.empty() ) {
-    QtUtil::infoDialogExclusive(this, "No output file specified. <View HTML> canceled." );
+    QtUtil::infoDialog(this, "No output file specified. <View HTML> canceled." );
     return;
   }
 
@@ -697,7 +697,7 @@ void EditFrame::_viewHtml( void )
   {
     ostringstream o;
     o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-    QtUtil::infoDialogExclusive( this, o.str() );
+    QtUtil::infoDialog( this, o.str() );
     return;
   }
 
