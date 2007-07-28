@@ -87,9 +87,10 @@ class LogEntryList: public CustomListView
     Item( LogEntryList* parent ):
       CustomListView::Item( parent )
     { 
+      Debug::Throw( "LogEntryList::item::item.\n" ); 
       setFlag( Qt::ItemIsDragEnabled, true );
       setFlag( Qt::ItemIsDropEnabled, false );
-      setFlag( Qt::ItemIsEditable, true );
+      //setFlag( Qt::ItemIsEditable, true );
     }
     
     //! retrieve associated entry
@@ -111,8 +112,9 @@ class LogEntryList: public CustomListView
   //! retrieve Item associated to given entry
   Item* item( LogEntry* entry )
   {
-    Debug::Throw( "LogEntryList::item.\n" );
     Exception::assert( entry, DESCRIPTION( "invalid entry" ) );
+
+    Debug::Throw() << "LogEntryList::item - entry: " << entry->key() << std::endl;
     
     // retrieve associated entries
     BASE::KeySet<Item> items( entry );

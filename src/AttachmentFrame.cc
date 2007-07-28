@@ -89,7 +89,7 @@ void AttachmentFrame::updateConfiguration( void )
 void AttachmentFrame::show( void )
 {
   Debug::Throw( "AttachmentFrame::show.\n" );
-  QtUtil::centerOnPointer( this, false );
+  QtUtil::centerOnPointer( this );
   QWidget::show();
   QWidget::raise();
 }

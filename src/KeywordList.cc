@@ -133,17 +133,23 @@ void KeywordList::selectKeyword( string keyword )
   { 
     if( keyword == qPrintable( (*iter)->text(KEYWORD) ) )
     {
+      Debug::Throw() << "KeywordList::selectKeyword - already selected." << endl;
+      setCurrentItem( *iter );
+      scrollToItem( *iter );
       emit currentItemChanged( *iter, QTreeWidget::currentItem() );
       break;
     }
   }
   
   // look for matching item in list
-  items = CustomListView::items();
+  items = CustomListView::children();
   for( QList<QTreeWidgetItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
   {
-    if( KeywordList::keyword( *iter ) == keyword )
+    string local(  KeywordList::keyword( *iter ) );
+    Debug::Throw() << "KeywordList::selectKeyword - local: " << local << " keyword: " << keyword << endl;
+    if( local == keyword )
     {    
+      Debug::Throw() << "KeywordList::selectKeyword - found matching keyword." << endl;
       setCurrentItem( *iter );
       scrollToItem( *iter );
       return;
@@ -151,6 +157,7 @@ void KeywordList::selectKeyword( string keyword )
   }
   
   // no keyword found returns root item
+  Debug::Throw() << "KeywordList::selectKeyword - no matching keyword found." << endl;
   setCurrentItem( root_item_ );
   scrollToItem( root_item_ );
   return;
@@ -175,7 +182,7 @@ set<string> KeywordList::keywords( void )
   set<string> out;
 
   // look for matching item in list
-  QList<QTreeWidgetItem*> items = CustomListView::items();
+  QList<QTreeWidgetItem*> items = CustomListView::children();
   for( QList<QTreeWidgetItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
   { out.insert( keyword( *iter ) ); }
 

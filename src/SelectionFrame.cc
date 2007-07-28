@@ -29,7 +29,6 @@
   \date $Date$
 */
 
-#include <QSplitter>
 
 #include "AttachmentFrame.h"
 #include "CustomDialog.h"
@@ -88,9 +87,9 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   main->setLayout( layout );
     
   // splitter for KeywordList/LogEntryList
-  QSplitter *splitter( new QSplitter( main ) );  
-  splitter->setOrientation( Qt::Horizontal );
-  layout->addWidget( splitter, 1 );
+  splitter_ = new QSplitter( main );  
+  splitter_->setOrientation( Qt::Horizontal );
+  layout->addWidget( splitter_, 1 );
  
   // search panel
   search_panel_ = new SearchPanel( main );
@@ -106,7 +105,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   layout->addWidget( &statusBar() ); 
   
   // left box for Keywords and buttons
-  QWidget* left = new QWidget( splitter );
+  QWidget* left = new QWidget( splitter_ );
   QVBoxLayout* v_layout = new QVBoxLayout();
   v_layout->setMargin(0);
   v_layout->setSpacing( 5 );
@@ -136,7 +135,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   
   // create keyword list
   v_layout->addWidget( keyword_list_ = new KeywordList( left ), 1 );
-  connect( keyword_list_, SIGNAL( itemSelectionChanged( void ) ), SLOT( _keywordSelectionChanged( void ) ) );  
+  connect( keyword_list_, SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );  
   connect( keyword_list_, SIGNAL( keywordChanged( const std::string& ) ), SLOT( _changeEntryKeyword( const std::string& ) ) );
   connect( keyword_list_, SIGNAL( keywordChanged( const std::string&, const std::string& ) ), SLOT( _renameKeyword( const std::string&, const std::string& ) ) );
   // connect( keyword_list_, SIGNAL( itemRenamed( QTreeWidgetItem*, int ) ), SLOT( _renameKeyword( QTreeWidgetItem*, int ) ) );
@@ -147,7 +146,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   keywordList().addMenuAction( "&Delete keyword", this, SLOT( _deleteKeyword() ), true );
   
   // right box for entries and buttons
-  QWidget* right = new QWidget( splitter );
+  QWidget* right = new QWidget( splitter_ );
   v_layout = new QVBoxLayout();
   v_layout->setMargin(0);
   v_layout->setSpacing( 5 );
@@ -296,6 +295,9 @@ void SelectionFrame::setLogbook( const File& file )
     what << errors;
     QtUtil::infoDialog( 0, what.str().c_str() );
   }
+  
+  // add opened file to OpenPrevious mennu.
+  menu().openPreviousMenu().add( logbook_->file() );
   
   ignore_warnings_ = false;
   
@@ -560,7 +562,10 @@ void SelectionFrame::updateConfiguration( void )
   // resize
   resize( XmlOptions::get().get<int>("SELECTION_FRAME_WIDTH"), XmlOptions::get().get<int>("SELECTION_FRAME_HEIGHT") );
   
-  
+  QList<int> sizes;
+  sizes.push_back( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
+  sizes.push_back( XmlOptions::get().get<int>( "ENTRY_LIST_WIDTH" ) );
+  splitter_->setSizes( sizes );
 }
 
 //_______________________________________________
@@ -746,8 +751,6 @@ void SelectionFrame::open( FileRecord record )
   // check if backup is needed
   checkLogbookBackup();
   
-  // add to open previous menu
-  menu().openPreviousMenu().add( logbook_->file() );
   return;
 }
 
@@ -808,12 +811,7 @@ void SelectionFrame::save( void )
   bool written( logbook_->write() );
   static_cast<MainFrame*>(qApp)->idle();
 
-  if( written ) {
-
-    menu().openPreviousMenu().add( logbook_->file() );
-    setWindowTitle( MainFrame::MAIN_TITLE );
-
-  }
+  if( written ) { setWindowTitle( MainFrame::MAIN_TITLE );}
 
   // update StateFrame
   statusBar().label().setText( "" );
@@ -843,7 +841,7 @@ bool SelectionFrame::saveAs( File default_file )
   CustomFileDialog dialog( this );
   dialog.setFileMode( QFileDialog::AnyFile );
   dialog.selectFile( default_file.c_str() );
-  QtUtil::centerOnPointer( &dialog, false );
+  QtUtil::centerOnPointer( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return false;
 
   // retrieve files
@@ -871,6 +869,9 @@ bool SelectionFrame::saveAs( File default_file )
     some children state may not have been reset properly
   */
   logbook_->setModifiedRecursive( false );
+
+  // add new file to openPreviousMenu
+  menu().openPreviousMenu().add( logbook_->file() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -976,7 +977,7 @@ void SelectionFrame::viewHtml( void )
   dialog.setFile( File( what.str() ) );
 
   // map dialog
-  QtUtil::centerOnParent( &dialog, false );
+  QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return;
 
   // retrieve/check file
@@ -1518,13 +1519,15 @@ void SelectionFrame::_showEditFrame( QTreeWidgetItem* item )
 }
 
 //_______________________________________________
-void SelectionFrame::_keywordSelectionChanged( void )
+void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWidgetItem* old )
 {
 
   Debug::Throw( "SelectionFrame::_keywordSelectionChanged.\n" );
   if( !logbook_ ) return; 
+  if( !current ) return;
   
-  string keyword = keywordList().currentKeyword();
+  string keyword = keywordList().keyword( current );
+  Debug::Throw() << "SelectionFrame::_keywordSelectionChanged - keyword: " << keyword << endl;
       
   // keep track of the last visible entry
   LogEntry *last_visible_entry( 0 );
@@ -1545,6 +1548,7 @@ void SelectionFrame::_keywordSelectionChanged( void )
     {  
       entry->setKeywordSelected( true );
       if( entry->isFindSelected() ) last_visible_entry = entry;
+      Debug::Throw() << "SelectionFrame::_keywordSelectionChanged - found entry: " << entry->key() << endl;
     } else entry->setKeywordSelected( false );
     
   }

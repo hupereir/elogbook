@@ -57,7 +57,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   for( unsigned int i=0; i<n_columns; i++ )
   { setColumnName( i, column_titles_[i] ); }
 
-  //setSelectionMode( QAbstractItemView::ContiguousSelection );
+  setSelectionMode( QAbstractItemView::ContiguousSelection );
 
 }
  
@@ -149,7 +149,7 @@ list< LogEntry* > LogEntryList::entries( void )
 
   // retrieve logbook entries
   list< LogEntry* > entries; 
-  QList<Item*> items( LogEntryList::items<Item>() );
+  QList<Item*> items( CustomListView::children<Item>() );
   for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
   {
     
@@ -254,11 +254,10 @@ LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_
 //_______________________________________________
 void LogEntryList::Item::update( void ) 
 {
-  
-  Debug::Throw( "LogEntryList::Item::update.\n" );
-  
-  LogEntry *entry( Item::entry() );
     
+  LogEntry *entry( Item::entry() );
+  Debug::Throw() << "LogEntryList::Item::update - entry: " << entry->key() << endl;
+  
   setText( LogEntryList::TITLE, string( entry->title()+" ").c_str() );
   setText( LogEntryList::CREATION, string( entry->creation().string()+" ").c_str() );
   setText( LogEntryList::MODIFICATION, string( entry->modification().string()+" ").c_str() );

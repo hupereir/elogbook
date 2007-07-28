@@ -682,7 +682,7 @@ void EditFrame::_viewHtml( void )
   dialog.setFile( File( what.str() ) );
 
   // map dialog
-  QtUtil::centerOnParent( &dialog, false );
+  QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return;
 
   // retrieve/check file

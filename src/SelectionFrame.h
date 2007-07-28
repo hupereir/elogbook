@@ -31,6 +31,8 @@
   \date $Date$
 */
 
+#include <QSplitter>
+
 #include "AskForSaveDialog.h"
 #include "Counter.h"
 #include "Debug.h"
@@ -261,7 +263,7 @@ class SelectionFrame: public TopWidget, public BASE::Key
   void _renameKeyword( const std::string& old_keyword, const std::string& new_keyword );
    
   //! keyword selection changed
-  void _keywordSelectionChanged( void );
+  void _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* );
     
   //! change selected entries keyword using custom dialog
   void _changeEntryKeyword( void );
@@ -298,6 +300,9 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! LogEntry color popup menu
   // ColorMenu *color_menu_;
 
+  //! main splitter
+  QSplitter* splitter_;
+  
   //! logEntry list
   LogEntryList* list_;
 

@@ -154,7 +154,7 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 //__________________________________
 string LogEntry::formatKeyword( const string& keyword )
 {
-  Debug::Throw() << "LogEntry::formatKeyword - in=" << keyword << endl;
+  Debug::Throw() << "LogEntry::formatKeyword - " << keyword << endl;
   list<string> keywords( parseKeyword( keyword ) );
 
   string out = "";
