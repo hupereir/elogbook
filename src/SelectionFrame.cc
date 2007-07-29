@@ -228,7 +228,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
 
 
 //_______________________________________________
-void SelectionFrame::setLogbook( const File& file )
+void SelectionFrame::setLogbook( File file )
 {
   Debug::Throw("SelectionFrame::SetLogbook.\n" );
 
@@ -1004,6 +1004,7 @@ void SelectionFrame::revertToSaved( void )
 
   // reinit SelectionFrame
   static_cast<MainFrame*>(qApp)->busy();
+  string file( logbook()->file() );
   setLogbook( logbook()->file() );
   static_cast<MainFrame*>(qApp)->idle();
 
@@ -1864,6 +1865,8 @@ void SelectionFrame::_changeEntryKeyword( void )
 void SelectionFrame::_changeEntryKeyword( const string& new_keyword )
 {
       
+  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - new_keyword: " << new_keyword << endl;
+  
   // check if selected item make sense
   QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
   KeySet<LogEntry> entries;
@@ -1886,13 +1889,14 @@ void SelectionFrame::_changeEntryKeyword( const string& new_keyword )
     for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
     { (*log_iter)->setModified( true ); }
   
-  }  
+  }
 
   // reset lists
   _resetKeywordList();
   _resetList();
   keywordList().addKeyword( new_keyword );
   keywordList().selectKeyword( new_keyword );
+  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - new keyword selected" << endl;
   
   // update selection
   logEntryList().clearSelection();
@@ -1902,8 +1906,12 @@ void SelectionFrame::_changeEntryKeyword( const string& new_keyword )
     logEntryList().setItemSelected( item, true );  
   }
   
+  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - item selection changed" << endl;
+  
   // scroll to last item
-  if( !entries.empty() ) logEntryList().scrollToItem( *items.begin() );
+  if( !entries.empty() ) logEntryList().scrollToItem( logEntryList().item( *entries.begin() ) );
+
+  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - list scrolled" << endl;
    
   // Save logbook if needed
   if( !logbook()->file().empty() ) save();
@@ -2090,7 +2098,7 @@ void SelectionFrame::_autoSave( void )
     // retrieve non read only editors; perform save
     KeySet<EditFrame> frames( this );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    if( !( (*iter)->isReadOnly() || (*iter)->isHidden() ) ) (*iter)->saveEntry();
+    if( !( (*iter)->isReadOnly() || (*iter)->isHidden() ) ) (*iter)->save();
 
     save();
   

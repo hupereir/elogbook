@@ -43,7 +43,7 @@
 #include "CustomToolButton.h"
 #include "EditFrame.h"
 #include "File.h"
-//#include "FormatBar.h"
+#include "FormatBar.h"
 #include "HtmlUtil.h"
 #include "Icons.h"
 #include "IconEngine.h"
@@ -73,8 +73,7 @@ using namespace BASE;
 EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
-  read_only_( read_only ),
-  modified_( false )
+  read_only_( read_only )
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
 
@@ -95,13 +94,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   h_layout->addWidget( new QLabel( " Title: ", main ) );
   h_layout->addWidget( title_ = new CustomLineEdit( main ), 1 );
   h_layout->addWidget( color_label_ = new QLabel() );
-  connect( title_, SIGNAL( textChanged( const QString&) ), SLOT( _modified() ) );
   
-//   color_label_ = new CustomLabel( h_box );
-//   color_label_->setAlignment( Qt::AlignCenter );
-//   color_label_->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-//   QtUtil::Expand( color_label_, "    " );
-
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
   splitter_->setOrientation( Qt::Vertical );
@@ -110,7 +103,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // create text
   text_ = new CustomTextEdit( splitter_ );
   
-  connect( text_, SIGNAL( textChanged() ), SLOT( _modified() ) );
+  connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );
+  connect( text_->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
   connect( text_, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
   connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
@@ -151,7 +145,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
 
   // save_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "Save the current entry", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), SLOT( saveEntry() ) );
+  connect( button, SIGNAL( clicked() ), SLOT( save() ) );
   button->setText("Save");
   toolbar->addWidget( button );
   read_only_widgets_.push_back( button );
@@ -179,19 +173,11 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   button->setText("Spell");
   #endif
 
-//   // format bar
-//   FormatBar *format_bar = new FormatBar( this, "format", "FORMAT_TOOLBAR_LOCATION" );
-//   format_bar->SetToolTipLabel( &statusbar_->label() );
-//   connect( text_, SIGNAL( currentFontChanged ( const QFont& ) ), format_bar, SLOT( UpdateState( const QFont& ) ) );
-//   read_only_widgets_.push_back( format_bar );
-//   format_bar->SetVisibilityOption( "FORMAT_TOOLBAR" );
-// 
-//   text_format_ = new FORMAT::TextFormat( text_ );
-//   connect( &format_bar->Button(FormatBar::BOLD), SIGNAL( toggled( bool ) ), text_format_, SLOT( Bold( bool ) ) );
-//   connect( &format_bar->Button(FormatBar::ITALIC), SIGNAL( toggled( bool ) ), text_format_, SLOT( Italic( bool ) ) );
-//   connect( &format_bar->Button(FormatBar::STRIKE), SIGNAL( toggled( bool ) ), text_format_, SLOT( Strike( bool ) ) );
-//   connect( &format_bar->Button(FormatBar::UNDERLINE), SIGNAL( toggled( bool ) ), text_format_, SLOT( Underline( bool ) ) );
-//   connect( &format_bar->GetColorMenu(), SIGNAL( ColorSelected( const std::string& ) ), text_format_, SLOT( ColorChanged( const std::string& ) ) );
+  // format bar
+  formatbar_ = new FormatBar( this );
+  formatbar_->setToolTipLabel( &statusbar_->label() );
+  formatbar_->setTarget( text_ );
+  addToolBar( Qt::LeftToolBarArea, formatbar_ );
 
 //   // toolbars
 //   CustomToolBar* toolbar( new CustomToolBar( "Editor edition toolbar", this ) );
@@ -263,7 +249,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
   setMenuBar( menu );
   
-  connect( menu, SIGNAL( save() ), SLOT( saveEntry() ) );
+  connect( menu, SIGNAL( save() ), SLOT( save() ) );
   connect( menu, SIGNAL( closeWindow() ), SLOT( close() ) );
 
   // changes display according to read_only flag
@@ -309,7 +295,7 @@ void EditFrame::displayEntry( LogEntry *entry )
   next_entry_->setEnabled( frame->nextEntry(entry, false) );
   
   // reset modify flag; change title accordingly
-  modified_ = false;
+  _setModified( false );
   updateWindowTitle();
 
   return;
@@ -348,6 +334,7 @@ void EditFrame::setReadOnly( const bool& value )
 string EditFrame::windowTitle( void ) const
 {
 
+  Debug::Throw( "EditFrame::windowTitle.\n" );
   LogEntry* entry( EditFrame::entry() );
 
   ostringstream title;
@@ -360,7 +347,7 @@ string EditFrame::windowTitle( void ) const
   } else title << "Electronic Logbook Editor";
 
   if( isReadOnly() ) title << " (read only)";
-  else if( modified_  ) title << " (modified)";
+  else if( modified()  ) title << " (modified)";
   return title.str();
 
 }
@@ -378,7 +365,7 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
   
   // exec and check return code
   int state = dialog.exec();
-  if( state == AskForSaveDialog::YES ) saveEntry( false );
+  if( state == AskForSaveDialog::YES ) save( false );
   return AskForSaveDialog::ReturnCode(state);
   
 }
@@ -442,10 +429,10 @@ void EditFrame::saveConfiguration( void )
 }
 
 //_____________________________________________
-void EditFrame::saveEntry( bool update_selection )
+void EditFrame::save( bool update_selection )
 {
   
-  Debug::Throw( "EditFrame::SaveEntry.\n" );
+  Debug::Throw( "EditFrame::save.\n" );
   if( isReadOnly() ) return;
 
   // retrieve associated entry
@@ -467,7 +454,7 @@ void EditFrame::saveEntry( bool update_selection )
 
   //! update entry text
   entry->setText( qPrintable( text_->toPlainText() ) );
-  //entry->SetTextFormat( text_format_->Write() );
+  entry->setFormats( formatbar_->get() );
 
   //! update entry title
   entry->setTitle( qPrintable( title_->text() ) );
@@ -485,7 +472,7 @@ void EditFrame::saveEntry( bool update_selection )
   if( entry_is_new ) Key::associate( entry, logbook->latestChild() );
 
   // update this window title, set unmodified.
-  modified_ = false;
+  _setModified( false );
   updateWindowTitle();
 
   // update selection frame
@@ -513,7 +500,7 @@ void EditFrame::newEntry( void )
   Debug::Throw( "EditFrame::newEntry.\n" );
 
   // check if entry is modified
-  if( modified_ && askForSave() == AskForSaveDialog::CANCEL ) return;
+  if( modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // create new entry, set author, set keyword
   LogEntry* entry = new LogEntry();
@@ -778,22 +765,40 @@ void EditFrame::_unlock( void )
   
 }
 
-
 //_____________________________________________
-void EditFrame::_modified( void )
+void EditFrame::_titleModified( bool state )
 {
-  Debug::Throw( "EditFrame::_modified.\n" );
+  Debug::Throw() << "EditFrame::_titleModified - state: " << (state ? "true":"false" ) << endl;
 
   // check readonly status
   if( isReadOnly() ) return;
 
-  // check if already modified; update window title otherwise
-  if( !modified_ ) {
-    modified_ = true;
-    updateWindowTitle();
-  }
+  bool text_modified( text_->document()->isModified() );
+  if( state && !text_modified ) updateWindowTitle();
+  if( !(state || text_modified ) ) updateWindowTitle();
 
   return;
+}
+
+//_____________________________________________
+void EditFrame::_textModified( bool state )
+{
+  Debug::Throw() << "EditFrame::_textModified - state: " << (state ? "true":"false" ) << endl;
+
+  // check readonly status
+  if( isReadOnly() ) return;
+  
+  bool title_modified( title_->isModified() );
+  if( state && !title_modified ) updateWindowTitle();
+  if( !(state || title_modified ) ) updateWindowTitle();
+  
+}
+
+//______________________________________________________
+void EditFrame::_setModified( const bool& value )
+{
+  title_->setModified( value );
+  text_->document()->setModified( value );
 }
 
 //_____________________________________________
@@ -830,7 +835,7 @@ void EditFrame::_displayText( void )
 
   LogEntry* entry( EditFrame::entry() );
   text_->setPlainText( (entry) ? entry->text().c_str() : "" );
-  // text_format_->Read( entry->GetTextFormat() );
+  formatbar_->load( entry->formats() );
 
   return;
 }

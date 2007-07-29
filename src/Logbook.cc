@@ -702,7 +702,7 @@ list<File> Logbook::checkFiles( void )
 //_________________________________
 void Logbook::setModified( const bool& value )
 {
-  Debug::Throw( "Logbook::SetModified.\n");
+  Debug::Throw( "Logbook::setModified.\n");
   modified_ = value;
   if( value ) setModification( TimeStamp::now() );
 }

@@ -81,6 +81,7 @@ noinst_HEADERS = \
   EditAttachmentDialog.h \
   EditFrame.h \
   EditKeywordDialog.h \
+  FormatBar.h \
   HelpText.h \
   HtmlUtil.h \
   Icons.h \
@@ -121,6 +122,7 @@ libeLogbook_a_SOURCES = \
   EditAttachmentDialog.cc \
   EditFrame.cc \
   EditKeywordDialog.cc \
+  FormatBar.cc \
   HtmlUtil.cc \
   KeywordList.cc \
   Logbook.cc \
@@ -147,6 +149,7 @@ nodist_libeLogbook_a_SOURCES = \
   moc_AttachmentFrame.cc \
   moc_AttachmentList.cc \
   moc_EditFrame.cc \
+  moc_FormatBar.cc \
   moc_KeywordList.cc \
   moc_Logbook.cc \
   moc_LogbookModifiedDialog.cc \

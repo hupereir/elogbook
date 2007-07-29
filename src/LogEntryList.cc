@@ -78,7 +78,7 @@ void LogEntryList::addEntry( LogEntry* entry, bool update_selection )
 
   if( update_selection ) {
     clearSelection();
-    setItemSelected( item, true );
+    setCurrentItem( item );
     scrollToItem( item );
   }
   
@@ -102,7 +102,7 @@ void LogEntryList::updateEntry( LogEntry* entry, bool update_selection )
   {
     clearSelection();
     setItemHidden( item, false );
-    setItemSelected( item, true );
+    setCurrentItem( item );
     scrollToItem( item );
   }
   
@@ -119,7 +119,7 @@ void LogEntryList::selectEntry( LogEntry* entry )
 
   clearSelection();
   setItemHidden( item, false );
-  setItemSelected( item, true );
+  setCurrentItem( item );
   scrollToItem( item );
   return;  
 }
@@ -198,7 +198,7 @@ LogEntryList::Item* LogEntryList::itemBelow( QTreeWidgetItem* item, bool update_
   if( out && update_selection ) {
   
     clearSelection();
-    setItemSelected( out, true );
+    setCurrentItem( out );
     scrollToItem( out );
     
   }
@@ -253,7 +253,7 @@ LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_
   
     setItemHidden( out, false );
     clearSelection();
-    setItemSelected( out, true );
+    setCurrentItem( out );
     scrollToItem( out );
     
   }

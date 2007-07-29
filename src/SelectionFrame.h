@@ -91,7 +91,12 @@ class SelectionFrame: public TopWidget, public BASE::Key
   }
 
   //! deletes old logbook, if any. Set the new one an display
-  virtual void setLogbook( const File& file );
+  /* 
+  note: don't pass a const File& here cause it crashes the application
+  when the file that is passed is from the currently opened logbook,
+  since the later gets deleted in the method and the file is being re-used
+  */
+  virtual void setLogbook( File file );
 
   //! check if logbook needs a backup, ask for it if needed
   virtual void checkLogbookBackup( void );

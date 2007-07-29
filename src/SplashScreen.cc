@@ -74,7 +74,7 @@ void SplashScreen::realizeWidget( void )
   setMinimumSize( minimum_size_ );    
   resize( minimum_size_ );
 
-  setOpacity( opacity_ );
+  QtUtil::setOpacity( this, opacity_ );
   QVBoxLayout *layout = new QVBoxLayout(); 
   setLayout( layout );
   

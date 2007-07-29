@@ -237,14 +237,14 @@ LogEntry* LogEntry::clone( void ) const
 //__________________________________
 void LogEntry::setKeyword( const string& keyword )
 {
-  Debug::Throw( "LoqEntry::SetKeyword.\n");
+  Debug::Throw( "LoqEntry::setKeyword.\n");
   keyword_ = formatKeyword( keyword );
 }
 
 //__________________________________
 bool LogEntry::matchAttachment( const string& buf )
 {
-  Debug::Throw( "LogEntry::MatchAttachment.\n" );
+  Debug::Throw( "LogEntry::matchAttachment.\n" );
 
   // retrieve associated attachments
   KeySet<Attachment> attachments( this );
@@ -258,14 +258,14 @@ bool LogEntry::matchAttachment( const string& buf )
 //__________________________________
 void LogEntry::modified( void )
 {
-  Debug::Throw( "LogEntry::Modified.\n" );
+  Debug::Throw( "LogEntry::modified.\n" );
   modification_ = TimeStamp::now();
 }
 
 //__________________________________
 QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &mask )
 {
-  Debug::Throw( "LogEntry::HtmlElement.\n" );
+  Debug::Throw( "LogEntry::htmlElement.\n" );
 
   QDomElement out = document.createElement( "div" );
   
@@ -438,7 +438,7 @@ void LogEntry::_htmlTextNode(
     QDomElement& parent,
     QDomDocument& document ) const
 {
-  Debug::Throw( "LogEntry::_HtmlTextNode.\n" );
+  Debug::Throw( "LogEntry::_htmlTextNode.\n" );
   
   // dump format list
   Debug::Throw() << formats_ << endl;

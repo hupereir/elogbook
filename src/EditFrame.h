@@ -41,6 +41,7 @@
 
 #include "AskForSaveDialog.h"
 #include "AttachmentList.h"
+#include "CustomLineEdit.h"
 #include "CustomTextEdit.h"
 #include "CustomMainWindow.h"
 #include "Counter.h"
@@ -52,8 +53,8 @@
 #include "TextPosition.h"
 
 class Attachment;
-class CustomLineEdit;
 class CustomToolButton;
+class FormatBar;
 class SelectionFrame;
 class StatusBar;
 
@@ -122,13 +123,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void setReadOnly( const bool& value );
   
   //! check if current entry has been modified or not
-  const bool& modified( void ) const 
-  { return modified_; }
-  
-  //! check if current entry has been modified or not
-  void setModified( const bool& value ) 
-  { modified_ = value; }
-  
+  bool modified( void ) const 
+  { return title_->isModified() || text_->document()->isModified(); }
+    
   //! computes window title
   std::string windowTitle() const;
   
@@ -154,7 +151,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void saveConfiguration( void );
 
   //! Save Current entry
-  void saveEntry( bool update_selection = true );
+  void save( bool update_selection = true );
   
   //! creates a new entry
   void newEntry( void );
@@ -204,7 +201,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _unlock( void );
   
   //! Set entry as modified, change window title
-  void _modified( void );
+  void _titleModified( bool );
+
+  //! Set entry as modified, change window title
+  void _textModified( bool );
   
   //! display cursor position
   void _displayCursorPosition( void )
@@ -216,37 +216,12 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   private:
   
+  //! check if current entry has been modified or not
+  void _setModified( const bool& value );  
+  
   //! display cursor position
   void _displayCursorPosition( const TextPosition& position );
-  
-//   //! internal customized label to have correct background color
-//   class CustomLabel : public QLabel
-//   {
-//     
-//     public:
-//     
-//     //! constructor
-//     CustomLabel( QWidget *parent ):
-//       QLabel( parent, name.c_str() ),
-//       color_( "" )
-//       {}
-//       
-//     //! set color
-//     void SetColor( const std::string& color )
-//     { color_ = color; }
-//     
-//     protected:
-//     
-//     //! overloaded draw method
-//     void drawContents( QPainter *painter );
-//   
-//     private:
-//     
-//     //! parent ColorSelectionFrame
-//     std::string color_;
-//   
-//   };
-  
+
   //! retrieve associated SelectionFrame
   SelectionFrame* _selectionFrame( void ) const; 
   
@@ -261,9 +236,6 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! list of buttons to disactivate in case of read-only
   std::list< QWidget* > read_only_widgets_;
-  
-  //! true if entry associated to EditFrame has been modified
-  bool modified_;    
   
   //! text formating bar
   // FORMAT::TextFormat* text_format_;
@@ -290,7 +262,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     
   //! LogEntry text Object
   CustomTextEdit *text_;            
-    
+  
+  //! pointer to text format bar
+  FormatBar* formatbar_;
+  
   //! pointer to statusbar    
   StatusBar* statusbar_;            
   

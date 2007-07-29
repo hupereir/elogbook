@@ -323,7 +323,7 @@ void AttachmentList::newAttachment(
     static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
 
     // save EditFrame entry
-    edit_frame->saveEntry();
+    edit_frame->save();
     
     break;
     
@@ -476,7 +476,7 @@ void AttachmentList::_editAttachment( void )
   static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
   
   // save EditFrame entry
-  edit_frame->saveEntry();
+  edit_frame->save();
   
 }
 
@@ -557,7 +557,7 @@ void AttachmentList::_deleteAttachment( void )
   static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
   
   // save EditFrame entry
-  edit_frame->saveEntry();
+  edit_frame->save();
 
   return;      
   
