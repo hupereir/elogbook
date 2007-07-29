@@ -140,10 +140,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! retrieve next entry (if any)
   virtual LogEntry* nextEntry( LogEntry* entry, const bool& update_selection );
 
-  //! retrieve current keyword if any
-  virtual std::string currentKeyword( void )
-  { return keywordList().currentKeyword(); }
-
   //! reset attachment frame
   virtual void resetAttachmentFrame( void ) const;
 
@@ -302,8 +298,8 @@ class SelectionFrame: public TopWidget, public BASE::Key
   virtual void _resetKeywordList( void );
   
   //! load colors (from current logbook)
-  void _loadColors( void );
-  
+  void _loadColors( void );    
+    
   //! main menu
   Menu* menu_;
 

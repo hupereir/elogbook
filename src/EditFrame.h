@@ -53,7 +53,7 @@
 #include "TextPosition.h"
 
 class Attachment;
-class CustomToolButton;
+class CustomToolBar;
 class FormatBar;
 class SelectionFrame;
 class StatusBar;
@@ -186,10 +186,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _spellCheck( void );
 
   //! undo in focused editor (text/title/keyword)
-  // void _undo( void );
+  void _undo( void );
   
   //! redo in focused editor (text/title/keyword);
-  // void _redo( void );
+  void _redo( void );
  
   //! opens a read_only EditFrame with same entry
   void _newWindow( void );    
@@ -237,9 +237,6 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! list of buttons to disactivate in case of read-only
   std::list< QWidget* > read_only_widgets_;
   
-  //! text formating bar
-  // FORMAT::TextFormat* text_format_;
-   
   //!@name stored actions to toggle visibility
   //@{
   
@@ -264,10 +261,13 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   CustomTextEdit *text_;            
   
   //! pointer to text format bar
-  FormatBar* formatbar_;
+  FormatBar* format_toolbar_;
+      
+  //! map toolbar and option name
+  std::list< std::pair<QToolBar*, std::string> > toolbars_;
   
   //! pointer to statusbar    
-  StatusBar* statusbar_;            
+  StatusBar* statusbar_;   
   
   //! color label
   QLabel* color_label_;

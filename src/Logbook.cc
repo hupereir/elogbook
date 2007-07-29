@@ -557,14 +557,14 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
   if( !(mask & HTML_ALL_MASK ) ) return QDomElement();
 
   // surrounding table
-  QDomElement table = document.createElement( "table" ).toElement();
-  table.setAttribute( "class", "header_outer_table" );
-  QDomElement column = table.
+  QDomElement out = document.createElement( "table" );
+  out.setAttribute( "class", "header_outer_table" );
+  QDomElement column = out.
     appendChild( document.createElement( "tr" ) ).
     appendChild( document.createElement( "td" ) ).
     toElement();
   column.setAttribute( "class", "header_column" );
-  table = column.
+  QDomElement table = column.
     appendChild( document.createElement( "table" ) ).
     toElement();
   table.setAttribute( "class", "header_inner_table" );
@@ -583,6 +583,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
 
   if( author().size() && (mask&HTML_AUTHOR ) )
   {
+    
     row = table.appendChild( document.createElement( "tr" ) ).toElement();
     column = row.appendChild( document.createElement( "td" ) ).toElement();
     column.setAttribute( "width", "15%" );
@@ -670,10 +671,10 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
       appendChild( document.createElement( "tr" ) ).
       appendChild( document.createElement( "td" ) ).toElement();
     column.setAttribute( "colspan", "2" );
-    HtmlUtil::textNode( comments(), column, document );
+    HtmlUtil::textNode( comments().c_str(), column, document );
   }
 
-  return table;
+  return out;
 }
 
 //_________________________________

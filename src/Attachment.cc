@@ -269,7 +269,7 @@ void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) cons
   
   // comments
   if( comments().size() )
-  HtmlUtil::textNode( comments(), par, document );
+  HtmlUtil::textNode( comments().c_str(), par, document );
   return;
 }  
   

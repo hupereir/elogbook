@@ -68,6 +68,7 @@
 
 using namespace std;
 using namespace BASE;
+using namespace Qt;
 
 //_______________________________________________
 EditFrame::EditFrame( QWidget* parent, bool read_only ):
@@ -76,7 +77,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   read_only_( read_only )
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
-
+  setObjectName( "EDITFRAME" );
+  
   QWidget* main( new QWidget( this ) ); 
   setCentralWidget( main );
 
@@ -122,10 +124,12 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   statusBar().addClock();
 
   // toolbars
-  CustomToolBar* toolbar( new CustomToolBar( "Editor main toolbar", this ) );
-  addToolBar( Qt::LeftToolBarArea, toolbar );
+  CustomToolBar* toolbar( new CustomToolBar( "Main", this ) );
+  toolbar->setObjectName( "MAIN_TOOLBAR" );
+  toolbars_.push_back( make_pair( toolbar, "MAIN_TOOLBAR" ) );
+  addToolBar( LeftToolBarArea, toolbar );
   CustomToolButton *button;
-
+  
   // toolbar buttons pixmaps
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
@@ -174,38 +178,39 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   #endif
 
   // format bar
-  formatbar_ = new FormatBar( this );
-  formatbar_->setToolTipLabel( &statusbar_->label() );
-  formatbar_->setTarget( text_ );
-  addToolBar( Qt::LeftToolBarArea, formatbar_ );
+  format_toolbar_ = new FormatBar( this );
+  format_toolbar_->setObjectName( "FORMAT_TOOLBAR" );
+  format_toolbar_->setToolTipLabel( &statusbar_->label() );
+  format_toolbar_->setTarget( text_ );
+  toolbars_.push_back( make_pair( format_toolbar_, "FORMAT_TOOLBAR" ) );
+  addToolBar( LeftToolBarArea, format_toolbar_ );
 
-//   // toolbars
-//   CustomToolBar* toolbar( new CustomToolBar( "Editor edition toolbar", this ) );
-//   addToolBar( Qt::LeftToolBarArea, toolbar );
-// 
-//   // undo button
-//   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::UNDO, path_list ) ), "Undo last text modification", &statusbar_->label() );
-//   connect( button, SIGNAL( clicked() ), SLOT( _undo() ) );
-//   button->setText("Undo");
-//   toolbar->addWidget( button );
-//   read_only_widgets_.push_back( button );
-// 
-//   // redo button
-//   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::REDO, path_list ) ), "Redo last text modification", &statusbar_->label() );
-//   connect( button, SIGNAL( clicked() ), SLOT( _redo() ) );
-//   button->setText("Redo");
-//   toolbar->addWidget( button );
-//   read_only_widgets_.push_back( button );
+  // edition toolbars
+  toolbar = new CustomToolBar( "History", this );
+  toolbar->setObjectName( "EDITION_TOOLBAR" );
+  toolbars_.push_back( make_pair( toolbar, "EDITION_TOOLBAR" ) );
+  addToolBar( LeftToolBarArea, toolbar );
+
+  // undo button
+  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::UNDO, path_list ) ), "Undo last text modification", &statusbar_->label() );
+  connect( button, SIGNAL( clicked() ), SLOT( _undo() ) );
+  button->setText("Undo");
+  toolbar->addWidget( button );
+  read_only_widgets_.push_back( button );
+
+  // redo button
+  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::REDO, path_list ) ), "Redo last text modification", &statusbar_->label() );
+  connect( button, SIGNAL( clicked() ), SLOT( _redo() ) );
+  button->setText("Redo");
+  toolbar->addWidget( button );
+  read_only_widgets_.push_back( button );
 
   // extra toolbar
-  toolbar = new CustomToolBar( "Editor extra toolbar (1)", this );
-  addToolBar( Qt::LeftToolBarArea, toolbar );
-
-  // main_window button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HOME, path_list ) ), "Raise the main window", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), &static_cast<MainFrame*>(qApp)->selectionFrame(), SLOT( uniconify() ) );
-  button->setText("Home");
-  toolbar->addWidget( button );
+  toolbar = new CustomToolBar( "Tools", this );
+  toolbar->setObjectName( "EXTRA_TOOLBAR" );
+  toolbars_.push_back( make_pair( toolbar, "EXTRA_TOOLBAR" ) );
+  addToolBarBreak( LeftToolBarArea );
+  addToolBar( LeftToolBarArea, toolbar );
 
   // view_html button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "Convert the current entry to HTML", &statusbar_->label() );
@@ -213,15 +218,29 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   button->setText("Html");
   toolbar->addWidget( button );
 
-  // new_window button
+  // clone button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::COPY, path_list ) ), "Open a read-only editor for the current entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _newWindow() ) );
   button->setText("Clone");
   toolbar->addWidget( button );
 
+  // entry_info button
+  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Display the current entry informations", &statusbar_->label() );
+  connect( button, SIGNAL( clicked() ), SLOT( _entryInfo() ) );
+  button->setText("Info");
+  toolbar->addWidget( button );
+
   // extra toolbar
-  toolbar = new CustomToolBar( "Editor extra toolbar (2)", this );
-  addToolBar( Qt::LeftToolBarArea, toolbar );
+  toolbar = new CustomToolBar( "Navigation", this );
+  toolbars_.push_back( make_pair( toolbar, "NAVIGATION_TOOLBAR" ) );
+  toolbar->setObjectName( "NAVIGATION_TOOLBAR" );
+  addToolBar( LeftToolBarArea, toolbar );
+
+  // main_window button
+  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HOME, path_list ) ), "Raise the main window", &statusbar_->label() );
+  connect( button, SIGNAL( clicked() ), &static_cast<MainFrame*>(qApp)->selectionFrame(), SLOT( uniconify() ) );
+  button->setText("Home");
+  toolbar->addWidget( button );
 
   // previous_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::PREV, path_list ) ), "Display the previous entry", &statusbar_->label() );
@@ -229,7 +248,6 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   button->setText("Previous");
   toolbar->addWidget( button );
   previous_entry_ = button;
-  //read_only_widgets_.push_back( button );
 
   // next_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEXT, path_list ) ), "Display the next entry", &statusbar_->label() );
@@ -237,13 +255,6 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   button->setText("Next");
   toolbar->addWidget( button );
   next_entry_ = button;
-  //read_only_widgets_.push_back( button );
-
-  // entry_info button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Display the current entry informations", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _entryInfo() ) );
-  button->setText("Info");
-  toolbar->addWidget( button );
 
   // create menu if requested
   Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
@@ -259,7 +270,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
   updateConfiguration();
- 
+
 }
 
 //____________________________________________
@@ -408,13 +419,42 @@ void EditFrame::updateConfiguration( void )
   
   // window size
   resize( XmlOptions::get().get<int>( "EDIT_FRAME_WIDTH" ), XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" ) );
-
+  
   // set splitter default size
   QList<int> sizes;
   sizes << XmlOptions::get().get<int>( "EDT_HEIGHT" );
   sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
   splitter_->setSizes( sizes );
-  
+
+  // toolbars visibility and location
+  for( list< pair<QToolBar*, string> >::iterator iter = toolbars_.begin(); iter != toolbars_.end(); iter++ )
+  {
+    
+    QToolBar* toolbar( iter->first );
+    string option_name( iter->second );
+    string location_name( option_name + "_LOCATION" );
+    
+    bool visibility( XmlOptions::get().find( option_name ) ? XmlOptions::get().get<bool>( option_name ):true );
+    bool current_visibility( toolbar->isVisible() );
+    
+    ToolBarArea location( (XmlOptions::get().find( location_name )) ? (ToolBarArea) CustomToolBar::nameToArea( XmlOptions::get().get<string>( location_name ) ):LeftToolBarArea );
+    ToolBarArea current_location( toolBarArea( toolbar ) );
+    
+    Debug::Throw() << "EditFrame::updateConfiguration - " << option_name << " visibility: " << visibility << " location: " << (int)location << endl;
+    
+    if( visibility )
+    {
+      if( !( current_visibility && location == current_location ) ) 
+      {
+        addToolBar( location, toolbar );
+        toolbar->show();
+      }
+    } else toolbar->hide();
+   
+    XmlOptions::get().set<bool>( option_name, !toolbar->isHidden() );
+    XmlOptions::get().set<string>( location_name, CustomToolBar::areaToName( toolBarArea( toolbar ) ) );
+  }
+
 }
 
 //_____________________________________________
@@ -426,6 +466,19 @@ void EditFrame::saveConfiguration( void )
   XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
   XmlOptions::get().set<int>( "EDT_HEIGHT", text_->height() );
   XmlOptions::get().set<int>( "ATC_HEIGHT", (*KeySet<AttachmentList>(this).begin())->height() );
+  
+  // save toolbars location and visibility
+  for( list< pair<QToolBar*, string> >::iterator iter = toolbars_.begin(); iter != toolbars_.end(); iter++ )
+  {
+    
+    QToolBar* toolbar( iter->first );
+    string option_name( iter->second );
+    string location_name( option_name + "_LOCATION" );
+    XmlOptions::get().set<bool>( option_name, !toolbar->isHidden() );
+    XmlOptions::get().set<string>( location_name, CustomToolBar::areaToName( toolBarArea( toolbar ) ) );
+  }
+  
+
 }
 
 //_____________________________________________
@@ -454,7 +507,7 @@ void EditFrame::save( bool update_selection )
 
   //! update entry text
   entry->setText( qPrintable( text_->toPlainText() ) );
-  entry->setFormats( formatbar_->get() );
+  entry->setFormats( format_toolbar_->get() );
 
   //! update entry title
   entry->setTitle( qPrintable( title_->text() ) );
@@ -505,7 +558,7 @@ void EditFrame::newEntry( void )
   // create new entry, set author, set keyword
   LogEntry* entry = new LogEntry();
   entry->setAuthor( XmlOptions::get().get<string>( "USER" ) );
-  entry->setKeyword( _selectionFrame()->currentKeyword() );
+  entry->setKeyword( _selectionFrame()->keywordList().current() );
 
   // add logbook parent if any
   Logbook *logbook( _selectionFrame()->logbook() );
@@ -548,12 +601,13 @@ void EditFrame::_previousEntry( void )
 {
   Debug::Throw( "EditFrame::_previousEntry.\n" );
 
-  if( isReadOnly() ) return;
+  //if( isReadOnly() ) return;
     
   SelectionFrame *frame( _selectionFrame() );
   LogEntry* entry( frame->previousEntry( EditFrame::entry(), true ) );
   if( !( entry  && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
+  setReadOnly( false );
 
 }
 
@@ -562,12 +616,13 @@ void EditFrame::_nextEntry( void )
 {
   Debug::Throw( "EditFrame::_nextEntry.\n" );
 
-  if( isReadOnly() ) return;
+  //if( isReadOnly() ) return;
 
   SelectionFrame *frame( _selectionFrame() );
   LogEntry* entry( frame->nextEntry( EditFrame::entry(), true ) );
   if( !( entry && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
+  setReadOnly( false );
 
 }
 
@@ -589,23 +644,23 @@ void EditFrame::_entryInfo( void )
 
 }
 
-// //_____________________________________________
-// void EditFrame::_Undo( void )
-// {
-//   Debug::Throw( "EditFrame::_Undo.\n" );
-//   if( text_->hasFocus() ) text_->undo();
-//   else if( title_->hasFocus() ) title_->undo();
-//   return;
-// }
-// 
-// //_____________________________________________
-// void EditFrame::_Redo( void )
-// {
-//   Debug::Throw( "EditFrame::_Redo.\n" );
-//   if( text_->hasFocus() ) text_->redo();
-//   else if( title_->hasFocus() ) title_->redo();
-//   return;
-// }
+//_____________________________________________
+void EditFrame::_undo( void )
+{
+  Debug::Throw( "EditFrame::_undo.\n" );
+  if( text_->hasFocus() ) text_->document()->undo();
+  else if( title_->hasFocus() ) title_->undo();
+  return;
+}
+
+//_____________________________________________
+void EditFrame::_redo( void )
+{
+  Debug::Throw( "EditFrame::_redo.\n" );
+  if( text_->hasFocus() ) text_->document()->redo();
+  else if( title_->hasFocus() ) title_->redo();
+  return;
+}
 
 //_____________________________________________
 void EditFrame::_deleteEntry( void )
@@ -657,8 +712,9 @@ void EditFrame::_newWindow( void )
   SelectionFrame *frame( _selectionFrame() );
 
   // create new EditFrame
-  EditFrame *edit_frame( new EditFrame( frame, entry ) );
+  EditFrame *edit_frame( new EditFrame( frame ) );
   Key::associate( edit_frame, frame );
+  edit_frame->displayEntry( entry );
 
   // raise EditFrame
   edit_frame->show();
@@ -835,7 +891,7 @@ void EditFrame::_displayText( void )
 
   LogEntry* entry( EditFrame::entry() );
   text_->setPlainText( (entry) ? entry->text().c_str() : "" );
-  formatbar_->load( entry->formats() );
+  format_toolbar_->load( entry->formats() );
 
   return;
 }
@@ -874,23 +930,3 @@ void EditFrame::_displayAttachments( void )
 
   return;
 }
-
-// //_________________________________________________________
-// void EditFrame::CustomLabel::drawContents( QPainter *painter )
-// {
-//   Debug::Throw( "EditFrame::CustomLabel::drawContents.\n" );
-// 
-//   if( color_ == "" || Str( color_ ).IsEqual( "None", false ) ) {
-//     QLabel::drawContents( painter );
-//     return;
-//   }
-// 
-//   // create/check color
-//   QColor color( color_.c_str() );
-//   if( !color.isValid() ) QLabel::drawContents( painter );
-// 
-//   // paint background rectangle
-//   painter->fillRect( contentsRect(), color );
-//   QLabel::drawContents( painter );
-// 
-// }

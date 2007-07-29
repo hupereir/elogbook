@@ -51,7 +51,7 @@ class EditKeywordDialog: public CustomDialog
   {}
   
   //! keyword
-  void addKeyword( const std::string& keyword )
+  void add( const std::string& keyword )
   { combo_box_->addItem( keyword.c_str() ); }
   
   //! keyword

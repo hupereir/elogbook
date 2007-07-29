@@ -29,6 +29,7 @@
    \date $Date$
 */
 
+#include <QApplication>
 #include <QPainter>
 
 #include "Debug.h"
@@ -40,6 +41,7 @@ using namespace std;
 using namespace BASE;
 
 //_______________________________________________
+const QString LogEntryList::DRAG = "LogEntryList::Drag";
 const char* LogEntryList::column_titles_[ LogEntryList::n_columns ] = 
 {
   "title",
@@ -51,24 +53,30 @@ const char* LogEntryList::column_titles_[ LogEntryList::n_columns ] =
 
 //_____________________________________________
 LogEntryList::LogEntryList( QWidget *parent, const string& name ):
-  CustomListView( parent )
+  CustomListView( parent ),
+  first_item_( 0 ),
+  last_item_( 0 ),
+  drag_enabled_( false )
 {
   
   Debug::Throw( "LogEntryList::LogEntryList.\n" );
-  
+ 
+  setRootIsDecorated( false );    
+  setAcceptDrops(false);  
+ 
   setColumnCount( n_columns );
   for( unsigned int i=0; i<n_columns; i++ )
   { setColumnName( i, column_titles_[i] ); }
 
   setSelectionMode( QAbstractItemView::ContiguousSelection );
-  
+//  setSelectionMode( QAbstractItemView::ExtendedSelection );
 }
  
 //_______________________________________________
-void LogEntryList::addEntry( LogEntry* entry, bool update_selection )
+void LogEntryList::add( LogEntry* entry, bool update_selection )
 {
   
-  Debug::Throw("LogEntryList::AddEntry.\n" );
+  Debug::Throw("LogEntryList::add.\n" );
   Exception::assert( entry, DESCRIPTION( "invalid entry" ) );
   
   Item *item( new Item( this ) );
@@ -87,10 +95,10 @@ void LogEntryList::addEntry( LogEntry* entry, bool update_selection )
 }
 
 //_______________________________________________
-void LogEntryList::updateEntry( LogEntry* entry, bool update_selection )
+void LogEntryList::update( LogEntry* entry, bool update_selection )
 {
   
-  Debug::Throw( "LogEntryList::UpdateEntry.\n" );
+  Debug::Throw( "LogEntryList::update.\n" );
   Exception::assert( entry, DESCRIPTION( "wrong entry" ) );
   
   // get associated Item
@@ -110,7 +118,7 @@ void LogEntryList::updateEntry( LogEntry* entry, bool update_selection )
 }
    
 //_______________________________________________
-void LogEntryList::selectEntry( LogEntry* entry )
+void LogEntryList::select( LogEntry* entry )
 {
   Debug::Throw( "LogEntryList::SelectEntry.\n" );
   Exception::assert( entry, DESCRIPTION("invalid entry") );
@@ -260,6 +268,154 @@ LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_
   
   return out;
   
+}
+
+//_______________________________________________
+void LogEntryList::mousePressEvent( QMouseEvent* event )
+{
+  
+  Debug::Throw( "LogEntryList::mousePressEvent.\n" );
+  
+  // check button
+  if( event->button() != Qt::LeftButton ) return CustomListView::mousePressEvent( event );
+
+  // retrieve Item at position
+  QTreeWidgetItem* item( itemAt( event->pos() ) );
+  if( !item ) 
+  {
+    clearSelection();
+    return;
+  }
+  
+  // set current item as selected
+  if( !isItemSelected( item ) ) setCurrentItem( item );
+  else {
+    drag_enabled_ = true;
+    drag_start_ = event->pos();
+  }
+  
+  first_item_ = item;
+  last_item_ = item;
+  
+
+}
+  
+//_____________________________________________________________
+void LogEntryList::mouseMoveEvent( QMouseEvent* event )
+{
+  
+  Debug::Throw( "LogEntryList::mouseMoveEvent.\n" );
+     
+  if( !(event->buttons()&Qt::LeftButton) ) return CustomListView::mouseMoveEvent( event );
+  
+  // retrieve Item at position
+  QTreeWidgetItem* item( itemAt( event->pos() ) );
+  if( !item ) return;
+  
+     
+  // check distance to last click
+  if( (event->pos() - drag_start_ ).manhattanLength() >= QApplication::startDragDistance() && drag_enabled_ )
+  { _startDrag( event ); }
+
+  
+  // select all items between first_item_ and current item
+  int first( indexOfTopLevelItem( first_item_ ) );
+  int last( indexOfTopLevelItem( last_item_ ) );
+  int index( indexOfTopLevelItem( item ) );
+  
+  if( first <= last )
+  {
+    
+    if( index > last )
+    {
+      for( int i = last; i <= index; i++ )
+      { setItemSelected( topLevelItem(i), true ); }
+    
+    } else if( index <= last && index >= first ) { 
+    
+      for( int i = index+1; i<= last; i++ )
+      { setItemSelected( topLevelItem(i), false ); }
+    
+    } else {
+      
+      for( int i = first+1; i<= last; i++ )
+      { setItemSelected( topLevelItem(i), false ); }
+      
+      for( int i = index; i<=first; i++ )
+      { setItemSelected( topLevelItem(i), true ); }
+    
+    }
+    
+  } else {
+      
+    if( index < last )
+    {
+    
+      for( int i = index; i <= last; i++ )
+      { setItemSelected( topLevelItem(i), true ); }
+    
+    } else if( index >= last && index <= first ) {
+    
+      for( int i = last; i< index; i++ )
+      { setItemSelected( topLevelItem(i), false ); }
+    
+    } else {
+
+      for( int i = last; i<first; i++ )
+      { setItemSelected( topLevelItem(i), false ); }
+    
+      for( int i = first; i<= index; i++ )
+       { setItemSelected( topLevelItem(i), true ); }
+
+    }
+  
+  }
+  
+  last_item_ = item;
+ 
+  return;
+  
+}
+    
+//_____________________________________________________________
+void LogEntryList::mouseReleaseEvent( QMouseEvent* event )
+{
+  Debug::Throw( "LogEntryList::mouseReleaseEvent.\n" );
+   
+  // retrieve Item at position
+  QTreeWidgetItem* item( itemAt( event->pos() ) );
+
+  // clear selection
+  if( first_item_ == item ) 
+  {
+    clearSelection();
+   
+    // set current item as selected
+    setCurrentItem( item );
+  }
+  
+  drag_enabled_ = false;
+  return CustomListView::mouseReleaseEvent( event );  
+}
+
+//_______________________________________________
+bool LogEntryList::_startDrag( QMouseEvent* event )
+{
+  Debug::Throw( "LogEntryList::_startDrag.\n" );
+  
+  // start drag
+  QDrag *drag = new QDrag(this);
+  
+  // store data
+  QMimeData *mime = new QMimeData();
+  mime->setData( LogEntryList::DRAG, 0 );
+  drag->setMimeData(mime);
+  drag->start(Qt::CopyAction);  
+
+  // disable drag
+  drag_enabled_ = false;
+  
+  return true;
 }
 
 //_______________________________________________

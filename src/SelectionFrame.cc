@@ -421,8 +421,8 @@ void SelectionFrame::selectEntry( LogEntry* entry )
   Debug::Throw( "SelectionFrame::selectEntry.\n" );
   
   if( !entry ) return;
-  keywordList().selectKeyword( entry->keyword() );
-  logEntryList().selectEntry( entry );
+  keywordList().select( entry->keyword() );
+  logEntryList().select( entry );
   return;
   
 }
@@ -434,14 +434,14 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
   Debug::Throw( "SelectionFrame::updateEntry.\n" );
   
   // add entry into frame list or update existing    
-  if( entry->keyword() != keywordList().currentKeyword() )
+  if( entry->keyword() != keywordList().current() )
   {
-    keywordList().addKeyword( entry->keyword() );
-    keywordList().selectKeyword( entry->keyword() );
+    keywordList().add( entry->keyword() );
+    keywordList().select( entry->keyword() );
   }
 
-  if( !KeySet<LogEntryList::Item>( entry ).empty() ) logEntryList().updateEntry( entry, update_selection );
-  else logEntryList().addEntry( entry, update_selection );
+  if( !KeySet<LogEntryList::Item>( entry ).empty() ) logEntryList().update( entry, update_selection );
+  else logEntryList().add( entry, update_selection );
   
 }
 
@@ -1620,8 +1620,8 @@ void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWi
   _resetList();
   
   // if EditFrame current entry is visible, select it;
-  if( selected_entry && selected_entry->isSelected() ) logEntryList().selectEntry( selected_entry );
-  else if( last_visible_entry ) logEntryList().selectEntry( last_visible_entry );
+  if( selected_entry && selected_entry->isSelected() ) logEntryList().select( selected_entry );
+  else if( last_visible_entry ) logEntryList().select( last_visible_entry );
   
   return;
 } 
@@ -1638,8 +1638,8 @@ void SelectionFrame::_newKeyword( void )
 
   const set<string>& keywords( keywordList().keywords() );
   for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  dialog.addKeyword( *iter );
-  dialog.setKeyword( keywordList().currentKeyword() );
+  dialog.add( *iter );
+  dialog.setKeyword( keywordList().current() );
   
   // map dialog
   QtUtil::centerOnParent( &dialog );
@@ -1648,8 +1648,8 @@ void SelectionFrame::_newKeyword( void )
   // retrieve keyword from line_edit
   string keyword = LogEntry::formatKeyword( dialog.keyword() );
   if( !keyword.empty() ) {
-    keywordList().addKeyword( keyword );
-    keywordList().selectKeyword( keyword );
+    keywordList().add( keyword );
+    keywordList().select( keyword );
   }
 }
   
@@ -1673,7 +1673,7 @@ void SelectionFrame::_renameKeyword( void )
   }
 
   // get current selected keyword
-  string keyword( keywordList().currentKeyword() );
+  string keyword( keywordList().current() );
       
   //! create CustomDialog
   EditKeywordDialog dialog( this );
@@ -1681,7 +1681,7 @@ void SelectionFrame::_renameKeyword( void )
 
   const set<string>& keywords( keywordList().keywords() );
   for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  dialog.addKeyword( *iter );
+  dialog.add( *iter );
   dialog.setKeyword( keyword );
   
   // map dialog
@@ -1714,7 +1714,7 @@ void SelectionFrame::_deleteKeyword( void )
 
   // get current selected keyword
   QTreeWidgetItem *selected_item( keywordList().QTreeWidget::currentItem() );
-  string keyword( keywordList().currentKeyword() );
+  string keyword( keywordList().current() );
 
   // retrieve associated entries
   KeySet<LogEntry> entries( logbook()->entries() );
@@ -1749,7 +1749,7 @@ void SelectionFrame::_deleteKeyword( void )
   }
 
   _resetKeywordList();
-  keywordList().selectKeyword( new_keyword );
+  keywordList().select( new_keyword );
 
   _resetList();
     
@@ -1813,8 +1813,8 @@ void SelectionFrame::_renameKeyword( const string& keyword, const string& new_ke
   // reset lists
   _resetKeywordList();
   _resetList();
-  keywordList().addKeyword( new_keyword );
-  keywordList().selectKeyword( new_keyword );
+  keywordList().add( new_keyword );
+  keywordList().select( new_keyword );
     
   // Save logbook if needed
   if( !logbook()->file().empty() ) save();     
@@ -1843,7 +1843,7 @@ void SelectionFrame::_changeEntryKeyword( void )
   combo->setAutoCompletion( true );
   combo->setEditable( true );
 
-  string keyword( keywordList().currentKeyword() );
+  string keyword( keywordList().current() );
   const set<string>& keywords( keywordList().keywords() );
   for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
   combo->addItem(iter->c_str() );
@@ -1894,8 +1894,8 @@ void SelectionFrame::_changeEntryKeyword( const string& new_keyword )
   // reset lists
   _resetKeywordList();
   _resetList();
-  keywordList().addKeyword( new_keyword );
-  keywordList().selectKeyword( new_keyword );
+  keywordList().add( new_keyword );
+  keywordList().select( new_keyword );
   Debug::Throw() << "SelectionFrame::_changeEntryKeyword - new keyword selected" << endl;
   
   // update selection
@@ -2035,57 +2035,6 @@ void SelectionFrame::_changeEntryColor( QColor color )
 
 }
 
-// //_______________________________________________
-// void SelectionFrame::_ChangeEntryColor( const std::string& color )
-// {
-//   Debug::Throw( "SelectionFrame::_ChangeEntryColor.\n" );
-// 
-//   // try add color to options
-//   list<string> colors( Options::GetSpecialOptions<string>( "COLOR" ) );
-//   if( std::find( colors.begin(), colors.end(), color ) == colors.end() )
-//   {
-//     Options::Get().Add( Option( "COLOR", color ) );
-//     if( Options::Get().file().size() ) Options::Get().Write();
-//   }
-// 
-//   // check if selected item make sense
-//   QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
-//   if( items.empty() )
-//   {
-//     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
-//     return;
-//   }
-// 
-//   // retrieve associated entry
-//   for( QList<LogEntryList::Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
-//   {
-//     // get associated entry
-//     LogEntryList::Item *item( *iter );
-//     LogEntry* entry( item->entry() );
-// 
-//     entry->SetColor( color );
-//     entry->Modified();
-// 
-//     // redraw item
-//     item->repaint();
-// 
-//     // update EditFrame color
-//     KeySet<EditFrame> frames( entry );
-//     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-//     if( !(*iter)->isHidden() ) (*iter)->DisplayColor();
-// 
-//     // set logbooks as modified
-//     KeySet<Logbook> logbooks( entry );
-//     for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
-//     (*iter)->SetModified( true );
-// 
-//   }
-// 
-//   // save Logbook
-//   if( GetLogbook()->file().size() ) save();
-// 
-// }
-
 //_______________________________________________
 void SelectionFrame::_autoSave( void )
 {
@@ -2149,7 +2098,7 @@ void SelectionFrame::_resetList( void )
   if( !logbook_ ) return;
   KeySet<LogEntry> entries( logbook()->entries() );
   for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
-  { if( (*it)->isSelected() ) logEntryList().addEntry( *it ); }
+  { if( (*it)->isSelected() ) logEntryList().add( *it ); }
   
   logEntryList().sort();
   logEntryList().resizeColumnToContents( LogEntryList::MODIFICATION );
@@ -2165,13 +2114,23 @@ void SelectionFrame::_resetKeywordList( void )
   Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
       
   // clear list of entries
-  keywordList().clear();
+  // keywordList().clear();
   
   if( !logbook_ ) return;
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )  
-  if( (*it)->isFindSelected() ) keywordList().addKeyword( (*it)->keyword() );  
+    
+  // retrieve current list of keywords
+  set<string> old_keywords = keywordList().keywords();
   
+  // retrieve new list of keywords (from logbook)
+  set<string> new_keywords;
+  KeySet<LogEntry> entries( logbook()->entries() );
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )  
+  { if( (*iter)->isFindSelected() ) new_keywords.insert( (*iter)->keyword() ); }
+  
+  // reset keyword list to new set
+  keywordList().reset( new_keywords );
+  
+  // sort list
   keywordList().sort();
 
 }

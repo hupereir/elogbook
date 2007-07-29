@@ -39,7 +39,7 @@
 void TopWidget::uniconify( void ) 
 {
 
-  Debug::Throw( "TopWidget::Uniconify.\n" );
+  Debug::Throw( "TopWidget::uniconify.\n" );
   QtUtil::uniconify( this );
   
   return;

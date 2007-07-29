@@ -110,24 +110,19 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   CustomListView *list_view( new CustomListView( this ) );
   layout->addWidget( list_view, 1 );
   
-  enum Columns{ ID, FILE, ENTRIES, MODIFIED }; 
-  list_view->setColumnCount( 4 );
-  list_view->setColumnName( ID, "id" );
+  enum Columns{ FILE, ENTRIES, MODIFIED }; 
+  list_view->setColumnCount( 3 );
   list_view->setColumnName( FILE, "file" );
   list_view->setColumnName( ENTRIES, "entries" );
   list_view->setColumnName( MODIFIED, "last modified" );
-  list_view->setColumnType( ID, CustomListView::NUMBER );
+  
   list_view->setColumnType( ENTRIES, CustomListView::NUMBER );
   
-  int id( 0 );
-  for( list< Logbook* >::iterator it=all.begin(); it!= all.end(); it++, id++ )
+  for( list< Logbook* >::iterator it=all.begin(); it!= all.end(); it++ )
   {
     
     CustomListView::Item* item( new CustomListView::Item( list_view ) );
-    
-    // first column get the file ID
-    item->setText( ID, Str().assign<int>( id ).c_str() );
-    
+        
     // second column get the file name
     item->setText( FILE, (*it)->file().localName().c_str() );
     
@@ -138,5 +133,10 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     item->setText( MODIFIED, (*it)->modification().string().c_str() );
     
   }
+
+  resize( 350, 350 );
+  list_view->resizeColumnToContents( ENTRIES );
+  list_view->resizeColumnToContents( MODIFIED );
+  list_view->resizeColumnToContents( FILE );
   
 }

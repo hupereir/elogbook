@@ -84,23 +84,22 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "WRAP_TEXT", "1", "wrap text in entry edition window" ));
   XmlOptions::get().add( Option( "SHOW_EDITFRAME_MENU", "1", "show menu in EditFrame windows" ));
 
-  
-  XmlOptions::get().add( Option( "ENTRY_TOOLBAR",   "1" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "FORMAT_TOOLBAR",  "1" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "EDITION_TOOLBAR", "1" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_1", "1" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_2", "1" , "toolbar visibility" ));
-
-  XmlOptions::get().add( Option( "ENTRY_TOOLBAR_LOCATION",   "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "FORMAT_TOOLBAR_LOCATION",  "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "EDITION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_1_LOCATION", "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_2_LOCATION", "left" , "toolbar location" ));
-
   #ifdef WITH_ASPELL
   XmlOptions::get().add( Option( "ASPELL", "@ASPELL@", "aspell command" ));
   XmlOptions::get().add( Option( "DICTIONARY", "en" , "default dictionary"  ));
   XmlOptions::get().add( Option( "DICTIONARY_FILTER", "none" , "default filter"  ));
   #endif
   
+  XmlOptions::get().add( Option( "MAIN_TOOLBAR",   "1" , "toolbar visibility" ));
+  XmlOptions::get().add( Option( "FORMAT_TOOLBAR",  "1" , "toolbar visibility" ));
+  XmlOptions::get().add( Option( "EDITION_TOOLBAR", "1" , "toolbar visibility" ));
+  XmlOptions::get().add( Option( "EXTRA_TOOLBAR", "1" , "toolbar visibility" ));
+  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "1" , "toolbar visibility" ));
+
+  XmlOptions::get().add( Option( "MAIN_TOOLBAR_LOCATION",   "left" , "toolbar location" ));
+  XmlOptions::get().add( Option( "FORMAT_TOOLBAR_LOCATION",  "left" , "toolbar location" ));
+  XmlOptions::get().add( Option( "EDITION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
+  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_LOCATION", "left" , "toolbar location" ));
+  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
+
 };

@@ -33,6 +33,8 @@
 #include <QLayout>
 
 #include "ConfigDialog.h"
+#include "CustomGridLayout.h"
+#include "CustomToolBar.h"
 #include "Debug.h"
 #include "ListViewConfig.h"
 #include "MainFrame.h"
@@ -67,39 +69,40 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   QLabel* label;
 
   // attachment editors
-  QWidget* page = &addPage( "Qttachments" );
+  QWidget* page = &addPage( "Attachments" );
   box = new QGroupBox( "Editors", page );
   page->layout()->addWidget( box );
 
-  QGridLayout* grid_layout = new QGridLayout();
+  CustomGridLayout* grid_layout = new CustomGridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
+  grid_layout->setMaxCount( 2 );
   box->setLayout( grid_layout );
 
   OptionBrowsedLineEdit *editor;
   
-  grid_layout->addWidget( new QLabel( "Default: ", box ), 0, 0 );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_UNKNOWN_ATC" ), 0, 1 );
+  grid_layout->addWidget( new QLabel( "Default: ", box ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_UNKNOWN_ATC" ) );
   addOptionWidget( editor );
   
-  grid_layout->addWidget( new QLabel( "HTML: ", box ), 1, 0 );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_HTML_ATC" ), 1, 1 );
+  grid_layout->addWidget( new QLabel( "HTML: ", box ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_HTML_ATC" ) );
   addOptionWidget( editor );
 
-  grid_layout->addWidget( new QLabel( "URL: ", box ), 2, 0 );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_URL_ATC" ), 2, 1 );
+  grid_layout->addWidget( new QLabel( "URL: ", box ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_URL_ATC" ) );
   addOptionWidget( editor );
 
-  grid_layout->addWidget( new QLabel( "Text: ", box ), 3, 0 );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_PLAIN_TEXT_ATC" ), 3, 1 );
+  grid_layout->addWidget( new QLabel( "Text: ", box ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_PLAIN_TEXT_ATC" ) );
   addOptionWidget( editor );
 
-  grid_layout->addWidget( new QLabel( "Postscript: ", box ), 4, 0 );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_POSTSCRIPT_ATC" ), 4, 1 );
+  grid_layout->addWidget( new QLabel( "Postscript: ", box ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_POSTSCRIPT_ATC" ) );
   addOptionWidget( editor );
 
-  grid_layout->addWidget( new QLabel( "Image: ", box ), 5, 0 );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_IMAGE_ATC" ), 5, 1 );
+  grid_layout->addWidget( new QLabel( "Image: ", box ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_IMAGE_ATC" ) );
   addOptionWidget( editor );
   
   grid_layout->setColumnStretch( 1, 1 );
@@ -119,28 +122,29 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   box = new QGroupBox( "Window sizes", page );
   page->layout()->addWidget( box );
 
-  grid_layout = new QGridLayout();
+  grid_layout = new CustomGridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
+  grid_layout->setMaxCount(3);
   box->setLayout( grid_layout );
 
   grid_layout->addWidget( new QLabel( "Width", box ), 0, 1 );
   grid_layout->addWidget( new QLabel( "Height", box ), 0, 2 );
 
-  grid_layout->addWidget( label = new QLabel( "Main window: ", box ), 1, 0 );
+  grid_layout->addWidget( label = new QLabel( "Main window: ", box ) );
   label->setToolTip( "Main window size (width x height)" );
 
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SELECTION_FRAME_WIDTH" ), 1, 1 );
+  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SELECTION_FRAME_WIDTH" ) );
   spinbox->setMinimum( 5 );
   spinbox->setMaximum( 2048 );
   addOptionWidget( spinbox );
 
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SELECTION_FRAME_HEIGHT" ), 1, 2 );
+  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SELECTION_FRAME_HEIGHT" ) );
   spinbox->setMinimum( 5 );
   spinbox->setMaximum( 2048 );
   addOptionWidget( spinbox );
 
-  grid_layout->addWidget( label = new QLabel( "Editor: ", box ), 2, 0 );
+  grid_layout->addWidget( label = new QLabel( "Editor: ", box ) );
   label->setToolTip( "Editor window size (width x height)" );
   
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "EDIT_FRAME_WIDTH" ), 2, 1 );
@@ -169,27 +173,46 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   // listview configuration
   ListViewConfig *listview_config = new ListViewConfig( &addPage( "List configuration" ), &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList() );
 
-//   // toolbars
-//   box = new QGroupBox( "toolbars", &addPage( "toolbars" ) );
-// 
-//   box = new QGrid( 2, box );
-//   new QLabel( "visibility", box );
-//   new QLabel( "location", box );
-// 
-//   addOptionWidget( new OptionCheckBox( "entry toolbar", box, "ENTRY_TOOLBAR" ));
-//   addOptionWidget( new CustomToolBar::LocationComboBox( box, "ENTRY_TOOLBAR_LOCATION" ) );
-// 
-//   addOptionWidget( new OptionCheckBox( "edition toolbar", box, "EDITION_TOOLBAR" ));
-//   addOptionWidget( new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" ));
-// 
-//   addOptionWidget( new OptionCheckBox( "format toolbar", box, "FORMAT_TOOLBAR" ));
-//   addOptionWidget( new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" ));
-// 
-//   addOptionWidget( new OptionCheckBox( "extra toolbar (1)", box, "EXTRA_TOOLBAR_1" ));
-//   addOptionWidget( new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_1_LOCATION" ));
-// 
-//   addOptionWidget( new OptionCheckBox( "extra toolbar (2)", box, "EXTRA_TOOLBAR_2" ));
-//   addOptionWidget( new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_2_LOCATION" ));
+  // toolbars
+  page = &addPage( "Toolbars" );
+  box = new QGroupBox( "Toolbars", page );
+  page->layout()->addWidget( box );
+
+  grid_layout = new CustomGridLayout();
+  grid_layout->setSpacing(5);
+  grid_layout->setMargin(5);
+  grid_layout->setMaxCount(2);
+  box->setLayout( grid_layout );
+
+  grid_layout->addWidget( new QLabel( "visibility", box ) );
+  grid_layout->addWidget( new QLabel( "location", box ) );
+
+  OptionComboBox* combobox;
+  
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "main toolbar", box, "MAIN_TOOLBAR" )); 
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) ); 
+  addOptionWidget( checkbox );
+  addOptionWidget( combobox );
+  
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "edition toolbar", box, "EDITION_TOOLBAR" )); 
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" )); 
+  addOptionWidget( checkbox );
+  addOptionWidget( combobox );
+
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "format toolbar", box, "FORMAT_TOOLBAR" )); 
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" )); 
+  addOptionWidget( checkbox );
+  addOptionWidget( combobox );
+
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "tools", box, "EXTRA_TOOLBAR" )); 
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" )); 
+  addOptionWidget( checkbox );
+  addOptionWidget( combobox );
+
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "navigation toolbar", box, "NAVIGATION_TOOLBAR" )); 
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" )); 
+  addOptionWidget( checkbox );
+  addOptionWidget( combobox );
 
   // colors
   page = &addPage( "Colors" ); 
@@ -228,7 +251,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Automatically save logbook at fixed time interval" );
 
-  grid_layout = new QGridLayout();
+  grid_layout = new CustomGridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   layout->addLayout( grid_layout );
@@ -252,7 +275,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   checkbox->setToolTip( "Make a backup of the logbook at fixed time schedule" );
   addOptionWidget( checkbox );
  
-  grid_layout = new QGridLayout();
+  grid_layout = new CustomGridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   layout->addLayout( grid_layout );

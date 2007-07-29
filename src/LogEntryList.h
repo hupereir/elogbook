@@ -53,7 +53,10 @@ class LogEntryList: public CustomListView
 { 
 
   public:
-  
+ 
+  //! used to tag Keyword drags
+  static const QString DRAG;
+ 
   //! constructor
   LogEntryList( QWidget *parent, const std::string& name = "log_entry_list" );
 
@@ -73,10 +76,13 @@ class LogEntryList: public CustomListView
   static const char* column_titles_[ n_columns ];
   
   //! update LogEntry in list
-  void updateEntry( LogEntry* entry, bool update_selection = true );
+  void update( LogEntry* entry, bool update_selection = true );
   
   //! select LogEntry in list
-  void selectEntry( LogEntry* entry );
+  void select( LogEntry* entry );
+  
+  //! add LogEntry to the list
+  void add( LogEntry* entry, bool update_selection = false );
       
   //! handle listviewitem and logbook entry association
   class Item: public CustomListView::Item, public BASE::Key
@@ -123,9 +129,6 @@ class LogEntryList: public CustomListView
     return *items.begin();    
     
   }
-  
-  //! add LogEntry to the list
-  void addEntry( LogEntry* entry, bool update_selection = false );
 
   //! select previous item in list, if any
   Item* itemBelow( QTreeWidgetItem* item, bool update_selection = true );
@@ -140,11 +143,33 @@ class LogEntryList: public CustomListView
   std::list< LogEntry* > selectedEntries( void );
    
   protected:
-  
-  //! dragging [overloaded]
-  //QDragObject* dragObject( void )
-  //{ return new QTextDrag( LogEntry::DRAG.c_str(), this ); }
 
+  //! mouse press events [needed to start drag]
+  virtual void mousePressEvent( QMouseEvent *event );
+  
+  //! mouse move events [needed to start drag]
+  virtual void mouseMoveEvent( QMouseEvent *event );
+ 
+  //! mouse move events [needed to start drag]
+  virtual void mouseReleaseEvent( QMouseEvent *event );
+
+  //! start drag
+  virtual bool _startDrag( QMouseEvent* event );
+  
+  private:
+  
+  //! clicked item
+  QTreeWidgetItem* first_item_;
+  
+  //! clicked item
+  QTreeWidgetItem* last_item_;
+  
+  //! store possible mouse drag start position
+  QPoint drag_start_;
+ 
+  //! true when drag is allowed (as opposed to entry selection
+  bool drag_enabled_;
+  
 };
 
 #endif

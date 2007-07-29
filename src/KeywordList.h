@@ -55,12 +55,12 @@ class KeywordList: public CustomListView
   Q_OBJECT
 
   public:
+
+  //! used to tag Keyword drags
+  static const QString DRAG;
   
   //! constructor
   KeywordList( QWidget *parent );
-
-  //! used to tag Keyword drags
-  static const std::string DRAG;
   
   //! number of columns
   enum { n_columns = 1 };
@@ -72,13 +72,19 @@ class KeywordList: public CustomListView
   static char* column_titles_[ n_columns ];
 
   //! add keyword, check for unicity
-  void addKeyword( std::string keyword );
-      
+  void add( std::string keyword );
+
+  //! remove keyword
+  void remove( std::string keyword );
+  
+  //! reset
+  void reset( const std::set<std::string>& keywords );
+  
   //! select a keyword, if found
-  void selectKeyword( std::string keyword );
+  void select( std::string keyword );
 
   //! get currently selected keyword
-  std::string currentKeyword( void );
+  std::string current( void );
 
   //! get all registered keywords
   std::set< std::string > keywords( void );
@@ -95,56 +101,19 @@ class KeywordList: public CustomListView
     */
     Item( KeywordList* parent ):
       CustomListView::Item( parent )
-    { 
-      // setRenameEnabled( KEYWORD, false );
-      setFlag( Qt::ItemIsDragEnabled, false ); 
-      setFlag( Qt::ItemIsDropEnabled,true );
-      setFlag( Qt::ItemIsEditable, false );
-    }
+    {}
 
-    //! constructor. All "sub items" can be dragged       
+    //! constructor
+    /*! subitems can be renamed, as opposed to topLevel items */
     Item( Item* parent ):
       CustomListView::Item( parent )
-    { 
-      // setRenameEnabled( KEYWORD, true );
-      setFlag( Qt::ItemIsDragEnabled, true ); 
-      setFlag( Qt::ItemIsDropEnabled,true );
-      setFlag( Qt::ItemIsEditable, true );
-   }
-    
-    //! store background color
-    void storeColors( int column )
-    { 
-      foreground_ = textColor( column );
-      background_ = backgroundColor( column ); 
-    }
-    
-    //! restore background color
-    void restoreColors( int column )
-    { 
-      if( foreground_.isValid() ) setTextColor( column, foreground_ );
-      if( background_.isValid() ) setBackgroundColor( column, background_ ); 
-    }
-    
+    { setFlag( Qt::ItemIsEditable, true ); }
+        
     //! retrieves backup keyword
     const QString& backup( void ) const
     { return backup_; }
-
-//     //! stores original keyword when renaming [overloaded]
-//     void startRename( int column )
-//     {
-//       if( column == KEYWORD )
-//       backup_ = (dynamic_cast<KeywordList*>( listView() ) )->GetKeyword( this );
-//       CustomListView::Item::startRename( column );
-//     }
                       
     private:
-        
-    //! unselected foreground color
-    QColor foreground_;
-       
-    //! unselected background color
-    QColor background_;
     
     //! backup of the keyword for rename actions
     QString backup_;
@@ -179,10 +148,12 @@ class KeywordList: public CustomListView
 
   protected:
   
-  //! returns supported drop actions
-  //QtDropActions supportedDropActions( void ) const
-  //{}
+  //! mouse press events [needed to start drag]
+  virtual void mousePressEvent( QMouseEvent *event );
   
+  //! mouse move events [needed to start drag]
+  virtual void mouseMoveEvent( QMouseEvent *event );
+    
   //! drag enter event [overloaded]
   void dragEnterEvent( QDragEnterEvent* event );                                
     
@@ -195,10 +166,6 @@ class KeywordList: public CustomListView
 
   //! drop event [overload]
   void dropEvent( QDropEvent* event );
-
-  //! dragging [overloaded]
-  //QDragObject* dragObject( void )
-  //{ return new QTextDrag( DRAG.c_str(), this ); }
   
   private slots:
   
@@ -215,17 +182,52 @@ class KeywordList: public CustomListView
   //! create root item
   void _createRootItem( void );
 
+  //!@name drag and drop methods
+  //@{
+  
   //! update opened item stack (when dragging to the list)
   void _updateOpenItems( QTreeWidgetItem* item );
 
+  //! start drag sequence
+  bool _startDrag( QMouseEvent *event );
+  
   //! reset drag sequence
   void _resetDrag( void );
   
   //! return true if QMimeSource is an accepted TextDrag
-  static bool _acceptTextDrag( QDropEvent *event );
+  bool _acceptDrag( QDropEvent *event ) const;
+
+  //! process drop action (for accepted drags)
+  bool _processDrop( QDropEvent *event );
+  
+  //@}
+  
+  //! needed for smart reset
+  class ContainsFTor
+  {
+    public:
     
+    //! constructor
+    ContainsFTor( const std::string& value ):
+      value_( value )
+      {}
+      
+    //! predicate
+    bool operator() ( const std::string& value ) const
+    { return value.find( value_ ) == 0; }
+    
+    private:
+    
+    //! predicted value 
+    std::string value_; 
+    
+  };
+  
   //! root Item
   Item *root_item_;
+
+  //!@name drag and drop
+  //@{
             
   //! drop target item
   Item *drop_item_;
@@ -233,11 +235,16 @@ class KeywordList: public CustomListView
   //! timer to open drop_item when selected
   QTimer drop_item_timer_;
 
+  //! store possible mouse drag start position
+  QPoint drag_start_;
+  
   //! keep track of items which have been opened while dragging
   std::stack< QTreeWidgetItem* > open_items_;  
   
   //! drop_item_open delay (ms)
-  static const int drop_item_delay_ = 500;      
+  static const int drop_item_delay_ = 500;   
+  
+  //@}
   
 };
 

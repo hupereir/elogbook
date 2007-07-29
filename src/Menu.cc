@@ -152,7 +152,7 @@ void Menu::_updateEditorMenu( void )
     found = true;
     
     string title( (*iter)->windowTitle() );
-    editor_menu_->addAction( title.c_str(), *iter, SLOT( Uniconify() ) );
+    editor_menu_->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
 
   }
   

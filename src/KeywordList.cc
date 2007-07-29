@@ -29,17 +29,18 @@
    \date $Date$
 */
 
-#include <qpainter.h>
+#include <QApplication>
 
 #include "KeywordList.h"
+#include "LogEntryList.h"
 #include "LogEntry.h"
 
 using namespace std;
 
 
 //_______________________________________________
+const QString KeywordList::DRAG = "KeywordList::Drag";
 char* KeywordList::column_titles_[ KeywordList::n_columns ] = { "keyword" };
-const string KeywordList::DRAG = "KEYWORDLIST_DRAG";
 
 //_______________________________________________
 KeywordList::KeywordList( QWidget *parent ):
@@ -56,8 +57,9 @@ KeywordList::KeywordList( QWidget *parent ):
   drop_item_timer_.setInterval( drop_item_delay_ );
   connect( &drop_item_timer_, SIGNAL( timeout() ), SLOT( _openDropItem() ) );
   
-  setRootIsDecorated( true );  
-
+  setRootIsDecorated( true );    
+  setAcceptDrops(true);  
+  
   setColumnCount( n_columns );
   for( unsigned int i=0; i<n_columns; i++ )
   { setColumnName( i, column_titles_[i] ); }
@@ -71,10 +73,10 @@ KeywordList::KeywordList( QWidget *parent ):
 }
 
 //_______________________________________________
-void KeywordList::addKeyword( string keyword )
+void KeywordList::add( string keyword )
 {
   
-  Debug::Throw() << "KeywordList::AddKeyword - keyword=" << keyword << endl;
+  Debug::Throw() << "KeywordList::add - keyword=" << keyword << endl;
 
   // check root item
   _createRootItem();
@@ -119,10 +121,91 @@ void KeywordList::addKeyword( string keyword )
 }  
 
 //_______________________________________________
-void KeywordList::selectKeyword( string keyword )
+void KeywordList::remove( string keyword )
 {
   
-  Debug::Throw() << "KeywordList::selectKeyword - " << keyword << endl;
+  Debug::Throw() << "KeywordList::remove - keyword=" << keyword << endl;
+
+  // check root item
+  _createRootItem();
+    
+  // check keyword
+  keyword = LogEntry::formatKeyword( keyword );
+  
+  // parse keyword, insert in keywords tree  
+  Item* parent_item( root_item_ );
+  
+  // retrieve sub-keywords, separated by "/"
+  bool found( true );
+  list<string> keywords( LogEntry::parseKeyword( keyword ) );
+  for( list<string>::iterator iter = keywords.begin(); iter!= keywords.end(); iter++ )
+  {
+    
+    if( !iter->size() ) continue;
+
+    Item* item( 0 );
+    
+    // loop over children, stop at matching keyword
+    for( int i=0; i < parent_item->childCount(); i++ )
+    {
+      Item* child( dynamic_cast<Item*>(parent_item->child(i)) );
+      if( child && (*iter) == qPrintable( child->text( KEYWORD ) ) )
+      { 
+        item = child;
+        break;
+      }
+    }
+          
+    // if none found, stop parsing
+    /* 
+      this can appen when a parent item has already been deleted
+      this is expected to happen during reset, during which a parent
+      is removed when neither it nor any of its children would survive the
+      reset anyway.
+    */
+    if( !item ) {
+      found = false;
+      break;
+    }
+    
+    // set as parent before processing the next keyword in the list
+    parent_item = item;
+    
+  }
+  
+  if( found ) delete parent_item;
+  
+}  
+
+//_______________________________________________
+void KeywordList::reset( const set<string>& new_keywords )
+{
+  
+  Debug::Throw( "KeywordList::reset.\n" );
+  
+  // retrieve current list of keywords
+  set<string> old_keywords( keywords() );
+  
+  // remove keywords that are not included in new keywords
+  for( set<string>::iterator iter = old_keywords.begin(); iter != old_keywords.end(); iter++ )
+  {
+    if( find_if( new_keywords.begin(), new_keywords.end(), ContainsFTor( *iter ) ) == new_keywords.end() )
+    { remove( *iter ); }
+  }
+  
+  // add keywords that are not found in old list
+  for( set<string>::const_iterator iter = new_keywords.begin(); iter != new_keywords.end(); iter++ )
+  { if( old_keywords.find( *iter ) == old_keywords.end() ) add( *iter ); }
+  
+  return;
+  
+}
+  
+//_______________________________________________
+void KeywordList::select( string keyword )
+{
+  
+  Debug::Throw() << "KeywordList::select - " << keyword << endl;
 
   // format
   keyword = LogEntry::formatKeyword( keyword );
@@ -133,7 +216,7 @@ void KeywordList::selectKeyword( string keyword )
   { 
     if( keyword == qPrintable( (*iter)->text(KEYWORD) ) )
     {
-      Debug::Throw() << "KeywordList::selectKeyword - already selected." << endl;
+      Debug::Throw() << "KeywordList::select - already selected." << endl;
       setCurrentItem( *iter );
       scrollToItem( *iter );
       emit currentItemChanged( *iter, QTreeWidget::currentItem() );
@@ -146,10 +229,10 @@ void KeywordList::selectKeyword( string keyword )
   for( QList<QTreeWidgetItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
   {
     string local(  KeywordList::keyword( *iter ) );
-    Debug::Throw() << "KeywordList::selectKeyword - local: " << local << " keyword: " << keyword << endl;
+    Debug::Throw() << "KeywordList::select - local: " << local << " keyword: " << keyword << endl;
     if( local == keyword )
     {    
-      Debug::Throw() << "KeywordList::selectKeyword - found matching keyword." << endl;
+      Debug::Throw() << "KeywordList::select - found matching keyword." << endl;
       setCurrentItem( *iter );
       scrollToItem( *iter );
       return;
@@ -157,7 +240,7 @@ void KeywordList::selectKeyword( string keyword )
   }
   
   // no keyword found returns root item
-  Debug::Throw() << "KeywordList::selectKeyword - no matching keyword found." << endl;
+  Debug::Throw() << "KeywordList::select - no matching keyword found." << endl;
   setCurrentItem( root_item_ );
   scrollToItem( root_item_ );
   return;
@@ -165,9 +248,9 @@ void KeywordList::selectKeyword( string keyword )
 }
 
 //_______________________________________________
-string KeywordList::currentKeyword( void )
+string KeywordList::current( void )
 {
-  Debug::Throw( "KeywordList::currentKeyword.\n" );
+  Debug::Throw( "KeywordList::current.\n" );
   
   QList<QTreeWidgetItem*> items( QTreeWidget::selectedItems() );
   return items.size() ? keyword( items.back() ):qPrintable( root_item_->text( KEYWORD ) );
@@ -199,12 +282,46 @@ void KeywordList::clear( void )
 }
 
 //__________________________________________________________
+void KeywordList::mousePressEvent( QMouseEvent* event )
+{
+  
+  Debug::Throw( "KeywordList::mousePressEvent.\n" );
+  if (event->button() == Qt::LeftButton) drag_start_ = event->pos();
+  return CustomListView::mousePressEvent( event );
+
+}
+  
+//_____________________________________________________________
+void KeywordList::mouseMoveEvent( QMouseEvent* event )
+{
+  
+  Debug::Throw( "KeywordList::mouseMoveEvent.\n" );
+  
+  // check button
+  if( !(event->buttons()&Qt::LeftButton) )  return CustomListView::mouseMoveEvent( event );
+  
+  // check distance to last click
+  if( (event->pos() - drag_start_ ).manhattanLength() < QApplication::startDragDistance() )
+  { return CustomListView::mouseMoveEvent( event ); }
+  
+  _startDrag( event );
+  
+}
+
+//__________________________________________________________
 void KeywordList::dragEnterEvent( QDragEnterEvent* event )
 {
   Debug::Throw( "KeywordList::dragEnterEvent.\n" );
 
   // check if object can be decoded
-  if( !_acceptTextDrag( event ) ) return;   
+  if( !_acceptDrag( event ) ) 
+  {
+    event->ignore();
+    return;
+  }
+  
+  // accept event
+  event->acceptProposedAction() ;
 
   // retrieve item below pointer
   Item *item( dynamic_cast<Item*>( itemAt( event->pos()) ) );
@@ -215,12 +332,7 @@ void KeywordList::dragEnterEvent( QDragEnterEvent* event )
     
     drop_item_ = item;
     drop_item_timer_.start();
-        
-    // change colors
-    drop_item_->storeColors( KEYWORD );
-    drop_item_->setBackgroundColor( KEYWORD, palette().color( QPalette::Highlight ) );
-    drop_item_->setTextColor( KEYWORD, palette().color( QPalette::HighlightedText ) );
-   
+
   }
       
 }
@@ -230,9 +342,16 @@ void KeywordList::dragMoveEvent( QDragMoveEvent* event )
 {
   Debug::Throw( "KeywordList::dragMoveEvent.\n" ); 
 
-  // check if event can be decoded
-  if( !_acceptTextDrag( event ) ) return;
-    
+  // check if object can be decoded
+  if( !_acceptDrag( event ) ) 
+  {
+    event->ignore();
+    return;
+  }
+  
+  // accept event
+  event->acceptProposedAction() ;
+  
   // retrieve item below pointer
   Item *item( dynamic_cast<Item*>( itemAt( event->pos() ) ) );
   
@@ -242,20 +361,11 @@ void KeywordList::dragMoveEvent( QDragMoveEvent* event )
     
     _updateOpenItems( item );
     
-    // see if drop item has changes
-    if( drop_item_ && drop_item_ != item )
-    { drop_item_->restoreColors( KEYWORD ); }
-
     if( drop_item_ != item )
     {
       
       // change drop item
       drop_item_ = item;
-      
-      // change colors
-      drop_item_->storeColors( KEYWORD );
-      drop_item_->setBackgroundColor( KEYWORD, palette().color( QPalette::Highlight ) );
-      drop_item_->setTextColor( KEYWORD, palette().color( QPalette::HighlightedText ) );
       
       // restart timer
       drop_item_timer_.start();
@@ -272,43 +382,14 @@ void KeywordList::dropEvent( QDropEvent* event )
   Debug::Throw( "KeywordList::dropEvent.\n" );
 
   // check if object can be decoded
-  if( !_acceptTextDrag( event ) )  
+  if( !_acceptDrag( event ) ) event->ignore();
+  else
   {
+    _processDrop( event );
     _resetDrag();
-    return;
   }
   
-  // retrieve item below pointer
-  Item *item( dynamic_cast<Item*>( itemAt( event->pos() ) ) );
-  
-  // retrieve event keyword
-  QString value( event->mimeData()->text() );
-  if( value == QString( LogEntry::DRAG.c_str() ) ) 
-  {
-    
-    _resetDrag();
-    emit keywordChanged( keyword( item ) );
-  
-  } else if( value == QString( KeywordList::DRAG.c_str() ) )
-  {
-   
-    // retrieve current Selection
-    Item *old_item( dynamic_cast<Item*>(QTreeWidget::currentItem()) );
-    if( !old_item || old_item == item ) return;
-    
-    // retrieve and cat keywords
-    string old_keyword( qPrintable( old_item->text(KEYWORD) ) );
-    string new_keyword( keyword( item ) );
-    
-    if( new_keyword.size() && old_keyword.size() ) new_keyword = new_keyword+"/"+old_keyword;
-    else if( new_keyword.empty() ) new_keyword = old_keyword;
-    
-    _resetDrag();
-    
-    // notify that keywords are to be changed
-    emit keywordChanged( keyword( old_item ), new_keyword );
-    
-  }
+  return;
   
 }
 
@@ -362,13 +443,36 @@ void KeywordList::_updateOpenItems( QTreeWidgetItem* item )
 }
 
 //__________________________________________________________
-bool KeywordList::_acceptTextDrag( QDropEvent *event )
+bool KeywordList::_acceptDrag( QDropEvent *event ) const
 {
   
-  Debug::Throw( "KeywordList::_acceptTextDrag.\n" );
-  QString value( event->mimeData()->text() );
-  return value == QString( LogEntry::DRAG.c_str() ) || value == QString( KeywordList::DRAG.c_str() );
+  Debug::Throw( "KeywordList::_acceptDrag.\n" );
+  return
+    event->mimeData()->hasFormat( KeywordList::DRAG ) || 
+    event->mimeData()->hasFormat( LogEntryList::DRAG );
    
+}
+
+//__________________________________________________________
+bool KeywordList::_startDrag( QMouseEvent *event )
+{
+  
+  Debug::Throw( "KeywordList::_startDrag.\n" );
+
+  // check current item. Cannot drag root item
+  if( QTreeWidget::currentItem() == root_item_ ) return false;
+
+  // start drag
+  QDrag *drag = new QDrag(this);
+  
+  // store data
+  QMimeData *mime = new QMimeData();
+  mime->setData( KeywordList::DRAG, QTreeWidget::currentItem()->text(KEYWORD).toAscii() );
+  mime->setText( QString( current().c_str() ) );
+  drag->setMimeData(mime);
+  drag->start(Qt::CopyAction);  
+  return true;
+  
 }
 
 //__________________________________________________________
@@ -379,9 +483,59 @@ void KeywordList::_resetDrag( void )
 
   // cleans drop_item
   _updateOpenItems( 0 );  
-  if( drop_item_ ) drop_item_->restoreColors( KEYWORD );
-  
   drop_item_ = 0;
   drop_item_timer_.stop();
+  
+}
+//__________________________________________________________
+bool KeywordList::_processDrop( QDropEvent *event )
+{
+  
+  Debug::Throw( "KeywordList::_processDrop.\n" );
+  
+  // retrieve item below pointer
+  Item *item( dynamic_cast<Item*>(itemAt( event->pos() ) ) );
+  if( !item ) return false;
+  string current_keyword( keyword( item ) );
+  
+  // retrieve event keyword
+  const QMimeData& mime( *event->mimeData() );
+  if( mime.hasFormat( KeywordList::DRAG ) )
+  {
+   
+    // dragging from one keyword to another
+    
+    // retrieve old keyword
+    QString value( mime.data( KeywordList::DRAG ) );
+    if( value.isNull() || value.isEmpty() ) return false;
+    
+    // append to new keyword
+    current_keyword += string("/") + qPrintable( value );
+
+    _resetDrag();
+    
+    // retrieve full keyword of selected items
+    QList<Item*> items( selectedItems<Item>() );
+    for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
+    {
+      string old_keyword( keyword( *iter ) );
+      if( old_keyword == current_keyword ) continue;
+      
+      emit keywordChanged( old_keyword, current_keyword );
+    }
+    
+    return true;
+  }
+  
+  if( mime.hasFormat( LogEntryList::DRAG ) )
+  {
+    
+    // dragging from logEntry list
+    _resetDrag();
+    emit keywordChanged( current_keyword );
+    
+  }
+  
+  return false;
   
 }
