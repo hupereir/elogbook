@@ -85,6 +85,13 @@ class Menu:public QMenuBar, public Counter
   */
   void save( void );
   
+  //! view html
+  /*! 
+  this signal is reinterpreted by the parent to view
+  either the current entry or the full logbook
+  */
+  void viewHtml( void );
+  
   private slots:
   
   //! get list of editor windows into menu

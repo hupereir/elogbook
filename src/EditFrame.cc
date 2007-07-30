@@ -93,9 +93,17 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   layout->addLayout( h_layout );
   
   // title label and line
-  h_layout->addWidget( new QLabel( " Title: ", main ) );
-  h_layout->addWidget( title_ = new CustomLineEdit( main ), 1 );
-  h_layout->addWidget( color_label_ = new QLabel() );
+  h_layout->addWidget( new QLabel( " Title: ", main ), 0, Qt::AlignVCenter );
+  h_layout->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
+  
+  // color label
+  color_label_ = new QFrame( main );
+//  color_label_->setFrameStyle( QFrame::Panel|QFrame::Raised );
+//  color_label_->setFrameStyle( QFrame::Box|QFrame::Sunken );
+  color_label_->setFrameStyle( QFrame::NoFrame );
+  color_label_->setFixedSize( ColorMenu::PixmapSize );
+  color_label_->setAutoFillBackground( true );
+  h_layout->addWidget( color_label_, 0, Qt::AlignVCenter );
   
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
@@ -262,6 +270,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   
   connect( menu, SIGNAL( save() ), SLOT( save() ) );
   connect( menu, SIGNAL( closeWindow() ), SLOT( close() ) );
+  connect( menu, SIGNAL( viewHtml() ), SLOT( _viewHtml() ) );
 
   // changes display according to read_only flag
   setReadOnly( read_only_ );
@@ -400,11 +409,20 @@ void EditFrame::displayColor( void )
   string colorname( EditFrame::entry()->color() );
   QColor color;
   if( colorname != ColorMenu::NONE ) color = QColor( colorname.c_str() );
+
   if( !color.isValid() ) color_label_->hide();
   else
   {
-    color_label_->setPixmap( CustomPixmap().empty( ColorMenu::PixmapSize , color, false ) );
+    QLinearGradient linearGrad(QPointF(0, 0), color_label_->rect().bottomRight());
+    linearGrad.setColorAt(0, color);
+    linearGrad.setColorAt(1, color.light());
+    
+    QPalette palette( color_label_->palette() );
+    palette.setBrush( QPalette::Window, linearGrad );
+    color_label_->setPalette( palette );
     color_label_->show();
+    //color_label_->setPixmap( CustomPixmap().empty( ColorMenu::PixmapSize , color, false ) );
+    //color_label_->show();
   }
   
 }

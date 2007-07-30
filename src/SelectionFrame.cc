@@ -140,7 +140,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( keyword_list_, SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );  
   connect( keyword_list_, SIGNAL( keywordChanged( const std::string& ) ), SLOT( _changeEntryKeyword( const std::string& ) ) );
   connect( keyword_list_, SIGNAL( keywordChanged( const std::string&, const std::string& ) ), SLOT( _renameKeyword( const std::string&, const std::string& ) ) );
-  // connect( keyword_list_, SIGNAL( itemRenamed( QTreeWidgetItem*, int ) ), SLOT( _renameKeyword( QTreeWidgetItem*, int ) ) );
+  //connect( keyword_list_, SIGNAL( itemChanged( QTreeWidgetItem*, int ) ), SLOT( _renameKeyword( QTreeWidgetItem*, int ) ) );
     
   // popup menu for keyword list
   keywordList().addMenuAction( "&New keyword", this, SLOT( _newKeyword() ) );
@@ -173,7 +173,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   toolbar->addWidget( button );
 
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "Convert logbook to html", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( viewHtml() ) );
+  connect( button, SIGNAL( clicked() ), SLOT( _viewHtml() ) );
   button->setText( "Html" );
   toolbar->addWidget( button );
 
@@ -214,6 +214,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   
   connect( menu_, SIGNAL( save() ), SLOT( save() ) );
   connect( menu_, SIGNAL( closeWindow() ), qApp, SLOT( exit() ) );
+  connect( menu_, SIGNAL( viewHtml() ), this, SLOT( _viewHtml() ) );
  
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
@@ -1013,163 +1014,6 @@ void SelectionFrame::revertToSaved( void )
   
 }
 
-//_____________________________________________
-void SelectionFrame::viewHtml( void )
-{
-  Debug::Throw( "SelectionFrame::viewHtml.\n" );
-
-  // check logbook
-  if( !logbook_ )
-  {
-    QtUtil::infoDialog( this, "No logbook opened. <View HTML> canceled." );
-    return;
-  }
-
-  // create custom dialog, retrieve check vbox child
-  ViewHtmlLogbookDialog dialog( this );
-  dialog.setSelection( ViewHtmlLogbookDialog::ALL );
-  dialog.setLogbookMask( Logbook::HTML_ALL_MASK );
-  dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
-  dialog.setCommand(
-    ( AttachmentType::HTML.editCommand().size() ) ?
-    AttachmentType::HTML.editCommand():"" );
-
-  ostringstream what;
-  what << "/tmp/_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
-  dialog.setFile( File( what.str() ) );
-
-  // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
-
-  // retrieve/check file
-  File file( dialog.file() );
-  if( file.empty() ) 
-  {
-    QtUtil::infoDialog(this, "No output file specified. <View HTML> canceled." );
-    return;
-  }
-
-  // open/check temp file
-  QFile out( file.c_str() );
-  if( !out.open( QIODevice::WriteOnly ) ) {
-    ostringstream o;
-    o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-    QtUtil::infoDialog( this, o.str() );
-    return;
-  }
-
-  // retrieve mask
-  unsigned int html_log_mask = dialog.logbookMask();
-  unsigned int html_entry_mask = dialog.entryMask();
-
- QDomDocument document( "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"" );
-  
-  // html
-  QDomElement html = document.appendChild( document.createElement( "html" ) ).toElement(); 
-  html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
-  
-  // head
-  HtmlUtil::header( html, document );
-  
-  // body
-  QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
-
-  // dump logbook header
-  body.appendChild( logbook()->htmlElement( document, html_log_mask ) );
-
-  // retrieve entries to write
-  vector<LogEntry*> entries;
-  if( dialog.allEntries() )
-  {
-
-    KeySet<LogEntry> entry_set( logbook()->entries() );
-    entries = vector<LogEntry*>( entry_set.begin(), entry_set.end() );
-
-  } else if( dialog.visibleEntries() ) {
-
-    list<LogEntry*> entry_list = ( logEntryList().entries() );
-    entries = vector<LogEntry*>( entry_list.begin(), entry_list.end() );
-
-  } else {
-
-    list<LogEntry*> entry_list = ( logEntryList().selectedEntries() );
-    entries = vector<LogEntry*>( entry_list.begin(), entry_list.end() );
-
-  }
-
-  // sort entries using keyword
-  sort( entries.begin(), entries.end(), Logbook::EntryLessFTor( Logbook::SORT_KEYWORD ) );
-
-  if( html_log_mask & Logbook::HTML_TABLE )
-  {
-    // dump table of content
-    QDomElement table = body.appendChild( document.createElement( "table" ) ).toElement();
-    table.setAttribute( "class", "header_outer_table" );
-    QDomElement column = table.
-      appendChild( document.createElement( "tr" ) ).
-      appendChild( document.createElement( "td" ) ).
-      toElement();
-    column.setAttribute( "class", "header_column" );
-    column.
-      appendChild( document.createElement( "h2" ) ).
-      appendChild( document.createTextNode( "Table of contents" ) );
-    column = table.
-      appendChild( document.createElement( "tr" ) ).
-      appendChild( document.createElement( "td" ) ).
-      toElement();
-    column.setAttribute( "class", "header_column" );
-    table = column.appendChild( document.createElement( "table" ) ).toElement();
-    table.setAttribute( "class", "header_inner_table" );
-    QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    
-    if( html_entry_mask & LogEntry::HTML_KEYWORD )
-      row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( "keyword" ) );
-    if( html_entry_mask & LogEntry::HTML_TITLE )
-      row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( "title" ) );
-    if( html_entry_mask & LogEntry::HTML_CREATION )
-      row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( "created" ) );
-    if( html_entry_mask & LogEntry::HTML_MODIFICATION )
-      row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( "last modified" ) );
-    
-    for( vector< LogEntry* >::iterator it=entries.begin(); it != entries.end(); it++ )
-    { table.appendChild( (*it)->htmlSummary( document ) ); }
-    
-  }
-    
-  // dump full logbook
-  if( html_log_mask & Logbook::HTML_CONTENT )
-  { 
-    for( vector<LogEntry*>::iterator it=entries.begin(); it != entries.end(); it++ )
-    { body.appendChild( (*it)->htmlElement( document, html_entry_mask ) ); }
-  }
-
-  out.write( document.toByteArray() );
-  out.close();
-
-  // retrieve command
-  string command( dialog.command() );
-  if( command.empty() ) return;
-
-  // execute command
-  what.str("");
-  what << command << " " << file << " &";
-  Util::run( what.str() );
-  return;
-}
-
 //_______________________________________________
 void SelectionFrame::showDuplicatedEntries( void )
 {
@@ -1771,9 +1615,8 @@ void SelectionFrame::_renameKeyword( QTreeWidgetItem *item, int column )
   
   string old_keyword( qPrintable( local_item->backup() ) );
   string new_keyword( keywordList().keyword( local_item ) );
-  Debug::Throw() << "SelectionFrame::_RenameKeyword - old=" << old_keyword << " new=" << new_keyword << endl;
+  Debug::Throw(0) << "SelectionFrame::_RenameKeyword - old=" << old_keyword << " new=" << new_keyword << endl;
   
-  // check if old differ from new
   _renameKeyword( old_keyword, new_keyword );
   
   return;
@@ -1918,6 +1761,164 @@ void SelectionFrame::_changeEntryKeyword( const string& new_keyword )
   return;    
   
 }
+
+//_____________________________________________
+void SelectionFrame::_viewHtml( void )
+{
+  Debug::Throw( "SelectionFrame::_viewHtml.\n" );
+
+  // check logbook
+  if( !logbook_ )
+  {
+    QtUtil::infoDialog( this, "No logbook opened. <View HTML> canceled." );
+    return;
+  }
+
+  // create custom dialog, retrieve check vbox child
+  ViewHtmlLogbookDialog dialog( this );
+  dialog.setSelection( ViewHtmlLogbookDialog::ALL );
+  dialog.setLogbookMask( Logbook::HTML_ALL_MASK );
+  dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
+  dialog.setCommand(
+    ( AttachmentType::HTML.editCommand().size() ) ?
+    AttachmentType::HTML.editCommand():"" );
+
+  ostringstream what;
+  what << "/tmp/_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+  dialog.setFile( File( what.str() ) );
+
+  // map dialog
+  QtUtil::centerOnParent( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return;
+
+  // retrieve/check file
+  File file( dialog.file() );
+  if( file.empty() ) 
+  {
+    QtUtil::infoDialog(this, "No output file specified. <View HTML> canceled." );
+    return;
+  }
+
+  // open/check temp file
+  QFile out( file.c_str() );
+  if( !out.open( QIODevice::WriteOnly ) ) {
+    ostringstream o;
+    o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
+    QtUtil::infoDialog( this, o.str() );
+    return;
+  }
+
+  // retrieve mask
+  unsigned int html_log_mask = dialog.logbookMask();
+  unsigned int html_entry_mask = dialog.entryMask();
+
+ QDomDocument document( "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"" );
+  
+  // html
+  QDomElement html = document.appendChild( document.createElement( "html" ) ).toElement(); 
+  html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
+  
+  // head
+  HtmlUtil::header( html, document );
+  
+  // body
+  QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
+
+  // dump logbook header
+  body.appendChild( logbook()->htmlElement( document, html_log_mask ) );
+
+  // retrieve entries to write
+  vector<LogEntry*> entries;
+  if( dialog.allEntries() )
+  {
+
+    KeySet<LogEntry> entry_set( logbook()->entries() );
+    entries = vector<LogEntry*>( entry_set.begin(), entry_set.end() );
+
+  } else if( dialog.visibleEntries() ) {
+
+    list<LogEntry*> entry_list = ( logEntryList().entries() );
+    entries = vector<LogEntry*>( entry_list.begin(), entry_list.end() );
+
+  } else {
+
+    list<LogEntry*> entry_list = ( logEntryList().selectedEntries() );
+    entries = vector<LogEntry*>( entry_list.begin(), entry_list.end() );
+
+  }
+
+  // sort entries using keyword
+  sort( entries.begin(), entries.end(), Logbook::EntryLessFTor( Logbook::SORT_KEYWORD ) );
+
+  if( html_log_mask & Logbook::HTML_TABLE )
+  {
+    // dump table of content
+    QDomElement table = body.appendChild( document.createElement( "table" ) ).toElement();
+    table.setAttribute( "class", "header_outer_table" );
+    QDomElement column = table.
+      appendChild( document.createElement( "tr" ) ).
+      appendChild( document.createElement( "td" ) ).
+      toElement();
+    column.setAttribute( "class", "header_column" );
+    column.
+      appendChild( document.createElement( "h2" ) ).
+      appendChild( document.createTextNode( "Table of contents" ) );
+    column = table.
+      appendChild( document.createElement( "tr" ) ).
+      appendChild( document.createElement( "td" ) ).
+      toElement();
+    column.setAttribute( "class", "header_column" );
+    table = column.appendChild( document.createElement( "table" ) ).toElement();
+    table.setAttribute( "class", "header_inner_table" );
+    QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
+    
+    if( html_entry_mask & LogEntry::HTML_KEYWORD )
+      row.
+      appendChild( document.createElement( "td" ) ).
+      appendChild( document.createElement( "b" ) ).
+      appendChild( document.createTextNode( "keyword" ) );
+    if( html_entry_mask & LogEntry::HTML_TITLE )
+      row.
+      appendChild( document.createElement( "td" ) ).
+      appendChild( document.createElement( "b" ) ).
+      appendChild( document.createTextNode( "title" ) );
+    if( html_entry_mask & LogEntry::HTML_CREATION )
+      row.
+      appendChild( document.createElement( "td" ) ).
+      appendChild( document.createElement( "b" ) ).
+      appendChild( document.createTextNode( "created" ) );
+    if( html_entry_mask & LogEntry::HTML_MODIFICATION )
+      row.
+      appendChild( document.createElement( "td" ) ).
+      appendChild( document.createElement( "b" ) ).
+      appendChild( document.createTextNode( "last modified" ) );
+    
+    for( vector< LogEntry* >::iterator it=entries.begin(); it != entries.end(); it++ )
+    { table.appendChild( (*it)->htmlSummary( document ) ); }
+    
+  }
+    
+  // dump full logbook
+  if( html_log_mask & Logbook::HTML_CONTENT )
+  { 
+    for( vector<LogEntry*>::iterator it=entries.begin(); it != entries.end(); it++ )
+    { body.appendChild( (*it)->htmlElement( document, html_entry_mask ) ); }
+  }
+
+  out.write( document.toByteArray() );
+  out.close();
+
+  // retrieve command
+  string command( dialog.command() );
+  if( command.empty() ) return;
+
+  // execute command
+  what.str("");
+  what << command << " " << file << " &";
+  Util::run( what.str() );
+  return;
+}
+
 
 //____________________________________________
 void SelectionFrame::_newEntry( void )

@@ -85,6 +85,9 @@ class KeywordList: public CustomListView
 
   //! get currently selected keyword
   std::string current( void );
+          
+  //! get full keyword from a given QTreeWidgetItem (appending parent keywords)
+  std::string keyword( QTreeWidgetItem* item ) const;
 
   //! get all registered keywords
   std::set< std::string > keywords( void );
@@ -108,10 +111,18 @@ class KeywordList: public CustomListView
     Item( Item* parent ):
       CustomListView::Item( parent )
     { setFlag( Qt::ItemIsEditable, true ); }
-        
+    
+    //! store backup
+    void storeBackup( void )
+    { backup_ = text( KEYWORD ); }
+    
     //! retrieves backup keyword
     const QString& backup( void ) const
     { return backup_; }
+    
+    //! restore backup
+    void restoreBackup( void )
+    { setText( KEYWORD, backup_ ); }
                       
     private:
     
@@ -123,9 +134,6 @@ class KeywordList: public CustomListView
   //! root item
   Item* rootItem( void ) const
   { return root_item_; }
-        
-  //! get full keyword from a given QTreeWidgetItem (appending parent keywords)
-  std::string keyword( QTreeWidgetItem* item ) const;
 
   signals:
   
@@ -171,12 +179,11 @@ class KeywordList: public CustomListView
   
   //! open drop item
   /*! this is connected to the time-out of the drop timer */
-  void _openDropItem( void )
-  {
-    if( drop_item_ && !isItemExpanded( drop_item_ ) )
-    expandItem( drop_item_ );
-  }
-              
+  void _openDropItem( void );
+        
+  //! start editting current item
+  void _startEdit( void );
+  
   private:
   
   //! create root item
@@ -225,12 +232,15 @@ class KeywordList: public CustomListView
   
   //! root Item
   Item *root_item_;
-
+  
   //!@name drag and drop
   //@{
-            
+
   //! drop target item
   Item *drop_item_;
+
+  //! drop item 'initial' selection state
+  bool drop_item_selected_;
 
   //! timer to open drop_item when selected
   QTimer drop_item_timer_;
@@ -242,8 +252,23 @@ class KeywordList: public CustomListView
   std::stack< QTreeWidgetItem* > open_items_;  
   
   //! drop_item_open delay (ms)
-  static const int drop_item_delay_ = 500;   
+  enum { drop_item_delay_ = 500 };   
   
+  //@}
+  
+  //!@name editting
+  //@{
+  
+  //! currently edited timer
+  QTreeWidgetItem* edit_item_;
+  
+  //! editing timer
+  /*! editting is enabled only if a certain delay is passed during which no drag/drop starts */
+  QTimer edit_timer_;
+  
+  //! edit_item delay (ms)
+  enum { edit_item_delay_ = 500 };   
+
   //@}
   
 };

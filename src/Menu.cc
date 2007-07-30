@@ -89,7 +89,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu->addAction( "Save &Backup", selection_frame, SLOT( saveBackup() ) );
   menu->addAction( "&Revert to Saved", selection_frame, SLOT( revertToSaved() ) );
   menu->addSeparator();
-  menu->addAction( "&View HTML", selection_frame, SLOT( viewHtml() ), 0 );
+  menu->addAction( "&View HTML", this, SIGNAL( viewHtml() ), 0 );
   menu->addSeparator();
   menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W );
   menu->addAction( "E&xit", qApp, SLOT( exit() ), CTRL+Key_Q );

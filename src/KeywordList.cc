@@ -47,7 +47,10 @@ KeywordList::KeywordList( QWidget *parent ):
   CustomListView( parent ),
   root_item_( 0 ),
   drop_item_( 0 ),
-  drop_item_timer_( this )
+  drop_item_selected_( false ),
+  drop_item_timer_( this ),
+  edit_item_( 0 ),
+  edit_timer_( this )
 {
   
   Debug::Throw( "KeywordList::KeywordList.\n" );
@@ -56,17 +59,21 @@ KeywordList::KeywordList( QWidget *parent ):
   drop_item_timer_.setSingleShot( true );
   drop_item_timer_.setInterval( drop_item_delay_ );
   connect( &drop_item_timer_, SIGNAL( timeout() ), SLOT( _openDropItem() ) );
+
+  edit_timer_.setSingleShot( true );
+  edit_timer_.setInterval( edit_item_delay_ );
+  connect( &edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
   
   setRootIsDecorated( true );    
   setAcceptDrops(true);  
+  setAutoScroll(true);
+  setEditTriggers( QAbstractItemView::NoEditTriggers );
+  //setEditTriggers( QAbstractItemView::SelectedClicked );
   
   setColumnCount( n_columns );
   for( unsigned int i=0; i<n_columns; i++ )
   { setColumnName( i, column_titles_[i] ); }
   
-  // connect direct item renaiming
-  // setSelectionMode( Extended );
-  // setDefaultRenameAction( Accept );
   
   _createRootItem();
     
@@ -110,7 +117,8 @@ void KeywordList::add( string keyword )
     // if none found, create a new Item
     if( !item ) {
       item = new Item( parent_item );
-      item->setText( KEYWORD, iter->c_str() );      
+      item->setText( KEYWORD, iter->c_str() );  
+      item->storeBackup();
     }
     
     // set as parent before processing the next keyword in the list
@@ -257,6 +265,21 @@ string KeywordList::current( void )
         
 }
 
+//__________________________________________________________
+string KeywordList::keyword( QTreeWidgetItem* item ) const
+{
+  
+  Debug::Throw( "KeywordList::keyword.\n" );
+  
+  if( item == root_item_ ) return qPrintable( root_item_->text( KEYWORD ) );
+  
+  QString out( item->text( KEYWORD ) );
+  while( (item = item->parent()) != root_item_ )
+  out = item->text( KEYWORD ) + "/" + out;
+
+  return qPrintable(out);  
+  
+}
 //_______________________________________________
 set<string> KeywordList::keywords( void )
 {
@@ -286,7 +309,32 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
 {
   
   Debug::Throw( "KeywordList::mousePressEvent.\n" );
-  if (event->button() == Qt::LeftButton) drag_start_ = event->pos();
+  
+  // retrieve item under cursor
+  QTreeWidgetItem* item = itemAt( event->pos());
+    
+  // see if current item match edited item
+  // if not, close editor, restore old keyword
+  if( edit_item_ && item != edit_item_ ) 
+  {
+    closePersistentEditor( edit_item_ );
+    dynamic_cast<Item*>( edit_item_ )->restoreBackup();
+    edit_item_ = 0;
+  }
+
+  // left button handling
+  if (event->button() == Qt::LeftButton) 
+  {
+    
+    // store event position for drag-start
+    drag_start_ = event->pos();
+    
+    // see if click occured on current item. Start Edit timer. 
+    if( item && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_.start();
+    else edit_timer_.stop();
+    
+  }
+  
   return CustomListView::mousePressEvent( event );
 
 }
@@ -332,7 +380,10 @@ void KeywordList::dragEnterEvent( QDragEnterEvent* event )
     
     drop_item_ = item;
     drop_item_timer_.start();
-
+    
+    drop_item_selected_ = isItemSelected( drop_item_ );
+    setItemSelected( drop_item_, true );
+    
   }
       
 }
@@ -363,9 +414,14 @@ void KeywordList::dragMoveEvent( QDragMoveEvent* event )
     
     if( drop_item_ != item )
     {
+
+      if( drop_item_ ) setItemSelected( drop_item_, drop_item_selected_ );
       
       // change drop item
       drop_item_ = item;
+      
+      drop_item_selected_ = isItemSelected( drop_item_ );
+      if( drop_item_ ) setItemSelected( drop_item_, true );
       
       // restart timer
       drop_item_timer_.start();
@@ -393,20 +449,21 @@ void KeywordList::dropEvent( QDropEvent* event )
   
 }
 
-//__________________________________________________________
-string KeywordList::keyword( QTreeWidgetItem* item ) const
+//_____________________________________________________
+void KeywordList::_openDropItem( void )
 {
-  
-  Debug::Throw( "KeywordList::keyword.\n" );
-  
-  if( item == root_item_ ) return qPrintable( root_item_->text( KEYWORD ) );
-  
-  QString out( item->text( KEYWORD ) );
-  while( (item = item->parent()) != root_item_ )
-  out = item->text( KEYWORD ) + "/" + out;
+  Debug::Throw( "KeyWordList::_openDropItem.\n" );
+  if( drop_item_ && !isItemExpanded( drop_item_ ) )
+  { expandItem( drop_item_ ); }
+}
 
-  return qPrintable(out);  
-  
+//_____________________________________________________
+void KeywordList::_startEdit( void )
+{
+  Debug::Throw( "KeywordList::_startEdit.\n" );
+  edit_item_ = QTreeWidget::currentItem();
+  dynamic_cast<Item*>(edit_item_)->storeBackup();
+  openPersistentEditor( edit_item_ );
 }
 
 //__________________________________________________________
@@ -461,7 +518,10 @@ bool KeywordList::_startDrag( QMouseEvent *event )
 
   // check current item. Cannot drag root item
   if( QTreeWidget::currentItem() == root_item_ ) return false;
-
+  
+  // stop edit timer to avoid conflicts.
+  edit_timer_.stop();
+  
   // start drag
   QDrag *drag = new QDrag(this);
   
@@ -483,6 +543,7 @@ void KeywordList::_resetDrag( void )
 
   // cleans drop_item
   _updateOpenItems( 0 );  
+  if( drop_item_ ) setItemSelected( drop_item_, drop_item_selected_ );
   drop_item_ = 0;
   drop_item_timer_.stop();
   
@@ -504,14 +565,10 @@ bool KeywordList::_processDrop( QDropEvent *event )
   {
    
     // dragging from one keyword to another
-    
     // retrieve old keyword
     QString value( mime.data( KeywordList::DRAG ) );
     if( value.isNull() || value.isEmpty() ) return false;
     
-    // append to new keyword
-    current_keyword += string("/") + qPrintable( value );
-
     _resetDrag();
     
     // retrieve full keyword of selected items
@@ -519,9 +576,11 @@ bool KeywordList::_processDrop( QDropEvent *event )
     for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
     {
       string old_keyword( keyword( *iter ) );
-      if( old_keyword == current_keyword ) continue;
       
-      emit keywordChanged( old_keyword, current_keyword );
+      // make sure that one does not move an item to itself
+      if( old_keyword == current_keyword ) continue;
+
+      emit keywordChanged( old_keyword, current_keyword + "/" + qPrintable( value ) );
     }
     
     return true;

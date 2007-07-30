@@ -197,9 +197,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! revert logbook to saved version
   virtual void revertToSaved( void );
 
-  //! create HTML file from logbook
-  virtual void viewHtml( void );
-
   /*! \brief
     show all entries which have equal creation time
     is needed to remove duplicate entries in case of
@@ -227,6 +224,9 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   protected slots:
 
+  //! create HTML file from logbook
+  virtual void _viewHtml( void );
+
   //! create new entry
   virtual void _newEntry( void );
 
@@ -238,10 +238,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! change selected entries color
   virtual void _changeEntryColor( QColor );
-
-
-  //! change selected entries color
-  // virtual void _changeEntryColor( const std::string& color );
 
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )
