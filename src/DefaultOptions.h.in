@@ -94,7 +94,7 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "FORMAT_TOOLBAR",  "1" , "toolbar visibility" ));
   XmlOptions::get().add( Option( "EDITION_TOOLBAR", "1" , "toolbar visibility" ));
   XmlOptions::get().add( Option( "EXTRA_TOOLBAR", "1" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "1" , "toolbar visibility" ));
+  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR", "1" , "toolbar visibility" ));
 
   XmlOptions::get().add( Option( "MAIN_TOOLBAR_LOCATION",   "left" , "toolbar location" ));
   XmlOptions::get().add( Option( "FORMAT_TOOLBAR_LOCATION",  "left" , "toolbar location" ));

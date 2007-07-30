@@ -25,7 +25,7 @@
 #define HelpText_h
 
 /*!
-  \file    LogHelp.h
+  \file    HelpText.h
   \brief   eLogbook help text
   \author  Hugo Pereira
   \version $Revision$

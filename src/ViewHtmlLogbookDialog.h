@@ -49,7 +49,7 @@ class ViewHtmlLogbookDialog: public CustomDialog
   
   public:
 
-  // selection mode
+  //! selection mode
   enum Selection
   {
     ALL,
@@ -57,7 +57,7 @@ class ViewHtmlLogbookDialog: public CustomDialog
     SELECTED
   };
           
-  // constructor
+  //! constructor
   ViewHtmlLogbookDialog( QWidget* parent );
   
   //! destructor

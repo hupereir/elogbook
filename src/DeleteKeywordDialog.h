@@ -44,7 +44,7 @@ class DeleteKeywordDialog: public CustomDialog
   
   public:
       
-  // constructor
+  //! constructor
   DeleteKeywordDialog( QWidget* parent, const std::string&, const bool& has_entries );
   
   //! destructor

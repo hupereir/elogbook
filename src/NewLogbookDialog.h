@@ -48,7 +48,7 @@ class NewLogbookDialog: public CustomDialog
   
   public:
       
-  // constructor
+  //! constructor
   NewLogbookDialog( QWidget* parent );
   
   //! destructor

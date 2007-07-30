@@ -43,7 +43,7 @@ class EditKeywordDialog: public CustomDialog
   
   public:
       
-  // constructor
+  //! constructor
   EditKeywordDialog( QWidget* parent );
   
   //! destructor

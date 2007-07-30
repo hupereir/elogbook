@@ -44,7 +44,7 @@ class DeleteAttachmentDialog: public CustomDialog
   
   public:
       
-  // constructor
+  //! constructor
   DeleteAttachmentDialog( QWidget* parent, const Attachment& attachment );
   
   //! destructor

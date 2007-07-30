@@ -23,7 +23,7 @@
  *******************************************************************************/
 
 /*!
-   \file ViewHtmlLogbookDialog.h
+   \file ViewHtmlLogbookDialog.cc
    \brief new logbook popup dialog
    \author Hugo Pereira
    \version $Revision$

@@ -45,6 +45,10 @@ class AskForSaveDialog: public QDialog, public Counter
   public:
   
   //! return codes
+  /*! 
+    the enumeration is used both to interpret the result and to decide which
+    buttons are to be shown in the dialog.
+  */
   enum ReturnCode {
     
     //! file is to be saved
@@ -56,6 +60,7 @@ class AskForSaveDialog: public QDialog, public Counter
     //! action is canceled
     CANCEL = 1<<2 ,
     
+    //! all buttons
     ALL = YES|NO|CANCEL
         
   };

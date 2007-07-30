@@ -48,7 +48,7 @@ class ViewHtmlEntryDialog: public CustomDialog
   
   public:
       
-  // constructor
+  //! constructor
   ViewHtmlEntryDialog( QWidget* parent );
   
   //! destructor
@@ -111,6 +111,7 @@ class ViewHtmlEntryDialog: public CustomDialog
   
   private:
   
+  //! map mask bits to checkboxes
   typedef std::map<unsigned int, QCheckBox*> CheckBoxMap;
       
   //! checkboxes

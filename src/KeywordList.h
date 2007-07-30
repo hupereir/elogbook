@@ -163,7 +163,8 @@ class KeywordList: public CustomListView
   //! start editting current item
   void _startEdit( void );
 
-  // item activated
+  //! item activated
+  /*! used to catch end of item edition and propagate */
   void _activate( QTreeWidgetItem* item, int column );
   
   protected:

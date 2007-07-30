@@ -109,7 +109,7 @@ class MainFrame: public QApplication, public Counter
   
   signals:
   
-  // configuration has changed
+  //! configuration has changed
   void configurationChanged( void );
   
   public slots:

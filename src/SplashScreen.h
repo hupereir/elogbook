@@ -74,6 +74,7 @@ class SplashScreen: public QWidget, public Counter
     splash_ = pixmap; 
   }
   
+  //! set splash screen displayed icon
   virtual void setIcon( const QPixmap& icon )
   {
     Exception::assert( !realized_, DESCRIPTION( "widget already realized" ) );
