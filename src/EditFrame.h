@@ -142,6 +142,17 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! update color Widget from current entry
   void displayColor( void );    
   
+  //! used to count EditFrames that are not hidden
+  class IsVisibleFTor
+  {
+    public:
+    
+    // predicate
+    bool operator() (const EditFrame* frame ) const
+    { return frame && !frame->isHidden(); } 
+    
+  };
+  
   public slots:  
   
   //! configuration

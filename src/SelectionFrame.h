@@ -185,6 +185,9 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! save current logbook
   virtual void save( void );
 
+  //! save logbook and children whether they are modified or not
+  virtual void saveForced( void );
+  
   /*! \brief
     save current logbook with a given filename
     returns true if logbook was saved
@@ -280,9 +283,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! enter event handler
   virtual void enterEvent( QEvent *event );
-
-  //! save logbook and children whether they are modified or not
-  virtual void _saveForced( void );
 
   //! clear list and reinitialize from logbook entries
   virtual void _resetList( void );

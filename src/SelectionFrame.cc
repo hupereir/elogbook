@@ -234,7 +234,7 @@ void SelectionFrame::setLogbook( File file )
   Debug::Throw("SelectionFrame::SetLogbook.\n" );
 
   // reset current logbook
-  if( logbook_ ) reset( );
+  if( logbook_ ) reset();
 
   // create new logbook
   logbook_ = new Logbook();
@@ -442,8 +442,14 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
   }
 
   if( !KeySet<LogEntryList::Item>( entry ).empty() ) logEntryList().update( entry, update_selection );
-  else logEntryList().add( entry, update_selection );
+  else {
+    logEntryList().add( entry, update_selection );
+    logEntryList().sort();
+  }
   
+  // make sure columns are properly displayed
+  logEntryList().resizeColumns();
+
 }
 
 
@@ -792,6 +798,7 @@ void SelectionFrame::open( FileRecord record )
   // open file from dialog if not set as argument
   if( record.file().empty() )
   {
+    
     // create file dialog
     CustomFileDialog dialog( this );
     dialog.setFileMode( QFileDialog::ExistingFile );
@@ -902,6 +909,7 @@ bool SelectionFrame::saveAs( File default_file )
   // create file dialog
   CustomFileDialog dialog( this );
   dialog.setFileMode( QFileDialog::AnyFile );
+  dialog.setDirectory( QDir( default_file.path().c_str() ) );
   dialog.selectFile( default_file.c_str() );
   QtUtil::centerOnPointer( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return false;
@@ -924,7 +932,8 @@ bool SelectionFrame::saveAs( File default_file )
 
   // change logbook filename and save
   logbook()->setFile( fullname );
-  _saveForced( );
+  logbook()->setModifiedRecursive( true );
+  save();
 
   /*
     force logbook state to unmodified since
@@ -939,6 +948,24 @@ bool SelectionFrame::saveAs( File default_file )
   ignore_warnings_ = false;
 
   return true;
+}
+
+
+//_____________________________________________
+void SelectionFrame::saveForced( void )
+{
+  Debug::Throw( "SelectionFrame::saveForced.\n" );
+
+  // retrieve/check SelectionFrame/Logbook
+  if( !logbook_ ) {
+    QtUtil::infoDialog( this, "no Logbook opened. <Save> canceled." );
+    return;
+  }
+
+  // set all logbooks as modified
+  logbook()->setModifiedRecursive( true );
+  save();
+
 }
 
 //_______________________________________________
@@ -2057,23 +2084,6 @@ void SelectionFrame::enterEvent( QEvent *event )
   return;
 }
 
-//_____________________________________________
-void SelectionFrame::_saveForced( void )
-{
-  Debug::Throw( "SelectionFrame::_saveForced.\n" );
-
-  // retrieve/check SelectionFrame/Logbook
-  if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no Logbook opened. <Save> canceled." );
-    return;
-  }
-
-  // set all logbooks as modified
-  logbook()->setModifiedRecursive( true );
-  save();
-
-}
-
 //_______________________________________________
 void SelectionFrame::_resetList( void )
 {
@@ -2089,10 +2099,8 @@ void SelectionFrame::_resetList( void )
   { if( (*it)->isSelected() ) logEntryList().add( *it ); }
   
   logEntryList().sort();
-  logEntryList().resizeColumnToContents( LogEntryList::MODIFICATION );
-  logEntryList().resizeColumnToContents( LogEntryList::CREATION );
-  logEntryList().resizeColumnToContents( LogEntryList::TITLE );
-     
+  logEntryList().resizeColumns();
+  
 }
 
 //_______________________________________________

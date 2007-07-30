@@ -32,6 +32,7 @@
 #include <QLayout>
 
 #include "BrowsedLineEdit.h"
+#include "CustomGridLayout.h"
 #include "CustomLineEdit.h"
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
@@ -64,13 +65,14 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   dest_dir_line_edit_->setMode( QFileDialog::DirectoryOnly );
   dest_dir_line_edit_->setToolTip( "Attachment directory where attached file is stored (either copied or linked)." );
     
-  QGridLayout* grid_layout = new QGridLayout();
+  CustomGridLayout* grid_layout = new CustomGridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
+  grid_layout->setMaxCount(2);
   mainLayout().addLayout( grid_layout, 0 );
 
-  grid_layout->addWidget( new QLabel( "Type:", this ), 0, 0 );
-  grid_layout->addWidget( file_type_combo_box_ = new QComboBox( this ), 0, 1 );
+  grid_layout->addWidget( new QLabel( "Type:", this ) );
+  grid_layout->addWidget( file_type_combo_box_ = new QComboBox( this ) );
   for( 
     std::map<string, AttachmentType>::const_iterator iter = AttachmentType::types().begin(); 
     iter != AttachmentType::types().end();
@@ -80,8 +82,8 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   connect( file_type_combo_box_, SIGNAL( activated( int ) ), SLOT( _attachmentTypeChanged( int ) ) );
         
   // action
-  grid_layout->addWidget( new QLabel( "Action:", this ), 1, 0 );
-  grid_layout->addWidget( action_combo_box_ = new QComboBox( this ), 1, 1 );
+  grid_layout->addWidget( new QLabel( "Action:", this ) );
+  grid_layout->addWidget( action_combo_box_ = new QComboBox( this ) );
   char *actions[] = { "Copy", "Link", 0 };
   for( int i=0; actions[i]; i++ )
   action_combo_box_->addItem( actions[i] );

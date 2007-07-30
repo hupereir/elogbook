@@ -34,6 +34,7 @@
 #include <QLayout>
 
 #include "BrowsedLineEdit.h"
+#include "CustomGridLayout.h"
 #include "CustomLineEdit.h"
 #include "CustomTextEdit.h"
 #include "Debug.h"
@@ -50,15 +51,16 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   
   Debug::Throw( "OpenAttachmentDialog::OpenAttachmentDialog.\n" );
 
-  QGridLayout* grid_layout = new QGridLayout();
+  CustomGridLayout* grid_layout = new CustomGridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
+  grid_layout->setMaxCount(2);
   mainLayout().addLayout( grid_layout, 0 );
 
   // file name
-  grid_layout->addWidget(new QLabel( "File: ", this ), 0, 0 );
+  grid_layout->addWidget(new QLabel( "File: ", this ) );
   CustomLineEdit* file_line_edit = new CustomLineEdit( this );
-  grid_layout->addWidget( file_line_edit, 0, 1 );
+  grid_layout->addWidget( file_line_edit );
   file_line_edit->setReadOnly( true );
   file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );
 
@@ -66,10 +68,10 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   file_line_edit->setText( fullname.c_str() );
 
   // attachment type
-  grid_layout->addWidget(new QLabel( "Type: ", this ), 1, 0 );
+  grid_layout->addWidget(new QLabel( "Type: ", this ) );
   ostringstream what;
   what << "<B>" << attachment.type().name() << "</B>";
-  grid_layout->addWidget( new QLabel( what.str().c_str(), this ), 1, 1 );
+  grid_layout->addWidget( new QLabel( what.str().c_str(), this ) );
     
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
@@ -81,16 +83,16 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   group_box->layout()->setMargin(5);
   group_box->layout()->setSpacing(5);
 
-  group_box->layout()->addWidget( open_radio_button_ = new QRadioButton( "open using: ", this ) );
+  group_box->layout()->addWidget( open_radio_button_ = new QRadioButton( "open using: ", group_box ) );
   open_radio_button_->setToolTip( "Select this button to open attachment using the selected application." );
   group->addButton( open_radio_button_ );
   
-  group_box->layout()->addWidget( command_line_edit_ = new BrowsedLineEdit( this ) );
+  group_box->layout()->addWidget( command_line_edit_ = new BrowsedLineEdit( group_box ) );
   command_line_edit_->setFile( attachment.type().editCommand() );
   QtUtil::expand( &command_line_edit_->editor() );
   command_line_edit_->setToolTip( "Application to be used to display the attachment." );
 
-  group_box->layout()->addWidget( save_radio_button_ = new QRadioButton( "save to disk ", this ) );
+  group_box->layout()->addWidget( save_radio_button_ = new QRadioButton( "save to disk ", group_box ) );
   save_radio_button_->setToolTip( "Select this button to save a copy of the attachment on disk." );
   group->addButton( save_radio_button_ );
 

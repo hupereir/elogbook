@@ -123,6 +123,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   DebugMenu *debug_menu( new DebugMenu( this ) );
   debug_menu->setTitle( "&Debug" );
   menu->addMenu( debug_menu );
+  debug_menu->addAction( "&Save (forced)", selection_frame, SLOT( saveForced() ) );
   debug_menu->addAction( "&Show duplicates", selection_frame, SLOT( showDuplicatedEntries() ) );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
 
@@ -138,29 +139,28 @@ void Menu::_updateEditorMenu( void )
   AttachmentFrame *attachment_frame( &static_cast<MainFrame*>(qApp)->attachmentFrame() );
   
   // editor attachments and logbook information
-  editor_menu_->addAction( "&Attachments", attachment_frame, SLOT( uniconify() ), CTRL+Key_T );
-  editor_menu_->addAction( "&Logbook informations", selection_frame, SLOT( editLogbookInformations() ) );
-  editor_menu_->addAction( "&Logbook statistics", selection_frame, SLOT( viewLogbookStatistics() ) );
+  editor_menu_->addAction( "&Main window", selection_frame, SLOT( uniconify() ) );
 
-  bool found ( false );
   KeySet<EditFrame> frames( selection_frame );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  bool has_edit_frames = find_if( frames.begin(), frames.end(), EditFrame::IsVisibleFTor() ) != frames.end();
+  if( has_edit_frames )
   {
-    // hidden EditFrames will be deleted. Do not allow for opening
-    if( (*iter)->isHidden() ) continue;
-    if( !found ) editor_menu_->addSeparator();
-    found = true;
-    
-    string title( (*iter)->windowTitle() );
-    editor_menu_->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
-
+    QMenu *menu = editor_menu_->addMenu( "&Editors" );
+    for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    {
+      // hidden EditFrames will be deleted. Do not allow for opening
+      if( (*iter)->isHidden() ) continue;
+      
+      string title( (*iter)->windowTitle() );
+      menu->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
+    }
+    menu->addSeparator();
+    menu->addAction( "&Close editors", &static_cast<MainFrame*>(qApp)->selectionFrame(), SLOT( closeEditFrames() ) );
   }
   
-  if( found )
-  {
-    editor_menu_->addSeparator();
-    editor_menu_->addAction( "&Close editors", &static_cast<MainFrame*>(qApp)->selectionFrame(), SLOT( closeEditFrames() ) );
-  }
+  editor_menu_->addAction( "&Attachments", attachment_frame, SLOT( uniconify() ) );
+  editor_menu_->addAction( "&Logbook informations", selection_frame, SLOT( editLogbookInformations() ) );
+  editor_menu_->addAction( "&Logbook statistics", selection_frame, SLOT( viewLogbookStatistics() ) );
   
   return;
 }

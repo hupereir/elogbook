@@ -193,14 +193,15 @@ void KeywordList::reset( set<string> new_keywords )
   
   // make sure root item is in the new_keywords list
   // so that it does not get deleted
+  _createRootItem();
   new_keywords.insert( qPrintable( root_item_->text( KEYWORD ) ) );
   
   // retrieve current list of keywords
   set<string> old_keywords( keywords() );
   
   // remove keywords that are not included in new keywords
-  //for( set<string>::iterator iter = old_keywords.begin(); iter != old_keywords.end(); iter++ )
-  for( set<string>::reverse_iterator iter = old_keywords.rbegin(); iter != old_keywords.rend(); iter++ )
+  for( set<string>::iterator iter = old_keywords.begin(); iter != old_keywords.end(); iter++ )
+  //for( set<string>::reverse_iterator iter = old_keywords.rbegin(); iter != old_keywords.rend(); iter++ )
   {
     if( find_if( new_keywords.begin(), new_keywords.end(), ContainsFTor( *iter ) ) == new_keywords.end() )
     { remove( *iter ); }
@@ -350,11 +351,12 @@ void KeywordList::_activate( QTreeWidgetItem* item, int column )
 //__________________________________________________________
 void KeywordList::_createRootItem( void )
 { 
-  Debug::Throw( "KeywordList::_createRootItem.\n" );
-  
   if( root_item_ ) return;
+  
+  Debug::Throw( "KeywordList::_createRootItem.\n" );
   root_item_ = new Item( this );
   root_item_->setText( KEYWORD, LogEntry::NO_KEYWORD.c_str() );
+
 }
 
 //__________________________________________________________

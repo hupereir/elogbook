@@ -95,6 +95,23 @@ void LogEntryList::add( LogEntry* entry, bool update_selection )
 }
 
 //_______________________________________________
+void LogEntryList::resizeColumns()
+{
+
+  Debug::Throw( "LogEntryList::resizeColumns.\n" );
+  
+  // if no items present, do nothing
+  if( QTreeWidget::topLevelItemCount() == 0 ) return;
+  
+  // resize. Goes from back to front, for visible columns only
+  unsigned int mask( LogEntryList::mask() );
+  for( int i = columnCount()-1; i >= 0; i-- )
+  { if( mask & (1<<i) ) resizeColumnToContents(i); }
+  
+  return;
+}
+
+//_______________________________________________
 void LogEntryList::update( LogEntry* entry, bool update_selection )
 {
   

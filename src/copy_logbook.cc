@@ -81,7 +81,10 @@ int main (int argc, char *argv[])
     // load user resource file
     string rcfile = Util::env( "HOME", "." ) + "/.eLogbookrc";
     XmlOptions::read( rcfile ); 
-          
+
+    // force debug level to 0
+    XmlOptions::get().set<int>("DEBUG_LEVEL", 0 );
+
     // set debug level
     int debug_level( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
     Debug::setLevel( debug_level );

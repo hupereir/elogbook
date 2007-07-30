@@ -84,6 +84,9 @@ class LogEntryList: public CustomListView
   //! add LogEntry to the list
   void add( LogEntry* entry, bool update_selection = false );
       
+  //! resize columns to match shown entries
+  void resizeColumns( void );
+  
   //! handle listviewitem and logbook entry association
   class Item: public CustomListView::Item, public BASE::Key
   {

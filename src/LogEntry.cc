@@ -122,7 +122,10 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
   if( title().size() ) out.setAttribute( XML::TITLE.c_str(), XmlUtil::textToXml(title()).c_str() );
   if( keyword().size() ) out.setAttribute( XML::KEYWORD.c_str(), XmlUtil::textToXml(keyword()).c_str() );
   if( author().size() ) out.setAttribute( XML::AUTHOR.c_str(), XmlUtil::textToXml(author()).c_str() );
-  if( color().size() ) out.setAttribute( XML::COLOR.c_str(), XmlUtil::textToXml(color()).c_str() );
+
+  // color
+  bool color_valid( color().size() && !Str(color()).isEqual( ColorMenu::NONE, false ) && QColor( color().c_str() ).isValid() );
+  if( color_valid ) out.setAttribute( XML::COLOR.c_str(), XmlUtil::textToXml(color()).c_str() );
 
   // dump timeStamp
   if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, parent ) );

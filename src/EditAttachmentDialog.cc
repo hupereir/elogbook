@@ -32,6 +32,7 @@
 #include <QLayout>
 #include <QLabel>
 
+#include "CustomGridLayout.h"
 #include "CustomLineEdit.h"
 #include "Debug.h"
 #include "EditAttachmentDialog.h"
@@ -59,13 +60,14 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   file_line_edit->setText( fullname.c_str() );
   QtUtil::expand( file_line_edit );
 
-  QGridLayout* grid_layout = new QGridLayout();
+  CustomGridLayout* grid_layout = new CustomGridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
+  grid_layout->setMaxCount(2);
   mainLayout().addLayout( grid_layout );
 
-  grid_layout->addWidget( new QLabel( "Type:", this ), 0, 0 );
-  grid_layout->addWidget( file_type_combo_box_ = new QComboBox( this ), 0, 1 );
+  grid_layout->addWidget( new QLabel( "Type:", this ) );
+  grid_layout->addWidget( file_type_combo_box_ = new QComboBox( this ) );
   for( 
     std::map<string, AttachmentType>::const_iterator iter = AttachmentType::types().begin(); 
     iter != AttachmentType::types().end();
