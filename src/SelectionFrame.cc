@@ -701,7 +701,7 @@ void SelectionFrame::synchronize( void )
   }
 
   // synchronize remove with local
-  logbook.synchronize( *logbook_ );
+  logbook.synchronize( *SelectionFrame::logbook() );
 
   // reinitialize lists
   _resetKeywordList();

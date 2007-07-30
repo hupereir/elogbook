@@ -109,7 +109,7 @@ bool Logbook::read( void )
 
   // check input file
   if( !file().exist() ) {
-    Debug::Throw(0) << "Logbook::read- ERROR: cannot access file \"" << file() << "\".\n";
+    Debug::Throw(0) << "Logbook::read - ERROR: cannot access file \"" << file() << "\".\n";
     return false;
   }
 
@@ -313,10 +313,12 @@ bool Logbook::write( File file )
       // change logbook state if saved in nominal file
       // stores now as last save time
       modified_ = false;
-      saved_ = Logbook::file().lastModified();
 
     }
   }
+  
+  // update saved timeStamp
+  saved_ = Logbook::file().lastModified();
 
   // write children
   unsigned int child_number=0;

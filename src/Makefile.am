@@ -29,20 +29,10 @@ endif
 CXXFLAGS = @CXXFLAGS@
 
 noinst_LIBRARIES = libeLogbook.a
-bin_PROGRAMS = eLogbook copy_logbook
+bin_PROGRAMS = eLogbook copy_logbook synchronize_logbook
 
 if WITH_ASPELL 
-
-eLogbook_LDADD =  \
-  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
-  -L$(aspell_libraries) -laspell  \
-  libeLogbook.a \
-  ../spellcheck/libspellcheck.a \
-  ../server/libserver.a \
-  ../base-qt/libbase-qt.a \
-  ../base/libbase.a
-
-copy_logbook_LDADD =  \
+libraries = \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   -L$(aspell_libraries) -laspell  \
   libeLogbook.a \
@@ -53,14 +43,7 @@ copy_logbook_LDADD =  \
 
 else
 
-eLogbook_LDADD =  \
-  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
-  libeLogbook.a \
-  ../server/libserver.a \
-  ../base-qt/libbase-qt.a \
-  ../base/libbase.a
-
-copy_logbook_LDADD =  \
+libraries =  \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   libeLogbook.a \
   ../server/libserver.a \
@@ -68,6 +51,10 @@ copy_logbook_LDADD =  \
   ../base/libbase.a
 
 endif
+
+eLogbook_LDADD =  $(libraries)
+copy_logbook_LDADD =  $(libraries)
+synchronize_logbook_LDADD =  $(libraries)
 
 noinst_HEADERS = \
   AskForSaveDialog.h \
@@ -108,7 +95,8 @@ noinst_HEADERS = \
 
 eLogbook_SOURCES = eLogbook.cc
 copy_logbook_SOURCES = copy_logbook.cc
-  
+synchronize_logbook_SOURCES = synchronize_logbook.cc
+
 libeLogbook_a_SOURCES = \
   AskForSaveDialog.cc \
   Attachment.cc \

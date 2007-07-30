@@ -22,8 +22,8 @@
 *******************************************************************************/
 
 /*!
-  \file copy_logbook.cc
-  \brief comand line copy of a logbook
+  \file synchronize_logbook.cc
+  \brief comand line synchronization of a logbook
   \author  Hugo Pereira
   \version $Revision$
   \date    $Date$
@@ -38,7 +38,7 @@
 #include "Debug.h"
 #include "DefaultOptions.h"
 #include "Logbook.h"
-#include "XmlOptions.h"
+#include "Options.h"
 #include "Util.h"
 
 using namespace std;
@@ -52,7 +52,6 @@ void interrupt( int sig );
 int main (int argc, char *argv[])
 {
   try {
-            
     // Ensure proper cleaning at exit
     signal(SIGINT,  interrupt);
     signal(SIGTERM, interrupt);
@@ -60,13 +59,13 @@ int main (int argc, char *argv[])
     // read argument
     if( argc < 3 ) 
     {
-      cout << "usage: copy_logbook <input file> <output file>" << endl;
+      cout << "usage: synchronize_logbook <local file> <remote file>" << endl;
       return 0;
     }
     
     // load argument
-    string input( argv[1] );
-    string output( argv[2] );
+    string local( argv[1] );
+    string remote( argv[2] );
     
     // load options
     string user( Util::user( ) );
@@ -87,53 +86,57 @@ int main (int argc, char *argv[])
     Debug::setLevel( debug_level );
     if( debug_level ) XmlOptions::get().dump();
     
-    // try open input logbook   
-    cout << "copy_logbook - reading from: " << input << endl;
-    Logbook logbook;
-    logbook.setFile( File(input).expand() );
-    logbook.read();
-    
-    // debug
-    cout << "copy_logbook - number of files: " << logbook.children().size() << endl;
-    cout << "copy_logbook - number of entries: " << logbook.entries().size() << endl;
-  
-    // perform copy
-    cout << "copy_logbook - writing to: " << output << endl;
-    logbook.setFile( File( output ).expand() );
-    logbook.setModifiedRecursive( true );
-
-    // check logbook filename is writable
-    File fullname = File( logbook.file() ).expand();
-    if( fullname.exist() ) {
-
-      // check file is not a directory
-      if( fullname.isDirectory() ) 
-      {
-        cout << "copy_logbook - selected file is a directory. <Save Logbook> canceled." << endl;
-        return 0;
-      }
-
-      // check file is writable
-      if( !fullname.isWritable() ) {
-        cout << "copy_logbook - selected file is not writable. <Save Logbook> canceled." << endl;
-        return 0;
-      }
-      
-    } else {
-      
-      File path( fullname.path() );
-      if( !path.isDirectory() ) {
-        cout << "copy_logbook - selected path is not valid. <Save Logbook> canceled." << endl;
-        return 0;
-      }
-      
+    // try open local_logbook   
+    cout << "synchronize_logbook - reading local logbook from: " << local << endl;
+    Logbook local_logbook;
+    local_logbook.setFile( File( local ).expand() );
+    if( !local_logbook.read() ) 
+    {
+      cout << "synchronize_logbook - error reading local logbook" << endl;
+      return 0;
     }
     
-    // copy logbook to ouput
-    if( !logbook.write() )
-    { cout << "copy_logbook - error writing to file " << output << endl; }
+    // debug
+    cout << "synchronize_logbook - number of local files: " << local_logbook.children().size() << endl;
+    cout << "synchronize_logbook - number of local entries: " << local_logbook.entries().size() << endl;
+   
+    // try open local_logbook   
+    cout << "synchronize_logbook - reading remote logbook from: " << remote << endl;
+    Logbook remote_logbook;
+    remote_logbook.setFile( File( remote ).expand() );
+    if( !remote_logbook.read() ) 
+    {
+      cout << "synchronize_logbook - error reading remote logbook" << endl;
+      return 0;
+    }
     
-  }catch ( exception& e ) { cout << e.what() << endl; }
+    // debug
+    cout << "synchronize_logbook - number of remote files: " << remote_logbook.children().size() << endl;
+    cout << "synchronize_logbook - number of remote entries: " << remote_logbook.entries().size() << endl;
+     
+    cout << "synchronize_logbook - updating local from remote" << endl;
+    int n_duplicated = local_logbook.synchronize( remote_logbook ).size();
+    
+    cout << "synchronize_logbook - number of duplicated entries: " << n_duplicated << endl;
+
+    if( !local_logbook.write() ) 
+    {
+      cout << "synchronize_logbook - error writing local logbook" << endl;
+      return 0;
+    }
+        
+    cout << "synchronize_logbook - updating remote from local" << endl;
+    n_duplicated = remote_logbook.synchronize( local_logbook ).size();
+    
+    cout << "synchronize_logbook - number of duplicated entries: " << n_duplicated << endl;
+
+    if( !remote_logbook.write() ) 
+    {
+      cout << "error writting to remote logbook" << endl;
+      return 0;
+    }
+    
+  } catch ( exception& e ) { cout << e.what() << endl; }
   
   return 0;
 }
