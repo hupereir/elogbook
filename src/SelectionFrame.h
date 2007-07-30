@@ -261,9 +261,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! delete keyword from keyword list using dialog
   void _deleteKeyword( void );
   
-  //! rename keyword from keyword list directly
-  void _renameKeyword( QTreeWidgetItem*, int );
-  
   //! rename keyword from keyword list using arguments
   void _renameKeyword( const std::string& old_keyword, const std::string& new_keyword );
    
