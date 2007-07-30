@@ -68,15 +68,15 @@ KeywordList::KeywordList( QWidget *parent ):
   setAcceptDrops(true);  
   setAutoScroll(true);
   setEditTriggers( QAbstractItemView::NoEditTriggers );
-  //setEditTriggers( QAbstractItemView::SelectedClicked );
   
   setColumnCount( n_columns );
   for( unsigned int i=0; i<n_columns; i++ )
   { setColumnName( i, column_titles_[i] ); }
-  
-  
+    
   _createRootItem();
     
+  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
+  
 }
 
 //_______________________________________________
@@ -133,7 +133,7 @@ void KeywordList::remove( string keyword )
 {
   
   Debug::Throw() << "KeywordList::remove - keyword=" << keyword << endl;
-
+  
   // check root item
   _createRootItem();
     
@@ -186,16 +186,21 @@ void KeywordList::remove( string keyword )
 }  
 
 //_______________________________________________
-void KeywordList::reset( const set<string>& new_keywords )
+void KeywordList::reset( set<string> new_keywords )
 {
   
   Debug::Throw( "KeywordList::reset.\n" );
+  
+  // make sure root item is in the new_keywords list
+  // so that it does not get deleted
+  new_keywords.insert( qPrintable( root_item_->text( KEYWORD ) ) );
   
   // retrieve current list of keywords
   set<string> old_keywords( keywords() );
   
   // remove keywords that are not included in new keywords
-  for( set<string>::iterator iter = old_keywords.begin(); iter != old_keywords.end(); iter++ )
+  //for( set<string>::iterator iter = old_keywords.begin(); iter != old_keywords.end(); iter++ )
+  for( set<string>::reverse_iterator iter = old_keywords.rbegin(); iter != old_keywords.rend(); iter++ )
   {
     if( find_if( new_keywords.begin(), new_keywords.end(), ContainsFTor( *iter ) ) == new_keywords.end() )
     { remove( *iter ); }
@@ -302,6 +307,54 @@ void KeywordList::clear( void )
   Debug::Throw( "KeywordList::clear.\n" );
   CustomListView::clear();
   root_item_ = 0;
+}
+
+//_____________________________________________________
+void KeywordList::_openDropItem( void )
+{
+  Debug::Throw( "KeyWordList::_openDropItem.\n" );
+  if( drop_item_ && !isItemExpanded( drop_item_ ) )
+  { expandItem( drop_item_ ); }
+}
+
+//_____________________________________________________
+void KeywordList::_startEdit( void )
+{
+  Debug::Throw( "KeywordList::_startEdit.\n" );
+  edit_item_ = QTreeWidget::currentItem();
+  dynamic_cast<Item*>(edit_item_)->storeBackup();
+  openPersistentEditor( edit_item_ );
+}
+
+//_____________________________________________________
+void KeywordList::_activate( QTreeWidgetItem* item, int column )
+{
+  Debug::Throw( "KeywordList::_activate.\n" );
+  
+  // check if item is edited
+  if( !( edit_item_ && item == edit_item_ ) ) return;
+  
+  // close editor
+  closePersistentEditor( edit_item_ ); 
+  
+  //! retrieve full backup keyword
+  string old_keyword = keyword( dynamic_cast<Item*>( edit_item_->parent() ) ) + "/" + qPrintable(  dynamic_cast<Item*>( edit_item_ )->backup() );
+  string new_keyword = keyword( dynamic_cast<Item*>( edit_item_ ) );
+  
+  Debug::Throw() << "KeywordList::_activate - old: " << old_keyword << " new: " << new_keyword << endl;
+  emit keywordChanged( old_keyword, new_keyword );
+  edit_item_ = 0;
+  
+}
+
+//__________________________________________________________
+void KeywordList::_createRootItem( void )
+{ 
+  Debug::Throw( "KeywordList::_createRootItem.\n" );
+  
+  if( root_item_ ) return;
+  root_item_ = new Item( this );
+  root_item_->setText( KEYWORD, LogEntry::NO_KEYWORD.c_str() );
 }
 
 //__________________________________________________________
@@ -447,33 +500,6 @@ void KeywordList::dropEvent( QDropEvent* event )
   
   return;
   
-}
-
-//_____________________________________________________
-void KeywordList::_openDropItem( void )
-{
-  Debug::Throw( "KeyWordList::_openDropItem.\n" );
-  if( drop_item_ && !isItemExpanded( drop_item_ ) )
-  { expandItem( drop_item_ ); }
-}
-
-//_____________________________________________________
-void KeywordList::_startEdit( void )
-{
-  Debug::Throw( "KeywordList::_startEdit.\n" );
-  edit_item_ = QTreeWidget::currentItem();
-  dynamic_cast<Item*>(edit_item_)->storeBackup();
-  openPersistentEditor( edit_item_ );
-}
-
-//__________________________________________________________
-void KeywordList::_createRootItem( void )
-{ 
-  Debug::Throw( "KeywordList::_createRootItem.\n" );
-  
-  if( root_item_ ) return;
-  root_item_ = new Item( this );
-  root_item_->setText( KEYWORD, LogEntry::NO_KEYWORD.c_str() );
 }
 
 //__________________________________________________________

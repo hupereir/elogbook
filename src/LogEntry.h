@@ -207,12 +207,7 @@ class LogEntry:public Counter, public BASE::Key
   { return Str( buf ).isIn( text_, XmlOptions::get().get<bool>( "CASE_SENSITIVE" )); }
 
   //! returns true if entry text matches buffer
-  bool matchColor(  const std::string& buf ) 
-  { 
-    return 
-      Str( buf ).isIn( color_, false ) ||
-      (QColor( buf.c_str() ).isValid() && QColor( buf.c_str() ) == QColor( color_.c_str() ) ); 
-  }
+  bool matchColor(  const std::string& buf );
   
   //! returns true if any entry attachment file name matches buffer
   bool matchAttachment( const std::string& buf ); 

@@ -622,9 +622,9 @@ void SelectionFrame::saveConfiguration( void )
   XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", logEntryList().mask() );
   
   // colors
-  const ColorMenu::ColorSet& colors( color_menu_->colors() );
-  for( set<QColor>::iterator iter = colors.begin(); iter != colors.end(); iter++ )
-  { XmlOptions::get().add( Option( "COLOR", qPrintable( iter->name() ) ) ); }
+  // const ColorMenu::ColorSet& colors( color_menu_->colors() );
+  // for( set<QColor>::iterator iter = colors.begin(); iter != colors.end(); iter++ )
+  // { XmlOptions::get().add( Option( "COLOR", qPrintable( iter->name() ) ) ); }
   
   // open previous menu
   menu().openPreviousMenu().write();
@@ -1237,6 +1237,12 @@ void SelectionFrame::selectEntries( QString selection, unsigned int mode )
 
   string selection_string( qPrintable( selection ) );
   
+  // check is selection_string is a valid color when Color search is requested.
+  bool color_valid = ( 
+    mode&SearchPanel::COLOR && ( 
+    selection_string == ColorMenu::NONE ||
+    QColor( selection_string.c_str() ).isValid() ) );
+  
   // retrieve all logbook entries
   KeySet<LogEntry> entries( logbook()->entries() );
   KeySet<LogEntry> turned_off_entries;
@@ -1256,7 +1262,7 @@ void SelectionFrame::selectEntries( QString selection, unsigned int mode )
     if( (mode&SearchPanel::KEYWORD ) && entry->matchKeyword( selection_string ) ) accept = true;
     if( (mode&SearchPanel::TEXT ) && entry->matchText( selection_string ) ) accept = true;
     if( (mode&SearchPanel::ATTACHMENT ) && entry->matchAttachment( selection_string ) ) accept = true;
-    if( (mode&SearchPanel::COLOR ) && entry->matchColor( selection_string ) ) accept = true;
+    if( color_valid && entry->matchColor( selection_string ) ) accept = true;
 
     if( accept ) 
     {
@@ -1602,25 +1608,6 @@ void SelectionFrame::_deleteKeyword( void )
   
   return;
   
-}
-
-//____________________________________________
-void SelectionFrame::_renameKeyword( QTreeWidgetItem *item, int column )
-{
-  Debug::Throw("SelectionFrame::_RenameKeyword.\n" );
-  if( !column == KeywordList::KEYWORD ) return;
-  
-  KeywordList::Item *local_item( dynamic_cast<KeywordList::Item*>(item));
-  Exception::assert( local_item, DESCRIPTION( "invalid cast to KeywordList::Item" ) );
-  
-  string old_keyword( qPrintable( local_item->backup() ) );
-  string new_keyword( keywordList().keyword( local_item ) );
-  Debug::Throw(0) << "SelectionFrame::_RenameKeyword - old=" << old_keyword << " new=" << new_keyword << endl;
-  
-  _renameKeyword( old_keyword, new_keyword );
-  
-  return;
-
 }
 
 //____________________________________________

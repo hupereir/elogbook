@@ -78,7 +78,7 @@ class KeywordList: public CustomListView
   void remove( std::string keyword );
   
   //! reset
-  void reset( const std::set<std::string>& keywords );
+  void reset( std::set<std::string> keywords );
   
   //! select a keyword, if found
   void select( std::string keyword );
@@ -154,6 +154,18 @@ class KeywordList: public CustomListView
   //! clear list and set of unique keywords
   void clear();      
 
+  protected slots:
+  
+  //! open drop item
+  /*! this is connected to the time-out of the drop timer */
+  void _openDropItem( void );
+        
+  //! start editting current item
+  void _startEdit( void );
+
+  // item activated
+  void _activate( QTreeWidgetItem* item, int column );
+  
   protected:
   
   //! mouse press events [needed to start drag]
@@ -174,16 +186,7 @@ class KeywordList: public CustomListView
 
   //! drop event [overload]
   void dropEvent( QDropEvent* event );
-  
-  private slots:
-  
-  //! open drop item
-  /*! this is connected to the time-out of the drop timer */
-  void _openDropItem( void );
-        
-  //! start editting current item
-  void _startEdit( void );
-  
+     
   private:
   
   //! create root item

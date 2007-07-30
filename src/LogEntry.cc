@@ -31,6 +31,7 @@
 
 #include "Debug.h"
 #include "Attachment.h"
+#include "ColorMenu.h"
 #include "Exception.h"
 #include "HtmlUtil.h"
 #include "Logbook.h"
@@ -241,6 +242,14 @@ void LogEntry::setKeyword( const string& keyword )
   keyword_ = formatKeyword( keyword );
 }
 
+//__________________________________
+bool LogEntry::matchColor( const string& buf )
+{
+  if( Str( buf ).isIn( color_, false ) ) return true;
+  if( color_ == ColorMenu::NONE ) return false;
+  return QColor( buf.c_str() ) == QColor( color_.c_str() );
+}
+  
 //__________________________________
 bool LogEntry::matchAttachment( const string& buf )
 {
