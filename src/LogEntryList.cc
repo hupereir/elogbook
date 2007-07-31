@@ -75,7 +75,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   
   // editing 
   edit_timer_.setSingleShot( true );
-  edit_timer_.setInterval( 
+  edit_timer_.setInterval( edit_item_delay_ );
   connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
 }
  
@@ -155,48 +155,6 @@ void LogEntryList::select( LogEntry* entry )
   scrollToItem( item );
   return;  
 }
-
-//___________________________________
-list< LogEntry* > LogEntryList::selectedEntries( void )
-{ 
-  Debug::Throw( "LogEntryList::entries" );
-
-  // retrieve logbook entries
-  list< LogEntry* > entries; 
-  QList<Item*> items( LogEntryList::selectedItems<Item>() );
-  for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
-  {
-    
-    // check item visibility
-    if( isItemHidden( *iter ) ) continue;
-    entries.push_back( (*iter)->entry() );
-
-  }
-  
-  return entries;
-  
-} 
-
-//___________________________________
-list< LogEntry* > LogEntryList::entries( void )
-{ 
-  Debug::Throw( "LogEntryList::entries" );
-
-  // retrieve logbook entries
-  list< LogEntry* > entries; 
-  QList<Item*> items( CustomListView::children<Item>() );
-  for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
-  {
-    
-    // check item visibility
-    if( isItemHidden( *iter ) ) continue;
-    entries.push_back( (*iter)->entry() );
-
-  }
-  
-  return entries;
-  
-} 
 
 //_______________________________________________
 LogEntryList::Item* LogEntryList::itemBelow( QTreeWidgetItem* item, bool update_selection )
@@ -291,6 +249,56 @@ LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_
   }
   
   return out;
+  
+}
+
+//___________________________________
+list< LogEntry* > LogEntryList::selectedEntries( void )
+{ 
+  Debug::Throw( "LogEntryList::entries" );
+
+  // retrieve logbook entries
+  list< LogEntry* > entries; 
+  QList<Item*> items( LogEntryList::selectedItems<Item>() );
+  for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
+  {
+    
+    // check item visibility
+    if( isItemHidden( *iter ) ) continue;
+    entries.push_back( (*iter)->entry() );
+
+  }
+  
+  return entries;
+  
+} 
+
+//___________________________________
+list< LogEntry* > LogEntryList::entries( void )
+{ 
+  Debug::Throw( "LogEntryList::entries" );
+
+  // retrieve logbook entries
+  list< LogEntry* > entries; 
+  QList<Item*> items( CustomListView::children<Item>() );
+  for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
+  {
+    
+    // check item visibility
+    if( isItemHidden( *iter ) ) continue;
+    entries.push_back( (*iter)->entry() );
+
+  }
+  
+  return entries;
+  
+} 
+
+//_______________________________________________
+void LogEntryList::_activate( QTreeWidgetItem *item, int column )
+{
+  
+  Debug::Throw( "LogEntryList::_activate.\n" );
   
 }
 

@@ -200,7 +200,6 @@ void KeywordList::reset( set<string> new_keywords )
   
   // remove keywords that are not included in new keywords
   for( set<string>::iterator iter = old_keywords.begin(); iter != old_keywords.end(); iter++ )
-  //for( set<string>::reverse_iterator iter = old_keywords.rbegin(); iter != old_keywords.rend(); iter++ )
   {
     if( find_if( new_keywords.begin(), new_keywords.end(), ContainsFTor( *iter ) ) == new_keywords.end() )
     { remove( *iter ); }
@@ -209,6 +208,9 @@ void KeywordList::reset( set<string> new_keywords )
   // add keywords that are not found in old list
   for( set<string>::const_iterator iter = new_keywords.begin(); iter != new_keywords.end(); iter++ )
   { if( old_keywords.find( *iter ) == old_keywords.end() ) add( *iter ); }
+  
+  // always expand the root item
+  expandItem( rootItem() );
   
   return;
   

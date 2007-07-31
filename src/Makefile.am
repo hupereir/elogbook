@@ -141,6 +141,7 @@ nodist_libeLogbook_a_SOURCES = \
   moc_KeywordList.cc \
   moc_Logbook.cc \
   moc_LogbookModifiedDialog.cc \
+  moc_LogEntryList.cc \
   moc_MainFrame.cc \
   moc_Menu.cc \
   moc_NewAttachmentDialog.cc \

@@ -34,6 +34,7 @@
 
 #include <string>
 #include <list>
+#include <QTimer>
 
 #include "Counter.h"
 #include "CustomListView.h"
@@ -52,6 +53,8 @@ class QPainter;
 class LogEntryList: public CustomListView
 { 
 
+  Q_OBJECT
+  
   public:
  
   //! used to tag Keyword drags
@@ -137,13 +140,19 @@ class LogEntryList: public CustomListView
   
   //! select next item in list, if any
   Item* itemAbove( QTreeWidgetItem* item, bool update_selection = true );    
-  
-  //! retrieve all entries
-  std::list< LogEntry* > entries( void );
 
   //! retrieve selected entries
   std::list< LogEntry* > selectedEntries( void );
+  
+  //! retrieve all entries
+  std::list< LogEntry* > entries( void );
    
+  protected slots:
+  
+  //! recieved when item gets activated
+  /*! used to retrieve edited text */
+  void _activate( QTreeWidgetItem*, int );
+  
   protected:
 
   //! mouse press events [needed to start drag]
@@ -154,14 +163,10 @@ class LogEntryList: public CustomListView
  
   //! mouse move events [needed to start drag]
   virtual void mouseReleaseEvent( QMouseEvent *event );
-
+    
   //! start drag
   virtual bool _startDrag( QMouseEvent* event );
-  
-  // edit available
-  void _activate( QTreeW
-    ifget:
-  
+
   private:
   
   //!@name list multi selection management
@@ -190,12 +195,9 @@ class LogEntryList: public CustomListView
   //! currently edited timer
   QTreeWidgetItem* edit_item_;
 
-  //! backup keyword
+  //! backup title for edited item
   QString backup_;
-  
-  //! backup keyword (including full path)
-  std::string full_backup_;
-  
+    
   //! editing timer
   /*! editting is enabled only if a certain delay is passed during which no drag/drop starts */
   QTimer edit_timer_;
