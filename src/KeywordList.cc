@@ -118,7 +118,6 @@ void KeywordList::add( string keyword )
     if( !item ) {
       item = new Item( parent_item );
       item->setText( KEYWORD, iter->c_str() );  
-      item->storeBackup();
     }
     
     // set as parent before processing the next keyword in the list
@@ -323,7 +322,8 @@ void KeywordList::_startEdit( void )
 {
   Debug::Throw( "KeywordList::_startEdit.\n" );
   edit_item_ = QTreeWidget::currentItem();
-  dynamic_cast<Item*>(edit_item_)->storeBackup();
+  backup_ = edit_item_->text( KEYWORD );
+  full_backup_ = keyword( edit_item_ );
   openPersistentEditor( edit_item_ );
 }
 
@@ -339,11 +339,14 @@ void KeywordList::_activate( QTreeWidgetItem* item, int column )
   closePersistentEditor( edit_item_ ); 
   
   //! retrieve full backup keyword
-  string old_keyword = keyword( dynamic_cast<Item*>( edit_item_->parent() ) ) + "/" + qPrintable(  dynamic_cast<Item*>( edit_item_ )->backup() );
-  string new_keyword = keyword( dynamic_cast<Item*>( edit_item_ ) );
+  string old_keyword = full_backup_; 
+  string new_keyword = keyword( edit_item_ );
   
-  Debug::Throw() << "KeywordList::_activate - old: " << old_keyword << " new: " << new_keyword << endl;
-  emit keywordChanged( old_keyword, new_keyword );
+  // emit keyword changed signal if they are different
+  if( old_keyword != new_keyword )
+  { emit keywordChanged( old_keyword, new_keyword ); }
+  
+  // reset edit item
   edit_item_ = 0;
   
 }
@@ -372,9 +375,16 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
   // if not, close editor, restore old keyword
   if( edit_item_ && item != edit_item_ ) 
   {
+    
+    // close editor
     closePersistentEditor( edit_item_ );
-    dynamic_cast<Item*>( edit_item_ )->restoreBackup();
+    
+    // restore backup text
+    edit_item_->setText( KEYWORD, backup_ );
+    
+    // reset item
     edit_item_ = 0;
+    
   }
 
   // left button handling

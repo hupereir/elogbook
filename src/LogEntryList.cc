@@ -56,7 +56,9 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   CustomListView( parent ),
   first_item_( 0 ),
   last_item_( 0 ),
-  drag_enabled_( false )
+  drag_enabled_( false ),
+  edit_item_( 0 ),
+  edit_timer_( this )
 {
   
   Debug::Throw( "LogEntryList::LogEntryList.\n" );
@@ -68,8 +70,13 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   for( unsigned int i=0; i<n_columns; i++ )
   { setColumnName( i, column_titles_[i] ); }
 
+  // selection mode
   setSelectionMode( QAbstractItemView::ContiguousSelection );
-//  setSelectionMode( QAbstractItemView::ExtendedSelection );
+  
+  // editing 
+  edit_timer_.setSingleShot( true );
+  edit_timer_.setInterval( 
+  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
 }
  
 //_______________________________________________

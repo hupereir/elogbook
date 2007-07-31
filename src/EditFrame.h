@@ -283,6 +283,31 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! color label
   QFrame* color_label_;
   
+  //!@name editting
+  //@{
+
+  //! currently edited timer
+  QTreeWidgetItem* edit_item_;
+
+  //! backup keyword
+  QString backup_;
+  
+  //! backup keyword (including full path)
+  std::string full_backup_;
+  
+  //! editing timer
+  /*! editting is enabled only if a certain delay is passed during which no drag/drop starts */
+  QTimer edit_timer_;
+
+  //! edit_item delay (ms)
+  /* 
+    it is used to start delayed edition of keywords
+    directly from the list 
+  */
+  enum { edit_item_delay_ = 500 };
+
+  //@}
+
 };
 
 #endif

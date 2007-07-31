@@ -110,7 +110,7 @@ void SplashScreen::realizeWidget( void )
     // change title font
     QFont font( title->font() );
     font.setPointSize( title_font_size_ );
-    font.setBold( true );
+    font.setWeight( QFont::Bold );
     title->setFont( font );
   }
   

@@ -242,6 +242,9 @@ void SelectionFrame::setLogbook( File file )
   // if filename is empty, return
   if( file.empty() )
   {
+    // update listView with new entries
+    _resetKeywordList();
+    _resetList();
     emit ready();
     return;
   }
@@ -250,6 +253,9 @@ void SelectionFrame::setLogbook( File file )
   logbook()->setFile( file );
   if( !file.exist() )
   {
+    // update listView with new entries
+    _resetKeywordList();
+    _resetList();
     emit ready();
     return;
   }
@@ -763,6 +769,8 @@ void SelectionFrame::newLogbook( void )
   QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return;
 
+  Debug::Throw() << "SelectionFrame::new - file: " << dialog.file() << endl;
+  
   // create a new logbook, with no file
   setLogbook( dialog.file() );
   Exception::checkPointer( logbook_, DESCRIPTION( "could not create Logbook") );
@@ -783,6 +791,10 @@ void SelectionFrame::newLogbook( void )
     QtUtil::infoDialog( this, o.str() );
 
   } else logbook()->setDirectory( directory );
+
+  // add new file to openPreviousMenu
+  if( !logbook()->file().empty() )
+  { menu().openPreviousMenu().add( logbook()->file() ); }
 
 }
 
@@ -884,6 +896,9 @@ void SelectionFrame::save( void )
 
   // update StateFrame
   statusBar().label().setText( "" );
+
+  // add new file to openPreviousMenu
+  menu().openPreviousMenu().add( logbook()->file() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
