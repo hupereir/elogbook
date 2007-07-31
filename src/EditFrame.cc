@@ -97,13 +97,11 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   h_layout->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
   
   // color label
-  color_label_ = new QFrame( main );
-//  color_label_->setFrameStyle( QFrame::Panel|QFrame::Raised );
-//  color_label_->setFrameStyle( QFrame::Box|QFrame::Sunken );
-  color_label_->setFrameStyle( QFrame::NoFrame );
-  color_label_->setFixedSize( ColorMenu::PixmapSize );
-  color_label_->setAutoFillBackground( true );
-  h_layout->addWidget( color_label_, 0, Qt::AlignVCenter );
+  color_frame_ = new QFrame( main );
+  color_frame_->setFrameStyle( QFrame::NoFrame );
+  color_frame_->setFixedSize( ColorMenu::PixmapSize );
+  color_frame_->setAutoFillBackground( true );
+  h_layout->addWidget( color_frame_, 0, Qt::AlignVCenter );
   
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
@@ -410,19 +408,23 @@ void EditFrame::displayColor( void )
   QColor color;
   if( colorname != ColorMenu::NONE ) color = QColor( colorname.c_str() );
 
-  if( !color.isValid() ) color_label_->hide();
+  if( !color.isValid() ) color_frame_->hide();
   else
   {
-    QLinearGradient linearGrad(QPointF(0, 0), color_label_->rect().bottomRight());
+    
+    // create gradient for nice look and fill
+    QLinearGradient linearGrad(QPointF(0, 0), color_frame_->rect().bottomRight());
     linearGrad.setColorAt(0, color);
     linearGrad.setColorAt(1, color.light());
     
-    QPalette palette( color_label_->palette() );
+    // modify palette with create gradient
+    QPalette palette( color );
     palette.setBrush( QPalette::Window, linearGrad );
-    color_label_->setPalette( palette );
-    color_label_->show();
-    //color_label_->setPixmap( CustomPixmap().empty( ColorMenu::PixmapSize , color, false ) );
-    //color_label_->show();
+    color_frame_->setPalette( palette );
+    
+    // show frame
+    color_frame_->show();
+    
   }
   
 }

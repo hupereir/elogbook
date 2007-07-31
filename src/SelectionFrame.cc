@@ -454,6 +454,7 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
   }
   
   // make sure columns are properly displayed
+  logEntryList().sort();
   logEntryList().resizeColumns();
 
 }

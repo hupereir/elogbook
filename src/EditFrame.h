@@ -281,7 +281,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   StatusBar* statusbar_;   
   
   //! color label
-  QFrame* color_label_;
+  QFrame* color_frame_;
   
   //!@name editting
   //@{
