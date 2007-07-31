@@ -166,6 +166,9 @@ class LogEntryList: public CustomListView
   /*! slot is activated at the end of the edit_timer_ delay */
   void _startEdit( void );
   
+  //! reset edition
+  void _resetEdit( const bool& restore_backup = true );
+  
   //! recieved when item gets activated
   /*! used to retrieve edited text */
   void _activate( QTreeWidgetItem*, int );

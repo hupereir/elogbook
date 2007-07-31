@@ -318,6 +318,28 @@ void LogEntryList::_startEdit( void )
   openPersistentEditor( edit_item_, TITLE );
 }
 
+//_____________________________________________________
+void LogEntryList::_resetEdit( const bool& restore_backup )
+{
+  Debug::Throw( "LogEntryList::_resetEdit.\n" );
+
+  // stop timer
+  edit_timer_->stop();
+  if( edit_item_ )
+  {
+    // close editor
+    closePersistentEditor( edit_item_ );
+    
+    // restore backup if required
+    if( restore_backup ) 
+    { edit_item_->setText( TITLE, backup_ ); }
+    
+    // reset item
+    edit_item_ = 0;
+  }
+  
+}
+
 //_______________________________________________
 void LogEntryList::_activate( QTreeWidgetItem *item, int column )
 {
@@ -327,37 +349,24 @@ void LogEntryList::_activate( QTreeWidgetItem *item, int column )
     
   // check if item is edited
   // if not, emit the selectend entry signal
-  if( item == edit_item_ ) 
-  { 
-    
-    // check if timer is active
-    if( !edit_timer_->isActive() )
-    {
-      // close editor
-      closePersistentEditor( edit_item_ ); 
+  if( item == edit_item_  && !edit_timer_->isActive() )
+  {
       
-      // retrieve Item title
-      // check against backup
-      QString title( item->text( TITLE ) );
-      if( title != backup_ ) 
-      { emit entryRenamed( dynamic_cast<Item*>( item )->entry(), qPrintable( title ) ); }
-  
-      // reset edit item
-      edit_item_ = 0;
       
-    } else  {
-
-      edit_timer_->stop();
-      emit entrySelected( dynamic_cast<Item*>(item)->entry() );
+    // retrieve Item title
+    // check against backup
+    QString title( item->text( TITLE ) );
+    if( title != backup_ ) 
+    { emit entryRenamed( dynamic_cast<Item*>( item )->entry(), qPrintable( title ) ); }
     
-    }
-    
+    // reset edition
+    // without restoring the backup
+    _resetEdit( false );
+                  
   } else {
     
-    if( edit_timer_->isActive() ) edit_timer_->stop();
-   
-    // select entry
     emit entrySelected( dynamic_cast<Item*>(item)->entry() );
+    _resetEdit();
     
   }
   
@@ -414,7 +423,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     item == QTreeWidget::currentItem() &&
     column == TITLE &&
     item != edit_item_ ) edit_timer_->start();
-  else edit_timer_->stop();
+  else _resetEdit();
   
   // set current item is selected
   if( !isItemSelected( item ) ) setCurrentItem( item );
@@ -532,11 +541,11 @@ bool LogEntryList::_startDrag( QMouseEvent* event )
   Debug::Throw( "LogEntryList::_startDrag.\n" );
   
   // stop edition timer
-  if( edit_item_ ) 
-  {
-    edit_item_ = 0;
-    edit_timer_->stop();
-  }
+  //if( edit_item_ ) 
+  //{
+  edit_item_ = 0;
+  edit_timer_->stop();
+  //}
   
   // start drag
   QDrag *drag = new QDrag(this);

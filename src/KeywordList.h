@@ -138,6 +138,9 @@ class KeywordList: public CustomListView
 
   protected slots:
 
+  void closeEditor ( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )
+  { Debug::Throw(0, "QAbstractItemView::closeEditor.\n" ); }
+  
   //! open drop item
   /*! this is connected to the time-out of the drop timer */
   void _openDropItem( void );
@@ -145,6 +148,9 @@ class KeywordList: public CustomListView
   //! start editting current item
   void _startEdit( void );
 
+  //! reset edition
+  void _resetEdit( const bool& restore_backup = true );
+  
   //! item activated
   /*! used to catch end of item edition and propagate */
   void _activate( QTreeWidgetItem* item, int column );
@@ -207,7 +213,11 @@ class KeywordList: public CustomListView
 
     //! predicate
     bool operator() ( const std::string& value ) const
-    { return value.find( value_ ) == 0; }
+    { 
+      return
+        value.substr( 0, value_.size() ) == value_ &&
+        ( value.size() == value_.size() || value[value_.size()] == '/' );
+    }
 
     private:
 

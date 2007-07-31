@@ -75,7 +75,8 @@ KeywordList::KeywordList( QWidget *parent ):
   _createRootItem();
     
   connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
-  
+  connect( this, SIGNAL( itemExpanded( QTreeWidgetItem* ) ), SLOT( _resetEdit() ) );
+  connect( this, SIGNAL( itemCollapsed( QTreeWidgetItem* ) ), SLOT( _resetEdit() ) );
 }
 
 //_______________________________________________
@@ -308,12 +309,8 @@ void KeywordList::clear( void )
   Debug::Throw( "KeywordList::clear.\n" );  
 
   root_item_ = 0;
-  drop_item_ = 0;
-  drop_item_selected_ = false;
-  drop_item_timer_->stop();
-  
-  edit_item_ = 0;
-  edit_timer_->stop();
+  _resetDrag();
+  _resetEdit();
 
   CustomListView::clear();
   
@@ -338,6 +335,28 @@ void KeywordList::_startEdit( void )
 }
 
 //_____________________________________________________
+void KeywordList::_resetEdit( const bool& restore_backup )
+{
+  Debug::Throw( "KeywordList::_resetEdit.\n" );
+
+  // stop timer
+  edit_timer_->stop();
+  if( edit_item_ )
+  {
+    // close editor
+    closePersistentEditor( edit_item_ );
+    
+    // restore backup if required
+    if( restore_backup ) 
+    { edit_item_->setText( KEYWORD, backup_ ); }
+    
+    // reset item
+    edit_item_ = 0;
+  }
+  
+}
+
+//_____________________________________________________
 void KeywordList::_activate( QTreeWidgetItem* item, int column )
 {
   Debug::Throw( "KeywordList::_activate.\n" );
@@ -357,7 +376,8 @@ void KeywordList::_activate( QTreeWidgetItem* item, int column )
   { emit keywordChanged( old_keyword, new_keyword ); }
   
   // reset edit item
-  edit_item_ = 0;
+  // without restoring the backup
+  _resetEdit( false );
   
 }
 
@@ -410,7 +430,7 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
       start Edit timer
     */
     if( item && item != rootItem() && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_->start();
-    else edit_timer_->stop();
+    else _resetEdit();
     
   }
   
@@ -572,11 +592,7 @@ bool KeywordList::_startDrag( QMouseEvent *event )
   if( QTreeWidget::currentItem() == root_item_ ) return false;
   
   // stop edit timer to avoid conflicts.
-  if( edit_item_ )
-  {
-    edit_item_ = 0;
-    edit_timer_->stop();
-  }
+  _resetEdit();
   
   // start drag
   QDrag *drag = new QDrag(this);

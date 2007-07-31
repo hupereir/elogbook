@@ -1526,7 +1526,7 @@ void SelectionFrame::_changeEntryTitle( LogEntry* entry, string new_title )
   (*iter)->setModified( true );
   
   // save Logbook
-  if( logbook() && !logbook()->file().size() ) save();
+  if( logbook() && !logbook()->file().empty() ) save();
  
 }
 
@@ -1671,46 +1671,6 @@ void SelectionFrame::_deleteKeyword( void )
   
 }
 
-// //_______________________________________________
-// void SelectionFrame::_changeEntryKeyword( void )
-// {
-//   Debug::Throw( "SelectionFrame::_changeEntryKeyword.\n" );  
-//       
-//   // check if selected item make sense
-//   QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
-//   if( items.empty() ) 
-//   {
-//     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
-//     return;
-//   }
-//       
-//   //! create CustomDialog
-//   CustomDialog dialog( this );
-//   dialog.setWindowTitle( "Edit keyword" );
-//   
-//   QComboBox *combo( new QComboBox( &dialog ) );
-//   dialog.mainLayout().addWidget( combo );
-//   combo->setAutoCompletion( true );
-//   combo->setEditable( true );
-// 
-//   string keyword( keywordList().current() );
-//   const set<string>& keywords( keywordList().keywords() );
-//   for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-//   combo->addItem(iter->c_str() );
-//   combo->setCurrentIndex( combo->findText( keyword.c_str() ) );
-//   
-//   dialog.mainLayout().addWidget( new QLabel( "use \"/\" characters to add keyword to a specific branch", &dialog ) );
-//        
-//   // map dialog
-//   QtUtil::centerOnPointer( &dialog );
-//   if( dialog.exec() == QDialog::Rejected ) return;
-// 
-//   // retrieve keyword from line_edit
-//   string new_keyword = LogEntry::formatKeyword( qPrintable( combo->currentText() ) );
-//   _changeEntryKeyword( new_keyword );
-//     
-// }
-
 //____________________________________________
 void SelectionFrame::_changeEntryKeyword( void )
 {
@@ -1747,7 +1707,7 @@ void SelectionFrame::_changeEntryKeyword( void )
   if( dialog.exec() == QDialog::Rejected ) return;
 
   // retrieve keyword from line_edit
-  _changeEntryKeyword( keyword, LogEntry::formatKeyword( dialog.keyword() ) );
+  _changeEntryKeyword( LogEntry::formatKeyword( dialog.keyword() ) );
   
 }
 
@@ -1769,7 +1729,6 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
     
     // change keyword and set as modified
     entry->setKeyword( new_keyword );
-    entry->modified();
     
     // keep track of modified entries
     entries.insert( entry );
@@ -1784,7 +1743,7 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
   // reset lists
   _resetKeywordList();
   _resetList();
-  keywordList().add( new_keyword );
+  // keywordList().add( new_keyword );
   keywordList().select( new_keyword );
   Debug::Throw() << "SelectionFrame::_changeEntryKeyword - new keyword selected" << endl;
   
@@ -1831,7 +1790,6 @@ void SelectionFrame::_changeEntryKeyword( string keyword, string new_keyword )
     if( entry->keyword().find( keyword ) == 0 ) 
     {
       entry->setKeyword( Str( entry->keyword() ).replace( keyword, new_keyword ) );
-      entry->modified();
       KeySet<Logbook> logbooks( entry );
       for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
       (*log_iter)->setModified( true );
@@ -1842,7 +1800,7 @@ void SelectionFrame::_changeEntryKeyword( string keyword, string new_keyword )
   // reset lists
   _resetKeywordList();
   _resetList();
-  keywordList().add( new_keyword );
+  // keywordList().add( new_keyword );
   keywordList().select( new_keyword );
     
   // Save logbook if needed
