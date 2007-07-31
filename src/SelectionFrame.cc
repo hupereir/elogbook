@@ -140,7 +140,6 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( keyword_list_, SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );  
   connect( keyword_list_, SIGNAL( keywordChanged( const std::string& ) ), SLOT( _changeEntryKeyword( const std::string& ) ) );
   connect( keyword_list_, SIGNAL( keywordChanged( const std::string&, const std::string& ) ), SLOT( _renameKeyword( const std::string&, const std::string& ) ) );
-  //connect( keyword_list_, SIGNAL( itemChanged( QTreeWidgetItem*, int ) ), SLOT( _renameKeyword( QTreeWidgetItem*, int ) ) );
     
   // popup menu for keyword list
   keywordList().addMenuAction( "&New keyword", this, SLOT( _newKeyword() ) );
@@ -198,7 +197,8 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   
   connect( logEntryList().header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
   //connect( list_, SIGNAL( itemRenamed( QTreeWidgetItem*, int ) ), SLOT( _RenameEntry( QTreeWidgetItem*, int ) ) );
-  connect( list_, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _showEditFrame( QTreeWidgetItem* ) ) );
+  connect( list_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
+  connect( list_, SIGNAL( entryRenamed( LogEntry*, QString ) ), SLOT( _renameEntry( LogEntry*, QString ) ) );
   connect( new QShortcut( Key_Delete, list_ ), SIGNAL( activated() ), SLOT( _deleteEntries() ) );
 
   // create popup menu for list
@@ -490,7 +490,7 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   /*
     hide associated EditFrames
     they will get deleted next time
-    SelectionFrame::_showEditFrame() is called
+    SelectionFrame::_displayEntry() is called
   */
   KeySet<EditFrame> frames( entry );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
@@ -1409,19 +1409,10 @@ void SelectionFrame::_storeSortMethod( int column )
 }
 
 //_______________________________________________
-void SelectionFrame::_showEditFrame( QTreeWidgetItem* item )
+void SelectionFrame::_displayEntry( LogEntry* entry )
 {
 
-  Debug::Throw( "SelectionFrame::_showEditFrame.\n" );
-
-  // cast item to LogEntryList::Item
-  LogEntryList::Item *local_item( dynamic_cast<LogEntryList::Item*>(item) );
-  Exception::check( local_item, DESCRIPTION( "invalid item" ) );
-
-  // retrieve associated entries
-  KeySet<LogEntry> entries( local_item );
-  Exception::check( entries.size()==1, DESCRIPTION( "invalid association to entry" ) );
-  LogEntry *entry( *entries.begin() );
+  Debug::Throw( "SelectionFrame::_displayEntry.\n" );
 
   // retrieve associated EditFrames, check if one matches the selected entry
   EditFrame *edit_frame( 0 );
@@ -1450,6 +1441,12 @@ void SelectionFrame::_showEditFrame( QTreeWidgetItem* item )
     edit_frame->show();
   } else edit_frame->uniconify();
 
+}
+
+//_______________________________________________
+void SelectionFrame::_renameEntry( LogEntry* entry, QString new_title )
+{
+  Debug::Throw( "SelectionFrame::_renameEntry.\n" );
 }
 
 //_______________________________________________
@@ -1958,7 +1955,7 @@ void SelectionFrame::_editEntries( void )
 
   // retrieve associated entry
   for( QList<LogEntryList::Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
-  _showEditFrame( *iter );
+  _displayEntry( (*iter)->entry() );
 
   return;
 

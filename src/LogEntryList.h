@@ -100,6 +100,7 @@ class LogEntryList: public CustomListView
       CustomListView::Item( parent )
     { 
       Debug::Throw( "LogEntryList::item::item.\n" ); 
+      setFlag( Qt::ItemIsEditable, true );
       setFlag( Qt::ItemIsDragEnabled, true );
       setFlag( Qt::ItemIsDropEnabled, false );
     }
@@ -147,7 +148,19 @@ class LogEntryList: public CustomListView
   //! retrieve all entries
   std::list< LogEntry* > entries( void );
    
+  signals:
+  
+  // emited when an items entry is activated
+  void entrySelected( LogEntry* entry );
+  
+  // emited when an items entry title is modified
+  void entryRenamed( LogEntry* entry, QString );
+  
   protected slots:
+  
+  //! start editing current item
+  /*! slot is activated at the end of the edit_timer_ delay */
+  void _startEdit( void );
   
   //! recieved when item gets activated
   /*! used to retrieve edited text */

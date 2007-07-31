@@ -76,6 +76,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   // editing 
   edit_timer_.setSingleShot( true );
   edit_timer_.setInterval( edit_item_delay_ );
+  connect( &edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
   connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
 }
  
@@ -294,11 +295,39 @@ list< LogEntry* > LogEntryList::entries( void )
   
 } 
 
+//_____________________________________________________
+void LogEntryList::_startEdit( void )
+{
+  Debug::Throw( "LogEntryList::_startEdit.\n" );
+  edit_item_ = QTreeWidget::currentItem();
+  backup_ = edit_item_->text( TITLE );
+  openPersistentEditor( edit_item_, TITLE );
+}
+
 //_______________________________________________
 void LogEntryList::_activate( QTreeWidgetItem *item, int column )
 {
   
   Debug::Throw( "LogEntryList::_activate.\n" );
+
+  // check if item is edited
+  // if not, emit the selectend entry signal
+  if( !( edit_item_ && item == edit_item_ ) ) 
+  { 
+    emit entrySelected( dynamic_cast<Item*>(item)->entry() );
+    return;
+  }
+  
+  // close editor
+  closePersistentEditor( edit_item_ ); 
+
+  // retrieve Item title
+  // check against backup
+  QString title( item->text( TITLE ) );
+  if( title == backup_ ) return;
+  
+  // emit signal
+  emit entryRenamed( dynamic_cast<Item*>( item )->entry(), title );
   
 }
 
@@ -308,27 +337,61 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   
   Debug::Throw( "LogEntryList::mousePressEvent.\n" );
   
+  // retrieve item under cursor
+  QTreeWidgetItem* item = itemAt( event->pos());
+  
+  // retrieve column under cursor
+  int column = columnAt( event->pos().x() );
+  
+  // see if current item and column match edited item TITLE column
+  // if not, close editor, restore old keyword
+  if( edit_item_ && ( item != edit_item_ || column != TITLE ) )
+  {
+    
+    // close editor
+    closePersistentEditor( edit_item_ );
+    
+    // restore backup text
+    edit_item_->setText( TITLE, backup_ );
+    
+    // reset item
+    edit_item_ = 0;
+    
+  }
+
   // check button
+  /* so far all actions linked to other than the left buttons are left default */
   if( event->button() != Qt::LeftButton ) return CustomListView::mousePressEvent( event );
 
   // retrieve Item at position
-  QTreeWidgetItem* item( itemAt( event->pos() ) );
   if( !item ) 
   {
     clearSelection();
     return;
   }
   
-  // set current item as selected
+  /* 
+    see if click occured on current item,
+    make sure it is not the root item, 
+    start Edit timer
+  */ 
+  if( 
+    item && 
+    item == QTreeWidget::currentItem() &&
+    column == TITLE &&
+    item != edit_item_ ) edit_timer_.start();
+  else edit_timer_.stop();
+  
+  // set current item is selected
   if( !isItemSelected( item ) ) setCurrentItem( item );
   else {
     drag_enabled_ = true;
     drag_start_ = event->pos();
   }
   
+  // keep item for multiple selections
   first_item_ = item;
   last_item_ = item;
-  
 
 }
   
@@ -343,7 +406,6 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
   // retrieve Item at position
   QTreeWidgetItem* item( itemAt( event->pos() ) );
   if( !item ) return;
-  
      
   // check distance to last click
   if( (event->pos() - drag_start_ ).manhattanLength() >= QApplication::startDragDistance() && drag_enabled_ )

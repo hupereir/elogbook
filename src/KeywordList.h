@@ -104,14 +104,13 @@ class KeywordList: public CustomListView
     */
     Item( KeywordList* parent ):
       CustomListView::Item( parent )
-    {}
+      {}
 
     //! constructor
     /*! subitems can be renamed, as opposed to topLevel items */
     Item( Item* parent ):
       CustomListView::Item( parent )
-    { setFlag( Qt::ItemIsEditable, true ); }
-
+      {}
   };
 
   //! root item

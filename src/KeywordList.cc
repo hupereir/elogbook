@@ -67,7 +67,6 @@ KeywordList::KeywordList( QWidget *parent ):
   setRootIsDecorated( true );    
   setAcceptDrops(true);  
   setAutoScroll(true);
-  setEditTriggers( QAbstractItemView::NoEditTriggers );
   
   setColumnCount( n_columns );
   for( unsigned int i=0; i<n_columns; i++ )
@@ -396,8 +395,12 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
     // store event position for drag-start
     drag_start_ = event->pos();
     
-    // see if click occured on current item. Start Edit timer. 
-    if( item && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_.start();
+    /* 
+      see if click occured on current item,
+      make sure it is not the root item, 
+      start Edit timer
+    */
+    if( item && item != rootItem() && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_.start();
     else edit_timer_.stop();
     
   }

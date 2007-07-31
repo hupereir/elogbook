@@ -249,11 +249,11 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int column );
 
-  //! show EditFrame when double clicking on a list item
-  virtual void _showEditFrame( QTreeWidgetItem* );
-
-  //! Load all colors from options and put in Color menu
-  // virtual void _loadColors( void );
+  //! show EditFrame associated to a given name
+  virtual void _displayEntry( LogEntry* );
+  
+  //! rename entry with current title
+  virtual void _renameEntry( LogEntry*, QString );
   
   //! create new keyword
   void _newKeyword( void );
