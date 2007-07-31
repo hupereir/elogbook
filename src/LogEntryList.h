@@ -108,7 +108,7 @@ class LogEntryList: public CustomListView
     LogEntry* entry( void ) const 
     { 
       BASE::KeySet<LogEntry> entries( this );
-      Exception::assert( entries.size()==1, DESCRIPTION("invalid association to entries") );
+      Exception::check( entries.size()==1, DESCRIPTION("invalid association to entries") );
       return *entries.begin();
     }
     
@@ -123,7 +123,7 @@ class LogEntryList: public CustomListView
   //! retrieve Item associated to given entry
   Item* item( LogEntry* entry )
   {
-    Exception::assert( entry, DESCRIPTION( "invalid entry" ) );
+    Exception::checkPointer( entry, DESCRIPTION( "invalid entry" ) );
 
     Debug::Throw() << "LogEntryList::item - entry: " << entry->key() << std::endl;
     

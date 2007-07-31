@@ -122,7 +122,7 @@ FormatBar::FormatBar( QWidget* parent ):
 void FormatBar::setTarget( CustomTextEdit* editor )
 {
   Debug::Throw( "FormatBar::setTarget.\n" );
-  Exception::assert( editor_ == 0, DESCRIPTION( "editor_ already set" ) );
+  Exception::check( editor_ == 0, DESCRIPTION( "editor_ already set" ) );
   editor_ = editor;
   connect( editor_, 
     SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 

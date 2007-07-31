@@ -89,7 +89,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   LogEntry* entry( void ) const 
   { 
     BASE::KeySet<LogEntry> entries( this );
-    Exception::assert( entries.size() <= 1, DESCRIPTION( "wrong association to LogEntry" ) ); 
+    Exception::check( entries.size() <= 1, DESCRIPTION( "wrong association to LogEntry" ) ); 
     return( entries.size() ) ? *entries.begin():0;
   }  
   
@@ -97,7 +97,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   AttachmentList& attachmentList( void ) 
   {
     BASE::KeySet<AttachmentList> attachment_list( this );
-    Exception::assert( attachment_list.size() == 1, DESCRIPTION( "wrong associateion to AttachmentList" ) );
+    Exception::check( attachment_list.size() == 1, DESCRIPTION( "wrong associateion to AttachmentList" ) );
     return **attachment_list.begin(); 
   }
   
@@ -251,8 +251,8 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //!@name stored actions to toggle visibility
   //@{
   
-  //! lock toolbutton
-  QAction* lock_;
+  //! lock toolbar
+  QToolBar* lock_;
   
   //! previous entry action
   QWidget* previous_entry_;

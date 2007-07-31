@@ -61,7 +61,7 @@ SplashScreen::SplashScreen( QWidget* parent, const std::string& title ):
 //_______________________________________________________________________
 void SplashScreen::realizeWidget( void )
 {
-  Exception::assert( !realized_, DESCRIPTION( "widget already realized" ) );
+  Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
   
   if( !splash_.isNull() )
   {
@@ -126,7 +126,7 @@ void SplashScreen::realizeWidget( void )
 //_______________________________________________________________________
 void SplashScreen::displayMessage( const QString& text )
 {
-  Exception::assert( realized_, DESCRIPTION( "widget not realized" ) );
+  Exception::check( realized_, DESCRIPTION( "widget not realized" ) );
   message_->setText( text );
   qApp->processEvents();
 }

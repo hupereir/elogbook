@@ -84,7 +84,7 @@ void LogEntryList::add( LogEntry* entry, bool update_selection )
 {
   
   Debug::Throw("LogEntryList::add.\n" );
-  Exception::assert( entry, DESCRIPTION( "invalid entry" ) );
+  Exception::check( entry, DESCRIPTION( "invalid entry" ) );
   
   Item *item( new Item( this ) );
   BASE::Key::associate( item, entry );
@@ -123,7 +123,7 @@ void LogEntryList::update( LogEntry* entry, bool update_selection )
 {
   
   Debug::Throw( "LogEntryList::update.\n" );
-  Exception::assert( entry, DESCRIPTION( "wrong entry" ) );
+  Exception::check( entry, DESCRIPTION( "wrong entry" ) );
   
   // get associated Item
   Item *item( LogEntryList::item( entry ) );
@@ -145,7 +145,7 @@ void LogEntryList::update( LogEntry* entry, bool update_selection )
 void LogEntryList::select( LogEntry* entry )
 {
   Debug::Throw( "LogEntryList::SelectEntry.\n" );
-  Exception::assert( entry, DESCRIPTION("invalid entry") );
+  Exception::check( entry, DESCRIPTION("invalid entry") );
 
   Item *item( LogEntryList::item( entry ) );
 

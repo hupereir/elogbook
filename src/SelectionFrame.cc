@@ -926,7 +926,7 @@ bool SelectionFrame::saveAs( File default_file )
   CustomFileDialog dialog( this );
   dialog.setFileMode( QFileDialog::AnyFile );
   dialog.setDirectory( QDir( default_file.path().c_str() ) );
-  dialog.selectFile( default_file.c_str() );
+  dialog.selectFile( default_file.localName().c_str() );
   QtUtil::centerOnPointer( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return false;
 
@@ -1386,25 +1386,6 @@ void SelectionFrame::showAllEntries( void )
   return;
 }
 
-// //____________________________________________
-// void SelectionFrame::_LoadColors( void )
-// {
-//   Debug::Throw( "SelectionFrame::_LoadColors.\n" );
-// 
-//   // clear menu
-//   color_menu_->clear();
-// 
-//   list<string> colors( Options::GetSpecialOptions<string>( "COLOR" ) );
-//   colors.sort();
-//   colors.unique();
-//   for( list<string>::iterator iter = colors.begin(); iter != colors.end(); iter++ )
-//   color_menu_->AddColor( *iter );
-//   color_menu_->DisplayColors();
-// 
-//   return;
-// 
-// }
-
 //_______________________________________________
 void SelectionFrame::_storeSortMethod( int column )
 {
@@ -1423,7 +1404,7 @@ void SelectionFrame::_storeSortMethod( int column )
   }
 
   // Save logbook if needed
-  // if( !logbook()->file().empty() ) save();
+  if( !logbook()->file().empty() ) save();
 
 }
 
@@ -1435,11 +1416,11 @@ void SelectionFrame::_showEditFrame( QTreeWidgetItem* item )
 
   // cast item to LogEntryList::Item
   LogEntryList::Item *local_item( dynamic_cast<LogEntryList::Item*>(item) );
-  Exception::assert( local_item, DESCRIPTION( "invalid item" ) );
+  Exception::check( local_item, DESCRIPTION( "invalid item" ) );
 
   // retrieve associated entries
   KeySet<LogEntry> entries( local_item );
-  Exception::assert( entries.size()==1, DESCRIPTION( "invalid association to entry" ) );
+  Exception::check( entries.size()==1, DESCRIPTION( "invalid association to entry" ) );
   LogEntry *entry( *entries.begin() );
 
   // retrieve associated EditFrames, check if one matches the selected entry
@@ -1466,11 +1447,8 @@ void SelectionFrame::_showEditFrame( QTreeWidgetItem* item )
     edit_frame = new EditFrame( this, false );
     Key::associate( this, edit_frame );
     edit_frame->displayEntry( entry );
-  }
-
-  // show edit_frame
-  edit_frame->show();
-  //edit_frame->uniconify();
+    edit_frame->show();
+  } else edit_frame->uniconify();
 
 }
 
@@ -2008,7 +1986,7 @@ void SelectionFrame::_deleteEntries ( void )
     LogEntryList::Item* item( *iter );
 
     KeySet<LogEntry> entries( item );
-    Exception::assert( entries.size()==1, DESCRIPTION( "invalid association to LogEntry" ) );
+    Exception::check( entries.size()==1, DESCRIPTION( "invalid association to LogEntry" ) );
     deleteEntry( *entries.begin(), false );
 
   }

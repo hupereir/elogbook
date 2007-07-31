@@ -130,22 +130,26 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   statusBar().addClock();
 
   // toolbars
+  // toolbar buttons pixmap path list
+  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
+
+  // lock toolbar is visible only when window is not editable
+  lock_ = new CustomToolBar( "Lock", this );
+  CustomToolButton *button;
+  button = new CustomToolButton( lock_, IconEngine::get( CustomPixmap().find( ICONS::LOCK, path_list ) ), "Unlock current editor", &statusbar_->label() );
+  connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
+  button->setText("Unlock");  
+  lock_->addWidget( button );
+  lock_->setMovable( false );
+  addToolBar( LeftToolBarArea, lock_ );
+
+  // main toolbar
   CustomToolBar* toolbar( new CustomToolBar( "Main", this ) );
   toolbar->setObjectName( "MAIN_TOOLBAR" );
   toolbars_.push_back( make_pair( toolbar, "MAIN_TOOLBAR" ) );
   addToolBar( LeftToolBarArea, toolbar );
-  CustomToolButton *button;
-  
-  // toolbar buttons pixmaps
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-  
-  // lock button. is visible only when window is not editable
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::LOCK, path_list ) ), "Unlock current editor", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
-  button->setText("Unlock");
-  lock_ = toolbar->addWidget( button );
-  
+    
   // generic tool button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "Create a new entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( newEntry() ) );
@@ -215,7 +219,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbar = new CustomToolBar( "Tools", this );
   toolbar->setObjectName( "EXTRA_TOOLBAR" );
   toolbars_.push_back( make_pair( toolbar, "EXTRA_TOOLBAR" ) );
-  addToolBarBreak( LeftToolBarArea );
+  //addToolBarBreak( LeftToolBarArea );
   addToolBar( LeftToolBarArea, toolbar );
 
   // view_html button
@@ -319,7 +323,6 @@ void EditFrame::displayEntry( LogEntry *entry )
   return;
 }
 
-
 //____________________________________________
 void EditFrame::setReadOnly( const bool& value )
 {
@@ -334,7 +337,8 @@ void EditFrame::setReadOnly( const bool& value )
   { (*it)->setEnabled( !isReadOnly() ); }
 
   // changes lock button state
-  lock_->setVisible( isReadOnly() );
+  if( isReadOnly() && lock_->isHidden() ) lock_->show();
+  if( !(isReadOnly() || lock_->isHidden() ) ) lock_->hide();
 
   // changes TextEdit readOnly status
   title_->setReadOnly( isReadOnly() );
@@ -899,7 +903,7 @@ SelectionFrame* EditFrame::_selectionFrame( void ) const
 {
   Debug::Throw( "EditFrame::_selectionFrame.\n" );
   KeySet<SelectionFrame> frames( this );
-  Exception::assert( frames.size()==1, DESCRIPTION( "wrong association to SelectionFrame" ) );
+  Exception::check( frames.size()==1, DESCRIPTION( "wrong association to SelectionFrame" ) );
   return *frames.begin();
 }
 

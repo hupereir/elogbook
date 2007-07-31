@@ -97,7 +97,7 @@ void AttachmentList::addAttachment( Attachment* attachment )
 {
 
   Debug::Throw( "AttachmentList::AddAttachment.\n" ); 
-  Exception::assert( attachment, DESCRIPTION( "invalid attachment" ) );
+  Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
   
   Item *item( new Item( this ) );
   Key::associate( item, attachment );
@@ -110,11 +110,11 @@ void AttachmentList::updateAttachment( Attachment* attachment )
 {
   
   Debug::Throw( "AttachmentList::UpdateAttachment.\n" ); 
-  Exception::assert( attachment, DESCRIPTION( "invalid attachment" ) );
+  Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
   
   // retrieve associated Item, check and update
   KeySet<Item> items( attachment );
-  Exception::assert( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
+  Exception::check( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
   
   (*items.begin())->update();
 
@@ -127,11 +127,11 @@ void AttachmentList::selectAttachment( Attachment* attachment )
   Debug::Throw( "AttachmentList::SelectAttachment.\n" ); 
   
   // check attachment
-  Exception::assert( attachment, DESCRIPTION( "invalid attachment" ) );
+  Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
 
   // retrieve associated Item, check 
   KeySet<Item> items( attachment );
-  Exception::assert( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
+  Exception::check( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
 
   // select local item
   clearSelection();
@@ -183,7 +183,7 @@ void AttachmentList::newAttachment(
   
   // retrieve/check associated EditFrame/LogEntry
   KeySet<EditFrame> edit_frames( this );
-  Exception::assert( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
+  Exception::check( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
   EditFrame *edit_frame( *edit_frames.begin() );
   
   KeySet<LogEntry> entries( edit_frame );
@@ -440,7 +440,7 @@ void AttachmentList::_editAttachment( void )
 
   // retrieve/check associated EditFrame/LogEntry
   KeySet<EditFrame> edit_frames( this );
-  Exception::assert( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
+  Exception::check( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
   EditFrame *edit_frame( *edit_frames.begin() );
 
   // create/check attachment full name
@@ -463,7 +463,7 @@ void AttachmentList::_editAttachment( void )
   
     // set associated entry modified
     KeySet<LogEntry> entries( &attachment );
-    Exception::assert( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
+    Exception::check( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
 
     // update attachment associated list items
     KeySet<AttachmentList::Item> items( &attachment );
@@ -495,7 +495,7 @@ void AttachmentList::_deleteAttachment( void )
 
   // retrieve/check associated EditFrame/LogEntry
   KeySet<EditFrame> edit_frames( this );
-  Exception::assert( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
+  Exception::check( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
   EditFrame *edit_frame( *edit_frames.begin() );
 
   // create/check attachment full name
@@ -522,7 +522,7 @@ void AttachmentList::_deleteAttachment( void )
   
     // retrieve associated entries
     KeySet<LogEntry> entries( attachment );
-    Exception::assert( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
+    Exception::check( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
     LogEntry* entry( *entries.begin() );
     entry->modified();
     

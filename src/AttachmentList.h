@@ -108,7 +108,7 @@ class AttachmentList: public CustomListView, public BASE::Key
     Attachment* attachment( void ) const
     {
       BASE::KeySet<Attachment> attachments( this );
-      Exception::assert( attachments.size()==1, DESCRIPTION( "invalid association to attachment") );
+      Exception::check( attachments.size()==1, DESCRIPTION( "invalid association to attachment") );
       return *attachments.begin();
     }
     
