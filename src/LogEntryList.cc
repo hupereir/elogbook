@@ -58,7 +58,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   last_item_( 0 ),
   drag_enabled_( false ),
   edit_item_( 0 ),
-  edit_timer_( this )
+  edit_timer_( new QTimer( this ) )
 {
   
   Debug::Throw( "LogEntryList::LogEntryList.\n" );
@@ -74,9 +74,9 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   setSelectionMode( QAbstractItemView::ContiguousSelection );
   
   // editing 
-  edit_timer_.setSingleShot( true );
-  edit_timer_.setInterval( edit_item_delay_ );
-  connect( &edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
+  edit_timer_->setSingleShot( true );
+  edit_timer_->setInterval( edit_item_delay_ );
+  connect( edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
   connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
 }
  
@@ -180,6 +180,7 @@ LogEntryList::Item* LogEntryList::itemBelow( QTreeWidgetItem* item, bool update_
     int index = item->parent()->indexOfChild( item );
     if( index+1 < item->parent()->childCount() ) tmp = item->parent()->child(index+1);
     else tmp = itemBelow( item->parent(), false );
+    
   }
   
   // if item is hidden, try the next one
@@ -258,7 +259,8 @@ list< LogEntry* > LogEntryList::selectedEntries( void )
 { 
   Debug::Throw( "LogEntryList::entries" );
 
-  // retrieve logbook entries
+  // retrieve selected items
+  // store associated entries
   list< LogEntry* > entries; 
   QList<Item*> items( LogEntryList::selectedItems<Item>() );
   for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
@@ -295,6 +297,18 @@ list< LogEntry* > LogEntryList::entries( void )
   
 } 
 
+//________________________________________
+void LogEntryList::clear( void )
+{
+  Debug::Throw( "LogEntryList::clear.\n" );
+  first_item_ = 0;
+  last_item_ = 0;
+  drag_enabled_ = false;
+  edit_item_ = 0;
+  edit_timer_->stop();
+  CustomListView::clear();
+}
+
 //_____________________________________________________
 void LogEntryList::_startEdit( void )
 {
@@ -309,26 +323,46 @@ void LogEntryList::_activate( QTreeWidgetItem *item, int column )
 {
   
   Debug::Throw( "LogEntryList::_activate.\n" );
-
+  Exception::checkPointer( item, "invalid item" );
+    
   // check if item is edited
   // if not, emit the selectend entry signal
-  if( !( edit_item_ && item == edit_item_ ) ) 
+  if( item == edit_item_ ) 
   { 
+    
+    // check if timer is active
+    if( !edit_timer_->isActive() )
+    {
+      // close editor
+      closePersistentEditor( edit_item_ ); 
+      
+      // retrieve Item title
+      // check against backup
+      QString title( item->text( TITLE ) );
+      if( title != backup_ ) 
+      { emit entryRenamed( dynamic_cast<Item*>( item )->entry(), qPrintable( title ) ); }
+  
+      // reset edit item
+      edit_item_ = 0;
+      
+    } else  {
+
+      edit_timer_->stop();
+      emit entrySelected( dynamic_cast<Item*>(item)->entry() );
+    
+    }
+    
+  } else {
+    
+    if( edit_timer_->isActive() ) edit_timer_->stop();
+   
+    // select entry
     emit entrySelected( dynamic_cast<Item*>(item)->entry() );
-    return;
+    
   }
   
-  // close editor
-  closePersistentEditor( edit_item_ ); 
-
-  // retrieve Item title
-  // check against backup
-  QString title( item->text( TITLE ) );
-  if( title == backup_ ) return;
-  
-  // emit signal
-  emit entryRenamed( dynamic_cast<Item*>( item )->entry(), title );
-  
+  return;
+      
 }
 
 //_______________________________________________
@@ -379,8 +413,8 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     item && 
     item == QTreeWidget::currentItem() &&
     column == TITLE &&
-    item != edit_item_ ) edit_timer_.start();
-  else edit_timer_.stop();
+    item != edit_item_ ) edit_timer_->start();
+  else edit_timer_->stop();
   
   // set current item is selected
   if( !isItemSelected( item ) ) setCurrentItem( item );
@@ -496,6 +530,13 @@ void LogEntryList::mouseReleaseEvent( QMouseEvent* event )
 bool LogEntryList::_startDrag( QMouseEvent* event )
 {
   Debug::Throw( "LogEntryList::_startDrag.\n" );
+  
+  // stop edition timer
+  if( edit_item_ ) 
+  {
+    edit_item_ = 0;
+    edit_timer_->stop();
+  }
   
   // start drag
   QDrag *drag = new QDrag(this);

@@ -141,6 +141,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! update color Widget from current entry
   void displayColor( void );    
+    
+  //! check if current entry has been modified or not
+  void setModified( const bool& value );  
   
   //! used to count EditFrames that are not hidden
   class IsVisibleFTor
@@ -226,9 +229,6 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   { _displayCursorPosition( TextPosition( 0, new_position ) ); }
 
   private:
-  
-  //! check if current entry has been modified or not
-  void _setModified( const bool& value );  
   
   //! display cursor position
   void _displayCursorPosition( const TextPosition& position );

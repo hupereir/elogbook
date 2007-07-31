@@ -123,13 +123,13 @@ class KeywordList: public CustomListView
     emitted when a logEntryList drag is accepted.
     sends the new keyword
   */
-  void keywordChanged( const std::string& new_keyword );
+  void keywordChanged( std::string new_keyword );
 
   /*!
     emitted when a Keyword drag is accepted
     sends old keyword, new keyword
   */
-  void keywordChanged( const std::string& old_keyword, const std::string& new_keyword );
+  void keywordChanged( std::string old_keyword, std::string new_keyword );
 
   public slots:
 
@@ -229,7 +229,7 @@ class KeywordList: public CustomListView
   bool drop_item_selected_;
 
   //! timer to open drop_item when selected
-  QTimer drop_item_timer_;
+  QTimer* drop_item_timer_;
 
   //! store possible mouse drag start position
   QPoint drag_start_;
@@ -256,7 +256,7 @@ class KeywordList: public CustomListView
   
   //! editing timer
   /*! editting is enabled only if a certain delay is passed during which no drag/drop starts */
-  QTimer edit_timer_;
+  QTimer* edit_timer_;
 
   //! edit_item delay (ms)
   /* 

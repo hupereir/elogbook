@@ -48,21 +48,21 @@ KeywordList::KeywordList( QWidget *parent ):
   root_item_( 0 ),
   drop_item_( 0 ),
   drop_item_selected_( false ),
-  drop_item_timer_( this ),
+  drop_item_timer_( new QTimer( this ) ),
   edit_item_( 0 ),
-  edit_timer_( this )
+  edit_timer_( new QTimer( this ) )
 {
   
   Debug::Throw( "KeywordList::KeywordList.\n" );
   
   // configurate drop timer
-  drop_item_timer_.setSingleShot( true );
-  drop_item_timer_.setInterval( drop_item_delay_ );
-  connect( &drop_item_timer_, SIGNAL( timeout() ), SLOT( _openDropItem() ) );
+  drop_item_timer_->setSingleShot( true );
+  drop_item_timer_->setInterval( drop_item_delay_ );
+  connect( drop_item_timer_, SIGNAL( timeout() ), SLOT( _openDropItem() ) );
 
-  edit_timer_.setSingleShot( true );
-  edit_timer_.setInterval( edit_item_delay_ );
-  connect( &edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
+  edit_timer_->setSingleShot( true );
+  edit_timer_->setInterval( edit_item_delay_ );
+  connect( edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
   
   setRootIsDecorated( true );    
   setAcceptDrops(true);  
@@ -305,9 +305,18 @@ set<string> KeywordList::keywords( void )
 //_______________________________________________
 void KeywordList::clear( void )
 {
-  Debug::Throw( "KeywordList::clear.\n" );
-  CustomListView::clear();
+  Debug::Throw( "KeywordList::clear.\n" );  
+
   root_item_ = 0;
+  drop_item_ = 0;
+  drop_item_selected_ = false;
+  drop_item_timer_->stop();
+  
+  edit_item_ = 0;
+  edit_timer_->stop();
+
+  CustomListView::clear();
+  
 }
 
 //_____________________________________________________
@@ -400,8 +409,8 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
       make sure it is not the root item, 
       start Edit timer
     */
-    if( item && item != rootItem() && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_.start();
-    else edit_timer_.stop();
+    if( item && item != rootItem() && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_->start();
+    else edit_timer_->stop();
     
   }
   
@@ -449,7 +458,7 @@ void KeywordList::dragEnterEvent( QDragEnterEvent* event )
     _updateOpenItems( item );
     
     drop_item_ = item;
-    drop_item_timer_.start();
+    drop_item_timer_->start();
     
     drop_item_selected_ = isItemSelected( drop_item_ );
     setItemSelected( drop_item_, true );
@@ -494,7 +503,7 @@ void KeywordList::dragMoveEvent( QDragMoveEvent* event )
       if( drop_item_ ) setItemSelected( drop_item_, true );
       
       // restart timer
-      drop_item_timer_.start();
+      drop_item_timer_->start();
       
     }
     
@@ -563,7 +572,11 @@ bool KeywordList::_startDrag( QMouseEvent *event )
   if( QTreeWidget::currentItem() == root_item_ ) return false;
   
   // stop edit timer to avoid conflicts.
-  edit_timer_.stop();
+  if( edit_item_ )
+  {
+    edit_item_ = 0;
+    edit_timer_->stop();
+  }
   
   // start drag
   QDrag *drag = new QDrag(this);
@@ -588,7 +601,7 @@ void KeywordList::_resetDrag( void )
   _updateOpenItems( 0 );  
   if( drop_item_ ) setItemSelected( drop_item_, drop_item_selected_ );
   drop_item_ = 0;
-  drop_item_timer_.stop();
+  drop_item_timer_->stop();
   
 }
 //__________________________________________________________

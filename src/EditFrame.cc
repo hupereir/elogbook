@@ -317,7 +317,7 @@ void EditFrame::displayEntry( LogEntry *entry )
   next_entry_->setEnabled( frame->nextEntry(entry, false) );
   
   // reset modify flag; change title accordingly
-  _setModified( false );
+  setModified( false );
   updateWindowTitle();
 
   return;
@@ -431,6 +431,14 @@ void EditFrame::displayColor( void )
     
   }
   
+}
+
+//______________________________________________________
+void EditFrame::setModified( const bool& value )
+{
+  Debug::Throw( "EditFrame::setModified.\n" );
+  title_->setModified( value );
+  text_->document()->setModified( value );
 }
 
 //_____________________________________________
@@ -549,7 +557,7 @@ void EditFrame::save( bool update_selection )
   if( entry_is_new ) Key::associate( entry, logbook->latestChild() );
 
   // update this window title, set unmodified.
-  _setModified( false );
+  setModified( false );
   updateWindowTitle();
 
   // update selection frame
@@ -872,13 +880,6 @@ void EditFrame::_textModified( bool state )
   if( state && !title_modified ) updateWindowTitle();
   if( !(state || title_modified ) ) updateWindowTitle();
   
-}
-
-//______________________________________________________
-void EditFrame::_setModified( const bool& value )
-{
-  title_->setModified( value );
-  text_->document()->setModified( value );
 }
 
 //_____________________________________________

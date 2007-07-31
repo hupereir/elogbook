@@ -83,7 +83,7 @@ class LogEntryList: public CustomListView
   
   //! select LogEntry in list
   void select( LogEntry* entry );
-  
+ 
   //! add LogEntry to the list
   void add( LogEntry* entry, bool update_selection = false );
       
@@ -100,7 +100,6 @@ class LogEntryList: public CustomListView
       CustomListView::Item( parent )
     { 
       Debug::Throw( "LogEntryList::item::item.\n" ); 
-      setFlag( Qt::ItemIsEditable, true );
       setFlag( Qt::ItemIsDragEnabled, true );
       setFlag( Qt::ItemIsDropEnabled, false );
     }
@@ -154,7 +153,12 @@ class LogEntryList: public CustomListView
   void entrySelected( LogEntry* entry );
   
   // emited when an items entry title is modified
-  void entryRenamed( LogEntry* entry, QString );
+  void entryRenamed( LogEntry* entry, std::string );
+  
+  public slots:
+  
+  //! clear list
+  void clear( void );
   
   protected slots:
   
@@ -213,7 +217,7 @@ class LogEntryList: public CustomListView
     
   //! editing timer
   /*! editting is enabled only if a certain delay is passed during which no drag/drop starts */
-  QTimer edit_timer_;
+  QTimer* edit_timer_;
 
   //! edit_item delay (ms)
   /* 

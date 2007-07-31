@@ -227,9 +227,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   protected slots:
 
-  //! create HTML file from logbook
-  virtual void _viewHtml( void );
-
   //! create new entry
   virtual void _newEntry( void );
 
@@ -239,42 +236,42 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! delete selected entries
   virtual void _deleteEntries ( void );
 
+  //! show EditFrame associated to a given name
+  virtual void _displayEntry( LogEntry* );
+  
+  //! rename entry with current title
+  virtual void _changeEntryTitle( LogEntry*, std::string );
+
   //! change selected entries color
   virtual void _changeEntryColor( QColor );
+  
+  //! create new keyword
+  void _newKeyword( void );
+  
+  //! delete keyword from keyword list using dialog
+  void _deleteKeyword( void );
 
+  //! change selected entries keyword using custom dialog
+  void _changeEntryKeyword( void );
+  
+  //! change selected entries keyword using argument
+  void _changeEntryKeyword( std::string new_keyword );
+  
+  //! rename keyword from keyword list using arguments
+  void _changeEntryKeyword( std::string old_keyword, std::string new_keyword );
+   
+  //! keyword selection changed
+  void _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* );
+    
+  //! create HTML file from logbook
+  virtual void _viewHtml( void );
+  
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )
   { _storeSortMethod( logEntryList().sortColumn() ); }
 
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int column );
-
-  //! show EditFrame associated to a given name
-  virtual void _displayEntry( LogEntry* );
-  
-  //! rename entry with current title
-  virtual void _renameEntry( LogEntry*, QString );
-  
-  //! create new keyword
-  void _newKeyword( void );
-  
-  //! rename keyword from keyword list using dialog
-  void _renameKeyword( void );
-  
-  //! delete keyword from keyword list using dialog
-  void _deleteKeyword( void );
-  
-  //! rename keyword from keyword list using arguments
-  void _renameKeyword( const std::string& old_keyword, const std::string& new_keyword );
-   
-  //! keyword selection changed
-  void _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* );
-    
-  //! change selected entries keyword using custom dialog
-  void _changeEntryKeyword( void );
-  
-  //! change selected entries keyword using argument
-  void _changeEntryKeyword( const std::string& new_keyword );
 
   //! perform autoSave
   void _autoSave( void );
@@ -318,7 +315,7 @@ class SelectionFrame: public TopWidget, public BASE::Key
   ColorMenu* color_menu_;
   
   //! autoSaveTimer
-  QTimer autosave_timer_;
+  QTimer* autosave_timer_;
 
   //! associated logbook
   Logbook* logbook_;
