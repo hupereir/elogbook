@@ -129,7 +129,7 @@ dnl Qt configuration checks
 AC_CHECK_FILE($qt_includes/QtCore/QtCore, , AC_ERROR(Can not find QtCore include file))
 AC_CHECK_FILE($qt_libraries/libQtCore.so, qt_lib=QtCore,  qt_lib=QtCore )
 
-CXXFLAGS=$CXXFLAGS" -DQT_THREAD_SUPPORT"
+
 
 AC_PATH_PROG(qt_moc, moc,  $qt_bin/moc)
 
