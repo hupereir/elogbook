@@ -158,7 +158,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   addOptionWidget( spinbox );
 
   grid_layout->addWidget( label = new QLabel( "Attachment: ", box ), 3, 0 );
-  label->setToolTip( "attachment window size (width x height)" );
+  label->setToolTip( "Attachment window size (width x height)" );
   
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "ATC_FRAME_WIDTH" ), 3, 1 );
   spinbox->setMinimum( 5 );
@@ -184,32 +184,32 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   grid_layout->setMaxCount(2);
   box->setLayout( grid_layout );
 
-  grid_layout->addWidget( new QLabel( "visibility", box ) );
-  grid_layout->addWidget( new QLabel( "location", box ) );
+  grid_layout->addWidget( new QLabel( "Visibility", box ) );
+  grid_layout->addWidget( new QLabel( "Location", box ) );
 
   OptionComboBox* combobox;
   
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "main toolbar", box, "MAIN_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Main toolbar", box, "MAIN_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) ); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
   
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "edition toolbar", box, "EDITION_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Undo history toolbar", box, "EDITION_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "format toolbar", box, "FORMAT_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Format toolbar", box, "FORMAT_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "tools", box, "EXTRA_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "navigation toolbar", box, "NAVIGATION_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation toolbar", box, "NAVIGATION_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );

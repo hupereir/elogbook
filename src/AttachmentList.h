@@ -73,24 +73,21 @@ class AttachmentList: public CustomListView, public BASE::Key
   static char* column_titles_[ n_columns ];
   
   //! add attachment to the list
-  void addAttachment( Attachment* attachment );
+  void add( Attachment* attachment );
   
   //! update attachment in the list
-  void updateAttachment( Attachment* attachment );
+  void update( Attachment* attachment );
   
   //! select attachment in the list
   void selectAttachment( Attachment* attachment );
  
    //! change read only status
   void setReadOnly( bool value )
-  { read_only_ = value; }
-   
-  //! overloaded drag event handler
-  // void dragEnterEvent( QDragEnterEvent *event );
-  
-  //! overloaded drop event handler
-  // void dropEvent( QDropEvent *event );
-    
+  { 
+    read_only_ = value; 
+    _updateActions();
+  }
+       
   //! local list item for attachments
   class Item: public CustomListView::Item, public BASE::Key 
   {
@@ -117,44 +114,52 @@ class AttachmentList: public CustomListView, public BASE::Key
     
   };
   
-  public slots:
+  //! resize attachment columns
+  void resizeColumns( void );
+  
+  //! new attachment action
+  QAction* newAttachmentAction( void )
+  { return new_attachment_action_; }
+     
+  private slots:
       
   //! display current attachment 
-  void newAttachment( 
-    const std::string& file = "", 
-    const AttachmentType& type = AttachmentType::UNKNOWN );
-  
-  private slots:
-  
+  void _newAttachment( void );
+ 
   //! update context menu
-  void _updateMenu( void );
+  void _updateActions( void );
   
   //! display current attachment 
-  void _openAttachment( QTreeWidgetItem* item = 0 );
+  void _open( QTreeWidgetItem* item = 0 );
   
   //! edit current attachment
-  void _editAttachment( void );
+  void _edit( void );
  
   //! delete current attachment
-  void _deleteAttachment( void );
+  void _delete( void );
 
   private:
   
   //! if true, listbox is read only
   bool read_only_;
   
+  //!@name actions
+  //@{
+  
   //! new attachment
-  QAction* new_attachment_;
+  QAction* new_attachment_action_;
   
   //! view attachment
-  QAction* view_attachment_;
+  QAction* view_attachment_action_;
     
   //! edit attachment
-  QAction* edit_attachment_;
+  QAction* edit_attachment_action_;
   
   //! delete attachment
-  QAction* delete_attachment_;
-      
+  QAction* delete_attachment_action_;
+
+  //@}
+  
 };
 
 #endif

@@ -30,7 +30,6 @@
 */
 
 #include <QHeaderView>
-#include <QShortcut>
 
 #include "AttachmentFrame.h"
 #include "BaseIcons.h"
@@ -93,7 +92,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
     
   // splitter for KeywordList/LogEntryList
   splitter_ = new QSplitter( main );  
-  splitter_->setOrientation( Qt::Horizontal );
+  splitter_->setOrientation( Horizontal );
   layout->addWidget( splitter_, 1 );
  
   // search panel
@@ -175,6 +174,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
 
   QAction* delete_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "&Delete entries", this );
   delete_entry_action->setToolTip( "Delete selected entries" );
+  delete_entry_action->setShortcut( Key_Delete );
   connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, delete_entry_action, &statusBar().label() ) );
   
@@ -203,7 +203,6 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( logEntryList().header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
   connect( list_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
   connect( list_, SIGNAL( entryRenamed( LogEntry*, std::string ) ), SLOT( _changeEntryTitle( LogEntry*, std::string ) ) );
-  connect( new QShortcut( Key_Delete, list_ ), SIGNAL( activated() ), SLOT( _deleteEntries() ) );
 
   // create popup menu for list
   logEntryList().addMenuAction( new_entry_action );
@@ -278,10 +277,10 @@ void SelectionFrame::setLogbook( File file )
   // change sorting
   switch( logbook()->sortingMethod() ) 
   {
-    case Logbook::SORT_TITLE: logEntryList().sortItems( LogEntryList::TITLE, Qt::AscendingOrder ); break;
-    case Logbook::SORT_CREATION: logEntryList().sortItems( LogEntryList::CREATION, Qt::AscendingOrder ); break;
-    case Logbook::SORT_MODIFICATION: logEntryList().sortItems( LogEntryList::MODIFICATION , Qt::AscendingOrder); break;
-    case Logbook::SORT_AUTHOR: logEntryList().sortItems( LogEntryList::AUTHOR, Qt::AscendingOrder ); break;
+    case Logbook::SORT_TITLE: logEntryList().sortItems( LogEntryList::TITLE, AscendingOrder ); break;
+    case Logbook::SORT_CREATION: logEntryList().sortItems( LogEntryList::CREATION, AscendingOrder ); break;
+    case Logbook::SORT_MODIFICATION: logEntryList().sortItems( LogEntryList::MODIFICATION , AscendingOrder); break;
+    case Logbook::SORT_AUTHOR: logEntryList().sortItems( LogEntryList::AUTHOR, AscendingOrder ); break;
     default: break;
   }
 
@@ -586,8 +585,8 @@ void SelectionFrame::resetAttachmentFrame( void ) const
   // retrieve logbook attachments, adds to AttachmentFrame
   KeySet<Attachment> attachments( logbook()->attachments() );
   for( KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
-  attachment_frame.list().addAttachment( *it );
-
+  { attachment_frame.list().add( *it ); }
+  attachment_frame.list().resizeColumns();
   return;
 
 }

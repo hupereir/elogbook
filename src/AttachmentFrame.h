@@ -91,7 +91,6 @@ class AttachmentFrame: public QWidget, public Counter
   //! overloaded enter event handler
   void enterEvent( QEvent *event );
 
-
   private slots:
 
   //! display entry associated to selected attachment when selection changes

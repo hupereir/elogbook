@@ -264,7 +264,7 @@ void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) cons
   ref.appendChild( document.createTextNode( shortFile().c_str() ) );
   
   ostringstream what;
-  what << "(" << (isValid() ? type().name():"not found") << ")";
+  what << "(" << type().name() << ")";
   par.appendChild( document.createTextNode( what.str().c_str() ) );
   
   // comments
@@ -278,12 +278,15 @@ void Attachment::_setFile( const File& file )
 {
   Debug::Throw() << "Attachment::_SetFile.\n";
   file_  = file;
-  if( XmlOptions::get().get<bool>("CHECK_ATTACHMENT") && file.exist() ) 
+  if( XmlOptions::get().get<bool>("CHECK_ATTACHMENT") )
   {
-    size_ = file.size();
-    size_str_ = file.sizeString();
-    is_valid_ = true;
-    modification_ = TimeStamp( file.lastModified() );
+    if( file.exist() ) 
+    {    
+      size_ = file.size();
+      size_str_ = file.sizeString();
+      is_valid_ = true;
+      modification_ = TimeStamp( file.lastModified() );
+    } else is_valid_ = false;
   }
   return;
 } 

@@ -37,11 +37,14 @@
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
 #include "CustomFileDialog.h"
+#include "CustomPixmap.h"
 #include "Debug.h"
 #include "DeleteAttachmentDialog.h"
 #include "EditAttachmentDialog.h"
 #include "EditFrame.h"
 #include "File.h"
+#include "Icons.h"
+#include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "MainFrame.h"
@@ -77,27 +80,45 @@ AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
   setRootIsDecorated( false );
   setSortingEnabled( true );
   setSelectionMode( QAbstractItemView::ContiguousSelection );
+  setTextElideMode ( Qt::ElideMiddle );
+  
+  // buttons pixmap path list
+  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
-  new_attachment_ = &addMenuAction( "&New", this, SLOT( newAttachment() ) );
+  new_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::ATTACH, path_list ) ), "&New", this );
+  new_attachment_action_->setToolTip( "Attach a file/URL to the current entry" );
+  connect( new_attachment_action_, SIGNAL( triggered() ), SLOT( _newAttachment() ) );
+  menu().addAction( new_attachment_action_ );
   menu().addSeparator();
   
-  view_attachment_ = &addMenuAction( "&Open", this, SLOT( _openAttachment() ) );
-  edit_attachment_ = &addMenuAction( "&Edit", this, SLOT( _editAttachment() ) );
-  delete_attachment_ = &addMenuAction( "&Delete", this, SLOT( _deleteAttachment() ) );
+  view_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::OPEN, path_list ) ), "&Open", this );
+  view_attachment_action_->setToolTip( "Open selected attachments" );
+  connect( view_attachment_action_, SIGNAL( triggered() ), SLOT( _open() ) );
+  menu().addAction( view_attachment_action_ );
+     
+  edit_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Edit", this );
+  edit_attachment_action_->setToolTip( "Edit selected attachments informations" );
+  connect( edit_attachment_action_, SIGNAL( triggered() ), SLOT( _edit() ) );
+  menu().addAction( edit_attachment_action_ );
+
+  delete_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "&Delete", this ); 
+  delete_attachment_action_->setToolTip( "Delete selected attachments" );
+  delete_attachment_action_->setShortcut( Qt::Key_Delete );
+  connect( delete_attachment_action_, SIGNAL( triggered() ), SLOT( _delete() ) );
+  menu().addAction( delete_attachment_action_ );
   
   // connections
-  connect( &menu(), SIGNAL( aboutToShow() ), SLOT( _updateMenu() ) );
-  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _openAttachment( QTreeWidgetItem* ) ) );
-
-  connect( new QShortcut( Qt::Key_Delete, this ), SIGNAL( activated() ), SLOT( _deleteAttachment() ) );
-
+  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _open( QTreeWidgetItem* ) ) );
+  connect( this, SIGNAL( itemSelectionChanged() ), SLOT( _updateActions() ) );
+  _updateActions();
 }
 
 //_____________________________________________
-void AttachmentList::addAttachment( Attachment* attachment )
+void AttachmentList::add( Attachment* attachment )
 {
 
-  Debug::Throw( "AttachmentList::AddAttachment.\n" ); 
+  Debug::Throw( "AttachmentList::add.\n" ); 
   Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
   
   Item *item( new Item( this ) );
@@ -107,10 +128,10 @@ void AttachmentList::addAttachment( Attachment* attachment )
 }
 
 //_____________________________________________
-void AttachmentList::updateAttachment( Attachment* attachment )
+void AttachmentList::update( Attachment* attachment )
 {
   
-  Debug::Throw( "AttachmentList::UpdateAttachment.\n" ); 
+  Debug::Throw( "AttachmentList::update.\n" ); 
   Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
   
   // retrieve associated Item, check and update
@@ -118,6 +139,7 @@ void AttachmentList::updateAttachment( Attachment* attachment )
   Exception::check( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
   
   (*items.begin())->update();
+  resizeColumns();
 
 }
 
@@ -143,44 +165,19 @@ void AttachmentList::selectAttachment( Attachment* attachment )
     
 }
 
-// //_____________________________________________
-// void AttachmentList::dragEnterEvent( QDragEnterEvent *event )
-// {
-//   Debug::Throw( "AttachmentList::dragEnterEvent.\n" );
-//   if( (!read_only_) &&  QTextDrag::canDecode( event ) ) event->accept();  
-// }
-
-// //_____________________________________________
-// void AttachmentList::dropEvent( QDropEvent *event )
-// {
-//   Debug::Throw( "AttachmentList::dropEvent.\n" );
-//   QString text;
-//   if( !QTextDrag::decode( event, text ) ) return;
-//   
-//   string filename( (const char*) text );
-//   Debug::Throw(0) << "AttachmentList::dropEvent - filename=" << filename << endl; 
-//   
-//   AttachmentType type( AttachmentType::UNKNOWN );
-//   
-//   // check for http/https at start
-//   if( filename.substr( 0,5 ) == "http:" || filename.substr( 0,6 ) == "https:" )
-//   type = AttachmentType::URL;
-//   
-//   // remove the "file:" header
-//   if( filename.substr( 0,5 ) == "file:" )
-//   filename = filename.substr( 5, filename.size()-5 );
-// 
-//   // create new attachment using filename as default_file  
-//   NewAttachment( filename, type );
-//   return;
-// }
-
 //_____________________________________________
-void AttachmentList::newAttachment( 
-  const string& default_file,
-  const AttachmentType& default_type )
+void AttachmentList::resizeColumns( void )
 {
-  Debug::Throw( "AttachmentList::_NewAttachment.\n" );  
+  Debug::Throw( "AttachmentList::resizeColumns.\n" );
+  resizeColumnToContents(SIZE);
+  resizeColumnToContents(MODIFICATION);
+  resizeColumnToContents(FILE);
+  resizeColumnToContents(TYPE);
+}
+  
+//_____________________________________________
+void AttachmentList::_newAttachment( void )
+{  Debug::Throw( "AttachmentList::_newAttachment.\n" );  
   
   // retrieve/check associated EditFrame/LogEntry
   KeySet<EditFrame> edit_frames( this );
@@ -201,14 +198,13 @@ void AttachmentList::newAttachment(
     
   // create dialog
   NewAttachmentDialog dialog( this );
-  if( !default_file.empty() ) dialog.setFile( default_file );
     
   // update destination directory
   if( logbooks.size() && !(*logbooks.begin())->directory().empty() )
   dialog.setDestinationDirectory( (*logbooks.begin())->directory() );
   
   // type and action
-  dialog.setType( default_type );
+  dialog.setType( AttachmentType::UNKNOWN );
   dialog.setAction( Attachment::COPY_VERSION );
   
   // map dialog
@@ -307,12 +303,14 @@ void AttachmentList::newAttachment(
     for( KeySet<EditFrame>::iterator iter = edit_frames.begin(); iter != edit_frames.end(); iter++ )
     {
       if( !(*iter)->attachmentList().topLevelItemCount() ) (*iter)->attachmentList().show();
-      (*iter)->attachmentList().addAttachment( attachment );
+      (*iter)->attachmentList().add( attachment );
+      (*iter)->attachmentList().resizeColumns();
     }
     
     // update attachment frame
-    static_cast<MainFrame*>(qApp)->attachmentFrame().list().addAttachment( attachment );
-    
+    static_cast<MainFrame*>(qApp)->attachmentFrame().list().add( attachment );
+    static_cast<MainFrame*>(qApp)->attachmentFrame().list().resizeColumns();
+   
     // update logbooks destination directory
     for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 
     {
@@ -335,22 +333,22 @@ void AttachmentList::newAttachment(
 }  
 
 //_____________________________________________
-void AttachmentList::_updateMenu( void )
+void AttachmentList::_updateActions( void )
 {
   
   bool has_selection( !QTreeWidget::selectedItems().empty() );
-  new_attachment_->setEnabled( !read_only_ );
-  view_attachment_->setEnabled( has_selection );
-  edit_attachment_->setEnabled( has_selection && !read_only_ );
-  delete_attachment_->setEnabled( has_selection && !read_only_ );
+  new_attachment_action_->setEnabled( !read_only_ );
+  view_attachment_action_->setEnabled( has_selection );
+  edit_attachment_action_->setEnabled( has_selection && !read_only_ );
+  delete_attachment_action_->setEnabled( has_selection && !read_only_ );
   return;
   
 }
 
 //_____________________________________________
-void AttachmentList::_openAttachment( QTreeWidgetItem* item )
+void AttachmentList::_open( QTreeWidgetItem* item )
 {
-  Debug::Throw( "AttachmentList::_openAttachment.\n" );  
+  Debug::Throw( "AttachmentList::_open.\n" );  
 
   // select item if valid
   QList<Item*> items;
@@ -394,7 +392,7 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
       // run edit command
       ostringstream what;
       what << command << " \"" << fullname << "\"& ";
-      Debug::Throw() << "AttachmentList::_openAttachment - command=" << what.str() << endl;
+      Debug::Throw() << "AttachmentList::_open - command=" << what.str() << endl;
       Util::run( what.str() );
     
     } else {
@@ -427,9 +425,9 @@ void AttachmentList::_openAttachment( QTreeWidgetItem* item )
 }  
 
 //_____________________________________________
-void AttachmentList::_editAttachment( void )
+void AttachmentList::_edit( void )
 {
-  Debug::Throw( "AttachmentList::_editAttachment.\n" );
+  Debug::Throw( "AttachmentList::_edit.\n" );
   
   // store selected item locally
   QList<Item*> items( selectedItems<Item>() );
@@ -482,9 +480,9 @@ void AttachmentList::_editAttachment( void )
 }
 
 //_____________________________________________
-void AttachmentList::_deleteAttachment( void )
+void AttachmentList::_delete( void )
 {
-  Debug::Throw( "AttachmentList::_DeleteAttachment.\n" );
+  Debug::Throw( "AttachmentList::_delete.\n" );
   
   // store selected item locally
   QList<Item*> items( selectedItems<Item>() );
@@ -570,7 +568,7 @@ void AttachmentList::Item::update( void )
 {
   Attachment& attachment( *Item::attachment() );  
   setText( AttachmentList::FILE, string( attachment.shortFile()+" ").c_str() );
-  setText( AttachmentList::TYPE, attachment.isValid() ? attachment.type().name().c_str():"not found" );
+  setText( AttachmentList::TYPE, attachment.type().name().c_str() );
   setText( AttachmentList::SIZE, attachment.sizeString().c_str() );
   setText( AttachmentList::MODIFICATION, (attachment.modification().isValid() ) ? 
       attachment.modification().string().c_str():

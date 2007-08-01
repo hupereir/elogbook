@@ -173,11 +173,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   read_only_widgets_.push_back( button );
 
   // add_attachment button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::ATTACH, path_list ) ), "Add an attachment to the current entry", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), attachment_list, SLOT( newAttachment() ) );
-  button->setText("Attach");
-  toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
+  toolbar->addWidget( new CustomToolButton( toolbar, attachment_list->newAttachmentAction(), &statusbar_->label() ) );
 
   #if WITH_ASPELL
   // spellcheck button
@@ -500,8 +496,14 @@ void EditFrame::saveConfiguration( void )
   Debug::Throw( "EditFrame::saveConfiguration.\n" );
   XmlOptions::get().set<int>( "EDIT_FRAME_HEIGHT", height() );
   XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
-  XmlOptions::get().set<int>( "EDT_HEIGHT", editor().height() );
-  XmlOptions::get().set<int>( "ATC_HEIGHT", (*KeySet<AttachmentList>(this).begin())->height() );
+  
+  // retrieve attachment list
+  AttachmentList* atc_list( *KeySet<AttachmentList>(this).begin() );
+  if( !atc_list->isHidden() )
+  {
+    XmlOptions::get().set<int>( "EDT_HEIGHT", editor().height() );
+    XmlOptions::get().set<int>( "ATC_HEIGHT", (*KeySet<AttachmentList>(this).begin())->height() );
+  }
   
   // save toolbars location and visibility
   for( list< pair<QToolBar*, string> >::iterator iter = toolbars_.begin(); iter != toolbars_.end(); iter++ )
@@ -986,9 +988,10 @@ void EditFrame::_displayAttachments( void )
 
   // display associated attachments
   for( KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
-  attachment_list.addAttachment( *it );
+  { attachment_list.add( *it ); }
 
   // show attachment list
+  attachment_list.resizeColumns();
   attachment_list.show();
 
   return;
