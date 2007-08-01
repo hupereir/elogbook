@@ -325,7 +325,7 @@ class SelectionFrame: public TopWidget, public BASE::Key
   
   //! ignore file modified warnings if true
   bool ignore_warnings_;
-
+  
 };
 
 #endif

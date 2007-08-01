@@ -116,7 +116,7 @@ class LogEntry:public Counter, public BASE::Key
   static std::string formatKeyword( const std::string& );
 
   //! split keyword into a list of strings using "/" as the separator
-  static std::list<std::string> parseKeyword( const std::string& );
+  static std::vector<std::string> parseKeyword( const std::string& );
   
   //!@name attributes
   //@{

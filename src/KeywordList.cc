@@ -344,7 +344,7 @@ void KeywordList::_resetEdit( const bool& restore_backup )
   if( edit_item_ )
   {
     // close editor
-    //closePersistentEditor( edit_item_ );
+    closePersistentEditor( edit_item_ );
     
     // restore backup if required
     if( restore_backup ) 

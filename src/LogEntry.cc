@@ -159,10 +159,10 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 string LogEntry::formatKeyword( const string& keyword )
 {
   Debug::Throw() << "LogEntry::formatKeyword - " << keyword << endl;
-  list<string> keywords( parseKeyword( keyword ) );
+  vector<string> keywords( parseKeyword( keyword ) );
 
   string out = "";
-  for( list<string>::iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+  for( vector<string>::iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
   {
     string local( *iter );
 
@@ -190,11 +190,11 @@ string LogEntry::formatKeyword( const string& keyword )
 }
 
 //__________________________________
-list<string> LogEntry::parseKeyword( const string& keyword )
+vector<string> LogEntry::parseKeyword( const string& keyword )
 {
   Debug::Throw() << "LogEntry::parseKeyword" << endl;
 
-  list<string> out;
+  vector<string> out;
   size_t pos = keyword.find( "/" );
   if( pos == string::npos ) out.push_back( keyword );
   else {
@@ -205,9 +205,8 @@ list<string> LogEntry::parseKeyword( const string& keyword )
 
     //! parse trailing keyword
     string second( keyword.substr( pos+1, keyword.size()-pos-1 ) );
-    list<string> tmp( parseKeyword( second ) );
-    for( list<string>::iterator iter= tmp.begin(); iter!= tmp.end(); iter++ )
-    out.push_back( *iter );
+    vector<string> tmp( parseKeyword( second ) );
+    out.insert( out.end(), tmp.begin(), tmp.end() );
   }
 
   return out;

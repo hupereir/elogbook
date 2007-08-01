@@ -119,22 +119,22 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   CustomToolBar* toolbar = new CustomToolBar( left );
   v_layout->addWidget( toolbar );
   
-  CustomToolButton *button;
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "New keyword", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _newKeyword() ) );
-  toolbar->addWidget( button );
-  button->setText( "New" );
+  // keyword actions
+  QAction* new_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "&New keyword", this );
+  new_keyword_action->setToolTip( "Create a new keyword" );
+  connect( new_keyword_action, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, new_keyword_action, &statusBar().label() ) );
   
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "Edit keyword", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _changeEntryKeyword() ) );
-  button->setText( "Edit" );
-  toolbar->addWidget( button );
+  QAction* edit_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Rename keyword", this );
+  edit_keyword_action->setToolTip( "Rename selected keyword" );
+  connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, edit_keyword_action, &statusBar().label() ) );
   
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "Delete keyword", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _deleteKeyword() ) );
-  button->setText( "Delete" );
-  toolbar->addWidget( button );
-  
+  QAction* delete_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "&Delete keyword", this );
+  delete_keyword_action->setToolTip( "Delete selected keyword" );
+  connect( delete_keyword_action, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, delete_keyword_action, &statusBar().label() ) );
+
   // create keyword list
   v_layout->addWidget( keyword_list_ = new KeywordList( left ), 1 );
   connect( keyword_list_, SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );  
@@ -142,9 +142,9 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( keyword_list_, SIGNAL( keywordChanged( std::string, std::string ) ), SLOT( _changeEntryKeyword( std::string, const std::string& ) ) );
     
   // popup menu for keyword list
-  keywordList().addMenuAction( "&New keyword", this, SLOT( _newKeyword() ) );
-  keywordList().addMenuAction( "&Rename keyword", this, SLOT( _changeEntryKeyword() ), true );
-  keywordList().addMenuAction( "&Delete keyword", this, SLOT( _deleteKeyword() ), true );
+  keywordList().addMenuAction( new_keyword_action ); 
+  keywordList().addMenuAction( edit_keyword_action, true ); 
+  keywordList().addMenuAction( delete_keyword_action, true ); 
   
   // right box for entries and buttons
   QWidget* right = new QWidget( splitter_ );
@@ -155,43 +155,49 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
     
   toolbar = new CustomToolBar( right );
   v_layout->addWidget( toolbar );
-  
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "New entry", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _newEntry() ) );
-  button->setText( "New" );
-  toolbar->addWidget( button );
-  
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "Edit selected entries", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _editEntries() ) );
-  button->setText( "Edit" );
-  toolbar->addWidget( button );
 
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "Delete selected entries", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _deleteEntries() ) );
-  button->setText( "Delete" );
-  toolbar->addWidget( button );
+  // entry actions
+  QAction* new_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "&New entry", this );
+  new_entry_action->setToolTip( "Create a new entry" );
+  connect( new_entry_action, SIGNAL( triggered() ), SLOT( _newEntry() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, new_entry_action, &statusBar().label() ) );
 
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "Convert logbook to html", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _viewHtml() ) );
-  button->setText( "Html" );
-  toolbar->addWidget( button );
+  QAction* edit_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Edit entries", this );
+  edit_entry_action->setToolTip( "Edit selected entries" );
+  connect( edit_entry_action, SIGNAL( triggered() ), SLOT( _editEntries() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, edit_entry_action, &statusBar().label() ) );
 
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "Save all edited entries", &statusBar().label() );
-  connect( button, SIGNAL( clicked() ), SLOT( save() ) );
-  button->setText( "Save" );
-  toolbar->addWidget( button );
+  QAction* delete_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "&Delete entries", this );
+  delete_entry_action->setToolTip( "Delete selected entries" );
+  connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, delete_entry_action, &statusBar().label() ) );
+    
+  QAction* view_html_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "&Html", this );
+  view_html_action->setToolTip( "Convert logbook to html" );
+  connect( view_html_action, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, view_html_action, &statusBar().label() ) );
+    
+  QAction* save_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "&Save", this );
+  save_entry_action->setToolTip( "Save all edited entries" );
+  connect( save_entry_action, SIGNAL( triggered() ), SLOT( save() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, save_entry_action, &statusBar().label() ) );
 
+  // color menu
   color_menu_ = new ColorMenu( this );
   color_menu_->setTitle( "&Change entry color" );
-  
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
-  
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ColorMenu::COLOR_ICON, path_list ) ), "Change entry color", &statusBar().label() );
-  button->setText( "Entry color" );
-  button->setMenu( color_menu_ );
+   
+  QAction* color_action = new QAction( IconEngine::get( CustomPixmap().find( ColorMenu::ICON, path_list ) ), "&Entry color", this );
+  color_action->setToolTip( "Change selected entries color" );
+  color_action->setMenu( color_menu_ );
+  CustomToolButton* button = new CustomToolButton( toolbar, color_action, &statusBar().label() );
   button->setPopupMode( QToolButton::InstantPopup );
   toolbar->addWidget( button );
-  
+
+  edit_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Change keyword", this );
+  edit_keyword_action->setToolTip( "Edit selected entries keyword" );
+  connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
+    
   // create logEntry list
   v_layout->addWidget( list_ = new LogEntryList( right, "log_entry_list" ), 1 );
   
@@ -201,11 +207,11 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( new QShortcut( Key_Delete, list_ ), SIGNAL( activated() ), SLOT( _deleteEntries() ) );
 
   // create popup menu for list
-  logEntryList().addMenuAction( "&New entry", this, SLOT( _newEntry() ) );
-  logEntryList().addMenuAction( "&Edit entries", this, SLOT( _editEntries() ), true ); 
-  logEntryList().addMenuAction( "&Delete entries", this, SLOT( _deleteEntries() ), true ); 
-  logEntryList().addMenuAction( "&Change keyword", this, SLOT( _changeEntryKeyword() ), true );
-  logEntryList().addMenuAction( color_menu_->menuAction(), true );
+  logEntryList().addMenuAction( new_entry_action );
+  logEntryList().addMenuAction( edit_entry_action, true ); 
+  logEntryList().addMenuAction( edit_keyword_action, true );
+  logEntryList().addMenuAction( delete_entry_action, true ); 
+  logEntryList().addMenuAction( color_action, true );
   
   // main menu
   menu_ = new Menu( this , this );
@@ -1642,7 +1648,7 @@ void SelectionFrame::_deleteKeyword( void )
   if( dialog.exec() == QDialog::Rejected ) return;
   
   // retrieve parent keyword
-  selected_item->setText(0, "");
+  selected_item->setText( KeywordList::KEYWORD, "");
   string new_keyword( LogEntry::formatKeyword( keywordList().keyword( selected_item ) ) );  
 
   // move entries
@@ -1772,7 +1778,7 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
 void SelectionFrame::_changeEntryKeyword( string keyword, string new_keyword )
 {
   
-  Debug::Throw("SelectionFrame::_changeEntryKeyword.\n" );
+  Debug::Throw(0) << "SelectionFrame::_changeEntryKeyword - keyword: " << keyword << " new:" << new_keyword << endl;
   
   // check keywords are different
   if( keyword == new_keyword ) return;
@@ -1800,7 +1806,6 @@ void SelectionFrame::_changeEntryKeyword( string keyword, string new_keyword )
   // reset lists
   _resetKeywordList();
   _resetList();
-  // keywordList().add( new_keyword );
   keywordList().select( new_keyword );
     
   // Save logbook if needed

@@ -403,8 +403,8 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   }
 
   // check button
-  /* so far all actions linked to other than the left buttons are left default */
-  if( event->button() != Qt::LeftButton ) return CustomListView::mousePressEvent( event );
+  /* so far all actions linked to other than the left or right buttons are left default */
+  if( !( event->button() & (Qt::LeftButton|Qt::RightButton) ) ) return CustomListView::mousePressEvent( event );
 
   // retrieve Item at position
   if( !item ) 
@@ -419,6 +419,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     start Edit timer
   */ 
   if( 
+    event->button() == Qt::LeftButton &&
     item && 
     item == QTreeWidget::currentItem() &&
     column == TITLE &&
@@ -427,15 +428,19 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   
   // set current item is selected
   if( !isItemSelected( item ) ) setCurrentItem( item );
-  else {
+  else if( event->button() == Qt::LeftButton )
+  {
     drag_enabled_ = true;
     drag_start_ = event->pos();
   }
   
   // keep item for multiple selections
-  first_item_ = item;
-  last_item_ = item;
-
+  if( event->button() == Qt::LeftButton )
+  {
+    first_item_ = item;
+    last_item_ = item;
+  }
+  
 }
   
 //_____________________________________________________________
