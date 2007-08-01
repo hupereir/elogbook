@@ -35,6 +35,7 @@
 #include <QTextFragment>
 #include <list>
 
+#include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"
 #include "CustomTextEdit.h"
@@ -100,7 +101,7 @@ FormatBar::FormatBar( QWidget* parent ):
   addWidget( button );
  
   // color
-  button = new CustomToolButton( this, CustomPixmap().find( ColorMenu::ICON, path_list ), "change current font color" );
+  button = new CustomToolButton( this, CustomPixmap().find( ICONS::COLOR, path_list ), "change current font color" );
   button->setText("Text color");
   buttons_.insert( make_pair( COLOR, button ) );
   addWidget( button );

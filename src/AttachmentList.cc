@@ -31,6 +31,7 @@
 
 #include <list>
 #include <sstream>
+#include <QShortcut>
 
 #include "Attachment.h"
 #include "AttachmentFrame.h"

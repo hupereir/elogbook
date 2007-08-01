@@ -34,6 +34,7 @@
 
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
+#include "BaseIcons.h"
 #include "BrowsedLineEdit.h"
 #include "ColorMenu.h"
 #include "CustomLineEdit.h"

@@ -41,8 +41,6 @@ namespace ICONS
   //! new attachment icon
   static const std::string ATTACH="attach.png";
   
-  //! editor window clone icon
-  static const std::string COPY="editcopy.png";
   
   //! entry deletion icon
   static const std::string DELETE="trashcan_empty.png";
@@ -70,19 +68,13 @@ namespace ICONS
   
   //! previous entry icon
   static const std::string PREV="1leftarrow.png";
-  
-  //! text redo icon
-  static const std::string REDO="redo.png";
-  
+    
   //! logbook/entry save icon
   static const std::string SAVE="filesave.png";
   
   //! entry spellCheck icon
   static const std::string SPELLCHECK="fonts.png";
-  
-  //! text undo icon
-  static const std::string UNDO="undo.png";
-  
+    
 };
 
 #endif

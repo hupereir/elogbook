@@ -30,8 +30,10 @@
 */
 
 #include <QHeaderView>
+#include <QShortcut>
 
 #include "AttachmentFrame.h"
+#include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "CustomDialog.h"
 #include "CustomLineEdit.h"
@@ -187,7 +189,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   color_menu_->setTitle( "&Change entry color" );
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
    
-  QAction* color_action = new QAction( IconEngine::get( CustomPixmap().find( ColorMenu::ICON, path_list ) ), "&Entry color", this );
+  QAction* color_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::COLOR, path_list ) ), "&Entry color", this );
   color_action->setToolTip( "Change selected entries color" );
   color_action->setMenu( color_menu_ );
   CustomToolButton* button = new CustomToolButton( toolbar, color_action, &statusBar().label() );
