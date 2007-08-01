@@ -8,7 +8,9 @@ pixmap_DATA =  \
   color.png \
   editcopy.png \
   edit.png \
+  exit.png \
   filenew.png \
+  fileopen.png \
   filesave.png \
   fonts.png \
   homeB.png \
@@ -16,6 +18,7 @@ pixmap_DATA =  \
   info.png \
   lock.png \
   redo.png \
+  reload.png \
   text_bold.png \
   text_italic.png \
   text_strike.png \
@@ -30,7 +33,9 @@ EXTRA_DIST = \
   color.png \
   editcopy.png \
   edit.png \
+  exit.png \
   filenew.png \
+  fileopen.png \
   filesave.png \
   fonts.png \
   homeB.png \
@@ -38,6 +43,7 @@ EXTRA_DIST = \
   info.png \
   lock.png \
   redo.png \
+  reload.png \
   text_bold.png \
   text_italic.png \
   text_strike.png \
