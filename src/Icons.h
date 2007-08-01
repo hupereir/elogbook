@@ -75,7 +75,7 @@ namespace ICONS
   static const std::string SAVE="filesave.png";
 
   //! logbook/entry save icon
-  static const std::string SAVE_AS="filesave.png";
+  static const std::string SAVE_AS="filesaveas.png";
 
   //! reload icon
   static const std::string RELOAD = "reload.png";
