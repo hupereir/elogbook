@@ -57,20 +57,20 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const string& keyword
   what << "Delete keyword " << keyword << " ?";
   mainLayout().addWidget( new QLabel( what.str().c_str(), this ) );
   
-  QGroupBox *group_box = new QGroupBox( this );
-  mainLayout().addWidget( group_box );
-  group_box->setLayout( new QVBoxLayout() );
-  group_box->layout()->setMargin(5);
-  group_box->layout()->setSpacing(5);
+  QGroupBox *box = new QGroupBox( this );
+  mainLayout().addWidget( box );
+  box->setLayout( new QVBoxLayout() );
+  box->layout()->setMargin(5);
+  box->layout()->setSpacing(5);
         
-  group_box->layout()->addWidget( move_radio_button_ = new QRadioButton( "Move entries to parent keyword", this ) );
+  box->layout()->addWidget( move_radio_button_ = new QRadioButton( "Move entries to parent keyword", box ) );
   move_radio_button_->setToolTip( "Select this button to move entries associated to this keyword to the parent keyword." );
   group->addButton( move_radio_button_ );
   
-  group_box->layout()->addWidget( delete_radio_button_ = new QRadioButton( "Delete entries", this ) );
+  box->layout()->addWidget( delete_radio_button_ = new QRadioButton( "Delete entries", box ) );
   delete_radio_button_->setToolTip( "Select this button to delete entries associated to this keyword." );
   group->addButton( move_radio_button_ );
   move_radio_button_->setChecked( true );
   
-  if( !has_entries ) group_box->setEnabled( false );
+  if( !has_entries ) box->setEnabled( false );
 }

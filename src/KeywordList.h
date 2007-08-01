@@ -138,9 +138,14 @@ class KeywordList: public CustomListView
 
   protected slots:
 
-  void closeEditor ( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )
-  { Debug::Throw(0, "QAbstractItemView::closeEditor.\n" ); }
-  
+//   // these should be used in place of the current edition implementation
+//   // in a model-view architecture
+//   void closeEditor ( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )
+//   { Debug::Throw(0, "QAbstractItemView::closeEditor.\n" ); }
+//   
+//   void commitData ( QWidget * editor ) 
+//   { Debug::Throw(0, "QAbstractItemView::commitData.\n" ); }
+    
   //! open drop item
   /*! this is connected to the time-out of the drop timer */
   void _openDropItem( void );

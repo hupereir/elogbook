@@ -95,8 +95,8 @@ void KeywordList::add( string keyword )
   Item* parent_item( root_item_ );
   
   // retrieve sub-keywords, separated by "/"
-  list<string> keywords( LogEntry::parseKeyword( keyword ) );
-  for( list<string>::iterator iter = keywords.begin(); iter!= keywords.end(); iter++ )
+  vector<string> keywords( LogEntry::parseKeyword( keyword ) );
+  for( vector<string>::iterator iter = keywords.begin(); iter!= keywords.end(); iter++ )
   {
     
     if( !iter->size() ) continue;
@@ -144,8 +144,8 @@ void KeywordList::remove( string keyword )
   
   // retrieve sub-keywords, separated by "/"
   bool found( true );
-  list<string> keywords( LogEntry::parseKeyword( keyword ) );
-  for( list<string>::iterator iter = keywords.begin(); iter!= keywords.end(); iter++ )
+  vector<string> keywords( LogEntry::parseKeyword( keyword ) );
+  for( vector<string>::iterator iter = keywords.begin(); iter!= keywords.end(); iter++ )
   {
     
     if( !iter->size() ) continue;
@@ -344,7 +344,7 @@ void KeywordList::_resetEdit( const bool& restore_backup )
   if( edit_item_ )
   {
     // close editor
-    closePersistentEditor( edit_item_ );
+    //closePersistentEditor( edit_item_ );
     
     // restore backup if required
     if( restore_backup ) 
@@ -363,10 +363,7 @@ void KeywordList::_activate( QTreeWidgetItem* item, int column )
   
   // check if item is edited
   if( !( edit_item_ && item == edit_item_ ) ) return;
-  
-  // close editor
-  closePersistentEditor( edit_item_ ); 
-  
+    
   //! retrieve full backup keyword
   string old_keyword = full_backup_; 
   string new_keyword = keyword( edit_item_ );
@@ -404,19 +401,8 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
   // see if current item match edited item
   // if not, close editor, restore old keyword
   if( edit_item_ && item != edit_item_ ) 
-  {
+  { _resetEdit(); }
     
-    // close editor
-    closePersistentEditor( edit_item_ );
-    
-    // restore backup text
-    edit_item_->setText( KEYWORD, backup_ );
-    
-    // reset item
-    edit_item_ = 0;
-    
-  }
-
   // left button handling
   if (event->button() == Qt::LeftButton) 
   {
