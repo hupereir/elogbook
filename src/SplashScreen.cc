@@ -82,16 +82,11 @@ void SplashScreen::realizeWidget( void )
   if( opacity_ == 1 ) frame->setFrameStyle( QFrame::Panel | QFrame::Raised );
   frame->setFixedSize( minimum_size_ );
   layout->addWidget( frame );
-  
-  layout = new QVBoxLayout();
-  layout->setSpacing(10);
-  layout->setMargin(10);
-  frame->setLayout( layout );
-  
+    
   QHBoxLayout* h_layout = new QHBoxLayout();
   h_layout->setSpacing(10);
   h_layout->setMargin(0);
-  layout->addLayout( h_layout );
+  frame->setLayout( h_layout );
     
   if( !icon_.isNull() )
   { 
@@ -101,10 +96,15 @@ void SplashScreen::realizeWidget( void )
     h_layout->addWidget( icon_label );
   }
   
+  layout = new QVBoxLayout();
+  layout->setSpacing(10);
+  layout->setMargin(10);
+  h_layout->addLayout( layout );
+
   QLabel* title = new QLabel( frame );
   title->setAlignment( Qt::AlignCenter );
   title->setText( title_.c_str() );
-  h_layout->addWidget( title );
+  layout->addWidget( title );
   
   {
     // change title font

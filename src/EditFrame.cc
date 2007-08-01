@@ -113,7 +113,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   text_ = new CustomTextEdit( splitter_ );
   
   connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );
-  connect( text_->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
+  connect( editor().document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
   connect( text_, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
   connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
@@ -203,24 +203,30 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, toolbar );
 
   // undo button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::UNDO, path_list ) ), "Undo last text modification", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _undo() ) );
-  button->setText("Undo");
-  toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
-
+  undo_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::UNDO, path_list ) ), "&Undo", this );
+  undo_action_->setToolTip( "Undo last modification" );
+  connect( undo_action_, SIGNAL( triggered() ), SLOT( _undo() ) );
+  toolbar->addAction( undo_action_ );
+  
   // redo button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::REDO, path_list ) ), "Redo last text modification", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _redo() ) );
-  button->setText("Redo");
-  toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
+  redo_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::REDO, path_list ) ), "&Redo", this );
+  redo_action_->setToolTip( "Redo last undone modification" );
+  connect( redo_action_, SIGNAL( triggered() ), SLOT( _redo() ) );
+  toolbar->addAction( redo_action_ );
 
+  // undo/redo connections
+  connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
+  connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateRedoAction() ) );
+  connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
+
+  connect( text_, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction() ) );
+  connect( text_, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
+  connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
+    
   // extra toolbar
   toolbar = new CustomToolBar( "Tools", this );
   toolbar->setObjectName( "EXTRA_TOOLBAR" );
   toolbars_.push_back( make_pair( toolbar, "EXTRA_TOOLBAR" ) );
-  //addToolBarBreak( LeftToolBarArea );
   addToolBar( LeftToolBarArea, toolbar );
 
   // view_html button
@@ -340,7 +346,7 @@ void EditFrame::setReadOnly( const bool& value )
 
   // changes TextEdit readOnly status
   title_->setReadOnly( isReadOnly() );
-  text_->setReadOnly( isReadOnly() );
+  editor().setReadOnly( isReadOnly() );
 
   // changes attachment list status
   attachmentList().setReadOnly( isReadOnly() );
@@ -436,7 +442,7 @@ void EditFrame::setModified( const bool& value )
 {
   Debug::Throw( "EditFrame::setModified.\n" );
   title_->setModified( value );
-  text_->document()->setModified( value );
+  editor().document()->setModified( value );
 }
 
 //_____________________________________________
@@ -494,7 +500,7 @@ void EditFrame::saveConfiguration( void )
   Debug::Throw( "EditFrame::saveConfiguration.\n" );
   XmlOptions::get().set<int>( "EDIT_FRAME_HEIGHT", height() );
   XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
-  XmlOptions::get().set<int>( "EDT_HEIGHT", text_->height() );
+  XmlOptions::get().set<int>( "EDT_HEIGHT", editor().height() );
   XmlOptions::get().set<int>( "ATC_HEIGHT", (*KeySet<AttachmentList>(this).begin())->height() );
   
   // save toolbars location and visibility
@@ -536,7 +542,7 @@ void EditFrame::save( bool update_selection )
   }
 
   //! update entry text
-  entry->setText( qPrintable( text_->toPlainText() ) );
+  entry->setText( qPrintable( editor().toPlainText() ) );
   entry->setFormats( format_toolbar_->get() );
 
   //! update entry title
@@ -678,7 +684,7 @@ void EditFrame::_entryInfo( void )
 void EditFrame::_undo( void )
 {
   Debug::Throw( "EditFrame::_undo.\n" );
-  if( text_->hasFocus() ) text_->document()->undo();
+  if( editor().hasFocus() ) editor().document()->undo();
   else if( title_->hasFocus() ) title_->undo();
   return;
 }
@@ -687,9 +693,43 @@ void EditFrame::_undo( void )
 void EditFrame::_redo( void )
 {
   Debug::Throw( "EditFrame::_redo.\n" );
-  if( text_->hasFocus() ) text_->document()->redo();
+  if( editor().hasFocus() ) editor().document()->redo();
   else if( title_->hasFocus() ) title_->redo();
   return;
+}
+
+//_____________________________________________
+void EditFrame::_updateUndoAction( void )
+{ 
+  Debug::Throw( "EditFrame::_updateUndoAction.\n" );
+  if( title_->hasFocus() ) undo_action_->setEnabled( title_->isUndoAvailable() );
+  if( editor().hasFocus() ) undo_action_->setEnabled( editor().document()->isUndoAvailable() );
+}
+
+//_____________________________________________
+void EditFrame::_updateRedoAction( void )
+{ 
+  Debug::Throw( "EditFrame::_updateRedoAction.\n" );
+  if( title_->hasFocus() ) redo_action_->setEnabled( title_->isRedoAvailable() );
+  if( editor().hasFocus() ) redo_action_->setEnabled( editor().document()->isRedoAvailable() );
+}
+
+//_____________________________________________
+void EditFrame::_updateUndoRedoActions( QWidget* old, QWidget* current )
+{
+  Debug::Throw( "EditFrame::_updateUndoRedoAction.\n" );
+  if( current == title_ )
+  {
+    undo_action_->setEnabled( title_->isUndoAvailable() );
+    redo_action_->setEnabled( title_->isRedoAvailable() );
+  }
+
+  if( current == text_ )
+  {
+    undo_action_->setEnabled( editor().document()->isUndoAvailable() );
+    redo_action_->setEnabled( editor().document()->isRedoAvailable() );
+  }
+
 }
 
 //_____________________________________________
@@ -859,7 +899,7 @@ void EditFrame::_titleModified( bool state )
   // check readonly status
   if( isReadOnly() ) return;
 
-  bool text_modified( text_->document()->isModified() );
+  bool text_modified( editor().document()->isModified() );
   if( state && !text_modified ) updateWindowTitle();
   if( !(state || text_modified ) ) updateWindowTitle();
 
@@ -913,7 +953,7 @@ void EditFrame::_displayText( void )
   if( !text_ ) return;
 
   LogEntry* entry( EditFrame::entry() );
-  text_->setPlainText( (entry) ? entry->text().c_str() : "" );
+  editor().setPlainText( (entry) ? entry->text().c_str() : "" );
   format_toolbar_->load( entry->formats() );
 
   return;

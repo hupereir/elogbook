@@ -208,6 +208,18 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! redo in focused editor (text/title/keyword);
   void _redo( void );
  
+  //! update (enable/disable) undo action
+  void _updateUndoAction( void );
+
+  //! update (enable/disable) redo action
+  void _updateRedoAction( void );
+
+  /*! 
+    \brief update (enable/disable) undo/redo action
+    based on the widget that currently has focus
+  */
+  void _updateUndoRedoActions( QWidget* old, QWidget* current );
+  
   //! opens a read_only EditFrame with same entry
   void _newWindow( void );    
   
@@ -311,6 +323,16 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //@}
 
+  //!@name actions
+  //@{
+  
+  //! undo
+  QAction* undo_action_;
+  
+  //! redo
+  QAction* redo_action_;
+  
+  //@}
 };
 
 #endif

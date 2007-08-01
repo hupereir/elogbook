@@ -1880,15 +1880,19 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
       
   Debug::Throw() << "SelectionFrame::_changeEntryKeyword - new_keyword: " << new_keyword << endl;
   
-  // check if selected item make sense
-  QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
+  // keep track of modified entries
   KeySet<LogEntry> entries;
   
+  // loop over selected entries
+  QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
   for( QList<LogEntryList::Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
   {
     
     // retrieve entry
     LogEntry* entry( (*iter)->entry() );
+    
+    // check if entry keyword has changed
+    if( entry->keyword() == new_keyword ) continue;
     
     // change keyword and set as modified
     entry->setKeyword( new_keyword );
@@ -1903,12 +1907,13 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
   
   }
 
+  // check if at least one entry was changed
+  if( entries.empty() ) return;
+  
   // reset lists
   _resetKeywordList();
   _resetList();
-  // keywordList().add( new_keyword );
   keywordList().select( new_keyword );
-  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - new keyword selected" << endl;
   
   // update selection
   logEntryList().clearSelection();
@@ -1918,15 +1923,12 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
     logEntryList().setItemSelected( item, true );  
   }
   
-  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - item selection changed" << endl;
-  
   // scroll to last item
   if( !entries.empty() ) logEntryList().scrollToItem( logEntryList().item( *entries.begin() ) );
-
-  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - list scrolled" << endl;
-   
+  
   // Save logbook if needed
   if( !logbook()->file().empty() ) save();
+  
   return;    
   
 }
