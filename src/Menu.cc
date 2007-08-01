@@ -41,6 +41,7 @@
 #include "File.h"
 #include "HelpManager.h"
 #include "HelpText.h"
+#include "Icons.h"
 #include "Logbook.h"
 #include "LogEntryList.h"
 #include "MainFrame.h"
@@ -70,8 +71,8 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   // file menu
   menu = addMenu( "&File" );
-  menu->addAction( "&New",  selection_frame, SLOT( newLogbook() ), CTRL+Key_N );
-  menu->addAction( "&Open", selection_frame, SLOT( open() ), CTRL+Key_O );
+  menu->addAction( selection_frame->newLogbookAction() );
+  menu->addAction( selection_frame->openAction() );
 
   // file menu
   open_previous_menu_ = new OpenPreviousMenu( this );
@@ -80,14 +81,14 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selection_frame, SLOT( open( FileRecord ) ) );  
   menu->addMenu( open_previous_menu_ );
 
-  menu->addAction( "&Synchronize", selection_frame, SLOT( synchronize() ) )->setToolTip( "synchronize current logbook with remove logbook" );
-  menu->addAction( "&Reorganize", selection_frame, SLOT( reorganize() ) )->setToolTip( "reorganize entries in sublogbook to minimize number of files" );
+  menu->addAction( selection_frame->synchronizeAction() );
+  menu->addAction( selection_frame->reorganizeAction() );
 
   menu->addSeparator();
   menu->addAction( "&Save", this, SIGNAL( save() ), CTRL+Key_S );
-  menu->addAction( "Save &As", selection_frame, SLOT( saveAs() ) );
-  menu->addAction( "Save &Backup", selection_frame, SLOT( saveBackup() ) );
-  menu->addAction( "&Revert to Saved", selection_frame, SLOT( revertToSaved() ) );
+  menu->addAction( selection_frame->saveAsAction() );
+  menu->addAction( selection_frame->saveBackupAction() );
+  menu->addAction( selection_frame->revertToSaveAction() );
   menu->addSeparator();
   menu->addAction( "&View HTML", this, SIGNAL( viewHtml() ), 0 );
   menu->addSeparator();
@@ -123,8 +124,8 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   DebugMenu *debug_menu( new DebugMenu( this ) );
   debug_menu->setTitle( "&Debug" );
   menu->addMenu( debug_menu );
-  debug_menu->addAction( "&Save (forced)", selection_frame, SLOT( saveForced() ) );
-  debug_menu->addAction( "&Show duplicates", selection_frame, SLOT( showDuplicatedEntries() ) );
+  debug_menu->addAction( selection_frame->saveForcedAction() );
+  debug_menu->addAction( selection_frame->showDuplicatesAction() );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
 
 }
@@ -139,7 +140,7 @@ void Menu::_updateEditorMenu( void )
   AttachmentFrame *attachment_frame( &static_cast<MainFrame*>(qApp)->attachmentFrame() );
   
   // editor attachments and logbook information
-  editor_menu_->addAction( "&Main window", selection_frame, SLOT( uniconify() ) );
+  editor_menu_->addAction( selection_frame->uniconifyAction() );
 
   KeySet<EditFrame> frames( selection_frame );
   bool has_edit_frames = find_if( frames.begin(), frames.end(), EditFrame::IsVisibleFTor() ) != frames.end();
@@ -159,8 +160,8 @@ void Menu::_updateEditorMenu( void )
   }
   
   editor_menu_->addAction( "&Attachments", attachment_frame, SLOT( uniconify() ) );
-  editor_menu_->addAction( "&Logbook informations", selection_frame, SLOT( editLogbookInformations() ) );
-  editor_menu_->addAction( "&Logbook statistics", selection_frame, SLOT( viewLogbookStatistics() ) );
+  editor_menu_->addAction( selection_frame->logbookStatisticsAction() );
+  editor_menu_->addAction( selection_frame->logbookInformationsAction() );
   
   return;
 }

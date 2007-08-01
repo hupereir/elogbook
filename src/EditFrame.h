@@ -172,7 +172,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! uniconify
   void uniconify( void )
-  { QtUtil::uniconify( this ); }
+  { 
+    Debug::Throw( "EditFrame::uniconify.\n" );
+    QtUtil::uniconify( this ); 
+  }
   
   protected:
   

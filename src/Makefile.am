@@ -88,7 +88,6 @@ noinst_HEADERS = \
   SearchPanel.h \
   SelectionFrame.h \
   SplashScreen.h \
-  TopWidget.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
@@ -128,7 +127,6 @@ libeLogbook_a_SOURCES = \
   SearchPanel.cc \
   SelectionFrame.cc \
   SplashScreen.cc \
-  TopWidget.cc \
   ViewHtmlEntryDialog.cc \
   ViewHtmlLogbookDialog.cc
 
@@ -147,8 +145,7 @@ nodist_libeLogbook_a_SOURCES = \
   moc_NewAttachmentDialog.cc \
   moc_SearchPanel.cc \
   moc_SelectionFrame.cc \
-  moc_SplashScreen.cc \
-  moc_TopWidget.cc
+  moc_SplashScreen.cc
 
 ### rule to generate qt meta objects
 moc_%.cc: %.h

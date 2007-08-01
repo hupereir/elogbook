@@ -174,7 +174,7 @@ void MainFrame::realizeWidget( void )
   else if( !selection_frame_->menu().openPreviousMenu().openLastValidFile() )
   { 
     splash_screen->close();
-    selection_frame_->newLogbook();
+    selection_frame_->newLogbookAction()->trigger();
   }
   
 }
@@ -297,7 +297,7 @@ void MainFrame::_processRequest( const ArgList& args )
 
   Debug::Throw() << "MainFrame::_processRequest - " << args << endl;
   
-  if( selection_frame_ ) selection_frame_->uniconify();
+  if( selection_frame_ ) selection_frame_->uniconifyAction()->trigger();
 
   // check argument. Last argument, if starting with a "-" is possibly a filename
   string filename( args.last() );

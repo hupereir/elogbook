@@ -35,6 +35,7 @@
 
 #include "AskForSaveDialog.h"
 #include "Counter.h"
+#include "CustomMainWindow.h"
 #include "Debug.h"
 #include "Exception.h"
 #include "FileRecord.h"
@@ -42,7 +43,7 @@
 #include "KeywordList.h"
 #include "LogEntry.h"
 #include "LogEntryList.h"
-#include "TopWidget.h"
+#include "QtUtil.h"
 
 // class ColorMenu;
 class CustomLineEdit;
@@ -54,7 +55,7 @@ class StatusBar;
 class ColorMenu;
 
 //! display a set of log entries, allows selection of one
-class SelectionFrame: public TopWidget, public BASE::Key
+class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
 {
 
   //! Qt meta object declaration
@@ -157,6 +158,67 @@ class SelectionFrame: public TopWidget, public BASE::Key
     return *list_;
   }
     
+  //!@name actions 
+  //@{
+  
+  //! uniconify window
+  QAction* uniconifyAction( void )
+  { return uniconify_action_; }
+  
+  //! create new logbook
+  QAction* newLogbookAction( void )
+  { return new_logbook_action_; }
+  
+  //! open existing logbook
+  QAction* openAction( void )
+  { return open_action_; }
+  
+  //! synchronize logbooks
+  QAction* synchronizeAction( void )
+  { return synchronize_action_; }
+  
+  //! reorganize logbook
+  QAction* reorganizeAction( void )
+  { return reorganize_action_; }
+  
+  //! save logbook
+  QAction* saveAction( void )
+  { return save_action_; }
+
+  //! save logbook
+  QAction* saveForcedAction( void )
+  { return save_forced_action_; }
+
+  //! save logbook with different name
+  QAction* saveAsAction( void )
+  { return save_as_action_; }
+
+  //! save logbook backup
+  QAction* saveBackupAction( void )
+  { return save_backup_action_; }
+
+  //! revert logbook to saved version
+  QAction* revertToSaveAction( void )
+  { return revert_to_save_action_; }
+  
+  //! convert logbook to html
+  QAction* viewHtmlAction( void )
+  { return view_html_action_; }
+
+  //! logbook information
+  QAction* logbookInformationsAction( void )
+  { return logbook_informations_action_; }
+  
+  //! logbook information
+  QAction* logbookStatisticsAction( void )
+  { return logbook_statistics_action_; }
+
+  //! show duplicates
+  QAction* showDuplicatesAction( void )
+  { return show_duplicates_action_; }
+  
+  //@}
+  
   signals:
 
   //! emmited when a message is available from logbook
@@ -172,12 +234,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! save configuration
   void saveConfiguration( void );
-  
-  //! opens a logbook merge it to the existing onecomments
-  virtual void synchronize( void );
-
-  //! create a new logbook
-  virtual void newLogbook( void );
 
   //! open existing logbook
   virtual void open( FileRecord file = FileRecord() );
@@ -185,47 +241,82 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! save current logbook
   virtual void save( void );
 
+  //! select entries using selection criterions
+  virtual void selectEntries( QString text, unsigned int mode );
+
+  //! show all entries
+  virtual void showAllEntries( void );
+    
+  protected:
+
+  //! enter event handler
+  virtual void enterEvent( QEvent *event );
+  
+  //! close event
+  virtual void closeEvent( QCloseEvent *event );
+  
+  //! install actions
+  virtual void _installActions( void );
+  
+  //! clear list and reinitialize from logbook entries
+  virtual void _resetList( void );
+
+  //! clear list and reinitialize from logbook entries
+  virtual void _resetKeywordList( void );
+  
+  //! load colors (from current logbook)
+  void _loadColors( void );    
+
+  protected slots:
+  
+  //! uniconify
+  void _uniconify( void )
+  { 
+  
+    Debug::Throw( "SelectionFrame::uniconify.\n" );
+    QtUtil::uniconify( this ); 
+    
+  }
+  
+  //! create a new logbook
+  virtual void _newLogbook( void );
+
   //! save logbook and children whether they are modified or not
-  virtual void saveForced( void );
+  virtual void _saveForced( void );
   
   /*! \brief
     save current logbook with a given filename
     returns true if logbook was saved
   */
-  virtual bool saveAs( File default_file = File("") );
+  virtual bool _saveAs( File default_file = File("") );
 
   //! save current logbook with a given filename
-  virtual void saveBackup( void );
+  virtual void _saveBackup( void );
 
   //! revert logbook to saved version
-  virtual void revertToSaved( void );
+  virtual void _revertToSaved( void );
+
+  //! opens a logbook merge it to the existing onecomments
+  virtual void _synchronize( void );
+
+  //! reorganize logbook to entries associations
+  virtual void _reorganize( void );
 
   /*! \brief
     show all entries which have equal creation time
     is needed to remove duplicate entries in case of
     wrong logbook merging. This is a Debugging tool
   */
-  virtual void showDuplicatedEntries( void );
-
-  //! edit current logbook informations
-  virtual void editLogbookInformations( void );
+  virtual void _showDuplicatedEntries( void );
 
   //! view logbook statistics
-  virtual void viewLogbookStatistics( void );
+  virtual void _viewLogbookStatistics( void );
 
-  //! reorganize logbook to entries associations
-  virtual void reorganize( void );
+  //! edit current logbook informations
+  virtual void _editLogbookInformations( void );
 
   //! close EditFrames
-  virtual void closeEditFrames( void ) const;
-
-  //! select entries using selection criterions
-  virtual void selectEntries( QString text, unsigned int mode );
-
-  //! show all entries
-  virtual void showAllEntries( void );
-
-  protected slots:
+  virtual void _closeEditFrames( void ) const;
 
   //! create new entry
   virtual void _newEntry( void );
@@ -276,20 +367,8 @@ class SelectionFrame: public TopWidget, public BASE::Key
   //! perform autoSave
   void _autoSave( void );
 
-  protected:
-
-  //! enter event handler
-  virtual void enterEvent( QEvent *event );
-
-  //! clear list and reinitialize from logbook entries
-  virtual void _resetList( void );
-
-  //! clear list and reinitialize from logbook entries
-  virtual void _resetKeywordList( void );
+  private:
   
-  //! load colors (from current logbook)
-  void _loadColors( void );    
-    
   //! main menu
   Menu* menu_;
 
@@ -298,9 +377,6 @@ class SelectionFrame: public TopWidget, public BASE::Key
 
   //! state frame
   StatusBar* statusbar_;
-
-  //! LogEntry color popup menu
-  // ColorMenu *color_menu_;
 
   //! main splitter
   QSplitter* splitter_;
@@ -325,6 +401,53 @@ class SelectionFrame: public TopWidget, public BASE::Key
   
   //! ignore file modified warnings if true
   bool ignore_warnings_;
+
+  //!@name actions
+  ///@{
+  
+  //! uniconify action
+  QAction* uniconify_action_;
+  
+  //! create new logbook
+  QAction* new_logbook_action_;
+  
+  //! open existing logbook
+  QAction* open_action_;
+  
+  //! synchronize logbooks
+  QAction* synchronize_action_;
+  
+  //! reorganize logbook
+  QAction* reorganize_action_;
+  
+  //! save logbook
+  QAction* save_action_;
+
+  //! save logbook
+  QAction* save_forced_action_;
+
+  //! save logbook with different name
+  QAction* save_as_action_;
+
+  //! save logbook backup
+  QAction* save_backup_action_;
+
+  //! revert logbook to saved version
+  QAction* revert_to_save_action_;
+  
+  //! convert logbook to html
+  QAction* view_html_action_;
+
+  //! logbook information
+  QAction* logbook_informations_action_;
+  
+  //! logbook information
+  QAction* logbook_statistics_action_;
+
+  //! show duplicates
+  QAction* show_duplicates_action_;
+    
+  //@}
   
 };
 

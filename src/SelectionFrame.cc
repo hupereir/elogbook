@@ -71,7 +71,8 @@ using namespace Qt;
 
 //_____________________________________________
 SelectionFrame::SelectionFrame( QWidget *parent ):
-  TopWidget( parent ),
+  CustomMainWindow( parent ),
+  Counter( "SelectionFrame" ),
   autosave_timer_( new QTimer( this ) ),
   logbook_( 0 ),
   working_directory_( Util::workingDirectory() ),
@@ -101,13 +102,16 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( search_panel_, SIGNAL( showAllEntries() ), SLOT( showAllEntries() ) );
   layout->addWidget( search_panel_ );  
   
-  // state frame
+  // status bar
   statusbar_ = new StatusBar( main );
   statusBar().addLabel( 2 );
   statusBar().addClock();
   connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().label(), SLOT( setTextAndUpdate( const QString& ) ) );  
   layout->addWidget( &statusBar() ); 
   
+  // global scope actions
+  _installActions();
+
   // left box for Keywords and buttons
   QWidget* left = new QWidget( splitter_ );
   QVBoxLayout* v_layout = new QVBoxLayout();
@@ -173,16 +177,9 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   delete_entry_action->setToolTip( "Delete selected entries" );
   connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, delete_entry_action, &statusBar().label() ) );
-    
-  QAction* view_html_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "&Html", this );
-  view_html_action->setToolTip( "Convert logbook to html" );
-  connect( view_html_action, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, view_html_action, &statusBar().label() ) );
-    
-  QAction* save_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "&Save", this );
-  save_entry_action->setToolTip( "Save all edited entries" );
-  connect( save_entry_action, SIGNAL( triggered() ), SLOT( save() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, save_entry_action, &statusBar().label() ) );
+  
+  toolbar->addWidget( new CustomToolButton( toolbar, saveAction(), &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, viewHtmlAction(), &statusBar().label() ) );
 
   // color menu
   color_menu_ = new ColorMenu( this );
@@ -351,7 +348,7 @@ void SelectionFrame::checkLogbookBackup( void )
 
     // ask if backup needs to be saved; save if yes
     if( QtUtil::questionDialog( this, "Current logbook needs backup. Make one?" )) 
-    { saveBackup(); }
+    { _saveBackup(); }
 
   }
 
@@ -373,11 +370,13 @@ void SelectionFrame::checkLogbookModified( void )
 
   int state = LogbookModifiedDialog( this, files ).exec();
   if( state == LogbookModifiedDialog::RESAVE ) { save(); }
-  else if( state == LogbookModifiedDialog::SAVE_AS ) { saveAs(); }
+  else if( state == LogbookModifiedDialog::SAVE_AS ) { _saveAs(); }
   else if( state == LogbookModifiedDialog::RELOAD ) 
   { 
+    
     logbook()->setModifiedRecursive( false ); 
-    revertToSaved(); 
+    _revertToSaved(); 
+  
   } else if( state == LogbookModifiedDialog::IGNORE ) { ignore_warnings_ = true; }
   
   return;
@@ -599,7 +598,7 @@ void SelectionFrame::updateConfiguration( void )
   
   Debug::Throw( "SelectionFrame::updateConfiguration.\n" );
   
-  TopWidget::updateConfiguration();
+  CustomMainWindow::updateConfiguration();
   
   // autoSave
   autosave_timer_->setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
@@ -650,198 +649,6 @@ void SelectionFrame::saveConfiguration( void )
   menu().openPreviousMenu().write();
   
 }
-//_______________________________________________
-void SelectionFrame::synchronize( void )
-{
-  Debug::Throw( "SelectionFrame::SynchronizeLogbook.\n" );
-
-  // check current logbook is valid
-  if( !logbook_ ) {
-    QtUtil::infoDialog( this, "No logbook opened. <Merge> canceled." );
-    return;
-  }
-
-  // save EditFrames
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if( !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
-
-  // save current logbook
-  if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
-
-  // create file dialog
-  CustomFileDialog dialog( this );
-  dialog.setFileMode( QFileDialog::ExistingFile );
-
-  if( dialog.exec() != QDialog::Accepted ) return;
-
-  QStringList files( dialog.selectedFiles() );
-  if( files.empty() ) return;
-  
-  // set busy flag
-  static_cast<MainFrame*>(qApp)->busy();
-  statusBar().label().setText( "reading remote logbook ... " );
-  
-  // opens file in a local logbook
-  Logbook logbook;
-  connect( &logbook, SIGNAL( messageAvailable() ), SIGNAL( messageAvailable() ) );
-  logbook.setFile( File( qPrintable( files.back() ) ) );
-  
-  // check if logbook is valid
-  XmlError::List errors( logbook.xmlErrors() );
-  if( errors.size() ) 
-  {
-
-    ostringstream what;
-    if( errors.size() > 1 ) what << "Errors occured while parsing files." << endl;
-    else what << "An error occured while parsing files." << endl;
-    what << errors;
-    QtUtil::infoDialog( 0, what.str().c_str() );
-
-    static_cast<MainFrame*>(qApp)->idle();
-    return;
-
-  }
-
-  // synchronize local with remote
-  // retrieve map of duplicated entries
-  std::map<LogEntry*,LogEntry*> duplicates( SelectionFrame::logbook()->synchronize( logbook ) );
-  
-  // update possible EditFrames when duplicated entries are found
-  // delete the local duplicated entries
-  for( std::map<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); iter++ )
-  {
-    
-    // display the new entry in all matching edit frames
-    KeySet<EditFrame> frames( iter->first );
-    for( KeySet<EditFrame>::iterator frame_iter = frames.begin(); frame_iter != frames.end(); frame_iter++ )
-    { (*frame_iter)->displayEntry( iter->first ); }
-
-    delete iter->first;
-
-  }
-
-  // synchronize remove with local
-  logbook.synchronize( *SelectionFrame::logbook() );
-
-  // reinitialize lists
-  _resetKeywordList();
-  _resetList();
-  resetAttachmentFrame();
-
-  // retrieve last modified entry
-  KeySet<LogEntry> entries( SelectionFrame::logbook()->entries() );
-  KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
-  selectEntry( *iter );
-  logEntryList().setFocus();
-
-  // save current logbook if needed
-  if( !SelectionFrame::logbook()->file().empty() )
-  {
-    statusBar().label().setText( "saving local logbook ... " );
-    save();
-  }
-
-  // save remote logbook
-  statusBar().label().setText( "saving remote logbook ... " );
-  logbook.write();
-
-  // idle
-  static_cast<MainFrame*>(qApp)->idle();
-  statusBar().label().setText( "" );
-
-  return;
-
-}
-
-//_______________________________________________
-void SelectionFrame::newLogbook( void )
-{
-  Debug::Throw( "SelectionFrame::newLogbook.\n" );
-
-  // check current logbook
-  if( logbook_ && logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
-
-  // new logbook
-  NewLogbookDialog dialog( this );
-  dialog.setTitle( Logbook::LOGBOOK_NO_TITLE );
-  dialog.setAuthor( XmlOptions::get().get<string>( "USER" ) );
-
-  // filename and directory
-  File file = File( "log.xml" ).addPath( workingDirectory() );
-  dialog.setFile( file );
-  dialog.setAttachmentDirectory( workingDirectory() );
-
-  // map dialog
-  Debug::Throw( "SelectionFrame::newLogbook - dialog created.\n" );
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
-
-  Debug::Throw() << "SelectionFrame::new - file: " << dialog.file() << endl;
-  
-  // create a new logbook, with no file
-  setLogbook( dialog.file() );
-  Exception::checkPointer( logbook_, DESCRIPTION( "could not create Logbook") );
-
-  logbook()->setTitle( dialog.title() );
-  logbook()->setAuthor( dialog.author() );
-  logbook()->setComments( dialog.comments() );
-
-  // attachment directory
-  File directory( dialog.attachmentDirectory() );
-
-  // check if fulldir is not a non directory existing file
-  if( directory.exist() && !directory.isDirectory() )
-  {
-
-    ostringstream o;
-    o << "File \"" << directory << "\" is not a directory.";
-    QtUtil::infoDialog( this, o.str() );
-
-  } else logbook()->setDirectory( directory );
-
-  // add new file to openPreviousMenu
-  if( !logbook()->file().empty() )
-  { menu().openPreviousMenu().add( logbook()->file() ); }
-
-}
-
-//_______________________________________________
-void SelectionFrame::open( FileRecord record )
-{
-  
-  Debug::Throw( "SelectionFrame::open.\n" );
-
-  // check if current logbook needs save
-  if( logbook_ && logbook()->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
-
-  // open file from dialog if not set as argument
-  if( record.file().empty() )
-  {
-    
-    // create file dialog
-    CustomFileDialog dialog( this );
-    dialog.setFileMode( QFileDialog::ExistingFile );
-    dialog.setDirectory( workingDirectory().c_str() );
-
-    if( dialog.exec() == QDialog::Rejected ) return;
-
-    QStringList files( dialog.selectedFiles() );
-    if( files.empty() ) return;
-    record = FileRecord( File( qPrintable( files.front() ) ) );
-    
-  }
-
-  // create logbook from file
-  static_cast<MainFrame*>(qApp)->busy();
-  setLogbook( record.file() );
-  static_cast<MainFrame*>(qApp)->idle();
-
-  // check if backup is needed
-  checkLogbookBackup();
-  
-  return;
-}
 
 //_______________________________________________
 void SelectionFrame::save( void )
@@ -863,7 +670,7 @@ void SelectionFrame::save( void )
 
   // check logbook filename, go to Save As if no file is given and redirect is true
   if( logbook()->file().empty() ) {
-    saveAs();
+    _saveAs();
     return;
   }
 
@@ -911,344 +718,6 @@ void SelectionFrame::save( void )
   // reset ignore_warning flag
   ignore_warnings_ = false;
 
-  return;
-}
-
-//_______________________________________________
-bool SelectionFrame::saveAs( File default_file )
-{
-  Debug::Throw( "SelectionFrame::saveAs.\n");
-
-  // check current logbook
-  if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no logbook opened. <Save Logbook> canceled." );
-    return false;
-  }
-
-  // check default filename
-  if( default_file.empty() ) default_file = logbook()->file();
-  if( default_file.empty() ) default_file = File( "log.xml" ).addPath( workingDirectory() );
-
-  // create file dialog
-  CustomFileDialog dialog( this );
-  dialog.setFileMode( QFileDialog::AnyFile );
-  dialog.setDirectory( QDir( default_file.path().c_str() ) );
-  dialog.selectFile( default_file.localName().c_str() );
-  QtUtil::centerOnPointer( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return false;
-
-  // retrieve files
-  QStringList files( dialog.selectedFiles() );
-  if( files.empty() ) return false;
-  
-  // retrieve filename
-  File fullname = File( qPrintable( files.back() ) ).expand();
-
-  // update working directory
-  working_directory_ = fullname.path();
-
-  // check if file exist
-  if(
-    fullname.exist() &&
-    !QtUtil::questionDialog( this, "selected file already exist. Overwrite ?" ) )
-  return false;
-
-  // change logbook filename and save
-  logbook()->setFile( fullname );
-  logbook()->setModifiedRecursive( true );
-  save();
-
-  /*
-    force logbook state to unmodified since
-    some children state may not have been reset properly
-  */
-  logbook()->setModifiedRecursive( false );
-
-  // add new file to openPreviousMenu
-  menu().openPreviousMenu().add( logbook()->file() );
-
-  // reset ignore_warning flag
-  ignore_warnings_ = false;
-
-  return true;
-}
-
-
-//_____________________________________________
-void SelectionFrame::saveForced( void )
-{
-  Debug::Throw( "SelectionFrame::saveForced.\n" );
-
-  // retrieve/check SelectionFrame/Logbook
-  if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no Logbook opened. <Save> canceled." );
-    return;
-  }
-
-  // set all logbooks as modified
-  logbook()->setModifiedRecursive( true );
-  save();
-
-}
-
-//_______________________________________________
-void SelectionFrame::saveBackup( void )
-{
-  Debug::Throw( "SelectionFrame::saveBackup.\n");
-
-  // check current logbook
-  if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no logbook opened. <Save Backup> canceled." );
-    return;
-  }
-
-  string filename( logbook()->backupFilename( ) );
-  if( filename.empty() ) {
-    QtUtil::infoDialog( this, "no valid filename. Use <Save As> first." );
-    return;
-  }
-
-  // store last backup time and update
-  TimeStamp last_backup( logbook()->backup() );
-
-  // stores current logbook filename
-  string current_filename( logbook()->file() );
-
-  // save logbook as backup
-  bool saved( saveAs( filename ) );
-
-  // remove the "backup" filename from the openPrevious list
-  // to avoid confusion
-  menu().openPreviousMenu().remove( filename );
-
-  // restore initial filename
-  logbook()->setFile( current_filename );
-
-  if( saved ) {
-
-    logbook()->setBackup( TimeStamp::now() );
-    logbook()->setModified( true );
-    setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
-
-    // Save logbook if needed (to make sure the backup stamp is updated)
-    if( !logbook()->file().empty() ) save();
-  }
-
-}
-
-//_____________________________________________
-void SelectionFrame::revertToSaved( void )
-{
-  Debug::Throw( "SelectionFrame::revertToSaved.\n" );
-
-  // check logbook
-  if( !logbook_ ){
-    QtUtil::infoDialog( this, "No logbook opened. <Revert to save> canceled." );
-    return;
-  }
-
-  // ask for confirmation
-  if(
-    logbook()->modified() &&
-    !QtUtil::questionDialog( this, "discard changes to current logbook ?" )
-  ) return;
-
-  // reinit SelectionFrame
-  static_cast<MainFrame*>(qApp)->busy();
-  string file( logbook()->file() );
-  setLogbook( logbook()->file() );
-  static_cast<MainFrame*>(qApp)->idle();
-
-  checkLogbookBackup();
-  ignore_warnings_ = false;
-  
-}
-
-//_______________________________________________
-void SelectionFrame::showDuplicatedEntries( void )
-{
-  Debug::Throw( "SelectionFrame::showDuplicatedEntries.\n" );
-
-  // keep track of the last visible entry
-  LogEntry *last_visible_entry( 0 );
-
-  // keep track of the current selected entry
-  LogEntryList::Item* item( logEntryList().currentItem<LogEntryList::Item>() );
-  LogEntry *selected_entry( (item) ? item->entry():0 );
-
-  // keep track of found entries
-  int found( 0 );
-
-  // retrieve all logbook entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-  KeySet<LogEntry> turned_off_entries;
-  for( KeySet<LogEntry>::iterator iter=entries.begin(); iter!= entries.end(); iter++ )
-  {
-
-    // retrieve entry
-    LogEntry* entry( *iter );
-
-    // if entry is already hidden, skipp
-    if( !entry->isSelected() ) continue;
-
-    // check duplicated entries
-    int n_duplicates( count_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( (*iter)->creation() ) ) );
-    if( n_duplicates < 2 ) {
-      
-      entry->setFindSelected( false );
-      turned_off_entries.insert( entry );
-    
-    } else {
-    
-      found++;
-      last_visible_entry = entry;
-    
-    }
-
-  }
-
-  if( !found ) {
-    QtUtil::infoDialog(
-      this,
-      "No matching entry found.\n"
-      "Request canceled.", QtUtil::CENTER_ON_PARENT );
-
-    // reset flag for the turned off entries to true
-    for( KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
-    (*it)->setFindSelected( true );
-
-    return;
-  }
-
-  // reinitialize logEntry list
-  _resetKeywordList();
-  _resetList();
-
-  // if EditFrame current entry is visible, select it;
-  if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
-  else if( last_visible_entry ) selectEntry( last_visible_entry );
-
-  return;
-}
-
-//_______________________________________________
-void SelectionFrame::editLogbookInformations( void )
-{
-  Debug::Throw( "SelectionFrame::editLogbookInformations.\n" );
-  
-  if( !logbook_ ) 
-  {
-    QtUtil::infoDialog( this, "No logbook opened." );
-    return;
-  }
-
-  // create dialog
-  LogbookInfoDialog dialog( this, logbook_ );
-  if( dialog.exec() == QDialog::Rejected ) return;
-
-  // keep track of logbook modifications
-  bool modified( false );
-
-  modified |= logbook()->setTitle( dialog.title() );
-  modified |= logbook()->setAuthor( dialog.author() );
-  modified |= logbook()->setComments( dialog.comments() );
-
-  // retrieve logbook directory
-  File directory = dialog.AttachmentDirectory();
-
-  // check if fulldir is not a non directory existing file
-  if( directory.exist() &&  !directory.isDirectory() )
-  {
-
-    ostringstream o;
-    o << "File \"" << directory << "\" is not a directory.";
-    QtUtil::infoDialog( this, o.str() );
-
-  } else modified |= logbook()->setDirectory( directory );
-
-
-  // save Logbook, if needed
-  if( modified ) logbook()->setModified( true );
-  if( !logbook()->file().empty() ) save();
-
-}
-
-//_______________________________________________
-void SelectionFrame::viewLogbookStatistics( void )
-{
-  Debug::Throw( "SelectionFrame::viewLogbookStatistics.\n" );
-  
-  if( !logbook_ ) 
-  {
-    QtUtil::infoDialog( this, "No logbook opened." );
-    return;
-  }
-
-  // create dialog
-  LogbookStatisticsDialog dialog( this, logbook_ );
-  dialog.exec();
-}
-
-//_______________________________________________
-void SelectionFrame::reorganize( void )
-{
-  Debug::Throw( "SelectionFrame::reorganize.\n" );
-
-  if( !logbook_ )
-  {
-    QtUtil::infoDialog( this,"No valid logbook. Canceled.\n");
-    return;
-  }
-
-  // retrieve all entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-
-  // dissasociate from logbook
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  {
-    
-    KeySet<Logbook> logbooks( *iter );
-    for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter != logbooks.end(); log_iter++ )
-    { (*log_iter)->setModified( true ); }
-    
-    (*iter)->clearAssociations<Logbook>();
-    
-  }
-
-  //! put entry set into a list and sort by creation time. 
-  // First entry must the oldest
-  list<LogEntry*> entry_list( entries.begin(), entries.end() );
-  entry_list.sort( LogEntry::FirstCreatedFTor() );
-  
-  // put entries in logbook
-  for( list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); iter++ )
-  {
-    Logbook *logbook( SelectionFrame::logbook()->latestChild() );
-    Key::associate( *iter, logbook );
-    logbook->setModified( true );
-  }
-  
-  // remove empty logbooks
-  logbook()->removeEmptyChildren();
-  
-  // save
-  logbook()->setModified( true );
-  if( !logbook()->file().empty() ) save();
-
-}
-
-//_______________________________________________
-void SelectionFrame::closeEditFrames( void ) const
-{
-  Debug::Throw( "SelectionFrame::CloseEditFrames.\n" );
-
-  // get all EditFrames from SelectionFrame
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  {
-    if( (*iter)->modified() && !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
-    delete *iter;
-  }
   return;
 }
 
@@ -1390,6 +859,688 @@ void SelectionFrame::showAllEntries( void )
   }
 
   statusBar().label().setText( "" );
+  return;
+}
+
+
+//____________________________________________
+void SelectionFrame::enterEvent( QEvent *event )
+{
+  Debug::Throw( "SelectionFrame::enterEvent.\n" );
+
+  // base class enterEvent
+  QWidget::enterEvent( event );
+  checkLogbookModified();
+  
+  return;
+}
+
+//____________________________________
+void SelectionFrame::closeEvent( QCloseEvent *event )
+{
+  Debug::Throw( "SelectionFrame::closeEvent.\n" );
+  event->accept();    
+  static_cast<MainFrame*>(qApp)->exit();
+}
+
+//_______________________________________________
+void SelectionFrame::_installActions( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_installActions.\n" );
+  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
+
+  uniconify_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::HOME, path_list ) ), "&Main window", this );
+  uniconify_action_->setToolTip( "Raise application main window" );
+  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
+  
+  new_logbook_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "&New", this );
+  new_logbook_action_->setToolTip( "Create a new logbook" );
+  new_logbook_action_->setShortcut( CTRL+Key_S );
+  connect( new_logbook_action_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
+
+  open_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::OPEN, path_list ) ), "&Open", this );
+  open_action_->setToolTip( "Open an existing logbook" );
+  open_action_->setShortcut( CTRL+Key_O );
+  connect( open_action_, SIGNAL( triggered() ), SLOT( open() ) );
+
+  synchronize_action_ = new QAction( "&Synchronize", this );
+  synchronize_action_->setToolTip( "Synchronize current logbook with remote" );
+  connect( synchronize_action_, SIGNAL( triggered() ), SLOT( _synchronize() ) );
+
+  reorganize_action_ = new QAction( "&Reorganize", this );
+  reorganize_action_->setToolTip( "Reoganize logbook entries in files" );
+  connect( reorganize_action_, SIGNAL( triggered() ), SLOT( _reorganize() ) );
+
+  save_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "&Save", this );
+  save_action_->setToolTip( "Save all edited entries" );
+  connect( save_action_, SIGNAL( triggered() ), SLOT( save() ) );
+
+  save_forced_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "&Save (forced)", this );
+  save_forced_action_->setToolTip( "Save all entries" );
+  connect( save_forced_action_, SIGNAL( triggered() ), SLOT( _saveForced() ) );
+
+  save_as_action_ = new QAction( "Save &As", this );
+  save_as_action_->setToolTip( "Save logbook with a different name" );
+  connect( save_as_action_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
+
+  save_backup_action_ = new QAction( "Save &Backup", this );
+  save_backup_action_->setToolTip( "Save logbook backup" );
+  connect( save_backup_action_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
+
+  revert_to_save_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::RELOAD, path_list ) ), "&Revert to Saved", this );
+  revert_to_save_action_->setToolTip( "Restore saved logbook" );
+  connect( revert_to_save_action_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
+
+  view_html_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "&Html", this );
+  view_html_action_->setToolTip( "Convert logbook to html" );
+  connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
+
+  logbook_statistics_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Logbook statistics", this );
+  logbook_statistics_action_->setToolTip( "View logbook statistics" );
+  connect( logbook_statistics_action_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
+  
+  logbook_informations_action_ = new QAction( "Logbook informations", this );
+  logbook_informations_action_->setToolTip( "Edit logbook informations" );
+  connect( logbook_informations_action_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
+
+  show_duplicates_action_ = new QAction( "Show duplicated entries", this );
+  show_duplicates_action_->setToolTip( "Show duplicated entries in logbook" );
+  connect( show_duplicates_action_, SIGNAL( triggered() ), SLOT( _showDuplicatedEntries() ) );
+
+}
+
+//_______________________________________________
+void SelectionFrame::_resetList( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_resetList.\n" );
+
+  // clear list of entries
+  logEntryList().clear();
+  
+  if( !logbook_ ) return;
+  KeySet<LogEntry> entries( logbook()->entries() );
+  for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
+  { if( (*it)->isSelected() ) logEntryList().add( *it ); }
+  
+  logEntryList().sort();
+  logEntryList().resizeColumns();
+  
+}
+
+//_______________________________________________
+void SelectionFrame::_resetKeywordList( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
+      
+  // clear list of entries
+  // keywordList().clear();
+  
+  if( !logbook_ ) return;
+    
+  // retrieve current list of keywords
+  set<string> old_keywords = keywordList().keywords();
+  
+  // retrieve new list of keywords (from logbook)
+  set<string> new_keywords;
+  KeySet<LogEntry> entries( logbook()->entries() );
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )  
+  { if( (*iter)->isFindSelected() ) new_keywords.insert( (*iter)->keyword() ); }
+  
+  // reset keyword list to new set
+  keywordList().reset( new_keywords );
+  
+  // sort list
+  keywordList().sort();
+
+}
+
+//_______________________________________________
+void SelectionFrame::_loadColors( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_loadColors.\n" );
+  
+  if( !logbook_ ) return;
+  
+  //! retrieve all entries
+  KeySet<LogEntry> entries( logbook()->entries() );
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  { color_menu_->add( (*iter)->color() ); }
+
+}
+
+//_______________________________________________
+void SelectionFrame::_newLogbook( void )
+{
+  Debug::Throw( "SelectionFrame::_newLogbook.\n" );
+
+  // check current logbook
+  if( logbook_ && logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+  // new logbook
+  NewLogbookDialog dialog( this );
+  dialog.setTitle( Logbook::LOGBOOK_NO_TITLE );
+  dialog.setAuthor( XmlOptions::get().get<string>( "USER" ) );
+
+  // filename and directory
+  File file = File( "log.xml" ).addPath( workingDirectory() );
+  dialog.setFile( file );
+  dialog.setAttachmentDirectory( workingDirectory() );
+
+  // map dialog
+  Debug::Throw( "SelectionFrame::newLogbook - dialog created.\n" );
+  QtUtil::centerOnParent( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return;
+
+  Debug::Throw() << "SelectionFrame::new - file: " << dialog.file() << endl;
+  
+  // create a new logbook, with no file
+  setLogbook( dialog.file() );
+  Exception::checkPointer( logbook_, DESCRIPTION( "could not create Logbook") );
+
+  logbook()->setTitle( dialog.title() );
+  logbook()->setAuthor( dialog.author() );
+  logbook()->setComments( dialog.comments() );
+
+  // attachment directory
+  File directory( dialog.attachmentDirectory() );
+
+  // check if fulldir is not a non directory existing file
+  if( directory.exist() && !directory.isDirectory() )
+  {
+
+    ostringstream o;
+    o << "File \"" << directory << "\" is not a directory.";
+    QtUtil::infoDialog( this, o.str() );
+
+  } else logbook()->setDirectory( directory );
+
+  // add new file to openPreviousMenu
+  if( !logbook()->file().empty() )
+  { menu().openPreviousMenu().add( logbook()->file() ); }
+
+}
+
+//_______________________________________________
+void SelectionFrame::open( FileRecord record )
+{
+  
+  Debug::Throw( "SelectionFrame::open.\n" );
+
+  // check if current logbook needs save
+  if( logbook_ && logbook()->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+  // open file from dialog if not set as argument
+  if( record.file().empty() )
+  {
+    
+    // create file dialog
+    CustomFileDialog dialog( this );
+    dialog.setFileMode( QFileDialog::ExistingFile );
+    dialog.setDirectory( workingDirectory().c_str() );
+
+    if( dialog.exec() == QDialog::Rejected ) return;
+
+    QStringList files( dialog.selectedFiles() );
+    if( files.empty() ) return;
+    record = FileRecord( File( qPrintable( files.front() ) ) );
+    
+  }
+
+  // create logbook from file
+  static_cast<MainFrame*>(qApp)->busy();
+  setLogbook( record.file() );
+  static_cast<MainFrame*>(qApp)->idle();
+
+  // check if backup is needed
+  checkLogbookBackup();
+  
+  return;
+}
+
+//_______________________________________________
+bool SelectionFrame::_saveAs( File default_file )
+{
+  Debug::Throw( "SelectionFrame::_saveAs.\n");
+
+  // check current logbook
+  if( !logbook_ ) {
+    QtUtil::infoDialog( this, "no logbook opened. <Save Logbook> canceled." );
+    return false;
+  }
+
+  // check default filename
+  if( default_file.empty() ) default_file = logbook()->file();
+  if( default_file.empty() ) default_file = File( "log.xml" ).addPath( workingDirectory() );
+
+  // create file dialog
+  CustomFileDialog dialog( this );
+  dialog.setFileMode( QFileDialog::AnyFile );
+  dialog.setDirectory( QDir( default_file.path().c_str() ) );
+  dialog.selectFile( default_file.localName().c_str() );
+  QtUtil::centerOnPointer( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return false;
+
+  // retrieve files
+  QStringList files( dialog.selectedFiles() );
+  if( files.empty() ) return false;
+  
+  // retrieve filename
+  File fullname = File( qPrintable( files.back() ) ).expand();
+
+  // update working directory
+  working_directory_ = fullname.path();
+
+  // check if file exist
+  if(
+    fullname.exist() &&
+    !QtUtil::questionDialog( this, "selected file already exist. Overwrite ?" ) )
+  return false;
+
+  // change logbook filename and save
+  logbook()->setFile( fullname );
+  logbook()->setModifiedRecursive( true );
+  save();
+
+  /*
+    force logbook state to unmodified since
+    some children state may not have been reset properly
+  */
+  logbook()->setModifiedRecursive( false );
+
+  // add new file to openPreviousMenu
+  menu().openPreviousMenu().add( logbook()->file() );
+
+  // reset ignore_warning flag
+  ignore_warnings_ = false;
+
+  return true;
+}
+
+
+//_____________________________________________
+void SelectionFrame::_saveForced( void )
+{
+  Debug::Throw( "SelectionFrame::_saveForced.\n" );
+
+  // retrieve/check SelectionFrame/Logbook
+  if( !logbook_ ) {
+    QtUtil::infoDialog( this, "no Logbook opened. <Save> canceled." );
+    return;
+  }
+
+  // set all logbooks as modified
+  logbook()->setModifiedRecursive( true );
+  save();
+
+}
+
+//_______________________________________________
+void SelectionFrame::_saveBackup( void )
+{
+  Debug::Throw( "SelectionFrame::_saveBackup.\n");
+
+  // check current logbook
+  if( !logbook_ ) {
+    QtUtil::infoDialog( this, "no logbook opened. <Save Backup> canceled." );
+    return;
+  }
+
+  string filename( logbook()->backupFilename( ) );
+  if( filename.empty() ) {
+    QtUtil::infoDialog( this, "no valid filename. Use <Save As> first." );
+    return;
+  }
+
+  // store last backup time and update
+  TimeStamp last_backup( logbook()->backup() );
+
+  // stores current logbook filename
+  string current_filename( logbook()->file() );
+
+  // save logbook as backup
+  bool saved( _saveAs( filename ) );
+
+  // remove the "backup" filename from the openPrevious list
+  // to avoid confusion
+  menu().openPreviousMenu().remove( filename );
+
+  // restore initial filename
+  logbook()->setFile( current_filename );
+
+  if( saved ) {
+
+    logbook()->setBackup( TimeStamp::now() );
+    logbook()->setModified( true );
+    setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+
+    // Save logbook if needed (to make sure the backup stamp is updated)
+    if( !logbook()->file().empty() ) save();
+  }
+
+}
+
+//_____________________________________________
+void SelectionFrame::_revertToSaved( void )
+{
+  Debug::Throw( "SelectionFrame::_revertToSaved.\n" );
+
+  // check logbook
+  if( !logbook_ ){
+    QtUtil::infoDialog( this, "No logbook opened. <Revert to save> canceled." );
+    return;
+  }
+
+  // ask for confirmation
+  if(
+    logbook()->modified() &&
+    !QtUtil::questionDialog( this, "discard changes to current logbook ?" )
+  ) return;
+
+  // reinit SelectionFrame
+  static_cast<MainFrame*>(qApp)->busy();
+  string file( logbook()->file() );
+  setLogbook( logbook()->file() );
+  static_cast<MainFrame*>(qApp)->idle();
+
+  checkLogbookBackup();
+  ignore_warnings_ = false;
+  
+}
+
+//_______________________________________________
+void SelectionFrame::_synchronize( void )
+{
+  Debug::Throw( "SelectionFrame::_synchronize.\n" );
+
+  // check current logbook is valid
+  if( !logbook_ ) {
+    QtUtil::infoDialog( this, "No logbook opened. <Merge> canceled." );
+    return;
+  }
+
+  // save EditFrames
+  KeySet<EditFrame> frames( this );
+  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  if( !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+
+  // save current logbook
+  if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+  // create file dialog
+  CustomFileDialog dialog( this );
+  dialog.setFileMode( QFileDialog::ExistingFile );
+
+  if( dialog.exec() != QDialog::Accepted ) return;
+
+  QStringList files( dialog.selectedFiles() );
+  if( files.empty() ) return;
+  
+  // set busy flag
+  static_cast<MainFrame*>(qApp)->busy();
+  statusBar().label().setText( "reading remote logbook ... " );
+  
+  // opens file in a local logbook
+  Logbook logbook;
+  connect( &logbook, SIGNAL( messageAvailable() ), SIGNAL( messageAvailable() ) );
+  logbook.setFile( File( qPrintable( files.back() ) ) );
+  
+  // check if logbook is valid
+  XmlError::List errors( logbook.xmlErrors() );
+  if( errors.size() ) 
+  {
+
+    ostringstream what;
+    if( errors.size() > 1 ) what << "Errors occured while parsing files." << endl;
+    else what << "An error occured while parsing files." << endl;
+    what << errors;
+    QtUtil::infoDialog( 0, what.str().c_str() );
+
+    static_cast<MainFrame*>(qApp)->idle();
+    return;
+
+  }
+
+  // synchronize local with remote
+  // retrieve map of duplicated entries
+  std::map<LogEntry*,LogEntry*> duplicates( SelectionFrame::logbook()->synchronize( logbook ) );
+  
+  // update possible EditFrames when duplicated entries are found
+  // delete the local duplicated entries
+  for( std::map<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); iter++ )
+  {
+    
+    // display the new entry in all matching edit frames
+    KeySet<EditFrame> frames( iter->first );
+    for( KeySet<EditFrame>::iterator frame_iter = frames.begin(); frame_iter != frames.end(); frame_iter++ )
+    { (*frame_iter)->displayEntry( iter->first ); }
+
+    delete iter->first;
+
+  }
+
+  // synchronize remove with local
+  logbook.synchronize( *SelectionFrame::logbook() );
+
+  // reinitialize lists
+  _resetKeywordList();
+  _resetList();
+  resetAttachmentFrame();
+
+  // retrieve last modified entry
+  KeySet<LogEntry> entries( SelectionFrame::logbook()->entries() );
+  KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+  selectEntry( *iter );
+  logEntryList().setFocus();
+
+  // save current logbook if needed
+  if( !SelectionFrame::logbook()->file().empty() )
+  {
+    statusBar().label().setText( "saving local logbook ... " );
+    save();
+  }
+
+  // save remote logbook
+  statusBar().label().setText( "saving remote logbook ... " );
+  logbook.write();
+
+  // idle
+  static_cast<MainFrame*>(qApp)->idle();
+  statusBar().label().setText( "" );
+
+  return;
+
+}
+
+//_______________________________________________
+void SelectionFrame::_reorganize( void )
+{
+  Debug::Throw( "SelectionFrame::_reorganize.\n" );
+
+  if( !logbook_ )
+  {
+    QtUtil::infoDialog( this,"No valid logbook. Canceled.\n");
+    return;
+  }
+
+  // retrieve all entries
+  KeySet<LogEntry> entries( logbook()->entries() );
+
+  // dissasociate from logbook
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  {
+    
+    KeySet<Logbook> logbooks( *iter );
+    for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter != logbooks.end(); log_iter++ )
+    { (*log_iter)->setModified( true ); }
+    
+    (*iter)->clearAssociations<Logbook>();
+    
+  }
+
+  //! put entry set into a list and sort by creation time. 
+  // First entry must the oldest
+  list<LogEntry*> entry_list( entries.begin(), entries.end() );
+  entry_list.sort( LogEntry::FirstCreatedFTor() );
+  
+  // put entries in logbook
+  for( list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); iter++ )
+  {
+    Logbook *logbook( SelectionFrame::logbook()->latestChild() );
+    Key::associate( *iter, logbook );
+    logbook->setModified( true );
+  }
+  
+  // remove empty logbooks
+  logbook()->removeEmptyChildren();
+  
+  // save
+  logbook()->setModified( true );
+  if( !logbook()->file().empty() ) save();
+
+}
+
+//_______________________________________________
+void SelectionFrame::_showDuplicatedEntries( void )
+{
+  Debug::Throw( "SelectionFrame::_showDuplicatedEntries.\n" );
+
+  // keep track of the last visible entry
+  LogEntry *last_visible_entry( 0 );
+
+  // keep track of the current selected entry
+  LogEntryList::Item* item( logEntryList().currentItem<LogEntryList::Item>() );
+  LogEntry *selected_entry( (item) ? item->entry():0 );
+
+  // keep track of found entries
+  int found( 0 );
+
+  // retrieve all logbook entries
+  KeySet<LogEntry> entries( logbook()->entries() );
+  KeySet<LogEntry> turned_off_entries;
+  for( KeySet<LogEntry>::iterator iter=entries.begin(); iter!= entries.end(); iter++ )
+  {
+
+    // retrieve entry
+    LogEntry* entry( *iter );
+
+    // if entry is already hidden, skipp
+    if( !entry->isSelected() ) continue;
+
+    // check duplicated entries
+    int n_duplicates( count_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( (*iter)->creation() ) ) );
+    if( n_duplicates < 2 ) {
+      
+      entry->setFindSelected( false );
+      turned_off_entries.insert( entry );
+    
+    } else {
+    
+      found++;
+      last_visible_entry = entry;
+    
+    }
+
+  }
+
+  if( !found ) {
+    QtUtil::infoDialog(
+      this,
+      "No matching entry found.\n"
+      "Request canceled.", QtUtil::CENTER_ON_PARENT );
+
+    // reset flag for the turned off entries to true
+    for( KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
+    (*it)->setFindSelected( true );
+
+    return;
+  }
+
+  // reinitialize logEntry list
+  _resetKeywordList();
+  _resetList();
+
+  // if EditFrame current entry is visible, select it;
+  if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
+  else if( last_visible_entry ) selectEntry( last_visible_entry );
+
+  return;
+}
+
+//_______________________________________________
+void SelectionFrame::_viewLogbookStatistics( void )
+{
+  Debug::Throw( "SelectionFrame::_viewLogbookStatistics.\n" );
+  
+  if( !logbook_ ) 
+  {
+    QtUtil::infoDialog( this, "No logbook opened." );
+    return;
+  }
+
+  // create dialog
+  LogbookStatisticsDialog dialog( this, logbook_ );
+  dialog.exec();
+}
+
+//_______________________________________________
+void SelectionFrame::_editLogbookInformations( void )
+{
+  Debug::Throw( "SelectionFrame::_editLogbookInformations.\n" );
+  
+  if( !logbook_ ) 
+  {
+    QtUtil::infoDialog( this, "No logbook opened." );
+    return;
+  }
+
+  // create dialog
+  LogbookInfoDialog dialog( this, logbook_ );
+  if( dialog.exec() == QDialog::Rejected ) return;
+
+  // keep track of logbook modifications
+  bool modified( false );
+
+  modified |= logbook()->setTitle( dialog.title() );
+  modified |= logbook()->setAuthor( dialog.author() );
+  modified |= logbook()->setComments( dialog.comments() );
+
+  // retrieve logbook directory
+  File directory = dialog.AttachmentDirectory();
+
+  // check if fulldir is not a non directory existing file
+  if( directory.exist() &&  !directory.isDirectory() )
+  {
+
+    ostringstream o;
+    o << "File \"" << directory << "\" is not a directory.";
+    QtUtil::infoDialog( this, o.str() );
+
+  } else modified |= logbook()->setDirectory( directory );
+
+
+  // save Logbook, if needed
+  if( modified ) logbook()->setModified( true );
+  if( !logbook()->file().empty() ) save();
+
+}
+
+//_______________________________________________
+void SelectionFrame::_closeEditFrames( void ) const
+{
+  Debug::Throw( "SelectionFrame::_closeEditFrames.\n" );
+
+  // get all EditFrames from SelectionFrame
+  KeySet<EditFrame> frames( this );
+  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  {
+    if( (*iter)->modified() && !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+    delete *iter;
+  }
   return;
 }
 
@@ -2057,80 +2208,5 @@ void SelectionFrame::_autoSave( void )
   
   } else
   statusBar().label().setText( "no logbook filename. <Autosave> skipped" );
-
-}
-
-
-//____________________________________________
-void SelectionFrame::enterEvent( QEvent *event )
-{
-  Debug::Throw( "SelectionFrame::enterEvent.\n" );
-
-  // base class enterEvent
-  QWidget::enterEvent( event );
-  checkLogbookModified();
-  
-  return;
-}
-
-//_______________________________________________
-void SelectionFrame::_resetList( void )
-{
-  
-  Debug::Throw( "SelectionFrame::_resetList.\n" );
-      
-  // clear list of entries
-  logEntryList().clear();
-  
-  if( !logbook_ ) return;
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
-  { if( (*it)->isSelected() ) logEntryList().add( *it ); }
-  
-  logEntryList().sort();
-  logEntryList().resizeColumns();
-  
-}
-
-//_______________________________________________
-void SelectionFrame::_resetKeywordList( void )
-{
-  
-  Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
-      
-  // clear list of entries
-  // keywordList().clear();
-  
-  if( !logbook_ ) return;
-    
-  // retrieve current list of keywords
-  set<string> old_keywords = keywordList().keywords();
-  
-  // retrieve new list of keywords (from logbook)
-  set<string> new_keywords;
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )  
-  { if( (*iter)->isFindSelected() ) new_keywords.insert( (*iter)->keyword() ); }
-  
-  // reset keyword list to new set
-  keywordList().reset( new_keywords );
-  
-  // sort list
-  keywordList().sort();
-
-}
-
-//_______________________________________________
-void SelectionFrame::_loadColors( void )
-{
-  
-  Debug::Throw( "SelectionFrame::_loadColors.\n" );
-  
-  if( !logbook_ ) return;
-  
-  //! retrieve all entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  { color_menu_->add( (*iter)->color() ); }
 
 }
