@@ -35,12 +35,14 @@
 #include "AttachmentFrame.h"
 #include "Config.h"
 #include "ConfigDialog.h"
+#include "CustomPixmap.h"
 #include "DebugMenu.h"
 #include "EditFrame.h"
 #include "Exception.h"
 #include "File.h"
 #include "HelpManager.h"
 #include "HelpText.h"
+#include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
 #include "LogEntryList.h"
@@ -65,10 +67,15 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 {
   
   Debug::Throw( "Menu::Menu.\n" );
+  
+  // path list for menu
+  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
-  // generic menu
+  // generic menu/action
   QMenu *menu;
-
+  QAction *action;
+  
   // file menu
   menu = addMenu( "&File" );
   menu->addAction( selection_frame->newLogbookAction() );
@@ -78,6 +85,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   open_previous_menu_ = new OpenPreviousMenu( this );
   open_previous_menu_->setTitle( "Open pre&vious" );
   open_previous_menu_->setCheck( true );
+  open_previous_menu_->updateConfiguration();
   connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selection_frame, SLOT( open( FileRecord ) ) );  
   menu->addMenu( open_previous_menu_ );
 
@@ -85,15 +93,21 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu->addAction( selection_frame->reorganizeAction() );
 
   menu->addSeparator();
-  menu->addAction( "&Save", this, SIGNAL( save() ), CTRL+Key_S );
+  action = menu->addAction( "&Save", this, SIGNAL( save() ), CTRL+Key_S );
+  action->setIcon( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ) );
+  
   menu->addAction( selection_frame->saveAsAction() );
   menu->addAction( selection_frame->saveBackupAction() );
   menu->addAction( selection_frame->revertToSaveAction() );
   menu->addSeparator();
-  menu->addAction( "&View HTML", this, SIGNAL( viewHtml() ), 0 );
+  
+  action = menu->addAction( "&View HTML", this, SIGNAL( viewHtml() ) );
+  action->setIcon( IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ) );
   menu->addSeparator();
+  
   menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W );
-  menu->addAction( "E&xit", qApp, SLOT( exit() ), CTRL+Key_Q );
+  action = menu->addAction( "E&xit", qApp, SLOT( exit() ), CTRL+Key_Q );
+  action->setIcon( IconEngine::get( CustomPixmap().find( ICONS::EXIT, path_list ) ) );
 
   // preferences menu
   menu = addMenu( "&Preferences" );
@@ -156,10 +170,10 @@ void Menu::_updateEditorMenu( void )
       menu->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
     }
     menu->addSeparator();
-    menu->addAction( "&Close editors", &static_cast<MainFrame*>(qApp)->selectionFrame(), SLOT( closeEditFrames() ) );
+    menu->addAction( selection_frame->closeFramesAction() );
   }
   
-  editor_menu_->addAction( "&Attachments", attachment_frame, SLOT( uniconify() ) );
+  editor_menu_->addAction( attachment_frame->uniconifyAction() );
   editor_menu_->addAction( selection_frame->logbookStatisticsAction() );
   editor_menu_->addAction( selection_frame->logbookInformationsAction() );
   

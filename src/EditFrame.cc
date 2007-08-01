@@ -248,10 +248,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, toolbar );
 
   // main_window button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HOME, path_list ) ), "Raise the main window", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), &static_cast<MainFrame*>(qApp)->selectionFrame(), SLOT( uniconify() ) );
-  button->setText("Home");
-  toolbar->addWidget( button );
+  toolbar->addAction( static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
 
   // previous_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::PREV, path_list ) ), "Display the previous entry", &statusbar_->label() );

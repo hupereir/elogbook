@@ -69,6 +69,10 @@ class AttachmentFrame: public QWidget, public Counter
     return *list_; 
   }
     
+  //! uniconify window
+  QAction* uniconifyAction( void )
+  { return uniconify_action_; }
+
   public slots:
   
   //! update configuration
@@ -77,8 +81,10 @@ class AttachmentFrame: public QWidget, public Counter
   //! save configuration
   void saveConfiguration( void );
   
+  protected slots:
+  
   //! uniconify window
-  void uniconify( void );
+  void _uniconify( void );
 
   protected:
   
@@ -95,6 +101,9 @@ class AttachmentFrame: public QWidget, public Counter
   
   //! associated attachment list
   AttachmentList* list_;
+
+  //! uniconify action
+  QAction* uniconify_action_;
 
 };
 

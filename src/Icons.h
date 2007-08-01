@@ -74,8 +74,14 @@ namespace ICONS
   //! logbook/entry save icon
   static const std::string SAVE="filesave.png";
 
+  //! logbook/entry save icon
+  static const std::string SAVE_AS="filesave.png";
+
   //! reload icon
   static const std::string RELOAD = "reload.png";
+
+  //! exit
+  static const std::string EXIT =  "exit.png";
 
   //! entry spellCheck icon
   static const std::string SPELLCHECK="fonts.png";

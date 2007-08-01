@@ -897,7 +897,7 @@ void SelectionFrame::_installActions( void )
   
   new_logbook_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "&New", this );
   new_logbook_action_->setToolTip( "Create a new logbook" );
-  new_logbook_action_->setShortcut( CTRL+Key_S );
+  new_logbook_action_->setShortcut( CTRL+Key_N );
   connect( new_logbook_action_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
   open_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::OPEN, path_list ) ), "&Open", this );
@@ -921,7 +921,7 @@ void SelectionFrame::_installActions( void )
   save_forced_action_->setToolTip( "Save all entries" );
   connect( save_forced_action_, SIGNAL( triggered() ), SLOT( _saveForced() ) );
 
-  save_as_action_ = new QAction( "Save &As", this );
+  save_as_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE_AS, path_list ) ), "Save &As", this );
   save_as_action_->setToolTip( "Save logbook with a different name" );
   connect( save_as_action_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
 
@@ -941,9 +941,13 @@ void SelectionFrame::_installActions( void )
   logbook_statistics_action_->setToolTip( "View logbook statistics" );
   connect( logbook_statistics_action_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
   
-  logbook_informations_action_ = new QAction( "Logbook informations", this );
+  logbook_informations_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Logbook informations", this );
   logbook_informations_action_->setToolTip( "Edit logbook informations" );
   connect( logbook_informations_action_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
+
+  close_frames_action_ = new QAction( "&Close editors", this );
+  close_frames_action_->setToolTip( "Close all entry editors" );
+  connect( close_frames_action_, SIGNAL( triggered() ), SLOT( _closeEditFrames() ) );
 
   show_duplicates_action_ = new QAction( "Show duplicated entries", this );
   show_duplicates_action_->setToolTip( "Show duplicated entries in logbook" );

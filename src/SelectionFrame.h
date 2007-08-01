@@ -213,6 +213,10 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   QAction* logbookStatisticsAction( void )
   { return logbook_statistics_action_; }
 
+  //! close editframes
+  QAction* closeFramesAction( void )
+  { return close_frames_action_; }
+  
   //! show duplicates
   QAction* showDuplicatesAction( void )
   { return show_duplicates_action_; }
@@ -273,7 +277,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _uniconify( void )
   { 
   
-    Debug::Throw( "SelectionFrame::uniconify.\n" );
+    Debug::Throw( "SelectionFrame::_uniconify.\n" );
     QtUtil::uniconify( this ); 
     
   }
@@ -444,6 +448,9 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! logbook information
   QAction* logbook_statistics_action_;
 
+  //! close editframes
+  QAction* close_frames_action_;
+  
   //! show duplicates
   QAction* show_duplicates_action_;
     

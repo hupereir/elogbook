@@ -12,6 +12,7 @@ pixmap_DATA =  \
   filenew.png \
   fileopen.png \
   filesave.png \
+  filesaveas.png \
   fonts.png \
   homeB.png \
   html.png \
@@ -37,6 +38,7 @@ EXTRA_DIST = \
   filenew.png \
   fileopen.png \
   filesave.png \
+  filesaveas.png \
   fonts.png \
   homeB.png \
   html.png \

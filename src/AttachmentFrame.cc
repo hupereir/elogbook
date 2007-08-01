@@ -31,9 +31,13 @@
 
 #include <QShortcut>
 #include <QLayout>
+#include <list>
 
 #include "AttachmentFrame.h"
+#include "CustomPixmap.h"
 #include "EditFrame.h"
+#include "IconEngine.h"
+#include "Icons.h"
 #include "KeywordList.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -42,6 +46,7 @@
 #include "Options.h"
 #include "QtUtil.h"
 #include "SelectionFrame.h"
+#include "XmlOptions.h"
 
 using namespace std;
 using namespace Qt;
@@ -72,6 +77,13 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
   updateConfiguration();
+
+  std::list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
+
+  uniconify_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::ATTACH, path_list ) ), "&Attachments", this );
+  uniconify_action_->setToolTip( "Raise application main window" );
+  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
   
 };
 
@@ -120,9 +132,9 @@ void AttachmentFrame::enterEvent( QEvent *event )
 }
 
 //_______________________________________________
-void AttachmentFrame::uniconify( void )
+void AttachmentFrame::_uniconify( void )
 {
-  Debug::Throw( "AttachmentFrame::uniconify.\n" );
+  Debug::Throw( "AttachmentFrame::_uniconify.\n" );
   show();
   QtUtil::uniconify( window() );
   return;

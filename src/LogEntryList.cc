@@ -404,7 +404,8 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
 
   // check button
   /* so far all actions linked to other than the left or right buttons are left default */
-  if( !( event->button() & (Qt::LeftButton|Qt::RightButton) ) ) return CustomListView::mousePressEvent( event );
+  if( !( event->buttons() & (Qt::LeftButton|Qt::RightButton) ) ) 
+  { return CustomListView::mousePressEvent( event ); }
 
   // retrieve Item at position
   if( !item ) 
@@ -426,7 +427,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     item != edit_item_ ) edit_timer_->start();
   else _resetEdit();
   
-  // set current item is selected
+  // check if current item is selected
   if( !isItemSelected( item ) ) setCurrentItem( item );
   else if( event->button() == Qt::LeftButton )
   {
