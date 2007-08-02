@@ -86,23 +86,23 @@ AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
-  new_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::ATTACH, path_list ) ), "&New", this );
+  new_attachment_action_ = new QAction( IconEngine::get( ICONS::ATTACH, path_list ), "&New", this );
   new_attachment_action_->setToolTip( "Attach a file/URL to the current entry" );
   connect( new_attachment_action_, SIGNAL( triggered() ), SLOT( _newAttachment() ) );
   menu().addAction( new_attachment_action_ );
   menu().addSeparator();
   
-  view_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::OPEN, path_list ) ), "&Open", this );
+  view_attachment_action_ = new QAction( IconEngine::get( ICONS::OPEN, path_list ), "&Open", this );
   view_attachment_action_->setToolTip( "Open selected attachments" );
   connect( view_attachment_action_, SIGNAL( triggered() ), SLOT( _open() ) );
   menu().addAction( view_attachment_action_ );
      
-  edit_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Edit", this );
+  edit_attachment_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit", this );
   edit_attachment_action_->setToolTip( "Edit selected attachments informations" );
   connect( edit_attachment_action_, SIGNAL( triggered() ), SLOT( _edit() ) );
   menu().addAction( edit_attachment_action_ );
 
-  delete_attachment_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "&Delete", this ); 
+  delete_attachment_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete", this ); 
   delete_attachment_action_->setToolTip( "Delete selected attachments" );
   delete_attachment_action_->setShortcut( Qt::Key_Delete );
   connect( delete_attachment_action_, SIGNAL( triggered() ), SLOT( _delete() ) );
