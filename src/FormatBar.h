@@ -88,7 +88,7 @@ class FormatBar: public CustomToolBar
   void setToolTipLabel( QLabel* tooltip_label )
   { 
     for( ButtonMap::iterator iter = buttons_.begin(); iter != buttons_.end(); iter++ )
-    iter->second->SetToolTipLabel( tooltip_label );
+    iter->second->setToolTipLabel( tooltip_label );
   }
           
   //! set target editor
@@ -128,8 +128,14 @@ class FormatBar: public CustomToolBar
   //! color
   void _color( QColor );
   
-  private:
+  //! last selected color
+  void _lastColor( void );
   
+  //! modify ColorButton pixmap to change the current color
+  void _updateColorPixmap( QColor color = QColor() );
+ 
+  private:
+   
   //! target text editor
   CustomTextEdit* editor_;
   

@@ -39,6 +39,7 @@
 #include "Debug.h"
 #include "EditFrame.h"
 #include "File.h"
+#include "IconEngine.h"
 #include "Logbook.h"
 #include "MainFrame.h"
 #include "Menu.h"
@@ -210,6 +211,9 @@ void MainFrame::updateConfiguration( void )
 
   // window icon
   setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
+  
+  // clear IconEngine cache (in case of icon_path_list that changed)
+  IconEngine::clear();
   
   emit configurationChanged();
 }

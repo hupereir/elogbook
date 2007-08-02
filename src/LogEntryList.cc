@@ -40,6 +40,8 @@
 using namespace std;
 using namespace BASE;
 
+#define BASE_EVENT_HANDLERS
+
 //_______________________________________________
 const QString LogEntryList::DRAG = "LogEntryList::Drag";
 const char* LogEntryList::column_titles_[ LogEntryList::n_columns ] = 
@@ -337,6 +339,8 @@ void LogEntryList::_resetEdit( const bool& restore_backup )
     // reset item
     edit_item_ = 0;
   }
+
+  Debug::Throw( "LogEntryList::_resetEdit - done.\n" );
   
 }
 
@@ -379,6 +383,10 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
 {
   
   Debug::Throw( "LogEntryList::mousePressEvent.\n" );
+  
+  #ifdef BASE_EVENT_HANDLERS
+  return CustomListView::mousePressEvent( event );
+  #endif
   
   // retrieve item under cursor
   QTreeWidgetItem* item = itemAt( event->pos());
@@ -442,6 +450,8 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     last_item_ = item;
   }
   
+  Debug::Throw( "LogEntryList::mousePressEvent. Done.\n" );
+
 }
   
 //_____________________________________________________________
@@ -449,6 +459,10 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
 {
   
   Debug::Throw( "LogEntryList::mouseMoveEvent.\n" );
+  
+  #ifdef BASE_EVENT_HANDLERS
+  return CustomListView::mouseMoveEvent( event );
+  #endif
      
   if( !(event->buttons()&Qt::LeftButton) ) return CustomListView::mouseMoveEvent( event );
   
@@ -524,7 +538,11 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
 void LogEntryList::mouseReleaseEvent( QMouseEvent* event )
 {
   Debug::Throw( "LogEntryList::mouseReleaseEvent.\n" );
-   
+  
+  #ifdef BASE_EVENT_HANDLERS
+  return CustomListView::mouseReleaseEvent( event );
+  #endif
+
   // retrieve Item at position
   QTreeWidgetItem* item( itemAt( event->pos() ) );
 

@@ -94,7 +94,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   menu->addSeparator();
   action = menu->addAction( "&Save", this, SIGNAL( save() ), CTRL+Key_S );
-  action->setIcon( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ) );
+  action->setIcon( IconEngine::get( ICONS::SAVE, path_list ) );
   
   menu->addAction( selection_frame->saveAsAction() );
   menu->addAction( selection_frame->saveBackupAction() );
@@ -102,12 +102,12 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu->addSeparator();
   
   action = menu->addAction( "&View HTML", this, SIGNAL( viewHtml() ) );
-  action->setIcon( IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ) );
+  action->setIcon( IconEngine::get( ICONS::HTML, path_list ) );
   menu->addSeparator();
   
   menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W );
   action = menu->addAction( "E&xit", qApp, SLOT( exit() ), CTRL+Key_Q );
-  action->setIcon( IconEngine::get( CustomPixmap().find( ICONS::EXIT, path_list ) ) );
+  action->setIcon( IconEngine::get( ICONS::EXIT, path_list ) );
 
   // preferences menu
   menu = addMenu( "&Preferences" );

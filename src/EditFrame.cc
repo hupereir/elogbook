@@ -138,7 +138,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // lock toolbar is visible only when window is not editable
   lock_ = new CustomToolBar( "Lock", this );
   CustomToolButton *button;
-  button = new CustomToolButton( lock_, IconEngine::get( CustomPixmap().find( ICONS::LOCK, path_list ) ), "Unlock current editor", &statusbar_->label() );
+  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK, path_list ), "Unlock current editor", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
   button->setText("Unlock");  
   lock_->addWidget( button );
@@ -152,21 +152,21 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, toolbar );
     
   // generic tool button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "Create a new entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEW, path_list ), "Create a new entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( newEntry() ) );
   button->setText("New");
   toolbar->addWidget( button );
   read_only_widgets_.push_back( button );
 
   // save_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "Save the current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SAVE, path_list ), "Save the current entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( save() ) );
   button->setText("Save");
   toolbar->addWidget( button );
   read_only_widgets_.push_back( button );
 
   // delete_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "Delete the current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::DELETE, path_list ), "Delete the current entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _deleteEntry() ) );
   button->setText("Delete");
   toolbar->addWidget( button );
@@ -177,7 +177,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
 
   #if WITH_ASPELL
   // spellcheck button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::SPELLCHECK, path_list ) ), "Check spelling of current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SPELLCHECK, path_list ), "Check spelling of current entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _spellCheck() ) );
   read_only_widgets_.push_back( button );
   toolbar->addWidget( button );
@@ -199,13 +199,13 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, toolbar );
 
   // undo button
-  undo_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::UNDO, path_list ) ), "&Undo", this );
+  undo_action_ = new QAction( IconEngine::get( ICONS::UNDO, path_list ), "&Undo", this );
   undo_action_->setToolTip( "Undo last modification" );
   connect( undo_action_, SIGNAL( triggered() ), SLOT( _undo() ) );
   toolbar->addAction( undo_action_ );
   
   // redo button
-  redo_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::REDO, path_list ) ), "&Redo", this );
+  redo_action_ = new QAction( IconEngine::get( ICONS::REDO, path_list ), "&Redo", this );
   redo_action_->setToolTip( "Redo last undone modification" );
   connect( redo_action_, SIGNAL( triggered() ), SLOT( _redo() ) );
   toolbar->addAction( redo_action_ );
@@ -226,19 +226,19 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, toolbar );
 
   // view_html button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "Convert the current entry to HTML", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::HTML, path_list ), "Convert the current entry to HTML", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _viewHtml() ) );
   button->setText("Html");
   toolbar->addWidget( button );
 
   // clone button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::COPY, path_list ) ), "Open a read-only editor for the current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::COPY, path_list ), "Open a read-only editor for the current entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _newWindow() ) );
   button->setText("Clone");
   toolbar->addWidget( button );
 
   // entry_info button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Display the current entry informations", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::INFO, path_list ), "Display the current entry informations", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _entryInfo() ) );
   button->setText("Info");
   toolbar->addWidget( button );
@@ -253,14 +253,14 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbar->addAction( static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
 
   // previous_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::PREV, path_list ) ), "Display the previous entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::PREV, path_list ), "Display the previous entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _previousEntry() ) );
   button->setText("Previous");
   toolbar->addWidget( button );
   previous_entry_ = button;
 
   // next_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( CustomPixmap().find( ICONS::NEXT, path_list ) ), "Display the next entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEXT, path_list ), "Display the next entry", &statusbar_->label() );
   connect( button, SIGNAL( clicked() ), SLOT( _nextEntry() ) );
   button->setText("Next");
   toolbar->addWidget( button );

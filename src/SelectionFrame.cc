@@ -125,17 +125,17 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->addWidget( toolbar );
   
   // keyword actions
-  QAction* new_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "&New keyword", this );
+  QAction* new_keyword_action = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New keyword", this );
   new_keyword_action->setToolTip( "Create a new keyword" );
   connect( new_keyword_action, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, new_keyword_action, &statusBar().label() ) );
   
-  QAction* edit_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Rename keyword", this );
+  QAction* edit_keyword_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Rename keyword", this );
   edit_keyword_action->setToolTip( "Rename selected keyword" );
   connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, edit_keyword_action, &statusBar().label() ) );
   
-  QAction* delete_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "&Delete keyword", this );
+  QAction* delete_keyword_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete keyword", this );
   delete_keyword_action->setToolTip( "Delete selected keyword" );
   connect( delete_keyword_action, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, delete_keyword_action, &statusBar().label() ) );
@@ -162,17 +162,17 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->addWidget( toolbar );
 
   // entry actions
-  QAction* new_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "&New entry", this );
+  QAction* new_entry_action = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New entry", this );
   new_entry_action->setToolTip( "Create a new entry" );
   connect( new_entry_action, SIGNAL( triggered() ), SLOT( _newEntry() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, new_entry_action, &statusBar().label() ) );
 
-  QAction* edit_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Edit entries", this );
+  QAction* edit_entry_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit entries", this );
   edit_entry_action->setToolTip( "Edit selected entries" );
   connect( edit_entry_action, SIGNAL( triggered() ), SLOT( _editEntries() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, edit_entry_action, &statusBar().label() ) );
 
-  QAction* delete_entry_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::DELETE, path_list ) ), "&Delete entries", this );
+  QAction* delete_entry_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete entries", this );
   delete_entry_action->setToolTip( "Delete selected entries" );
   delete_entry_action->setShortcut( Key_Delete );
   connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
@@ -186,14 +186,14 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   color_menu_->setTitle( "&Change entry color" );
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
    
-  QAction* color_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::COLOR, path_list ) ), "&Entry color", this );
+  QAction* color_action = new QAction( IconEngine::get( ICONS::COLOR, path_list ), "&Entry color", this );
   color_action->setToolTip( "Change selected entries color" );
   color_action->setMenu( color_menu_ );
   CustomToolButton* button = new CustomToolButton( toolbar, color_action, &statusBar().label() );
   button->setPopupMode( QToolButton::InstantPopup );
   toolbar->addWidget( button );
 
-  edit_keyword_action = new QAction( IconEngine::get( CustomPixmap().find( ICONS::EDIT, path_list ) ), "&Change keyword", this );
+  edit_keyword_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Change keyword", this );
   edit_keyword_action->setToolTip( "Edit selected entries keyword" );
   connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
     
@@ -890,16 +890,16 @@ void SelectionFrame::_installActions( void )
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
-  uniconify_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::HOME, path_list ) ), "&Main window", this );
+  uniconify_action_ = new QAction( IconEngine::get( ICONS::HOME, path_list ), "&Main window", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
   
-  new_logbook_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::NEW, path_list ) ), "&New", this );
+  new_logbook_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New", this );
   new_logbook_action_->setToolTip( "Create a new logbook" );
   new_logbook_action_->setShortcut( CTRL+Key_N );
   connect( new_logbook_action_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
-  open_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::OPEN, path_list ) ), "&Open", this );
+  open_action_ = new QAction( IconEngine::get( ICONS::OPEN, path_list ), "&Open", this );
   open_action_->setToolTip( "Open an existing logbook" );
   open_action_->setShortcut( CTRL+Key_O );
   connect( open_action_, SIGNAL( triggered() ), SLOT( open() ) );
@@ -912,15 +912,15 @@ void SelectionFrame::_installActions( void )
   reorganize_action_->setToolTip( "Reoganize logbook entries in files" );
   connect( reorganize_action_, SIGNAL( triggered() ), SLOT( _reorganize() ) );
 
-  save_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "&Save", this );
+  save_action_ = new QAction( IconEngine::get( ICONS::SAVE, path_list ), "&Save", this );
   save_action_->setToolTip( "Save all edited entries" );
   connect( save_action_, SIGNAL( triggered() ), SLOT( save() ) );
 
-  save_forced_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE, path_list ) ), "&Save (forced)", this );
+  save_forced_action_ = new QAction( IconEngine::get( ICONS::SAVE, path_list ), "&Save (forced)", this );
   save_forced_action_->setToolTip( "Save all entries" );
   connect( save_forced_action_, SIGNAL( triggered() ), SLOT( _saveForced() ) );
 
-  save_as_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::SAVE_AS, path_list ) ), "Save &As", this );
+  save_as_action_ = new QAction( IconEngine::get( ICONS::SAVE_AS, path_list ), "Save &As", this );
   save_as_action_->setToolTip( "Save logbook with a different name" );
   connect( save_as_action_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
 
@@ -928,19 +928,19 @@ void SelectionFrame::_installActions( void )
   save_backup_action_->setToolTip( "Save logbook backup" );
   connect( save_backup_action_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
 
-  revert_to_save_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::RELOAD, path_list ) ), "&Revert to Saved", this );
+  revert_to_save_action_ = new QAction( IconEngine::get( ICONS::RELOAD, path_list ), "&Revert to Saved", this );
   revert_to_save_action_->setToolTip( "Restore saved logbook" );
   connect( revert_to_save_action_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
-  view_html_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::HTML, path_list ) ), "&Html", this );
+  view_html_action_ = new QAction( IconEngine::get( ICONS::HTML, path_list ), "&Html", this );
   view_html_action_->setToolTip( "Convert logbook to html" );
   connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
 
-  logbook_statistics_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Logbook statistics", this );
+  logbook_statistics_action_ = new QAction( IconEngine::get( ICONS::INFO, path_list ), "Logbook statistics", this );
   logbook_statistics_action_->setToolTip( "View logbook statistics" );
   connect( logbook_statistics_action_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
   
-  logbook_informations_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::INFO, path_list ) ), "Logbook informations", this );
+  logbook_informations_action_ = new QAction( IconEngine::get( ICONS::INFO, path_list ), "Logbook informations", this );
   logbook_informations_action_->setToolTip( "Edit logbook informations" );
   connect( logbook_informations_action_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 

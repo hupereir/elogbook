@@ -81,7 +81,7 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   std::list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
-  uniconify_action_ = new QAction( IconEngine::get( CustomPixmap().find( ICONS::ATTACH, path_list ) ), "&Attachments", this );
+  uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH, path_list ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
   

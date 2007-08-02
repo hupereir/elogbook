@@ -30,6 +30,7 @@
 */
 
 #include <QApplication>
+#include <QPainter>
 #include <QTextBlock>
 #include <QTextEdit>
 #include <QTextFragment>
@@ -69,7 +70,7 @@ FormatBar::FormatBar( QWidget* parent ):
   CustomToolButton *button;
   
   // bold 
-  button = new CustomToolButton( this, IconEngine::get( CustomPixmap().find( BOLD_ICON, path_list ) ), "change current font to bold" );
+  button = new CustomToolButton( this, IconEngine::get( BOLD_ICON, path_list ), "change current font to bold" );
   button->setText("Bold");
   button->setCheckable( true );
   buttons_.insert( make_pair( BOLD, button ) );
@@ -77,7 +78,7 @@ FormatBar::FormatBar( QWidget* parent ):
   addWidget( button );
   
   // underline 
-  button = new CustomToolButton( this, CustomPixmap().find( ITALIC_ICON, path_list ), "change current font to italic" );
+  button = new CustomToolButton( this, IconEngine::get( ITALIC_ICON, path_list ), "change current font to italic" );
   button->setText("Italic");
   button->setCheckable( true );
   buttons_.insert( make_pair( ITALIC, button ) );
@@ -85,7 +86,7 @@ FormatBar::FormatBar( QWidget* parent ):
   addWidget( button );
 
   // underline 
-  button = new CustomToolButton( this, CustomPixmap().find( UNDERLINE_ICON, path_list ), "change current font to underline" );
+  button = new CustomToolButton( this, IconEngine::get( UNDERLINE_ICON, path_list ), "change current font to underline" );
   button->setText("Underline");
   button->setCheckable( true );
   buttons_.insert( make_pair( UNDERLINE, button ) );
@@ -93,7 +94,7 @@ FormatBar::FormatBar( QWidget* parent ):
   addWidget( button );
 
   // underline 
-  button = new CustomToolButton( this, CustomPixmap().find( STRIKE_ICON, path_list ), "change current font to strike" );
+  button = new CustomToolButton( this, IconEngine::get( STRIKE_ICON, path_list ), "change current font to strike" );
   button->setText("Strike");
   button->setCheckable( true );
   buttons_.insert( make_pair( STRIKE, button ) );
@@ -101,16 +102,20 @@ FormatBar::FormatBar( QWidget* parent ):
   addWidget( button );
  
   // color
-  button = new CustomToolButton( this, CustomPixmap().find( ICONS::COLOR, path_list ), "change current font color" );
+  button = new CustomToolButton( this, IconEngine::get( ICONS::COLOR, path_list ), "change current font color" );
   button->setText("Text color");
   buttons_.insert( make_pair( COLOR, button ) );
   addWidget( button );
   
   // color menu
   color_menu_ = new ColorMenu( button );
-  connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _color( QColor ) ) );
   button->setMenu( color_menu_ );
-  button->setPopupMode( QToolButton::InstantPopup );
+  connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _updateColorPixmap( QColor ) ) );
+  connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _color( QColor ) ) );
+  connect( button, SIGNAL( pressed() ), SLOT( _lastColor() ) );
+  _updateColorPixmap();
+  
+  // button->setPopupMode( QToolButton::MenuButtonPopup );
   
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
@@ -306,11 +311,18 @@ void FormatBar::_strike( void )
 //________________________________________
 void FormatBar::_color( QColor color )
 {
-  Debug::Throw( "FormatBar::_strike.\n" );
+  Debug::Throw( "FormatBar::_color.\n" );
   if( !editor_ ) return;
   editor_->setTextColor( color.isValid() ? color:editor_->palette().color( QPalette::Text ) );
 }
 
+//______________________________________
+void FormatBar::_lastColor( void )
+{ 
+  Debug::Throw( "FormatBar::_lastColor.\n" );
+  _color( color_menu_->lastColor() ); 
+}
+  
 //________________________________________
 void FormatBar::_updateState( const QTextCharFormat& format )
 {
@@ -320,4 +332,41 @@ void FormatBar::_updateState( const QTextCharFormat& format )
   buttons_[UNDERLINE]->setChecked( format.fontUnderline() );
   buttons_[STRIKE]->setChecked( format.fontStrikeOut() );
 }
-      
+  
+//________________________________________
+void FormatBar::_updateColorPixmap( QColor color )
+{
+  Debug::Throw( "FormatBar::_updateColorPixmap.\n" );
+  
+  // retrieve button
+  CustomToolButton* button( buttons_[COLOR] );
+  Exception::checkPointer( button, DESCRIPTION( "invalid button" ) );
+  
+  // retrieve color pixmap
+  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
+  
+  CustomPixmap base( CustomPixmap().find( ICONS::COLOR, path_list ) );
+  Exception::check( !base.isNull(), DESCRIPTION( "invalid pixmap" ) );
+  
+  // create new empty pixmap
+  static const double ratio = 1.15;
+  QSize size( base.width(), int( ratio*base.height() ) );
+  CustomPixmap new_pixmap = CustomPixmap().empty( size );
+  QPainter painter( &new_pixmap );
+  painter.drawPixmap( QPoint(0, 0), base, base.rect() );
+  
+  if( color.isValid() )
+  {
+    QLinearGradient gradient(QPointF(0, 0), QPointF( base.width(), int( 0.4*base.height() ) ) );
+    gradient.setColorAt(0, color);
+    gradient.setColorAt(1, color.light(135));
+    
+    painter.setPen( Qt::NoPen );
+    painter.setBrush( gradient );
+    painter.drawRect( QRectF( 0, base.height(), base.width(), (ratio-1)*base.height() ) );
+  }
+  
+  button->setIcon( new_pixmap.scaleHeight( button->iconSize().height() ) );
+  
+}
