@@ -10,4 +10,4 @@ SPELLCHECK_SOURCE_DIR=
 endif
 
 SUBDIRS =  base base-qt base-server $(SPELLCHECK_SOURCE_DIR) src pixmaps
-EXTRA_DIST = INSTALL COPYING autogen.sh icon.png eLogbook.spec.in eLogbook.spec
+EXTRA_DIST = INSTALL COPYING autogen.sh icon.png eLogbook.spec.in eLogbook.spec eLogbook.pro

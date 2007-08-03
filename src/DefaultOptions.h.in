@@ -68,9 +68,9 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "EDIT_FRAME_WIDTH", "600" , "requested EditFrame width [pixels]"  ));
   XmlOptions::get().add( Option( "EDIT_HTML_ATC", "@KONQUEROR@" , "to edit html attachments"  ));
   XmlOptions::get().add( Option( "EDIT_IMAGE_ATC", "@KUICKSHOW@" , "to edit image type attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_PLAIN_TEXT_ATC", "@NEDIT@" , "to edit plain text attachments"  ));
+  XmlOptions::get().add( Option( "EDIT_PLAIN_TEXT_ATC", "@QEDIT@" , "to edit plain text attachments"  ));
   XmlOptions::get().add( Option( "EDIT_POSTSCRIPT_ATC", "@GV@" , "to edit postscript attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_UNKNOWN_ATC", "@NEDIT@" , "to edit unknown type attachments"  ));
+  XmlOptions::get().add( Option( "EDIT_UNKNOWN_ATC", "@QEDIT@" , "to edit unknown type attachments"  ));
   XmlOptions::get().add( Option( "EDIT_URL_ATC", "@KONQUEROR@" , "to edit url attachments"  ));
   XmlOptions::get().add( Option( "ICON_PIXMAP", "@prefix@/share/eLogbook/icon.png" , "application icon"  ));
   XmlOptions::get().add( Option( "SIDE_EDITOR_TOOLBAR", "1" , "if true, editor toolbar is on the left instead of top"  ));

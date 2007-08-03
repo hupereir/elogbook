@@ -7,7 +7,7 @@ CXXFLAGS="-Wall -Wno-non-virtual-dtor"
 dnl *********************************************
 dnl external programs
 dnl *********************************************
-AC_PATH_PROG(NEDIT,     nedit,      nedit) 
+AC_PATH_PROG(QEDIT,     qedit,      qedit) 
 AC_PATH_PROG(KONQUEROR, konqueror,  konqueror) 
 AC_PATH_PROG(KUICKSHOW, kuickshow,  kuickshow) 
 AC_PATH_PROG(GV,        kghostview, kghostview) 
