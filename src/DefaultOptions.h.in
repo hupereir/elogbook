@@ -81,7 +81,6 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "ENTRY_LIST_MASK", "350" , "requested entry list width [pixels]"  ));
   XmlOptions::get().add( Option( "SPLASH_SCREEN", "1" , "1 to show splash screen"  ));
   XmlOptions::get().add( Option( "SHOW_KEYWORD", "0" , "show keyword in editor"  ));
-  XmlOptions::get().add( Option( "WRAP_TEXT", "1", "wrap text in entry edition window" ));
   XmlOptions::get().add( Option( "SHOW_EDITFRAME_MENU", "1", "show menu in EditFrame windows" ));
 
   #ifdef WITH_ASPELL

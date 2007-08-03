@@ -171,7 +171,10 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   addOptionWidget( spinbox );
 
   // listview configuration
-  ListViewConfig *listview_config = new ListViewConfig( &addPage( "List configuration" ), &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList() );
+  ListViewConfig *listview_config = new ListViewConfig( 
+    &addPage( "List configuration" ), 
+    &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList(), 
+    "Main window logbook entries display list" );
 
   // toolbars
   page = &addPage( "Toolbars" );
@@ -297,7 +300,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
 
   // misc
   page = &addPage( "Misc" );
-  tabConfiguration( page );
+  textEditConfiguration( page );
   
   box = new QGroupBox( "Misc", page );
   box->setLayout( new QVBoxLayout() );
@@ -312,10 +315,6 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   box->layout()->addWidget( checkbox = new OptionCheckBox( "Show keyword", box, "SHOW_KEYWORD" ) );
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Show/hide keyword line in editor window" );
-
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Wrap text", box, "WRAP_TEXT" ) ); 
-  addOptionWidget( checkbox ); 
-  checkbox->setToolTip( "Wrap text in entry edition window" ); 
 
   box->layout()->addWidget( checkbox = new OptionCheckBox( "Case sensitive", box, "CASE_SENSITIVE" ) );
   addOptionWidget( checkbox );
