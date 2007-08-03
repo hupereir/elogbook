@@ -119,7 +119,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   // help menu
   menu = addMenu( "&Help" );
-  menu->addAction( "&Reference Manuel", &HelpManager::get(), SLOT( display() ) );
+  menu->addAction( HelpManager::get().displayAction() );
   menu->addSeparator();
   menu->addAction( "About &Qt", qApp, SLOT( aboutQt() ), 0 );
   menu->addAction( "About &eLogbook", qApp, SLOT( about() ), 0 );
@@ -141,6 +141,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   debug_menu->addAction( selection_frame->saveForcedAction() );
   debug_menu->addAction( selection_frame->showDuplicatesAction() );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
+  debug_menu->addAction( HelpManager::get().dumpAction() );
 
 }
 
@@ -157,15 +158,11 @@ void Menu::_updateEditorMenu( void )
   editor_menu_->addAction( selection_frame->uniconifyAction() );
 
   KeySet<EditFrame> frames( selection_frame );
-  bool has_edit_frames = find_if( frames.begin(), frames.end(), EditFrame::IsVisibleFTor() ) != frames.end();
-  if( has_edit_frames )
+  if( !frames.empty() )
   {
     QMenu *menu = editor_menu_->addMenu( "&Editors" );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
-      // hidden EditFrames will be deleted. Do not allow for opening
-      if( (*iter)->isHidden() ) continue;
-      
       string title( (*iter)->windowTitle() );
       menu->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
     }

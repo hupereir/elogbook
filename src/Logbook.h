@@ -390,7 +390,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
   private:
   
   //! generate tagged backup filename
-  static File _childFilename( const File& file, const int& child_number );   
+  File _childFilename( const File& file, const int& child_number ) const;   
   
   //! list of pointers to logbook children
   LogbookList children_; 

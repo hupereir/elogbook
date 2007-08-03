@@ -19,8 +19,6 @@
 *                         
 *                         
 *******************************************************************************/
- 
-
 
 /*!
   \file AskForSaveDialog.cc
@@ -99,6 +97,13 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message,
   {
     button_layout->addWidget( button = new QPushButton( "&No", this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _no() ) );
+  }
+  
+  // no button
+  if( buttons & ALL )
+  {
+    button_layout->addWidget( button = new QPushButton( "Yes to &All", this ) );
+    connect( button, SIGNAL( clicked() ), SLOT( _all() ) );
   }
   
   // cancel button

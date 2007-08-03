@@ -11,8 +11,8 @@ INCLUDES = \
   -I$(qt_includes)/QtGui \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
-  -I$(top_srcdir)/server \
-  -I$(top_srcdir)/spellcheck
+  -I$(top_srcdir)/base-server \
+  -I$(top_srcdir)/base-spellcheck
 else
 INCLUDES = \
   -I$(qt_includes) \
@@ -23,7 +23,7 @@ INCLUDES = \
   -I$(qt_includes)/QtGui \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
-  -I$(top_srcdir)/server
+  -I$(top_srcdir)/base-server
 endif
 
 CXXFLAGS = @CXXFLAGS@
@@ -36,8 +36,8 @@ libraries = \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   -L$(aspell_libraries) -laspell  \
   libeLogbook.a \
-  ../spellcheck/libspellcheck.a \
-  ../server/libserver.a \
+  ../base-spellcheck/libbase-spellcheck.a \
+  ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
 
@@ -46,7 +46,7 @@ else
 libraries =  \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   libeLogbook.a \
-  ../server/libserver.a \
+  ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
 

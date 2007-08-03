@@ -189,7 +189,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   QAction* saveForcedAction( void )
   { return save_forced_action_; }
 
-  //! save logbook with different name
+  //! save logbook with a different name
   QAction* saveAsAction( void )
   { return save_as_action_; }
 
@@ -243,7 +243,8 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   virtual void open( FileRecord file = FileRecord() );
 
   //! save current logbook
-  virtual void save( void );
+  /*! if argument is false, all modified entries will be saved without asking */
+  virtual void save( const bool& confirm_entries = true );
 
   //! select entries using selection criterions
   virtual void selectEntries( QString text, unsigned int mode );
@@ -405,6 +406,9 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! ignore file modified warnings if true
   bool ignore_warnings_;
+  
+  //! ask entries for confirmation before saving
+  bool confirm_entries_;
 
   //!@name actions
   ///@{

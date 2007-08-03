@@ -80,6 +80,9 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   Debug::Throw("EditFrame::EditFrame.\n" );
   setObjectName( "EDITFRAME" );
   
+  // tell frame to delete on exit
+  setAttribute( Qt::WA_DeleteOnClose );
+  
   QWidget* main( new QWidget( this ) ); 
   setCentralWidget( main );
 
@@ -281,6 +284,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
   updateConfiguration();
+  Debug::Throw("EditFrame::EditFrame - done.\n" );
 
 }
 
@@ -320,6 +324,7 @@ void EditFrame::displayEntry( LogEntry *entry )
   setModified( false );
   updateWindowTitle();
 
+  Debug::Throw( "EditFrame::displayEntry - done.\n" );
   return;
 }
 
@@ -380,14 +385,33 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
   
   Debug::Throw( "EditFrame::askForSave.\n" );
   
+  // retrieve other editFrames
+  KeySet<EditFrame> frames( _selectionFrame() );
+  unsigned int count( count_if( frames.begin(), frames.end(), ModifiedFTor() ) );
+  
   // create dialog
   unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
   if( enable_cancel ) buttons |= AskForSaveDialog::CANCEL;
+  if( count > 1 ) buttons |= AskForSaveDialog::ALL; 
   AskForSaveDialog dialog( this, "Entry has been modified. Save ?", buttons );
   
   // exec and check return code
   int state = dialog.exec();
   if( state == AskForSaveDialog::YES ) save( false );
+  else if( state == AskForSaveDialog::ALL ) 
+  {
+    /*
+      save_all: if the logbook has no valid file one save the modified edit frames one by one
+      otherwise one directly save the loogbook, while disabling the confirmation for modified
+      entries
+    */
+    if( _selectionFrame()->logbook()->file().empty() )
+    {
+      for( KeySet<EditFrame>::iterator iter = frames.begin(); iter!= frames.end(); iter++ )
+      { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->save(enable_cancel); }
+    } else _selectionFrame()->save( false );
+  }
+  
   return AskForSaveDialog::ReturnCode(state);
   
 }
@@ -763,9 +787,20 @@ void EditFrame::_spellCheck( void )
 {
 #if WITH_ASPELL
   Debug::Throw( "EditFrame::_spellCheck.\n" );
+  
+  // create dialog
   SPELLCHECK::SpellDialog dialog( text_ );
+  
+  // set dictionary and filter
+  dialog.setFilter( XmlOptions::get().raw("DICTIONARY_FILTER") );
+  dialog.setDictionary( XmlOptions::get().raw("DICTIONARY") );
   dialog.nextWord();
   dialog.exec();
+  
+  // update dictionary and filter from dialog
+  XmlOptions::get().setRaw( "DICTIONARY_FILTER", dialog.interface().filter() );
+  XmlOptions::get().setRaw( "DICTIONARY", dialog.interface().dictionary() );
+  
 #endif
 }
 

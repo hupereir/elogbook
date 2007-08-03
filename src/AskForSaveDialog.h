@@ -57,16 +57,19 @@ class AskForSaveDialog: public QDialog, public Counter
     //! file is not to be saved
     NO = 1<<1,
     
+    //! all files are to be saved
+    ALL = 1<<2,
+    
     //! action is canceled
-    CANCEL = 1<<2 ,
+    CANCEL = 1<<3,
     
     //! all buttons
-    ALL = YES|NO|CANCEL
+    DEFAULT = YES|NO|CANCEL
         
   };
           
   //! constructor
-  AskForSaveDialog( QWidget* parent, const std::string& message, const unsigned int& buttons = ALL );
+  AskForSaveDialog( QWidget* parent, const std::string& message, const unsigned int& buttons = DEFAULT );
   
   private slots:
       
@@ -77,6 +80,10 @@ class AskForSaveDialog: public QDialog, public Counter
   //! discard changes
   void _no( void )
   { done( NO ); }
+  
+  //! save for all modified entries
+  void _all( void )
+  { done( ALL ); }
   
   //! cancel action
   void _cancel( void )

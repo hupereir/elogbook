@@ -137,9 +137,6 @@ class MainFrame: public QApplication, public Counter
   //! application manager state is changed
   void _applicationManagerStateChanged( SERVER::ApplicationManager::State );
   
-  //! actions called when application is about to quit
-  void _aboutToQuit( void );
-          
   private:
   
   //! command line arguments

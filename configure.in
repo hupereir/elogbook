@@ -161,8 +161,8 @@ AC_OUTPUT( Makefile \
   pixmaps/Makefile \
   base/Makefile \
   base-qt/Makefile \
-  server/Makefile \
-  spellcheck/Makefile \
+  base-server/Makefile \
+  base-spellcheck/Makefile \
   src/Makefile \
   src/Config.h \
   src/DefaultOptions.h )

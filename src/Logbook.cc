@@ -768,7 +768,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 }
 
 //_________________________________
-File Logbook::_childFilename( const File& file, const int& child_number )
+File Logbook::_childFilename( const File& file, const int& child_number ) const
 {
   File head( file.truncatedName() );
   string foot( file.extension() );

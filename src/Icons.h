@@ -34,16 +34,20 @@
 
 #include <string>
 
+/*
+  BaseIcons is not necessary here
+  but it is included to avoid conflicts 
+  between icons wrapping names
+*/
+#include "BaseIcons.h"
+
 //! namespace for icon static name wrappers
 namespace ICONS
 {
   
   //! new attachment icon
   static const std::string ATTACH="attach.png";
-  
-  //! entry deletion icon
-  static const std::string DELETE="trashcan_empty.png";
-  
+    
   //! keyword/entry edition icon
   static const std::string EDIT="edit.png";
   
@@ -72,13 +76,7 @@ namespace ICONS
   static const std::string OPEN = "fileopen.png";
     
   //! logbook/entry save icon
-  static const std::string SAVE="filesave.png";
-
-  //! logbook/entry save icon
   static const std::string SAVE_AS="filesaveas.png";
-
-  //! reload icon
-  static const std::string RELOAD = "reload.png";
 
   //! exit
   static const std::string EXIT =  "exit.png";

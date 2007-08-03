@@ -75,7 +75,8 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   autosave_timer_( new QTimer( this ) ),
   logbook_( 0 ),
   working_directory_( Util::workingDirectory() ),
-  ignore_warnings_( false )
+  ignore_warnings_( false ),
+  confirm_entries_( true )
 {
   Debug::Throw( "SelectionFrame::SelectionFrame.\n" );
   setWindowTitle( MainFrame::MAIN_TITLE );
@@ -404,8 +405,7 @@ void SelectionFrame::reset( void )
   // delete all EditFrames
   KeySet<EditFrame> frames( this ); 
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
-  (*iter)->hide();
-  
+  {delete *iter;}
   return;
   
 }
@@ -499,7 +499,7 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   */
   KeySet<EditFrame> frames( entry );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  (*iter)->hide();
+  {delete *iter;}
 
   // set logbooks as modified
   KeySet<Logbook> logbooks( entry );
@@ -526,7 +526,7 @@ bool SelectionFrame::lockEntry( LogEntry* entry ) const
   
   KeySet<EditFrame> frames( entry );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if(  !( (*iter)->isReadOnly() || (*iter)->isHidden() ) )
+  if(  !( (*iter)->isReadOnly() ) )
   {
     if( (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return false;
     (*iter)->setReadOnly( true );
@@ -650,9 +650,9 @@ void SelectionFrame::saveConfiguration( void )
 }
 
 //_______________________________________________
-void SelectionFrame::save( void )
+void SelectionFrame::save( const bool& confirm_entries )
 {
-  Debug::Throw( "SelectionFrame::save.\n");
+  Debug::Throw( "SelectionFrame::save - confirm.\n" );
 
   // check logbook
   if( !logbook_ ) 
@@ -661,12 +661,22 @@ void SelectionFrame::save( void )
     return;
   }
 
+  if( !confirm_entries ) confirm_entries_ = false;
+  
   // check if editable EditFrames needs save
   // cancel if required
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if( !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
-
+  {
+    if( !(*iter)->isReadOnly() && (*iter)->modified() )
+    {
+      if( !confirm_entries_ ) 
+      {
+        (*iter)->save();
+      } else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+    }
+  }
+  
   // check logbook filename, go to Save As if no file is given and redirect is true
   if( logbook()->file().empty() ) {
     _saveAs();
@@ -680,12 +690,14 @@ void SelectionFrame::save( void )
     // check file is not a directory
     if( fullname.isDirectory() ) {
       QtUtil::infoDialog( this, "selected file is a directory. <Save Logbook> canceled." );
+      confirm_entries_ = true;
       return;
     }
 
     // check file is writable
     if( !fullname.isWritable() ) {
       QtUtil::infoDialog( this, "selected file is not writable. <Save Logbook> canceled." );
+      confirm_entries_ = true;
       return;
     }
     
@@ -696,6 +708,7 @@ void SelectionFrame::save( void )
       QtUtil::infoDialog(
         this, "selected path is not vallid. <Save Logbook> canceled."
       );
+      confirm_entries_ = true;
       return;
     }
 
@@ -717,6 +730,8 @@ void SelectionFrame::save( void )
   // reset ignore_warning flag
   ignore_warnings_ = false;
 
+  // reset confirm entries
+  confirm_entries_ = true;
   return;
 }
 
@@ -1269,7 +1284,7 @@ void SelectionFrame::_synchronize( void )
   // save EditFrames
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if( !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+  if( !((*iter)->isReadOnly() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // save current logbook
   if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1541,7 +1556,7 @@ void SelectionFrame::_closeEditFrames( void ) const
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
-    if( (*iter)->modified() && !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( (*iter)->modified() && !(*iter)->isReadOnly() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
     delete *iter;
   }
   return;
@@ -1631,11 +1646,8 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
   for( KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
   {
     
-    // if Editframe is hidden, delete it. Hidden frames are used for delayed deletion
-    if( (*iter)->isHidden() ) delete *iter;
-
     //! check if EditFrame is editable and match editor
-    else if( !((*iter)->isReadOnly() || (*iter)->isHidden() ) && (*iter)->entry() == entry ) 
+    if( !((*iter)->isReadOnly() ) && (*iter)->entry() == entry ) 
     {
       edit_frame = *iter;
       break;
@@ -1651,6 +1663,8 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
     edit_frame->displayEntry( entry );
     edit_frame->show();
   } else edit_frame->uniconify();
+  
+  Debug::Throw( "SelectionFrame::_displayEntry - done.\n" );
 
 }
 
@@ -1724,7 +1738,7 @@ void SelectionFrame::_changeEntryColor( QColor color )
     // update EditFrame color
     KeySet<EditFrame> frames( entry );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    { if( !(*iter)->isHidden() ) (*iter)->displayColor(); }
+    { (*iter)->displayColor(); }
 
     // set logbooks as modified
     KeySet<Logbook> logbooks( entry );
@@ -1936,7 +1950,7 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
 void SelectionFrame::_changeEntryKeyword( string keyword, string new_keyword )
 {
   
-  Debug::Throw(0) << "SelectionFrame::_changeEntryKeyword - keyword: " << keyword << " new:" << new_keyword << endl;
+  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - keyword: " << keyword << " new:" << new_keyword << endl;
   
   // check keywords are different
   if( keyword == new_keyword ) return;
@@ -2207,7 +2221,7 @@ void SelectionFrame::_autoSave( void )
     // retrieve non read only editors; perform save
     KeySet<EditFrame> frames( this );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    if( !( (*iter)->isReadOnly() || (*iter)->isHidden() ) ) (*iter)->save();
+    if( !(*iter)->isReadOnly() ) (*iter)->save();
 
     save();
   

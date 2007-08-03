@@ -55,7 +55,7 @@ class SplashScreen: public QWidget, public Counter
     
   //! destructor
   virtual ~SplashScreen( void )
-  { Debug::Throw( "SplashScreen::~SplashScreen" ); }
+  { Debug::Throw( "SplashScreen::~SplashScreen.\n" ); }
 
   //! realize widget
   void realizeWidget( void );

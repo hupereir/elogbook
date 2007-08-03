@@ -144,15 +144,15 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     
   //! check if current entry has been modified or not
   void setModified( const bool& value );  
-  
-  //! used to count EditFrames that are not hidden
-  class IsVisibleFTor
+    
+  //! used to count modified EditFrames
+  class ModifiedFTor
   {
     public:
     
-    // predicate
-    bool operator() (const EditFrame* frame ) const
-    { return frame && !frame->isHidden(); } 
+    //! predicate
+    bool operator() (const EditFrame* frame )
+    { return frame->modified() && !frame->isReadOnly(); }
     
   };
   

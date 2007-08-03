@@ -38,6 +38,7 @@
 #include "ConfigDialog.h"
 #include "Debug.h"
 #include "EditFrame.h"
+#include "ErrorHandler.h"
 #include "File.h"
 #include "IconEngine.h"
 #include "Logbook.h"
@@ -82,9 +83,6 @@ MainFrame::MainFrame( int argc, char*argv[] ) :
 { 
   Debug::Throw( "MainFrame::MainFrame.\n" ); 
     
-  // about to quit connection
-  connect( this, SIGNAL( aboutToQuit() ), this, SLOT( _aboutToQuit() ) );
-  
 } 
 
 //____________________________________________
@@ -97,6 +95,9 @@ MainFrame::~MainFrame( void )
     delete application_manager_; 
     application_manager_ = 0;
   }
+
+  // error handler
+  ErrorHandler::exit();
 
 } 
 
@@ -213,8 +214,8 @@ void MainFrame::updateConfiguration( void )
   setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
   
   // clear IconEngine cache (in case of icon_path_list that changed)
-  IconEngine::clear();
-  
+  IconEngine::get().clear();
+
   emit configurationChanged();
 }
 
@@ -338,10 +339,3 @@ void MainFrame::_applicationManagerStateChanged( SERVER::ApplicationManager::Sta
   return;
   
 }
-
-//_______________________________________________
-void MainFrame::_aboutToQuit( void )
-{ 
-  Debug::Throw( "MainFrame::_AboutToQuit.\n" );    
-}
-  
