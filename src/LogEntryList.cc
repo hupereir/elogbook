@@ -40,8 +40,6 @@
 using namespace std;
 using namespace BASE;
 
-#define BASE_EVENT_HANDLERS
-
 //_______________________________________________
 const QString LogEntryList::DRAG = "LogEntryList::Drag";
 const char* LogEntryList::column_titles_[ LogEntryList::n_columns ] = 
@@ -370,10 +368,11 @@ void LogEntryList::_activate( QTreeWidgetItem *item, int column )
   } else {
     
     emit entrySelected( dynamic_cast<Item*>(item)->entry() );
-    _resetEdit();
+   _resetEdit();
     
-  }
+ }
   
+  Debug::Throw( "LogEntryList::_activate - done.\n" );
   return;
       
 }
@@ -460,10 +459,6 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
   
   Debug::Throw( "LogEntryList::mouseMoveEvent.\n" );
   
-  #ifdef BASE_EVENT_HANDLERS
-  return CustomListView::mouseMoveEvent( event );
-  #endif
-     
   if( !(event->buttons()&Qt::LeftButton) ) return CustomListView::mouseMoveEvent( event );
   
   // retrieve Item at position
@@ -538,10 +533,6 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
 void LogEntryList::mouseReleaseEvent( QMouseEvent* event )
 {
   Debug::Throw( "LogEntryList::mouseReleaseEvent.\n" );
-  
-  #ifdef BASE_EVENT_HANDLERS
-  return CustomListView::mouseReleaseEvent( event );
-  #endif
 
   // retrieve Item at position
   QTreeWidgetItem* item( itemAt( event->pos() ) );
