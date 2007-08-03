@@ -62,7 +62,7 @@ noinst_HEADERS = \
   Attachment.h \
   AttachmentList.h \
   AttachmentType.h \
-  ConfigDialog.h \
+  ConfigurationDialog.h \
   DeleteAttachmentDialog.h \
   DeleteKeywordDialog.h \
   EditAttachmentDialog.h \
@@ -102,7 +102,7 @@ libeLogbook_a_SOURCES = \
   AttachmentFrame.cc \
   AttachmentList.cc \
   AttachmentType.cc \
-  ConfigDialog.cc \
+  ConfigurationDialog.cc \
   copy_logbook.cc \
   DeleteAttachmentDialog.cc \
   DeleteKeywordDialog.cc \

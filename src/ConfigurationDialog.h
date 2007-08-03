@@ -21,26 +21,26 @@
 *******************************************************************************/
  
 /*!
-  \file ConfigDialog.h
+  \file ConfigurationDialog.h
   \brief configuration dialog
   \author Hugo Pereira
   \version $Revision$
   \date $Date$
 */
 
-#ifndef _ConfigDialog_h_
-#define _ConfigDialog_h_
+#ifndef _ConfigurationDialog_h_
+#define _ConfigurationDialog_h_
 
-#include "ConfigDialogBase.h"
+#include "BaseConfigurationDialog.h"
 
 //! xMaze configuration dialog
-class ConfigDialog: public ConfigDialogBase
+class ConfigurationDialog: public BaseConfigurationDialog
 {
   
   public:
    
   //! creator
-  ConfigDialog( QWidget *parent );
+  ConfigurationDialog( QWidget *parent );
     
 };
 

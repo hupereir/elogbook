@@ -33,8 +33,6 @@
 #include <sstream>
 
 #include "AttachmentFrame.h"
-#include "Config.h"
-#include "ConfigDialog.h"
 #include "CustomPixmap.h"
 #include "DebugMenu.h"
 #include "EditFrame.h"

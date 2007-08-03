@@ -35,7 +35,7 @@
 #include "AttachmentFrame.h"
 #include "AttachmentType.h"
 #include "Config.h"
-#include "ConfigDialog.h"
+#include "ConfigurationDialog.h"
 #include "Debug.h"
 #include "EditFrame.h"
 #include "ErrorHandler.h"
@@ -186,7 +186,7 @@ void MainFrame::configuration( void )
 {
   
   Debug::Throw( "MainFrame::configuration" );
-  ConfigDialog dialog(0);
+  ConfigurationDialog dialog(0);
   connect( &dialog, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
   dialog.exec();
 

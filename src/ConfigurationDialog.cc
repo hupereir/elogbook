@@ -22,7 +22,7 @@
 *******************************************************************************/
  
 /*!
-  \file ConfigDialog.cc
+  \file ConfigurationDialog.cc
   \brief xMaze configuration dialog
   \author Hugo Pereira
   \version $Revision$
@@ -32,11 +32,11 @@
 #include <QLabel>
 #include <QLayout>
 
-#include "ConfigDialog.h"
+#include "ConfigurationDialog.h"
 #include "CustomGridLayout.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
-#include "ListViewConfig.h"
+#include "ListViewConfiguration.h"
 #include "MainFrame.h"
 #include "OptionBrowsedLineEdit.h"
 #include "OptionCheckBox.h"
@@ -47,18 +47,18 @@
 
 #include "Config.h"
 #if WITH_ASPELL
-#include "SpellConfig.h"
+#include "SpellCheckConfiguration.h"
 #endif
 
 using namespace std;
 
 //_________________________________________________________
-ConfigDialog::ConfigDialog( QWidget* parent ):
-  ConfigDialogBase( parent )
+ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
+  BaseConfigurationDialog( parent )
 {
 
 
-  Debug::Throw( "ConfigDialog::ConfigDialog.\n" );
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog.\n" );
 
   baseConfiguration();
 
@@ -171,7 +171,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   addOptionWidget( spinbox );
 
   // listview configuration
-  ListViewConfig *listview_config = new ListViewConfig( 
+  ListViewConfiguration *listview_config = new ListViewConfiguration( 
     &addPage( "List configuration" ), 
     &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList(), 
     "Main window logbook entries display list" );
@@ -293,7 +293,7 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   // spelling
   #if WITH_ASPELL
   page = &addPage( "Spell checking" );
-  SpellConfig* spell_config = new SpellConfig( page );
+  SpellCheckConfiguration* spell_config = new SpellCheckConfiguration( page );
   page->layout()->addWidget( spell_config );
   addOptionWidget( spell_config );
   #endif
@@ -312,10 +312,6 @@ ConfigDialog::ConfigDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Show/hide menu in editor window" );
   
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show keyword", box, "SHOW_KEYWORD" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Show/hide keyword line in editor window" );
-
   box->layout()->addWidget( checkbox = new OptionCheckBox( "Case sensitive", box, "CASE_SENSITIVE" ) );
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Toggle case sensitive text search" );
