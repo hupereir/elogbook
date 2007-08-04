@@ -56,6 +56,17 @@ eLogbook_LDADD =  $(libraries)
 copy_logbook_LDADD =  $(libraries)
 synchronize_logbook_LDADD =  $(libraries)
 
+
+libeLogbook_a_SOURCES = \
+  Attachment.cc \
+  AttachmentType.cc \
+  HtmlUtil.cc \
+  Logbook.cc \
+  LogEntry.cc
+
+nodist_libeLogbook_a_SOURCES = \
+  moc_Logbook.cc
+
 noinst_HEADERS = \
   AskForSaveDialog.h \
   AttachmentFrame.h \
@@ -92,31 +103,21 @@ noinst_HEADERS = \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
 
-eLogbook_SOURCES = eLogbook.cc
-copy_logbook_SOURCES = copy_logbook.cc
-synchronize_logbook_SOURCES = synchronize_logbook.cc
-
-libeLogbook_a_SOURCES = \
+eLogbook_SOURCES = \
   AskForSaveDialog.cc \
-  Attachment.cc \
   AttachmentFrame.cc \
   AttachmentList.cc \
-  AttachmentType.cc \
   ConfigurationDialog.cc \
-  copy_logbook.cc \
   DeleteAttachmentDialog.cc \
   DeleteKeywordDialog.cc \
   EditAttachmentDialog.cc \
   EditFrame.cc \
   EditKeywordDialog.cc \
   FormatBar.cc \
-  HtmlUtil.cc \
   KeywordList.cc \
-  Logbook.cc \
   LogbookInfoDialog.cc \
   LogbookModifiedDialog.cc \
   LogbookStatisticsDialog.cc \
-  LogEntry.cc \
   LogEntryInfoDialog.cc \
   LogEntryList.cc \
   MainFrame.cc \
@@ -128,16 +129,16 @@ libeLogbook_a_SOURCES = \
   SelectionFrame.cc \
   SplashScreen.cc \
   ViewHtmlEntryDialog.cc \
-  ViewHtmlLogbookDialog.cc
+  ViewHtmlLogbookDialog.cc \
+  eLogbook.cc
 
-nodist_libeLogbook_a_SOURCES = \
+nodist_eLogbook_SOURCES = \
   moc_AskForSaveDialog.cc \
   moc_AttachmentFrame.cc \
   moc_AttachmentList.cc \
   moc_EditFrame.cc \
   moc_FormatBar.cc \
   moc_KeywordList.cc \
-  moc_Logbook.cc \
   moc_LogbookModifiedDialog.cc \
   moc_LogEntryList.cc \
   moc_MainFrame.cc \
@@ -146,6 +147,9 @@ nodist_libeLogbook_a_SOURCES = \
   moc_SearchPanel.cc \
   moc_SelectionFrame.cc \
   moc_SplashScreen.cc
+
+copy_logbook_SOURCES = copy_logbook.cc
+synchronize_logbook_SOURCES = synchronize_logbook.cc
 
 ### rule to generate qt meta objects
 moc_%.cc: %.h
