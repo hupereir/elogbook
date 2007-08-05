@@ -59,7 +59,6 @@ const QString MainFrame::MAIN_TITLE_MODIFIED = "eLogbook (modified)";
 const QString MainFrame::MAIN_TITLE = "eLogbook";
 const QString MainFrame::ATTACHMENT_TITLE = "eLogbook - attachments";
 
-
 //____________________________________________
 void MainFrame::usage( void )
 {
@@ -119,9 +118,9 @@ void MainFrame::initApplicationManager(  void )
   application_manager_->setApplicationName( "ELOGBOOK" );
   connect( 
     application_manager_, SIGNAL( stateChanged( SERVER::ApplicationManager::State ) ),
-    this, SLOT( _applicationManagerStateChanged( SERVER::ApplicationManager::State ) ) );
+    SLOT( _applicationManagerStateChanged( SERVER::ApplicationManager::State ) ) );
     
-  connect( application_manager_, SIGNAL( serverRequest( const ArgList& ) ), this, SLOT( _processRequest( const ArgList& ) ) );
+  connect( application_manager_, SIGNAL( serverRequest( const ArgList& ) ), SLOT( _processRequest( const ArgList& ) ) );
     
   // initialize application manager  
   application_manager_->init( args_ );
