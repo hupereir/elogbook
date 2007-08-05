@@ -54,9 +54,7 @@
 #include "XmlOptions.h"
 
 using namespace std;
-using namespace BASE;
 using namespace Qt;
-using namespace HELP;
 
 //_______________________________________________
 Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
@@ -117,7 +115,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   // help menu
   menu = addMenu( "&Help" );
-  menu->addAction( HelpManager::get().displayAction() );
+  menu->addAction( BASE::HelpManager::get().displayAction() );
   menu->addSeparator();
   menu->addAction( "About &Qt", qApp, SLOT( aboutQt() ), 0 );
   menu->addAction( "About &eLogbook", qApp, SLOT( about() ), 0 );
@@ -125,11 +123,11 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   // install help
   File help_file( XmlOptions::get().get<File>( "HELP_FILE" ) );
-  if( help_file.exist() ) HelpManager::get().install( help_file );
+  if( help_file.exist() ) BASE::HelpManager::get().install( help_file );
   else
   {
-    HelpManager::get().setFile( help_file );
-    HelpManager::get().install( HelpText );
+    BASE::HelpManager::get().setFile( help_file );
+    BASE::HelpManager::get().install( HelpText );
   }
   
   // debug menu
@@ -139,7 +137,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   debug_menu->addAction( selection_frame->saveForcedAction() );
   debug_menu->addAction( selection_frame->showDuplicatesAction() );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
-  debug_menu->addAction( HelpManager::get().dumpAction() );
+  debug_menu->addAction( BASE::HelpManager::get().dumpAction() );
 
 }
 
@@ -155,11 +153,11 @@ void Menu::_updateEditorMenu( void )
   // editor attachments and logbook information
   editor_menu_->addAction( selection_frame->uniconifyAction() );
 
-  KeySet<EditFrame> frames( selection_frame );
+  BASE::KeySet<EditFrame> frames( selection_frame );
   if( !frames.empty() )
   {
     QMenu *menu = editor_menu_->addMenu( "&Editors" );
-    for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       string title( (*iter)->windowTitle() );
       menu->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
