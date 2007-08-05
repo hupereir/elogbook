@@ -114,9 +114,7 @@ FormatBar::FormatBar( QWidget* parent ):
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _color( QColor ) ) );
   connect( button, SIGNAL( pressed() ), SLOT( _lastColor() ) );
   _updateColorPixmap();
-  
-  // button->setPopupMode( QToolButton::MenuButtonPopup );
-  
+    
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
@@ -133,6 +131,10 @@ void FormatBar::setTarget( CustomTextEdit* editor )
   connect( editor_, 
     SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 
     SLOT( _updateState( const QTextCharFormat& ) ) );
+  
+  // first update
+  _updateState( editor->currentCharFormat() );
+  
 }
 
 //________________________________________
