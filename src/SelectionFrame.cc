@@ -92,9 +92,8 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   main->setLayout( layout );
     
   // splitter for KeywordList/LogEntryList
-  splitter_ = new QSplitter( main );  
+  layout->addWidget( splitter_ = new QSplitter( main ), 1 );  
   splitter_->setOrientation( Horizontal );
-  layout->addWidget( splitter_, 1 );
  
   // search panel
   search_panel_ = new SearchPanel( main );
@@ -1910,6 +1909,11 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
     // change keyword and set as modified
     entry->setKeyword( new_keyword );
     
+    /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
+    keyword change when synchronizing logbooks, without having all entries modification time
+    set to now() */
+    entry->setModification( entry->modification()+1 );
+    
     // keep track of modified entries
     entries.insert( entry );
     
@@ -1967,7 +1971,14 @@ void SelectionFrame::_changeEntryKeyword( string keyword, string new_keyword )
     */
     if( entry->keyword().find( keyword ) == 0 ) 
     {
+      
       entry->setKeyword( Str( entry->keyword() ).replace( keyword, new_keyword ) );
+      
+      /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
+      keyword change when synchronizing logbooks, without having all entries modification time
+      set to now() */
+      entry->setModification( entry->modification()+1 );
+
       KeySet<Logbook> logbooks( entry );
       for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
       (*log_iter)->setModified( true );

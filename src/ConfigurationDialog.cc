@@ -70,8 +70,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // attachment editors
   QWidget* page = &addPage( "Attachments" );
-  box = new QGroupBox( "Editors", page );
-  page->layout()->addWidget( box );
+  page->layout()->addWidget( box = new QGroupBox( "Editors", page ));
 
   CustomGridLayout* grid_layout = new CustomGridLayout();
   grid_layout->setSpacing(5);
@@ -326,6 +325,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   connect( this, SIGNAL( cancel() ), listview_config, SLOT( restore() ) );
 
   // load initial configuration
-  _readConfiguration();
+  _read();
 
 }
