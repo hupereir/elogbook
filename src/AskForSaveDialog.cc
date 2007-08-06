@@ -81,7 +81,8 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message,
     
   // button layout
   QHBoxLayout *button_layout = new QHBoxLayout();     
-  button_layout->setSpacing( 10 );
+  button_layout->setMargin(0);
+  button_layout->setSpacing(5);
   layout->addLayout( button_layout );
 
   // yes button

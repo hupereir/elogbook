@@ -62,8 +62,8 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout(this);
-  layout->setMargin( 10 );
-  layout->setSpacing( 10 );
+  layout->setMargin(10);
+  layout->setSpacing(5);
   setLayout( layout );
   
   layout->addWidget( list_ = new AttachmentList( this, true ) );

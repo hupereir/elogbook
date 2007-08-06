@@ -94,7 +94,8 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
 
   // button layout
   QHBoxLayout *button_layout = new QHBoxLayout();     
-  button_layout->setSpacing( 10 );
+  button_layout->setSpacing(5);
+  button_layout->setMargin(0);
   layout->addLayout( button_layout );
 
   // resave button
