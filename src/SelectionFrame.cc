@@ -178,8 +178,8 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, delete_entry_action, &statusBar().label() ) );
   
-  toolbar->addWidget( new CustomToolButton( toolbar, saveAction(), &statusBar().label() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, viewHtmlAction(), &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &saveAction(), &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &viewHtmlAction(), &statusBar().label() ) );
 
   // color menu
   color_menu_ = new ColorMenu( this );

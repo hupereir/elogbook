@@ -74,8 +74,8 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   
   // file menu
   menu = addMenu( "&File" );
-  menu->addAction( selection_frame->newLogbookAction() );
-  menu->addAction( selection_frame->openAction() );
+  menu->addAction( &selection_frame->newLogbookAction() );
+  menu->addAction( &selection_frame->openAction() );
 
   // file menu
   open_previous_menu_ = new OpenPreviousMenu( this );
@@ -85,16 +85,16 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selection_frame, SLOT( open( FileRecord ) ) );  
   menu->addMenu( open_previous_menu_ );
 
-  menu->addAction( selection_frame->synchronizeAction() );
-  menu->addAction( selection_frame->reorganizeAction() );
+  menu->addAction( &selection_frame->synchronizeAction() );
+  menu->addAction( &selection_frame->reorganizeAction() );
 
   menu->addSeparator();
   action = menu->addAction( "&Save", this, SIGNAL( save() ), CTRL+Key_S );
   action->setIcon( IconEngine::get( ICONS::SAVE, path_list ) );
   
-  menu->addAction( selection_frame->saveAsAction() );
-  menu->addAction( selection_frame->saveBackupAction() );
-  menu->addAction( selection_frame->revertToSaveAction() );
+  menu->addAction( &selection_frame->saveAsAction() );
+  menu->addAction( &selection_frame->saveBackupAction() );
+  menu->addAction( &selection_frame->revertToSaveAction() );
   menu->addSeparator();
   
   action = menu->addAction( "&View HTML", this, SIGNAL( viewHtml() ) );
@@ -115,7 +115,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   // help menu
   menu = addMenu( "&Help" );
-  menu->addAction( BASE::HelpManager::get().displayAction() );
+  menu->addAction( &BASE::HelpManager::get().displayAction() );
   menu->addSeparator();
   menu->addAction( "About &Qt", qApp, SLOT( aboutQt() ), 0 );
   menu->addAction( "About &eLogbook", qApp, SLOT( about() ), 0 );
@@ -134,10 +134,10 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   DebugMenu *debug_menu( new DebugMenu( this ) );
   debug_menu->setTitle( "&Debug" );
   menu->addMenu( debug_menu );
-  debug_menu->addAction( selection_frame->saveForcedAction() );
-  debug_menu->addAction( selection_frame->showDuplicatesAction() );
+  debug_menu->addAction( &selection_frame->saveForcedAction() );
+  debug_menu->addAction( &selection_frame->showDuplicatesAction() );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
-  debug_menu->addAction( BASE::HelpManager::get().dumpAction() );
+  debug_menu->addAction( &BASE::HelpManager::get().dumpAction() );
 
 }
 
@@ -147,11 +147,11 @@ void Menu::_updateEditorMenu( void )
   Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
   editor_menu_->clear();
 
-  SelectionFrame *selection_frame( &static_cast<MainFrame*>(qApp)->selectionFrame() );
-  AttachmentFrame *attachment_frame( &static_cast<MainFrame*>(qApp)->attachmentFrame() );
+  SelectionFrame &selection_frame( dynamic_cast<MainFrame*>(qApp)->selectionFrame() );
+  AttachmentFrame &attachment_frame( dynamic_cast<MainFrame*>(qApp)->attachmentFrame() );
   
   // editor attachments and logbook information
-  editor_menu_->addAction( selection_frame->uniconifyAction() );
+  editor_menu_->addAction( &selection_frame.uniconifyAction() );
 
   BASE::KeySet<EditFrame> frames( selection_frame );
   if( !frames.empty() )
@@ -163,12 +163,12 @@ void Menu::_updateEditorMenu( void )
       menu->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
     }
     menu->addSeparator();
-    menu->addAction( selection_frame->closeFramesAction() );
+    menu->addAction( &selection_frame.closeFramesAction() );
   }
   
-  editor_menu_->addAction( attachment_frame->uniconifyAction() );
-  editor_menu_->addAction( selection_frame->logbookStatisticsAction() );
-  editor_menu_->addAction( selection_frame->logbookInformationsAction() );
+  editor_menu_->addAction( &attachment_frame.uniconifyAction() );
+  editor_menu_->addAction( &selection_frame.logbookStatisticsAction() );
+  editor_menu_->addAction( &selection_frame.logbookInformationsAction() );
   
   return;
 }

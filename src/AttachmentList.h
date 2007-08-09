@@ -118,8 +118,8 @@ class AttachmentList: public CustomListView, public BASE::Key
   void resizeColumns( void );
   
   //! new attachment action
-  QAction* newAttachmentAction( void )
-  { return new_attachment_action_; }
+  QAction& newAttachmentAction( void )
+  { return *new_attachment_action_; }
      
   private slots:
       

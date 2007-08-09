@@ -70,8 +70,8 @@ class AttachmentFrame: public QWidget, public Counter
   }
     
   //! uniconify window
-  QAction* uniconifyAction( void )
-  { return uniconify_action_; }
+  QAction& uniconifyAction( void )
+  { return *uniconify_action_; }
 
   public slots:
   

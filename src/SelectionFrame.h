@@ -162,64 +162,64 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //@{
   
   //! uniconify window
-  QAction* uniconifyAction( void )
-  { return uniconify_action_; }
+  QAction& uniconifyAction( void )
+  { return *uniconify_action_; }
   
   //! create new logbook
-  QAction* newLogbookAction( void )
-  { return new_logbook_action_; }
+  QAction& newLogbookAction( void )
+  { return *new_logbook_action_; }
   
   //! open existing logbook
-  QAction* openAction( void )
-  { return open_action_; }
+  QAction& openAction( void )
+  { return *open_action_; }
   
   //! synchronize logbooks
-  QAction* synchronizeAction( void )
-  { return synchronize_action_; }
+  QAction& synchronizeAction( void )
+  { return *synchronize_action_; }
   
   //! reorganize logbook
-  QAction* reorganizeAction( void )
-  { return reorganize_action_; }
+  QAction& reorganizeAction( void )
+  { return *reorganize_action_; }
   
   //! save logbook
-  QAction* saveAction( void )
-  { return save_action_; }
+  QAction& saveAction( void )
+  { return *save_action_; }
 
   //! save logbook
-  QAction* saveForcedAction( void )
-  { return save_forced_action_; }
+  QAction& saveForcedAction( void )
+  { return *save_forced_action_; }
 
   //! save logbook with a different name
-  QAction* saveAsAction( void )
-  { return save_as_action_; }
+  QAction& saveAsAction( void )
+  { return *save_as_action_; }
 
   //! save logbook backup
-  QAction* saveBackupAction( void )
-  { return save_backup_action_; }
+  QAction& saveBackupAction( void )
+  { return *save_backup_action_; }
 
   //! revert logbook to saved version
-  QAction* revertToSaveAction( void )
-  { return revert_to_save_action_; }
+  QAction& revertToSaveAction( void )
+  { return *revert_to_save_action_; }
   
   //! convert logbook to html
-  QAction* viewHtmlAction( void )
-  { return view_html_action_; }
+  QAction& viewHtmlAction( void )
+  { return *view_html_action_; }
 
   //! logbook information
-  QAction* logbookInformationsAction( void )
-  { return logbook_informations_action_; }
+  QAction& logbookInformationsAction( void )
+  { return *logbook_informations_action_; }
   
   //! logbook information
-  QAction* logbookStatisticsAction( void )
-  { return logbook_statistics_action_; }
+  QAction& logbookStatisticsAction( void )
+  { return *logbook_statistics_action_; }
 
   //! close editframes
-  QAction* closeFramesAction( void )
-  { return close_frames_action_; }
+  QAction& closeFramesAction( void )
+  { return *close_frames_action_; }
   
   //! show duplicates
-  QAction* showDuplicatesAction( void )
-  { return show_duplicates_action_; }
+  QAction& showDuplicatesAction( void )
+  { return *show_duplicates_action_; }
   
   //@}
   

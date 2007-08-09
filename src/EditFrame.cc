@@ -176,7 +176,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   read_only_widgets_.push_back( button );
 
   // add_attachment button
-  toolbar->addWidget( new CustomToolButton( toolbar, attachment_list->newAttachmentAction(), &statusbar_->label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &attachment_list->newAttachmentAction(), &statusbar_->label() ) );
 
   #if WITH_ASPELL
   // spellcheck button
@@ -253,7 +253,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, toolbar );
 
   // main_window button
-  toolbar->addAction( static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
+  toolbar->addAction( &static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
 
   // previous_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::PREV, path_list ), "Display the previous entry", &statusbar_->label() );
