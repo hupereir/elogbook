@@ -122,6 +122,14 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! set read_only state of the EditFrame
   void setReadOnly( const bool& value );
   
+  //! closed flag
+  const bool& isClosed( void ) const
+  { return closed_; }
+  
+  //! closed flag
+  void setIsClosed( const bool& value )
+  { closed_ = value; }
+  
   //! check if current entry has been modified or not
   bool modified( void ) const 
   { return title_->isModified() || text_->document()->isModified(); }
@@ -152,10 +160,22 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     
     //! predicate
     bool operator() (const EditFrame* frame )
-    { return frame->modified() && !frame->isReadOnly(); }
+    { return frame->modified() && !frame->isReadOnly() && !frame->isClosed(); }
     
   };
   
+  //! used to count alive frames, that are not subject to delayed deletion
+  class aliveFTor
+  {
+    public:
+    
+    //! predicate
+    bool operator() (const EditFrame* frame )
+    { return !frame->isClosed(); }
+    
+  };
+    
+    
   public slots:  
   
   //! configuration
@@ -262,6 +282,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! list of buttons to disactivate in case of read-only
   std::list< QWidget* > read_only_widgets_;
+  
+  //! "closed" flag
+  /*! this flag is used for delayed deletion of EditFrames, when direct deletion might cause flags */
+  bool closed_;
   
   //!@name stored actions to toggle visibility
   //@{

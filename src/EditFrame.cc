@@ -75,13 +75,14 @@ using namespace Qt;
 EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
-  read_only_( read_only )
+  read_only_( read_only ),
+  closed_( false )
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
   setObjectName( "EDITFRAME" );
   
   // tell frame to delete on exit
-  setAttribute( Qt::WA_DeleteOnClose );
+  // setAttribute( Qt::WA_DeleteOnClose );
   
   QWidget* main( new QWidget( this ) ); 
   setCentralWidget( main );
@@ -637,10 +638,11 @@ void EditFrame::closeEvent( QCloseEvent *event )
   Debug::Throw( "EditFrame::closeEvent.\n" );
   
   // ask for save if entry is modified
-  if( !isReadOnly() && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
+  if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   else
   {
     saveConfiguration();
+    setIsClosed( true );
     event->accept();
   }
   

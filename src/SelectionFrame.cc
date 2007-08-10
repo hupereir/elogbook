@@ -167,12 +167,12 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( new_entry_action, SIGNAL( triggered() ), SLOT( _newEntry() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, new_entry_action, &statusBar().label() ) );
 
-  QAction* edit_entry_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit entries", this );
+  QAction* edit_entry_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit selected entries", this );
   edit_entry_action->setToolTip( "Edit selected entries" );
   connect( edit_entry_action, SIGNAL( triggered() ), SLOT( _editEntries() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, edit_entry_action, &statusBar().label() ) );
 
-  QAction* delete_entry_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete entries", this );
+  QAction* delete_entry_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete selected entries", this );
   delete_entry_action->setToolTip( "Delete selected entries" );
   delete_entry_action->setShortcut( Key_Delete );
   connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
@@ -401,10 +401,15 @@ void SelectionFrame::reset( void )
   // clear the AttachmentFrame
   static_cast<MainFrame*>(qApp)->attachmentFrame().list().clear();
   
-  // delete all EditFrames
+  // make all EditFrames for deletion
   KeySet<EditFrame> frames( this ); 
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
-  {delete *iter;}
+  //{delete *iter;}
+  {
+    (*iter)->setIsClosed( true );
+    (*iter)->hide();
+  }
+  
   return;
   
 }
@@ -498,7 +503,11 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   */
   KeySet<EditFrame> frames( entry );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  {delete *iter;}
+  { 
+    (*iter)->setIsClosed( true );
+    (*iter)->hide();
+  }
+  //{delete *iter;}
 
   // set logbooks as modified
   KeySet<Logbook> logbooks( entry );
@@ -525,7 +534,7 @@ bool SelectionFrame::lockEntry( LogEntry* entry ) const
   
   KeySet<EditFrame> frames( entry );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if(  !( (*iter)->isReadOnly() ) )
+  if(  !( (*iter)->isReadOnly() || (*iter)->isClosed() ) )
   {
     if( (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return false;
     (*iter)->setReadOnly( true );
@@ -667,7 +676,7 @@ void SelectionFrame::save( const bool& confirm_entries )
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
-    if( !(*iter)->isReadOnly() && (*iter)->modified() )
+    if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() )
     {
       if( !confirm_entries_ ) 
       {
@@ -1283,7 +1292,7 @@ void SelectionFrame::_synchronize( void )
   // save EditFrames
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if( !((*iter)->isReadOnly() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+  if( !((*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // save current logbook
   if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1555,7 +1564,7 @@ void SelectionFrame::_closeEditFrames( void ) const
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
-    if( (*iter)->modified() && !(*iter)->isReadOnly() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( (*iter)->modified() && !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
     delete *iter;
   }
   return;
@@ -1644,6 +1653,16 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
   KeySet<EditFrame> frames( this );
   for( KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
   {
+    
+    /*
+      if Editframe is to be deleted, delete it. This is to avoid memory leak
+      for EditFrames which should have been deleted before but could not to avoid crash
+    */
+    if( (*iter)->isClosed() )
+    {
+      delete *iter;
+      continue;
+    }
     
     //! check if EditFrame is editable and match editor
     if( !((*iter)->isReadOnly() ) && (*iter)->entry() == entry ) 
@@ -1737,7 +1756,7 @@ void SelectionFrame::_changeEntryColor( QColor color )
     // update EditFrame color
     KeySet<EditFrame> frames( entry );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    { (*iter)->displayColor(); }
+    { if( !(*iter)->isClosed() ) (*iter)->displayColor(); }
 
     // set logbooks as modified
     KeySet<Logbook> logbooks( entry );
@@ -2232,7 +2251,7 @@ void SelectionFrame::_autoSave( void )
     // retrieve non read only editors; perform save
     KeySet<EditFrame> frames( this );
     for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    if( !(*iter)->isReadOnly() ) (*iter)->save();
+    if( !((*iter)->isReadOnly() || (*iter)->isClosed() ) ) (*iter)->save();
 
     save();
   

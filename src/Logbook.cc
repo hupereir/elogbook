@@ -690,8 +690,12 @@ list<File> Logbook::checkFiles( void )
   bool modified = file_modified.isValid() && saved().isValid() && file_modified > saved();
   setSaved( file_modified );
 
-  if( modified ) out.push_back( file() );
-
+  if( modified ) 
+  {
+    setModified( true );
+    out.push_back( file() );
+  }
+  
   for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
   {
     list<File> tmp = (*it)->checkFiles();
