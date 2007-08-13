@@ -526,6 +526,7 @@ void KeywordList::dropEvent( QDropEvent* event )
   if( !_acceptDrag( event ) ) event->ignore();
   else
   {
+    event->acceptProposedAction();
     _processDrop( event );
     _resetDrag();
   }

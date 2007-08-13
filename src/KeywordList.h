@@ -169,17 +169,17 @@ class KeywordList: public CustomListView
   virtual void mouseMoveEvent( QMouseEvent *event );
 
   //! drag enter event [overloaded]
-  void dragEnterEvent( QDragEnterEvent* event );
+  virtual void dragEnterEvent( QDragEnterEvent* event );
 
   //! drag move event [overloaded]
-  void dragMoveEvent( QDragMoveEvent* event );
+  virtual void dragMoveEvent( QDragMoveEvent* event );
 
   //! drag leave event [overloaded]
-  void dragLeaveEvent( QDragLeaveEvent* event )
+  virtual void dragLeaveEvent( QDragLeaveEvent* event )
   {  _resetDrag(); }
 
   //! drop event [overload]
-  void dropEvent( QDropEvent* event );
+  virtual void dropEvent( QDropEvent* event );
 
   private:
 
