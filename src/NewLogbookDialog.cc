@@ -63,13 +63,13 @@ NewLogbookDialog::NewLogbookDialog( QWidget* parent ):
   // attachment directory
   grid_layout->addWidget( new QLabel( "File: ", this ), 2, 0 );
   grid_layout->addWidget( file_ = new BrowsedLineEdit( this ), 2, 1 );
-  file_->setMode( QFileDialog::AnyFile );
+  file_->setFileMode( QFileDialog::AnyFile );
   file_->setToolTip( "File to which logbook entries are saved." );
   
   // attachment directory
   grid_layout->addWidget( new QLabel( "Attachment directory: ", this ), 3, 0 );
   grid_layout->addWidget( attachment_directory_ = new BrowsedLineEdit( this ), 3, 1 );
-  attachment_directory_->setMode( QFileDialog::DirectoryOnly );
+  attachment_directory_->setFileMode( QFileDialog::DirectoryOnly );
   attachment_directory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );
   
   grid_layout->setColumnStretch( 1, 1 );  

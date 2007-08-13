@@ -53,12 +53,12 @@ ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
   // command
   mainLayout().addWidget( new QLabel( "Command:", this ) );
   mainLayout().addWidget( command_ = new BrowsedLineEdit( this ) );
-  command_->setMode( QFileDialog::ExistingFile );
+  command_->setFileMode( QFileDialog::ExistingFile );
   
   // file
   mainLayout().addWidget( new QLabel( "File:", this ) );
   mainLayout().addWidget( file_ = new BrowsedLineEdit( this ) );
-  file_->setMode( QFileDialog::AnyFile );
+  file_->setFileMode( QFileDialog::AnyFile );
 
   QPushButton* button = new QPushButton( "more ... ", this );
   button->setCheckable( true );

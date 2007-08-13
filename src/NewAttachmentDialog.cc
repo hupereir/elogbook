@@ -51,7 +51,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   // source file
   mainLayout().addWidget( new QLabel( "Source file:", this ) );
   mainLayout().addWidget( file_line_edit_ = new BrowsedLineEdit( this ) );
-  file_line_edit_->setMode( QFileDialog::ExistingFile );
+  file_line_edit_->setFileMode( QFileDialog::ExistingFile );
   file_line_edit_->setToolTip( "Attachment source file (or URL) to be stored in logbook." );
   
   // destination directory
@@ -62,7 +62,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   
   directory_layout_->addWidget( new QLabel( "Destination directory:", this ) );
   directory_layout_->addWidget( dest_dir_line_edit_ = new BrowsedLineEdit( this ) );
-  dest_dir_line_edit_->setMode( QFileDialog::DirectoryOnly );
+  dest_dir_line_edit_->setFileMode( QFileDialog::DirectoryOnly );
   dest_dir_line_edit_->setToolTip( "Attachment directory where attached file is stored (either copied or linked)." );
     
   CustomGridLayout* grid_layout = new CustomGridLayout();
