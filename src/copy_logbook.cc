@@ -107,7 +107,7 @@ int main (int argc, char *argv[])
 
     // check logbook filename is writable
     File fullname = File( logbook.file() ).expand();
-    if( fullname.exist() ) {
+    if( fullname.exists() ) {
 
       // check file is not a directory
       if( fullname.isDirectory() ) 

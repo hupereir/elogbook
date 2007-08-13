@@ -254,7 +254,7 @@ void SelectionFrame::setLogbook( File file )
 
   // set file
   logbook()->setFile( file );
-  if( !file.exist() )
+  if( !file.exists() )
   {
     // update listView with new entries
     _resetKeywordList();
@@ -449,7 +449,7 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
 
   Debug::Throw( "SelectionFrame::updateEntry.\n" );
   
-  // add entry into frame list or update existing    
+  // add entry into frame list or update existsing    
   if( entry->keyword() != keywordList().current() )
   {
     keywordList().add( entry->keyword() );
@@ -693,7 +693,7 @@ void SelectionFrame::save( const bool& confirm_entries )
 
   // check logbook filename is writable
   File fullname = File( logbook()->file() ).expand();
-  if( fullname.exist() ) {
+  if( fullname.exists() ) {
 
     // check file is not a directory
     if( fullname.isDirectory() ) {
@@ -923,7 +923,7 @@ void SelectionFrame::_installActions( void )
   connect( new_logbook_action_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
   open_action_ = new QAction( IconEngine::get( ICONS::OPEN, path_list ), "&Open", this );
-  open_action_->setToolTip( "Open an existing logbook" );
+  open_action_->setToolTip( "Open an existsing logbook" );
   open_action_->setShortcut( CTRL+Key_O );
   connect( open_action_, SIGNAL( triggered() ), SLOT( open() ) );
 
@@ -1075,8 +1075,8 @@ void SelectionFrame::_newLogbook( void )
   // attachment directory
   File directory( dialog.attachmentDirectory() );
 
-  // check if fulldir is not a non directory existing file
-  if( directory.exist() && !directory.isDirectory() )
+  // check if fulldir is not a non directory existsing file
+  if( directory.exists() && !directory.isDirectory() )
   {
 
     ostringstream o;
@@ -1161,10 +1161,10 @@ bool SelectionFrame::_saveAs( File default_file )
   // update working directory
   working_directory_ = fullname.path();
 
-  // check if file exist
+  // check if file exists
   if(
-    fullname.exist() &&
-    !QtUtil::questionDialog( this, "selected file already exist. Overwrite ?" ) )
+    fullname.exists() &&
+    !QtUtil::questionDialog( this, "selected file already exists. Overwrite ?" ) )
   return false;
 
   // change logbook filename and save
@@ -1538,8 +1538,8 @@ void SelectionFrame::_editLogbookInformations( void )
   // retrieve logbook directory
   File directory = dialog.AttachmentDirectory();
 
-  // check if fulldir is not a non directory existing file
-  if( directory.exist() &&  !directory.isDirectory() )
+  // check if fulldir is not a non directory existsing file
+  if( directory.exists() &&  !directory.isDirectory() )
   {
 
     ostringstream o;

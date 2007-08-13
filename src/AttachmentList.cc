@@ -221,8 +221,8 @@ void AttachmentList::_newAttachment( void )
   // check destination directory (if file is not URL)
   if( !(type == AttachmentType::URL) )
   {
-    // check if destination directory is not a non directory existing file
-    if( full_directory.exist() && !full_directory.isDirectory() ) 
+    // check if destination directory is not a non directory existsing file
+    if( full_directory.exists() && !full_directory.isDirectory() ) 
     { 
     
       ostringstream o;
@@ -232,9 +232,9 @@ void AttachmentList::_newAttachment( void )
     } else {
   
       // check destination directory
-      if( !full_directory.exist() ) {
+      if( !full_directory.exists() ) {
         ostringstream o; 
-        o << "Directory \"" << full_directory << "\" does not exist. Create ?";
+        o << "Directory \"" << full_directory << "\" does not exists. Create ?";
         if( QtUtil::questionDialog( this, o.str() ) ) {
     
           ostringstream o;
@@ -373,7 +373,7 @@ void AttachmentList::_open( QTreeWidgetItem* item )
     Attachment& attachment( *current.attachment() ); 
     AttachmentType type = attachment.type();
     File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
-    if( !( type == AttachmentType::URL || fullname.exist() ) )
+    if( !( type == AttachmentType::URL || fullname.exists() ) )
     {
       ostringstream what; 
       what << "Cannot find file \"" << fullname << "\". <View Attachment> canceled.";
@@ -411,7 +411,7 @@ void AttachmentList::_open( QTreeWidgetItem* item )
       if( files.empty() ) return;
       
       destname = File( qPrintable( files.front() ) ).expand();
-      if( destname.exist() && !QtUtil::questionDialog( this, "selected file already exist. Overwrite ?" ) ) return;
+      if( destname.exists() && !QtUtil::questionDialog( this, "selected file already exists. Overwrite ?" ) ) return;
       
       // make the copy
       Util::run( string("cp ") + "\"" + fullname + "\" \"" + destname + "\"" );

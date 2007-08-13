@@ -108,7 +108,7 @@ bool Logbook::read( void )
   emit messageAvailable( what.str().c_str() );
 
   // check input file
-  if( !file().exist() ) {
+  if( !file().exists() ) {
     Debug::Throw(0) << "Logbook::read - ERROR: cannot access file \"" << file() << "\".\n";
     return false;
   }
@@ -446,7 +446,7 @@ Logbook* Logbook::latestChild( void )
   // check parent number of entries
   if( KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
 
-  // check if one existing child is not complete
+  // check if one existsing child is not complete
   else {
     for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
     if( *it && KeySet<LogEntry>(*it).size() < MAX_ENTRIES ) {

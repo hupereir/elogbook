@@ -123,7 +123,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   // install help
   File help_file( XmlOptions::get().get<File>( "HELP_FILE" ) );
-  if( help_file.exist() ) BASE::HelpManager::get().install( help_file );
+  if( help_file.exists() ) BASE::HelpManager::get().install( help_file );
   else
   {
     BASE::HelpManager::get().setFile( help_file );

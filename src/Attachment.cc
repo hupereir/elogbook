@@ -156,7 +156,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   
   // generate expanded source name
   File fullname( source_file_ .expand() );
-  if( !( type_ == AttachmentType::URL || fullname.exist() ) ) return SOURCE_NOT_FOUND;
+  if( !( type_ == AttachmentType::URL || fullname.exists() ) ) return SOURCE_NOT_FOUND;
   else if( !( type_ == AttachmentType::URL ) && fullname.isDirectory() ) return SOURCE_IS_DIR;
     
   // destination filename
@@ -169,7 +169,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     
     case COPY:
       
-    if( destname.exist() ) return DEST_EXIST;
+    if( destname.exists() ) return DEST_EXIST;
     else {
       command_string = string("cp \"") + source_file_ + "\" \"" + destname + "\"";
       break;
@@ -177,7 +177,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     
     case LINK:
     
-    if( destname.exist() ) return DEST_EXIST;
+    if( destname.exists() ) return DEST_EXIST;
     else {
       command_string = string("ln -s \"") + source_file_ + "\" \"" + destname + "\"";
       break;
@@ -201,7 +201,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     
     case COPY_VERSION:
       
-    if( destname.exist() ) 
+    if( destname.exists() ) 
     {
       if( destname.diff( source_file_ ) ) 
       {
@@ -213,7 +213,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     
     case LINK_VERSION:
       
-    if( destname.exist() ) 
+    if( destname.exists() ) 
     {
       if( destname.diff( source_file_ ) ) 
       {
@@ -280,7 +280,7 @@ void Attachment::_setFile( const File& file )
   file_  = file;
   if( XmlOptions::get().get<bool>("CHECK_ATTACHMENT") )
   {
-    if( file.exist() ) 
+    if( file.exists() ) 
     {    
       size_ = file.size();
       size_str_ = file.sizeString();
