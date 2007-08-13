@@ -395,6 +395,7 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
   if( enable_cancel ) buttons |= AskForSaveDialog::CANCEL;
   if( count > 1 ) buttons |= AskForSaveDialog::ALL; 
   AskForSaveDialog dialog( this, "Entry has been modified. Save ?", buttons );
+  QtUtil::centerOnParent( &dialog );
   
   // exec and check return code
   int state = dialog.exec();
@@ -704,7 +705,9 @@ void EditFrame::_entryInfo( void )
   }
 
   // create dialog
-  LogEntryInfoDialog( this, entry ).exec();
+  LogEntryInfoDialog dialog( this, entry );
+  QtUtil::centerOnParent( &dialog );
+  dialog.exec();
 
 }
 

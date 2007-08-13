@@ -97,6 +97,8 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   mainLayout().addWidget( comments_text_edit_ = new CustomTextEdit( this ), 1 );
   comments_text_edit_->setToolTip( "Attachment comments." );
   
+  adjustSize();
+  
 } 
 
 //____________________________________________________

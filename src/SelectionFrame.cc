@@ -424,6 +424,7 @@ AskForSaveDialog::ReturnCode SelectionFrame::askForSave( const bool& enable_canc
   unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
   if( enable_cancel ) buttons |= AskForSaveDialog::CANCEL;
   AskForSaveDialog dialog( this, "Logbook has been modified. Save ?", buttons );
+  QtUtil::centerOnParent( &dialog );
   
   // exec and check return code 
   int state = dialog.exec();
@@ -1109,6 +1110,7 @@ void SelectionFrame::open( FileRecord record )
     dialog.setFileMode( QFileDialog::ExistingFile );
     dialog.setDirectory( workingDirectory().c_str() );
 
+    QtUtil::centerOnParent( &dialog );
     if( dialog.exec() == QDialog::Rejected ) return;
 
     QStringList files( dialog.selectedFiles() );
@@ -1148,7 +1150,7 @@ bool SelectionFrame::_saveAs( File default_file )
   dialog.setFileMode( QFileDialog::AnyFile );
   dialog.setDirectory( QDir( default_file.path().c_str() ) );
   dialog.selectFile( default_file.localName().c_str() );
-  QtUtil::centerOnPointer( &dialog );
+  QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return false;
 
   // retrieve files
@@ -1301,6 +1303,7 @@ void SelectionFrame::_synchronize( void )
   CustomFileDialog dialog( this );
   dialog.setFileMode( QFileDialog::ExistingFile );
 
+  QtUtil::centerOnParent( &dialog );
   if( dialog.exec() != QDialog::Accepted ) return;
 
   QStringList files( dialog.selectedFiles() );
@@ -1510,6 +1513,7 @@ void SelectionFrame::_viewLogbookStatistics( void )
 
   // create dialog
   LogbookStatisticsDialog dialog( this, logbook_ );
+  QtUtil::centerOnWidget( &dialog, qApp->activeWindow() );
   dialog.exec();
 }
 
@@ -1526,6 +1530,7 @@ void SelectionFrame::_editLogbookInformations( void )
 
   // create dialog
   LogbookInfoDialog dialog( this, logbook_ );
+  QtUtil::centerOnWidget( &dialog, qApp->activeWindow() );
   if( dialog.exec() == QDialog::Rejected ) return;
 
   // keep track of logbook modifications
@@ -1830,8 +1835,6 @@ void SelectionFrame::_deleteKeyword( void )
                  
   //! create CustomDialog
   DeleteKeywordDialog dialog( this, keyword, associated_entries.size() );
-    
-  // map dialog
   QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return;
   

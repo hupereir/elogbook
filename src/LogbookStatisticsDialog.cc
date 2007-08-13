@@ -30,6 +30,7 @@
 */
 
 #include <QLayout>
+#include <QPushButton>
 
 #include "CustomListView.h"
 #include "CustomLineEdit.h" 
@@ -134,6 +135,10 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     
   }
 
+  QPushButton* button = new QPushButton( "&Ok", this );
+  layout->addWidget( button );
+  connect( button, SIGNAL( clicked() ), SLOT( close() ) );
+  
   resize( 350, 350 );
   list_view->resizeColumnToContents( ENTRIES );
   list_view->resizeColumnToContents( MODIFIED );

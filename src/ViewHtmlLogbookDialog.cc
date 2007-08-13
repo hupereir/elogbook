@@ -131,6 +131,7 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   group_box->layout()->addWidget( entry_check_boxes_[LogEntry::HTML_ATTACHMENT] = new QCheckBox( "Attachment", group_box ) );
   group_box->layout()->addWidget( entry_check_boxes_[LogEntry::HTML_TEXT] = new QCheckBox( "Text", group_box ) );
 
+  adjustSize();
   
 }
 

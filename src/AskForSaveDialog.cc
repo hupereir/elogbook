@@ -71,11 +71,13 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message,
   {
     
     QHBoxLayout *h_layout( new QHBoxLayout() );
+    h_layout->setSpacing(10);
+    h_layout->setMargin(10);
     layout->addLayout( h_layout, 1 );
     QLabel* label = new QLabel( this );
     label->setPixmap( question_pixmap );
     h_layout->addWidget( label, 0, Qt::AlignHCenter );
-    h_layout->addWidget( new QLabel( message.c_str(), this ), 0, Qt::AlignHCenter );
+    h_layout->addWidget( new QLabel( message.c_str(), this ), 1, Qt::AlignHCenter );
     
   }
     
@@ -113,5 +115,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message,
     button_layout->addWidget( button = new QPushButton( "&Cancel", this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _cancel() ) );
   }
+  
+  adjustSize();
   
 }

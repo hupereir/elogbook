@@ -79,5 +79,7 @@ NewLogbookDialog::NewLogbookDialog( QWidget* parent ):
   mainLayout().addWidget( comments_ = new CustomTextEdit( this ), 1 );
   comments_->setToolTip( "Logbook comments." );
   Debug::Throw( "NewLogbookDialog::NewLogbookDialog - done.\n" );
-
+  
+  adjustSize();
+  
 }

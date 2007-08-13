@@ -81,5 +81,5 @@ LogbookInfoDialog::LogbookInfoDialog( QWidget* parent, Logbook* logbook ):
   mainLayout().addWidget( comments_ = new CustomTextEdit( this ), 1 );
   comments_->setPlainText( logbook->comments().c_str() );
   comments_->setToolTip( "Logbook comments." );
-  
+  adjustSize();
 }

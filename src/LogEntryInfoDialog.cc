@@ -30,6 +30,7 @@
 */
 
 #include <QLayout>
+#include <QPushButton>
 
 #include "CustomPixmap.h"
 #include "Debug.h"
@@ -100,5 +101,11 @@ LogEntryInfoDialog::LogEntryInfoDialog( QWidget* parent, LogEntry* entry ):
    grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName().c_str(), this ), i, 1);
 
   }
+  
+  QPushButton* button = new QPushButton( "&Ok", this );
+  layout->addWidget( button );
+  connect( button, SIGNAL( clicked() ), SLOT( close() ) );
+
+  adjustSize();
   
 }

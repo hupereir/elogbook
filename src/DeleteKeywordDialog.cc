@@ -73,4 +73,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const string& keyword
   move_radio_button_->setChecked( true );
   
   if( !has_entries ) box->setEnabled( false );
+
+  adjustSize();
+  
 }

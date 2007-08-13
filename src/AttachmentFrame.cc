@@ -135,6 +135,7 @@ void AttachmentFrame::enterEvent( QEvent *event )
 void AttachmentFrame::_uniconify( void )
 {
   Debug::Throw( "AttachmentFrame::_uniconify.\n" );
+  QtUtil::centerOnWidget( this, qApp->activeWindow() );
   show();
   QtUtil::uniconify( window() );
   return;

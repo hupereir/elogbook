@@ -121,6 +121,8 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
     comments_text_edit->setToolTip( "Attachment comments. (read-only)" );
   }
   
+  adjustSize();
+  
 } 
 
 //______________________________________________________

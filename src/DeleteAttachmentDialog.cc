@@ -71,6 +71,8 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
   if( attachment.type() == AttachmentType::URL )
   { group_box->setEnabled( false ); }
   
+  adjustSize();
+  
 } 
 
 //______________________________________________________

@@ -208,7 +208,7 @@ void AttachmentList::_newAttachment( void )
   dialog.setAction( Attachment::COPY_VERSION );
   
   // map dialog
-  QtUtil::centerOnPointer( &dialog );
+  QtUtil::centerOnParent( &dialog );
   dialog.resize( 400, 350 );
   if( dialog.exec() == QDialog::Rejected ) return;
  
@@ -382,7 +382,7 @@ void AttachmentList::_open( QTreeWidgetItem* item )
     }
     
     OpenAttachmentDialog dialog( this, attachment );  
-    QtUtil::centerOnPointer( &dialog );
+    QtUtil::centerOnParent( &dialog );
     
     if( dialog.exec() == QDialog::Rejected ) return;
     if( dialog.action() == OpenAttachmentDialog::OPEN )
@@ -451,7 +451,7 @@ void AttachmentList::_edit( void )
     EditAttachmentDialog dialog( this, attachment );
   
     // map dialog
-    QtUtil::centerOnPointer( &dialog );
+    QtUtil::centerOnParent( &dialog );
     if( dialog.exec() == QDialog::Rejected ) return;
   
     // change attachment type
@@ -506,6 +506,8 @@ void AttachmentList::_delete( void )
   
     // dialog
     DeleteAttachmentDialog dialog( this, *attachment );
+    QtUtil::centerOnParent( &dialog );
+
     if( dialog.exec() == QDialog::Rejected ) return;    
     
     // retrieve action

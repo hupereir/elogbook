@@ -93,7 +93,9 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   box_layout->addWidget( comments_text_edit_ = new CustomTextEdit( this ), 1 );
   comments_text_edit_->setPlainText( attachment.comments().c_str() );
   comments_text_edit_->setToolTip( "Attachment comments." );
-
+  
+  adjustSize();
+  
 }
   
 //____________________________________________

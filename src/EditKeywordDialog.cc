@@ -47,5 +47,5 @@ EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
   combo_box_->setEditable( true );
   
   mainLayout().addWidget( new QLabel( "use \"/\" characters to add keyword to a specific branch", this ) );
-  
+  adjustSize();
 }

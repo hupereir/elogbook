@@ -185,8 +185,9 @@ void MainFrame::configuration( void )
 {
   
   Debug::Throw( "MainFrame::configuration" );
-  ConfigurationDialog dialog(0);
+  ConfigurationDialog dialog( activeWindow() );
   connect( &dialog, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
+  QtUtil::centerOnParent( &dialog );
   dialog.exec();
 
 }
