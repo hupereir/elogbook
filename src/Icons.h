@@ -61,7 +61,7 @@ namespace ICONS
   static const std::string INFO="info.png";
   
   //! editframe lock icon
-  static const std::string LOCK="lock.png";
+  static const std::string LOCK="encrypted.png";
 
   //! previous entry icon
   static const std::string PREV="1leftarrow.png";

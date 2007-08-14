@@ -17,7 +17,7 @@ pixmap_DATA =  \
   homeB.png \
   html.png \
   info.png \
-  lock.png \
+  encrypted.png \
   redo.png \
   reload.png \
   text_bold.png \
@@ -43,7 +43,7 @@ EXTRA_DIST = \
   homeB.png \
   html.png \
   info.png \
-  lock.png \
+  encrypted.png \
   redo.png \
   reload.png \
   text_bold.png \
