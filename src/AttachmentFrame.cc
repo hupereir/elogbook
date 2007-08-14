@@ -126,7 +126,7 @@ void AttachmentFrame::enterEvent( QEvent *event )
   
   // base class enterEvent
   QWidget::enterEvent( event );
-  static_cast<MainFrame*>(qApp)->selectionFrame().checkLogbookModified();
+  dynamic_cast<MainFrame*>(qApp)->selectionFrame().checkLogbookModified();
     
   return;
 }
@@ -149,16 +149,16 @@ void AttachmentFrame::_displayEntry( QTreeWidgetItem *current, QTreeWidgetItem* 
   
   if( !current ) current = old;
   
-  AttachmentList::Item *item = static_cast<AttachmentList::Item*>( current );
+  AttachmentList::Item *item = dynamic_cast<AttachmentList::Item*>( current );
   Exception::checkPointer( item, DESCRIPTION( "wrong item" ) );
   
   // retrieve associated entry
   LogEntry *entry( item->attachment()->entry() );
   
   // check if entry is visible
-  static_cast<MainFrame*>(qApp)->selectionFrame().clearSelection();
+  dynamic_cast<MainFrame*>(qApp)->selectionFrame().clearSelection();
   
   if( entry && !entry->isSelected() ) entry->setFindSelected( true );  
-  static_cast<MainFrame*>(qApp)->selectionFrame().selectEntry( entry );
+  dynamic_cast<MainFrame*>(qApp)->selectionFrame().selectEntry( entry );
   
 }
