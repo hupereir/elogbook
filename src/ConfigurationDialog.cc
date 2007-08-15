@@ -31,6 +31,7 @@
 
 #include <QLabel>
 #include <QLayout>
+#include <QGroupBox>
 
 #include "ConfigurationDialog.h"
 #include "CustomGridLayout.h"
