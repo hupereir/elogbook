@@ -48,7 +48,8 @@ void installDefaultOptions( void )
   
   // pixmap path options are special. Keep the full list
   XmlOptions::get().keep( "PIXMAP_PATH" );
-  XmlOptions::get().add( Option( "PIXMAP_PATH", "@prefix@/share/eLogbook/pixmaps" , "directory where application pixmaps are taken from."  ));
+  //XmlOptions::get().add( Option( "PIXMAP_PATH", "@prefix@/share/eLogbook/pixmaps" , "directory where application pixmaps are taken from."  ));
+  XmlOptions::get().add( Option( "PIXMAP_PATH", ":/pixmaps" , "directory where application pixmaps are taken from."  ));
   
   // normal (overwritten) options
   XmlOptions::get().add( Option( "ATC_FRAME_HEIGHT", "400" , "requested AttachmentFrame height [pixels]"  ));

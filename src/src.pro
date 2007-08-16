@@ -1,7 +1,6 @@
 
 CONFIG += qt
 QT += xml network
-RESOURCES = ../pixmaps/pixmaps.qrc
 
 TARGET = elogbook
 VERSION = Qt4_1.0
@@ -12,12 +11,15 @@ DEPENDPATH += . ../base ../base-qt ../base-server
 LIBS += \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
-  ../base/libbase.a
+  ../base/libbase.a \
+  ../pixmaps/libpixmaps.a
 
 POST_TARGETDEPS = \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
-  ../base/libbase.a
+  ../base/libbase.a \
+  ../pixmaps/libpixmaps.a
+
 
 
 HEADERS = \
