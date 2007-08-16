@@ -63,7 +63,6 @@ AttachmentFrame.cc \
 AttachmentList.cc \
 AttachmentType.cc \
 ConfigurationDialog.cc \
-copy_logbook.cc \
 DeleteAttachmentDialog.cc \
 DeleteKeywordDialog.cc \
 EditAttachmentDialog.cc \
@@ -88,6 +87,5 @@ OpenAttachmentDialog.cc \
 SearchPanel.cc \
 SelectionFrame.cc \
 SplashScreen.cc \
-synchronize_logbook.cc \
 ViewHtmlEntryDialog.cc \
 ViewHtmlLogbookDialog.cc
