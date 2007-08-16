@@ -130,7 +130,7 @@ class AttachmentList: public CustomListView, public BASE::Key
   void _updateActions( void );
   
   //! display current attachment 
-  void _open( QTreeWidgetItem* item = 0 );
+  void _open( void );
   
   //! edit current attachment
   void _edit( void );

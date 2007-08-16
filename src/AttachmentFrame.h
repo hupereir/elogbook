@@ -34,7 +34,7 @@
 */
 
 #include <QEvent>
-#include <QWidget>
+#include <QDialog>
 #include <string>
 
 #include "Counter.h"
@@ -48,7 +48,7 @@ class Attachment;
    \brief popup window to list/edit all attachments independantly from entries
 */ 
 
-class AttachmentFrame: public QWidget, public Counter
+class AttachmentFrame: public QDialog, public Counter
 {
 
   //! Qt meta object declaration

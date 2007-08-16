@@ -910,9 +910,7 @@ void EditFrame::_viewHtml( void )
   if( command.empty() ) return;
 
   // execute command
-  what.str("");
-  what << command << " " << file << " &";
-  Util::run( what.str() );
+  Util::run( QStringList() << command.c_str() << file.c_str() );
 
   return;
 }

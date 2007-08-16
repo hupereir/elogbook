@@ -164,63 +164,43 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   source_file_ = fullname;
 
   // for other process command
-  string command_string;
+  QStringList command_string;
   switch (command) {
     
     case COPY:
-      
     if( destname.exists() ) return DEST_EXIST;
     else {
-      command_string = string("cp \"") + source_file_ + "\" \"" + destname + "\"";
+      command_string << "cp" << source_file_.c_str() << destname.c_str();
       break;
     }
     
     case LINK:
-    
     if( destname.exists() ) return DEST_EXIST;
     else {
-      command_string = string("ln -s \"") + source_file_ + "\" \"" + destname + "\"";
+      command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
       break;
     }
     
     case COPY_FORCED:
-    
-    // first delete destination file
     destname.remove();
-
-    // perform the copy
-    command_string = string("cp \"") + source_file_ + "\" \"" + destname + "\"";
+    command_string << "cp" << source_file_.c_str() << destname.c_str();
     break;
   
     case LINK_FORCED:
-    
-    // first remove destination file
     destname.remove();
-    command_string = string("ln -s \"") + source_file_ + "\" \"" + destname + "\"";
+    command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
     break;
     
     case COPY_VERSION:
-      
-    if( destname.exists() ) 
-    {
-      if( destname.diff( source_file_ ) ) 
-      {
-        destname = destname.version();
-        command_string = string("cp \"") + source_file_ + "\" \"" + destname + "\"";
-      }
-    } else command_string = string("cp \"") + source_file_ + "\" \"" + destname + "\"";
+    if( destname.exists() && destname.diff( source_file_ ) ) 
+    { destname = destname.version(); }
+    command_string << "cp" << source_file_.c_str() << destname.c_str();
     break;
     
     case LINK_VERSION:
-      
-    if( destname.exists() ) 
-    {
-      if( destname.diff( source_file_ ) ) 
-      {
-        destname = destname.version();
-        command_string = string("ln -s \"") + source_file_ + "\" \"" + destname + "\"";
-      }
-    } else  command_string = string("ln -s \"") + source_file_ + "\" \"" + destname + "\"";
+    if( destname.exists() && destname.diff( source_file_ ) ) 
+    { destname = destname.version(); }
+    command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
     break;
     
     case DO_NOTHING:
@@ -231,11 +211,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   }
   
   // process copy
-  Debug::Throw()
-    << "Attachment::ProcessCopy - command= "
-    << command_string
-    << endl;
-  if( command_string.size() ) Util::run( command_string );  
+  Util::run( command_string );  
   
   // update long/short filenames.
   _setFile( destname );

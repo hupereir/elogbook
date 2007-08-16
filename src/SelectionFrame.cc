@@ -23,7 +23,7 @@
 
 /*!
   \file SelectionFrame.cc
-  \brief base class to display entries and keyword
+  \brief base class to display entries and keyword::
   \author Hugo Pereira
   \version $Revision$
   \date $Date$
@@ -2206,9 +2206,7 @@ void SelectionFrame::_viewHtml( void )
   if( command.empty() ) return;
 
   // execute command
-  what.str("");
-  what << command << " " << file << " &";
-  Util::run( what.str() );
+  Util::run( QStringList() << command.c_str() << file.c_str() );
   return;
 }
 

@@ -109,7 +109,7 @@ AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
   menu().addAction( delete_attachment_action_ );
   
   // connections
-  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _open( QTreeWidgetItem* ) ) );
+  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _open() ) );
   connect( this, SIGNAL( itemSelectionChanged() ), SLOT( _updateActions() ) );
   _updateActions();
 }
@@ -235,13 +235,8 @@ void AttachmentList::_newAttachment( void )
       if( !full_directory.exists() ) {
         ostringstream o; 
         o << "Directory \"" << full_directory << "\" does not exists. Create ?";
-        if( QtUtil::questionDialog( this, o.str() ) ) {
-    
-          ostringstream o;
-          o << "mkdir \"" << full_directory << "\"";
-          Util::run( o.str() );
-        
-        }
+        if( QtUtil::questionDialog( this, o.str() ) ) 
+        { Util::run( QStringList() << "mkdir" << full_directory.c_str() ); }
       }
     }
   }
@@ -346,18 +341,12 @@ void AttachmentList::_updateActions( void )
 }
 
 //_____________________________________________
-void AttachmentList::_open( QTreeWidgetItem* item )
+void AttachmentList::_open( void )
 {
   Debug::Throw( "AttachmentList::_open.\n" );  
 
   // select item if valid
-  QList<Item*> items;
-  Item* local_item( dynamic_cast<Item*>( item ) );
-  if( item ) 
-  {
-    items.push_back( local_item );
-    setItemSelected( local_item, true );
-  } else items = selectedItems<Item>();
+  QList<Item*> items( selectedItems<Item>() );
   
   // check items
   if( items.empty() ) 
@@ -386,16 +375,9 @@ void AttachmentList::_open( QTreeWidgetItem* item )
     
     if( dialog.exec() == QDialog::Rejected ) return;
     if( dialog.action() == OpenAttachmentDialog::OPEN )
+    { Util::run( QStringList() << dialog.command().c_str() << fullname.c_str() ); } 
+    else 
     {
-      string command( dialog.command() );
-    
-      // run edit command
-      ostringstream what;
-      what << command << " \"" << fullname << "\"& ";
-      Debug::Throw() << "AttachmentList::_open - command=" << what.str() << endl;
-      Util::run( what.str() );
-    
-    } else {
   
       // create and configure SaveAs dialog
       CustomFileDialog dialog( this );
@@ -414,7 +396,7 @@ void AttachmentList::_open( QTreeWidgetItem* item )
       if( destname.exists() && !QtUtil::questionDialog( this, "selected file already exists. Overwrite ?" ) ) return;
       
       // make the copy
-      Util::run( string("cp ") + "\"" + fullname + "\" \"" + destname + "\"" );
+      Util::run( QStringList() << "cp" << fullname.c_str() << destname.c_str() );
       
     }
   

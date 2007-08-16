@@ -399,7 +399,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   if( edit_item_ && ( item != edit_item_ || column != TITLE ) )
   {
     
-    Debug::Throw( 0, "LogEntryList::mousePressEvent - closing editor.\n" );
+    Debug::Throw( "LogEntryList::mousePressEvent - closing editor.\n" );
     
     // close editor
     closePersistentEditor( edit_item_ );

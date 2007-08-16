@@ -31,6 +31,7 @@
 
 #include <QShortcut>
 #include <QLayout>
+#include <QPushButton>
 #include <list>
 
 #include "AttachmentFrame.h"
@@ -53,7 +54,7 @@ using namespace Qt;
 
 //________________________________________
 AttachmentFrame::AttachmentFrame( QWidget* parent ):
-  QWidget( parent ),
+  QDialog( parent ),
   Counter( "AttachmentFrame" )
 {
   
@@ -63,7 +64,7 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout(this);
   layout->setMargin(10);
-  layout->setSpacing(5);
+  layout->setSpacing(10);
   setLayout( layout );
   
   layout->addWidget( list_ = new AttachmentList( this, true ) );
@@ -84,6 +85,18 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH, path_list ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
+  
+  // button layout
+  QHBoxLayout *button_layout( new QHBoxLayout() );
+  button_layout->setSpacing(10);
+  button_layout->setMargin(0);
+  layout->addLayout( button_layout );
+  
+  // close button
+  QPushButton* button;
+  button_layout->addWidget( button = new QPushButton( "&Close", this ) );
+  button->setAutoDefault( false );
+  connect( button, SIGNAL( clicked() ), SLOT( close() ) );
   
 };
 
