@@ -1,0 +1,1 @@
+RESOURCES     = pixmaps.qrc

@@ -1,0 +1,29 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource>
+    <file alias="pixmaps/1leftarrow.png">1leftarrow.png</file>
+    <file alias="pixmaps/1rightarrow.png">1rightarrow.png</file>
+    <file alias="pixmaps/attach.png">attach.png</file>
+    <file alias="pixmaps/color.png">color.png</file>
+    <file alias="pixmaps/editcopy.png">editcopy.png</file>
+    <file alias="pixmaps/edit.png">edit.png</file>
+    <file alias="pixmaps/encrypted.png">encrypted.png</file>
+    <file alias="pixmaps/exit.png">exit.png</file>
+    <file alias="pixmaps/filenew.png">filenew.png</file>
+    <file alias="pixmaps/fileopen.png">fileopen.png</file>
+    <file alias="pixmaps/filesaveas.png">filesaveas.png</file>
+    <file alias="pixmaps/filesave.png">filesave.png</file>
+    <file alias="pixmaps/fonts.png">fonts.png</file>
+    <file alias="pixmaps/homeB.png">homeB.png</file>
+    <file alias="pixmaps/html.png">html.png</file>
+    <file alias="pixmaps/info.png">info.png</file>
+    <file alias="pixmaps/lock.png">lock.png</file>
+    <file alias="pixmaps/redo.png">redo.png</file>
+    <file alias="pixmaps/reload.png">reload.png</file>
+    <file alias="pixmaps/text_bold.png">text_bold.png</file>
+    <file alias="pixmaps/text_italic.png">text_italic.png</file>
+    <file alias="pixmaps/text_strike.png">text_strike.png</file>
+    <file alias="pixmaps/text_under.png">text_under.png</file>
+    <file alias="pixmaps/trashcan_empty.png">trashcan_empty.png</file>
+    <file alias="pixmaps/undo.png">undo.png</file>                                                    
+  </qresource>
+</RCC>
