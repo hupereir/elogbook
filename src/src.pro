@@ -1,23 +1,22 @@
 
 CONFIG += qt
-QT += xml
+QT += xml network
 
-TARGET = Top
-VERSION = 2.0
-DESTDIR = $$(HOME)/bin/.
+TARGET = elogbook
+VERSION = Qt4_1.0
 
-INCLUDEPATH = . ../base ../base-qt ../server
-DEPENDPATH += . ../base ../base-qt ../server
+INCLUDEPATH = . ../base ../base-qt ../base-server
+DEPENDPATH += . ../base ../base-qt ../base-server
 
 LIBS += \
+  ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
-  ../base/libbase.a \
-  ../server/libserver.a
+  ../base/libbase.a
 
 POST_TARGETDEPS = \
+  ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
-  ../base/libbase.a \
-  ../server/libserver.a
+  ../base/libbase.a
 
 
 HEADERS = \
