@@ -648,14 +648,6 @@ void SelectionFrame::saveConfiguration( void )
   // entry list mask
   XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", logEntryList().mask() );
   
-  // colors
-  // const ColorMenu::ColorSet& colors( color_menu_->colors() );
-  // for( set<QColor>::iterator iter = colors.begin(); iter != colors.end(); iter++ )
-  // { XmlOptions::get().add( Option( "COLOR", qPrintable( iter->name() ) ) ); }
-  
-  // open previous menu
-  menu().openPreviousMenu().write();
-  
 }
 
 //_______________________________________________

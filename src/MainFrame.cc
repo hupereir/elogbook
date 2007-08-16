@@ -55,9 +55,9 @@ using namespace BASE;
 using namespace SERVER;
 
 //____________________________________________
-const QString MainFrame::MAIN_TITLE_MODIFIED = "eLogbook (modified)";
-const QString MainFrame::MAIN_TITLE = "eLogbook";
-const QString MainFrame::ATTACHMENT_TITLE = "eLogbook - attachments";
+const QString MainFrame::MAIN_TITLE_MODIFIED = "elogbook (modified)";
+const QString MainFrame::MAIN_TITLE = "elogbook";
+const QString MainFrame::ATTACHMENT_TITLE = "elogbook - attachments";
 
 //____________________________________________
 void MainFrame::usage( void )
@@ -148,7 +148,7 @@ void MainFrame::realizeWidget( void )
   QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
   
   ostringstream what;
-  what << "<B>eLogbook</B><BR> version " << VERSION;
+  what << "<B>elogbook</B><BR> version " << VERSION;
   SplashScreen *splash_screen = new SplashScreen( selection_frame_, what.str() );
   splash_screen->setIcon( pixmap );
   splash_screen->setOpacity( 0.7 );

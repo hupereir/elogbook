@@ -28,14 +28,14 @@ endif
 
 CXXFLAGS = @CXXFLAGS@
 
-noinst_LIBRARIES = libeLogbook.a
-bin_PROGRAMS = eLogbook copy_logbook synchronize_logbook
+noinst_LIBRARIES = libelogbook.a
+bin_PROGRAMS = elogbook copy_logbook synchronize_logbook
 
 if WITH_ASPELL 
 libraries = \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   -L$(aspell_libraries) -laspell  \
-  libeLogbook.a \
+  libelogbook.a \
   ../base-spellcheck/libbase-spellcheck.a \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
@@ -45,26 +45,26 @@ else
 
 libraries =  \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
-  libeLogbook.a \
+  libelogbook.a \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
 
 endif
 
-eLogbook_LDADD =  $(libraries)
+elogbook_LDADD =  $(libraries)
 copy_logbook_LDADD =  $(libraries)
 synchronize_logbook_LDADD =  $(libraries)
 
 
-libeLogbook_a_SOURCES = \
+libelogbook_a_SOURCES = \
   Attachment.cc \
   AttachmentType.cc \
   HtmlUtil.cc \
   Logbook.cc \
   LogEntry.cc
 
-nodist_libeLogbook_a_SOURCES = \
+nodist_libelogbook_a_SOURCES = \
   moc_Logbook.cc
 
 noinst_HEADERS = \
@@ -103,7 +103,7 @@ noinst_HEADERS = \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
 
-eLogbook_SOURCES = \
+elogbook_SOURCES = \
   AskForSaveDialog.cc \
   AttachmentFrame.cc \
   AttachmentList.cc \
@@ -132,7 +132,7 @@ eLogbook_SOURCES = \
   ViewHtmlLogbookDialog.cc \
   eLogbook.cc
 
-nodist_eLogbook_SOURCES = \
+nodist_elogbook_SOURCES = \
   moc_AskForSaveDialog.cc \
   moc_AttachmentFrame.cc \
   moc_AttachmentList.cc \
