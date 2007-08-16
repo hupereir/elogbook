@@ -61,7 +61,7 @@ class LogEntryList: public CustomListView
   static const QString DRAG;
  
   //! constructor
-  LogEntryList( QWidget *parent, const std::string& name = "log_entry_list" );
+  LogEntryList( QWidget *parent );
 
   //! number of columns
   enum { n_columns = 5 };
@@ -171,7 +171,7 @@ class LogEntryList: public CustomListView
   
   //! recieved when item gets activated
   /*! used to retrieve edited text */
-  void _activate( QTreeWidgetItem*, int );
+  void _activate( QTreeWidgetItem* );
   
   protected:
 
@@ -185,7 +185,7 @@ class LogEntryList: public CustomListView
   virtual void mouseReleaseEvent( QMouseEvent *event );
  
   //! start drag
-  virtual bool _startDrag( QMouseEvent* event );
+  virtual bool _startDrag( void );
 
   private:
   

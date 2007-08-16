@@ -260,7 +260,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   { _displayCursorPosition( text_->textPosition() ); }
 
   //! display cursor position
-  void _displayCursorPosition( int old_position, int new_position )
+  void _displayCursorPosition( int, int new_position )
   { _displayCursorPosition( TextPosition( 0, new_position ) ); }
 
   private:

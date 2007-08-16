@@ -74,7 +74,7 @@ KeywordList::KeywordList( QWidget *parent ):
     
   _createRootItem();
     
-  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
+  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem* ) ) );
   connect( this, SIGNAL( itemExpanded( QTreeWidgetItem* ) ), SLOT( _resetEdit() ) );
   connect( this, SIGNAL( itemCollapsed( QTreeWidgetItem* ) ), SLOT( _resetEdit() ) );
 }
@@ -357,7 +357,7 @@ void KeywordList::_resetEdit( const bool& restore_backup )
 }
 
 //_____________________________________________________
-void KeywordList::_activate( QTreeWidgetItem* item, int column )
+void KeywordList::_activate( QTreeWidgetItem* item )
 {
   Debug::Throw( "KeywordList::_activate.\n" );
   

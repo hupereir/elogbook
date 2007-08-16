@@ -158,7 +158,7 @@ class KeywordList: public CustomListView
   
   //! item activated
   /*! used to catch end of item edition and propagate */
-  void _activate( QTreeWidgetItem* item, int column );
+  void _activate( QTreeWidgetItem* item );
 
   protected:
 
@@ -175,7 +175,7 @@ class KeywordList: public CustomListView
   virtual void dragMoveEvent( QDragMoveEvent* event );
 
   //! drag leave event [overloaded]
-  virtual void dragLeaveEvent( QDragLeaveEvent* event )
+  virtual void dragLeaveEvent( QDragLeaveEvent* )
   {  _resetDrag(); }
 
   //! drop event [overload]

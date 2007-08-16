@@ -198,7 +198,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
     
   // create logEntry list
-  v_layout->addWidget( list_ = new LogEntryList( right, "log_entry_list" ), 1 );
+  v_layout->addWidget( list_ = new LogEntryList( right ), 1 );
   
   connect( logEntryList().header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
   connect( list_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );

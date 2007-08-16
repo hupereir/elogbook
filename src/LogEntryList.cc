@@ -52,7 +52,7 @@ const char* LogEntryList::column_titles_[ LogEntryList::n_columns ] =
 };
 
 //_____________________________________________
-LogEntryList::LogEntryList( QWidget *parent, const string& name ):
+LogEntryList::LogEntryList( QWidget *parent ):
   CustomListView( parent ),
   first_item_( 0 ),
   last_item_( 0 ),
@@ -77,7 +77,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   edit_timer_->setSingleShot( true );
   edit_timer_->setInterval( edit_item_delay_ );
   connect( edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
-  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
+  connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem* ) ) );
 
 }
  
@@ -344,7 +344,7 @@ void LogEntryList::_resetEdit( const bool& restore_backup )
 }
 
 //_______________________________________________
-void LogEntryList::_activate( QTreeWidgetItem *item, int column )
+void LogEntryList::_activate( QTreeWidgetItem *item )
 { 
   
   Debug::Throw( "LogEntryList::_activate.\n" );
@@ -474,7 +474,7 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
      
   // check distance to last click
   if( (event->pos() - drag_start_ ).manhattanLength() >= QApplication::startDragDistance() && drag_enabled_ )
-  { _startDrag( event ); }
+  { _startDrag(); }
 
   
   // select all items between first_item_ and current item
@@ -558,7 +558,7 @@ void LogEntryList::mouseReleaseEvent( QMouseEvent* event )
 }
 
 //_______________________________________________
-bool LogEntryList::_startDrag( QMouseEvent* event )
+bool LogEntryList::_startDrag( void )
 {
   Debug::Throw( "LogEntryList::_startDrag.\n" );
   

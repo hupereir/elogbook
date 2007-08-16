@@ -746,7 +746,7 @@ void EditFrame::_updateRedoAction( void )
 }
 
 //_____________________________________________
-void EditFrame::_updateUndoRedoActions( QWidget* old, QWidget* current )
+void EditFrame::_updateUndoRedoActions( QWidget*, QWidget* current )
 {
   Debug::Throw( "EditFrame::_updateUndoRedoAction.\n" );
   if( current == title_ )
