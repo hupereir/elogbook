@@ -78,6 +78,7 @@ LogEntryList::LogEntryList( QWidget *parent, const string& name ):
   edit_timer_->setInterval( edit_item_delay_ );
   connect( edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
   connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _activate( QTreeWidgetItem*, int ) ) );
+
 }
  
 //_______________________________________________
@@ -346,7 +347,8 @@ void LogEntryList::_resetEdit( const bool& restore_backup )
 void LogEntryList::_activate( QTreeWidgetItem *item, int column )
 {
   
-  Debug::Throw( "LogEntryList::_activate.\n" );
+  
+  Debug::Throw( 0, "LogEntryList::_activate.\n" );
   Exception::checkPointer( item, "invalid item" );
     
   // check if item is edited
@@ -398,6 +400,8 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   if( edit_item_ && ( item != edit_item_ || column != TITLE ) )
   {
     
+    Debug::Throw( 0, "LogEntryList::mousePressEvent - closing editor.\n" );
+    
     // close editor
     closePersistentEditor( edit_item_ );
     
@@ -431,12 +435,12 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     item && 
     item == QTreeWidget::currentItem() &&
     column == TITLE &&
-    item != edit_item_ ) edit_timer_->start();
+    item != edit_item_ ) 
+  { edit_timer_->start(); } 
   else _resetEdit();
-  
-  // check if current item is selected
-  if( !isItemSelected( item ) ) setCurrentItem( item );
-  else if( event->button() == Qt::LeftButton )
+      
+  // enable drag if item was already selected  
+  if( isItemSelected( item ) && event->button() == Qt::LeftButton )
   {
     drag_enabled_ = true;
     drag_start_ = event->pos();
@@ -448,6 +452,10 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     first_item_ = item;
     last_item_ = item;
   }
+  
+  // finally, if item was not selected, run default
+  if( !isItemSelected( item ) ) 
+  { CustomListView::mousePressEvent( event ); }
   
   Debug::Throw( "LogEntryList::mousePressEvent. Done.\n" );
 

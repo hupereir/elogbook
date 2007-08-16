@@ -183,7 +183,7 @@ class LogEntryList: public CustomListView
  
   //! mouse move events [needed to start drag]
   virtual void mouseReleaseEvent( QMouseEvent *event );
-    
+ 
   //! start drag
   virtual bool _startDrag( QMouseEvent* event );
 
