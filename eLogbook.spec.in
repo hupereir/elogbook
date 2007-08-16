@@ -30,7 +30,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc COPYING INSTALL
-%{prefix}/bin/eLogbook
+%{prefix}/bin/copy_logbook
+%{prefix}/bin/synchronize_logbook
+%{prefix}/bin/elogbook
 %{prefix}/share/eLogbook/icon.png
 %{prefix}/share/eLogbook/pixmaps/1leftarrow.png
 %{prefix}/share/eLogbook/pixmaps/1rightarrow.png
@@ -38,14 +40,18 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/eLogbook/pixmaps/color.png
 %{prefix}/share/eLogbook/pixmaps/editcopy.png
 %{prefix}/share/eLogbook/pixmaps/edit.png
+%{prefix}/share/eLogbook/pixmaps/encrypted.png
+%{prefix}/share/eLogbook/pixmaps/exit.png
 %{prefix}/share/eLogbook/pixmaps/filenew.png
+%{prefix}/share/eLogbook/pixmaps/fileopen.png
 %{prefix}/share/eLogbook/pixmaps/filesave.png
+%{prefix}/share/eLogbook/pixmaps/filesaveas.png
 %{prefix}/share/eLogbook/pixmaps/fonts.png
 %{prefix}/share/eLogbook/pixmaps/homeB.png
 %{prefix}/share/eLogbook/pixmaps/html.png
 %{prefix}/share/eLogbook/pixmaps/info.png
-%{prefix}/share/eLogbook/pixmaps/lock.png
 %{prefix}/share/eLogbook/pixmaps/redo.png
+%{prefix}/share/eLogbook/pixmaps/reload.png
 %{prefix}/share/eLogbook/pixmaps/text_bold.png
 %{prefix}/share/eLogbook/pixmaps/text_italic.png
 %{prefix}/share/eLogbook/pixmaps/text_strike.png
