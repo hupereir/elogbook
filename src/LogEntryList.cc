@@ -345,10 +345,9 @@ void LogEntryList::_resetEdit( const bool& restore_backup )
 
 //_______________________________________________
 void LogEntryList::_activate( QTreeWidgetItem *item, int column )
-{
+{ 
   
-  
-  Debug::Throw( 0, "LogEntryList::_activate.\n" );
+  Debug::Throw( "LogEntryList::_activate.\n" );
   Exception::checkPointer( item, "invalid item" );
     
   // check if item is edited
