@@ -1,6 +1,7 @@
 
 CONFIG += qt
 QT += xml network
+RESOURCES = ../pixmaps/pixmaps.qrc
 
 TARGET = elogbook
 VERSION = Qt4_1.0
