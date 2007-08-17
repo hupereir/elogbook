@@ -2,7 +2,9 @@ TEMPLATE = app
 CONFIG += qt
 QT += xml network
 TARGET = elogbook
-VERSION = 2.0
+
+VERSION = 1.0
+DEFINES += VERSION=\"$$VERSION\"
 
 INCLUDEPATH = . ../base ../base-qt ../base-server ../extra-includes
 DEPENDPATH += . ../base ../base-qt ../base-server ../extra-includes

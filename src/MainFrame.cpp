@@ -149,7 +149,7 @@ void MainFrame::realizeWidget( void )
   QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
   
   ostringstream what;
-  what << "<B>elogbook</B><BR> version " << VERSION;
+  what << "<B>eLogbook</B><BR> version " << VERSION;
   SplashScreen *splash_screen = new SplashScreen( selection_frame_, what.str() );
   splash_screen->setIcon( pixmap );
   splash_screen->setOpacity( 0.7 );
