@@ -20,8 +20,6 @@ POST_TARGETDEPS = \
   ../base/libbase.a \
   ../pixmaps/libpixmaps.a
 
-
-
 HEADERS = \
 AskForSaveDialog.h \
 AttachmentFrame.h \
@@ -59,35 +57,35 @@ ViewHtmlLogbookDialog.h \
 XmlDef.h
 
 SOURCES = \
-AskForSaveDialog.cc \
-Attachment.cc \
-AttachmentFrame.cc \
-AttachmentList.cc \
-AttachmentType.cc \
-ConfigurationDialog.cc \
-DeleteAttachmentDialog.cc \
-DeleteKeywordDialog.cc \
-EditAttachmentDialog.cc \
-EditFrame.cc \
-EditKeywordDialog.cc \
-eLogbook.cc \
-FormatBar.cc \
-HtmlUtil.cc \
-KeywordList.cc \
-Logbook.cc \
-LogbookInfoDialog.cc \
-LogbookModifiedDialog.cc \
-LogbookStatisticsDialog.cc \
-LogEntry.cc \
-LogEntryInfoDialog.cc \
-LogEntryList.cc \
-MainFrame.cc \
-Menu.cc \
-NewAttachmentDialog.cc \
-NewLogbookDialog.cc \
-OpenAttachmentDialog.cc \
-SearchPanel.cc \
-SelectionFrame.cc \
-SplashScreen.cc \
-ViewHtmlEntryDialog.cc \
-ViewHtmlLogbookDialog.cc
+AskForSaveDialog.cpp \
+Attachment.cpp \
+AttachmentFrame.cpp \
+AttachmentList.cpp \
+AttachmentType.cpp \
+ConfigurationDialog.cpp \
+DeleteAttachmentDialog.cpp \
+DeleteKeywordDialog.cpp \
+EditAttachmentDialog.cpp \
+EditFrame.cpp \
+EditKeywordDialog.cpp \
+eLogbook.cpp \
+FormatBar.cpp \
+HtmlUtil.cpp \
+KeywordList.cpp \
+Logbook.cpp \
+LogbookInfoDialog.cpp \
+LogbookModifiedDialog.cpp \
+LogbookStatisticsDialog.cpp \
+LogEntry.cpp \
+LogEntryInfoDialog.cpp \
+LogEntryList.cpp \
+MainFrame.cpp \
+Menu.cpp \
+NewAttachmentDialog.cpp \
+NewLogbookDialog.cpp \
+OpenAttachmentDialog.cpp \
+SearchPanel.cpp \
+SelectionFrame.cpp \
+SplashScreen.cpp \
+ViewHtmlEntryDialog.cpp \
+ViewHtmlLogbookDialog.cpp

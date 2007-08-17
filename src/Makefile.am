@@ -1,4 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
+EXTRA_DIST = src.pro
 
 if WITH_ASPELL 
 INCLUDES = \
@@ -62,14 +63,14 @@ synchronize_logbook_LDADD =  $(libraries)
 
 
 libelogbook_a_SOURCES = \
-  Attachment.cc \
-  AttachmentType.cc \
-  HtmlUtil.cc \
-  Logbook.cc \
-  LogEntry.cc
+  Attachment.cpp \
+  AttachmentType.cpp \
+  HtmlUtil.cpp \
+  Logbook.cpp \
+  LogEntry.cpp
 
 nodist_libelogbook_a_SOURCES = \
-  moc_Logbook.cc
+  moc_Logbook.cpp
 
 noinst_HEADERS = \
   AskForSaveDialog.h \
@@ -108,56 +109,56 @@ noinst_HEADERS = \
   XmlDef.h
 
 elogbook_SOURCES = \
-  AskForSaveDialog.cc \
-  AttachmentFrame.cc \
-  AttachmentList.cc \
-  ConfigurationDialog.cc \
-  DeleteAttachmentDialog.cc \
-  DeleteKeywordDialog.cc \
-  EditAttachmentDialog.cc \
-  EditFrame.cc \
-  EditKeywordDialog.cc \
-  FormatBar.cc \
-  KeywordList.cc \
-  LogbookInfoDialog.cc \
-  LogbookModifiedDialog.cc \
-  LogbookStatisticsDialog.cc \
-  LogEntryInfoDialog.cc \
-  LogEntryList.cc \
-  MainFrame.cc \
-  Menu.cc \
-  NewAttachmentDialog.cc \
-  NewLogbookDialog.cc \
-  OpenAttachmentDialog.cc \
-  SearchPanel.cc \
-  SelectionFrame.cc \
-  SplashScreen.cc \
-  ViewHtmlEntryDialog.cc \
-  ViewHtmlLogbookDialog.cc \
-  eLogbook.cc
+  AskForSaveDialog.cpp \
+  AttachmentFrame.cpp \
+  AttachmentList.cpp \
+  ConfigurationDialog.cpp \
+  DeleteAttachmentDialog.cpp \
+  DeleteKeywordDialog.cpp \
+  EditAttachmentDialog.cpp \
+  EditFrame.cpp \
+  EditKeywordDialog.cpp \
+  FormatBar.cpp \
+  KeywordList.cpp \
+  LogbookInfoDialog.cpp \
+  LogbookModifiedDialog.cpp \
+  LogbookStatisticsDialog.cpp \
+  LogEntryInfoDialog.cpp \
+  LogEntryList.cpp \
+  MainFrame.cpp \
+  Menu.cpp \
+  NewAttachmentDialog.cpp \
+  NewLogbookDialog.cpp \
+  OpenAttachmentDialog.cpp \
+  SearchPanel.cpp \
+  SelectionFrame.cpp \
+  SplashScreen.cpp \
+  ViewHtmlEntryDialog.cpp \
+  ViewHtmlLogbookDialog.cpp \
+  eLogbook.cpp
 
 nodist_elogbook_SOURCES = \
-  moc_AskForSaveDialog.cc \
-  moc_AttachmentFrame.cc \
-  moc_AttachmentList.cc \
-  moc_EditFrame.cc \
-  moc_FormatBar.cc \
-  moc_KeywordList.cc \
-  moc_LogbookModifiedDialog.cc \
-  moc_LogEntryList.cc \
-  moc_MainFrame.cc \
-  moc_Menu.cc \
-  moc_NewAttachmentDialog.cc \
-  moc_SearchPanel.cc \
-  moc_SelectionFrame.cc \
-  moc_SplashScreen.cc
+  moc_AskForSaveDialog.cpp \
+  moc_AttachmentFrame.cpp \
+  moc_AttachmentList.cpp \
+  moc_EditFrame.cpp \
+  moc_FormatBar.cpp \
+  moc_KeywordList.cpp \
+  moc_LogbookModifiedDialog.cpp \
+  moc_LogEntryList.cpp \
+  moc_MainFrame.cpp \
+  moc_Menu.cpp \
+  moc_NewAttachmentDialog.cpp \
+  moc_SearchPanel.cpp \
+  moc_SelectionFrame.cpp \
+  moc_SplashScreen.cpp
 
-copy_logbook_SOURCES = copy_logbook.cc
-synchronize_logbook_SOURCES = synchronize_logbook.cc
+copy_logbook_SOURCES = copy_logbook.cpp
+synchronize_logbook_SOURCES = synchronize_logbook.cpp
 
 clean-local:
-	rm -f moc_*.cc
+	rm -f moc_*.cpp
 
 ### rule to generate qt meta objects
-moc_%.cc: %.h
+moc_%.cpp: %.h
 	$(qt_moc) $^ -o $@
