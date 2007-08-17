@@ -1,5 +1,6 @@
 TEMPLATE = app
-CONFIG += staticlib qt
+
+CONFIG += qt release
 QT += xml network
 TARGET = elogbook
 
