@@ -6,7 +6,15 @@ else
 SPELLCHECK_SOURCE_DIR=
 endif
 
-SUBDIRS =  pixmaps base base-qt base-server $(SPELLCHECK_SOURCE_DIR) extra-includes src
+SUBDIRS = \
+ pixmaps \
+ base \
+ base-qt \
+ base-server \
+ $(SPELLCHECK_SOURCE_DIR) \
+ extra-includes \
+ src
+
 EXTRA_DIST = \
  INSTALL \
  COPYING\
