@@ -37,6 +37,7 @@
 #include "ArgList.h"
 #include "Debug.h"
 #include "DefaultOptions.h"
+#include "SystemOptions.h"
 #include "ErrorHandler.h"
 #include "File.h"
 #include "MainFrame.h"
@@ -81,7 +82,7 @@ int main (int argc, char *argv[])
    
     // install default options
     installDefaultOptions();
-
+    installSystemOptions();
     // add help file
     string helpfile = Util::env( "HOME", "." ) + "/.eLogbook_help";
     option = Option( "HELP_FILE", helpfile );  

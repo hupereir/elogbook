@@ -1,0 +1,54 @@
+// $Id$
+
+/******************************************************************************
+*                        
+* Copyright (C) 2002 Hugo PEREIRA XmlOptions::get().add( Option("mailto: hugo.pereira@free.fr>            
+*                        
+* This is free software; you can redistribute it and/or modify it under the    
+* terms of the GNU General Public License as published by the Free Software    
+* Foundation; either version 2 of the License, or (at your option) any later   
+* version.                            
+*                         
+* This software is distributed in the hope that it will be useful, but WITHOUT 
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or        
+* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License        
+* for more details.                    
+*                         
+* You should have received a copy of the GNU General Public License along with 
+* software; if not, write to the Free Software Foundation, Inc., 59 Temple     
+* Place, Suite 330, Boston, MA  02111-1307 USA                          
+*                        
+*                        
+*******************************************************************************/
+
+/*!
+  \file SystemOptions.h
+  \brief System options
+  \author Hugo Pereira
+  \version $Revision$
+  \date $Date$
+*/
+
+#include "XmlOptions.h"
+#include "Config.h"
+
+//_____________________________________________________
+//! System options installer
+void installSystemOptions( void )
+{
+  // set system dependent options
+  
+  XmlOptions::get().add( Option( "EDIT_HTML_ATC", "@KONQUEROR@" , "to edit html attachments"  ));
+  XmlOptions::get().add( Option( "EDIT_IMAGE_ATC", "@KUICKSHOW@" , "to edit image type attachments"  ));
+  XmlOptions::get().add( Option( "EDIT_PLAIN_TEXT_ATC", "@QEDIT@" , "to edit plain text attachments"  ));
+  XmlOptions::get().add( Option( "EDIT_POSTSCRIPT_ATC", "@GV@" , "to edit postscript attachments"  ));
+  XmlOptions::get().add( Option( "EDIT_UNKNOWN_ATC", "@QEDIT@" , "to edit unknown type attachments"  ));
+  XmlOptions::get().add( Option( "EDIT_URL_ATC", "@KONQUEROR@" , "to edit url attachments"  ));
+
+  #ifdef WITH_ASPELL
+  XmlOptions::get().add( Option( "ASPELL", "@ASPELL@", "aspell command" ));
+  XmlOptions::get().add( Option( "DICTIONARY", "en" , "default dictionary"  ));
+  XmlOptions::get().add( Option( "DICTIONARY_FILTER", "none" , "default filter"  ));
+  #endif
+  
+};

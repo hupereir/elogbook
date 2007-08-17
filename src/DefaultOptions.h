@@ -23,7 +23,7 @@
 
 /*!
   \file DefaultOptions.h
-  \brief default options
+  \brief Default options
   \author Hugo Pereira
   \version $Revision$
   \date $Date$
@@ -33,7 +33,7 @@
 #include "Config.h"
 
 //_____________________________________________________
-//! default options installer
+//! Default options installer
 void installDefaultOptions( void )
 {
   // set options default values
@@ -75,12 +75,7 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "BACKUP_ITV", "30" , "interval between two consecutive auto backup [days]"  ));
   XmlOptions::get().add( Option( "CASE_SENSITIVE", "0" , "1 to distinguish upper and lower case when sorting/selecting text"  ));
   XmlOptions::get().add( Option( "DB_SIZE", "10" , "max number of files stored in the open previous menu"  ));
-  XmlOptions::get().add( Option( "EDIT_HTML_ATC", "@KONQUEROR@" , "to edit html attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_IMAGE_ATC", "@KUICKSHOW@" , "to edit image type attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_PLAIN_TEXT_ATC", "@QEDIT@" , "to edit plain text attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_POSTSCRIPT_ATC", "@GV@" , "to edit postscript attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_UNKNOWN_ATC", "@QEDIT@" , "to edit unknown type attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_URL_ATC", "@KONQUEROR@" , "to edit url attachments"  ));
+
   XmlOptions::get().add( Option( "SIDE_EDITOR_TOOLBAR", "1" , "if true, editor toolbar is on the left instead of top"  ));
   XmlOptions::get().add( Option( "SPLASH_SCREEN", "1" , "1 to show splash screen"  ));
   XmlOptions::get().add( Option( "SHOW_KEYWORD", "0" , "show keyword in editor"  ));

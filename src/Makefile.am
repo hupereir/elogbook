@@ -75,6 +75,7 @@ noinst_HEADERS = \
   AttachmentList.h \
   AttachmentType.h \
   ConfigurationDialog.h \
+  DefaultOptions.h \
   DeleteAttachmentDialog.h \
   DeleteKeywordDialog.h \
   EditAttachmentDialog.h \
