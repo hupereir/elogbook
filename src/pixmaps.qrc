@@ -17,7 +17,6 @@
     <file alias="pixmaps/homeB.png">../pixmaps/homeB.png</file>
     <file alias="pixmaps/html.png">../pixmaps/html.png</file>
     <file alias="pixmaps/info.png">../pixmaps/info.png</file>
-    <file alias="pixmaps/lock.png">../pixmaps/lock.png</file>
     <file alias="pixmaps/redo.png">../pixmaps/redo.png</file>
     <file alias="pixmaps/reload.png">../pixmaps/reload.png</file>
     <file alias="pixmaps/text_bold.png">../pixmaps/text_bold.png</file>

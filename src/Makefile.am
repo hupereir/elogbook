@@ -39,7 +39,6 @@ libraries = \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   -L$(aspell_libraries) -laspell  \
   libelogbook.a \
-  ../pixmaps/libpixmaps.a \
   ../base-spellcheck/libbase-spellcheck.a \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
@@ -50,7 +49,6 @@ else
 libraries =  \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   libelogbook.a \
-  ../pixmaps/libpixmaps.a \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
@@ -138,7 +136,7 @@ elogbook_SOURCES = \
   eLogbook.cpp
 
 nodist_elogbook_SOURCES = \
-  qrc_picmaps.cpp \
+  qrc_pixmaps.cpp \
   moc_AskForSaveDialog.cpp \
   moc_AttachmentFrame.cpp \
   moc_AttachmentList.cpp \

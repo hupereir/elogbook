@@ -10,14 +10,12 @@ DEPENDPATH += . ../base ../base-qt ../base-server
 LIBS += \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
-  ../base/libbase.a \
-  ../pixmaps/libpixmaps.a
+  ../base/libbase.a
 
 POST_TARGETDEPS = \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
-  ../base/libbase.a \
-  ../pixmaps/libpixmaps.a
+  ../base/libbase.a
 
 RESOURCES = pixmaps.qrc
 
