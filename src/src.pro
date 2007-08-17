@@ -1,9 +1,7 @@
-
+TEMPLATE = app
 CONFIG += qt
 QT += xml network
-
 TARGET = elogbook
-VERSION = Qt4_1.0
 
 INCLUDEPATH = . ../base ../base-qt ../base-server
 DEPENDPATH += . ../base ../base-qt ../base-server
