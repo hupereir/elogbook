@@ -1,10 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
 
-INCLUDES =  \
-  -I$(qt_includes) \
-  -I$(qt_includes)/Qt \
-  -I$(qt_includes)/QtCore 
-
 EXTRA_DIST = \
   1leftarrow.png \
   1rightarrow.png \

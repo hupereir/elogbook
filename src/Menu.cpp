@@ -114,6 +114,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   connect( editor_menu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
   // help manager
+  BASE::HelpManager* help( new BASE::HelpManager( this ) );
   File help_file( XmlOptions::get().get<File>( "HELP_FILE" ) );
   if( help_file.exists() ) BASE::HelpManager::install( help_file );
   else
@@ -121,8 +122,6 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
     BASE::HelpManager::setFile( help_file );
     BASE::HelpManager::install( HelpText );
   }  
-
-  BASE::HelpManager* help( new BASE::HelpManager( this ) );
   
   // help menu
   menu = addMenu( "&Help" );

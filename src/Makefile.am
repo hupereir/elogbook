@@ -13,8 +13,7 @@ INCLUDES = \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-server \
-  -I$(top_srcdir)/base-spellcheck \
-  -I$(top_srcdir)/pixmaps
+  -I$(top_srcdir)/base-spellcheck
 else
 INCLUDES = \
   -I$(qt_includes) \
@@ -25,8 +24,7 @@ INCLUDES = \
   -I$(qt_includes)/QtGui \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
-  -I$(top_srcdir)/base-server \
-  -I$(top_srcdir)/pixmaps
+  -I$(top_srcdir)/base-server
 endif
 
 CXXFLAGS = @CXXFLAGS@
