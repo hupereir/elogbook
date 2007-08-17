@@ -15,7 +15,6 @@ EXTRA_DIST = \
   fonts.png \
   homeB.png \
   html.png \
-  icon.png \
   info.png \
   encrypted.png \
   redo.png \
