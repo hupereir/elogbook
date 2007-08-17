@@ -851,7 +851,7 @@ void EditFrame::_viewHtml( void )
 
   // generate default filename
   ostringstream what;
-  what << "/tmp/_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+  what << Util::tmp() << "/_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
   dialog.setFile( File( what.str() ) );
 
   // map dialog
