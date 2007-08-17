@@ -104,8 +104,8 @@ int main (int argc, char *argv[])
     if( Debug::level() ) XmlOptions::get().dump();
     
     // initialize main frame and run loop
-    MainFrame main_frame(argc, argv);
     Q_INIT_RESOURCE( pixmaps );
+    MainFrame main_frame(argc, argv);
     main_frame.setStyle( new FlatStyle() );
     main_frame.initApplicationManager();
     main_frame.exec();
