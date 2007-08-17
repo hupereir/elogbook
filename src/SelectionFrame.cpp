@@ -1578,8 +1578,8 @@ void SelectionFrame::_newEntry( void )
   Key::associate( this, frame );
 
   // call NewEntry for the selected frame
-//  frame->newEntry();
-//  frame->show();
+  frame->newEntry();
+  frame->show();
 
 }
 
