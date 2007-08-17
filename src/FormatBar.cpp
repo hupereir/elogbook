@@ -238,7 +238,7 @@ void FormatBar::updateConfiguration( void )
     string default_colors[] = 
     { 
       "None",
-      "red",
+      "#aa0000",
       "green",
       "blue",
       "grey",
