@@ -1574,7 +1574,7 @@ void SelectionFrame::_newEntry( void )
   Debug::Throw( "SelectionFrame::_NewEntry.\n" );
 
   // create new EditFrame
-  EditFrame *frame = new EditFrame( this, false );
+  EditFrame *frame = new EditFrame( 0, false );
   Key::associate( this, frame );
 
   // call NewEntry for the selected frame
@@ -1673,7 +1673,7 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
   // create editFrame if not found
   if( !edit_frame )
   {
-    edit_frame = new EditFrame( this, false );
+    edit_frame = new EditFrame( 0, false );
     Key::associate( this, edit_frame );
     edit_frame->displayEntry( entry );
     QtUtil::centerOnParent( edit_frame );

@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
-EXTRA_DIST = src.pro
+EXTRA_DIST = src.pro pixmaps.qrc
 
 if WITH_ASPELL 
 INCLUDES = \
@@ -138,6 +138,7 @@ elogbook_SOURCES = \
   eLogbook.cpp
 
 nodist_elogbook_SOURCES = \
+  qrc_picmaps.cpp \
   moc_AskForSaveDialog.cpp \
   moc_AttachmentFrame.cpp \
   moc_AttachmentList.cpp \
@@ -158,7 +159,11 @@ synchronize_logbook_SOURCES = synchronize_logbook.cpp
 
 clean-local:
 	rm -f moc_*.cpp
+	rm -f qrc_*.cpp
 
 ### rule to generate qt meta objects
 moc_%.cpp: %.h
 	$(qt_moc) $^ -o $@
+
+qrc_%.cpp: %.qrc
+	$(qt_rcc) -name $* $^ -o $@

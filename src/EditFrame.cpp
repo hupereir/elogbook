@@ -80,10 +80,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
   setObjectName( "EDITFRAME" );
-  
-  // tell frame to delete on exit
-  // setAttribute( Qt::WA_DeleteOnClose );
-  
+    
   QWidget* main( new QWidget( this ) ); 
   setCentralWidget( main );
 

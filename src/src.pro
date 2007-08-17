@@ -2,6 +2,7 @@ TEMPLATE = app
 CONFIG += qt
 QT += xml network
 TARGET = elogbook
+VERSION = 2.0
 
 INCLUDEPATH = . ../base ../base-qt ../base-server
 DEPENDPATH += . ../base ../base-qt ../base-server
@@ -17,6 +18,8 @@ POST_TARGETDEPS = \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a \
   ../pixmaps/libpixmaps.a
+
+RESOURCES = pixmaps.qrc
 
 HEADERS = \
 AskForSaveDialog.h \

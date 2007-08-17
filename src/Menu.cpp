@@ -113,22 +113,24 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   editor_menu_ = addMenu( "&Windows" );
   connect( editor_menu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
+  // help manager
+  File help_file( XmlOptions::get().get<File>( "HELP_FILE" ) );
+  if( help_file.exists() ) BASE::HelpManager::install( help_file );
+  else
+  {
+    BASE::HelpManager::setFile( help_file );
+    BASE::HelpManager::install( HelpText );
+  }  
+
+  BASE::HelpManager* help( new BASE::HelpManager( this ) );
+  
   // help menu
   menu = addMenu( "&Help" );
-  menu->addAction( &BASE::HelpManager::get().displayAction() );
+  menu->addAction( &help->displayAction() );
   menu->addSeparator();
   menu->addAction( "About &Qt", qApp, SLOT( aboutQt() ), 0 );
   menu->addAction( "About &eLogbook", qApp, SLOT( about() ), 0 );
   menu->addSeparator();
-
-  // install help
-  File help_file( XmlOptions::get().get<File>( "HELP_FILE" ) );
-  if( help_file.exists() ) BASE::HelpManager::get().install( help_file );
-  else
-  {
-    BASE::HelpManager::get().setFile( help_file );
-    BASE::HelpManager::get().install( HelpText );
-  }
   
   // debug menu
   DebugMenu *debug_menu( new DebugMenu( this ) );
@@ -137,7 +139,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   debug_menu->addAction( &selection_frame->saveForcedAction() );
   debug_menu->addAction( &selection_frame->showDuplicatesAction() );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
-  debug_menu->addAction( &BASE::HelpManager::get().dumpAction() );
+  debug_menu->addAction( &help->dumpAction() );
 
 }
 

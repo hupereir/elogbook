@@ -40,6 +40,7 @@
 #include "EditFrame.h"
 #include "ErrorHandler.h"
 #include "File.h"
+#include "FlatStyle.h"
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "MainFrame.h"
@@ -81,7 +82,7 @@ MainFrame::MainFrame( int argc, char*argv[] ) :
   realized_( false )
 { 
   Debug::Throw( "MainFrame::MainFrame.\n" ); 
-    
+  setStyle( new FlatStyle() );
 } 
 
 //____________________________________________

@@ -1,0 +1,30 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource>
+    <file alias="icon.png">../pixmaps/icon.png</file>
+    <file alias="pixmaps/1leftarrow.png">../pixmaps/1leftarrow.png</file>
+    <file alias="pixmaps/1rightarrow.png">../pixmaps/1rightarrow.png</file>
+    <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
+    <file alias="pixmaps/color.png">../pixmaps/color.png</file>
+    <file alias="pixmaps/editcopy.png">../pixmaps/editcopy.png</file>
+    <file alias="pixmaps/edit.png">../pixmaps/edit.png</file>
+    <file alias="pixmaps/encrypted.png">../pixmaps/encrypted.png</file>
+    <file alias="pixmaps/exit.png">../pixmaps/exit.png</file>
+    <file alias="pixmaps/filenew.png">../pixmaps/filenew.png</file>
+    <file alias="pixmaps/fileopen.png">../pixmaps/fileopen.png</file>
+    <file alias="pixmaps/filesaveas.png">../pixmaps/filesaveas.png</file>
+    <file alias="pixmaps/filesave.png">../pixmaps/filesave.png</file>
+    <file alias="pixmaps/fonts.png">../pixmaps/fonts.png</file>
+    <file alias="pixmaps/homeB.png">../pixmaps/homeB.png</file>
+    <file alias="pixmaps/html.png">../pixmaps/html.png</file>
+    <file alias="pixmaps/info.png">../pixmaps/info.png</file>
+    <file alias="pixmaps/lock.png">../pixmaps/lock.png</file>
+    <file alias="pixmaps/redo.png">../pixmaps/redo.png</file>
+    <file alias="pixmaps/reload.png">../pixmaps/reload.png</file>
+    <file alias="pixmaps/text_bold.png">../pixmaps/text_bold.png</file>
+    <file alias="pixmaps/text_italic.png">../pixmaps/text_italic.png</file>
+    <file alias="pixmaps/text_strike.png">../pixmaps/text_strike.png</file>
+    <file alias="pixmaps/text_under.png">../pixmaps/text_under.png</file>
+    <file alias="pixmaps/trashcan_empty.png">../pixmaps/trashcan_empty.png</file>
+    <file alias="pixmaps/undo.png">../pixmaps/undo.png</file>                                                    
+  </qresource>
+</RCC>

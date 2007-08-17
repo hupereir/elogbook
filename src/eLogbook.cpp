@@ -39,7 +39,6 @@
 #include "DefaultOptions.h"
 #include "ErrorHandler.h"
 #include "File.h"
-#include "FlatStyle.h"
 #include "MainFrame.h"
 #include "XmlOptions.h"
 #include "Util.h"
@@ -106,7 +105,6 @@ int main (int argc, char *argv[])
     // initialize main frame and run loop
     Q_INIT_RESOURCE( pixmaps );
     MainFrame main_frame(argc, argv);
-    main_frame.setStyle( new FlatStyle() );
     main_frame.initApplicationManager();
     main_frame.exec();
 
