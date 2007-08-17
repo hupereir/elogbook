@@ -12,7 +12,8 @@ INCLUDES = \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-server \
-  -I$(top_srcdir)/base-spellcheck
+  -I$(top_srcdir)/base-spellcheck \
+  -I$(top_srcdir)/pixmaps
 else
 INCLUDES = \
   -I$(qt_includes) \
@@ -23,7 +24,8 @@ INCLUDES = \
   -I$(qt_includes)/QtGui \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
-  -I$(top_srcdir)/base-server
+  -I$(top_srcdir)/base-server \
+  -I$(top_srcdir)/pixmaps
 endif
 
 CXXFLAGS = @CXXFLAGS@
@@ -36,6 +38,7 @@ libraries = \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   -L$(aspell_libraries) -laspell  \
   libelogbook.a \
+  ../pixmaps/libpixmaps.a \
   ../base-spellcheck/libbase-spellcheck.a \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
@@ -46,6 +49,7 @@ else
 libraries =  \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
   libelogbook.a \
+  ../pixmaps/libpixmaps.a \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
@@ -150,6 +154,9 @@ nodist_elogbook_SOURCES = \
 
 copy_logbook_SOURCES = copy_logbook.cc
 synchronize_logbook_SOURCES = synchronize_logbook.cc
+
+clean-local:
+	rm -f moc_*.cc
 
 ### rule to generate qt meta objects
 moc_%.cc: %.h

@@ -59,7 +59,7 @@ int main (int argc, char *argv[])
     // Ensure proper cleaning at exit
     signal(SIGINT,  interupt);
     signal(SIGTERM, interupt);
-    
+        
     // install error handler
     qInstallMsgHandler( ErrorHandler::Throw );
     ErrorHandler::disableMessage( "QServerSocket: failed to bind or listen to the socket" );
@@ -105,6 +105,7 @@ int main (int argc, char *argv[])
     
     // initialize main frame and run loop
     MainFrame main_frame(argc, argv);
+    Q_INIT_RESOURCE( pixmaps );
     main_frame.setStyle( new FlatStyle() );
     main_frame.initApplicationManager();
     main_frame.exec();

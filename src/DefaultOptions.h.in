@@ -48,8 +48,10 @@ void installDefaultOptions( void )
   
   // pixmap path options are special. Keep the full list
   XmlOptions::get().keep( "PIXMAP_PATH" );
-  //XmlOptions::get().add( Option( "PIXMAP_PATH", "@prefix@/share/eLogbook/pixmaps" , "directory where application pixmaps are taken from."  ));
   XmlOptions::get().add( Option( "PIXMAP_PATH", ":/pixmaps" , "directory where application pixmaps are taken from."  ));
+  
+  // icon
+  XmlOptions::get().add( Option( "ICON_PIXMAP", ":/icon.png" , "application icon"  ));
   
   // normal (overwritten) options
   XmlOptions::get().add( Option( "ATC_FRAME_HEIGHT", "400" , "requested AttachmentFrame height [pixels]"  ));
@@ -73,13 +75,11 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "EDIT_POSTSCRIPT_ATC", "@GV@" , "to edit postscript attachments"  ));
   XmlOptions::get().add( Option( "EDIT_UNKNOWN_ATC", "@QEDIT@" , "to edit unknown type attachments"  ));
   XmlOptions::get().add( Option( "EDIT_URL_ATC", "@KONQUEROR@" , "to edit url attachments"  ));
-  XmlOptions::get().add( Option( "ICON_PIXMAP", "@prefix@/share/eLogbook/icon.png" , "application icon"  ));
   XmlOptions::get().add( Option( "SIDE_EDITOR_TOOLBAR", "1" , "if true, editor toolbar is on the left instead of top"  ));
   XmlOptions::get().add( Option( "SELECTION_FRAME_HEIGHT", "400" , "requested SelectionFrame height [pixels]"  ));
   XmlOptions::get().add( Option( "SELECTION_FRAME_WIDTH", "600" , "requested SelectionFrame width [pixels]"  ));
   XmlOptions::get().add( Option( "KEYWORD_LIST_WIDTH", "250" , "requested keyword list width [pixels]"  ));
   XmlOptions::get().add( Option( "ENTRY_LIST_WIDTH", "350" , "requested entry list width [pixels]"  ));
-  XmlOptions::get().add( Option( "ENTRY_LIST_MASK", "350" , "requested entry list width [pixels]"  ));
   XmlOptions::get().add( Option( "SPLASH_SCREEN", "1" , "1 to show splash screen"  ));
   XmlOptions::get().add( Option( "SHOW_KEYWORD", "0" , "show keyword in editor"  ));
   XmlOptions::get().add( Option( "SHOW_EDITFRAME_MENU", "1", "show menu in EditFrame windows" ));

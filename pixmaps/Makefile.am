@@ -1,33 +1,16 @@
 AUTOMAKE_OPTIONS = foreign
 
-pixmapdir = $(prefix)/share/eLogbook/pixmaps
-pixmap_DATA =  \
-  1leftarrow.png \
-  1rightarrow.png \
-  attach.png \
-  color.png \
-  editcopy.png \
-  edit.png \
-  exit.png \
-  filenew.png \
-  fileopen.png \
-  filesave.png \
-  filesaveas.png \
-  fonts.png \
-  homeB.png \
-  html.png \
-  info.png \
-  encrypted.png \
-  redo.png \
-  reload.png \
-  text_bold.png \
-  text_italic.png \
-  text_strike.png \
-  text_under.png \
-  trashcan_empty.png \
-  undo.png
-	
+noinst_LIBRARIES = libpixmaps.a
+libpixmaps_a_SOURCES = qrc_pixmaps.cc
+
+INCLUDES =  \
+  -I$(qt_includes) \
+  -I$(qt_includes)/Qt \
+  -I$(qt_includes)/QtCore 
+
 EXTRA_DIST = \
+  pixmaps.qrc \
+  pixmaps.pro \
   1leftarrow.png \
   1rightarrow.png \
   attach.png \
@@ -42,6 +25,7 @@ EXTRA_DIST = \
   fonts.png \
   homeB.png \
   html.png \
+  icon.png \
   info.png \
   encrypted.png \
   redo.png \
@@ -52,3 +36,10 @@ EXTRA_DIST = \
   text_under.png \
   trashcan_empty.png \
   undo.png
+
+clean-local:
+	rm -f qrc_*.cc
+
+### rule to generate qt meta objects
+qrc_%.cc: %.qrc
+	$(qt_rcc) -name $* $^ -o $@
