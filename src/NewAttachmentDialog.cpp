@@ -113,7 +113,10 @@ void NewAttachmentDialog::setFile( const File& file )
 
 //____________________________________________________
 File NewAttachmentDialog::file( void ) const
-{ return File( qPrintable( file_line_edit_->editor().text() ) ).expand(); }
+{ 
+  File out( qPrintable( file_line_edit_->editor().text() ) );
+  return type() == AttachmentType::URL ? out : out.expand(); 
+}
 
 //____________________________________________________
 void NewAttachmentDialog::setDestinationDirectory( const File& file )

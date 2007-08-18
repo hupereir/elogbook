@@ -86,27 +86,32 @@ AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
-  new_attachment_action_ = new QAction( IconEngine::get( ICONS::ATTACH, path_list ), "&New", this );
+  addAction( new_attachment_action_ = new QAction( IconEngine::get( ICONS::ATTACH, path_list ), "&New", this ) );
   new_attachment_action_->setToolTip( "Attach a file/URL to the current entry" );
   connect( new_attachment_action_, SIGNAL( triggered() ), SLOT( _newAttachment() ) );
   menu().addAction( new_attachment_action_ );
   menu().addSeparator();
   
-  view_attachment_action_ = new QAction( IconEngine::get( ICONS::OPEN, path_list ), "&Open", this );
+  addAction( view_attachment_action_ = new QAction( IconEngine::get( ICONS::OPEN, path_list ), "&Open", this ) );
   view_attachment_action_->setToolTip( "Open selected attachments" );
   connect( view_attachment_action_, SIGNAL( triggered() ), SLOT( _open() ) );
   menu().addAction( view_attachment_action_ );
      
-  edit_attachment_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit", this );
+  addAction( edit_attachment_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit", this ) );
   edit_attachment_action_->setToolTip( "Edit selected attachments informations" );
   connect( edit_attachment_action_, SIGNAL( triggered() ), SLOT( _edit() ) );
   menu().addAction( edit_attachment_action_ );
 
-  delete_attachment_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete", this ); 
+  // addAction( delete_attachment_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete", this ) ); 
+  delete_attachment_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete", this );
   delete_attachment_action_->setToolTip( "Delete selected attachments" );
-  delete_attachment_action_->setShortcut( Qt::Key_Delete );
   connect( delete_attachment_action_, SIGNAL( triggered() ), SLOT( _delete() ) );
   menu().addAction( delete_attachment_action_ );
+  
+  // attachment shortcut is handled separately from the action
+  // because apparently it does not get disabled properly when the action is
+  delete_attachment_shortcut_ = new QShortcut(QKeySequence(Qt::Key_Delete), this );
+  connect( delete_attachment_shortcut_, SIGNAL( activated() ), SLOT( _delete() ) );
   
   // connections
   connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _open() ) );
@@ -336,6 +341,7 @@ void AttachmentList::_updateActions( void )
   view_attachment_action_->setEnabled( has_selection );
   edit_attachment_action_->setEnabled( has_selection && !read_only_ );
   delete_attachment_action_->setEnabled( has_selection && !read_only_ );
+  delete_attachment_shortcut_->setEnabled( has_selection && !read_only_ );
   return;
   
 }

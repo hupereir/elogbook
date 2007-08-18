@@ -135,8 +135,15 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, edit_keyword_action, &statusBar().label() ) );
   
+  /*
+  delete keyword action
+  it is associated to the Key_Delete shortcut
+  but the later is enabled only if the KeywordList has focus.
+  */
   QAction* delete_keyword_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete keyword", this );
   delete_keyword_action->setToolTip( "Delete selected keyword" );
+  delete_keyword_action->setShortcut( Key_Delete );
+  delete_keyword_action->setShortcutContext( WidgetShortcut );  
   connect( delete_keyword_action, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, delete_keyword_action, &statusBar().label() ) );
 
@@ -150,6 +157,13 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   keywordList().addMenuAction( new_keyword_action ); 
   keywordList().addMenuAction( edit_keyword_action, true ); 
   keywordList().addMenuAction( delete_keyword_action, true ); 
+
+  /* 
+  add the delete_keyword_action to the keyword list,
+  so that the corresponding shortcut gets activated whenever it is pressed
+  while the list has focus
+  */
+  keywordList().addAction( delete_keyword_action );
   
   // right box for entries and buttons
   QWidget* right = new QWidget( splitter_ );
@@ -172,9 +186,15 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( edit_entry_action, SIGNAL( triggered() ), SLOT( _editEntries() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, edit_entry_action, &statusBar().label() ) );
 
+  /*
+  delete entry action
+  it is associated to the Key_Delete shortcut
+  but the later is enabled only if the KeywordList has focus.
+  */
   QAction* delete_entry_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete selected entries", this );
   delete_entry_action->setToolTip( "Delete selected entries" );
   delete_entry_action->setShortcut( Key_Delete );
+  delete_entry_action->setShortcutContext( WidgetShortcut );  
   connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, delete_entry_action, &statusBar().label() ) );
   
@@ -203,7 +223,14 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( logEntryList().header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
   connect( list_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
   connect( list_, SIGNAL( entryRenamed( LogEntry*, std::string ) ), SLOT( _changeEntryTitle( LogEntry*, std::string ) ) );
-
+  
+  /* 
+  add the delete_entry_action to the list,
+  so that the corresponding shortcut gets activated whenever it is pressed
+  while the list has focus
+  */
+  list_->addAction( delete_entry_action );
+  
   // create popup menu for list
   logEntryList().addMenuAction( new_entry_action );
   logEntryList().addMenuAction( edit_entry_action, true ); 

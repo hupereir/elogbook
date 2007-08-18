@@ -32,6 +32,7 @@
   \date $Date$
 */
 
+#include <QShortcut>
 #include <string>
 #include <set>
 
@@ -157,6 +158,9 @@ class AttachmentList: public CustomListView, public BASE::Key
   
   //! delete attachment
   QAction* delete_attachment_action_;
+
+  //! delete attachment
+  QShortcut* delete_attachment_shortcut_;
 
   //@}
   
