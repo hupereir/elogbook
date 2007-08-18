@@ -125,7 +125,8 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     CustomListView::Item* item( new CustomListView::Item( list_view ) );
         
     // second column get the file name
-    item->setText( FILE, (*it)->file().localName().c_str() );
+    // item->setText( FILE, (*it)->file().localName().c_str() );
+    item->setText( FILE, (*it)->file().c_str() );
     
     // third column get the number of entries
     item->setText( ENTRIES, Str().assign<unsigned int>( KeySet<LogEntry>(*it).size() ).c_str() );
