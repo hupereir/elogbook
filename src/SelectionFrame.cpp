@@ -48,7 +48,7 @@
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
-#include "LogbookInfoDialog.h"
+#include "LogbookInformationDialog.h"
 #include "LogbookModifiedDialog.h"
 #include "LogbookStatisticsDialog.h"
 #include "LogEntryList.h"
@@ -1548,7 +1548,7 @@ void SelectionFrame::_editLogbookInformations( void )
   }
 
   // create dialog
-  LogbookInfoDialog dialog( this, logbook_ );
+  LogbookInformationDialog dialog( this, logbook_ );
   QtUtil::centerOnWidget( &dialog, qApp->activeWindow() );
   if( dialog.exec() == QDialog::Rejected ) return;
 

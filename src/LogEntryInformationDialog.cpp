@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file LogEntryInfoDialog.cc
+  \file LogEntryInformationDialog.cc
   \brief  logbook entry informations
   \author Hugo Pereira
   \version $Revision$
@@ -35,7 +35,7 @@
 #include "CustomPixmap.h"
 #include "Debug.h"
 #include "Icons.h"
-#include "LogEntryInfoDialog.h"
+#include "LogEntryInformationDialog.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "Options.h"
@@ -46,11 +46,11 @@ using namespace std;
 using namespace BASE;
 
 //_________________________________________________________
-LogEntryInfoDialog::LogEntryInfoDialog( QWidget* parent, LogEntry* entry ):
+LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):
     QDialog( parent ),
-    Counter( "LogEntryInfoDialog" )
+    Counter( "LogEntryInformationDialog" )
 {
-  Debug::Throw( "LogEntryInfoDialog::LogEntryInfoDialog.\n" );
+  Debug::Throw( "LogEntryInformationDialog::LogEntryInformationDialog.\n" );
 
   //! try load Question icon
   static CustomPixmap pixmap;

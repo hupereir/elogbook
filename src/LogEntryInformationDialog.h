@@ -1,5 +1,5 @@
-#ifndef LogEntryInfoDialog_h
-#define LogEntryInfoDialog_h
+#ifndef LogEntryInformationDialog_h
+#define LogEntryInformationDialog_h
 // $Id$
 
 /******************************************************************************
@@ -24,7 +24,7 @@
 *******************************************************************************/
 
 /*!
-  \file LogEntryInfoDialog.h
+  \file LogEntryInformationDialog.h
   \brief  logbook entry informations
   \author Hugo Pereira
   \version $Revision$
@@ -38,13 +38,13 @@
 class LogEntry;
 
 //! logbook entry informations
-class LogEntryInfoDialog: public QDialog, public Counter
+class LogEntryInformationDialog: public QDialog, public Counter
 {
   
   public:
       
   //! constructor
-  LogEntryInfoDialog( QWidget* parent, LogEntry* entry  );
+  LogEntryInformationDialog( QWidget* parent, LogEntry* entry  );
   
 };
 

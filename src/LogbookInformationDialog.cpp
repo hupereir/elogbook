@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file LogbookInfoDialog.cc
+  \file LogbookInformationDialog.cc
   \brief  logbook informations
   \author Hugo Pereira
   \version $Revision$
@@ -35,17 +35,17 @@
 #include "CustomListView.h"
 #include "Debug.h"
 #include "Logbook.h"
-#include "LogbookInfoDialog.h"
+#include "LogbookInformationDialog.h"
 #include "QtUtil.h"
 #include "Util.h"
 
 using namespace std;
 
 //_________________________________________________________
-LogbookInfoDialog::LogbookInfoDialog( QWidget* parent, Logbook* logbook ):
+LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* logbook ):
     CustomDialog( parent )
 {
-  Debug::Throw( "LogbookInfoDialog::LogbookInfoDialog.\n" );
+  Debug::Throw( "LogbookInformationDialog::LogbookInformationDialog.\n" );
   
   setWindowTitle( "eLogbook - logbook informations" );
   

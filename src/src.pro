@@ -41,11 +41,11 @@ HEADERS = \
  Icons.h \
  KeywordList.h \
  Logbook.h \
- LogbookInfoDialog.h \
+ LogbookInformationDialog.h \
  LogbookModifiedDialog.h \
  LogbookStatisticsDialog.h \
  LogEntry.h \
- LogEntryInfoDialog.h \
+ LogEntryInformationDialog.h \
  LogEntryList.h \
  MainFrame.h \
  Menu.h \
@@ -76,11 +76,11 @@ SOURCES = \
  HtmlUtil.cpp \
  KeywordList.cpp \
  Logbook.cpp \
- LogbookInfoDialog.cpp \
+ LogbookInformationDialog.cpp \
  LogbookModifiedDialog.cpp \
  LogbookStatisticsDialog.cpp \
  LogEntry.cpp \
- LogEntryInfoDialog.cpp \
+ LogEntryInformationDialog.cpp \
  LogEntryList.cpp \
  MainFrame.cpp \
  Menu.cpp \

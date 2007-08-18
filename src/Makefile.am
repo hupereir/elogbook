@@ -87,11 +87,11 @@ noinst_HEADERS = \
   Icons.h \
   KeywordList.h \
   Logbook.h \
-  LogbookInfoDialog.h \
+  LogbookInformationDialog.h \
   LogbookModifiedDialog.h \
   LogbookStatisticsDialog.h \
   LogEntry.h \
-  LogEntryInfoDialog.h \
+  LogEntryInformationDialog.h \
   LogEntryList.h \
   MainFrame.h \
   Menu.h \
@@ -117,10 +117,10 @@ elogbook_SOURCES = \
   EditKeywordDialog.cpp \
   FormatBar.cpp \
   KeywordList.cpp \
-  LogbookInfoDialog.cpp \
+  LogbookInformationDialog.cpp \
   LogbookModifiedDialog.cpp \
   LogbookStatisticsDialog.cpp \
-  LogEntryInfoDialog.cpp \
+  LogEntryInformationDialog.cpp \
   LogEntryList.cpp \
   MainFrame.cpp \
   Menu.cpp \

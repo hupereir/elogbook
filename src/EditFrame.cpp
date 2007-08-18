@@ -50,7 +50,7 @@
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
-#include "LogEntryInfoDialog.h"
+#include "LogEntryInformationDialog.h"
 #include "LogEntryList.h"
 #include "MainFrame.h"
 #include "Menu.h"
@@ -702,7 +702,7 @@ void EditFrame::_entryInfo( void )
   }
 
   // create dialog
-  LogEntryInfoDialog dialog( this, entry );
+  LogEntryInformationDialog dialog( this, entry );
   QtUtil::centerOnParent( &dialog );
   dialog.exec();
 

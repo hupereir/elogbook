@@ -1,5 +1,5 @@
-#ifndef LogbookInfoDialog_h
-#define LogbookInfoDialog_h
+#ifndef LogbookInformationDialog_h
+#define LogbookInformationDialog_h
 // $Id$
 
 /******************************************************************************
@@ -24,7 +24,7 @@
 *******************************************************************************/
 
 /*!
-  \file LogbookInfoDialog.h
+  \file LogbookInformationDialog.h
   \brief  logbook informations
   \author Hugo Pereira
   \version $Revision$
@@ -38,13 +38,13 @@
 
 class Logbook;
 
-class LogbookInfoDialog: public CustomDialog
+class LogbookInformationDialog: public CustomDialog
 {
   
   public:
       
   //! constructor
-  LogbookInfoDialog( QWidget* parent, Logbook* logbook  );
+  LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
   
   //! title
   std::string title( void ) const
