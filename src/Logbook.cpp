@@ -198,6 +198,7 @@ bool Logbook::read( void )
       }
 
       File file( qPrintable( file_attribute ) );
+      if( !file.isAbsolute() ) file.addPath( Logbook::file().path() );
       Logbook* child = new Logbook();
       child->setFile( file );
 
@@ -325,7 +326,7 @@ bool Logbook::write( File file )
   for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
   {
 
-    File child_filename( _childFilename( file, child_number ) );
+    File child_filename( _childFilename( file, child_number ).addPath( file.path() ) );
 
     // update stateFrame
     ostringstream what;
@@ -462,7 +463,7 @@ Logbook* Logbook::latestChild( void )
     dest->setTitle( title() );
     dest->setDirectory( directory() );
     dest->setAuthor( author() );
-    dest->setFile( _childFilename( file(), children_.size() ) );
+    dest->setFile( _childFilename( file(), children_.size() ).addPath( file().path() ) );
     dest->setModified( true );
 
     children_.push_back( dest );
@@ -774,7 +775,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 //_________________________________
 File Logbook::_childFilename( const File& file, const int& child_number ) const
 {
-  File head( file.truncatedName() );
+  File head( file.localName().truncatedName() );
   string foot( file.extension() );
   if( !foot.empty() ) foot = string(".") + foot;
   ostringstream o; o << head << "_include_" << child_number << foot;
