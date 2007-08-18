@@ -91,11 +91,20 @@ MainFrame::~MainFrame( void )
   Debug::Throw( "MainFrame::~MainFrame.\n" );
   XmlOptions::write();
   
-  if( application_manager_ ) {
+  if( selection_frame_ )
+  {
+    delete selection_frame_;
+    selection_frame_ = 0;
+  }
+  
+  if( application_manager_ ) 
+  {
     delete application_manager_; 
     application_manager_ = 0;
   }
 
+  
+  
   // error handler
   ErrorHandler::exit();
 

@@ -74,9 +74,6 @@ class KeywordList: public CustomListView
   //! add keyword, check for unicity
   void add( std::string keyword );
 
-  //! remove keyword
-  void remove( std::string keyword );
-
   //! reset
   void reset( std::set<std::string> keywords );
 
@@ -119,15 +116,15 @@ class KeywordList: public CustomListView
 
   signals:
 
-  /*!
+  /*! \brief
     emitted when a logEntryList drag is accepted.
-    sends the new keyword
+    Sends the new keyword
   */
-  void keywordChanged( std::string new_keyword );
+  void entryKeywordChanged( std::string new_keyword );
 
-  /*!
-    emitted when a Keyword drag is accepted
-    sends old keyword, new keyword
+  /*! \brief
+    emitted when a Keyword drag is accepted, or when keyword item
+    is emitted directly in the list. Sends old keyword, new keyword
   */
   void keywordChanged( std::string old_keyword, std::string new_keyword );
 
@@ -138,14 +135,6 @@ class KeywordList: public CustomListView
 
   protected slots:
 
-//   // these should be used in place of the current edition implementation
-//   // in a model-view architecture
-//   void closeEditor ( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )
-//   { Debug::Throw(0, "QAbstractItemView::closeEditor.\n" ); }
-//   
-//   void commitData ( QWidget * editor ) 
-//   { Debug::Throw(0, "QAbstractItemView::commitData.\n" ); }
-    
   //! open drop item
   /*! this is connected to the time-out of the drop timer */
   void _openDropItem( void );
@@ -186,6 +175,13 @@ class KeywordList: public CustomListView
   //! create root item
   void _createRootItem( void );
 
+  //! make sure items appear only once in the list
+  //! recursive
+  void _unique( QTreeWidgetItem* item = 0 );
+
+  //! remove keyword
+  void _remove( std::string keyword );
+  
   //!@name drag and drop methods
   //@{
 

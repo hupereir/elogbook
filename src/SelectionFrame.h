@@ -68,7 +68,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! destructor
   virtual ~SelectionFrame( void )
-  { Debug::Throw(0, "SelectionFrame::~SelectionFrame.\n" ); }
+  { Debug::Throw( "SelectionFrame::~SelectionFrame.\n" ); }
 
   //! retrive menu
   Menu& menu( void )
@@ -162,63 +162,94 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //@{
   
   //! uniconify window
-  QAction& uniconifyAction( void )
+  QAction& uniconifyAction( void ) const
   { return *uniconify_action_; }
   
+  //! new keyword action
+  QAction& newKeywordAction( void ) const
+  { return *new_keyword_action_; }
+
+  //! edit keyword action
+  QAction& editKeywordAction( void ) const
+  { return *edit_keyword_action_; }
+
+  //! delete keyword action
+  QAction& deleteKeywordAction( void ) const
+  { return *delete_keyword_action_; }
+  //! new entry action
+  QAction& newEntryAction( void ) const
+  { return *new_entry_action_; }
+
+  //! edit entry action
+  QAction& editEntryAction( void ) const
+  { return *edit_entry_action_; }
+
+  //! delete entry action
+  QAction& deleteEntryAction( void ) const
+  { return *delete_entry_action_; }
+
+  //! change entry color action
+  QAction& entryColorAction( void ) const
+  { return *entry_color_action_; }
+
+  //! change entry keyword action
+  QAction& entryKeywordAction( void ) const
+  { return *entry_keyword_action_; }
+
   //! create new logbook
-  QAction& newLogbookAction( void )
+  QAction& newLogbookAction( void ) const
   { return *new_logbook_action_; }
   
   //! open existing logbook
-  QAction& openAction( void )
+  QAction& openAction( void ) const
   { return *open_action_; }
   
   //! synchronize logbooks
-  QAction& synchronizeAction( void )
+  QAction& synchronizeAction( void ) const
   { return *synchronize_action_; }
   
   //! reorganize logbook
-  QAction& reorganizeAction( void )
+  QAction& reorganizeAction( void ) const
   { return *reorganize_action_; }
   
   //! save logbook
-  QAction& saveAction( void )
+  QAction& saveAction( void ) const
   { return *save_action_; }
 
   //! save logbook
-  QAction& saveForcedAction( void )
+  QAction& saveForcedAction( void ) const
   { return *save_forced_action_; }
 
   //! save logbook with a different name
-  QAction& saveAsAction( void )
+  QAction& saveAsAction( void ) const
   { return *save_as_action_; }
 
   //! save logbook backup
-  QAction& saveBackupAction( void )
+  QAction& saveBackupAction( void ) const
   { return *save_backup_action_; }
 
   //! revert logbook to saved version
-  QAction& revertToSaveAction( void )
+  QAction& revertToSaveAction( void ) const
   { return *revert_to_save_action_; }
   
   //! convert logbook to html
-  QAction& viewHtmlAction( void )
+  QAction& viewHtmlAction( void ) const
   { return *view_html_action_; }
 
   //! logbook information
-  QAction& logbookInformationsAction( void )
+  QAction& logbookInformationsAction( void ) const
   { return *logbook_informations_action_; }
   
   //! logbook information
-  QAction& logbookStatisticsAction( void )
+  QAction& logbookStatisticsAction( void ) const
   { return *logbook_statistics_action_; }
 
   //! close editframes
-  QAction& closeFramesAction( void )
+  QAction& closeFramesAction( void ) const
   { return *close_frames_action_; }
   
   //! show duplicates
-  QAction& showDuplicatesAction( void )
+  QAction& showDuplicatesAction( void ) const
   { return *show_duplicates_action_; }
   
   //@}
@@ -347,18 +378,45 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! delete keyword from keyword list using dialog
   void _deleteKeyword( void );
 
-  //! change selected entries keyword using custom dialog
-  void _changeEntryKeyword( void );
+  //! change selected entries keyword using dialog
+  /*! 
+  this is triggered by the rename keyword action from 
+  the keyword list
+  */
+  void _renameKeyword( void );
+
+  //! rename keyword for all entries that match old keyword.
+  /*! 
+  this is triggered by drag and drop in the keyword list,
+  by renaming a keyword directly from the keyword list,
+  or by deleting a keyword in the list, and moving entries to the parent.
+  It is also called by the renameKeyword slot above.
+  */
+  void _renameKeyword( std::string old_keyword, std::string new_keyword );
+  
+  //! rename keyword for selected entries using dialog
+  /*! 
+  this is triggered by the rename entry keyword action in the
+  logEntry list.
+  */
+  void _renameEntryKeyword( void );
   
   //! change selected entries keyword using argument
-  void _changeEntryKeyword( std::string new_keyword );
+  /*! 
+  this is triggered by drag and drop from the logEntry list
+  to the keyword list, and it is also called by the slot above 
+  */
+  void _renameEntryKeyword( std::string new_keyword );
   
-  //! rename keyword from keyword list using arguments
-  void _changeEntryKeyword( std::string old_keyword, std::string new_keyword );
-   
   //! keyword selection changed
   void _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* );
     
+  //! update keyword-list related actions
+  void _updateKeywordActions( void );
+  
+  //! update entry-list related actions
+  void _updateEntryActions( void );
+  
   //! create HTML file from logbook
   virtual void _viewHtml( void );
   
@@ -415,6 +473,30 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! uniconify action
   QAction* uniconify_action_;
+  
+  //! add new keyword
+  QAction* new_keyword_action_;
+ 
+  //! edit keyword
+  QAction* edit_keyword_action_;
+  
+  //! delete keyword
+  QAction* delete_keyword_action_;
+  
+  //! new entry
+  QAction* new_entry_action_;
+  
+  //! edit entry
+  QAction* edit_entry_action_;
+  
+  //! delete entry
+  QAction* delete_entry_action_;
+  
+  //! change selected entries color
+  QAction* entry_color_action_;
+  
+  //! change selected entries keyword
+  QAction* entry_keyword_action_;
   
   //! create new logbook
   QAction* new_logbook_action_;

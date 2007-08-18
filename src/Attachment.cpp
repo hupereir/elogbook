@@ -144,7 +144,6 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
 
   // for URL attachments, just copy origin to file, whatever the command
   if( type_ == AttachmentType::URL ) {
-    Debug::Throw( 0 ) << "Attachment::copy - source: " << source_file_ << endl;
     _setFile( source_file_ );
     return SUCCESS;
   }

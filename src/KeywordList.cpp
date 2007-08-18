@@ -128,15 +128,18 @@ void KeywordList::add( string keyword )
 }  
 
 //_______________________________________________
-void KeywordList::remove( string keyword )
+void KeywordList::_remove( string keyword )
 {
   
-  Debug::Throw() << "KeywordList::remove - keyword=" << keyword << endl;
+  Debug::Throw() << "KeywordList::_remove - keyword=" << keyword << endl;
+  
+  // when removing items one must stop all edition
+  if( edit_item_ ) _resetEdit();
   
   // check root item
   _createRootItem();
     
-  // check keyword
+  // format keyword
   keyword = LogEntry::formatKeyword( keyword );
   
   // parse keyword, insert in keywords tree  
@@ -190,6 +193,9 @@ void KeywordList::reset( set<string> new_keywords )
   
   Debug::Throw( "KeywordList::reset.\n" );
   
+  // remove duplicated keywords
+  _unique();
+  
   // make sure root item is in the new_keywords list
   // so that it does not get deleted
   _createRootItem();
@@ -202,18 +208,19 @@ void KeywordList::reset( set<string> new_keywords )
   for( set<string>::iterator iter = old_keywords.begin(); iter != old_keywords.end(); iter++ )
   {
     if( find_if( new_keywords.begin(), new_keywords.end(), ContainsFTor( *iter ) ) == new_keywords.end() )
-    { remove( *iter ); }
+    { _remove( *iter ); }
   }
   
   // add keywords that are not found in old list
   for( set<string>::const_iterator iter = new_keywords.begin(); iter != new_keywords.end(); iter++ )
-  { if( old_keywords.find( *iter ) == old_keywords.end() ) add( *iter ); }
-  
+  { 
+    if( old_keywords.find( *iter ) == old_keywords.end() ) 
+    { add( *iter ); }
+  }
+    
   // always expand the root item
   expandItem( rootItem() );
-  
   return;
-  
 }
   
 //_______________________________________________
@@ -282,7 +289,9 @@ string KeywordList::keyword( QTreeWidgetItem* item ) const
   
   QString out( item->text( KEYWORD ) );
   while( (item = item->parent()) != root_item_ )
-  out = item->text( KEYWORD ) + "/" + out;
+  { out = item->text( KEYWORD ) + "/" + out; }
+  
+  out = root_item_->text( KEYWORD ) + out;
 
   return qPrintable(out);  
   
@@ -388,6 +397,53 @@ void KeywordList::_createRootItem( void )
   root_item_->setText( KEYWORD, LogEntry::NO_KEYWORD.c_str() );
 
 }
+
+//__________________________________________________________
+void KeywordList::_unique( QTreeWidgetItem* item )
+{
+
+  Debug::Throw( "KeywordList::_unique.\n" );  
+  if( !item ) 
+  {
+    // when uniquing the list one must stop all edition
+    if( edit_item_ ) _resetEdit();
+    item = rootItem();
+    
+  } if( !item ) return;
+  
+  // loop over children
+  for( int i=0; i<item->childCount(); i++ )
+  {
+    
+    // check if name is empty
+    if( item->child(i)->text( KEYWORD ).isEmpty() )
+    {
+      // move children
+      for( int k = 0; k< item->child(i)->childCount(); k++ )
+      { item->addChild( item->child(i)->takeChild(k) ); }
+      delete item->takeChild(i);
+      continue;
+    }
+    
+    // compare to existing children 
+    for( int j=0; j<i; j++ )
+    {
+      if( item->child(i)->text(KEYWORD) == item->child(j)->text(KEYWORD) )
+      {
+        // move children
+        for( int k = 0; k< item->child(i)->childCount(); k++ )
+        { item->child(j)->addChild( item->child(i)->takeChild(k) ); }
+        delete item->takeChild(i);
+        break;
+      }
+    }
+  }
+  
+  // run unique on children
+  for( int i=0; i<item->childCount(); i++ )
+  { _unique( item->child(i) ); }
+  
+} 
 
 //__________________________________________________________
 void KeywordList::mousePressEvent( QMouseEvent* event )
@@ -650,7 +706,7 @@ bool KeywordList::_processDrop( QDropEvent *event )
     
     // dragging from logEntry list
     _resetDrag();
-    emit keywordChanged( current_keyword );
+    emit entryKeywordChanged( current_keyword );
     
   }
   

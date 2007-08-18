@@ -184,9 +184,14 @@ string LogEntry::formatKeyword( const string& keyword )
       else out += "/"+local;
     }
   }
-  if( out.empty() ) out = NO_KEYWORD;
+  
+  // for debugging, check leading character
+  Exception::check( out.empty() || out.find( NO_KEYWORD ) != 0, "incorrect keyword format" );
+  
+  // add leading backspace
+  out = NO_KEYWORD + out;
+  Debug::Throw() << "LogEntry::FormatKeyword: " << out << endl;
   return out;
-
 }
 
 //__________________________________
@@ -201,12 +206,13 @@ vector<string> LogEntry::parseKeyword( const string& keyword )
 
     //! get leading keyword add to the list
     string first( keyword.substr( 0, pos ) );
-    if( first.size() ) out.push_back( first );
+    if( !first.empty() ) out.push_back( first );
 
     //! parse trailing keyword
     string second( keyword.substr( pos+1, keyword.size()-pos-1 ) );
     vector<string> tmp( parseKeyword( second ) );
     out.insert( out.end(), tmp.begin(), tmp.end() );
+  
   }
 
   return out;

@@ -34,7 +34,6 @@
 #include "AttachmentFrame.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
-#include "CustomDialog.h"
 #include "CustomLineEdit.h"
 #include "CustomPixmap.h"
 #include "CustomToolBar.h"
@@ -125,45 +124,37 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->addWidget( toolbar );
   
   // keyword actions
-  QAction* new_keyword_action = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New keyword", this );
-  new_keyword_action->setToolTip( "Create a new keyword" );
-  connect( new_keyword_action, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, new_keyword_action, &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &newKeywordAction(), &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &editKeywordAction(), &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &deleteKeywordAction(), &statusBar().label() ) );
+  Debug::Throw() << "SelectionFrame::SelectionFrame - keyword toolbar created." << endl;
   
-  QAction* edit_keyword_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Rename keyword", this );
-  edit_keyword_action->setToolTip( "Rename selected keyword" );
-  connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, edit_keyword_action, &statusBar().label() ) );
-  
-  /*
-  delete keyword action
-  it is associated to the Key_Delete shortcut
-  but the later is enabled only if the KeywordList has focus.
-  */
-  QAction* delete_keyword_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete keyword", this );
-  delete_keyword_action->setToolTip( "Delete selected keyword" );
-  delete_keyword_action->setShortcut( Key_Delete );
-  delete_keyword_action->setShortcutContext( WidgetShortcut );  
-  connect( delete_keyword_action, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, delete_keyword_action, &statusBar().label() ) );
-
   // create keyword list
   v_layout->addWidget( keyword_list_ = new KeywordList( left ), 1 );
+  
+  // update LogEntryList when keyword selection change
   connect( keyword_list_, SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );  
-  connect( keyword_list_, SIGNAL( keywordChanged( std::string ) ), SLOT( _changeEntryKeyword( std::string ) ) );
-  connect( keyword_list_, SIGNAL( keywordChanged( std::string, std::string ) ), SLOT( _changeEntryKeyword( std::string, const std::string& ) ) );
+  connect( keyword_list_, SIGNAL( itemSelectionChanged( void ) ), SLOT( _updateKeywordActions() ) );
+  
+  // rename selected entries when KeywordChanged is emitted with a single argument.
+  // this correspond to drag and drop action from the logEntryList in the KeywordList
+  connect( keyword_list_, SIGNAL( entryKeywordChanged( std::string ) ), SLOT( _renameEntryKeyword( std::string ) ) );
+  
+  // rename all entries matching first keyword the second. This correspond to 
+  // drag and drop inside the keyword list, or to direct edition of a keyword list item.
+  connect( keyword_list_, SIGNAL( keywordChanged( std::string, std::string ) ), SLOT( _renameKeyword( std::string, const std::string& ) ) );
     
   // popup menu for keyword list
-  keywordList().addMenuAction( new_keyword_action ); 
-  keywordList().addMenuAction( edit_keyword_action, true ); 
-  keywordList().addMenuAction( delete_keyword_action, true ); 
+  keywordList().menu().addAction( &newKeywordAction() ); 
+  keywordList().menu().addAction( &editKeywordAction() );
+  keywordList().menu().addAction( &deleteKeywordAction() );
 
   /* 
   add the delete_keyword_action to the keyword list,
   so that the corresponding shortcut gets activated whenever it is pressed
   while the list has focus
   */
-  keywordList().addAction( delete_keyword_action );
+  keywordList().addAction( &deleteKeywordAction() );
   
   // right box for entries and buttons
   QWidget* right = new QWidget( splitter_ );
@@ -176,67 +167,35 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->addWidget( toolbar );
 
   // entry actions
-  QAction* new_entry_action = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New entry", this );
-  new_entry_action->setToolTip( "Create a new entry" );
-  connect( new_entry_action, SIGNAL( triggered() ), SLOT( _newEntry() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, new_entry_action, &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &newEntryAction(), &statusBar().label() ) );
+  toolbar->addWidget( new CustomToolButton( toolbar, &editEntryAction(), &statusBar().label() ) );
+  Debug::Throw( "after EditEntryAction.\n" );
 
-  QAction* edit_entry_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit selected entries", this );
-  edit_entry_action->setToolTip( "Edit selected entries" );
-  connect( edit_entry_action, SIGNAL( triggered() ), SLOT( _editEntries() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, edit_entry_action, &statusBar().label() ) );
-
-  /*
-  delete entry action
-  it is associated to the Key_Delete shortcut
-  but the later is enabled only if the KeywordList has focus.
-  */
-  QAction* delete_entry_action = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete selected entries", this );
-  delete_entry_action->setToolTip( "Delete selected entries" );
-  delete_entry_action->setShortcut( Key_Delete );
-  delete_entry_action->setShortcutContext( WidgetShortcut );  
-  connect( delete_entry_action, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, delete_entry_action, &statusBar().label() ) );
-  
+  toolbar->addWidget( new CustomToolButton( toolbar, &deleteEntryAction(), &statusBar().label() ) );
+  Debug::Throw( "after DeleteEntryAction.\n" );
   toolbar->addWidget( new CustomToolButton( toolbar, &saveAction(), &statusBar().label() ) );
   toolbar->addWidget( new CustomToolButton( toolbar, &viewHtmlAction(), &statusBar().label() ) );
-
-  // color menu
-  color_menu_ = new ColorMenu( this );
-  color_menu_->setTitle( "&Change entry color" );
-  connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
-   
-  QAction* color_action = new QAction( IconEngine::get( ICONS::COLOR, path_list ), "&Entry color", this );
-  color_action->setToolTip( "Change selected entries color" );
-  color_action->setMenu( color_menu_ );
-  CustomToolButton* button = new CustomToolButton( toolbar, color_action, &statusBar().label() );
-  button->setPopupMode( QToolButton::InstantPopup );
-  toolbar->addWidget( button );
-
-  edit_keyword_action = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Change keyword", this );
-  edit_keyword_action->setToolTip( "Edit selected entries keyword" );
-  connect( edit_keyword_action, SIGNAL( triggered() ), SLOT( _changeEntryKeyword() ) );
-    
+       
   // create logEntry list
   v_layout->addWidget( list_ = new LogEntryList( right ), 1 );
   
   connect( logEntryList().header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
   connect( list_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
   connect( list_, SIGNAL( entryRenamed( LogEntry*, std::string ) ), SLOT( _changeEntryTitle( LogEntry*, std::string ) ) );
-  
+  connect( list_, SIGNAL( itemSelectionChanged( void ) ), SLOT( _updateEntryActions( void ) ) );
   /* 
   add the delete_entry_action to the list,
   so that the corresponding shortcut gets activated whenever it is pressed
   while the list has focus
   */
-  list_->addAction( delete_entry_action );
+  list_->addAction( &deleteEntryAction() );
   
   // create popup menu for list
-  logEntryList().addMenuAction( new_entry_action );
-  logEntryList().addMenuAction( edit_entry_action, true ); 
-  logEntryList().addMenuAction( edit_keyword_action, true );
-  logEntryList().addMenuAction( delete_entry_action, true ); 
-  logEntryList().addMenuAction( color_action, true );
+  logEntryList().menu().addAction( &newEntryAction() );
+  logEntryList().menu().addAction( &editEntryAction() ); 
+  logEntryList().menu().addAction( &entryKeywordAction() );
+  logEntryList().menu().addAction( &deleteEntryAction() ); 
+  logEntryList().menu().addAction( &entryColorAction() );
   
   // main menu
   menu_ = new Menu( this , this );
@@ -936,7 +895,58 @@ void SelectionFrame::_installActions( void )
   uniconify_action_ = new QAction( IconEngine::get( ICONS::HOME, path_list ), "&Main window", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
+
+  new_keyword_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New keyword", this );
+  new_keyword_action_->setToolTip( "Create a new keyword" );
+  connect( new_keyword_action_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
+
+  edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Rename keyword", this );
+  edit_keyword_action_->setToolTip( "Rename selected keyword" );
+  connect( edit_keyword_action_, SIGNAL( triggered() ), SLOT( _renameKeyword() ) );
   
+  /*
+  delete keyword action
+  it is associated to the Key_Delete shortcut
+  but the later is enabled only if the KeywordList has focus.
+  */
+  delete_keyword_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete keyword", this );
+  delete_keyword_action_->setToolTip( "Delete selected keyword" );
+  delete_keyword_action_->setShortcut( Key_Delete );
+  delete_keyword_action_->setShortcutContext( WidgetShortcut );  
+  connect( delete_keyword_action_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
+
+  new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New entry", this );
+  new_entry_action_->setToolTip( "Create a new entry" );
+  connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
+  
+  edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit selected entries", this );
+  edit_entry_action_->setToolTip( "Edit selected entries" );
+  connect( edit_entry_action_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
+
+  /*
+  delete entry action
+  it is associated to the Key_Delete shortcut
+  but the later is enabled only if the KeywordList has focus.
+  */
+  delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete selected entries", this );
+  delete_entry_action_->setToolTip( "Delete selected entries" );
+  delete_entry_action_->setShortcut( Key_Delete );
+  delete_entry_action_->setShortcutContext( WidgetShortcut );  
+  connect( delete_entry_action_, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
+
+  // color menu
+  color_menu_ = new ColorMenu( this );
+  color_menu_->setTitle( "&Change entry color" );
+  connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
+
+  entry_color_action_ = new QAction( IconEngine::get( ICONS::COLOR, path_list ), "&Entry color", this );
+  entry_color_action_->setToolTip( "Change selected entries color" );
+  entry_color_action_->setMenu( color_menu_ );
+  
+  entry_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Change keyword", this );
+  entry_keyword_action_->setToolTip( "Edit selected entries keyword" );
+  connect( entry_keyword_action_, SIGNAL( triggered() ), SLOT( _renameEntryKeyword() ) );
+
   new_logbook_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New", this );
   new_logbook_action_->setToolTip( "Create a new logbook" );
   new_logbook_action_->setShortcut( CTRL+Key_N );
@@ -1021,11 +1031,7 @@ void SelectionFrame::_resetKeywordList( void )
 {
   
   Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
-      
-  // clear list of entries
-  // keywordList().clear();
-  
-  if( !logbook_ ) return;
+  Exception::checkPointer( logbook(), "no valid logbook.\n" );
     
   // retrieve current list of keywords
   set<string> old_keywords = keywordList().keywords();
@@ -1041,6 +1047,7 @@ void SelectionFrame::_resetKeywordList( void )
   
   // sort list
   keywordList().sort();
+  Debug::Throw( "SelectionFrame::_resetKeywordList - node.\n" );
 
 }
 
@@ -1329,8 +1336,8 @@ void SelectionFrame::_synchronize( void )
   if( files.empty() ) return;
 
   // debug
-  Debug::Throw(0) << "SelectionFrame::_synchronize - number of local files: " << SelectionFrame::logbook()->children().size() << endl;
-  Debug::Throw(0) << "SelectionFrame::_synchronize - number of local entries: " << SelectionFrame::logbook()->entries().size() << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - number of local files: " << SelectionFrame::logbook()->children().size() << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - number of local entries: " << SelectionFrame::logbook()->entries().size() << endl;
   
   // set busy flag
   dynamic_cast<MainFrame*>(qApp)->busy();
@@ -1338,7 +1345,7 @@ void SelectionFrame::_synchronize( void )
   
   // opens file in remote logbook
   File remote_file( qPrintable( files.front() ) );
-  Debug::Throw(0) << "SelectionFrame::_synchronize - reading remote logbook from file: " << remote_file << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - reading remote logbook from file: " << remote_file << endl;
   
   Logbook remote_logbook;
   connect( &remote_logbook, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
@@ -1362,14 +1369,14 @@ void SelectionFrame::_synchronize( void )
   }
 
   // debug
-  Debug::Throw(0) << "SelectionFrame::_synchronize - number of remote files: " << remote_logbook.children().size() << endl;
-  Debug::Throw(0) << "SelectionFrame::_synchronize - number of remote entries: " << remote_logbook.entries().size() << endl;
-  Debug::Throw(0) << "SelectionFrame::_synchronize - updating local from remote" << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - number of remote files: " << remote_logbook.children().size() << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - number of remote entries: " << remote_logbook.entries().size() << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - updating local from remote" << endl;
 
   // synchronize local with remote
   // retrieve map of duplicated entries
   std::map<LogEntry*,LogEntry*> duplicates( SelectionFrame::logbook()->synchronize( remote_logbook ) );
-  Debug::Throw(0) << "SelectionFrame::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
 
   // update possible EditFrames when duplicated entries are found
   // delete the local duplicated entries
@@ -1400,9 +1407,9 @@ void SelectionFrame::_synchronize( void )
   if( !SelectionFrame::logbook()->file().empty() ) save();
   
   // synchronize remove with local
-  Debug::Throw(0) << "SelectionFrame::_synchronize - updating remote from local" << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - updating remote from local" << endl;
   unsigned int n_duplicated = remote_logbook.synchronize( *SelectionFrame::logbook() ).size();
-  Debug::Throw(0) << "SelectionFrame::_synchronize - number of duplicated entries: " << n_duplicated << endl;
+  Debug::Throw() << "SelectionFrame::_synchronize - number of duplicated entries: " << n_duplicated << endl;
 
   // save remote logbook
   statusBar().label().setText( "saving remote logbook ... " );
@@ -1813,7 +1820,7 @@ void SelectionFrame::_newKeyword( void )
   
   Debug::Throw( "SelectionFrame::_newKeyword.\n" );
   
-  //! create CustomDialog
+  //! create dialog
   EditKeywordDialog dialog( this );
   dialog.setWindowTitle( "New keyword" );
 
@@ -1865,7 +1872,7 @@ void SelectionFrame::_deleteKeyword( void )
   if( (*iter)->keyword().find( keyword ) == 0 )
   associated_entries.insert( *iter );    
                  
-  //! create CustomDialog
+  //! create dialog
   DeleteKeywordDialog dialog( this, keyword, associated_entries.size() );
   QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return;
@@ -1878,7 +1885,7 @@ void SelectionFrame::_deleteKeyword( void )
   if( dialog.moveEntries() && associated_entries.size() ) 
   { 
 
-    _changeEntryKeyword( keyword, new_keyword ); 
+    _renameKeyword( keyword, new_keyword ); 
     return;
     
   } else if( dialog.deleteEntries() ) {
@@ -1901,9 +1908,9 @@ void SelectionFrame::_deleteKeyword( void )
 }
 
 //____________________________________________
-void SelectionFrame::_changeEntryKeyword( void )
+void SelectionFrame::_renameKeyword( void )
 {
-  Debug::Throw("SelectionFrame::_changeEntryKeyword.\n" );
+  Debug::Throw("SelectionFrame::_renameKeyword.\n" );
   
   //! check that keywordlist has selected item
   if( !keywordList().QTreeWidget::currentItem() )
@@ -1922,7 +1929,7 @@ void SelectionFrame::_changeEntryKeyword( void )
   // get current selected keyword
   string keyword( keywordList().current() );
       
-  //! create CustomDialog
+  //! create dialog
   EditKeywordDialog dialog( this );
   dialog.setWindowTitle( "Edit keyword" );
 
@@ -1935,16 +1942,111 @@ void SelectionFrame::_changeEntryKeyword( void )
   QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return;
 
-  // retrieve keyword from line_edit
-  _changeEntryKeyword( LogEntry::formatKeyword( dialog.keyword() ) );
+  // change keyword for all entries that match the old one
+  _renameKeyword( keyword, dialog.keyword() );
+  
+}
+
+//____________________________________________
+void SelectionFrame::_renameKeyword( string keyword, string new_keyword )
+{
+
+  Debug::Throw("SelectionFrame::_renameKeyword.\n" );
+  
+  // format keywords
+  keyword = LogEntry::formatKeyword( keyword );
+  new_keyword = LogEntry::formatKeyword( new_keyword );
+
+  // check keywords are different
+  if( keyword == new_keyword ) return;
+    
+  // get entries matching the old_keyword, change the keyword
+  KeySet<LogEntry> entries( logbook()->entries() );
+  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  {
+    LogEntry* entry( *iter );
+    
+    /* 
+      if keyword to modify is a leading subset of current entry keyword, 
+      update entry with new keyword
+    */
+    if( entry->keyword().find( keyword ) == 0 ) 
+    {
+      
+      entry->setKeyword( Str( entry->keyword() ).replace( keyword, new_keyword ) );
+      
+      /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
+      keyword change when synchronizing logbooks, without having all entries modification time
+      set to now() */
+      entry->setModification( entry->modification()+1 );
+
+      KeySet<Logbook> logbooks( entry );
+      for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
+      { (*log_iter)->setModified( true ); }
+    
+    }
+    
+  }
+
+  // reset lists
+  _resetKeywordList();
+  _resetList();
+  keywordList().select( new_keyword );
+    
+  // Save logbook if needed
+  if( !logbook()->file().empty() ) save();     
+  
+}
+ 
+//____________________________________________
+void SelectionFrame::_renameEntryKeyword( void )
+{
+  Debug::Throw("SelectionFrame::_renameEntryKeyword.\n" );
+  
+  //! check that LogEntry list has selected items
+  if( logEntryList().QTreeWidget::selectedItems().empty() )
+  {
+    QtUtil::infoDialog( this, "no entries selected. <Change keyword> canceled" );
+    return;
+  }
+        
+  //! check that current keyword make sense
+  if( !keywordList().QTreeWidget::currentItem() )
+  {
+    QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
+    return;
+  }
+  
+  // get current selected keyword
+  string keyword( keywordList().current() );
+  
+  //! create dialog
+  EditKeywordDialog dialog( this );
+  dialog.setWindowTitle( "Edit keyword" );
+
+  const set<string>& keywords( keywordList().keywords() );
+  for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+  dialog.add( *iter );
+  dialog.setKeyword( keyword );
+  
+  // map dialog
+  QtUtil::centerOnParent( &dialog );
+  if( dialog.exec() == QDialog::Rejected ) return;
+
+  // check if keyword was changed
+  string new_keyword( LogEntry::formatKeyword( dialog.keyword() ) );
+  if( keyword == new_keyword ) return;
+  
+  // change keyword for all entries that match the old one
+  _renameEntryKeyword( new_keyword );
   
 }
 
 //_______________________________________________
-void SelectionFrame::_changeEntryKeyword( string new_keyword )
+void SelectionFrame::_renameEntryKeyword( string new_keyword )
 {
       
-  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - new_keyword: " << new_keyword << endl;
+  Debug::Throw() << "SelectionFrame::_renameKeyword - new_keyword: " << new_keyword << endl;
   
   // keep track of modified entries
   KeySet<LogEntry> entries;
@@ -2004,52 +2106,6 @@ void SelectionFrame::_changeEntryKeyword( string new_keyword )
   
 }
 
-//____________________________________________
-void SelectionFrame::_changeEntryKeyword( string keyword, string new_keyword )
-{
-  
-  Debug::Throw() << "SelectionFrame::_changeEntryKeyword - keyword: " << keyword << " new:" << new_keyword << endl;
-  
-  // check keywords are different
-  if( keyword == new_keyword ) return;
-    
-  // get entries matching the old_keyword, change the keyword
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  {
-    LogEntry* entry( *iter );
-    
-    /* 
-      if keyword to modify is a leading subset of current entry keyword, 
-      update entry with new keyword
-    */
-    if( entry->keyword().find( keyword ) == 0 ) 
-    {
-      
-      entry->setKeyword( Str( entry->keyword() ).replace( keyword, new_keyword ) );
-      
-      /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
-      keyword change when synchronizing logbooks, without having all entries modification time
-      set to now() */
-      entry->setModification( entry->modification()+1 );
-
-      KeySet<Logbook> logbooks( entry );
-      for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
-      (*log_iter)->setModified( true );
-    }
-    
-  }
-
-  // reset lists
-  _resetKeywordList();
-  _resetList();
-  keywordList().select( new_keyword );
-    
-  // Save logbook if needed
-  if( !logbook()->file().empty() ) save();     
-  
-}
- 
 //_______________________________________________
 void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWidgetItem* old )
 {
@@ -2094,6 +2150,32 @@ void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWi
   
   return;
 } 
+
+//_____________________________________________
+void SelectionFrame::_updateKeywordActions( void )
+{
+  Debug::Throw( "SelectionFrame::_updateKeywordActions.\n" );
+
+  QList<KeywordList::Item*> items( keywordList().selectedItems<KeywordList::Item>() );  
+  bool has_selection( !items.empty() );
+  bool selection_is_root( items.size() == 1 && items.front() == keywordList().rootItem() );
+  
+  editKeywordAction().setEnabled( has_selection && !selection_is_root );
+  deleteKeywordAction().setEnabled( has_selection && !selection_is_root );
+  return;
+}
+
+//_____________________________________________
+void SelectionFrame::_updateEntryActions( void )
+{
+  Debug::Throw( "SelectionFrame::_updateEntryActions.\n" );
+  bool has_selection( !logEntryList().QTreeWidget::selectedItems().empty() );
+  editEntryAction().setEnabled( has_selection );
+  deleteEntryAction().setEnabled( has_selection );
+  entryColorAction().setEnabled( has_selection );
+  entryKeywordAction().setEnabled( has_selection );
+  return;
+}
 
 //_____________________________________________
 void SelectionFrame::_viewHtml( void )
