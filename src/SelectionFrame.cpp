@@ -1327,18 +1327,26 @@ void SelectionFrame::_synchronize( void )
 
   QStringList files( dialog.selectedFiles() );
   if( files.empty() ) return;
+
+  // debug
+  Debug::Throw(0) << "SelectionFrame::_synchronize - number of local files: " << SelectionFrame::logbook()->children().size() << endl;
+  Debug::Throw(0) << "SelectionFrame::_synchronize - number of local entries: " << SelectionFrame::logbook()->entries().size() << endl;
   
   // set busy flag
   dynamic_cast<MainFrame*>(qApp)->busy();
   statusBar().label().setText( "reading remote logbook ... " );
   
-  // opens file in a local logbook
-  Logbook logbook;
-  connect( &logbook, SIGNAL( messageAvailable() ), SIGNAL( messageAvailable() ) );
-  logbook.setFile( File( qPrintable( files.back() ) ) );
+  // opens file in remote logbook
+  File remote_file( qPrintable( files.front() ) );
+  Debug::Throw(0) << "SelectionFrame::_synchronize - reading remote logbook from file: " << remote_file << endl;
+  
+  Logbook remote_logbook;
+  connect( &remote_logbook, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+  remote_logbook.setFile( remote_file );
+  remote_logbook.read();
   
   // check if logbook is valid
-  XmlError::List errors( logbook.xmlErrors() );
+  XmlError::List errors( remote_logbook.xmlErrors() );
   if( errors.size() ) 
   {
 
@@ -1353,10 +1361,16 @@ void SelectionFrame::_synchronize( void )
 
   }
 
+  // debug
+  Debug::Throw(0) << "SelectionFrame::_synchronize - number of remote files: " << remote_logbook.children().size() << endl;
+  Debug::Throw(0) << "SelectionFrame::_synchronize - number of remote entries: " << remote_logbook.entries().size() << endl;
+  Debug::Throw(0) << "SelectionFrame::_synchronize - updating local from remote" << endl;
+
   // synchronize local with remote
   // retrieve map of duplicated entries
-  std::map<LogEntry*,LogEntry*> duplicates( SelectionFrame::logbook()->synchronize( logbook ) );
-  
+  std::map<LogEntry*,LogEntry*> duplicates( SelectionFrame::logbook()->synchronize( remote_logbook ) );
+  Debug::Throw(0) << "SelectionFrame::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
+
   // update possible EditFrames when duplicated entries are found
   // delete the local duplicated entries
   for( std::map<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); iter++ )
@@ -1365,14 +1379,11 @@ void SelectionFrame::_synchronize( void )
     // display the new entry in all matching edit frames
     KeySet<EditFrame> frames( iter->first );
     for( KeySet<EditFrame>::iterator frame_iter = frames.begin(); frame_iter != frames.end(); frame_iter++ )
-    { (*frame_iter)->displayEntry( iter->first ); }
+    { (*frame_iter)->displayEntry( iter->second ); }
 
     delete iter->first;
 
   }
-
-  // synchronize remove with local
-  logbook.synchronize( *SelectionFrame::logbook() );
 
   // reinitialize lists
   _resetKeywordList();
@@ -1385,16 +1396,17 @@ void SelectionFrame::_synchronize( void )
   selectEntry( *iter );
   logEntryList().setFocus();
 
-  // save current logbook if needed
-  if( !SelectionFrame::logbook()->file().empty() )
-  {
-    statusBar().label().setText( "saving local logbook ... " );
-    save();
-  }
+  // write local logbook
+  if( !SelectionFrame::logbook()->file().empty() ) save();
+  
+  // synchronize remove with local
+  Debug::Throw(0) << "SelectionFrame::_synchronize - updating remote from local" << endl;
+  unsigned int n_duplicated = remote_logbook.synchronize( *SelectionFrame::logbook() ).size();
+  Debug::Throw(0) << "SelectionFrame::_synchronize - number of duplicated entries: " << n_duplicated << endl;
 
   // save remote logbook
   statusBar().label().setText( "saving remote logbook ... " );
-  logbook.write();
+  remote_logbook.write();
 
   // idle
   dynamic_cast<MainFrame*>(qApp)->idle();

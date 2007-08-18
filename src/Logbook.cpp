@@ -198,7 +198,7 @@ bool Logbook::read( void )
       }
 
       File file( qPrintable( file_attribute ) );
-      if( !file.isAbsolute() ) file.addPath( Logbook::file().path() );
+      if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
       Logbook* child = new Logbook();
       child->setFile( file );
 
