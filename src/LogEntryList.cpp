@@ -424,19 +424,17 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     return;
   }
   
-  /* 
-    see if click occured on current item,
-    make sure it is not the root item, 
-    start Edit timer
-  */ 
+  // see if click occured on current item, start Edit timer
   if( 
-    event->button() == Qt::LeftButton &&
-    item && 
-    item == QTreeWidget::currentItem() &&
+    event->button() == Qt::LeftButton && item && 
+    isItemSelected( item ) &&
+   // item == QTreeWidget::currentItem() &&
     column == TITLE &&
     item != edit_item_ ) 
-  { edit_timer_->start(); } 
-  else _resetEdit();
+  { 
+    edit_timer_->start(); 
+    CustomListView::mousePressEvent( event );
+  } else _resetEdit();
       
   // enable drag if item was already selected  
   if( isItemSelected( item ) && event->button() == Qt::LeftButton )

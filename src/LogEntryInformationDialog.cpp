@@ -101,10 +101,10 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
   KeySet<Logbook> logbooks( entry );
   for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter!=logbooks.end(); iter++, i++ )
   {
-
-   grid_layout->addWidget( new QLabel( "File: ", this ), i, 0 );
-   grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName().c_str(), this ), i, 1);
-
+    
+    grid_layout->addWidget( new QLabel( "File: ", this ), i, 0 );
+    grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName().c_str(), this ), i, 1);
+    
   }
   
   QPushButton* button = new QPushButton( "&Ok", this );
