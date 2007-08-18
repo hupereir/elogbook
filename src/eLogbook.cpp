@@ -85,20 +85,20 @@ int main (int argc, char *argv[])
     installSystemOptions();
     
     // add help file
-    string helpfile = Util::home() + "/.eLogbook_help";
-    option = Option( "HELP_FILE", helpfile );  
+    option = Option( "HELP_FILE",  File( ".eLogbook_help" ).addPath( Util::home() ) );  
     option.setRecordable( false );
     XmlOptions::get().add( option );
 
     // add help file
-    string dbfile = Util::home() + "/.eLogbook_db";
-    option = Option( "DB_FILE", dbfile );  
+    option = Option( "DB_FILE", File( ".eLogbook_db" ).addPath( Util::home() ) );  
     option.setRecordable( false );
     XmlOptions::get().add( option );
 
     // load user resource file
-    string rcfile = Util::home() + "/.eLogbookrc";
-    XmlOptions::read( rcfile ); 
+    option = Option( "RC_FILE", File(".elogbookrc").addPath(Util::home()));
+    option.setRecordable( false );
+    XmlOptions::get().add( option );
+    XmlOptions::read( option.raw() ); 
                
     // set debug level
     Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
