@@ -116,16 +116,8 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   // help manager
   BASE::HelpManager* help( new BASE::HelpManager( this ) );
   File help_file( XmlOptions::get().raw( "HELP_FILE" ) );
-  if( help_file.exists() ) 
-  {
-    
-    ostringstream what;
-    what << "Installing help file: " << help_file << endl;
-    QtUtil::infoDialog( this, what.str() );
-    
-    BASE::HelpManager::install( help_file );
-  
-  } else {
+  if( help_file.exists() )   BASE::HelpManager::install( help_file );
+  else {
     BASE::HelpManager::setFile( help_file );
     BASE::HelpManager::install( HelpText );
   }  

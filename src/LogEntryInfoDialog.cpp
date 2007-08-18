@@ -62,19 +62,24 @@ LogEntryInfoDialog::LogEntryInfoDialog( QWidget* parent, LogEntry* entry ):
     pixmap.find( ICONS::INFO, path_list );
   }
   
-  QHBoxLayout* layout = new QHBoxLayout();
+  QVBoxLayout* layout = new QVBoxLayout();
   layout->setMargin(10);
   layout->setSpacing(10);
   setLayout( layout );
   
+  QHBoxLayout* h_layout = new QHBoxLayout();
+  h_layout->setSpacing(10);
+  h_layout->setMargin(0);
+  layout->addLayout( h_layout );
+  
   QLabel* label = new QLabel(this);
   label->setPixmap( pixmap );
-  layout->addWidget( label );
+  h_layout->addWidget( label );
   
   QGridLayout *grid_layout = new QGridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
-  layout->addLayout( grid_layout );
+  h_layout->addLayout( grid_layout );
   
   grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
   grid_layout->addWidget( new QLabel( entry->title().c_str(), this ), 0, 1 );
