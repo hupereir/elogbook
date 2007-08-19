@@ -81,7 +81,6 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   open_previous_menu_ = new OpenPreviousMenu( this );
   open_previous_menu_->setTitle( "Open pre&vious" );
   open_previous_menu_->setCheck( true );
-  open_previous_menu_->updateConfiguration();
   connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selection_frame, SLOT( open( FileRecord ) ) );  
   menu->addMenu( open_previous_menu_ );
 

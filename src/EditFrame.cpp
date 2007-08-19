@@ -574,7 +574,7 @@ void EditFrame::closeEvent( QCloseEvent *event )
   if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   else
   {
-    saveConfiguration();
+    _saveConfiguration();
     setIsClosed( true );
     event->accept();
   }
