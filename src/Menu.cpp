@@ -102,6 +102,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu->addSeparator();
   
   menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W );
+ 
   action = menu->addAction( "E&xit", qApp, SLOT( exit() ), CTRL+Key_Q );
   action->setIcon( IconEngine::get( ICONS::EXIT, path_list ) );
 
