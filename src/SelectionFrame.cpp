@@ -136,6 +136,9 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( keyword_list_, SIGNAL( itemSelectionChanged( void ) ), SLOT( _updateKeywordActions() ) );
   _updateKeywordActions();
   
+  // set sorting order
+  keyword_list_->sortItems( KeywordList::KEYWORD, Qt::AscendingOrder );
+  
   // rename selected entries when KeywordChanged is emitted with a single argument.
   // this correspond to drag and drop action from the logEntryList in the KeywordList
   connect( keyword_list_, SIGNAL( entryKeywordChanged( std::string ) ), SLOT( _renameEntryKeyword( std::string ) ) );
@@ -1079,7 +1082,7 @@ void SelectionFrame::_newLogbook( void )
   // new logbook
   NewLogbookDialog dialog( this );
   dialog.setTitle( Logbook::LOGBOOK_NO_TITLE );
-  dialog.setAuthor( XmlOptions::get().get<string>( "USER" ) );
+  dialog.setAuthor( Util::user() );
 
   // filename and directory
   File file = File( "log.xml" ).addPath( workingDirectory() );
