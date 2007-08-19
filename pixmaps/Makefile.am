@@ -5,6 +5,7 @@ EXTRA_DIST = \
   1rightarrow.png \
   attach.png \
   color.png \
+  configure.png \
   editcopy.png \
   edit.png \
   encrypted.png \
