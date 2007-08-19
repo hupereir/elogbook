@@ -75,7 +75,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
   read_only_( read_only ),
-  closed_( false )
+  closed_( false ),
+  color_frame_( 0 )
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
   setObjectName( "EDITFRAME" );
@@ -88,22 +89,15 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   layout->setSpacing( 5 );
   main->setLayout( layout );
   
-  QHBoxLayout* h_layout = new QHBoxLayout();
-  h_layout->setMargin(0);
-  h_layout->setSpacing(2);
-  layout->addLayout( h_layout );
+  title_layout_ = new QHBoxLayout();
+  title_layout_->setMargin(0);
+  title_layout_->setSpacing(2);
+  layout->addLayout( title_layout_ );
   
   // title label and line
-  h_layout->addWidget( new QLabel( " Title: ", main ), 0, Qt::AlignVCenter );
-  h_layout->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
-  
-  // color label
-  color_frame_ = new QFrame( main );
-  color_frame_->setFrameStyle( QFrame::NoFrame );
-  color_frame_->setFixedSize( ColorMenu::PixmapSize );
-  color_frame_->setAutoFillBackground( true );
-  h_layout->addWidget( color_frame_, 0, Qt::AlignVCenter );
-  
+  title_layout_->addWidget( new QLabel( " Title: ", main ), 0, Qt::AlignVCenter );
+  title_layout_->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
+    
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
   splitter_->setOrientation( Qt::Vertical );
@@ -434,9 +428,31 @@ void EditFrame::displayColor( void )
   QColor color;
   if( colorname != ColorMenu::NONE ) color = QColor( colorname.c_str() );
 
-  if( !color.isValid() ) color_frame_->hide();
-  else
+  if( !color.isValid() )
   {
+  
+    // if a colored frame existed
+    // delete it and set it to 0
+    if( color_frame_ ) 
+    {
+      delete color_frame_;
+      color_frame_ = 0;
+    }
+  
+  } else {
+    
+    // if color frame does not exist, create it
+    // color label
+    if( !color_frame_ )
+    {
+      color_frame_ = new QFrame( title_->parentWidget() );
+      color_frame_->setFrameStyle( QFrame::NoFrame );
+      // color_frame_->setFixedSize( ColorMenu::PixmapSize );
+      color_frame_->setFixedSize( QSize( title_->height()-2, title_->height()-2 ) );
+      color_frame_->setAutoFillBackground( true );
+      
+      title_layout_->addWidget( color_frame_ );
+    }
     
     // create gradient for nice look and fill
     QLinearGradient linearGrad(QPointF(0, 0), color_frame_->rect().bottomRight());
@@ -447,9 +463,7 @@ void EditFrame::displayColor( void )
     QPalette palette( color );
     palette.setBrush( QPalette::Window, linearGrad );
     color_frame_->setPalette( palette );
-    
-    // show frame
-    color_frame_->show();
+    color_frame_->update();
     
   }
   

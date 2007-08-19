@@ -32,7 +32,7 @@
   \date $Date$
 */
 
-#include <QMainWindow>
+#include <QLayout>
 #include <QSplitter>
 #include <string>
 #include <set>
@@ -303,6 +303,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! main splitter
   QSplitter *splitter_;
+  
+  //! titlebar layout
+  QHBoxLayout* title_layout_;
   
   //! LogEntry title Object
   CustomLineEdit *title_;          
