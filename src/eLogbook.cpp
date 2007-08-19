@@ -39,10 +39,8 @@
 #include "DefaultOptions.h"
 #include "SystemOptions.h"
 #include "ErrorHandler.h"
-#include "File.h"
 #include "MainFrame.h"
 #include "XmlOptions.h"
-#include "Util.h"
 
 using namespace std;
 
@@ -72,33 +70,11 @@ int main (int argc, char *argv[])
       MainFrame::usage();
       return 0;
     }
-      
-    // add user name as non recordable option
-    string user( Util::user( ) );
-    string host( Util::host() );
-    Option option( "USER", user+"@"+host );  
-    option.setRecordable( false );
-    XmlOptions::get().add( option );
    
     // install default options
     installDefaultOptions();
     installSystemOptions();
-    
-    // add help file
-    option = Option( "HELP_FILE",  File( ".eLogbook_help" ).addPath( Util::home() ) );  
-    option.setRecordable( false );
-    XmlOptions::get().add( option );
-
-    // add help file
-    option = Option( "DB_FILE", File( ".eLogbook_db" ).addPath( Util::home() ) );  
-    option.setRecordable( false );
-    XmlOptions::get().add( option );
-
-    // load user resource file
-    option = Option( "RC_FILE", File(".elogbookrc").addPath(Util::home()));
-    option.setRecordable( false );
-    XmlOptions::get().add( option );
-    XmlOptions::read( option.raw() ); 
+    XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
                
     // set debug level
     Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );

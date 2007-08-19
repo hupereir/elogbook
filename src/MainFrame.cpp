@@ -82,7 +82,7 @@ MainFrame::MainFrame( int argc, char*argv[] ) :
   realized_( false )
 { 
   Debug::Throw( "MainFrame::MainFrame.\n" ); 
-  setStyle( new FlatStyle() );
+  if( XmlOptions::get().get<bool>( "USE_FLAT_THEME" ) ) setStyle( new FlatStyle() );
 } 
 
 //____________________________________________

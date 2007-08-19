@@ -1082,7 +1082,7 @@ void SelectionFrame::_newLogbook( void )
   // new logbook
   NewLogbookDialog dialog( this );
   dialog.setTitle( Logbook::LOGBOOK_NO_TITLE );
-  dialog.setAuthor( Util::user() );
+  dialog.setAuthor( XmlOptions::get().raw( "USER" ) );
 
   // filename and directory
   File file = File( "log.xml" ).addPath( workingDirectory() );

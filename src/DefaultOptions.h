@@ -31,6 +31,9 @@
 
 #include "XmlOptions.h"
 #include "Config.h"
+#include "Util.h"
+
+using namespace std;
 
 //_____________________________________________________
 //! Default options installer
@@ -98,5 +101,29 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "EDITION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
   XmlOptions::get().add( Option( "EXTRA_TOOLBAR_LOCATION", "left" , "toolbar location" ));
   XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
+  
+  // add run-time non recordable options
+        
+  // user name and host
+  string user( Util::user( ) );
+  string host( Util::host() );
+  Option option( "USER", user+"@"+host );  
+  option.setRecordable( false );
+  XmlOptions::get().add( option );
 
+  // help file
+  option = Option( "HELP_FILE",  File( ".eLogbook_help" ).addPath( Util::home() ) );  
+  option.setRecordable( false );
+  XmlOptions::get().add( option );
+  
+  // DB file (for previously opened files
+  option = Option( "DB_FILE", File( ".eLogbook_db" ).addPath( Util::home() ) );  
+  option.setRecordable( false );
+  XmlOptions::get().add( option );
+
+  // user resource file
+  option = Option( "RC_FILE", File(".elogbookrc").addPath(Util::home()));
+  option.setRecordable( false );
+  XmlOptions::get().add( option );
+  
 };

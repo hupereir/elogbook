@@ -587,7 +587,7 @@ void EditFrame::save( bool update_selection )
   entry->setTitle( qPrintable( title_->text() ) );
 
   // update author
-  entry->setAuthor( XmlOptions::get().get<string>( "USER" ) );
+  entry->setAuthor( XmlOptions::get().raw( "USER" ) );
 
   // add _now_ to entry modification timestamps
   entry->modified();
@@ -631,7 +631,7 @@ void EditFrame::newEntry( void )
 
   // create new entry, set author, set keyword
   LogEntry* entry = new LogEntry();
-  entry->setAuthor( XmlOptions::get().get<string>( "USER" ) );
+  entry->setAuthor( XmlOptions::get().raw( "USER" ) );
   entry->setKeyword( _selectionFrame()->keywordList().current() );
 
   // add logbook parent if any
