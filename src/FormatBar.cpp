@@ -116,9 +116,9 @@ FormatBar::FormatBar( QWidget* parent ):
   _updateColorPixmap();
     
   // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
-  updateConfiguration();
+  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
+  _updateConfiguration();
   
 }
 
@@ -225,9 +225,9 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
 }
 
 //________________________________________
-void FormatBar::updateConfiguration( void )
+void FormatBar::_updateConfiguration( void )
 {
-  Debug::Throw( "FormatBar::updateConfiguration.\n" );
+  Debug::Throw( "FormatBar::_updateConfiguration.\n" );
   
   // retrieve colors from options
   list<string> text_colors( XmlOptions::get().specialOptions<string>( "TEXT_COLOR" ) );
@@ -263,9 +263,9 @@ void FormatBar::updateConfiguration( void )
   
 
 //________________________________________
-void FormatBar::saveConfiguration( void )
+void FormatBar::_saveConfiguration( void )
 {
-  Debug::Throw( "FormatBar::saveConfiguration.\n" );
+  Debug::Throw( "FormatBar::_saveConfiguration.\n" );
   XmlOptions::get().keep( "TEXT_COLOR" );
   
   const ColorMenu::ColorSet colors( color_menu_->colors() );

@@ -100,16 +100,14 @@ class FormatBar: public CustomToolBar
   //! get text formats
   FORMAT::TextFormatBlock::List get( void ) const;
   
-  public slots:
+  protected slots:
   
   //! update configuration
-  void updateConfiguration( void );
+  void _updateConfiguration( void );
   
   //! save configuration
-  void saveConfiguration( void );
-  
-  private slots:
-  
+  void _saveConfiguration( void );
+    
   //! update button state
   void _updateState( const QTextCharFormat& );
     

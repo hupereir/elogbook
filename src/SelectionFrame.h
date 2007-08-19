@@ -264,12 +264,6 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   public slots:
 
-  //! configuration
-  virtual void updateConfiguration( void );
-
-  //! save configuration
-  void saveConfiguration( void );
-
   //! open existing logbook
   virtual void open( FileRecord file = FileRecord() );
 
@@ -304,7 +298,13 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _loadColors( void );    
 
   protected slots:
-  
+ 
+  //! configuration
+  virtual void _updateConfiguration( void );
+
+  //! save configuration
+  virtual void _saveConfiguration( void );
+
   //! uniconify
   void _uniconify( void )
   { 

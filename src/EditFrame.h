@@ -178,12 +178,6 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     
   public slots:  
   
-  //! configuration
-  void updateConfiguration( void );
-  
-  //! configuration
-  void saveConfiguration( void );
-
   //! Save Current entry
   void save( bool update_selection = true );
   
@@ -205,7 +199,13 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! enter event handler
   void enterEvent( QEvent *event );
     
-  private slots:
+  protected slots:
+  
+  //! configuration
+  void _updateConfiguration( void );
+  
+  //! configuration
+  void _saveConfiguration( void );
   
   //! select previous entry
   void _previousEntry( void );

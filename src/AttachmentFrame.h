@@ -73,25 +73,21 @@ class AttachmentFrame: public QDialog, public Counter
   QAction& uniconifyAction( void )
   { return *uniconify_action_; }
 
-  public slots:
-  
-  //! update configuration
-  void updateConfiguration( void );
-  
-  //! save configuration
-  void saveConfiguration( void );
-  
-  protected slots:
-  
-  //! uniconify window
-  void _uniconify( void );
-
   protected:
   
   //! overloaded enter event handler
   void enterEvent( QEvent *event );
 
-  private slots:
+  protected slots:
+  
+  //! update configuration
+  void _updateConfiguration( void );
+  
+  //! save configuration
+  void _saveConfiguration( void );
+    
+  //! uniconify window
+  void _uniconify( void );
 
   //! display entry associated to selected attachment when selection changes
   void _displayEntry( QTreeWidgetItem*, QTreeWidgetItem* );

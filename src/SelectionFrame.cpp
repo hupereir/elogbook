@@ -211,9 +211,9 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( menu_, SIGNAL( viewHtml() ), this, SLOT( _viewHtml() ) );
  
   // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
-  updateConfiguration();
+  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
+  _updateConfiguration();
 
   // autosave_timer_
   autosave_timer_->setSingleShot( false );
@@ -589,56 +589,6 @@ void SelectionFrame::resetAttachmentFrame( void ) const
   attachment_frame.list().resizeColumns();
   return;
 
-}
-
-//_______________________________________________
-void SelectionFrame::updateConfiguration( void )
-{
-  
-  Debug::Throw( "SelectionFrame::updateConfiguration.\n" );
-  
-  CustomMainWindow::updateConfiguration();
-  
-  // autoSave
-  autosave_timer_->setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
-  bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
-  if( autosave ) autosave_timer_->start();
-  else autosave_timer_->stop();
-    
-  // resize
-  resize( XmlOptions::get().get<int>("SELECTION_FRAME_WIDTH"), XmlOptions::get().get<int>("SELECTION_FRAME_HEIGHT") );
-  
-  QList<int> sizes;
-  sizes.push_back( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
-  sizes.push_back( XmlOptions::get().get<int>( "ENTRY_LIST_WIDTH" ) );
-  splitter_->setSizes( sizes );
-  
-  // entry list mask
-  if( XmlOptions::get().find( "ENTRY_LIST_MASK" ) )
-  logEntryList().setMask( XmlOptions::get().get<unsigned int>( "ENTRY_LIST_MASK" ) );
-  
-  // colors
-  list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );
-  for( list<string>::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
-  { color_menu_->add( *iter ); }
-  
-}
-
-//_______________________________________________
-void SelectionFrame::saveConfiguration( void )
-{
-  
-  Debug::Throw( "SelectionFrame::saveConfiguration.\n" );
-  
-  // sizes
-  XmlOptions::get().set<int>( "SELECTION_FRAME_WIDTH", width() );
-  XmlOptions::get().set<int>( "SELECTION_FRAME_HEIGHT", height() );
-  XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
-  XmlOptions::get().set<int>( "ENTRY_LIST_WIDTH", logEntryList().width() );
-  
-  // entry list mask
-  XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", logEntryList().mask() );
-  
 }
 
 //_______________________________________________
@@ -1069,6 +1019,57 @@ void SelectionFrame::_loadColors( void )
   for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   { color_menu_->add( (*iter)->color() ); }
 
+}
+
+
+//_______________________________________________
+void SelectionFrame::_updateConfiguration( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_updateConfiguration.\n" );
+  
+  CustomMainWindow::_updateConfiguration();
+  
+  // autoSave
+  autosave_timer_->setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
+  bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
+  if( autosave ) autosave_timer_->start();
+  else autosave_timer_->stop();
+    
+  // resize
+  resize( XmlOptions::get().get<int>("SELECTION_FRAME_WIDTH"), XmlOptions::get().get<int>("SELECTION_FRAME_HEIGHT") );
+  
+  QList<int> sizes;
+  sizes.push_back( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
+  sizes.push_back( XmlOptions::get().get<int>( "ENTRY_LIST_WIDTH" ) );
+  splitter_->setSizes( sizes );
+  
+  // entry list mask
+  if( XmlOptions::get().find( "ENTRY_LIST_MASK" ) )
+  logEntryList().setMask( XmlOptions::get().get<unsigned int>( "ENTRY_LIST_MASK" ) );
+  
+  // colors
+  list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );
+  for( list<string>::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
+  { color_menu_->add( *iter ); }
+  
+}
+
+//_______________________________________________
+void SelectionFrame::_saveConfiguration( void )
+{
+  
+  Debug::Throw( "SelectionFrame::_saveConfiguration.\n" );
+  
+  // sizes
+  XmlOptions::get().set<int>( "SELECTION_FRAME_WIDTH", width() );
+  XmlOptions::get().set<int>( "SELECTION_FRAME_HEIGHT", height() );
+  XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
+  XmlOptions::get().set<int>( "ENTRY_LIST_WIDTH", logEntryList().width() );
+  
+  // entry list mask
+  XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", logEntryList().mask() );
+  
 }
 
 //_______________________________________________

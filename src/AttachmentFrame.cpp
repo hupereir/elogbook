@@ -75,9 +75,9 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   connect( new QShortcut( CTRL+Key_W, this ), SIGNAL( activated() ), SLOT( close() ) );
   
   // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( updateConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( saveConfiguration() ) );
-  updateConfiguration();
+  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
+  _updateConfiguration();
 
   std::list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
@@ -101,29 +101,6 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
 };
 
 //________________________________________
-void AttachmentFrame::updateConfiguration( void )
-{
-  
-  Debug::Throw( "AttachmentFrame::updateConfiguration.\n" );
-  
-  // resize window
-  resize( XmlOptions::get().get<int>( "ATC_FRAME_WIDTH" ), XmlOptions::get().get<int>( "ATC_FRAME_HEIGHT" ) );  
-  
-}    
-
-//________________________________________
-void AttachmentFrame::saveConfiguration( void )
-{
-  
-  Debug::Throw( "AttachmentFrame::saveConfiguration.\n" );
-  
-  // resize window
-  XmlOptions::get().set<int>( "ATC_FRAME_WIDTH", width() );
-  XmlOptions::get().set<int>( "ATC_FRAME_HEIGHT", height() );
-  
-}  
-
-//________________________________________
 void AttachmentFrame::show( void )
 {
   Debug::Throw( "AttachmentFrame::show.\n" );
@@ -143,6 +120,30 @@ void AttachmentFrame::enterEvent( QEvent *event )
     
   return;
 }
+
+
+//________________________________________
+void AttachmentFrame::_updateConfiguration( void )
+{
+  
+  Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
+  
+  // resize window
+  resize( XmlOptions::get().get<int>( "ATC_FRAME_WIDTH" ), XmlOptions::get().get<int>( "ATC_FRAME_HEIGHT" ) );  
+  
+}    
+
+//________________________________________
+void AttachmentFrame::_saveConfiguration( void )
+{
+  
+  Debug::Throw( "AttachmentFrame::_saveConfiguration.\n" );
+  
+  // resize window
+  XmlOptions::get().set<int>( "ATC_FRAME_WIDTH", width() );
+  XmlOptions::get().set<int>( "ATC_FRAME_HEIGHT", height() );
+  
+}  
 
 //_______________________________________________
 void AttachmentFrame::_uniconify( void )
