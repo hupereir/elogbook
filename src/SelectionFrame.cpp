@@ -135,6 +135,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   // update LogEntryList when keyword selection change
   connect( keyword_list_, SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );  
   connect( keyword_list_, SIGNAL( itemSelectionChanged( void ) ), SLOT( _updateKeywordActions() ) );
+  _updateKeywordActions();
   
   // rename selected entries when KeywordChanged is emitted with a single argument.
   // this correspond to drag and drop action from the logEntryList in the KeywordList
@@ -183,6 +184,8 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( list_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
   connect( list_, SIGNAL( entryRenamed( LogEntry*, std::string ) ), SLOT( _changeEntryTitle( LogEntry*, std::string ) ) );
   connect( list_, SIGNAL( itemSelectionChanged( void ) ), SLOT( _updateEntryActions( void ) ) );
+  _updateEntryActions();
+  
   /* 
   add the delete_entry_action to the list,
   so that the corresponding shortcut gets activated whenever it is pressed
