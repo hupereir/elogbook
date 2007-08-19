@@ -205,7 +205,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   setMenuBar( menu_ );
   
   connect( menu_, SIGNAL( save() ), SLOT( save() ) );
-  connect( menu_, SIGNAL( closeWindow() ), qApp, SLOT( exit() ) );
+  connect( menu_, SIGNAL( closeWindow() ), &dynamic_cast<MainFrame*>(qApp)->closeAction(), SLOT( trigger() ) );
   connect( menu_, SIGNAL( viewHtml() ), this, SLOT( _viewHtml() ) );
  
   // configuration
@@ -884,7 +884,7 @@ void SelectionFrame::closeEvent( QCloseEvent *event )
 {
   Debug::Throw( "SelectionFrame::closeEvent.\n" );
   event->accept();    
-  dynamic_cast<MainFrame*>(qApp)->exit();
+  dynamic_cast<MainFrame*>(qApp)->closeAction().trigger();
 }
 
 //_______________________________________________

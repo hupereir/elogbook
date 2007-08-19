@@ -32,6 +32,7 @@
   \date    $Date$
 */
 
+#include <QAction>
 #include <QApplication>
 #include <QCursor>
 #include <QMessageBox>
@@ -107,6 +108,23 @@ class MainFrame: public QApplication, public Counter
   void idle( void )
   { restoreOverrideCursor(); }
   
+  //!@name actions
+  //@{
+  
+  //! about
+  QAction& aboutAction( void ) const
+  { return *about_action_; }
+  
+  //! configuration
+  QAction& configurationAction( void ) const
+  { return *configuration_action_; }
+  
+  //! exit safely
+  QAction& closeAction( void ) const
+  { return *close_action_; }
+  
+  //@}
+  
   signals:
   
   //! configuration has changed
@@ -114,22 +132,22 @@ class MainFrame: public QApplication, public Counter
   
   public slots:
   
-  //! configuration
-  void configuration( void );
-  
-  //! Update Configuration
-  void updateConfiguration( void );
-      
-  //! about eLogbook
-  void about( void );
-  
   //! show splash screen
   void showSplashScreen( void );
   
-  //! exit safely
-  void exit( void );
-  
   private slots:
+  
+  //! configuration
+  void _configuration( void );
+  
+  //! Update Configuration
+  void _updateConfiguration( void );
+      
+  //! about eLogbook
+  void _about( void );
+  
+  //! exit safely
+  void _exit( void );
   
   //! process request from application manager
   void _processRequest( const ArgList&);
@@ -154,6 +172,20 @@ class MainFrame: public QApplication, public Counter
   //! true when Realized Widget has been called.
   bool realized_; 
 
+  //!@name actions
+  //@{
+  
+  //! about
+  QAction* about_action_;
+  
+  //! configure
+  QAction* configuration_action_;
+  
+  //! close
+  QAction* close_action_;
+  
+  //@}
+  
 };
 
 #endif  

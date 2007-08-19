@@ -103,12 +103,12 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   
   menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W );
  
-  action = menu->addAction( "E&xit", qApp, SLOT( exit() ), CTRL+Key_Q );
-  action->setIcon( IconEngine::get( ICONS::EXIT, path_list ) );
+  MainFrame& mainframe( *dynamic_cast<MainFrame*>(qApp) );
+  menu->addAction( &mainframe.closeAction() );
 
   // preferences menu
   menu = addMenu( "&Preferences" );
-  menu->addAction( "&Configuration", qApp, SLOT( configuration() ) );
+  menu->addAction( &mainframe.configurationAction() );
 
   // windows menu
   editor_menu_ = addMenu( "&Windows" );
@@ -128,7 +128,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu->addAction( &help->displayAction() );
   menu->addSeparator();
   menu->addAction( "About &Qt", qApp, SLOT( aboutQt() ), 0 );
-  menu->addAction( "About &eLogbook", qApp, SLOT( about() ), 0 );
+  menu->addAction( &mainframe.aboutAction() );
   menu->addSeparator();
   
   // debug menu
