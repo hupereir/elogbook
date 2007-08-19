@@ -100,7 +100,7 @@ class FormatBar: public CustomToolBar
   //! get text formats
   FORMAT::TextFormatBlock::List get( void ) const;
   
-  protected slots:
+  private slots:
   
   //! update configuration
   void _updateConfiguration( void );

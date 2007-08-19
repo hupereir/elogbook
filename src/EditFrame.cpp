@@ -600,8 +600,6 @@ void EditFrame::_updateConfiguration( void )
   
   Debug::Throw( "EditFrame::_updateConfiguration.\n" );
   
-  CustomMainWindow::_updateConfiguration();
-  
   // window size
   resize( XmlOptions::get().get<int>( "EDIT_FRAME_WIDTH" ), XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" ) );
   

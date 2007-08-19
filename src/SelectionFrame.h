@@ -297,13 +297,13 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! load colors (from current logbook)
   void _loadColors( void );    
 
-  protected slots:
+  private slots:
  
   //! configuration
-  virtual void _updateConfiguration( void );
+  void _updateConfiguration( void );
 
   //! save configuration
-  virtual void _saveConfiguration( void );
+  void _saveConfiguration( void );
 
   //! uniconify
   void _uniconify( void )

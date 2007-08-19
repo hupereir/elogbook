@@ -1027,9 +1027,7 @@ void SelectionFrame::_updateConfiguration( void )
 {
   
   Debug::Throw( "SelectionFrame::_updateConfiguration.\n" );
-  
-  CustomMainWindow::_updateConfiguration();
-  
+    
   // autoSave
   autosave_timer_->setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
   bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
