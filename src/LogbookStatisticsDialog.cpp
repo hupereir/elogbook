@@ -42,7 +42,6 @@
 #include "Util.h"
 
 using namespace std;
-using namespace BASE;
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
@@ -129,7 +128,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     item->setText( FILE, (*it)->file().c_str() );
     
     // third column get the number of entries
-    item->setText( ENTRIES, Str().assign<unsigned int>( KeySet<LogEntry>(*it).size() ).c_str() );
+    item->setText( ENTRIES, Str().assign<unsigned int>( BASE::KeySet<LogEntry>(*it).size() ).c_str() );
 
     // last modificatino
     item->setText( MODIFIED, (*it)->modification().string().c_str() );

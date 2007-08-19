@@ -64,7 +64,6 @@
 #include "XmlOptions.h"
 
 using namespace std;
-using namespace BASE;
 using namespace Qt;
 
 //_____________________________________________
@@ -280,8 +279,8 @@ void SelectionFrame::setLogbook( File file )
   Debug::Throw( "SelectionFrame::setLogbook - attachment frame reset.\n" );
 
   // retrieve last modified entry
-  KeySet<LogEntry> entries( logbook()->entries() );
-  KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  BASE::KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
   selectEntry( *iter );
   logEntryList().setFocus();
   
@@ -391,8 +390,8 @@ void SelectionFrame::reset( void )
   dynamic_cast<MainFrame*>(qApp)->attachmentFrame().list().clear();
   
   // make all EditFrames for deletion
-  KeySet<EditFrame> frames( this ); 
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
+  BASE::KeySet<EditFrame> frames( this ); 
+  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
   //{delete *iter;}
   {
     (*iter)->setIsClosed( true );
@@ -446,7 +445,7 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
     keywordList().select( entry->keyword() );
   }
 
-  if( !KeySet<LogEntryList::Item>( entry ).empty() ) logEntryList().update( entry, update_selection );
+  if( !BASE::KeySet<LogEntryList::Item>( entry ).empty() ) logEntryList().update( entry, update_selection );
   else {
     logEntryList().add( entry, update_selection );
     logEntryList().sort();
@@ -467,13 +466,13 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   Exception::checkPointer( entry, DESCRIPTION( "invalid entry" ) );
 
   // get associated attachments
-  KeySet<Attachment> attachments( entry );
-  for( KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  BASE::KeySet<Attachment> attachments( entry );
+  for( BASE::KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
   {
 
     // retrieve/delete associated attachmentlist items
-    KeySet<AttachmentList::Item> items( *iter );
-    for( KeySet<AttachmentList::Item>::iterator attachment_iter = items.begin(); attachment_iter != items.end(); attachment_iter++ )
+    BASE::KeySet<AttachmentList::Item> items( *iter );
+    for( BASE::KeySet<AttachmentList::Item>::iterator attachment_iter = items.begin(); attachment_iter != items.end(); attachment_iter++ )
     delete *attachment_iter;
 
     // delete attachment
@@ -482,8 +481,8 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   };
 
   // get associated logentrylist items
-  KeySet<LogEntryList::Item> items( entry );
-  for( KeySet<LogEntryList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ )
+  BASE::KeySet<LogEntryList::Item> items( entry );
+  for( BASE::KeySet<LogEntryList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ )
   delete *iter;
 
   /*
@@ -491,8 +490,8 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
     they will get deleted next time
     SelectionFrame::_displayEntry() is called
   */
-  KeySet<EditFrame> frames( entry );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  BASE::KeySet<EditFrame> frames( entry );
+  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   { 
     (*iter)->setIsClosed( true );
     (*iter)->hide();
@@ -500,8 +499,8 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   //{delete *iter;}
 
   // set logbooks as modified
-  KeySet<Logbook> logbooks( entry );
-  for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+  BASE::KeySet<Logbook> logbooks( entry );
+  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
   (*iter)->setModified( true );
 
   // delete entry
@@ -522,8 +521,8 @@ bool SelectionFrame::lockEntry( LogEntry* entry ) const
   
   if( !entry ) return true;
   
-  KeySet<EditFrame> frames( entry );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  BASE::KeySet<EditFrame> frames( entry );
+  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   if(  !( (*iter)->isReadOnly() || (*iter)->isClosed() ) )
   {
     if( (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return false;
@@ -581,8 +580,8 @@ void SelectionFrame::resetAttachmentFrame( void ) const
   if( !logbook_ ) return;
 
   // retrieve logbook attachments, adds to AttachmentFrame
-  KeySet<Attachment> attachments( logbook()->attachments() );
-  for( KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
+  BASE::KeySet<Attachment> attachments( logbook()->attachments() );
+  for( BASE::KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
   { attachment_frame.list().add( *it ); }
   attachment_frame.list().resizeColumns();
   return;
@@ -655,8 +654,8 @@ void SelectionFrame::save( const bool& confirm_entries )
   
   // check if editable EditFrames needs save
   // cancel if required
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  BASE::KeySet<EditFrame> frames( this );
+  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
     if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() )
     {
@@ -767,9 +766,9 @@ void SelectionFrame::selectEntries( QString selection, unsigned int mode )
     QColor( selection_string.c_str() ).isValid() ) );
   
   // retrieve all logbook entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-  KeySet<LogEntry> turned_off_entries;
-  for( KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  BASE::KeySet<LogEntry> turned_off_entries;
+  for( BASE::KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
   {
 
     // retrieve entry
@@ -810,7 +809,7 @@ void SelectionFrame::selectEntries( QString selection, unsigned int mode )
     statusBar().label().setText( "no match found. Find canceled" );
 
     // reset flag for the turned off entries to true
-    for( KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
+    for( BASE::KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
     (*it)->setFindSelected( true );
 
     return;
@@ -845,8 +844,8 @@ void SelectionFrame::showAllEntries( void )
   LogEntry *selected_entry( (item) ? item->entry():0 );
 
   // set all logbook entries to find_visible
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  for( BASE::KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
   { (*it)->setFindSelected( true ); }
 
   // reinitialize logEntry list
@@ -1020,8 +1019,8 @@ void SelectionFrame::_resetList( void )
   logEntryList().clear();
   
   if( !logbook_ ) return;
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
   { if( (*it)->isSelected() ) logEntryList().add( *it ); }
   
   logEntryList().sort();
@@ -1041,8 +1040,8 @@ void SelectionFrame::_resetKeywordList( void )
   
   // retrieve new list of keywords (from logbook)
   set<string> new_keywords;
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )  
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )  
   { if( (*iter)->isFindSelected() ) new_keywords.insert( (*iter)->keyword() ); }
   
   // reset keyword list to new set
@@ -1063,8 +1062,8 @@ void SelectionFrame::_loadColors( void )
   if( !logbook_ ) return;
   
   //! retrieve all entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   { color_menu_->add( (*iter)->color() ); }
 
 }
@@ -1321,8 +1320,8 @@ void SelectionFrame::_synchronize( void )
   }
 
   // save EditFrames
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  BASE::KeySet<EditFrame> frames( this );
+  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   if( !((*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // save current logbook
@@ -1387,8 +1386,8 @@ void SelectionFrame::_synchronize( void )
   {
     
     // display the new entry in all matching edit frames
-    KeySet<EditFrame> frames( iter->first );
-    for( KeySet<EditFrame>::iterator frame_iter = frames.begin(); frame_iter != frames.end(); frame_iter++ )
+    BASE::KeySet<EditFrame> frames( iter->first );
+    for( BASE::KeySet<EditFrame>::iterator frame_iter = frames.begin(); frame_iter != frames.end(); frame_iter++ )
     { (*frame_iter)->displayEntry( iter->second ); }
 
     delete iter->first;
@@ -1401,8 +1400,8 @@ void SelectionFrame::_synchronize( void )
   resetAttachmentFrame();
 
   // retrieve last modified entry
-  KeySet<LogEntry> entries( SelectionFrame::logbook()->entries() );
-  KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+  BASE::KeySet<LogEntry> entries( SelectionFrame::logbook()->entries() );
+  BASE::KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
   selectEntry( *iter );
   logEntryList().setFocus();
 
@@ -1438,14 +1437,14 @@ void SelectionFrame::_reorganize( void )
   }
 
   // retrieve all entries
-  KeySet<LogEntry> entries( logbook()->entries() );
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
 
   // dissasociate from logbook
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   {
     
-    KeySet<Logbook> logbooks( *iter );
-    for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter != logbooks.end(); log_iter++ )
+    BASE::KeySet<Logbook> logbooks( *iter );
+    for( BASE::KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter != logbooks.end(); log_iter++ )
     { (*log_iter)->setModified( true ); }
     
     (*iter)->clearAssociations<Logbook>();
@@ -1490,9 +1489,9 @@ void SelectionFrame::_showDuplicatedEntries( void )
   int found( 0 );
 
   // retrieve all logbook entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-  KeySet<LogEntry> turned_off_entries;
-  for( KeySet<LogEntry>::iterator iter=entries.begin(); iter!= entries.end(); iter++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  BASE::KeySet<LogEntry> turned_off_entries;
+  for( BASE::KeySet<LogEntry>::iterator iter=entries.begin(); iter!= entries.end(); iter++ )
   {
 
     // retrieve entry
@@ -1524,7 +1523,7 @@ void SelectionFrame::_showDuplicatedEntries( void )
       "Request canceled.", QtUtil::CENTER_ON_PARENT );
 
     // reset flag for the turned off entries to true
-    for( KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
+    for( BASE::KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
     (*it)->setFindSelected( true );
 
     return;
@@ -1607,8 +1606,8 @@ void SelectionFrame::_closeEditFrames( void ) const
   Debug::Throw( "SelectionFrame::_closeEditFrames.\n" );
 
   // get all EditFrames from SelectionFrame
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  BASE::KeySet<EditFrame> frames( this );
+  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
     if( (*iter)->modified() && !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
     delete *iter;
@@ -1675,7 +1674,7 @@ void SelectionFrame::_deleteEntries ( void )
   {
     LogEntryList::Item* item( *iter );
 
-    KeySet<LogEntry> entries( item );
+    BASE::KeySet<LogEntry> entries( item );
     Exception::check( entries.size()==1, DESCRIPTION( "invalid association to LogEntry" ) );
     deleteEntry( *entries.begin(), false );
 
@@ -1696,8 +1695,8 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
 
   // retrieve associated EditFrames, check if one matches the selected entry
   EditFrame *edit_frame( 0 );
-  KeySet<EditFrame> frames( this );
-  for( KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
+  BASE::KeySet<EditFrame> frames( this );
+  for( BASE::KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
   {
     
     /*
@@ -1745,8 +1744,8 @@ void SelectionFrame::_changeEntryTitle( LogEntry* entry, string new_title )
   entry->setTitle( new_title );
   
   // update associated EditFrames
-  KeySet<EditFrame> frames( entry );
-  for( KeySet< EditFrame >::iterator it = frames.begin(); it != frames.end(); it++ )
+  BASE::KeySet<EditFrame> frames( entry );
+  for( BASE::KeySet< EditFrame >::iterator it = frames.begin(); it != frames.end(); it++ )
   {
     
     // keep track of already modified EditFrames
@@ -1762,8 +1761,8 @@ void SelectionFrame::_changeEntryTitle( LogEntry* entry, string new_title )
   }
   
   // set logbooks as modified
-  KeySet<Logbook> logbooks( entry );
-  for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+  BASE::KeySet<Logbook> logbooks( entry );
+  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
   (*iter)->setModified( true );
   
   // save Logbook
@@ -1796,18 +1795,18 @@ void SelectionFrame::_changeEntryColor( QColor color )
     entry->modified();
     
     // update list items
-    KeySet<LogEntryList::Item> entry_items( entry );
-    for( KeySet<LogEntryList::Item>::iterator it = entry_items.begin(); it != entry_items.end(); it++ )
+    BASE::KeySet<LogEntryList::Item> entry_items( entry );
+    for( BASE::KeySet<LogEntryList::Item>::iterator it = entry_items.begin(); it != entry_items.end(); it++ )
     { (*it)->update(); }
     
     // update EditFrame color
-    KeySet<EditFrame> frames( entry );
-    for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    BASE::KeySet<EditFrame> frames( entry );
+    for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     { if( !(*iter)->isClosed() ) (*iter)->displayColor(); }
 
     // set logbooks as modified
-    KeySet<Logbook> logbooks( entry );
-    for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+    BASE::KeySet<Logbook> logbooks( entry );
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
     { (*iter)->setModified( true ); }
 
   }
@@ -1871,9 +1870,9 @@ void SelectionFrame::_deleteKeyword( void )
   string keyword( keywordList().current() );
 
   // retrieve associated entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-  KeySet<LogEntry> associated_entries;
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  BASE::KeySet<LogEntry> associated_entries;
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   if( (*iter)->keyword().find( keyword ) == 0 )
   associated_entries.insert( *iter );    
                  
@@ -1895,7 +1894,7 @@ void SelectionFrame::_deleteKeyword( void )
     
   } else if( dialog.deleteEntries() ) {
     
-    for( KeySet<LogEntry>::iterator iter = associated_entries.begin(); iter != associated_entries.end(); iter++ )
+    for( BASE::KeySet<LogEntry>::iterator iter = associated_entries.begin(); iter != associated_entries.end(); iter++ )
     deleteEntry( *iter, false );
   
   }
@@ -1966,8 +1965,8 @@ void SelectionFrame::_renameKeyword( string keyword, string new_keyword )
   if( keyword == new_keyword ) return;
     
   // get entries matching the old_keyword, change the keyword
-  KeySet<LogEntry> entries( logbook()->entries() );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   {
     LogEntry* entry( *iter );
     
@@ -1985,8 +1984,8 @@ void SelectionFrame::_renameKeyword( string keyword, string new_keyword )
       set to now() */
       entry->setModification( entry->modification()+1 );
 
-      KeySet<Logbook> logbooks( entry );
-      for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
+      BASE::KeySet<Logbook> logbooks( entry );
+      for( BASE::KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
       { (*log_iter)->setModified( true ); }
     
     }
@@ -2054,7 +2053,7 @@ void SelectionFrame::_renameEntryKeyword( string new_keyword )
   Debug::Throw() << "SelectionFrame::_renameKeyword - new_keyword: " << new_keyword << endl;
   
   // keep track of modified entries
-  KeySet<LogEntry> entries;
+  BASE::KeySet<LogEntry> entries;
   
   // loop over selected entries
   QList<LogEntryList::Item*> items( logEntryList().selectedItems<LogEntryList::Item>() );
@@ -2079,8 +2078,8 @@ void SelectionFrame::_renameEntryKeyword( string new_keyword )
     entries.insert( entry );
     
     // set associated logbooks as modified
-    KeySet<Logbook> logbooks( entry );
-    for( KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
+    BASE::KeySet<Logbook> logbooks( entry );
+    for( BASE::KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
     { (*log_iter)->setModified( true ); }
   
   }
@@ -2095,7 +2094,7 @@ void SelectionFrame::_renameEntryKeyword( string new_keyword )
   
   // update selection
   logEntryList().clearSelection();
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   {
     LogEntryList::Item* item( logEntryList().item( *iter ) );
     logEntryList().setItemSelected( item, true );  
@@ -2130,9 +2129,9 @@ void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWi
   LogEntry *selected_entry( (local_item) ? local_item->entry():0 );
   
   // retrieve all logbook entries
-  KeySet<LogEntry> entries( logbook()->entries() );
-  KeySet<LogEntry> turned_off_entries;
-  for( KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
+  BASE::KeySet<LogEntry> entries( logbook()->entries() );
+  BASE::KeySet<LogEntry> turned_off_entries;
+  for( BASE::KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
   {
   
     // retrieve entry
@@ -2252,7 +2251,7 @@ void SelectionFrame::_viewHtml( void )
   if( dialog.allEntries() )
   {
 
-    KeySet<LogEntry> entry_set( logbook()->entries() );
+    BASE::KeySet<LogEntry> entry_set( logbook()->entries() );
     entries = vector<LogEntry*>( entry_set.begin(), entry_set.end() );
 
   } else if( dialog.visibleEntries() ) {
@@ -2369,8 +2368,8 @@ void SelectionFrame::_autoSave( void )
     statusBar().label().setText( "performing autoSave" );
 
     // retrieve non read only editors; perform save
-    KeySet<EditFrame> frames( this );
-    for( KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    BASE::KeySet<EditFrame> frames( this );
+    for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     if( !((*iter)->isReadOnly() || (*iter)->isClosed() ) ) (*iter)->save();
 
     save();

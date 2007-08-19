@@ -43,7 +43,6 @@
 #include <string.h>
 
 using namespace std;
-using namespace BASE;
 
 //_______________________________________
 const string Attachment::NO_FILE( "" );
@@ -126,7 +125,7 @@ bool Attachment::operator < ( const Attachment &attachment ) const
 //__________________________________
 LogEntry* Attachment::entry( void ) const
 {
-  KeySet<LogEntry> entries( this );
+  BASE::KeySet<LogEntry> entries( this );
   Exception::check( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
   return *entries.begin();
 }

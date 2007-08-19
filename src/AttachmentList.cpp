@@ -55,7 +55,6 @@
 #include "Util.h"
 
 using namespace std;
-using namespace BASE;
 
 //_______________________________________________
 char* AttachmentList::column_titles_[ AttachmentList::n_columns ] = 
@@ -140,7 +139,7 @@ void AttachmentList::update( Attachment* attachment )
   Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
   
   // retrieve associated Item, check and update
-  KeySet<Item> items( attachment );
+  BASE::KeySet<Item> items( attachment );
   Exception::check( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
   
   (*items.begin())->update();
@@ -158,7 +157,7 @@ void AttachmentList::selectAttachment( Attachment* attachment )
   Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
 
   // retrieve associated Item, check 
-  KeySet<Item> items( attachment );
+  BASE::KeySet<Item> items( attachment );
   Exception::check( items.size()==1, DESCRIPTION( "invalid association to local_item" ) );
 
   // select local item
@@ -185,11 +184,11 @@ void AttachmentList::_newAttachment( void )
 {  Debug::Throw( "AttachmentList::_newAttachment.\n" );  
   
   // retrieve/check associated EditFrame/LogEntry
-  KeySet<EditFrame> edit_frames( this );
+  BASE::KeySet<EditFrame> edit_frames( this );
   Exception::check( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
   EditFrame *edit_frame( *edit_frames.begin() );
   
-  KeySet<LogEntry> entries( edit_frame );
+  BASE::KeySet<LogEntry> entries( edit_frame );
   if( entries.size() != 1 )
   {
     QtUtil::infoDialog( this, "No valid entry found. <New Attachment> canceled." );
@@ -199,7 +198,7 @@ void AttachmentList::_newAttachment( void )
   LogEntry *entry( *entries.begin() );
   
   // retrieve/check associated logbook, logbook directory
-  KeySet<Logbook> logbooks( entry );
+  BASE::KeySet<Logbook> logbooks( entry );
     
   // create dialog
   NewAttachmentDialog dialog( this );
@@ -299,8 +298,8 @@ void AttachmentList::_newAttachment( void )
     Key::associate( entry, attachment );
     
     // update all edit_frames AttachmentList associated to entry
-    edit_frames = KeySet<EditFrame>( entry );
-    for( KeySet<EditFrame>::iterator iter = edit_frames.begin(); iter != edit_frames.end(); iter++ )
+    edit_frames = BASE::KeySet<EditFrame>( entry );
+    for( BASE::KeySet<EditFrame>::iterator iter = edit_frames.begin(); iter != edit_frames.end(); iter++ )
     {
       if( !(*iter)->attachmentList().topLevelItemCount() ) (*iter)->attachmentList().show();
       (*iter)->attachmentList().add( attachment );
@@ -312,7 +311,7 @@ void AttachmentList::_newAttachment( void )
     dynamic_cast<MainFrame*>(qApp)->attachmentFrame().list().resizeColumns();
    
     // update logbooks destination directory
-    for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 
     {
       (*iter)->setModified( true );
       (*iter)->setDirectory( full_directory );
@@ -426,7 +425,7 @@ void AttachmentList::_edit( void )
   }
 
   // retrieve/check associated EditFrame/LogEntry
-  KeySet<EditFrame> edit_frames( this );
+  BASE::KeySet<EditFrame> edit_frames( this );
   Exception::check( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
   EditFrame *edit_frame( *edit_frames.begin() );
 
@@ -449,12 +448,12 @@ void AttachmentList::_edit( void )
     attachment.setComments( dialog.comments() );
   
     // set associated entry modified
-    KeySet<LogEntry> entries( &attachment );
+    BASE::KeySet<LogEntry> entries( &attachment );
     Exception::check( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
 
     // update attachment associated list items
-    KeySet<AttachmentList::Item> items( &attachment );
-    for( KeySet<AttachmentList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ )
+    BASE::KeySet<AttachmentList::Item> items( &attachment );
+    for( BASE::KeySet<AttachmentList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ )
     { (*iter)->update(); }
           
   }
@@ -481,7 +480,7 @@ void AttachmentList::_delete( void )
   }
 
   // retrieve/check associated EditFrame/LogEntry
-  KeySet<EditFrame> edit_frames( this );
+  BASE::KeySet<EditFrame> edit_frames( this );
   Exception::check( edit_frames.size() == 1, DESCRIPTION("wrong association to EditFrames") );
   EditFrame *edit_frame( *edit_frames.begin() );
 
@@ -502,27 +501,27 @@ void AttachmentList::_delete( void )
     bool from_disk( dialog.action() == DeleteAttachmentDialog::FROM_DISK );
     
     // retrieve/delete associated attachmentlist items
-    KeySet<AttachmentList::Item> items( attachment );
-    for( KeySet<AttachmentList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
+    BASE::KeySet<AttachmentList::Item> items( attachment );
+    for( BASE::KeySet<AttachmentList::Item>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
     {
       if( (*iter)->treeWidget()->topLevelItemCount() == 1 ) (*iter)->treeWidget()->hide();
       delete *iter;
     }
   
     // retrieve associated entries
-    KeySet<LogEntry> entries( attachment );
+    BASE::KeySet<LogEntry> entries( attachment );
     Exception::check( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
     LogEntry* entry( *entries.begin() );
     entry->modified();
     
     // retrieve associated logbooks
-    KeySet<Logbook> logbooks( entry );
+    BASE::KeySet<Logbook> logbooks( entry );
     
     // check sharing attachments to avoid from_disk deletion
     if( from_disk && logbooks.size() ) 
     {
       
-      KeySet<Attachment> attachments( (*logbooks.begin())->attachments() );
+      BASE::KeySet<Attachment> attachments( (*logbooks.begin())->attachments() );
       unsigned int n_share = count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) ); 
       if( n_share > 1 ) {
         

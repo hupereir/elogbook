@@ -38,7 +38,6 @@
 #include "LogEntryList.h"
 
 using namespace std;
-using namespace BASE;
 
 //_______________________________________________
 const QString LogEntryList::DRAG = "LogEntryList::Drag";

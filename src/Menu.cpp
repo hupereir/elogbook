@@ -127,8 +127,8 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu = addMenu( "&Help" );
   menu->addAction( &help->displayAction() );
   menu->addSeparator();
-  menu->addAction( "About &Qt", qApp, SLOT( aboutQt() ), 0 );
   menu->addAction( &mainframe.aboutAction() );
+  menu->addAction( &mainframe.aboutQtAction() );
   menu->addSeparator();
   
   // debug menu

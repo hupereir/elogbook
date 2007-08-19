@@ -44,7 +44,6 @@
 #include "XmlTimeStamp.h"
 
 using namespace std;
-using namespace BASE;
 
 //________________________________
 // public methods
@@ -86,8 +85,8 @@ Logbook::~Logbook( void )
   children_.clear();
 
   // delete associated entries
-  KeySet<LogEntry> entries( this );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  BASE::KeySet<LogEntry> entries( this );
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   delete *iter;
 
 }
@@ -114,8 +113,8 @@ bool Logbook::read( void )
   }
 
   // delete associated entries
-  KeySet<LogEntry> entries( Logbook::entries() );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  BASE::KeySet<LogEntry> entries( Logbook::entries() );
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
   delete *iter;
 
   // parse the file
@@ -288,8 +287,8 @@ bool Logbook::write( File file )
     if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
 
     // write all entries
-    KeySet<LogEntry> entries( this );
-    for( KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
+    BASE::KeySet<LogEntry> entries( this );
+    for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
     top.appendChild( (*it)->domElement( document ) );
 
     // dump all logbook childrens
@@ -347,18 +346,18 @@ map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
   Debug::Throw( "Logbook::synchronize.\n" );
 
   // retrieve logbook entries
-  KeySet<LogEntry> new_entries( logbook.entries() );
-  KeySet<LogEntry> current_entries( entries() );
+  BASE::KeySet<LogEntry> new_entries( logbook.entries() );
+  BASE::KeySet<LogEntry> current_entries( entries() );
 
   // map of duplicated entries
   std::map< LogEntry*, LogEntry* > duplicates;
 
   // merge new entries into current entries
-  for( KeySet< LogEntry>::iterator it = new_entries.begin(); it != new_entries.end(); it++ )
+  for( BASE::KeySet< LogEntry>::iterator it = new_entries.begin(); it != new_entries.end(); it++ )
   {
 
     // check if there is an entry with matching creation and modification time
-    KeySet< LogEntry >::iterator duplicate( find_if(
+    BASE::KeySet< LogEntry >::iterator duplicate( find_if(
       current_entries.begin(),
       current_entries.end(),
       LogEntry::DuplicateFTor( *it ) ) );
@@ -383,8 +382,8 @@ map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     {
       // set logbooks as modified
       // and disassociate with entry
-      KeySet<Logbook> logbooks( *duplicate );
-      for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+      BASE::KeySet<Logbook> logbooks( *duplicate );
+      for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
       {
         (*iter)->setModified( true );
         BASE::Key::disassociate( *iter, *duplicate );
@@ -445,12 +444,12 @@ Logbook* Logbook::latestChild( void )
   Logbook* dest = 0;
 
   // check parent number of entries
-  if( KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
+  if( BASE::KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
 
   // check if one existsing child is not complete
   else {
     for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
-    if( *it && KeySet<LogEntry>(*it).size() < MAX_ENTRIES ) {
+    if( *it && BASE::KeySet<LogEntry>(*it).size() < MAX_ENTRIES ) {
       dest = *it;
       break;
     }
@@ -475,10 +474,10 @@ Logbook* Logbook::latestChild( void )
 }
 
 //_________________________________
-KeySet<LogEntry> Logbook::entries( void ) const
+BASE::KeySet<LogEntry> Logbook::entries( void ) const
 {
 
-  KeySet<LogEntry> out( this );
+  BASE::KeySet<LogEntry> out( this );
   for( LogbookList::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
   out.merge( (*iter)->entries() );
 
@@ -487,15 +486,15 @@ KeySet<LogEntry> Logbook::entries( void ) const
 }
 
 //_________________________________
-KeySet<Attachment> Logbook::attachments( void ) const
+BASE::KeySet<Attachment> Logbook::attachments( void ) const
 {
 
-  KeySet<Attachment> out;
+  BASE::KeySet<Attachment> out;
 
   // loop over associated entries, add entries associated attachments
-  KeySet<LogEntry> entries( this );
-  for( KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  out.merge( KeySet<Attachment>(*iter) );
+  BASE::KeySet<LogEntry> entries( this );
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  out.merge( BASE::KeySet<Attachment>(*iter) );
 
   // loop over children, add associated attachments
   for( LogbookList::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )

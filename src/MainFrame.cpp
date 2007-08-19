@@ -153,6 +153,9 @@ void MainFrame::realizeWidget( void )
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
+  aboutqt_action_ = new QAction( IconEngine::get( ICONS::ABOUT_QT, path_list ), "About &Qt", 0 );
+  connect( aboutqt_action_, SIGNAL( triggered() ), SLOT( aboutQt() ) ); 
+
   close_action_ = new QAction( IconEngine::get( ICONS::EXIT, path_list ), "E&xit", 0 );
   close_action_->setShortcut( CTRL+Key_Q );
   connect( close_action_, SIGNAL( triggered() ), SLOT( _exit() ) );

@@ -68,7 +68,6 @@
 #endif
 
 using namespace std;
-using namespace BASE;
 using namespace Qt;
 
 //_______________________________________________
@@ -384,7 +383,7 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
   Debug::Throw( "EditFrame::askForSave.\n" );
   
   // retrieve other editFrames
-  KeySet<EditFrame> frames( _selectionFrame() );
+  BASE::KeySet<EditFrame> frames( _selectionFrame() );
   unsigned int count( count_if( frames.begin(), frames.end(), ModifiedFTor() ) );
   
   // create dialog
@@ -406,7 +405,7 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
     */
     if( _selectionFrame()->logbook()->file().empty() )
     {
-      for( KeySet<EditFrame>::iterator iter = frames.begin(); iter!= frames.end(); iter++ )
+      for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter!= frames.end(); iter++ )
       { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->save(enable_cancel); }
     } else _selectionFrame()->save( false );
   }
@@ -521,11 +520,11 @@ void EditFrame::saveConfiguration( void )
   XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
   
   // retrieve attachment list
-  AttachmentList* atc_list( *KeySet<AttachmentList>(this).begin() );
+  AttachmentList* atc_list( *BASE::KeySet<AttachmentList>(this).begin() );
   if( !atc_list->isHidden() )
   {
     XmlOptions::get().set<int>( "EDT_HEIGHT", editor().height() );
-    XmlOptions::get().set<int>( "ATC_HEIGHT", (*KeySet<AttachmentList>(this).begin())->height() );
+    XmlOptions::get().set<int>( "ATC_HEIGHT", (*BASE::KeySet<AttachmentList>(this).begin())->height() );
   }
   
   // save toolbars location and visibility
@@ -553,7 +552,7 @@ void EditFrame::save( bool update_selection )
   LogEntry *entry( EditFrame::entry() );
 
   // see if entry is new
-  bool entry_is_new( !entry || KeySet<Logbook>( entry ).empty() );
+  bool entry_is_new( !entry || BASE::KeySet<Logbook>( entry ).empty() );
   
   // create entry if none set
   if( !entry ) entry = new LogEntry();
@@ -594,8 +593,8 @@ void EditFrame::save( bool update_selection )
   frame->setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
 
   // set logbook as modified
-  KeySet<Logbook> logbooks( entry );
-  for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
+  BASE::KeySet<Logbook> logbooks( entry );
+  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
   (*iter)->setModified( true );
 
   // Save logbook
@@ -892,8 +891,8 @@ void EditFrame::_viewHtml( void )
   QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
   
   // dump logbook header
-  KeySet<Logbook> logbooks( entry );
-  for( KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+  BASE::KeySet<Logbook> logbooks( entry );
+  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
   { body.appendChild( (*iter)->htmlElement( document, html_log_mask ) ); }
 
   // dump entry
@@ -978,7 +977,7 @@ void EditFrame::_displayCursorPosition( const TextPosition& position)
 SelectionFrame* EditFrame::_selectionFrame( void ) const
 {
   Debug::Throw( "EditFrame::_selectionFrame.\n" );
-  KeySet<SelectionFrame> frames( this );
+  BASE::KeySet<SelectionFrame> frames( this );
   Exception::check( frames.size()==1, DESCRIPTION( "wrong association to SelectionFrame" ) );
   return *frames.begin();
 }
@@ -1013,7 +1012,7 @@ void EditFrame::_displayAttachments( void )
   }
 
   // get associated attachments
-  KeySet<Attachment> attachments( entry );
+  BASE::KeySet<Attachment> attachments( entry );
   if( attachments.empty() ) {
   
     attachment_list.hide();
@@ -1022,7 +1021,7 @@ void EditFrame::_displayAttachments( void )
   }
 
   // display associated attachments
-  for( KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
+  for( BASE::KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
   { attachment_list.add( *it ); }
 
   // show attachment list

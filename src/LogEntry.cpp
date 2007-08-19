@@ -45,8 +45,6 @@
 #include <stdio.h>
 
 using namespace std;
-using namespace BASE;
-using namespace FORMAT;
 
 //__________________________________
 const string LogEntry::DRAG = "logEntry_drag";
@@ -95,7 +93,7 @@ LogEntry::LogEntry( const QDomElement& element ):
     if( tag_name == XML::TEXT ) setText( XmlUtil::xmlToText( qPrintable( child_element.text() ) ) );
     else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( child_element ) );
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( child_element ) );
-    else if( tag_name == XmlTextFormatBlock::XML_TAG ) addFormat( XmlTextFormatBlock( child_element ) );
+    else if( tag_name == FORMAT::XmlTextFormatBlock::XML_TAG ) addFormat( FORMAT::XmlTextFormatBlock( child_element ) );
     else if( tag_name == XML::ATTACHMENT ) Key::associate( this, new Attachment( child_element ) );
     else cout << "Option::Option - unrecognized child " << qPrintable( child_element.tagName() ) << ".\n";
   }
@@ -108,8 +106,8 @@ LogEntry::~LogEntry( void )
   Debug::Throw( "LogEntry::~LogEntry.\n" );
 
   // delete associated attachments
-  KeySet<Attachment> attachments( this );
-  for( KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  BASE::KeySet<Attachment> attachments( this );
+  for( BASE::KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
   delete *iter;
 
 }
@@ -144,11 +142,11 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 
   // dump text format
   for( FORMAT::TextFormatBlock::List::const_iterator iter = formats().begin(); iter != formats().end(); iter++ )
-  if( !iter->isEmpty() ) out.appendChild( XmlTextFormatBlock( *iter ).domElement( parent ) );
+  if( !iter->isEmpty() ) out.appendChild( FORMAT::XmlTextFormatBlock( *iter ).domElement( parent ) );
 
   // dump attachments
-  KeySet<Attachment> attachments( this );
-  for( KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
+  BASE::KeySet<Attachment> attachments( this );
+  for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
   out.appendChild( (*iter)->domElement( parent ) );
 
   return out;
@@ -229,8 +227,8 @@ LogEntry* LogEntry::clone( void ) const
   out->clearAssociations();
 
   // copy all Attachments
-  KeySet<Attachment> attachments( this );
-  for( KeySet<Attachment>::iterator attachment_iter = attachments.begin(); attachment_iter != attachments.end(); attachment_iter++ )
+  BASE::KeySet<Attachment> attachments( this );
+  for( BASE::KeySet<Attachment>::iterator attachment_iter = attachments.begin(); attachment_iter != attachments.end(); attachment_iter++ )
   {
 
     // copy attachment, associate to entry
@@ -264,8 +262,8 @@ bool LogEntry::matchAttachment( const string& buf )
   Debug::Throw( "LogEntry::matchAttachment.\n" );
 
   // retrieve associated attachments
-  KeySet<Attachment> attachments( this );
-  for( KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
+  BASE::KeySet<Attachment> attachments( this );
+  for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
   if( Str(buf).isIn( (*iter)->file(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ) )
   return true;
 
@@ -381,11 +379,11 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
   }
 
   // write attachments
-  KeySet<Attachment> attachments( this );
+  BASE::KeySet<Attachment> attachments( this );
   if( attachments.size() && ( mask &  HTML_ATTACHMENT ) )
   {
     QDomElement par = out.appendChild( document.createElement("p") ).toElement();
-    for( KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
+    for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
     (*iter)->htmlElement( par, document );
   }
 

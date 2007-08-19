@@ -114,6 +114,10 @@ class MainFrame: public QApplication, public Counter
   //! about
   QAction& aboutAction( void ) const
   { return *about_action_; }
+
+  //! about
+  QAction& aboutQtAction( void ) const
+  { return *aboutqt_action_; }
   
   //! configuration
   QAction& configurationAction( void ) const
@@ -177,6 +181,9 @@ class MainFrame: public QApplication, public Counter
   
   //! about
   QAction* about_action_;
+  
+  //! about qt
+  QAction* aboutqt_action_;
   
   //! configure
   QAction* configuration_action_;
