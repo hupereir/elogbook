@@ -428,12 +428,13 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   if( 
     event->button() == Qt::LeftButton && item && 
     isItemSelected( item ) &&
-   // item == QTreeWidget::currentItem() &&
     column == TITLE &&
     item != edit_item_ ) 
   { 
+    
     edit_timer_->start(); 
     CustomListView::mousePressEvent( event );
+  
   } else _resetEdit();
       
   // enable drag if item was already selected  
@@ -443,7 +444,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     drag_start_ = event->pos();
   }
   
-  // keep item for multiple selections
+  // reset extended selection begin/end items
   if( event->button() == Qt::LeftButton )
   {
     first_item_ = item;
@@ -451,7 +452,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   }
   
   // finally, if item was not selected, run default
-  if( !isItemSelected( item ) ) 
+  if( !isItemSelected( item ) )
   { CustomListView::mousePressEvent( event ); }
   
   Debug::Throw( "LogEntryList::mousePressEvent. Done.\n" );
@@ -543,11 +544,11 @@ void LogEntryList::mouseReleaseEvent( QMouseEvent* event )
   QTreeWidgetItem* item( itemAt( event->pos() ) );
 
   // clear selection
-  if( first_item_ == item ) 
+  // if mouse release occur in same event as mouse press,
+  // and if shift key is not active (since it is supposed to extend the selection
+  if( first_item_ == item && event->modifiers() != Qt::ShiftModifier) 
   {
     clearSelection();
-   
-    // set current item as selected
     setCurrentItem( item );
   }
   

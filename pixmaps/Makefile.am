@@ -26,5 +26,6 @@ EXTRA_DIST = \
   text_under.png \
   toggle_log.png \
   trashcan_empty.png \
-  undo.png
+  undo.png \
+  viewmag.png
 

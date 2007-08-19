@@ -1840,7 +1840,9 @@ void SelectionFrame::_newKeyword( void )
   string keyword = LogEntry::formatKeyword( dialog.keyword() );
   if( !keyword.empty() ) {
     keywordList().add( keyword );
+    keywordList().sort();
     keywordList().select( keyword );
+    
   }
 }
   

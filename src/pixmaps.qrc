@@ -18,13 +18,16 @@
     <file alias="pixmaps/homeB.png">../pixmaps/homeB.png</file>
     <file alias="pixmaps/html.png">../pixmaps/html.png</file>
     <file alias="pixmaps/info.png">../pixmaps/info.png</file>
+    <file alias="pixmaps/messagebox_warning.png">../pixmaps/messagebox_warning.png</file>
     <file alias="pixmaps/redo.png">../pixmaps/redo.png</file>
     <file alias="pixmaps/reload.png">../pixmaps/reload.png</file>
     <file alias="pixmaps/text_bold.png">../pixmaps/text_bold.png</file>
     <file alias="pixmaps/text_italic.png">../pixmaps/text_italic.png</file>
     <file alias="pixmaps/text_strike.png">../pixmaps/text_strike.png</file>
     <file alias="pixmaps/text_under.png">../pixmaps/text_under.png</file>
+    <file alias="pixmaps/toggle_log.png">../pixmaps/toggle_log.png</file>
     <file alias="pixmaps/trashcan_empty.png">../pixmaps/trashcan_empty.png</file>
     <file alias="pixmaps/undo.png">../pixmaps/undo.png</file>                                                    
+    <file alias="pixmaps/viewmag.png">../pixmaps/viewmag.png</file>
   </qresource>
 </RCC>
