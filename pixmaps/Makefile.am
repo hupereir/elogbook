@@ -7,6 +7,7 @@ EXTRA_DIST = \
   color.png \
   editcopy.png \
   edit.png \
+  encrypted.png \
   exit.png \
   filenew.png \
   fileopen.png \
@@ -16,13 +17,14 @@ EXTRA_DIST = \
   homeB.png \
   html.png \
   info.png \
-  encrypted.png \
+  messagebox_warning.png \  
   redo.png \
   reload.png \
   text_bold.png \
   text_italic.png \
   text_strike.png \
   text_under.png \
+  toggle_log.png \
   trashcan_empty.png \
   undo.png
 
