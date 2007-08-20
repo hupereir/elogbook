@@ -51,6 +51,10 @@
 #include "SpellCheckConfiguration.h"
 #endif
 
+// forward declaration
+void installDefaultOptions( void );
+void installSystemOptions( void );
+
 using namespace std;
 
 //_________________________________________________________
@@ -324,10 +328,35 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   connect( this, SIGNAL( apply() ), listview_config, SLOT( update() ) );
   connect( this, SIGNAL( ok() ), listview_config, SLOT( update() ) );
   connect( this, SIGNAL( cancel() ), listview_config, SLOT( restore() ) );
-
+  
+  // add restore default button to layout
+  _buttonLayout().insertStretch( 0, 1 );
+  QPushButton* button = new QPushButton( "Restore &Defaults", this );
+  button->setToolTip( "Restore default value for all options.");
+  connect( button, SIGNAL( clicked() ), SLOT( _restoreDefaults() ) );
+  _buttonLayout().insertWidget( 0, button );
+  
   // load initial configuration
   _read();
   
   adjustSize();
+  
+}
+
+//________________________________________________________________________________
+void ConfigurationDialog::_restoreDefaults( void )
+{
+  
+  Debug::Throw( "ConfigurationDialog::restoreDefaults.\n" );
+  
+  // reset options
+  XmlOptions::get() = Options();
+  
+  // reinstall default options
+  installDefaultOptions();
+  installSystemOptions();
+  
+  // read everything in dialog
+  _read();
   
 }

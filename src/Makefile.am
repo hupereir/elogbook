@@ -139,6 +139,7 @@ nodist_elogbook_SOURCES = \
   moc_AskForSaveDialog.cpp \
   moc_AttachmentFrame.cpp \
   moc_AttachmentList.cpp \
+  moc_ConfigurationDialog.cpp \
   moc_EditFrame.cpp \
   moc_FormatBar.cpp \
   moc_KeywordList.cpp \
