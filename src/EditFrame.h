@@ -32,6 +32,7 @@
   \date $Date$
 */
 
+#include <QFrame>
 #include <QLayout>
 #include <QSplitter>
 #include <string>
@@ -321,10 +322,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! pointer to statusbar    
   StatusBar* statusbar_;   
-  
-  //! color label
-  QFrame* color_frame_;
-  
+    
   //!@name editting
   //@{
 

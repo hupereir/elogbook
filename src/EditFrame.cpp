@@ -31,6 +31,7 @@
 
 #include <QLabel>
 #include <QLayout>
+#include <QPainter>
 
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
@@ -75,8 +76,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
   read_only_( read_only ),
-  closed_( false ),
-  color_frame_( 0 )
+  closed_( false )
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
   setObjectName( "EDITFRAME" );
@@ -423,50 +423,6 @@ void EditFrame::displayTitle( void )
 void EditFrame::displayColor( void )
 {
   Debug::Throw( "EditFrame::DisplayColor.\n" );
-    
-  string colorname( EditFrame::entry()->color() );
-  QColor color;
-  if( colorname != ColorMenu::NONE ) color = QColor( colorname.c_str() );
-
-  if( !color.isValid() )
-  {
-  
-    // if a colored frame existed
-    // delete it and set it to 0
-    if( color_frame_ ) 
-    {
-      delete color_frame_;
-      color_frame_ = 0;
-    }
-  
-  } else {
-    
-    // if color frame does not exist, create it
-    // color label
-    if( !color_frame_ )
-    {
-      color_frame_ = new QFrame( title_->parentWidget() );
-      color_frame_->setFrameStyle( QFrame::NoFrame );
-      color_frame_->setFixedSize( ColorMenu::PixmapSize );
-      // color_frame_->setFixedSize( QSize( title_->height()-2, title_->height()-2 ) );
-      color_frame_->setAutoFillBackground( true );
-      
-      title_layout_->addWidget( color_frame_ );
-    }
-    
-    // create gradient for nice look and fill
-    QLinearGradient linearGrad(QPointF(0, 0), color_frame_->rect().bottomRight());
-    linearGrad.setColorAt(0, color);
-    linearGrad.setColorAt(1, color.light());
-    
-    // modify palette with create gradient
-    QPalette palette( color );
-    palette.setBrush( QPalette::Window, linearGrad );
-    color_frame_->setPalette( palette );
-    color_frame_->update();
-    
-  }
-  
 }
 
 //______________________________________________________
