@@ -76,7 +76,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
   read_only_( read_only ),
-  closed_( false )
+  closed_( false ),
+  color_widget_( 0 )
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
   setObjectName( "EDITFRAME" );
@@ -96,7 +97,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   
   // title label and line
   title_layout_->addWidget( new QLabel( " Title: ", main ), 0, Qt::AlignVCenter );
-  title_layout_->addWidget( title_ = new LocalLineEdit( main ), 1, Qt::AlignVCenter );
+  title_layout_->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
     
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
@@ -423,6 +424,26 @@ void EditFrame::displayTitle( void )
 void EditFrame::displayColor( void )
 {
   Debug::Throw( "EditFrame::DisplayColor.\n" );
+  Str colorname( entry()->color() );
+  QColor color = colorname.isEqual( ColorMenu::NONE ) ? QColor():QColor( colorname.c_str() );
+  
+  if( color_widget_ && !color.isValid() )
+  { 
+    delete color_widget_;
+    color_widget_ = 0;
+    return;
+  }
+  
+  if( !color_widget_ ) 
+  { 
+    color_widget_ = new ColorWidget( title_->parentWidget() );
+    color_widget_->setMinimumSize( QSize( ColorMenu::PixmapSize.width(), 0 ) );
+    title_layout_->addWidget( color_widget_ );
+  }
+  
+  color_widget_->setColor( color );
+  return;
+  
 }
 
 //______________________________________________________
@@ -998,12 +1019,27 @@ void EditFrame::_displayAttachments( void )
   attachment_list.show();
 
   return;
+
 }
 
-//_____________________________________________
-void EditFrame::LocalLineEdit::paintEvent( QPaintEvent* event )
+//___________________________________________________________________________________
+void EditFrame::ColorWidget::paintEvent( QPaintEvent* e )
 {
-  CustomLineEdit::paintEvent( event );
-  return;
-}
+
+  QLinearGradient gradient( QPoint(0,0), QPoint( width(), height() ) );
+  gradient.setColorAt(0, color_);
+  gradient.setColorAt(1, color_.light(135));
+ 
+  QPainter painter( this );
+  painter.setPen( NoPen );
+  painter.setBrush( gradient );
   
+  int border = 2;
+  int v_offset = -1;
+  int w = min( width(), height() - 2*border ); 
+  int h_offset = (width() - w)/2;
+  QRect r( 
+    QPoint( h_offset, border + v_offset ),
+    QPoint( h_offset+w, height() ) + QPoint( 0, -border + v_offset ) );
+  painter.drawRect( r );
+}
