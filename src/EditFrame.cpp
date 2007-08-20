@@ -447,8 +447,8 @@ void EditFrame::displayColor( void )
     {
       color_frame_ = new QFrame( title_->parentWidget() );
       color_frame_->setFrameStyle( QFrame::NoFrame );
-      // color_frame_->setFixedSize( ColorMenu::PixmapSize );
-      color_frame_->setFixedSize( QSize( title_->height()-2, title_->height()-2 ) );
+      color_frame_->setFixedSize( ColorMenu::PixmapSize );
+      // color_frame_->setFixedSize( QSize( title_->height()-2, title_->height()-2 ) );
       color_frame_->setAutoFillBackground( true );
       
       title_layout_->addWidget( color_frame_ );
