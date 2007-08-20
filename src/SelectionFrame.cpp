@@ -1727,7 +1727,6 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
     Key::associate( this, edit_frame );
     QtUtil::centerOnParent( edit_frame );
     edit_frame->show();
-    qApp->processEvents();
     edit_frame->displayEntry( entry );
 
   } else edit_frame->uniconify();

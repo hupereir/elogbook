@@ -18,7 +18,7 @@ EXTRA_DIST = \
   homeB.png \
   html.png \
   info.png \
-  messagebox_warning.png \  
+  messagebox_warning.png \
   qt-logo.png \
   redo.png \
   reload.png \

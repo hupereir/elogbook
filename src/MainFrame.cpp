@@ -217,13 +217,13 @@ void MainFrame::showSplashScreen( void )
   ostringstream what;
   what << "<B>eLogbook</B><BR> version " << VERSION;
   ::SplashScreen *splash_screen = new ::SplashScreen( 0, what.str() );
-  splash_screen->setOpacity( 0.3 );
   splash_screen->setMinimumSize( QSize( 350, 150 ) );
   splash_screen->setIcon( pixmap );
+  splash_screen->setOpacity( 0.7 );
   splash_screen->realizeWidget();
+  QtUtil::centerOnDesktop( splash_screen );
   splash_screen->show();
   splash_screen->displayMessage( "click on the window to close" );
-  QtUtil::centerOnParent( splash_screen );
 
   processEvents();
 
