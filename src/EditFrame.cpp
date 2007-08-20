@@ -425,9 +425,8 @@ void EditFrame::displayColor( void )
 {
   Debug::Throw( "EditFrame::DisplayColor.\n" );
   Str colorname( entry()->color() );
-  QColor color = colorname.isEqual( ColorMenu::NONE ) ? QColor():QColor( colorname.c_str() );
-  
-  if( color_widget_ && !color.isValid() )
+  QColor color;
+  if( color_widget_ && colorname.isEqual( ColorMenu::NONE ) || !(color = QColor( colorname.c_str() ) ).isValid() )
   { 
     delete color_widget_;
     color_widget_ = 0;
