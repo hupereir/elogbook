@@ -308,8 +308,38 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! titlebar layout
   QHBoxLayout* title_layout_;
   
+  //! local line Edit to display entry color
+  class LocalLineEdit: public CustomLineEdit
+  {
+    
+    public:
+    
+    //! constructor
+    LocalLineEdit( QWidget* parent ):
+      CustomLineEdit( parent )
+      {}
+      
+    //! color
+    void setColor( const QColor& color )
+    { color_ = color; }
+    
+    //! color
+    const QColor& color( void ) const
+    { return color_; }
+  
+    protected:
+    
+    //! paint event
+    void paintEvent( QPaintEvent* );
+    
+    private:
+    
+    //! entry color
+    QColor color_; 
+  };
+    
   //! LogEntry title Object
-  CustomLineEdit *title_;          
+  LocalLineEdit *title_;          
     
   //! LogEntry text Object
   CustomTextEdit *text_;            

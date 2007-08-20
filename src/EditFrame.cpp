@@ -96,7 +96,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   
   // title label and line
   title_layout_->addWidget( new QLabel( " Title: ", main ), 0, Qt::AlignVCenter );
-  title_layout_->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
+  title_layout_->addWidget( title_ = new LocalLineEdit( main ), 1, Qt::AlignVCenter );
     
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
@@ -999,3 +999,11 @@ void EditFrame::_displayAttachments( void )
 
   return;
 }
+
+//_____________________________________________
+void EditFrame::LocalLineEdit::paintEvent( QPaintEvent* event )
+{
+  CustomLineEdit::paintEvent( event );
+  return;
+}
+  
