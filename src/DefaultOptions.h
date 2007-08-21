@@ -112,12 +112,12 @@ void installDefaultOptions( void )
   XmlOptions::get().add( option );
 
   // help file
-  option = Option( "HELP_FILE",  File( ".eLogbook_help" ).addPath( Util::home() ) );  
+  option = Option( "HELP_FILE",  File( ".elogbook_help" ).addPath( Util::home() ) );  
   option.setRecordable( false );
   XmlOptions::get().add( option );
   
   // DB file (for previously opened files
-  option = Option( "DB_FILE", File( ".eLogbook_db" ).addPath( Util::home() ) );  
+  option = Option( "DB_FILE", File( ".elogbook_db" ).addPath( Util::home() ) );  
   option.setRecordable( false );
   XmlOptions::get().add( option );
 
