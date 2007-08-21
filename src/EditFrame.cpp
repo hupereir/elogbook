@@ -424,15 +424,26 @@ void EditFrame::displayTitle( void )
 void EditFrame::displayColor( void )
 {
   Debug::Throw( "EditFrame::DisplayColor.\n" );
-  Str colorname( entry()->color() );
+
+  // try load entry color
   QColor color;
-  if( color_widget_ && colorname.isEqual( ColorMenu::NONE ) || !(color = QColor( colorname.c_str() ) ).isValid() )
+  Str colorname( entry()->color() );
+  if( colorname.isEqual( ColorMenu::NONE, false ) || !( color = QColor( colorname.c_str() ) ).isValid() )
   { 
-    delete color_widget_;
-    color_widget_ = 0;
+ 
+    // delete existing color widget if any
+    if( color_widget_ )
+    {
+      delete color_widget_;
+      color_widget_ = 0;
+    }
+    
+    // and return
     return;
+    
   }
   
+  // color is valid. Create color widget if none
   if( !color_widget_ ) 
   { 
     color_widget_ = new ColorWidget( title_->parentWidget() );
@@ -440,6 +451,7 @@ void EditFrame::displayColor( void )
     title_layout_->addWidget( color_widget_ );
   }
   
+  // set color
   color_widget_->setColor( color );
   return;
   

@@ -35,7 +35,6 @@
 #include <QAction>
 #include <QApplication>
 #include <QCursor>
-#include <QMessageBox>
 
 #include "ApplicationManager.h"
 #include "ArgList.h"
