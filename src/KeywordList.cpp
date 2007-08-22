@@ -107,7 +107,7 @@ void KeywordList::add( string keyword )
     // loop over children, stop at matching keyword
     for( int i=0; i < parent_item->childCount(); i++ )
     {
-      Item* child( dynamic_cast<Item*>(parent_item->child(i)) );
+      Item* child( static_cast<Item*>(parent_item->child(i)) );
       if( child && (*iter) == qPrintable( child->text( KEYWORD ) ) )
       { 
         item = child;
@@ -159,7 +159,7 @@ void KeywordList::_remove( string keyword )
     // loop over children, stop at matching keyword
     for( int i=0; i < parent_item->childCount(); i++ )
     {
-      Item* child( dynamic_cast<Item*>(parent_item->child(i)) );
+      Item* child( static_cast<Item*>(parent_item->child(i)) );
       if( child && (*iter) == qPrintable( child->text( KEYWORD ) ) )
       { 
         item = child;
@@ -514,7 +514,7 @@ void KeywordList::dragEnterEvent( QDragEnterEvent* event )
   event->acceptProposedAction() ;
 
   // retrieve item below pointer
-  Item *item( dynamic_cast<Item*>( itemAt( event->pos()) ) );
+  Item *item( static_cast<Item*>( itemAt( event->pos()) ) );
 
   if( item ) {
     
@@ -546,7 +546,7 @@ void KeywordList::dragMoveEvent( QDragMoveEvent* event )
   event->acceptProposedAction() ;
   
   // retrieve item below pointer
-  Item *item( dynamic_cast<Item*>( itemAt( event->pos() ) ) );
+  Item *item( static_cast<Item*>( itemAt( event->pos() ) ) );
   
   // update drop item  
   if( item ) 
@@ -671,7 +671,7 @@ bool KeywordList::_processDrop( QDropEvent *event )
   Debug::Throw( "KeywordList::_processDrop.\n" );
   
   // retrieve item below pointer
-  Item *item( dynamic_cast<Item*>(itemAt( event->pos() ) ) );
+  Item *item( static_cast<Item*>(itemAt( event->pos() ) ) );
   if( !item ) return false;
   string current_keyword( keyword( item ) );
   

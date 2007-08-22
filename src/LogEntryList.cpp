@@ -187,7 +187,7 @@ LogEntryList::Item* LogEntryList::itemBelow( QTreeWidgetItem* item, bool update_
   // if item is hidden, try the next one
   if( tmp && isItemHidden( tmp ) ) tmp = itemBelow( tmp, false );
   
-  Item* out = dynamic_cast<Item*>( tmp );
+  Item* out = static_cast<Item*>( tmp );
   if( out && update_selection ) {
   
     clearSelection();
@@ -240,7 +240,7 @@ LogEntryList::Item* LogEntryList::itemAbove( QTreeWidgetItem* item, bool update_
   // if item is hidden, try the next one
   if( tmp && isItemHidden( tmp ) ) tmp = itemAbove( tmp, false );
   
-  Item* out = dynamic_cast<Item*>( tmp );
+  Item* out = static_cast<Item*>( tmp );
 
   if( out && update_selection ) {
   
@@ -360,7 +360,7 @@ void LogEntryList::_activate( QTreeWidgetItem *item )
     // check against backup
     QString title( item->text( TITLE ) );
     if( title != backup_ ) 
-    { emit entryRenamed( dynamic_cast<Item*>( item )->entry(), qPrintable( title ) ); }
+    { emit entryRenamed( static_cast<Item*>( item )->entry(), qPrintable( title ) ); }
     
     // reset edition
     // without restoring the backup
@@ -368,7 +368,7 @@ void LogEntryList::_activate( QTreeWidgetItem *item )
                   
   } else {
     
-    emit entrySelected( dynamic_cast<Item*>(item)->entry() );
+    emit entrySelected( static_cast<Item*>(item)->entry() );
    _resetEdit();
     
  }
@@ -608,11 +608,11 @@ bool LogEntryList::Item::operator < (const QTreeWidgetItem& item ) const
 {
 
   // cast parent to custom list view
-  const CustomListView* parent( dynamic_cast<const CustomListView*>( treeWidget() ) );
+  const CustomListView* parent( static_cast<const CustomListView*>( treeWidget() ) );
   if( !parent ) return QTreeWidgetItem::operator < (item);
   
   // try cast other
-  const Item* local( dynamic_cast<const Item*>( &item ) );
+  const Item* local( static_cast<const Item*>( &item ) );
   if( !local )  return QTreeWidgetItem::operator < (item);
   
   // retrieve column type

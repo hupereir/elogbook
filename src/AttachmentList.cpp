@@ -569,11 +569,11 @@ bool AttachmentList::Item::operator < (const QTreeWidgetItem& item ) const
 {
 
   // cast parent to custom list view
-  const CustomListView* parent( dynamic_cast<const CustomListView*>( treeWidget() ) );
+  const CustomListView* parent( static_cast<const CustomListView*>( treeWidget() ) );
   if( !parent ) return QTreeWidgetItem::operator < (item);
   
   // try cast other
-  const Item* local( dynamic_cast<const Item*>( &item ) );
+  const Item* local( static_cast<const Item*>( &item ) );
   if( !local )  return QTreeWidgetItem::operator < (item);
   
   // retrieve column type

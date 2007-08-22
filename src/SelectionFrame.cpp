@@ -809,7 +809,7 @@ void SelectionFrame::showAllEntries( void )
   else if( logEntryList().topLevelItemCount() > 0 )
   {
     
-    LogEntryList::Item *item( dynamic_cast<LogEntryList::Item*>( logEntryList().topLevelItem( logEntryList().topLevelItemCount()-1) ));
+    LogEntryList::Item *item( static_cast<LogEntryList::Item*>( logEntryList().topLevelItem( logEntryList().topLevelItemCount()-1) ));
     if( item ) selectEntry( item->entry() );;
   
   }
