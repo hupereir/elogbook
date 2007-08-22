@@ -93,7 +93,7 @@ FormatBar::FormatBar( QWidget* parent ):
   connect( button, SIGNAL( clicked() ), SLOT( _underline() ) );
   addWidget( button );
 
-  // underline 
+  // strike 
   button = new CustomToolButton( this, IconEngine::get( STRIKE_ICON, path_list ), "change current font to strike" );
   button->setText("Strike");
   button->setCheckable( true );
