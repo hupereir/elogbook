@@ -245,7 +245,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, toolbar );
 
   // main_window button
-  toolbar->addAction( &dynamic_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
+  toolbar->addAction( &static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
 
   // previous_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::PREV, path_list ), "Display the previous entry", &statusbar_->label() );
@@ -262,7 +262,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   next_entry_ = button;
 
   // create menu if requested
-  Menu* menu = new Menu( this, &dynamic_cast<MainFrame*>(qApp)->selectionFrame() ); 
+  Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
   setMenuBar( menu );
   
   connect( menu, SIGNAL( save() ), SLOT( save() ) );

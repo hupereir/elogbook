@@ -207,7 +207,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   setMenuBar( menu_ );
   
   connect( menu_, SIGNAL( save() ), SLOT( save() ) );
-  connect( menu_, SIGNAL( closeWindow() ), &dynamic_cast<MainFrame*>(qApp)->closeAction(), SLOT( trigger() ) );
+  connect( menu_, SIGNAL( closeWindow() ), &static_cast<MainFrame*>(qApp)->closeAction(), SLOT( trigger() ) );
   connect( menu_, SIGNAL( viewHtml() ), this, SLOT( _viewHtml() ) );
  
   // configuration
@@ -390,7 +390,7 @@ void SelectionFrame::reset( void )
   logEntryList().clear();
     
   // clear the AttachmentFrame
-  dynamic_cast<MainFrame*>(qApp)->attachmentFrame().list().clear();
+  static_cast<MainFrame*>(qApp)->attachmentFrame().list().clear();
   
   // make all EditFrames for deletion
   BASE::KeySet<EditFrame> frames( this ); 
@@ -576,7 +576,7 @@ void SelectionFrame::resetAttachmentFrame( void ) const
   Debug::Throw( "SelectionFrame::resetAttachmentFrame.\n" );
 
   // clear the AttachmentFrame
-  AttachmentFrame &attachment_frame( dynamic_cast<MainFrame*>(qApp)->attachmentFrame() );
+  AttachmentFrame &attachment_frame( static_cast<MainFrame*>(qApp)->attachmentFrame() );
   attachment_frame.list().clear();
 
   // check current logbook
@@ -657,9 +657,9 @@ void SelectionFrame::save( const bool& confirm_entries )
   }
 
   // write logbook to file, retrieve result
-  dynamic_cast<MainFrame*>(qApp)->busy();
+  static_cast<MainFrame*>(qApp)->busy();
   bool written( logbook()->write() );
-  dynamic_cast<MainFrame*>(qApp)->idle();
+  static_cast<MainFrame*>(qApp)->idle();
 
   if( written ) { setWindowTitle( MainFrame::MAIN_TITLE );}
 
@@ -836,7 +836,7 @@ void SelectionFrame::closeEvent( QCloseEvent *event )
 {
   Debug::Throw( "SelectionFrame::closeEvent.\n" );
   event->accept();    
-  dynamic_cast<MainFrame*>(qApp)->closeAction().trigger();
+  static_cast<MainFrame*>(qApp)->closeAction().trigger();
 }
 
 //_______________________________________________
@@ -1150,9 +1150,9 @@ void SelectionFrame::open( FileRecord record )
   }
 
   // create logbook from file
-  dynamic_cast<MainFrame*>(qApp)->busy();
+  static_cast<MainFrame*>(qApp)->busy();
   setLogbook( record.file() );
-  dynamic_cast<MainFrame*>(qApp)->idle();
+  static_cast<MainFrame*>(qApp)->idle();
 
   // check if backup is needed
   checkLogbookBackup();
@@ -1300,10 +1300,10 @@ void SelectionFrame::_revertToSaved( void )
   ) return;
 
   // reinit SelectionFrame
-  dynamic_cast<MainFrame*>(qApp)->busy();
+  static_cast<MainFrame*>(qApp)->busy();
   string file( logbook()->file() );
   setLogbook( logbook()->file() );
-  dynamic_cast<MainFrame*>(qApp)->idle();
+  static_cast<MainFrame*>(qApp)->idle();
 
   checkLogbookBackup();
   ignore_warnings_ = false;
@@ -1344,7 +1344,7 @@ void SelectionFrame::_synchronize( void )
   Debug::Throw() << "SelectionFrame::_synchronize - number of local entries: " << SelectionFrame::logbook()->entries().size() << endl;
   
   // set busy flag
-  dynamic_cast<MainFrame*>(qApp)->busy();
+  static_cast<MainFrame*>(qApp)->busy();
   statusBar().label().setText( "reading remote logbook ... " );
   
   // opens file in remote logbook
@@ -1367,7 +1367,7 @@ void SelectionFrame::_synchronize( void )
     what << errors;
     QtUtil::infoDialog( 0, what.str().c_str() );
 
-    dynamic_cast<MainFrame*>(qApp)->idle();
+    static_cast<MainFrame*>(qApp)->idle();
     return;
 
   }
@@ -1420,7 +1420,7 @@ void SelectionFrame::_synchronize( void )
   remote_logbook.write();
 
   // idle
-  dynamic_cast<MainFrame*>(qApp)->idle();
+  static_cast<MainFrame*>(qApp)->idle();
   statusBar().label().setText( "" );
 
   return;

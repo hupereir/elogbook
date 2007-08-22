@@ -307,8 +307,8 @@ void AttachmentList::_newAttachment( void )
     }
     
     // update attachment frame
-    dynamic_cast<MainFrame*>(qApp)->attachmentFrame().list().add( attachment );
-    dynamic_cast<MainFrame*>(qApp)->attachmentFrame().list().resizeColumns();
+    static_cast<MainFrame*>(qApp)->attachmentFrame().list().add( attachment );
+    static_cast<MainFrame*>(qApp)->attachmentFrame().list().resizeColumns();
    
     // update logbooks destination directory
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 
@@ -318,7 +318,7 @@ void AttachmentList::_newAttachment( void )
     }
     
     // change MainFrame window title
-    dynamic_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+    static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
 
     // save EditFrame entry
     edit_frame->save();
@@ -459,7 +459,7 @@ void AttachmentList::_edit( void )
   }
   
   // set main window title
-  dynamic_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+  static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
   
   // save EditFrame entry
   edit_frame->save();
@@ -542,7 +542,7 @@ void AttachmentList::_delete( void )
   }
   
   // set main window title
-  dynamic_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+  static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
   
   // save EditFrame entry
   edit_frame->save();

@@ -30,6 +30,7 @@
 */
 
 #include <QApplication>
+#include <QMouseEvent>
 #include <QPainter>
 
 #include "Debug.h"

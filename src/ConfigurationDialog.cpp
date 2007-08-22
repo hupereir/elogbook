@@ -177,7 +177,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   // listview configuration
   ListViewConfiguration *listview_config = new ListViewConfiguration( 
     &addPage( "List configuration" ), 
-    &dynamic_cast<MainFrame*>(qApp)->selectionFrame().logEntryList(), 
+    &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList(), 
     "Logbook entries display list" );
 
   // toolbars

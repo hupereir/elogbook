@@ -30,6 +30,7 @@
 */
 
 #include <QApplication>
+#include <QMouseEvent>
 
 #include "KeywordList.h"
 #include "LogEntryList.h"

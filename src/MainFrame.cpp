@@ -29,6 +29,7 @@
   \date $Date$
 */
 
+#include <QMessageBox>
 #include <iostream>
 #include <string>
 

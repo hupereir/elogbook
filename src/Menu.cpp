@@ -102,7 +102,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   
   menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W );
  
-  MainFrame& mainframe( *dynamic_cast<MainFrame*>(qApp) );
+  MainFrame& mainframe( *static_cast<MainFrame*>(qApp) );
   menu->addAction( &mainframe.closeAction() );
 
   // preferences menu
@@ -147,8 +147,8 @@ void Menu::_updateEditorMenu( void )
   Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
   editor_menu_->clear();
 
-  SelectionFrame &selection_frame( dynamic_cast<MainFrame*>(qApp)->selectionFrame() );
-  AttachmentFrame &attachment_frame( dynamic_cast<MainFrame*>(qApp)->attachmentFrame() );
+  SelectionFrame &selection_frame( static_cast<MainFrame*>(qApp)->selectionFrame() );
+  AttachmentFrame &attachment_frame( static_cast<MainFrame*>(qApp)->attachmentFrame() );
   
   // editor attachments and logbook information
   editor_menu_->addAction( &selection_frame.uniconifyAction() );
