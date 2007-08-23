@@ -2206,8 +2206,8 @@ void SelectionFrame::_viewHtml( void )
     AttachmentType::HTML.editCommand():"" );
 
   ostringstream what;
-  what << Util::tmp() << "/_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
-  dialog.setFile( File( what.str() ) );
+  what << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+  dialog.setFile( File( what.str() ).addPath( Util::tmp() ) );
 
   // map dialog
   QtUtil::centerOnParent( &dialog );
