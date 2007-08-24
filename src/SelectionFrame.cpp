@@ -866,7 +866,7 @@ void SelectionFrame::_installActions( void )
   */
   delete_keyword_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete keyword", this );
   delete_keyword_action_->setToolTip( "Delete selected keyword" );
-  delete_keyword_action_->setShortcut( Key_Delete );
+  delete_keyword_action_->setShortcut( c );
   delete_keyword_action_->setShortcutContext( WidgetShortcut );  
   connect( delete_keyword_action_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
 
