@@ -132,7 +132,7 @@ elogbook_SOURCES = \
   SplashScreen.cpp \
   ViewHtmlEntryDialog.cpp \
   ViewHtmlLogbookDialog.cpp \
-  eLogbook.cpp
+  elogbook.cpp
 
 nodist_elogbook_SOURCES = \
   qrc_pixmaps.cpp \

@@ -71,7 +71,7 @@ SOURCES = \
  EditAttachmentDialog.cpp \
  EditFrame.cpp \
  EditKeywordDialog.cpp \
- eLogbook.cpp \
+ elogbook.cpp \
  FormatBar.cpp \
  HtmlUtil.cpp \
  KeywordList.cpp \

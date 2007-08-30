@@ -157,7 +157,7 @@ AC_SUBST(timestamp)
 echo "timestamp = " $timestamp
 
 AC_OUTPUT( Makefile \
-  eLogbook.spec \
+  elogbook.spec \
   pixmaps/Makefile \
   base/Makefile \
   base-qt/Makefile \

@@ -21,6 +21,6 @@ EXTRA_DIST = \
  icon.ico \
  icon.png \
  autogen.sh \
- eLogbook.spec.in \
- eLogbook.spec \
- eLogbook.pro
+ elogbook.spec.in \
+ elogbook.spec \
+ elogbook.pro
