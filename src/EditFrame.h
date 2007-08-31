@@ -45,6 +45,7 @@
 #include "CustomLineEdit.h"
 #include "CustomTextEdit.h"
 #include "CustomMainWindow.h"
+#include "CustomToolBar.h"
 #include "Counter.h"
 #include "Debug.h"
 #include "Exception.h"
@@ -349,7 +350,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   FormatBar* format_toolbar_;
       
   //! map toolbar and option name
-  std::list< std::pair<QToolBar*, std::string> > toolbars_;
+  CustomToolBar::List toolbars_;
   
   //! pointer to statusbar    
   StatusBar* statusbar_;   

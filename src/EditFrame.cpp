@@ -106,6 +106,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   
   // create text
   text_ = new CustomTextEdit( splitter_ );
+  text_->setAcceptRichText( false );
   
   connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );
   connect( editor().document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
@@ -596,35 +597,8 @@ void EditFrame::_updateConfiguration( void )
   sizes << XmlOptions::get().get<int>( "EDT_HEIGHT" );
   sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
   splitter_->setSizes( sizes );
-
-  // toolbars visibility and location
-  for( list< pair<QToolBar*, string> >::iterator iter = toolbars_.begin(); iter != toolbars_.end(); iter++ )
-  {
-    
-    QToolBar* toolbar( iter->first );
-    string option_name( iter->second );
-    string location_name( option_name + "_LOCATION" );
-    
-    bool visibility( XmlOptions::get().find( option_name ) ? XmlOptions::get().get<bool>( option_name ):true );
-    bool current_visibility( toolbar->isVisible() );
-    
-    ToolBarArea location( (XmlOptions::get().find( location_name )) ? (ToolBarArea) CustomToolBar::nameToArea( XmlOptions::get().get<string>( location_name ) ):LeftToolBarArea );
-    ToolBarArea current_location( toolBarArea( toolbar ) );
-    
-    Debug::Throw() << "EditFrame::_updateConfiguration - " << option_name << " visibility: " << visibility << " location: " << (int)location << endl;
-    
-    if( visibility )
-    {
-      if( !( current_visibility && location == current_location ) ) 
-      {
-        addToolBar( location, toolbar );
-        toolbar->show();
-      }
-    } else toolbar->hide();
-   
-    XmlOptions::get().set<bool>( option_name, !toolbar->isHidden() );
-    XmlOptions::get().set<string>( location_name, CustomToolBar::areaToName( toolBarArea( toolbar ) ) );
-  }
+  
+  CustomToolBar::updateConfiguration( this, toolbars_ );
 
 }
 
@@ -644,17 +618,7 @@ void EditFrame::_saveConfiguration( void )
     XmlOptions::get().set<int>( "ATC_HEIGHT", (*BASE::KeySet<AttachmentList>(this).begin())->height() );
   }
   
-  // save toolbars location and visibility
-  for( list< pair<QToolBar*, string> >::iterator iter = toolbars_.begin(); iter != toolbars_.end(); iter++ )
-  {
-    
-    QToolBar* toolbar( iter->first );
-    string option_name( iter->second );
-    string location_name( option_name + "_LOCATION" );
-    XmlOptions::get().set<bool>( option_name, !toolbar->isHidden() );
-    XmlOptions::get().set<string>( location_name, CustomToolBar::areaToName( toolBarArea( toolbar ) ) );
-  }
-  
+  CustomToolBar::saveConfiguration( this, toolbars_ );
 
 }
 
