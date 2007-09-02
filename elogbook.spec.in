@@ -3,7 +3,7 @@
 %define prefix   /usr
 
 Summary: electronic logbook
-Name: eLogbook
+Name: elogbook
 Version: %{ver}
 Release: %{rel}
 License: GPL

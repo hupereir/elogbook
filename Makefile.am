@@ -10,6 +10,7 @@ SUBDIRS = \
  pixmaps \
  base \
  base-qt \
+ base-help \
  base-server \
  $(SPELLCHECK_SOURCE_DIR) \
  extra-includes \
