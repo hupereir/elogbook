@@ -7,17 +7,18 @@ TARGET = elogbook
 VERSION = 1.0
 DEFINES += QT_STATIC VERSION="\"$$VERSION\""
 
-INCLUDEPATH = . ../base ../base-qt ../base-server ../extra-includes
-DEPENDPATH += . ../base ../base-qt ../base-server ../extra-includes
+INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../extra-includes
+DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../extra-includes
 
 LIBS += \
   ../base-server/libbase-server.a \
   ../base-qt/libbase-qt.a \
+  ../base-help/libbase-help.a \
   ../base/libbase.a
 
 POST_TARGETDEPS = \
   ../base-server/libbase-server.a \
-  ../base-qt/libbase-qt.a \
+  ../base-help/libbase-help.a \
   ../base/libbase.a
 
 RESOURCES = pixmaps.qrc
