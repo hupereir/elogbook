@@ -100,11 +100,11 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   layout->addWidget( search_panel_ );  
   
   // status bar
-  statusbar_ = new StatusBar( main );
-  statusBar().addLabel( 2 );
+  setStatusBar( statusbar_ = new StatusBar( this ) );
+  statusBar().addLabel(1);
   statusBar().addClock();
   connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().label(), SLOT( setTextAndUpdate( const QString& ) ) );  
-  layout->addWidget( &statusBar() ); 
+  //layout->addWidget( &statusBar() ); 
   
   // global scope actions
   _installActions();

@@ -120,8 +120,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // associate EditFrame and attachment list
   Key::associate( this, attachment_list );
 
-  // state frame for tooltips
-  layout->addWidget( statusbar_ = new StatusBar( main ) );
+  // status bar for tooltips
+  setStatusBar( statusbar_ = new StatusBar( this ) );
   statusBar().addLabel( 2 );
   statusBar().addLabels( 2, 0 );
   statusBar().addClock();
