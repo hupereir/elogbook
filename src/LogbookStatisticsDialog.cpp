@@ -45,8 +45,8 @@ using namespace std;
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
-    QDialog( parent ),
-    Counter( "LogbookStatisticsDialog" )
+  QDialog( parent ),
+  Counter( "LogbookStatisticsDialog" )
 {
   Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
@@ -73,19 +73,22 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   QtUtil::expand( edit, logbook->file().expand() );
   
   // creation time
-  if( logbook->creation().isValid() ) {
+  if( logbook->creation().isValid() ) 
+  {
     grid_layout->addWidget( new QLabel( "Created: ", this ), 1, 0 );
     grid_layout->addWidget( new QLabel( logbook->creation().string().c_str(), this ), 1, 1 );
   }
   
   // modification time
-  if( logbook->modification().isValid() ) {
+  if( logbook->modification().isValid() ) 
+  {
     grid_layout->addWidget( new QLabel( "Last modified: ", this ), 2, 0 );
     grid_layout->addWidget( new QLabel( logbook->modification().string().c_str(), this ), 2, 1 );
   }
    
   // backup time
-  if( logbook->backup().isValid() ) {
+  if( logbook->backup().isValid() ) 
+  {
     grid_layout->addWidget( new QLabel( "Last backup: ", this ), 3, 0 );
     grid_layout->addWidget( new QLabel( logbook->backup().string().c_str(), this ), 3, 1 );
   }
@@ -125,7 +128,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
         
     // second column get the file name
     // item->setText( FILE, (*it)->file().localName().c_str() );
-    item->setText( FILE, (*it)->file().c_str() );
+    item->setText( FILE, (*it)->file().localName().c_str() );
     
     // third column get the number of entries
     item->setText( ENTRIES, Str().assign<unsigned int>( BASE::KeySet<LogEntry>(*it).size() ).c_str() );
