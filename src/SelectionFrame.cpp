@@ -1043,8 +1043,7 @@ void SelectionFrame::_updateConfiguration( void )
   splitter_->setSizes( sizes );
   
   // entry list mask
-  if( XmlOptions::get().find( "ENTRY_LIST_MASK" ) )
-  logEntryList().setMask( XmlOptions::get().get<unsigned int>( "ENTRY_LIST_MASK" ) );
+  if( XmlOptions::get().find( "ENTRY_LIST_MASK" ) ) logEntryList().setMask( XmlOptions::get().get<unsigned int>( "ENTRY_LIST_MASK" ) );
   
   // colors
   list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );

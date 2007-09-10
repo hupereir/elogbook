@@ -175,11 +175,14 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( spinbox );
 
   // listview configuration
+  page = &addPage( "List configuration" );
   ListViewConfiguration *listview_config = new ListViewConfiguration( 
-    &addPage( "List configuration" ), 
+    page, 
     &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList(), 
     "Logbook entries display list" );
-
+  
+  page->layout()->addWidget( listview_config );
+  
   // toolbars
   page = &addPage( "Toolbars" );
   box = new QGroupBox( "Toolbars", page );
