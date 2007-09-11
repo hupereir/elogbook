@@ -530,7 +530,8 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
   }
   
   last_item_ = item;
- 
+  scrollToItem( item );
+  
   return;
   
 }
