@@ -465,7 +465,7 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
   {
     
     // store event position for drag-start
-    drag_start_ = event->pos();drop_item_timer_
+    drag_start_ = event->pos();
     
     /* 
       see if click occured on current item,
