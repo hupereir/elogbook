@@ -1,3 +1,6 @@
+#ifndef SplashScreen_h
+#define SplashScreen_h
+
 // $Id$
 
 /******************************************************************************
@@ -20,9 +23,6 @@
 *                         
 *                         
 *******************************************************************************/
-
-#ifndef SplashScreen_h
-#define SplashScreen_h
 
 /*!
    \file SplashScreen.h
