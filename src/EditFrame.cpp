@@ -126,6 +126,9 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   statusBar().addLabels( 2, 0 );
   statusBar().addClock();
 
+  // actions
+  _installActions();
+  
   // toolbars
   // toolbar buttons pixmap path list
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
@@ -194,16 +197,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbars_.push_back( make_pair( toolbar, "EDITION_TOOLBAR" ) );
   addToolBar( LeftToolBarArea, toolbar );
 
-  // undo button
-  undo_action_ = new QAction( IconEngine::get( ICONS::UNDO, path_list ), "&Undo", this );
-  undo_action_->setToolTip( "Undo last modification" );
-  connect( undo_action_, SIGNAL( triggered() ), SLOT( _undo() ) );
   toolbar->addAction( undo_action_ );
-  
-  // redo button
-  redo_action_ = new QAction( IconEngine::get( ICONS::REDO, path_list ), "&Redo", this );
-  redo_action_->setToolTip( "Redo last undone modification" );
-  connect( redo_action_, SIGNAL( triggered() ), SLOT( _redo() ) );
   toolbar->addAction( redo_action_ );
 
   // undo/redo connections
@@ -245,22 +239,9 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbar->setObjectName( "NAVIGATION_TOOLBAR" );
   addToolBar( LeftToolBarArea, toolbar );
 
-  // main_window button
   toolbar->addAction( &static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
-
-  // previous_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::PREV, path_list ), "Display the previous entry", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _previousEntry() ) );
-  button->setText("Previous");
-  toolbar->addWidget( button );
-  previous_entry_ = button;
-
-  // next_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEXT, path_list ), "Display the next entry", &statusbar_->label() );
-  connect( button, SIGNAL( clicked() ), SLOT( _nextEntry() ) );
-  button->setText("Next");
-  toolbar->addWidget( button );
-  next_entry_ = button;
+  toolbar->addAction( &previousEntryAction() );
+  toolbar->addAction( &nextEntryAction() );
 
   // create menu if requested
   Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
@@ -310,8 +291,8 @@ void EditFrame::displayEntry( LogEntry *entry )
   
   // update previous and next action states
   Debug::Throw( "EditFrame::displayEntry - setting button states.\n" );
-  previous_entry_->setEnabled( frame->previousEntry(entry, false) );
-  next_entry_->setEnabled( frame->nextEntry(entry, false) );
+  previousEntryAction().setEnabled( frame->previousEntry(entry, false) );
+  nextEntryAction().setEnabled( frame->nextEntry(entry, false) );
   
   // reset modify flag; change title accordingly
   setModified( false );
@@ -582,6 +563,36 @@ void EditFrame::enterEvent( QEvent *event )
 
 }
 
+//_____________________________________________
+void EditFrame::_installActions( void )
+{
+  Debug::Throw( "EditFrame::_installActions.\n" );
+  
+  // toolbar buttons pixmap path list
+  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
+
+  // undo action
+  undo_action_ = new QAction( IconEngine::get( ICONS::UNDO, path_list ), "&Undo", this );
+  undo_action_->setToolTip( "Undo last modification" );
+  connect( undo_action_, SIGNAL( triggered() ), SLOT( _undo() ) );
+  
+  // redo action
+  redo_action_ = new QAction( IconEngine::get( ICONS::REDO, path_list ), "&Redo", this );
+  redo_action_->setToolTip( "Redo last undone modification" );
+  connect( redo_action_, SIGNAL( triggered() ), SLOT( _redo() ) );
+
+  // previous_entry action
+  previous_entry_action_ = new QAction( IconEngine::get( ICONS::PREV, path_list ), "&Previous Entry", this );
+  previous_entry_action_->setToolTip( "Display previous entry in current list" );
+  connect( previous_entry_action_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
+
+  // previous_entry action
+  next_entry_action_ = new QAction( IconEngine::get( ICONS::NEXT, path_list ), "&Next Entry", this );
+  next_entry_action_->setToolTip( "Display next entry in current list" );
+  connect( next_entry_action_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
+
+}
 
 //_____________________________________________
 void EditFrame::_updateConfiguration( void )

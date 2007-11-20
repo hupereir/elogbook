@@ -177,7 +177,19 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     
   };
     
-    
+  //!@name actions
+  //@{
+  
+  //! previous entry action
+  QAction& previousEntryAction( void ) const
+  { return *previous_entry_action_; }
+
+  //! next entry action
+  QAction& nextEntryAction( void ) const
+  { return *next_entry_action_; }
+  
+  //@}
+  
   public slots:  
   
   //! Save Current entry
@@ -202,6 +214,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void enterEvent( QEvent *event );
     
   private slots:
+  
+  //! install actions
+  void _installActions( void );
   
   //! configuration
   void _updateConfiguration( void );
@@ -294,13 +309,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! lock toolbar
   QToolBar* lock_;
-  
-  //! previous entry action
-  QWidget* previous_entry_;
-  
-  //! next entry action
-  QWidget* next_entry_;
-
+ 
   //@}
   
   //! main splitter
@@ -388,6 +397,12 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! redo
   QAction* redo_action_;
+  
+  //! previous entry action
+  QAction* previous_entry_action_;
+  
+  //! next entry action
+  QAction* next_entry_action_;
   
   //@}
 };
