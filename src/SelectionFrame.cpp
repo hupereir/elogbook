@@ -2133,7 +2133,7 @@ void SelectionFrame::_renameEntryKeyword( string new_keyword )
 }
 
 //_______________________________________________
-void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWidgetItem* old )
+void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWidgetItem* )
 {
 
   Debug::Throw( "SelectionFrame::_keywordSelectionChanged.\n" );
