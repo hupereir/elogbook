@@ -395,7 +395,6 @@ void SelectionFrame::reset( void )
   // make all EditFrames for deletion
   BASE::KeySet<EditFrame> frames( this ); 
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
-  //{delete *iter;}
   {
     (*iter)->setIsClosed( true );
     (*iter)->hide();
@@ -971,13 +970,34 @@ void SelectionFrame::_resetList( void )
   // clear list of entries
   logEntryList().clear();
   
-  if( !logbook_ ) return;
-  BASE::KeySet<LogEntry> entries( logbook()->entries() );
-  for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
-  { if( (*it)->isSelected() ) logEntryList().add( *it ); }
+  if( logbook_ )
+  {
+    
+    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
+    { if( (*it)->isSelected() ) logEntryList().add( *it ); }
+    logEntryList().sort();
+    logEntryList().resizeColumns();
+    
+  } 
   
-  logEntryList().sort();
-  logEntryList().resizeColumns();
+  // loop over associated editframes
+  // update navigation buttons
+  BASE::KeySet<EditFrame> frames( this );
+  for( BASE::KeySet<EditFrame>::iterator it = frames.begin(); it != frames.end(); it++ )
+  {
+    
+    // skip frames that are about to be deleted
+    if( (*it)->isClosed() ) continue;
+    
+    // get associated entry and see if selected
+    LogEntry* entry( (*it)->entry() );
+    (*it)->previousEntryAction().setEnabled( entry && entry->isSelected() && previousEntry(entry, false) );
+    (*it)->nextEntryAction().setEnabled( entry && entry->isSelected() && nextEntry(entry, false) );
+    
+  }
+
+  return;
   
 }
 
