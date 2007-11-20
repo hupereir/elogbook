@@ -84,7 +84,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   // action
   grid_layout->addWidget( new QLabel( "Action:", this ) );
   grid_layout->addWidget( action_combo_box_ = new QComboBox( this ) );
-  char *actions[] = { "Copy", "Link", 0 };
+  const char *actions[] = { "Copy", "Link", 0 };
   for( int i=0; actions[i]; i++ )
   action_combo_box_->addItem( actions[i] );
   action_combo_box_->setCurrentIndex( 0 );

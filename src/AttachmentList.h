@@ -71,7 +71,7 @@ class AttachmentList: public CustomListView, public BASE::Key
   };
     
   //! column titles
-  static char* column_titles_[ n_columns ];
+  static const char* column_titles_[ n_columns ];
   
   //! add attachment to the list
   void add( Attachment* attachment );

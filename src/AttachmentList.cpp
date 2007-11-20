@@ -57,7 +57,7 @@
 using namespace std;
 
 //_______________________________________________
-char* AttachmentList::column_titles_[ AttachmentList::n_columns ] = 
+const char* AttachmentList::column_titles_[ AttachmentList::n_columns ] = 
 {
   "file",
   "type",
