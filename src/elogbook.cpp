@@ -45,8 +45,8 @@
 using namespace std;
 
 //_______________________________
-//! to handle keyboard interuptions
-void interupt( int sig ); 
+//! to handle keyboard interruptions
+void interrupt( int sig ); 
  
 //__________________________________________
 //! main function
@@ -55,8 +55,8 @@ int main (int argc, char *argv[])
   try {
               
     // Ensure proper cleaning at exit
-    signal(SIGINT,  interupt);
-    signal(SIGTERM, interupt);
+    signal(SIGINT,  interrupt);
+    signal(SIGTERM, interrupt);
         
     // install error handler
     qInstallMsgHandler( ErrorHandler::Throw );
@@ -91,8 +91,8 @@ int main (int argc, char *argv[])
 }
 
 //_____________________________________________
-void interupt( int sig )
+void interrupt( int sig )
 { 
-  Debug::Throw() << "interupt - Recieved signal " << sig << endl;
+  Debug::Throw() << "interrupt - Recieved signal " << sig << endl;
   qApp->quit();
 }
