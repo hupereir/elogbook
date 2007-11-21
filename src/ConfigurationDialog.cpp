@@ -23,7 +23,7 @@
  
 /*!
   \file ConfigurationDialog.cc
-  \brief xMaze configuration dialog
+  \brief configuration dialog
   \author Hugo Pereira
   \version $Revision$
   \date $Date$

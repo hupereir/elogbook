@@ -33,7 +33,7 @@
 
 #include "BaseConfigurationDialog.h"
 
-//! xMaze configuration dialog
+//! configuration dialog
 class ConfigurationDialog: public BaseConfigurationDialog
 {
   
