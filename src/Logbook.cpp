@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file Logbook.cc
+  \file Logbook.cpp
   \brief log file parser based on xml
   \author Hugo Pereira
   \version $Revision$

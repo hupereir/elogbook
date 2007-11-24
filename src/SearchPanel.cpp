@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file SearchPanel.cc
+  \file SearchPanel.cpp
   \brief selects entries from keyword/title/text/...
   \author Hugo Pereira
   \version $Revision$

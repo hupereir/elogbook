@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file  AttachmentList.cc
+  \file  AttachmentList.cpp
   \brief  customized list view to handle attachment 
   \author Hugo Pereira
   \version $Revision$

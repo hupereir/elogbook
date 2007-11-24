@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file FormatBar.cc
+  \file FormatBar.cpp
   \brief text formating bar
   \author Hugo Pereira
   \version $Revision$

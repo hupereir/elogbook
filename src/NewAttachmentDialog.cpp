@@ -22,7 +22,7 @@
  *******************************************************************************/
 
 /*!
-   \file NewAttachmentDialog.cc
+   \file NewAttachmentDialog.cpp
    \brief new attachment popup dialog
    \author Hugo Pereira
    \version $Revision$

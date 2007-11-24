@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-   \file    AttachmentType.cc
+   \file    AttachmentType.cpp
    \brief   Attached file types for file manipulations
    \author  Hugo Pereira
    \version $Revision$

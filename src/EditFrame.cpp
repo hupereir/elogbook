@@ -22,7 +22,7 @@
  *******************************************************************************/
 
 /*!
-  \file EditFrame.cc
+  \file EditFrame.cpp
   \brief log entry edition/creation object
   \author Hugo Pereira
   \version $Revision$

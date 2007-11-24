@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file LogbookInformationDialog.cc
+  \file LogbookInformationDialog.cpp
   \brief  logbook informations
   \author Hugo Pereira
   \version $Revision$

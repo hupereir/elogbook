@@ -23,7 +23,7 @@
  *******************************************************************************/
 
 /*!
-   \file ViewHtmlEntryDialog.cc
+   \file ViewHtmlEntryDialog.cpp
    \brief new logbook popup dialog
    \author Hugo Pereira
    \version $Revision$

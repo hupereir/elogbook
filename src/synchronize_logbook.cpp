@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file synchronize_logbook.cc
+  \file synchronize_logbook.cpp
   \brief comand line synchronization of a logbook
   \author  Hugo Pereira
   \version $Revision$

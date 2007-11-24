@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file SelectionFrame.cc
+  \file SelectionFrame.cpp
   \brief base class to display entries and keyword::
   \author Hugo Pereira
   \version $Revision$

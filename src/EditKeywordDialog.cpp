@@ -23,7 +23,7 @@
  *******************************************************************************/
 
 /*!
-   \file EditKeywordDialog.cc
+   \file EditKeywordDialog.cpp
    \brief Edit/create keyword popup dialog
    \author Hugo Pereira
    \version $Revision$

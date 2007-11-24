@@ -23,7 +23,7 @@
  *******************************************************************************/
 
 /*!
-   \file DeleteKeywordDialog.cc
+   \file DeleteKeywordDialog.cpp
    \brief Delete attachment popup dialog
    \author Hugo Pereira
    \version $Revision$

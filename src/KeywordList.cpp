@@ -22,7 +22,7 @@
 
 
 /*!
-   \file KeywordList.cc
+   \file KeywordList.cpp
    \brief customized list view to handle LogEntry keyword
    \author Hugo Pereira
    \version $Revision$

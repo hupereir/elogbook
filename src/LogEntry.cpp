@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file LogEntry.cc
+  \file LogEntry.cpp
   \brief log file entry manipulation object
   \author Hugo Pereira
   \version $Revision$

@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file    eLogbook.cc
+  \file    eLogbook.cpp
   \brief  eLogbook main file
   \author  Hugo Pereira
   \version $Revision$

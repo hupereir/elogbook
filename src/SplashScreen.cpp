@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-   \file SplashScreen.cc
+   \file SplashScreen.cpp
    \brief application splash screen
    \author Hugo Pereira
    \version $Revision$

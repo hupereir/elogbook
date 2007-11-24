@@ -23,7 +23,7 @@
  *******************************************************************************/
 
 /*!
-   \file DeleteAttachmentDialog.cc
+   \file DeleteAttachmentDialog.cpp
    \brief Delete attachment popup dialog
    \author Hugo Pereira
    \version $Revision$

@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file Attachment.cc
+  \file Attachment.cpp
   \brief Attached file object
   \author Hugo Pereira
   \version $Revision$

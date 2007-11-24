@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file AttachmentFrame.cc
+  \file AttachmentFrame.cpp
   \brief popup window to list/edit all attachments independantly from entries
   \author  Hugo Pereira
   \version $Revision$

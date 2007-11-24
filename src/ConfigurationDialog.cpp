@@ -22,7 +22,7 @@
 *******************************************************************************/
  
 /*!
-  \file ConfigurationDialog.cc
+  \file ConfigurationDialog.cpp
   \brief configuration dialog
   \author Hugo Pereira
   \version $Revision$

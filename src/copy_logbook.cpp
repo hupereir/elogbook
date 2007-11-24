@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file copy_logbook.cc
+  \file copy_logbook.cpp
   \brief comand line copy of a logbook
   \author  Hugo Pereira
   \version $Revision$

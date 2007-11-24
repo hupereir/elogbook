@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file LogbookModifiedDialog.cc
+  \file LogbookModifiedDialog.cpp
   \brief QDialog used when a file has been modified on disk
   \author Hugo Pereira
   \version $Revision$

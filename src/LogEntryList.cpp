@@ -22,7 +22,7 @@
 
 
 /*!
-   \file LogEntryList.cc
+   \file LogEntryList.cpp
    \brief customized list view to handle LogEntry
    \author Hugo Pereira
    \version $Revision$
