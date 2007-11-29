@@ -130,7 +130,7 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
   if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, parent ) );
 
   // dump text
-  if( text().size() )
+  if( !text().empty() )
   {
     string text( LogEntry::text() );
     if( text[text.size()-1] != '\n' ) text+='\n';
