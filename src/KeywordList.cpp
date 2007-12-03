@@ -533,7 +533,6 @@ void KeywordList::dragEnterEvent( QDragEnterEvent* event )
 //__________________________________________________________
 void KeywordList::dragMoveEvent( QDragMoveEvent* event )
 {
-  Debug::Throw( "KeywordList::dragMoveEvent.\n" ); 
 
   // check if object can be decoded
   if( !_acceptDrag( event ) ) 
