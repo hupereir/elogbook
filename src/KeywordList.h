@@ -69,7 +69,7 @@ class KeywordList: public CustomListView
   enum ColumnTypes { KEYWORD };
 
   //! column titles
-  static char* column_titles_[ n_columns ];
+  static const char* column_titles_[ n_columns ];
 
   //! add keyword, check for unicity
   void add( std::string keyword );
@@ -139,6 +139,9 @@ class KeywordList: public CustomListView
   /*! this is connected to the time-out of the drop timer */
   void _openDropItem( void );
 
+  //! process drop action (for accepted drags)
+  bool _processDrop( void );
+
   //! start editting current item
   void _startEdit( void );
 
@@ -197,9 +200,6 @@ class KeywordList: public CustomListView
   //! return true if QMimeSource is an accepted TextDrag
   bool _acceptDrag( QDropEvent *event ) const;
 
-  //! process drop action (for accepted drags)
-  bool _processDrop( QDropEvent *event );
-
   //@}
 
   //! needed for smart reset
@@ -240,8 +240,39 @@ class KeywordList: public CustomListView
   bool drop_item_selected_;
 
   //! timer to open drop_item when selected
-  QTimer* drop_item_timer_;
+  QTimer drop_item_timer_;
+   
+  //! drop event timer
+  /*! 
+  a timer is used to process keyword drops after the dropEvent is completed, which otherwise can make the application crash
+  because of the list being modified while processing the event.
+  */
+  QTimer process_drop_timer_;
 
+  //! drop mime data
+  class DropData
+  {
+    public:
+    DropData( const QString& type = QString(), const QString& value = QString() ):
+      type_( type ),
+      value_( value )
+    {}
+    
+    const QString& type( void ) const
+    { return type_; }
+    
+    const QString& value( void ) const
+    { return value_; }
+    
+    private:
+    
+    QString type_;
+    QString value_;
+    
+  };
+  
+  DropData drop_data_;
+    
   //! store possible mouse drag start position
   QPoint drag_start_;
 
@@ -267,8 +298,8 @@ class KeywordList: public CustomListView
   
   //! editing timer
   /*! editting is enabled only if a certain delay is passed during which no drag/drop starts */
-  QTimer* edit_timer_;
-
+  QTimer edit_timer_;
+ 
   //! edit_item delay (ms)
   /* 
     it is used to start delayed edition of keywords

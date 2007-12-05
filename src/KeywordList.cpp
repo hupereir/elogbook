@@ -41,7 +41,7 @@ using namespace std;
 
 //_______________________________________________
 const QString KeywordList::DRAG = "KeywordList::Drag";
-char* KeywordList::column_titles_[ KeywordList::n_columns ] = { "keyword" };
+const char* KeywordList::column_titles_[ KeywordList::n_columns ] = { "keyword" };
 
 //_______________________________________________
 KeywordList::KeywordList( QWidget *parent ):
@@ -49,22 +49,27 @@ KeywordList::KeywordList( QWidget *parent ):
   root_item_( 0 ),
   drop_item_( 0 ),
   drop_item_selected_( false ),
-  drop_item_timer_( new QTimer( this ) ),
+  drop_item_timer_( this ),
+  process_drop_timer_( this ),
   edit_item_( 0 ),
-  edit_timer_( new QTimer( this ) )
+  edit_timer_( this )
 {
   
   Debug::Throw( "KeywordList::KeywordList.\n" );
   
   // configurate drop timer
-  drop_item_timer_->setSingleShot( true );
-  drop_item_timer_->setInterval( drop_item_delay_ );
-  connect( drop_item_timer_, SIGNAL( timeout() ), SLOT( _openDropItem() ) );
+  drop_item_timer_.setSingleShot( true );
+  drop_item_timer_.setInterval( drop_item_delay_ );
+  connect( &drop_item_timer_, SIGNAL( timeout() ), SLOT( _openDropItem() ) );
 
-  edit_timer_->setSingleShot( true );
-  edit_timer_->setInterval( edit_item_delay_ );
-  connect( edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
+  process_drop_timer_.setSingleShot( true );
+  process_drop_timer_.setInterval( 0 );
+  connect( &process_drop_timer_, SIGNAL( timeout() ), SLOT( _processDrop() ) );
   
+  edit_timer_.setSingleShot( true );
+  edit_timer_.setInterval( edit_item_delay_ );
+  connect( &edit_timer_, SIGNAL( timeout() ), SLOT( _startEdit() ) );
+    
   setRootIsDecorated( true );    
   setAcceptDrops(true);  
   setAutoScroll(true);
@@ -221,6 +226,8 @@ void KeywordList::reset( set<string> new_keywords )
     
   // always expand the root item
   expandItem( rootItem() );
+  Debug::Throw( "KeywordList::reset - done.\n" );
+  
   return;
 }
   
@@ -350,7 +357,7 @@ void KeywordList::_resetEdit( const bool& restore_backup )
   Debug::Throw( "KeywordList::_resetEdit.\n" );
 
   // stop timer
-  edit_timer_->stop();
+  edit_timer_.stop();
   if( edit_item_ )
   {
     // close editor
@@ -472,7 +479,7 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
       make sure it is not the root item, 
       start Edit timer
     */
-    if( item && item != rootItem() && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_->start();
+    if( item && item != rootItem() && item == QTreeWidget::currentItem() && item != edit_item_ ) edit_timer_.start();
     else _resetEdit();
     
   }
@@ -521,7 +528,7 @@ void KeywordList::dragEnterEvent( QDragEnterEvent* event )
     _updateOpenItems( item );
     
     drop_item_ = item;
-    drop_item_timer_->start();
+    drop_item_timer_.start();
     
     drop_item_selected_ = isItemSelected( drop_item_ );
     setItemSelected( drop_item_, true );
@@ -533,6 +540,8 @@ void KeywordList::dragEnterEvent( QDragEnterEvent* event )
 //__________________________________________________________
 void KeywordList::dragMoveEvent( QDragMoveEvent* event )
 {
+
+  Debug::Throw( "KeywordList::dragMoveEvent.\n" );
 
   // check if object can be decoded
   if( !_acceptDrag( event ) ) 
@@ -565,7 +574,7 @@ void KeywordList::dragMoveEvent( QDragMoveEvent* event )
       if( drop_item_ ) setItemSelected( drop_item_, true );
       
       // restart timer
-      drop_item_timer_->start();
+      drop_item_timer_.start();
       
     }
     
@@ -577,16 +586,47 @@ void KeywordList::dragMoveEvent( QDragMoveEvent* event )
 void KeywordList::dropEvent( QDropEvent* event )
 {
   Debug::Throw( "KeywordList::dropEvent.\n" );
-
+  
   // check if object can be decoded
-  if( !_acceptDrag( event ) ) event->ignore();
-  else
+  if( !_acceptDrag( event ) ) 
   {
-    event->acceptProposedAction();
-    _processDrop( event );
-    _resetDrag();
+    event->ignore();
+    return;
   }
   
+  // retrieve item below pointer
+  Item *item( static_cast<Item*>(itemAt( event->pos() ) ) );
+  if( !item )  {
+    event->ignore();
+    return;
+  }
+
+  // store mime data
+  if( event->mimeData()->hasFormat( KeywordList::DRAG ) )
+  {
+    QString value( event->mimeData()->data( KeywordList::DRAG ) );
+    if( value.isNull() || value.isEmpty() ) 
+    {
+      event->ignore();
+      return;
+    }
+    
+    drop_data_ = DropData( KeywordList::DRAG, value );
+
+  } else if( event->mimeData()->hasFormat( LogEntryList::DRAG ) ) {
+   
+    drop_data_ = DropData( LogEntryList::DRAG );
+    
+  } else {
+    
+    event->ignore();
+    return;
+  }
+    
+  event->acceptProposedAction();
+  process_drop_timer_.start();
+  
+  Debug::Throw( "KeywordList::dropEvent - done.\n" );
   return;
   
 }
@@ -595,9 +635,9 @@ void KeywordList::dropEvent( QDropEvent* event )
 void KeywordList::_updateOpenItems( QTreeWidgetItem* item )
 {
   
-  Debug::Throw( "KeywordList::_createRootItem.\n" );
+  Debug::Throw() << "KeywordList::_updateOpenItems - size: " << open_items_.size() << endl;
   
-  while( open_items_.size() )
+  while( !open_items_.empty() )
   {
     // exit if item is found in list
     if( item && item == open_items_.top() ) return;
@@ -611,6 +651,7 @@ void KeywordList::_updateOpenItems( QTreeWidgetItem* item )
   
   // adds current item if needed
   if( item && !isItemExpanded( item ) ) open_items_.push( item );
+  Debug::Throw( "KeywordList::_updateOpenItems - done.\n" );
   
 }
 
@@ -660,30 +701,22 @@ void KeywordList::_resetDrag( void )
   _updateOpenItems( 0 );  
   if( drop_item_ ) setItemSelected( drop_item_, drop_item_selected_ );
   drop_item_ = 0;
-  drop_item_timer_->stop();
+  drop_item_timer_.stop();
+  
+  Debug::Throw( "KeywordList::_resetDrag - done.\n" );
   
 }
 //__________________________________________________________
-bool KeywordList::_processDrop( QDropEvent *event )
+bool KeywordList::_processDrop( void )
 {
   
   Debug::Throw( "KeywordList::_processDrop.\n" );
-  
-  // retrieve item below pointer
-  Item *item( static_cast<Item*>(itemAt( event->pos() ) ) );
-  if( !item ) return false;
-  string current_keyword( keyword( item ) );
-  
-  // retrieve event keyword
-  const QMimeData& mime( *event->mimeData() );
-  if( mime.hasFormat( KeywordList::DRAG ) )
+  Exception::checkPointer( drop_item_, DESCRIPTION( "invalid drop item" ) );
+  string current_keyword( keyword( drop_item_ ) );
+  if( drop_data_.type() == KeywordList::DRAG )
   {
-   
-    // dragging from one keyword to another
-    // retrieve old keyword
-    QString value( mime.data( KeywordList::DRAG ) );
-    if( value.isNull() || value.isEmpty() ) return false;
     
+    Debug::Throw( "KeywordList::_processDrop - KeywordList::DRAG.\n" );    
     _resetDrag();
     
     // retrieve full keyword of selected items
@@ -695,20 +728,24 @@ bool KeywordList::_processDrop( QDropEvent *event )
       // make sure that one does not move an item to itself
       if( old_keyword == current_keyword ) continue;
 
-      emit keywordChanged( old_keyword, current_keyword + "/" + qPrintable( value ) );
+      emit keywordChanged( old_keyword, current_keyword + "/" + qPrintable( drop_data_.value() ) );
     }
     
     return true;
-  }
-  
-  if( mime.hasFormat( LogEntryList::DRAG ) )
-  {
+    
+  } else if( drop_data_.type() == LogEntryList::DRAG ) {
+
+    Debug::Throw( "KeywordList::_processDrop - KeywordList::LogEntryList.\n" );
     
     // dragging from logEntry list
     _resetDrag();
+
+    Debug::Throw( "KeywordList::_processDrop - signal emmited.\n" );
     emit entryKeywordChanged( current_keyword );
     
-  }
+    return true;
+    
+  } else _resetDrag();
   
   return false;
   

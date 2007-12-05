@@ -1022,7 +1022,7 @@ void SelectionFrame::_resetKeywordList( void )
   
   // sort list
   keywordList().sort();
-  Debug::Throw( "SelectionFrame::_resetKeywordList - node.\n" );
+  Debug::Throw( "SelectionFrame::_resetKeywordList - done.\n" );
 
 }
 
@@ -2072,7 +2072,7 @@ void SelectionFrame::_renameEntryKeyword( void )
 void SelectionFrame::_renameEntryKeyword( string new_keyword )
 {
       
-  Debug::Throw() << "SelectionFrame::_renameKeyword - new_keyword: " << new_keyword << endl;
+  Debug::Throw() << "SelectionFrame::_renameEntryKeyword - new_keyword: " << new_keyword << endl;
   
   // keep track of modified entries
   BASE::KeySet<LogEntry> entries;

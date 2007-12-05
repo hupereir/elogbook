@@ -188,7 +188,6 @@ string LogEntry::formatKeyword( const string& keyword )
   
   // add leading backspace
   out = NO_KEYWORD + out;
-  Debug::Throw() << "LogEntry::FormatKeyword: " << out << endl;
   return out;
 }
 
