@@ -96,8 +96,7 @@ class LogEntryList: public CustomListView
     public:
     
     //! constructor
-    Item( LogEntryList* parent ):
-      CustomListView::Item( parent )
+    Item( void )
     { 
       Debug::Throw( "LogEntryList::item::item.\n" ); 
       setFlag( Qt::ItemIsDragEnabled, true );

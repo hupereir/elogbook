@@ -88,11 +88,12 @@ void LogEntryList::add( LogEntry* entry, bool update_selection )
   Debug::Throw("LogEntryList::add.\n" );
   Exception::check( entry, DESCRIPTION( "invalid entry" ) );
   
-  Item *item( new Item( this ) );
-  BASE::Key::associate( item, entry );
-  
-  item->update( );
+  Item *item( new Item() );
+  addTopLevelItem( item );
 
+  BASE::Key::associate( item, entry );  
+  item->update();
+  
   if( update_selection ) {
     clearSelection();
     setCurrentItem( item );

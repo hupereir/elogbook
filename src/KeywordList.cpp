@@ -121,8 +121,10 @@ void KeywordList::add( string keyword )
     }
           
     // if none found, create a new Item
-    if( !item ) {
-      item = new Item( parent_item );
+    if( !item ) 
+    {
+      item = new Item();
+      parent_item->addChild( item );
       item->setText( KEYWORD, iter->c_str() );  
     }
     
@@ -401,7 +403,8 @@ void KeywordList::_createRootItem( void )
   if( root_item_ ) return;
   
   Debug::Throw( "KeywordList::_createRootItem.\n" );
-  root_item_ = new Item( this );
+  root_item_ = new Item();
+  addTopLevelItem( root_item_ );
   root_item_->setText( KEYWORD, LogEntry::NO_KEYWORD.c_str() );
 
 }

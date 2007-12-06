@@ -95,8 +95,7 @@ class AttachmentList: public CustomListView, public BASE::Key
     public: 
     
     //! constructor
-    Item( AttachmentList *list ):
-        CustomListView::Item( list )
+    Item( void )
     {}
     
     //! update current attachment

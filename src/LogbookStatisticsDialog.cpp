@@ -124,16 +124,13 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   for( list< Logbook* >::iterator it=all.begin(); it!= all.end(); it++ )
   {
     
-    CustomListView::Item* item( new CustomListView::Item( list_view ) );
-        
-    // second column get the file name
-    // item->setText( FILE, (*it)->file().localName().c_str() );
-    item->setText( FILE, (*it)->file().localName().c_str() );
+    // create
+    CustomListView::Item* item( new CustomListView::Item() );
+    list_view->addTopLevelItem( item );
     
-    // third column get the number of entries
+    // fill
+    item->setText( FILE, (*it)->file().localName().c_str() );
     item->setText( ENTRIES, Str().assign<unsigned int>( BASE::KeySet<LogEntry>(*it).size() ).c_str() );
-
-    // last modificatino
     item->setText( MODIFIED, (*it)->modification().string().c_str() );
     
   }

@@ -125,7 +125,9 @@ void AttachmentList::add( Attachment* attachment )
   Debug::Throw( "AttachmentList::add.\n" ); 
   Exception::check( attachment, DESCRIPTION( "invalid attachment" ) );
   
-  Item *item( new Item( this ) );
+  // create item
+  Item *item( new Item() );
+  addTopLevelItem( item );
   Key::associate( item, attachment );
   item->update();
   

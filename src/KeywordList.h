@@ -89,27 +89,6 @@ class KeywordList: public CustomListView
   //! get all registered keywords
   std::set< std::string > keywords( void );
 
-  //! local items
-  class Item: public CustomListView::Item
-  {
-
-    public:
-
-    /*!
-      constructor. Only the "root" item is created from the list
-      it cannot be dragged
-    */
-    Item( KeywordList* parent ):
-      CustomListView::Item( parent )
-      {}
-
-    //! constructor
-    /*! subitems can be renamed, as opposed to topLevel items */
-    Item( Item* parent ):
-      CustomListView::Item( parent )
-      {}
-  };
-
   //! root item
   Item* rootItem( void ) const
   { return root_item_; }
