@@ -31,6 +31,7 @@
 
 #include <QApplication>
 #include <QMouseEvent>
+#include <QLineEdit>
 
 #include "KeywordList.h"
 #include "LogEntryList.h"
@@ -383,8 +384,17 @@ void KeywordList::_activate( QTreeWidgetItem* item )
   // check if item is edited
   if( !( edit_item_ && item == edit_item_ ) ) return;
     
+  // cast associated editor and check for validity
+  QLineEdit* editor( dynamic_cast<QLineEdit*>( itemWidget( item, 0 ) ) );
+  if( !editor ) return;
+  
   //! retrieve full backup keyword
   string old_keyword = full_backup_; 
+  
+  // update item text
+  edit_item_->setText( KEYWORD, editor->text() );
+  
+  // retrieve full keyword
   string new_keyword = keyword( edit_item_ );
   
   // emit keyword changed signal if they are different

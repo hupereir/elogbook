@@ -30,6 +30,7 @@
 */
 
 #include <QApplication>
+#include <QLineEdit>
 #include <QMouseEvent>
 #include <QPainter>
 
@@ -356,10 +357,15 @@ void LogEntryList::_activate( QTreeWidgetItem *item )
   if( item == edit_item_  && !edit_timer_->isActive() )
   {
       
-      
+    Debug::Throw( "LogEntryList::_activate - matching item.\n" );
+    
+    // cast associated editor and check for validity
+    QLineEdit* editor( dynamic_cast<QLineEdit*>( itemWidget( item, 0 ) ) );
+    if( !editor ) return;
+
     // retrieve Item title
     // check against backup
-    QString title( item->text( TITLE ) );
+    QString title( editor->text() );
     if( title != backup_ ) 
     { emit entryRenamed( static_cast<Item*>( item )->entry(), qPrintable( title ) ); }
     
@@ -369,6 +375,7 @@ void LogEntryList::_activate( QTreeWidgetItem *item )
                   
   } else {
     
+    Debug::Throw( "LogEntryList::_activate - item selected.\n" );
     emit entrySelected( static_cast<Item*>(item)->entry() );
    _resetEdit();
     
@@ -452,8 +459,8 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
     last_item_ = item;
   }
   
-  // finally, if item was not selected, run default
-  if( !isItemSelected( item ) )
+  // finally, if item was not selected, or column is other than title run default
+  if( !( isItemSelected( item ) && column == TITLE )  )
   { CustomListView::mousePressEvent( event ); }
   
   Debug::Throw( "LogEntryList::mousePressEvent. Done.\n" );
