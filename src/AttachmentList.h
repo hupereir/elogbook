@@ -39,7 +39,7 @@
 #include "AttachmentType.h"
 #include "Attachment.h"
 #include "Counter.h"
-#include "CustomListView.h"
+#include "TreeWidget.h"
 #include "Debug.h"
 #include "Exception.h"
 #include "Key.h"
@@ -48,7 +48,7 @@
   \class  AttachmentList
   \brief  customized ListBox to handle Attachment
 */ 
-class AttachmentList: public CustomListView, public BASE::Key
+class AttachmentList: public TreeWidget, public BASE::Key
 { 
 
   //! Qt meta object declaration
@@ -90,7 +90,7 @@ class AttachmentList: public CustomListView, public BASE::Key
   }
        
   //! local list item for attachments
-  class Item: public CustomListView::Item, public BASE::Key 
+  class Item: public TreeWidget::Item, public BASE::Key 
   {
     public: 
     

@@ -32,7 +32,7 @@
 #include <QLayout>
 
 #include "CustomTextEdit.h"
-#include "CustomListView.h"
+#include "TreeWidget.h"
 #include "Debug.h"
 #include "Logbook.h"
 #include "LogbookInformationDialog.h"

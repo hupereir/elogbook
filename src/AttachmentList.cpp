@@ -67,7 +67,7 @@ const char* AttachmentList::column_titles_[ AttachmentList::n_columns ] =
 
 //_____________________________________________
 AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
-  CustomListView( parent ),
+  TreeWidget( parent ),
   read_only_( read_only )
 { 
   Debug::Throw( "AttachmentList::AttachmentList.\n" ); 
@@ -571,7 +571,7 @@ bool AttachmentList::Item::operator < (const QTreeWidgetItem& item ) const
 {
 
   // cast parent to custom list view
-  const CustomListView* parent( static_cast<const CustomListView*>( treeWidget() ) );
+  const TreeWidget* parent( static_cast<const TreeWidget*>( treeWidget() ) );
   if( !parent ) return QTreeWidgetItem::operator < (item);
   
   // try cast other

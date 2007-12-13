@@ -46,7 +46,7 @@ const char* KeywordList::column_titles_[ KeywordList::n_columns ] = { "keyword" 
 
 //_______________________________________________
 KeywordList::KeywordList( QWidget *parent ):
-  CustomListView( parent ),
+  TreeWidget( parent ),
   root_item_( 0 ),
   drop_item_( 0 ),
   drop_item_selected_( false ),
@@ -258,7 +258,7 @@ void KeywordList::select( string keyword )
   }
   
   // look for matching item in list
-  items = CustomListView::children();
+  items = TreeWidget::children();
   for( QList<QTreeWidgetItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
   {
     string local(  KeywordList::keyword( *iter ) );
@@ -315,7 +315,7 @@ set<string> KeywordList::keywords( void )
   set<string> out;
 
   // look for matching item in list
-  QList<QTreeWidgetItem*> items = CustomListView::children();
+  QList<QTreeWidgetItem*> items = TreeWidget::children();
   for( QList<QTreeWidgetItem*>::iterator iter = items.begin(); iter != items.end(); iter++ )
   { out.insert( keyword( *iter ) ); }
 
@@ -332,7 +332,7 @@ void KeywordList::clear( void )
   _resetDrag();
   _resetEdit();
 
-  CustomListView::clear();
+  TreeWidget::clear();
   
 }
 
@@ -497,7 +497,7 @@ void KeywordList::mousePressEvent( QMouseEvent* event )
     
   }
   
-  return CustomListView::mousePressEvent( event );
+  return TreeWidget::mousePressEvent( event );
 
 }
   
@@ -508,11 +508,11 @@ void KeywordList::mouseMoveEvent( QMouseEvent* event )
   Debug::Throw( "KeywordList::mouseMoveEvent.\n" );
   
   // check button
-  if( !(event->buttons()&Qt::LeftButton) )  return CustomListView::mouseMoveEvent( event );
+  if( !(event->buttons()&Qt::LeftButton) )  return TreeWidget::mouseMoveEvent( event );
   
   // check distance to last click
   if( (event->pos() - drag_start_ ).manhattanLength() < QApplication::startDragDistance() )
-  { return CustomListView::mouseMoveEvent( event ); }
+  { return TreeWidget::mouseMoveEvent( event ); }
   
   _startDrag( event );
   

@@ -40,7 +40,7 @@
 #include <string>
 
 #include "Counter.h"
-#include "CustomListView.h"
+#include "TreeWidget.h"
 #include "Debug.h"
 #include "Exception.h"
 
@@ -48,7 +48,7 @@
   \class KeywordList
   \brief customized ListView to handle LogEntry keyword
 */
-class KeywordList: public CustomListView
+class KeywordList: public TreeWidget
 {
 
   //! Qt meta object declaration

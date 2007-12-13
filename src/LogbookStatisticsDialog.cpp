@@ -32,7 +32,7 @@
 #include <QLayout>
 #include <QPushButton>
 
-#include "CustomListView.h"
+#include "TreeWidget.h"
 #include "CustomLineEdit.h" 
 #include "Debug.h"
 #include "Logbook.h"
@@ -110,7 +110,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   list< Logbook* > all( logbook->children() );
   all.push_front( logbook ); 
 
-  CustomListView *list_view( new CustomListView( this ) );
+  TreeWidget *list_view( new TreeWidget( this ) );
   layout->addWidget( list_view, 1 );
   
   enum Columns{ FILE, ENTRIES, MODIFIED }; 
@@ -119,13 +119,13 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   list_view->setColumnName( ENTRIES, "entries" );
   list_view->setColumnName( MODIFIED, "last modified" );
   
-  list_view->setColumnType( ENTRIES, CustomListView::NUMBER );
+  list_view->setColumnType( ENTRIES, TreeWidget::NUMBER );
   
   for( list< Logbook* >::iterator it=all.begin(); it!= all.end(); it++ )
   {
     
     // create
-    CustomListView::Item* item( new CustomListView::Item() );
+    TreeWidget::Item* item( new TreeWidget::Item() );
     list_view->addTopLevelItem( item );
     
     // fill

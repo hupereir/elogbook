@@ -37,7 +37,7 @@
 #include <QTimer>
 
 #include "Counter.h"
-#include "CustomListView.h"
+#include "TreeWidget.h"
 #include "Debug.h"
 #include "Exception.h"
 #include "Key.h"
@@ -50,7 +50,7 @@ class QPainter;
   \class  LogEntryList
   \brief  customized ListView to handle LogEntry
 */ 
-class LogEntryList: public CustomListView
+class LogEntryList: public TreeWidget
 { 
 
   Q_OBJECT
@@ -91,7 +91,7 @@ class LogEntryList: public CustomListView
   void resizeColumns( void );
   
   //! handle listviewitem and logbook entry association
-  class Item: public CustomListView::Item, public BASE::Key
+  class Item: public TreeWidget::Item, public BASE::Key
   {
     public:
     

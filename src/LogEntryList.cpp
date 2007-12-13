@@ -54,7 +54,7 @@ const char* LogEntryList::column_titles_[ LogEntryList::n_columns ] =
 
 //_____________________________________________
 LogEntryList::LogEntryList( QWidget *parent ):
-  CustomListView( parent ),
+  TreeWidget( parent ),
   first_item_( 0 ),
   last_item_( 0 ),
   drag_enabled_( false ),
@@ -286,7 +286,7 @@ list< LogEntry* > LogEntryList::entries( void )
 
   // retrieve logbook entries
   list< LogEntry* > entries; 
-  QList<Item*> items( CustomListView::children<Item>() );
+  QList<Item*> items( TreeWidget::children<Item>() );
   for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ ) 
   {
     
@@ -309,7 +309,7 @@ void LogEntryList::clear( void )
   drag_enabled_ = false;
   edit_item_ = 0;
   edit_timer_->stop();
-  CustomListView::clear();
+  TreeWidget::clear();
 }
 
 //_____________________________________________________
@@ -393,7 +393,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   Debug::Throw( "LogEntryList::mousePressEvent.\n" );
   
   #ifdef BASE_EVENT_HANDLERS
-  return CustomListView::mousePressEvent( event );
+  return TreeWidget::mousePressEvent( event );
   #endif
   
   // retrieve item under cursor
@@ -423,7 +423,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   // check button
   /* so far all actions linked to other than the left or right buttons are left default */
   if( !( event->buttons() & (Qt::LeftButton|Qt::RightButton) ) ) 
-  { return CustomListView::mousePressEvent( event ); }
+  { return TreeWidget::mousePressEvent( event ); }
 
   // retrieve Item at position
   if( !item ) 
@@ -441,7 +441,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   { 
     
     edit_timer_->start(); 
-    CustomListView::mousePressEvent( event );
+    TreeWidget::mousePressEvent( event );
   
   } else _resetEdit();
       
@@ -461,7 +461,7 @@ void LogEntryList::mousePressEvent( QMouseEvent* event )
   
   // finally, if item was not selected, or column is other than title run default
   if( !( isItemSelected( item ) && column == TITLE )  )
-  { CustomListView::mousePressEvent( event ); }
+  { TreeWidget::mousePressEvent( event ); }
   
   Debug::Throw( "LogEntryList::mousePressEvent. Done.\n" );
 
@@ -473,7 +473,7 @@ void LogEntryList::mouseMoveEvent( QMouseEvent* event )
   
   Debug::Throw( "LogEntryList::mouseMoveEvent.\n" );
   
-  if( !(event->buttons()&Qt::LeftButton) ) return CustomListView::mouseMoveEvent( event );
+  if( !(event->buttons()&Qt::LeftButton) ) return TreeWidget::mouseMoveEvent( event );
   
   // retrieve Item at position
   QTreeWidgetItem* item( itemAt( event->pos() ) );
@@ -562,7 +562,7 @@ void LogEntryList::mouseReleaseEvent( QMouseEvent* event )
   }
   
   drag_enabled_ = false;
-  return CustomListView::mouseReleaseEvent( event );  
+  return TreeWidget::mouseReleaseEvent( event );  
 }
 
 //_______________________________________________
@@ -617,7 +617,7 @@ bool LogEntryList::Item::operator < (const QTreeWidgetItem& item ) const
 {
 
   // cast parent to custom list view
-  const CustomListView* parent( static_cast<const CustomListView*>( treeWidget() ) );
+  const TreeWidget* parent( static_cast<const TreeWidget*>( treeWidget() ) );
   if( !parent ) return QTreeWidgetItem::operator < (item);
   
   // try cast other
