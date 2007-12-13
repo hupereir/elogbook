@@ -37,7 +37,7 @@
 #include "CustomGridLayout.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
-#include "ListViewConfiguration.h"
+#include "TreeViewConfiguration.h"
 #include "MainFrame.h"
 #include "OptionBrowsedLineEdit.h"
 #include "OptionCheckBox.h"
@@ -176,7 +176,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // listview configuration
   page = &addPage( "List configuration" );
-  ListViewConfiguration *listview_config = new ListViewConfiguration( 
+  TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
     page, 
     &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList(), 
     "Logbook entries display list" );
