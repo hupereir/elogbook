@@ -45,10 +45,11 @@ void installDefaultOptions( void )
   XmlOptions::get().keep( "COLOR" );
   XmlOptions::get().add( Option( "COLOR", "#aa0000" , "entry display color"  ));
   XmlOptions::get().add( Option( "COLOR", "#FF9900" , "entry display color"  ));
+  XmlOptions::get().add( Option( "COLOR", "#FF8C00" , "entry display color"  ));
   XmlOptions::get().add( Option( "COLOR", "#009900" , "entry display color"  ));
   XmlOptions::get().add( Option( "COLOR", "#3333FF" , "entry display color"  ));
   XmlOptions::get().add( Option( "COLOR", "#993399" , "entry display color"  ));
-  
+ 
   // pixmap path options are special. Keep the full list
   XmlOptions::get().keep( "PIXMAP_PATH" );
   XmlOptions::get().add( Option( "PIXMAP_PATH", ":/pixmaps" , "directory where application pixmaps are taken from."  ));
