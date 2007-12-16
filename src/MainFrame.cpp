@@ -263,6 +263,7 @@ void MainFrame::_configuration( void )
 {
   
   Debug::Throw( "MainFrame::_configuration" );
+  emit saveConfiguration();
   ConfigurationDialog dialog(0);
   connect( &dialog, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   QtUtil::centerOnWidget( &dialog, activeWindow() );

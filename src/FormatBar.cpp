@@ -56,8 +56,8 @@ const std::string FormatBar::STRIKE_ICON = "text_strike.png";
 const std::string FormatBar::UNDERLINE_ICON = "text_under.png";
 
 //________________________________________
-FormatBar::FormatBar( QWidget* parent ):
-  CustomToolBar( "Text format", parent ),
+FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
+  CustomToolBar( "Text format", parent, option_name ),
   editor_(0)
 {
   

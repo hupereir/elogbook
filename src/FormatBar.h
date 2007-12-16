@@ -78,7 +78,7 @@ class FormatBar: public CustomToolBar
   };
       
   //! constructor
-  FormatBar( QWidget* parent );
+  FormatBar( QWidget* parent, const std::string& option_name );
 
   //! destructor
   virtual ~FormatBar( void )

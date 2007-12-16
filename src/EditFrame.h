@@ -45,7 +45,6 @@
 #include "CustomLineEdit.h"
 #include "CustomTextEdit.h"
 #include "CustomMainWindow.h"
-#include "CustomToolBar.h"
 #include "Counter.h"
 #include "Debug.h"
 #include "Exception.h"
@@ -55,7 +54,6 @@
 #include "TextPosition.h"
 
 class Attachment;
-class CustomToolBar;
 class FormatBar;
 class SelectionFrame;
 class StatusBar;
@@ -358,9 +356,6 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! pointer to text format bar
   FormatBar* format_toolbar_;
       
-  //! map toolbar and option name
-  CustomToolBar::List toolbars_;
-  
   //! pointer to statusbar    
   StatusBar* statusbar_;   
     

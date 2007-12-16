@@ -145,10 +145,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   addToolBar( LeftToolBarArea, lock_ );
 
   // main toolbar
-  CustomToolBar* toolbar( new CustomToolBar( "Main", this ) );
-  toolbar->setObjectName( "MAIN_TOOLBAR" );
-  toolbars_.push_back( make_pair( toolbar, "MAIN_TOOLBAR" ) );
-  addToolBar( LeftToolBarArea, toolbar );
+  CustomToolBar* toolbar;
+  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" ) );
     
   // generic tool button
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEW, path_list ), "Create a new entry", &statusbar_->label() );
@@ -184,19 +182,11 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   #endif
 
   // format bar
-  format_toolbar_ = new FormatBar( this );
-  format_toolbar_->setObjectName( "FORMAT_TOOLBAR" );
-  format_toolbar_->setToolTipLabel( &statusbar_->label() );
+  addToolBar( LeftToolBarArea, format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" ) );
   format_toolbar_->setTarget( text_ );
-  toolbars_.push_back( make_pair( format_toolbar_, "FORMAT_TOOLBAR" ) );
-  addToolBar( LeftToolBarArea, format_toolbar_ );
 
   // edition toolbars
-  toolbar = new CustomToolBar( "History", this );
-  toolbar->setObjectName( "EDITION_TOOLBAR" );
-  toolbars_.push_back( make_pair( toolbar, "EDITION_TOOLBAR" ) );
-  addToolBar( LeftToolBarArea, toolbar );
-
+  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" ) );
   toolbar->addAction( undo_action_ );
   toolbar->addAction( redo_action_ );
 
@@ -210,10 +200,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
     
   // extra toolbar
-  toolbar = new CustomToolBar( "Tools", this );
-  toolbar->setObjectName( "EXTRA_TOOLBAR" );
-  toolbars_.push_back( make_pair( toolbar, "EXTRA_TOOLBAR" ) );
-  addToolBar( LeftToolBarArea, toolbar );
+  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" ) );
 
   // view_html button
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::HTML, path_list ), "Convert the current entry to HTML", &statusbar_->label() );
@@ -234,11 +221,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbar->addWidget( button );
 
   // extra toolbar
-  toolbar = new CustomToolBar( "Navigation", this );
-  toolbars_.push_back( make_pair( toolbar, "NAVIGATION_TOOLBAR" ) );
-  toolbar->setObjectName( "NAVIGATION_TOOLBAR" );
-  addToolBar( LeftToolBarArea, toolbar );
-
+  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" ) );
   toolbar->addAction( &static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
   toolbar->addAction( &previousEntryAction() );
   toolbar->addAction( &nextEntryAction() );
@@ -609,8 +592,6 @@ void EditFrame::_updateConfiguration( void )
   sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
   splitter_->setSizes( sizes );
   
-  CustomToolBar::updateConfiguration( this, toolbars_ );
-
 }
 
 //_____________________________________________
@@ -629,8 +610,6 @@ void EditFrame::_saveConfiguration( void )
     XmlOptions::get().set<int>( "ATC_HEIGHT", (*BASE::KeySet<AttachmentList>(this).begin())->height() );
   }
   
-  CustomToolBar::saveConfiguration( this, toolbars_ );
-
 }
 
 //_______________________________________________

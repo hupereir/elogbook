@@ -130,6 +130,9 @@ class MainFrame: public QApplication, public Counter
   
   signals:
   
+  //! request widget to save their current configuration
+  void saveConfiguration( void );
+  
   //! configuration has changed
   void configurationChanged( void );
   
