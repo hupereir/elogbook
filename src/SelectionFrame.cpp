@@ -119,7 +119,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
   
-  CustomToolBar* toolbar = new CustomToolBar( left );
+  CustomToolBar* toolbar = new CustomToolBar( "keywords toolbar", left );
   v_layout->addWidget( toolbar );
   
   // keyword actions
@@ -166,7 +166,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->setSpacing( 5 );
   right->setLayout( v_layout );
     
-  toolbar = new CustomToolBar( right );
+  toolbar = new CustomToolBar( "entries toolbar", right );
   v_layout->addWidget( toolbar );
 
   // entry actions
