@@ -116,7 +116,8 @@ void LogEntryList::resizeColumns()
   
   // resize. Goes from back to front, for visible columns only
   unsigned int mask( LogEntryList::mask() );
-  for( int i = columnCount()-1; i >= 0; i-- )
+ // for( int i = columnCount()-1; i >= 0; i-- )
+  for( int i = 0; i < columnCount(); i++ )
   { if( mask & (1<<i) ) resizeColumnToContents(i); }
   
   return;

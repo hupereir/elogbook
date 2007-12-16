@@ -101,6 +101,8 @@ class LogEntryList: public TreeWidget
       Debug::Throw( "LogEntryList::item::item.\n" ); 
       setFlag( Qt::ItemIsDragEnabled, true );
       setFlag( Qt::ItemIsDropEnabled, false );
+      setTextAlignment ( CREATION, Qt::AlignCenter );
+      setTextAlignment ( MODIFICATION, Qt::AlignCenter );
     }
     
     //! retrieve associated entry
