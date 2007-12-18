@@ -292,8 +292,8 @@ void MainFrame::_updateConfiguration( void )
   // window icon
   setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
   
-  // clear IconEngine cache (in case of icon_path_list that changed)
-  IconEngine::get().clear();
+  // reload IconEngine cache (in case of icon_path_list that changed)
+  IconEngine::get().reload( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
 
   emit configurationChanged();
 }
