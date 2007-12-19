@@ -40,7 +40,8 @@
 #include <string>
 
 #include "Counter.h"
-#include "Exception.h"
+
+
 #include "Key.h"
 #include "Str.h"
 #include "TextFormatBlock.h"

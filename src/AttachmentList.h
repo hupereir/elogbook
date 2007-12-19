@@ -41,7 +41,8 @@
 #include "Counter.h"
 #include "TreeWidget.h"
 #include "Debug.h"
-#include "Exception.h"
+
+
 #include "Key.h"
 
 /*!
@@ -105,7 +106,8 @@ class AttachmentList: public TreeWidget, public BASE::Key
     Attachment* attachment( void ) const
     {
       BASE::KeySet<Attachment> attachments( this );
-      Exception::check( attachments.size()==1, DESCRIPTION( "invalid association to attachment") );
+      assert( attachments.size()==1
+ );
       return *attachments.begin();
     }
     

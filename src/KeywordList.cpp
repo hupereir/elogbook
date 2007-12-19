@@ -724,7 +724,7 @@ bool KeywordList::_processDrop( void )
 {
   
   Debug::Throw( "KeywordList::_processDrop.\n" );
-  Exception::checkPointer( drop_item_, DESCRIPTION( "invalid drop item" ) );
+  assert( drop_item_ );
   string current_keyword( keyword( drop_item_ ) );
   if( drop_data_.type() == KeywordList::DRAG )
   {

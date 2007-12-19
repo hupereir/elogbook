@@ -47,7 +47,8 @@
 #include "CustomMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
-#include "Exception.h"
+
+
 #include "Key.h"
 #include "LogEntry.h"
 #include "QtUtil.h"
@@ -89,7 +90,8 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   LogEntry* entry( void ) const 
   { 
     BASE::KeySet<LogEntry> entries( this );
-    Exception::check( entries.size() <= 1, DESCRIPTION( "wrong association to LogEntry" ) ); 
+    assert( entries.size() <= 1
+ ); 
     return( entries.size() ) ? *entries.begin():0;
   }  
   
@@ -97,21 +99,24 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   AttachmentList& attachmentList( void ) 
   {
     BASE::KeySet<AttachmentList> attachment_list( this );
-    Exception::check( attachment_list.size() == 1, DESCRIPTION( "wrong associateion to AttachmentList" ) );
+    assert( attachment_list.size() == 1
+ );
     return **attachment_list.begin(); 
   }
   
   //! get text editor
   CustomTextEdit& editor( void ) 
   { 
-    Exception::checkPointer( text_, DESCRIPTION( "text_ not initialized" ) );
+    assert( text_
+ );
     return *text_;
   }
   
   //! status bar
   StatusBar& statusBar( void )
   {
-    Exception::checkPointer( statusbar_, DESCRIPTION( "statusbar_ not initialized" ) );
+    assert( statusbar_
+ );
     return *statusbar_;
   }
   

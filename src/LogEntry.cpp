@@ -32,7 +32,6 @@
 #include "Debug.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
-#include "Exception.h"
 #include "HtmlUtil.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -184,7 +183,7 @@ string LogEntry::formatKeyword( const string& keyword )
   }
   
   // for debugging, check leading character
-  Exception::check( out.empty() || out.find( NO_KEYWORD ) != 0, "incorrect keyword format" );
+  assert( out.empty() || out.find( NO_KEYWORD ) != 0, "incorrect keyword format" );
   
   // add leading backspace
   out = NO_KEYWORD + out;

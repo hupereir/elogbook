@@ -39,7 +39,8 @@
 #include "Counter.h"
 #include "TreeWidget.h"
 #include "Debug.h"
-#include "Exception.h"
+
+
 #include "Key.h"
 #include "LogEntry.h"
 
@@ -109,7 +110,8 @@ class LogEntryList: public TreeWidget
     LogEntry* entry( void ) const 
     { 
       BASE::KeySet<LogEntry> entries( this );
-      Exception::check( entries.size()==1, DESCRIPTION("invalid association to entries") );
+      assert( entries.size()==1
+ );
       return *entries.begin();
     }
     
@@ -124,7 +126,8 @@ class LogEntryList: public TreeWidget
   //! retrieve Item associated to given entry
   Item* item( LogEntry* entry )
   {
-    Exception::checkPointer( entry, DESCRIPTION( "invalid entry" ) );
+    assert( entry
+ );
 
     Debug::Throw() << "LogEntryList::item - entry: " << entry->key() << std::endl;
     

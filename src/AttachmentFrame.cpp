@@ -164,7 +164,7 @@ void AttachmentFrame::_displayEntry( QTreeWidgetItem *current, QTreeWidgetItem* 
   if( !current ) current = old;
   
   AttachmentList::Item *item = static_cast<AttachmentList::Item*>( current );
-  Exception::checkPointer( item, DESCRIPTION( "wrong item" ) );
+  assert( item );
   
   // retrieve associated entry
   LogEntry *entry( item->attachment()->entry() );

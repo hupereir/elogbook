@@ -933,7 +933,7 @@ SelectionFrame* EditFrame::_selectionFrame( void ) const
 {
   Debug::Throw( "EditFrame::_selectionFrame.\n" );
   BASE::KeySet<SelectionFrame> frames( this );
-  Exception::check( frames.size()==1, DESCRIPTION( "wrong association to SelectionFrame" ) );
+  assert( frames.size()==1 );
   return *frames.begin();
 }
 

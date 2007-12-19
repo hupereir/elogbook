@@ -41,7 +41,6 @@
 #include "CustomPixmap.h"
 #include "CustomTextEdit.h"
 #include "Debug.h"
-#include "Exception.h"
 #include "FormatBar.h"
 #include "IconEngine.h"
 #include "TextPosition.h"
@@ -126,7 +125,7 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
 void FormatBar::setTarget( CustomTextEdit* editor )
 {
   Debug::Throw( "FormatBar::setTarget.\n" );
-  Exception::check( editor_ == 0, DESCRIPTION( "editor_ already set" ) );
+  assert( editor_ == 0 );
   editor_ = editor;
   connect( editor_, 
     SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 
@@ -142,7 +141,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
 {
   
   Debug::Throw( "FormatBar::loadFormats.\n" );
-  Exception::checkPointer( editor_, DESCRIPTION( "editor_ already set" ) );
+  assert( editor_ );
   for( FORMAT::TextFormatBlock::List::const_iterator iter = format_list.begin(); iter != format_list.end(); iter++ )
   {
         
@@ -179,7 +178,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
 FORMAT::TextFormatBlock::List FormatBar::get( void ) const
 {
   Debug::Throw( "FormatBar::get.\n" );
-  Exception::checkPointer( editor_, DESCRIPTION( "editor_ already set" ) );
+  assert( editor_ );
   
   FORMAT::TextFormatBlock::List out;
   
@@ -342,14 +341,14 @@ void FormatBar::_updateColorPixmap( QColor color )
   
   // retrieve button
   CustomToolButton* button( buttons_[COLOR] );
-  Exception::checkPointer( button, DESCRIPTION( "invalid button" ) );
+  assert( button );
   
   // retrieve color pixmap
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
   
   CustomPixmap base( CustomPixmap().find( ICONS::COLOR, path_list ) );
-  Exception::check( !base.isNull(), DESCRIPTION( "invalid pixmap" ) );
+  assert( !base.isNull() );
   
   // create new empty pixmap
   static const double ratio = 1.15;

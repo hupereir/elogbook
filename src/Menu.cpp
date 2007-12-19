@@ -36,7 +36,6 @@
 #include "CustomPixmap.h"
 #include "DebugMenu.h"
 #include "EditFrame.h"
-#include "Exception.h"
 #include "File.h"
 #include "HelpManager.h"
 #include "HelpText.h"

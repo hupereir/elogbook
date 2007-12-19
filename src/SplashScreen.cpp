@@ -36,7 +36,6 @@
 
 #include "SplashScreen.h"
 #include "CustomPixmap.h"
-#include "Exception.h"
 #include "QtUtil.h"
 
 using namespace std;
@@ -61,7 +60,7 @@ SplashScreen::SplashScreen( QWidget* parent, const std::string& title ):
 //_______________________________________________________________________
 void SplashScreen::realizeWidget( void )
 {
-  Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
+  assert( !realized_ );
   
   if( !splash_.isNull() )
   {
@@ -126,7 +125,7 @@ void SplashScreen::realizeWidget( void )
 //_______________________________________________________________________
 void SplashScreen::displayMessage( const QString& text )
 {
-  Exception::check( realized_, DESCRIPTION( "widget not realized" ) );
+  assert( realized_ );
   message_->setText( text );
   qApp->processEvents();
 }

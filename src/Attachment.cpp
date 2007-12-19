@@ -126,7 +126,7 @@ bool Attachment::operator < ( const Attachment &attachment ) const
 LogEntry* Attachment::entry( void ) const
 {
   BASE::KeySet<LogEntry> entries( this );
-  Exception::check( entries.size() == 1, DESCRIPTION( "wrong association to LogEntry" ) );
+  assert( entries.size() == 1 );
   return *entries.begin();
 }
 

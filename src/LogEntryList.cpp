@@ -87,7 +87,7 @@ void LogEntryList::add( LogEntry* entry, bool update_selection )
 {
   
   Debug::Throw("LogEntryList::add.\n" );
-  Exception::check( entry, DESCRIPTION( "invalid entry" ) );
+  assert( entry );
   
   Item *item( new Item() );
   addTopLevelItem( item );
@@ -128,7 +128,7 @@ void LogEntryList::update( LogEntry* entry, bool update_selection )
 {
   
   Debug::Throw( "LogEntryList::update.\n" );
-  Exception::check( entry, DESCRIPTION( "wrong entry" ) );
+  assert( entry );
   
   // get associated Item
   Item *item( LogEntryList::item( entry ) );
@@ -150,7 +150,7 @@ void LogEntryList::update( LogEntry* entry, bool update_selection )
 void LogEntryList::select( LogEntry* entry )
 {
   Debug::Throw( "LogEntryList::SelectEntry.\n" );
-  Exception::check( entry, DESCRIPTION("invalid entry") );
+  assert( entry );
 
   Item *item( LogEntryList::item( entry ) );
 
@@ -351,7 +351,7 @@ void LogEntryList::_activate( QTreeWidgetItem *item )
 { 
   
   Debug::Throw( "LogEntryList::_activate.\n" );
-  Exception::checkPointer( item, "invalid item" );
+  assert( item, "invalid item" );
     
   // check if item is edited
   // if not, emit the selectend entry signal

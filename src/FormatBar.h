@@ -39,7 +39,8 @@
 #include "Counter.h"
 #include "CustomToolBar.h"
 #include "CustomToolButton.h"
-#include "Exception.h"
+
+
 #include "TextFormatBlock.h"
 #include "TextFormat.h"
 

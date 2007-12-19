@@ -39,7 +39,8 @@
 #include <string>
 
 #include "Counter.h"
-#include "Exception.h"
+
+
 
 //! application splash screen
 class SplashScreen: public QWidget, public Counter
@@ -63,21 +64,24 @@ class SplashScreen: public QWidget, public Counter
   //! set application title
   virtual void setTitle( const std::string& title )
   {
-    Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
+    assert( !realized_
+ );
     title_ = title;
   }
   
   //! set splash pixmap
   virtual void setSplash( const QPixmap& pixmap )
   {
-    Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
+    assert( !realized_
+ );
     splash_ = pixmap; 
   }
   
   //! set splash screen displayed icon
   virtual void setIcon( const QPixmap& icon )
   {
-    Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
+    assert( !realized_
+ );
     icon_ = icon;
     QWidget::setWindowIcon( QIcon(icon) );
   }
@@ -85,21 +89,24 @@ class SplashScreen: public QWidget, public Counter
   //! set icon size
   virtual void setIconSize( const unsigned int& size )
   { 
-    Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
+    assert( !realized_
+ );
     icon_size_ = size;
   }    
     
   //! change default title font
   virtual void SetTitleFontSize( const unsigned int value )
   {
-    Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
+    assert( !realized_
+ );
     title_font_size_ = value;
   }
   
   //! set minimum size (to be used if splash is not specified
   virtual void setMinimumSize( const QSize& size )
   { 
-    Exception::check( !realized_, DESCRIPTION( "widget already realized" ) );
+    assert( !realized_
+ );
     minimum_size_ = size;
   }
       

@@ -39,7 +39,8 @@
 #include "ApplicationManager.h"
 #include "ArgList.h"
 #include "Counter.h"
-#include "Exception.h"
+
+
 
 class AttachmentFrame;
 class LogEntry;
@@ -85,14 +86,16 @@ class MainFrame: public QApplication, public Counter
   //! retrieve SelectionFrame singleton
   SelectionFrame& selectionFrame( void ) const
   { 
-    Exception::checkPointer( selection_frame_, DESCRIPTION("selection_frame_ not initialized") );
+    assert( selection_frame_
+ );
     return *selection_frame_; 
   }
   
   //! retrieve AttachmentFrame singleton
   AttachmentFrame & attachmentFrame( void ) const
   { 
-    Exception::checkPointer( attachment_frame_, DESCRIPTION("attachment_frame_ not initialized") );
+    assert( attachment_frame_
+ );
     return *attachment_frame_; 
   }
   

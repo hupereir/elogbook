@@ -49,7 +49,7 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
 {
 
   Debug::Throw( "LogbookModifiedDialog::LogbookModifiedDialog.\n" );
-  Exception::check( !files.empty(), DESCRIPTION( "illegal number of files" ) );
+  assert( !files.empty() );
   
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout();

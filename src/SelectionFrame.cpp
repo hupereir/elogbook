@@ -42,7 +42,6 @@
 #include "DeleteKeywordDialog.h"
 #include "EditFrame.h"
 #include "EditKeywordDialog.h"
-#include "Exception.h"
 #include "HtmlUtil.h"
 #include "IconEngine.h"
 #include "Icons.h"
@@ -465,7 +464,7 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
 {
   Debug::Throw( "SelectionFrame::deleteEntry.\n" );
   
-  Exception::checkPointer( entry, DESCRIPTION( "invalid entry" ) );
+  assert( entry );
 
   // get associated attachments
   BASE::KeySet<Attachment> attachments( entry );
@@ -1006,7 +1005,7 @@ void SelectionFrame::_resetKeywordList( void )
 {
   
   Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
-  Exception::checkPointer( logbook(), "no valid logbook.\n" );
+  assert( logbook(), "no valid logbook.\n" );
     
   // retrieve current list of keywords
   set<string> old_keywords = keywordList().keywords();
@@ -1116,7 +1115,7 @@ void SelectionFrame::_newLogbook( void )
   
   // create a new logbook, with no file
   setLogbook( dialog.file() );
-  Exception::checkPointer( logbook_, DESCRIPTION( "could not create Logbook") );
+  assert( logbook_ );
 
   logbook()->setTitle( dialog.title() );
   logbook()->setAuthor( dialog.author() );
@@ -1696,7 +1695,7 @@ void SelectionFrame::_deleteEntries ( void )
     LogEntryList::Item* item( *iter );
 
     BASE::KeySet<LogEntry> entries( item );
-    Exception::check( entries.size()==1, DESCRIPTION( "invalid association to LogEntry" ) );
+    assert( entries.size()==1 );
     deleteEntry( *entries.begin(), false );
 
   }

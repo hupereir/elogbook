@@ -42,7 +42,8 @@
 #include "Counter.h"
 #include "TreeWidget.h"
 #include "Debug.h"
-#include "Exception.h"
+
+
 
 /*!
   \class KeywordList

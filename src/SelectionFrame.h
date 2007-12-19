@@ -37,7 +37,8 @@
 #include "Counter.h"
 #include "CustomMainWindow.h"
 #include "Debug.h"
-#include "Exception.h"
+
+
 #include "FileRecord.h"
 #include "Key.h"
 #include "KeywordList.h"
@@ -73,21 +74,24 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! retrive menu
   Menu& menu( void )
   {
-    Exception::checkPointer( menu_, DESCRIPTION( "menu_ not initialized" ) );
+    assert( menu_
+ );
     return *menu_;
   }
 
   //! retrive search panel
   SearchPanel& searchPanel( void )
   {
-    Exception::checkPointer( search_panel_, DESCRIPTION( "search_panel_ not initialized" ) );
+    assert( search_panel_
+ );
     return *search_panel_;
   }
 
   //! retrive state frame
   StatusBar& statusBar( void )
   {
-    Exception::checkPointer( statusbar_, DESCRIPTION( "statusbar_ not initialized" ) );
+    assert( statusbar_
+ );
     return *statusbar_;
   }
 
@@ -147,14 +151,16 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! return keyword list
   KeywordList& keywordList( void )
   {
-    Exception::checkPointer( keyword_list_, DESCRIPTION( "keyword_list_ not initialized" ) );
+    assert( keyword_list_
+ );
     return *keyword_list_;
   }
 
   //! return entry list
   LogEntryList& logEntryList( void )
   {
-    Exception::checkPointer( list_, DESCRIPTION( "list_ not initialized" ) );
+    assert( list_
+ );
     return *list_;
   }
     

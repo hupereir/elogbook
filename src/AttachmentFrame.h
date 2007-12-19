@@ -65,7 +65,8 @@ class AttachmentFrame: public QDialog, public Counter
   //! retrieve associated List
   AttachmentList& list()
   { 
-    Exception::checkPointer( list_, DESCRIPTION("list_ not initialized") );
+    assert( list_
+ );
     return *list_; 
   }
     
