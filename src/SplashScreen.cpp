@@ -36,6 +36,7 @@
 
 #include "SplashScreen.h"
 #include "CustomPixmap.h"
+#include "Debug.h"
 #include "QtUtil.h"
 
 using namespace std;

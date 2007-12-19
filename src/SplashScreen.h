@@ -32,6 +32,7 @@
    \date $Date$
 */
 
+#include <assert.h>
 #include <QIcon>
 #include <QLabel>
 #include <QPixmap>
@@ -39,7 +40,7 @@
 #include <string>
 
 #include "Counter.h"
-
+#include "Debug.h"
 
 
 //! application splash screen

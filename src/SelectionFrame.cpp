@@ -1005,7 +1005,7 @@ void SelectionFrame::_resetKeywordList( void )
 {
   
   Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
-  assert( logbook(), "no valid logbook.\n" );
+  assert( logbook() );
     
   // retrieve current list of keywords
   set<string> old_keywords = keywordList().keywords();

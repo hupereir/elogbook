@@ -29,6 +29,7 @@
    \date $Date$
 */
 
+#include <assert.h>
 #include <QApplication>
 #include <QLineEdit>
 #include <QMouseEvent>
@@ -351,7 +352,7 @@ void LogEntryList::_activate( QTreeWidgetItem *item )
 { 
   
   Debug::Throw( "LogEntryList::_activate.\n" );
-  assert( item, "invalid item" );
+  assert( item );
     
   // check if item is edited
   // if not, emit the selectend entry signal

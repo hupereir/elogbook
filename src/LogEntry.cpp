@@ -29,6 +29,9 @@
   \date $Date$
 */
 
+#include <assert.h>
+#include <cstdio>
+
 #include "Debug.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
@@ -40,8 +43,6 @@
 #include "XmlTextFormatBlock.h"
 #include "XmlTimeStamp.h"
 #include "XmlUtil.h"
-
-#include <stdio.h>
 
 using namespace std;
 
@@ -183,7 +184,7 @@ string LogEntry::formatKeyword( const string& keyword )
   }
   
   // for debugging, check leading character
-  assert( out.empty() || out.find( NO_KEYWORD ) != 0, "incorrect keyword format" );
+  assert( out.empty() || out.find( NO_KEYWORD ) != 0 );
   
   // add leading backspace
   out = NO_KEYWORD + out;

@@ -32,6 +32,7 @@
   \date $Date$
 */
 
+#include <assert.h>
 #include <QMenuBar>
 #include <string>
 
@@ -66,7 +67,7 @@ class Menu:public QMenuBar, public Counter
   //! retrieve OpenPreviousMenu
   OpenPreviousMenu& openPreviousMenu( void ) const
   {
-    assert( open_previous_menu_, DESCRIPTION( "open_previous_menu_ not initialized.\n" ) );
+    assert( open_previous_menu_ );
     return *open_previous_menu_;
   }
   
