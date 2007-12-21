@@ -110,8 +110,7 @@ class LogEntryList: public TreeWidget
     LogEntry* entry( void ) const 
     { 
       BASE::KeySet<LogEntry> entries( this );
-      assert( entries.size()==1
- );
+      assert( entries.size()==1);
       return *entries.begin();
     }
     
