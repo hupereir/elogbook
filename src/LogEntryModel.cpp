@@ -44,6 +44,7 @@ using namespace std;
 LogEntryModel::IconCache LogEntryModel::icons_;
 
 //_______________________________________________
+const QString LogEntryModel::DRAG = "LogEntryList::Drag";
 const char* LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
 { 
   "title",

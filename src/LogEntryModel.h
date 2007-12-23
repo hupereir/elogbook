@@ -42,6 +42,9 @@ class LogEntryModel : public ListModel<LogEntry*>
 {
     
   public:
+
+  //! used to tag Keyword drags
+  static const QString DRAG;
     
   //! constructor
   LogEntryModel(QObject *parent = 0);
