@@ -43,8 +43,10 @@
 #include "Key.h"
 #include "KeywordList.h"
 #include "LogEntry.h"
-#include "LogEntryList.h"
+#include "LogEntryModel.h"
 #include "QtUtil.h"
+
+#include "TreeView.h"
 
 // class ColorMenu;
 class CustomLineEdit;
@@ -74,24 +76,21 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! retrive menu
   Menu& menu( void )
   {
-    assert( menu_
- );
+    assert( menu_ );
     return *menu_;
   }
 
   //! retrive search panel
   SearchPanel& searchPanel( void )
   {
-    assert( search_panel_
- );
+    assert( search_panel_ );
     return *search_panel_;
   }
 
   //! retrive state frame
   StatusBar& statusBar( void )
   {
-    assert( statusbar_
- );
+    assert( statusbar_ );
     return *statusbar_;
   }
 
@@ -124,8 +123,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   { return working_directory_; }
 
   //! clear entry selection
-  virtual void clearSelection( void )
-  { logEntryList().clearSelection(); }
+  virtual void clearSelection( void );
 
   //! select entry
   virtual void selectEntry( LogEntry *entry );
@@ -151,18 +149,13 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! return keyword list
   KeywordList& keywordList( void )
   {
-    assert( keyword_list_
- );
+    assert( keyword_list_ );
     return *keyword_list_;
   }
-
-  //! return entry list
-  LogEntryList& logEntryList( void )
-  {
-    assert( list_
- );
-    return *list_;
-  }
+  
+  //! log entry list
+  virtual TreeView& logEntryList( void ) const
+  { return *list_; }
     
   //!@name actions 
   //@{
@@ -293,7 +286,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! install actions
   virtual void _installActions( void );
-  
+    
   //! clear list and reinitialize from logbook entries
   virtual void _resetList( void );
 
@@ -428,10 +421,20 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )
-  { _storeSortMethod( logEntryList().sortColumn() ); }
+  { _storeSortMethod( model_.sortColumn() ); }
 
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int column );
+ 
+  //! activare item
+  void _entryItemActivated( const QModelIndex& index )
+  { if( index.isValid() ) selectEntry( model_.get( index ) ); }
+    
+  //! store selected jobs in model
+  void _storeEntrySelection( void );
+
+  //! restore selected jobs from model
+  void _restoreEntrySelection( void );
 
   //! perform autoSave
   void _autoSave( void );
@@ -450,8 +453,11 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! main splitter
   QSplitter* splitter_;
   
+  //! model
+  LogEntryModel model_;
+  
   //! logEntry list
-  LogEntryList* list_;
+  TreeView* list_;
 
   //! Keyword list
   KeywordList *keyword_list_;
