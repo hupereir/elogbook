@@ -184,7 +184,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   list_->setModel( &model_ );
   list_->setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   list_->setDragEnabled(true); 
-  list_->setAllColumnsShowFocus( false );
+  //list_->setAllColumnsShowFocus( false );
   list_->setItemDelegate( new LogEntryDelegate( this ) );
   
   connect( list_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
