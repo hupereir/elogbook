@@ -179,6 +179,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   // create logEntry list
   v_layout->addWidget( list_ = new TreeView( right ), 1 );
   list_->setModel( &model_ );
+  list_->setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   
   connect( list_->header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
   connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
@@ -967,7 +968,7 @@ void SelectionFrame::_resetList( void )
     LogEntryModel::List model_entries;
     BASE::KeySet<LogEntry> entries( logbook()->entries() );
     for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
-    { model_entries.push_back( *it ); }
+    { if( (*it)->isSelected() ) model_entries.push_back( *it ); }
     
     model_.add( model_entries );
     
