@@ -421,10 +421,10 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )
-  { _storeSortMethod( model_.sortColumn() ); }
+  { _storeSortMethod( model_.sortColumn(), model_.sortOrder() ); }
 
   //! store sorting method when changed via list header
-  virtual void _storeSortMethod( int column );
+  virtual void _storeSortMethod( int, Qt::SortOrder );
  
   //! activare item
   void _entryItemActivated( const QModelIndex& index )

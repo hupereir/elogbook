@@ -32,6 +32,7 @@
   \date    $Date$
 */
 
+#include "ColorMenu.h"
 #include "Counter.h"
 #include "ListModel.h"
 
@@ -40,6 +41,9 @@ class LogEntry;
 //! Job model. Stores job information for display in lists
 class LogEntryModel : public ListModel<LogEntry*>
 {
+ 
+  //! Qt meta object declaration
+  Q_OBJECT
     
   public:
 
@@ -58,11 +62,11 @@ class LogEntryModel : public ListModel<LogEntry*>
 
  //! column type enumeration
   enum ColumnType {
+    COLOR,
     TITLE, 
     CREATION,
     MODIFICATION,
-    AUTHOR,
-    COLOR
+    AUTHOR
   };
 
   //!@name methods reimplemented from base class
@@ -87,8 +91,19 @@ class LogEntryModel : public ListModel<LogEntry*>
   virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
 
   //@}
+ 
+  private slots:
+    
+  //! update configuration
+  void _updateConfiguration( void );
   
   private:
+  
+  //! reset icons
+  void _resetIcons( void );
+  
+  //! create icon for a given color
+  QIcon _createIcon( const QColor& ) const;
   
   //! used to sort LogEntrys
   class SortFTor
@@ -119,7 +134,7 @@ class LogEntryModel : public ListModel<LogEntry*>
   static const char* column_titles_[n_columns];
    
   //! color icon cache
-  typedef std::map<QColor, QIcon> IconCache;
+  typedef std::map<QColor, QIcon, ColorMenu::ColorLessFTor> IconCache;
    
   //! color icon cache
   static IconCache icons_; 

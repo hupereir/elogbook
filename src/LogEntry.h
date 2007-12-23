@@ -34,7 +34,6 @@
 
 #include <QDomElement>
 #include <QDomDocument>
-#include <QColor>
 
 #include <vector>
 #include <string>

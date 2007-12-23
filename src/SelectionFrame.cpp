@@ -120,9 +120,9 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->addWidget( toolbar );
   
   // keyword actions
-  toolbar->addWidget( new CustomToolButton( toolbar, &newKeywordAction(), &statusBar().label() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, &editKeywordAction(), &statusBar().label() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, &deleteKeywordAction(), &statusBar().label() ) );
+  toolbar->addAction( &newKeywordAction() );
+  toolbar->addAction( &editKeywordAction() );
+  toolbar->addAction( &deleteKeywordAction() );
   Debug::Throw() << "SelectionFrame::SelectionFrame - keyword toolbar created." << endl;
   
   // create keyword list
@@ -167,21 +167,23 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->addWidget( toolbar );
 
   // entry actions
-  toolbar->addWidget( new CustomToolButton( toolbar, &newEntryAction(), &statusBar().label() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, &editEntryAction(), &statusBar().label() ) );
-  Debug::Throw( "after EditEntryAction.\n" );
+  toolbar->addAction( &newEntryAction() );
+  toolbar->addAction( &editEntryAction() );
 
-  toolbar->addWidget( new CustomToolButton( toolbar, &deleteEntryAction(), &statusBar().label() ) );
-  Debug::Throw( "after DeleteEntryAction.\n" );
-  toolbar->addWidget( new CustomToolButton( toolbar, &saveAction(), &statusBar().label() ) );
-  toolbar->addWidget( new CustomToolButton( toolbar, &viewHtmlAction(), &statusBar().label() ) );
-       
+  toolbar->addAction( &deleteEntryAction() );
+  toolbar->addAction( &saveAction() );
+  toolbar->addAction( &viewHtmlAction() );
+  
+  CustomToolButton *button;
+  toolbar->addWidget( button = new CustomToolButton( toolbar,&entryColorAction(), 0 ) );
+  button->setPopupMode( QToolButton::InstantPopup );
+  
   // create logEntry list
   v_layout->addWidget( list_ = new TreeView( right ), 1 );
   list_->setModel( &model_ );
   list_->setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   
-  connect( list_->header(), SIGNAL( sectionClicked( int ) ), SLOT( _storeSortMethod( int ) ) );
+  connect( list_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
   connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
   connect( list_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _entryItemActivated( const QModelIndex& ) ) ); 
   _updateEntryActions();
@@ -268,12 +270,13 @@ void SelectionFrame::setLogbook( File file )
   Debug::Throw( "SelectionFrame::setLogbook - lists set.\n" );
   
   // change sorting
-  switch( logbook()->sortingMethod() ) 
+  Qt::SortOrder sort_order( (Qt::SortOrder) logbook()->sortOrder() );
+  switch( logbook()->sortMethod() )
   {
-    case Logbook::SORT_TITLE: model_.sort( LogEntryModel::TITLE, AscendingOrder ); break;
-    case Logbook::SORT_CREATION: model_.sort( LogEntryModel::CREATION, AscendingOrder ); break;
-    case Logbook::SORT_MODIFICATION: model_.sort( LogEntryModel::MODIFICATION , AscendingOrder); break;
-    case Logbook::SORT_AUTHOR: model_.sort( LogEntryModel::AUTHOR, AscendingOrder ); break;
+    case Logbook::SORT_TITLE: logEntryList().sortByColumn( LogEntryModel::TITLE, sort_order ); break;
+    case Logbook::SORT_CREATION: logEntryList().sortByColumn( LogEntryModel::CREATION, sort_order ); break;
+    case Logbook::SORT_MODIFICATION: logEntryList().sortByColumn( LogEntryModel::MODIFICATION , sort_order); break;
+    case Logbook::SORT_AUTHOR: logEntryList().sortByColumn( LogEntryModel::AUTHOR, sort_order ); break;
     default: break;
   }
 
@@ -2342,7 +2345,7 @@ void SelectionFrame::_viewHtml( void )
 }
 
 //_______________________________________________
-void SelectionFrame::_storeSortMethod( int column )
+void SelectionFrame::_storeSortMethod( int column, Qt::SortOrder order  )
 {
   
   Debug::Throw( "SelectionFrame::_storeSortMethod.\n");
@@ -2350,15 +2353,16 @@ void SelectionFrame::_storeSortMethod( int column )
 
   switch( column ) {
     
-    case LogEntryModel::TITLE: logbook()->setSortingMethod( Logbook::SORT_TITLE ); break;
-    case LogEntryModel::CREATION: logbook()->setSortingMethod( Logbook::SORT_CREATION ); break;
-    case LogEntryModel::MODIFICATION: logbook()->setSortingMethod( Logbook::SORT_MODIFICATION ); break;
-    case LogEntryModel::AUTHOR: logbook()->setSortingMethod( Logbook::SORT_AUTHOR ); break;
-    default: break;
+    case LogEntryModel::TITLE: logbook()->setSortMethod( Logbook::SORT_TITLE ); break;
+    case LogEntryModel::CREATION: logbook()->setSortMethod( Logbook::SORT_CREATION ); break;
+    case LogEntryModel::MODIFICATION: logbook()->setSortMethod( Logbook::SORT_MODIFICATION ); break;
+    case LogEntryModel::AUTHOR: logbook()->setSortMethod( Logbook::SORT_AUTHOR ); break;
+    default: return;
     
   }
 
   // Save logbook if needed
+  logbook()->setSortOrder( int( order ) );
   if( !logbook()->file().empty() ) save();
 
 }
