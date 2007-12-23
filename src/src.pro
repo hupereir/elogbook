@@ -47,7 +47,6 @@ HEADERS = \
  LogbookStatisticsDialog.h \
  LogEntry.h \
  LogEntryInformationDialog.h \
- LogEntryList.h \
  MainFrame.h \
  Menu.h \
  NewAttachmentDialog.h \
@@ -82,7 +81,6 @@ SOURCES = \
  LogbookStatisticsDialog.cpp \
  LogEntry.cpp \
  LogEntryInformationDialog.cpp \
- LogEntryList.cpp \
  MainFrame.cpp \
  Menu.cpp \
  NewAttachmentDialog.cpp \

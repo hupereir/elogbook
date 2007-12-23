@@ -42,7 +42,6 @@
 #include "KeywordList.h"
 #include "Logbook.h"
 #include "LogEntry.h"
-#include "LogEntryList.h"
 #include "MainFrame.h"
 #include "Options.h"
 #include "QtUtil.h"

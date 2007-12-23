@@ -96,7 +96,6 @@ noinst_HEADERS = \
   LogbookStatisticsDialog.h \
   LogEntry.h \
   LogEntryInformationDialog.h \
-  LogEntryList.h \
   LogEntryModel.h \
   MainFrame.h \
   Menu.h \
@@ -126,7 +125,6 @@ elogbook_SOURCES = \
   LogbookModifiedDialog.cpp \
   LogbookStatisticsDialog.cpp \
   LogEntryInformationDialog.cpp \
-  LogEntryList.cpp \
   LogEntryModel.cpp \
   MainFrame.cpp \
   Menu.cpp \
@@ -150,7 +148,6 @@ nodist_elogbook_SOURCES = \
   moc_FormatBar.cpp \
   moc_KeywordList.cpp \
   moc_LogbookModifiedDialog.cpp \
-  moc_LogEntryList.cpp \
   moc_MainFrame.cpp \
   moc_Menu.cpp \
   moc_NewAttachmentDialog.cpp \

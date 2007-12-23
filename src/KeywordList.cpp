@@ -34,7 +34,7 @@
 #include <QLineEdit>
 
 #include "KeywordList.h"
-#include "LogEntryList.h"
+#include "LogEntryModel.h"
 #include "LogEntry.h"
 
 using namespace std;
@@ -626,9 +626,9 @@ void KeywordList::dropEvent( QDropEvent* event )
     
     drop_data_ = DropData( KeywordList::DRAG, value );
 
-  } else if( event->mimeData()->hasFormat( LogEntryList::DRAG ) ) {
+  } else if( event->mimeData()->hasFormat( LogEntryModel::DRAG ) ) {
    
-    drop_data_ = DropData( LogEntryList::DRAG );
+    drop_data_ = DropData( LogEntryModel::DRAG );
     
   } else {
     
@@ -675,7 +675,7 @@ bool KeywordList::_acceptDrag( QDropEvent *event ) const
   Debug::Throw( "KeywordList::_acceptDrag.\n" );
   return
     event->mimeData()->hasFormat( KeywordList::DRAG ) || 
-    event->mimeData()->hasFormat( LogEntryList::DRAG );
+    event->mimeData()->hasFormat( LogEntryModel::DRAG );
    
 }
 
@@ -746,9 +746,9 @@ bool KeywordList::_processDrop( void )
     
     return true;
     
-  } else if( drop_data_.type() == LogEntryList::DRAG ) {
+  } else if( drop_data_.type() == LogEntryModel::DRAG ) {
 
-    Debug::Throw( "KeywordList::_processDrop - KeywordList::LogEntryList.\n" );
+    Debug::Throw( "KeywordList::_processDrop - KeywordList::LogEntryModel.\n" );
     
     // dragging from logEntry list
     _resetDrag();

@@ -52,7 +52,6 @@
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryInformationDialog.h"
-#include "LogEntryList.h"
 #include "MainFrame.h"
 #include "Menu.h"
 #include "Options.h"

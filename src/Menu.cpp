@@ -42,7 +42,6 @@
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
-#include "LogEntryList.h"
 #include "MainFrame.h"
 #include "Menu.h"
 #include "OpenPreviousMenu.h"
