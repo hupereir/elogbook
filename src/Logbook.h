@@ -320,10 +320,10 @@ class Logbook:public QObject, public Counter, public BASE::Key
   //! tells if logbook or children has been modified since last call [recursive]
   bool modified( void ) const; 
   
-  //!@name sorting
+  //!@name sort
   //@{
   
-  //! sorting method enumeration
+  //! sort method enumeration
   enum SortMethod
   { 
     //! sort LogEntry objects according to creation time
@@ -349,27 +349,31 @@ class Logbook:public QObject, public Counter, public BASE::Key
     public:
     
     //! constructor
-    EntryLessFTor( const Logbook::SortMethod& sort_method ):
-      sort_method_( sort_method )
+    EntryLessFTor( const Logbook::SortMethod& sort_method, const int& order = 0 ):
+      sort_method_( sort_method ),
+      order_(order)
     {}
       
-    //! sorting operator
+    //! sort operator
     bool operator()( LogEntry* first, LogEntry* second ) const;
       
     private:
       
-    //! sorting method (defined a constructor)
+    //! sort method (defined a constructor)
     Logbook::SortMethod sort_method_; 
+    
+    //! order
+    int order_;
     
   };
   
   /*! 
-  changes sorting method associated to oldest parent
+  changes sort method associated to oldest parent
   returns true if changed
   */
-  bool setSortingMethod( const SortMethod& sort_method )
+  bool setSortMethod( const SortMethod& sort_method )
   {
-    bool changed = ( sortingMethod() != sort_method );
+    bool changed = ( sortMethod() != sort_method );
     if( changed ) {
       sort_method_ = sort_method;
       setModified( true );
@@ -377,9 +381,25 @@ class Logbook:public QObject, public Counter, public BASE::Key
     return changed;
   }
   
-  //! retrieves current sorting method associated to oldest parent
-  SortMethod sortingMethod( void ) 
+  //! retrieves current sort method associated to oldest parent
+  SortMethod sortMethod( void ) 
   { return sort_method_; }
+
+  //! sort order
+  bool setSortOrder( const int& order )
+  {
+    bool changed = (sortOrder() != order );
+    if( changed )
+    {
+      sort_order_ = order;
+      setModified( true );
+    }
+    return changed;
+  }
+  
+  //! sort order
+  const int& sortOrder( void ) const
+  { return sort_order_; }
   
   //@}
   
@@ -429,8 +449,11 @@ class Logbook:public QObject, public Counter, public BASE::Key
   //! logbook last save time
   TimeStamp saved_;         
   
-  //! method used for LogEntry sorting
+  //! method used for LogEntry sort
   SortMethod sort_method_;             
+  
+  //! sort order
+  int sort_order_;
   
   //! number of entries in logbook as read from xml
   /*!  \brief 

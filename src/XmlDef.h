@@ -84,6 +84,9 @@ namespace XML {
   //! logbook sort method
   static const std::string SORT_METHOD( "sort_method" );
   
+  //! logbook sort order
+  static const std::string SORT_ORDER( "sort_order" );
+  
   //! logbook number of entries
   static const std::string ENTRIES( "entries" );
   

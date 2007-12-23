@@ -159,7 +159,8 @@ bool Logbook::read( void )
     else if( name == XML::PARENT_FILE ) setParentFile( XmlUtil::xmlToText( value ) );
     else if( name == XML::DIRECTORY ) setDirectory( XmlUtil::xmlToText( value ) );
     else if( name == XML::AUTHOR ) setAuthor( XmlUtil::xmlToText( value ) );
-    else if( name == XML::SORT_METHOD ) setSortingMethod( static_cast<SortMethod>(value.get<int>()) );
+    else if( name == XML::SORT_METHOD ) setSortMethod( static_cast<SortMethod>(value.get<int>()) );
+    else if( name == XML::SORT_ORDER ) setSortOrder( value.get<int>() );
     else if( name == XML::ENTRIES ) setXmlEntries( value.get<int>() );
     else if( name == XML::CHILDREN ) setXmlChildren( value.get<int>() );
     else cout << "Logbook::read - unrecognized logbook attribute: \"" << name << "\"\n";
@@ -262,6 +263,7 @@ bool Logbook::write( File file )
     if( !author().size() ) top.setAttribute( XML::AUTHOR.c_str(), XmlUtil::textToXml(author()).c_str()) ;
 
     top.setAttribute( XML::SORT_METHOD.c_str(), Str().assign<unsigned int>(sort_method_).c_str() );
+    top.setAttribute( XML::SORT_ORDER.c_str(), Str().assign<int>(sort_order_).c_str() );
 
     // update number of entries and children
     xml_entries_ = entries().size();
@@ -744,6 +746,9 @@ bool Logbook::modified( void ) const
 //_________________________________
 bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) const
 {
+  
+  if( order_ ) std::swap( first, second );
+  
   switch( sort_method_ )
   {
     case Logbook::SORT_CREATION:
@@ -765,7 +770,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
     return (first->author() < second->author());
 
     default:
-    Debug::Throw(0,"EntryLessFTor - invalid sorting method.\n" );
+    Debug::Throw(0,"EntryLessFTor - invalid sort method.\n" );
     break;
   }
   return false;
