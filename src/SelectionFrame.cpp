@@ -46,6 +46,7 @@
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
+#include "LogEntryDelegate.h"
 #include "LogbookInformationDialog.h"
 #include "LogbookModifiedDialog.h"
 #include "LogbookStatisticsDialog.h"
@@ -169,19 +170,22 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   // entry actions
   toolbar->addAction( &newEntryAction() );
   toolbar->addAction( &editEntryAction() );
+ 
+  CustomToolButton *button;
+  toolbar->addWidget( button = new CustomToolButton( toolbar,&entryColorAction(), 0 ) );
+  button->setPopupMode( QToolButton::InstantPopup );
 
   toolbar->addAction( &deleteEntryAction() );
   toolbar->addAction( &saveAction() );
   toolbar->addAction( &viewHtmlAction() );
-  
-  CustomToolButton *button;
-  toolbar->addWidget( button = new CustomToolButton( toolbar,&entryColorAction(), 0 ) );
-  button->setPopupMode( QToolButton::InstantPopup );
-  
+   
   // create logEntry list
   v_layout->addWidget( list_ = new TreeView( right ), 1 );
   list_->setModel( &model_ );
   list_->setSelectionMode( QAbstractItemView::ContiguousSelection ); 
+  list_->setDragEnabled(true); 
+  list_->setAllColumnsShowFocus( false );
+  list_->setItemDelegate( new LogEntryDelegate( this ) );
   
   connect( list_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
   connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
@@ -191,7 +195,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( &model_, SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeEntrySelection() ) );
   connect( &model_, SIGNAL( layoutChanged() ), SLOT( _restoreEntrySelection() ) );  
   connect( &model_, SIGNAL( layoutChanged() ), list_, SLOT( resizeColumns() ) );  
-  
+  connect( &model_, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) ); 
   /* 
   add the delete_entry_action to the list,
   so that the corresponding shortcut gets activated whenever it is pressed
@@ -2365,6 +2369,41 @@ void SelectionFrame::_storeSortMethod( int column, Qt::SortOrder order  )
   logbook()->setSortOrder( int( order ) );
   if( !logbook()->file().empty() ) save();
 
+}
+
+//_______________________________________________
+void SelectionFrame::_entryDataChanged( const QModelIndex& index )
+{
+  Debug::Throw( "SelectionFrame::_entryDataChanged.\n" );
+  
+  if( !( index.isValid() && index.column() == LogEntryModel::TITLE ) ) return;
+  LogEntry* entry( model_.get( index ) );
+    
+  // update associated EditFrames
+  BASE::KeySet<EditFrame> frames( entry );
+  for( BASE::KeySet< EditFrame >::iterator it = frames.begin(); it != frames.end(); it++ )
+  {
+    
+    // keep track of already modified EditFrames
+    bool frame_modified( (*it)->modified() && !(*it)->isReadOnly() );
+    
+    // update EditFrame
+    (*it)->displayTitle();
+    
+    // save if needed [title/keyword changes are discarded since saved here anyway]
+    if( frame_modified ) (*it)->askForSave( false );
+    else (*it)->setModified( false );
+    
+  }
+  
+  // set logbooks as modified
+  BASE::KeySet<Logbook> logbooks( entry );
+  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+  (*iter)->setModified( true );
+  
+  // save Logbook
+  if( logbook() && !logbook()->file().empty() ) save();
+ 
 }
 
 //________________________________________

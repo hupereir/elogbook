@@ -430,6 +430,9 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _entryItemActivated( const QModelIndex& index )
   { if( index.isValid() ) _displayEntry( model_.get( index ) ); }
     
+  //! item data changed
+  void _entryDataChanged( const QModelIndex& index );
+  
   //! store selected jobs in model
   void _storeEntrySelection( void );
 

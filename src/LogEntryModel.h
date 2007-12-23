@@ -71,13 +71,22 @@ class LogEntryModel : public ListModel<LogEntry*>
 
   //!@name methods reimplemented from base class
   //@{
+
+  //! flags
+  virtual Qt::ItemFlags flags(const QModelIndex &index) const;
   
-  // return job for a given index
+  //! return data
   virtual QVariant data(const QModelIndex &index, int role) const;
+  
+  // modify data
+  virtual bool setData(const QModelIndex &index, const QVariant& value, int role = Qt::EditRole );
    
   //! header data
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
    
+  //! mime data
+  virtual QMimeData* mimeData(const QModelIndexList &indexes) const;
+  
   //! number of columns for a given index
   virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
   { return n_columns; }

@@ -23,7 +23,7 @@
 
 /*!
   \file    LogEntryModel.h
-  \brief   Job model. Stores job information for display in lists
+  \brief   LogEntry information to display in lists
   \author  Hugo Pereira
   \version $Revision$
   \date    $Date$
@@ -65,6 +65,17 @@ LogEntryModel::LogEntryModel( QObject* parent ):
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
 
+}
+  
+//__________________________________________________________________
+Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
+{
+  
+    if (!index.isValid()) return 0;
+    Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
+    if( index.column() == TITLE ) out |= (Qt::ItemIsDragEnabled | Qt::ItemIsEditable );
+    return out;
+    
 }
 
 //__________________________________________________________________
@@ -115,6 +126,22 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 }
 
 //__________________________________________________________________
+bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int role )
+{
+  Debug::Throw( "LogEntryModel::setData.\n" );
+  if( !(index.isValid() && index.column() == TITLE && role == Qt::EditRole ) ) return false;
+  LogEntry* entry( get( index ) );
+  if( value != entry->title().c_str() )
+  {
+    entry->setTitle( qPrintable( value.toString() ) );
+    emit dataChanged( index, index );
+  }
+
+  return true;
+  
+}
+
+//__________________________________________________________________
 QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
 
@@ -128,6 +155,17 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
   // return empty
   return QVariant(); 
 
+}
+
+//______________________________________________________________________
+QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
+{
+
+  assert( !indexes.empty() );
+  
+  QMimeData *mime = new QMimeData();
+  mime->setData( DRAG, 0 );
+  return mime;
 }
 
 //____________________________________________________________
