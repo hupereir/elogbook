@@ -101,6 +101,24 @@ class LogEntryModel : public ListModel<LogEntry*>
 
   //@}
  
+  //!@name edition
+  //@{
+  
+  //! enable edition
+  void setEditionEnabled( const bool& value )
+  { edition_enabled_ = value; }
+  
+  //! edition index
+  const QModelIndex& editionIndex( void ) const
+  { return edition_index_; }
+  
+  //! edition index
+  void setEditionIndex( const QModelIndex& index )
+  { 
+    edition_enabled_ = false;
+    edition_index_ = index; 
+  }
+  
   private slots:
     
   //! update configuration
@@ -138,6 +156,13 @@ class LogEntryModel : public ListModel<LogEntry*>
     Qt::SortOrder order_;
     
   };
+
+  //! edition flag
+  bool edition_enabled_;
+  
+  //! edition index
+  /*! needs to be stored to start delayed edition */
+  QModelIndex edition_index_;
   
   //! list column names
   static const char* column_titles_[n_columns];

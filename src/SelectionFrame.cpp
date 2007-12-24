@@ -69,7 +69,8 @@ using namespace Qt;
 SelectionFrame::SelectionFrame( QWidget *parent ):
   CustomMainWindow( parent ),
   Counter( "SelectionFrame" ),
-  autosave_timer_( new QTimer( this ) ),
+  autosave_timer_( this ),
+  edition_timer_( this ),
   logbook_( 0 ),
   working_directory_( Util::workingDirectory() ),
   ignore_warnings_( false ),
@@ -190,12 +191,14 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( list_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
   connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
   connect( list_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _entryItemActivated( const QModelIndex& ) ) ); 
+  connect( list_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _entryItemClicked( const QModelIndex& ) ) );
   _updateEntryActions();
 
   connect( &model_, SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeEntrySelection() ) );
   connect( &model_, SIGNAL( layoutChanged() ), SLOT( _restoreEntrySelection() ) );  
   connect( &model_, SIGNAL( layoutChanged() ), list_, SLOT( resizeColumns() ) );  
   connect( &model_, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) ); 
+
   /* 
   add the delete_entry_action to the list,
   so that the corresponding shortcut gets activated whenever it is pressed
@@ -224,8 +227,12 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   _updateConfiguration();
 
   // autosave_timer_
-  autosave_timer_->setSingleShot( false );
-  connect( autosave_timer_, SIGNAL( timeout() ), SLOT( _autoSave() ) );
+  autosave_timer_.setSingleShot( false );
+  connect( &autosave_timer_, SIGNAL( timeout() ), SLOT( _autoSave() ) );
+  
+  // edition timer
+  edition_timer_.setSingleShot( true );
+  connect( &edition_timer_, SIGNAL( timeout() ), SLOT( _startEntryEdition() ) );
   
 }
 
@@ -442,7 +449,9 @@ void SelectionFrame::selectEntry( LogEntry* entry )
   
   if( !entry ) return;
   keywordList().select( entry->keyword() );
-  logEntryList().selectionModel()->select( model_.index( entry ), QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  QModelIndex index( model_.index( entry ) );
+  logEntryList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  logEntryList().scrollTo( index );
   return;
   
 }
@@ -1049,10 +1058,10 @@ void SelectionFrame::_updateConfiguration( void )
   Debug::Throw( "SelectionFrame::_updateConfiguration.\n" );
     
   // autoSave
-  autosave_timer_->setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
+  autosave_timer_.setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
   bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
-  if( autosave ) autosave_timer_->start();
-  else autosave_timer_->stop();
+  if( autosave ) autosave_timer_.start();
+  else autosave_timer_.stop();
     
   // resize
   resize( XmlOptions::get().get<int>("SELECTION_FRAME_WIDTH"), XmlOptions::get().get<int>("SELECTION_FRAME_HEIGHT") );
@@ -2371,6 +2380,32 @@ void SelectionFrame::_storeSortMethod( int column, Qt::SortOrder order  )
 
 }
 
+
+//____________________________________________________________
+void SelectionFrame::_entryItemActivated( const QModelIndex& index )
+{ 
+  // stop edition timer
+  model_.setEditionIndex( QModelIndex() );
+  edition_timer_.stop();
+  if( index.isValid() ) _displayEntry( model_.get( index ) ); 
+}
+
+//____________________________________________________________
+void SelectionFrame::_entryItemClicked( const QModelIndex& index )
+{ 
+  
+  // do nothing if index do not correspond to an entry title
+  if( !(index.isValid() && index.column() == LogEntryModel::TITLE ) ) return;
+  
+  // do nothing if index is not already selected
+  if( !logEntryList().selectionModel()->isSelected( index ) ) return;
+
+  // compare to model edition index
+  if( index == model_.editionIndex() ) edition_timer_.start( edition_delay_ );
+  else model_.setEditionIndex( index );
+  
+}
+
 //_______________________________________________
 void SelectionFrame::_entryDataChanged( const QModelIndex& index )
 {
@@ -2404,6 +2439,22 @@ void SelectionFrame::_entryDataChanged( const QModelIndex& index )
   // save Logbook
   if( logbook() && !logbook()->file().empty() ) save();
  
+}
+
+//________________________________________
+void SelectionFrame::_startEntryEdition( void )
+{   
+
+  Debug::Throw( "SelectionFrame::_startEntryEdition\n" );
+  QModelIndex index( logEntryList().currentIndex() );
+  if( !( index.isValid() && index == model_.editionIndex() ) ) return;
+
+  // enable model edition
+  model_.setEditionEnabled( true );
+  
+  // edit item
+  logEntryList().edit( index );
+  
 }
 
 //________________________________________

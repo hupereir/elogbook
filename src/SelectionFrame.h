@@ -426,13 +426,18 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int, Qt::SortOrder );
  
+  //! item clicked
+  virtual void _entryItemClicked( const QModelIndex& index );
+      
   //! activare item
-  void _entryItemActivated( const QModelIndex& index )
-  { if( index.isValid() ) _displayEntry( model_.get( index ) ); }
+  void _entryItemActivated( const QModelIndex& index );
     
   //! item data changed
   void _entryDataChanged( const QModelIndex& index );
-  
+ 
+  //! edit entry title
+  void _startEntryEdition( void );
+ 
   //! store selected jobs in model
   void _storeEntrySelection( void );
 
@@ -469,8 +474,19 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   ColorMenu* color_menu_;
   
   //! autoSaveTimer
-  QTimer* autosave_timer_;
+  QTimer autosave_timer_;
 
+  //!@name item edition
+  //@{
+  
+  //! edition timer
+  QTimer edition_timer_;
+
+  //! edit_item delay (ms)
+  enum { edition_delay_ = 500 };
+  
+  //@}
+  
   //! associated logbook
   Logbook* logbook_;
 

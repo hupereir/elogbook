@@ -58,13 +58,14 @@ const char* LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
 
 //_______________________________________________________________
 LogEntryModel::LogEntryModel( QObject* parent ):
-  ListModel<LogEntry*>( parent )
+  ListModel<LogEntry*>( parent ),
+  edition_enabled_( false )
 { 
   Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
   
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
-
+  
 }
   
 //__________________________________________________________________
@@ -72,8 +73,16 @@ Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
 {
   
     if (!index.isValid()) return 0;
+    
+    // default flags
     Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
-    if( index.column() == TITLE ) out |= (Qt::ItemIsDragEnabled | Qt::ItemIsEditable );
+ 
+    // check against edition index
+    if( index == editionIndex() && edition_enabled_ ) 
+    { out |= Qt::ItemIsEditable; }
+    
+    // check column
+    if( index.column() == TITLE ) out |= Qt::ItemIsDragEnabled;
     return out;
     
 }
