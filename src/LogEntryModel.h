@@ -119,6 +119,8 @@ class LogEntryModel : public ListModel<LogEntry*>
     edition_index_ = index; 
   }
   
+  //@}
+  
   private slots:
     
   //! update configuration

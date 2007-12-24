@@ -42,6 +42,7 @@
 #include "FileRecord.h"
 #include "Key.h"
 #include "KeywordList.h"
+#include "KeywordModel.h"
 #include "LogEntry.h"
 #include "LogEntryModel.h"
 #include "QtUtil.h"
@@ -155,7 +156,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! log entry list
   virtual TreeView& logEntryList( void ) const
-  { return *list_; }
+  { return *entry_list_; }
     
   //!@name actions 
   //@{
@@ -421,7 +422,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )
-  { _storeSortMethod( model_.sortColumn(), model_.sortOrder() ); }
+  { _storeSortMethod( entry_model_.sortColumn(), entry_model_.sortOrder() ); }
 
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int, Qt::SortOrder );
@@ -460,12 +461,15 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! main splitter
   QSplitter* splitter_;
+
+  //! keyword model
+  KeywordModel keyword_model_;
   
-  //! model
-  LogEntryModel model_;
+  //! entry model
+  LogEntryModel entry_model_;
   
   //! logEntry list
-  TreeView* list_;
+  TreeView* entry_list_;
 
   //! Keyword list
   KeywordList *keyword_list_;

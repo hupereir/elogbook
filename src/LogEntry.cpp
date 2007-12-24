@@ -49,7 +49,6 @@ using namespace std;
 //__________________________________
 const string LogEntry::DRAG = "logEntry_drag";
 const string LogEntry::UNTITLED = "untitled";
-const string LogEntry::NO_KEYWORD = "/";
 const string LogEntry::NO_AUTHOR = "anonymous";
 const string LogEntry::NO_TEXT = "";
 
@@ -77,7 +76,7 @@ LogEntry::LogEntry( const QDomElement& element ):
     Str name( qPrintable( attribute.name() ) );
     Str value( qPrintable( attribute.value() ) );
     if( name == XML::TITLE ) setTitle( XmlUtil::xmlToText( value ) );
-    else if( name == XML::KEYWORD ) setKeyword( XmlUtil::xmlToText( value ) );
+    else if( name == XML::KEYWORD ) setKeyword( Keyword( XmlUtil::xmlToText( value ) ) );
     else if( name == XML::AUTHOR ) setAuthor( XmlUtil::xmlToText( value ) );
     else if( name == XML::COLOR ) setColor( XmlUtil::xmlToText( value ) );
     else cerr << "LogEntry::LogEntry - unrecognized entry attribute: \"" << name << "\"\n";
@@ -117,12 +116,12 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 {
   Debug::Throw( "LogEntry::domElement.\n" );
   QDomElement out( parent.createElement( XML::ENTRY.c_str() ) );
-  if( title().size() ) out.setAttribute( XML::TITLE.c_str(), XmlUtil::textToXml(title()).c_str() );
-  if( keyword().size() ) out.setAttribute( XML::KEYWORD.c_str(), XmlUtil::textToXml(keyword()).c_str() );
-  if( author().size() ) out.setAttribute( XML::AUTHOR.c_str(), XmlUtil::textToXml(author()).c_str() );
+  if( !title().empty() ) out.setAttribute( XML::TITLE.c_str(), XmlUtil::textToXml(title()).c_str() );
+  if( !keyword().get().empty() ) out.setAttribute( XML::KEYWORD.c_str(), XmlUtil::textToXml(keyword().get()).c_str() );
+  if( !author().empty() ) out.setAttribute( XML::AUTHOR.c_str(), XmlUtil::textToXml(author()).c_str() );
 
   // color
-  bool color_valid( color().size() && !Str(color()).isEqual( ColorMenu::NONE, false ) && QColor( color().c_str() ).isValid() );
+  bool color_valid( !( color().empty() || Str(color()).isEqual( ColorMenu::NONE, false ) ) && QColor( color().c_str() ).isValid() );
   if( color_valid ) out.setAttribute( XML::COLOR.c_str(), XmlUtil::textToXml(color()).c_str() );
 
   // dump timeStamp
@@ -154,68 +153,6 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 }
 
 //__________________________________
-string LogEntry::formatKeyword( const string& keyword )
-{
-  Debug::Throw() << "LogEntry::formatKeyword - " << keyword << endl;
-  vector<string> keywords( parseKeyword( keyword ) );
-
-  string out = "";
-  for( vector<string>::iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  {
-    string local( *iter );
-
-    // remove empty trailing spaces
-    while( local.size() && local[local.size() - 1] == ' ' )
-    local = local.substr( 0, local.size() - 1 );
-
-    // remove empty leading spaces
-    while( local.size() && local[0] == ' ' )
-    local = local.substr( 1, local.size() - 1  );
-
-    // change first character to uppercase
-    if( local.size() ) local[0] = toupper( local[0] );
-
-    // append to global name
-    if( local.size() )
-    {
-      if( out.empty() ) out = local;
-      else out += "/"+local;
-    }
-  }
-  
-  // for debugging, check leading character
-  assert( out.empty() || out.find( NO_KEYWORD ) != 0 );
-  
-  // add leading backspace
-  out = NO_KEYWORD + out;
-  return out;
-}
-
-//__________________________________
-vector<string> LogEntry::parseKeyword( const string& keyword )
-{
-  Debug::Throw() << "LogEntry::parseKeyword" << endl;
-
-  vector<string> out;
-  size_t pos = keyword.find( "/" );
-  if( pos == string::npos ) out.push_back( keyword );
-  else {
-
-    //! get leading keyword add to the list
-    string first( keyword.substr( 0, pos ) );
-    if( !first.empty() ) out.push_back( first );
-
-    //! parse trailing keyword
-    string second( keyword.substr( pos+1, keyword.size()-pos-1 ) );
-    vector<string> tmp( parseKeyword( second ) );
-    out.insert( out.end(), tmp.begin(), tmp.end() );
-  
-  }
-
-  return out;
-}
-
-//__________________________________
 LogEntry* LogEntry::clone( void ) const
 {
   Debug::Throw( "LogEntry::clone.\n" );
@@ -238,13 +175,6 @@ LogEntry* LogEntry::clone( void ) const
   }
 
   return out;
-}
-
-//__________________________________
-void LogEntry::setKeyword( const string& keyword )
-{
-  Debug::Throw( "LoqEntry::setKeyword.\n");
-  keyword_ = formatKeyword( keyword );
 }
 
 //__________________________________
@@ -308,7 +238,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
     table.setAttribute( "class", "header_inner_table" );
     table.setAttribute( "width", "100%" );
     QDomElement row;
-    if( keyword().size() && (mask&HTML_KEYWORD) )
+    if( !keyword().get().empty() && (mask&HTML_KEYWORD) )
     {
       row = table.appendChild( document.createElement( "tr" ) ).toElement();
       column = row.appendChild( document.createElement( "td" ) ).toElement();
@@ -317,11 +247,11 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
       row.
         appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( keyword().c_str() ) );
+        appendChild( document.createTextNode( keyword().get().c_str() ) );
 
     }
 
-    if( title().size() && (mask&HTML_TITLE) )
+    if( !title().empty() && (mask&HTML_TITLE) )
     {
       row = table.appendChild( document.createElement( "tr" ) ).toElement();
       column = row.appendChild( document.createElement( "td" ) ).toElement();
@@ -362,7 +292,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
 
     }
 
-    if( author().size() && (mask&HTML_AUTHOR) )
+    if( !author().empty() && (mask&HTML_AUTHOR) )
     {
       row = table.appendChild( document.createElement( "tr" ) ).toElement();
       column = row.appendChild( document.createElement( "td" ) ).toElement();
@@ -379,7 +309,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
 
   // write attachments
   BASE::KeySet<Attachment> attachments( this );
-  if( attachments.size() && ( mask &  HTML_ATTACHMENT ) )
+  if( !attachments.empty() && ( mask &  HTML_ATTACHMENT ) )
   {
     QDomElement par = out.appendChild( document.createElement("p") ).toElement();
     for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
@@ -387,7 +317,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
   }
 
   // write text
-  if( text().size() && ( mask & HTML_TEXT ) )
+  if( !text().empty() && ( mask & HTML_TEXT ) )
   {
     QDomElement par = out.appendChild( document.createElement("p") ).toElement();
     _htmlTextNode( par, document );
@@ -412,7 +342,7 @@ QDomElement LogEntry::htmlSummary( QDomDocument& document, const unsigned int& m
         appendChild( document.createElement( "b" ) )).
         appendChild( document.createElement( "a" ) ).toElement();
     ref.setAttribute( "href", (string("#")+Str().assign<int>( creation() )).c_str() );
-    ref.appendChild( document.createTextNode( (keyword().size()) ? keyword().c_str():NO_KEYWORD.c_str() ) );
+    ref.appendChild( document.createTextNode( (keyword().get().empty() ) ? Keyword::NO_KEYWORD.get().c_str():keyword().get().c_str() ) );
   }
 
   if( mask & HTML_TITLE )
@@ -422,7 +352,7 @@ QDomElement LogEntry::htmlSummary( QDomDocument& document, const unsigned int& m
         appendChild( document.createElement( "b" ) )).
         appendChild( document.createElement( "a" ) ).toElement();
     ref.setAttribute( "href", (string("#")+Str().assign<int>( creation() )).c_str() );
-    ref.appendChild( document.createTextNode( (title().size()) ? title().c_str():UNTITLED.c_str() ) );
+    ref.appendChild( document.createTextNode( (title().empty()) ? UNTITLED.c_str():title().c_str() ) );
   }
   if( mask & HTML_CREATION ) row.
     appendChild( document.createElement( "td" )).
@@ -441,7 +371,7 @@ void LogEntry::_init( void )
   creation_ = TimeStamp::now();
   modification_ = TimeStamp::now();
   title_ = UNTITLED;
-  keyword_ = NO_KEYWORD;
+  keyword_ = Keyword::NO_KEYWORD;
   author_ = NO_AUTHOR;
   text_ = NO_TEXT;
   color_ = "None";
@@ -489,7 +419,7 @@ void LogEntry::_htmlTextNode(
       if( iter->format() & FORMAT::ITALIC ) local_node = local_node.appendChild( document.createElement( "i" ) ).toElement();
       if( iter->format() & FORMAT::BOLD ) local_node = local_node.appendChild( document.createElement( "b" ) ).toElement();
       if( iter->format() & FORMAT::STRIKE ) local_node = local_node.appendChild( document.createElement( "s" ) ).toElement();
-      if( iter->color().size() && iter->color() != string("None") )
+      if( !( iter->color().empty() || iter->color() == string("None") ) )
       {
         local_node = local_node.appendChild( document.createElement( "font" ) ).toElement();
         local_node.setAttribute( "color", iter->color().c_str() );

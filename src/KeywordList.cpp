@@ -415,7 +415,7 @@ void KeywordList::_createRootItem( void )
   Debug::Throw( "KeywordList::_createRootItem.\n" );
   root_item_ = new Item();
   addTopLevelItem( root_item_ );
-  root_item_->setText( KEYWORD, LogEntry::NO_KEYWORD.c_str() );
+  root_item_->setText( KEYWORD, Keyword::NO_KEYWORD.get().c_str() );
 
 }
 

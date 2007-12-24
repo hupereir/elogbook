@@ -84,7 +84,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
   grid_layout->addWidget( new QLabel( entry->title().c_str(), this ), 0, 1 );
 
   grid_layout->addWidget( new QLabel( "Keyword: ", this ), 1, 0 );
-  grid_layout->addWidget( new QLabel( entry->keyword().c_str(), this ), 1, 1 );
+  grid_layout->addWidget( new QLabel( entry->keyword().get().c_str(), this ), 1, 1 );
 
   grid_layout->addWidget( new QLabel( "Author: ", this ), 2, 0 );
   grid_layout->addWidget( new QLabel( entry->author().c_str(), this ), 2, 1 );

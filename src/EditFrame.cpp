@@ -325,7 +325,7 @@ string EditFrame::windowTitle( void ) const
   {
   
     title << entry->title();
-    if( entry->keyword() != LogEntry::NO_KEYWORD ) title << " - " << entry->keyword();
+    if( entry->keyword() != Keyword::NO_KEYWORD ) title << " - " << entry->keyword().get();
 
   } else title << "Electronic Logbook Editor";
 

@@ -1,3 +1,6 @@
+#ifndef LogEntry_h
+#define LogEntry_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,9 +24,6 @@
 *                        
 *******************************************************************************/
 
-#ifndef LogEntry_h
-#define LogEntry_h
-
 /*!
   \file LogEntry.h
   \brief log file entry manipulation object
@@ -40,8 +40,8 @@
 
 #include "Counter.h"
 
-
 #include "Key.h"
+#include "Keyword.h"
 #include "Str.h"
 #include "TextFormatBlock.h"
 #include "TimeStamp.h"
@@ -100,9 +100,6 @@ class LogEntry:public Counter, public BASE::Key
   static const std::string UNTITLED;    
   
   //! used when LogEntry keyword is not defined 
-  static const std::string NO_KEYWORD;  
-  
-  //! used when LogEntry keyword is not defined 
   static const std::string NO_AUTHOR;  
   
   //! used when LogEntry keyword is not defined
@@ -113,10 +110,12 @@ class LogEntry:public Counter, public BASE::Key
     replace empty string by NO_KEYWORD
     otherwise, uppercase first character.
   */
-  static std::string formatKeyword( const std::string& );
+  static std::string formatKeyword( const std::string& value )
+  { return Keyword::format( value ); }
 
   //! split keyword into a list of strings using "/" as the separator
-  static std::vector<std::string> parseKeyword( const std::string& );
+  static std::vector<std::string> parseKeyword( const std::string& value )
+  { return Keyword::parse( Keyword( value ) ); }
   
   //!@name attributes
   //@{
@@ -152,10 +151,11 @@ class LogEntry:public Counter, public BASE::Key
   { return title_; }        
   
   //! LogEntry keyword
-  void setKeyword( const std::string& keyword );  
+  void setKeyword( const Keyword& keyword )
+  { keyword_ = keyword; }
   
   //! LogEntry keyword
-  std::string keyword( void ) const 
+  const Keyword& keyword( void ) const 
   { return keyword_; }  
   
   //! LogEntry author
@@ -200,7 +200,7 @@ class LogEntry:public Counter, public BASE::Key
   
   //! returns true if entry keyword matches buffer
   bool matchKeyword( const std::string& buf ) 
-  { return Str( buf ).isIn( keyword_, XmlOptions::get().get<bool>( "CASE_SENSITIVE" )); }
+  { return Str( buf ).isIn( keyword_.get(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" )); }
 
   //! returns true if entry text matches buffer
   bool matchText(  const std::string& buf ) 
@@ -314,18 +314,18 @@ class LogEntry:public Counter, public BASE::Key
     public:
         
     //! constructor
-    MatchKeywordFTor( const std::string& keyword ):
+    MatchKeywordFTor( const Keyword& keyword ):
       keyword_( keyword )
     {}
     
     //! predicate
     bool operator() (const LogEntry* entry ) const
-    { return entry->keyword().find( keyword_ ) == 0;}
+    { return entry->keyword().get().find( keyword_.get() ) == 0;}
     
     private:
         
     //! comparison keyword
-    std::string keyword_;
+    Keyword keyword_;
     
   };
   
@@ -351,7 +351,7 @@ class LogEntry:public Counter, public BASE::Key
   std::string title_;  
   
   //! log entry keywords
-  std::string keyword_;
+  Keyword keyword_;
   
   //! last user name who had access to the entry    
   std::string author_; 

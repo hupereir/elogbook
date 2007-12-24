@@ -66,6 +66,7 @@ libelogbook_a_SOURCES = \
   Attachment.cpp \
   AttachmentType.cpp \
   HtmlUtil.cpp \
+  Keyword.cpp \
   Logbook.cpp \
   LogEntry.cpp
 
@@ -89,7 +90,9 @@ noinst_HEADERS = \
   HelpText.h \
   HtmlUtil.h \
   Icons.h \
+  Keyword.h \
   KeywordList.h \
+  KeywordModel.h \
   Logbook.h \
   LogbookInformationDialog.h \
   LogbookModifiedDialog.h \
@@ -122,6 +125,7 @@ elogbook_SOURCES = \
   EditKeywordDialog.cpp \
   FormatBar.cpp \
   KeywordList.cpp \
+  KeywordModel.cpp \
   LogbookInformationDialog.cpp \
   LogbookModifiedDialog.cpp \
   LogbookStatisticsDialog.cpp \
