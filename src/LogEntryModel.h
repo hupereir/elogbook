@@ -83,10 +83,13 @@ class LogEntryModel : public ListModel<LogEntry*>
    
   //! header data
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+ 
+  //! mime type
+  virtual QStringList mimeTypes( void ) const;
    
   //! mime data
   virtual QMimeData* mimeData(const QModelIndexList &indexes) const;
-  
+
   //! number of columns for a given index
   virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
   { return n_columns; }

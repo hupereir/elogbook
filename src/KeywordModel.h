@@ -44,7 +44,10 @@ class KeywordModel : public TreeModel<Keyword>
 {
     
   public:
-    
+
+  //! used to tag Keyword drags
+  static const QString DRAG;
+  
   //! constructor
   KeywordModel(QObject *parent = 0);
   
@@ -62,7 +65,7 @@ class KeywordModel : public TreeModel<Keyword>
   //@{
 
   //! flags
-  // virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+  virtual Qt::ItemFlags flags(const QModelIndex &index) const;
   
   //! return data
   virtual QVariant data(const QModelIndex &index, int role) const;
@@ -73,6 +76,15 @@ class KeywordModel : public TreeModel<Keyword>
   //! number of columns for a given index
   virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
   { return n_columns; }
+ 
+  //! mime type
+  virtual QStringList mimeTypes( void ) const;
+   
+  //! mime data
+  virtual QMimeData* mimeData(const QModelIndexList &indexes) const;
+  
+  //! drop mine data
+  virtual bool dropMimeData(const QMimeData*, Qt::DropAction, int row, int column, const QModelIndex&);
 
   //@}
   
