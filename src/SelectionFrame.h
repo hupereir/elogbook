@@ -452,14 +452,26 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _startEntryEdition( void );
  
   //! store selected jobs in model
-  void _storeEntrySelection( void );
+  void _storeSelectedEntries( void );
 
   //! restore selected jobs from model
-  void _restoreEntrySelection( void );
+  void _restoreSelectedEntries( void );
+ 
+  //! store selected jobs in model
+  void _storeSelectedKeywords( void );
+
+  //! restore selected jobs from model
+  void _restoreSelectedKeywords( void );
+ 
+  //! store expanded jobs in model
+  void _storeExpandedKeywords( void );
+
+  //! restore expanded jobs from model
+  void _restoreExpandedKeywords( void );
 
   //! perform autoSave
   void _autoSave( void );
-
+  
   private:
   
   //! main menu

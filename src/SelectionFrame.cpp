@@ -153,6 +153,12 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   keyword_list_->menu().addAction( &editKeywordAction() );
   keyword_list_->menu().addAction( &deleteKeywordAction() );
 
+  connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedKeywords() ) );
+  connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedKeywords() ) );
+  
+  connect( &_keywordModel(), SIGNAL( layoutChanged() ), SLOT( _restoreSelectKeywords() ) );
+  connect( &_keywordModel(), SIGNAL( layoutChanged() ), SLOT( _restoreExpandedKeywords() ) );
+
   /* 
   add the delete_keyword_action to the keyword list,
   so that the corresponding shortcut gets activated whenever it is pressed
@@ -195,8 +201,8 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( entry_list_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _entryItemClicked( const QModelIndex& ) ) );
   _updateEntryActions();
 
-  connect( &_logEntryModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeEntrySelection() ) );
-  connect( &_logEntryModel(), SIGNAL( layoutChanged() ), SLOT( _restoreEntrySelection() ) );  
+  connect( &_logEntryModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedEntries() ) );
+  connect( &_logEntryModel(), SIGNAL( layoutChanged() ), SLOT( _restoreSelectedEntries() ) );  
   connect( &_logEntryModel(), SIGNAL( layoutChanged() ), entry_list_, SLOT( resizeColumns() ) );  
   connect( &_logEntryModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) ); 
 
@@ -446,18 +452,21 @@ void SelectionFrame::clearSelection( void )
 //_______________________________________________
 void SelectionFrame::selectEntry( LogEntry* entry )
 {
-  Debug::Throw( "SelectionFrame::selectEntry.\n" );
+  Debug::Throw("SelectionFrame::selectEntry.\n" );
   
   if( !entry ) return;
 
   // select entry keyword
   QModelIndex index = _keywordModel().index( entry->keyword() );
   keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  keywordList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
   keywordList().scrollTo( index );
 
   index = _logEntryModel().index( entry );
   logEntryList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  logEntryList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
   logEntryList().scrollTo( index );
+  Debug::Throw("SelectionFrame::selectEntry - done.\n" );
   return;
   
 }
@@ -472,7 +481,9 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
   if( entry->keyword() != currentKeyword() )
   {
     _keywordModel().add( entry->keyword() );
-    keywordList().selectionModel()->select( _keywordModel().index( entry->keyword() ), QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    QModelIndex index = _keywordModel().index( entry->keyword() );
+    keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    keywordList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
   }
 
   // umdate logEntry model
@@ -563,7 +574,12 @@ LogEntry* SelectionFrame::previousEntry( LogEntry* entry, const bool& update_sel
   if( !( index.isValid() && index.row() > 0 ) ) return 0;
   
   QModelIndex previous_index( _logEntryModel().index( index.row()-1, index.column() ) );
-  if( update_selection ) logEntryList().selectionModel()->select( previous_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  if( update_selection ) 
+  {
+    logEntryList().selectionModel()->select( previous_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    logEntryList().selectionModel()->setCurrentIndex( previous_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  }
+  
   return _logEntryModel().get( previous_index );
   
 }
@@ -577,7 +593,12 @@ LogEntry* SelectionFrame::nextEntry( LogEntry* entry, const bool& update_selecti
   if( !( index.isValid() && index.row()+1 < _logEntryModel().rowCount() ) ) return 0;
  
   QModelIndex next_index( _logEntryModel().index( index.row()+1, index.column() ) );
-  if( update_selection ) logEntryList().selectionModel()->select( next_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  if( update_selection ) 
+  {
+    logEntryList().selectionModel()->select( next_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    logEntryList().selectionModel()->setCurrentIndex( next_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  }
+  
   return _logEntryModel().get( next_index );
 
 }
@@ -1027,13 +1048,27 @@ void SelectionFrame::_resetKeywordList( void )
   assert( logbook() );
       
   // retrieve new list of keywords (from logbook)
-  set<string> new_keywords;
+  set<Keyword> new_keywords;
   BASE::KeySet<LogEntry> entries( logbook()->entries() );
   for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )  
-  { if( (*iter)->isFindSelected() ) new_keywords.insert( (*iter)->keyword().get() ); }
+  { 
+    if( (*iter)->isFindSelected() ) 
+    {
+      Keyword keyword( (*iter)->keyword() );
+      while( keyword != Keyword::NO_KEYWORD ) 
+      { 
+        new_keywords.insert( keyword ); 
+        keyword = keyword.parent(); 
+      }
+      
+    }
+  }
+  Debug::Throw( "SelectionFrame::_resetKeywordList - new list ready.\n" );
    
   // update model
-  // _keywordModel().clear();
+  //_keywordModel().clear();
+  Debug::Throw( "SelectionFrame::_resetKeywordList - cleared.\n" );
+  
   _keywordModel().set( KeywordModel::List( new_keywords.begin(), new_keywords.end() ) );
   Debug::Throw(0) << _keywordModel().root() << endl;
   Debug::Throw( "SelectionFrame::_resetKeywordList - done.\n" );
@@ -1855,8 +1890,8 @@ void SelectionFrame::_newKeyword( void )
 
   KeywordModel::List keywords( _keywordModel().values() );
   for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  dialog.add( iter->get() );
-  dialog.setKeyword( currentKeyword().get() );
+  dialog.add( *iter );
+  dialog.setKeyword( currentKeyword() );
   
   // map dialog
   QtUtil::centerOnParent( &dialog );
@@ -1868,6 +1903,7 @@ void SelectionFrame::_newKeyword( void )
   {
     _keywordModel().add( keyword );
     keywordList().selectionModel()->select( _keywordModel().index( keyword ), QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
+    keywordList().selectionModel()->setCurrentIndex( _keywordModel().index( keyword ), QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
   }
 }
   
@@ -2458,7 +2494,7 @@ void SelectionFrame::_startEntryEdition( void )
 }
 
 //________________________________________
-void SelectionFrame::_storeEntrySelection( void )
+void SelectionFrame::_storeSelectedEntries( void )
 {   
   // clear
   _logEntryModel().clearSelectedIndexes();
@@ -2475,7 +2511,7 @@ void SelectionFrame::_storeEntrySelection( void )
 }
 
 //________________________________________
-void SelectionFrame::_restoreEntrySelection( void )
+void SelectionFrame::_restoreSelectedEntries( void )
 {
 
   // retrieve indexes
@@ -2488,6 +2524,68 @@ void SelectionFrame::_restoreEntrySelection( void )
     { logEntryList().selectionModel()->select( *iter, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
   
   }
+  
+  return;
+}
+
+//________________________________________
+void SelectionFrame::_storeSelectedKeywords( void )
+{   
+  // clear
+  _keywordModel().clearSelectedIndexes();
+  
+  // retrieve selected indexes in list
+  QModelIndexList selected_indexes( keywordList().selectionModel()->selectedRows() );
+  for( QModelIndexList::iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
+  { 
+    // check column
+    if( !iter->column() == 0 ) continue;
+    _keywordModel().setIndexSelected( *iter, true ); 
+  }
+    
+}
+
+//________________________________________
+void SelectionFrame::_restoreSelectedKeywords( void )
+{
+
+  // retrieve indexes
+  QModelIndexList selected_indexes( _keywordModel().selectedIndexes() );
+  if( selected_indexes.empty() ) keywordList().selectionModel()->clear();
+  else {
+    
+    keywordList().selectionModel()->select( selected_indexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    for( QModelIndexList::const_iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
+    { keywordList().selectionModel()->select( *iter, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+  
+  }
+  
+  return;
+}
+
+
+//________________________________________
+void SelectionFrame::_storeExpandedKeywords( void )
+{   
+  // clear
+  _keywordModel().clearExpandedIndexes();
+  
+  // retrieve expanded indexes in list
+  QModelIndexList indexes( _keywordModel().indexes() );
+  for( QModelIndexList::iterator iter = indexes.begin(); iter != indexes.end(); iter++ )
+  { if( keywordList().isExpanded( *iter ) ) _keywordModel().setIndexExpanded( *iter, true ); }
+    
+}
+
+//________________________________________
+void SelectionFrame::_restoreExpandedKeywords( void )
+{
+  
+  keywordList().collapseAll();  
+  
+  QModelIndexList expanded_indexes( _keywordModel().expandedIndexes() );
+  for( QModelIndexList::const_iterator iter = expanded_indexes.begin(); iter != expanded_indexes.end(); iter++ )
+  { keywordList().setExpanded( *iter, true ); }
   
   return;
 }

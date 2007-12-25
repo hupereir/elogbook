@@ -104,18 +104,6 @@ class LogEntry:public Counter, public BASE::Key
   
   //! used when LogEntry keyword is not defined
   static const std::string NO_TEXT;      
-
-  /*!
-    format keyword: remove all trailing/leading space characters;
-    replace empty string by NO_KEYWORD
-    otherwise, uppercase first character.
-  */
-  static std::string formatKeyword( const std::string& value )
-  { return Keyword::format( value ); }
-
-  //! split keyword into a list of strings using "/" as the separator
-  static std::vector<std::string> parseKeyword( const std::string& value )
-  { return Keyword::parse( Keyword( value ) ); }
   
   //!@name attributes
   //@{

@@ -49,7 +49,7 @@ class Keyword: public Counter
   //! constructor
   Keyword( const std::string& value = std::string("")):
     Counter( "Keyword" )
-  { value_ = format( value ); }
+  { value_ = _format( value ); }
   
   //! equal to operator
   bool operator == (const Keyword& keyword ) const
@@ -65,7 +65,7 @@ class Keyword: public Counter
 
   //! set full keyword
   void set( const std::string& value )
-  { value_ = format( value ); }
+  { value_ = _format( value ); }
   
   //! full keyword
   const std::string& get( void ) const
@@ -80,10 +80,10 @@ class Keyword: public Counter
   //! parse keyword
   static std::vector<std::string> parse( Keyword );
   
-  //! format keyword
-  static std::string format( const std::string& );
-  
   private:
+
+  //! format keyword
+  static std::string _format( const std::string& );
   
   //! full value
   std::string value_;  

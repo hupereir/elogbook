@@ -54,10 +54,6 @@ Keyword Keyword::parent( void ) const
 {
   
   size_t pos = value_.rfind( "/" );
-  
-  if( pos == string::npos ) 
-  { Debug::Throw(0) << "Keyword::parent - no parent for keyword " << *this << endl; }
-  
   assert( pos != string::npos );
   return Keyword( value_.substr( 0, pos ) );
   
@@ -78,8 +74,9 @@ vector<string> Keyword::parse( Keyword keyword )
 }
 
 //_________________________________________________________________
-string Keyword::format( const string& value )
+string Keyword::_format( const string& value )
 {  
+  
   // make sure value is not empty
   if( value.empty() ) 
   { return NO_KEYWORD.get(); }
@@ -87,7 +84,7 @@ string Keyword::format( const string& value )
   string out( value );
   
   // add leading "/"
-  if( !out[0] == '/' ) out = string( "/" ) + out;
+  if( out[0] != '/' ) out = string( "/" ) + out;
   
   // look for "/"
   // replace next character by uppercase

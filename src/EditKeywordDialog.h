@@ -36,6 +36,7 @@
 #include <string>
 
 #include "CustomDialog.h"
+#include "Keyword.h"
 
 //! Edit/create keyword popup dialog
 class EditKeywordDialog: public CustomDialog
@@ -51,16 +52,16 @@ class EditKeywordDialog: public CustomDialog
   {}
   
   //! keyword
-  void add( const std::string& keyword )
-  { combo_box_->addItem( keyword.c_str() ); }
+  void add( const Keyword& keyword )
+  { combo_box_->addItem( keyword.get().c_str() ); }
   
   //! keyword
-  void setKeyword( const std::string& keyword )
-  { combo_box_->setEditText( keyword.c_str() ); }
+  void setKeyword( const Keyword& keyword )
+  { combo_box_->setEditText( keyword.get().c_str() ); }
   
   //! keyword
-  std::string keyword( void ) const
-  { return qPrintable( combo_box_->currentText() ); }
+  Keyword keyword( void ) const
+  { return Keyword( qPrintable( combo_box_->currentText() ) ); }
         
   private:
         
