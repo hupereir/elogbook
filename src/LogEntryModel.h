@@ -105,6 +105,10 @@ class LogEntryModel : public ListModel<LogEntry*>
   //@{
   
   //! enable edition
+  const bool& editionEnabled( void ) const
+  { return edition_enabled_; }
+  
+  //! enable edition
   void setEditionEnabled( const bool& value )
   { edition_enabled_ = value; }
   

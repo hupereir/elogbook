@@ -308,7 +308,7 @@ class LogEntry:public Counter, public BASE::Key
     
     //! predicate
     bool operator() (const LogEntry* entry ) const
-    { return entry->keyword().get().find( keyword_.get() ) == 0;}
+    { return entry->keyword().isChild( keyword_ );}
     
     private:
         

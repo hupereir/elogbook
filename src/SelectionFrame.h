@@ -404,7 +404,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   or by deleting a keyword in the list, and moving entries to the parent.
   It is also called by the renameKeyword slot above.
   */
-  void _renameKeyword( std::string old_keyword, std::string new_keyword );
+  void _renameKeyword( Keyword old_keyword, Keyword new_keyword, bool update_selection = true );
   
   //! rename keyword for selected entries using dialog
   /*! 

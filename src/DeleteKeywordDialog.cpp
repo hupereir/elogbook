@@ -30,6 +30,7 @@
    \date $Date$
 */
 
+#include <assert.h>
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QLabel>
@@ -41,20 +42,37 @@
 using namespace std;
 
 //_____________________________________________________
-DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const string& keyword, const bool& has_entries ):
+DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const vector<Keyword>& keywords, const bool& has_entries ):
   CustomDialog( parent )
 {
   
   Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
-
-  setWindowTitle( "delete keyword" );
   
-  // radio buttons
-  QButtonGroup* group = new QButtonGroup( this );
-  group->setExclusive( true );
-
+  assert( !keywords.empty() );
+  
+  setWindowTitle( "delete keyword" );
   ostringstream what;
-  what << "Delete keyword " << keyword << " ?";
+  if( keywords.size() == 1 ) what << "Delete keyword " << keywords.front() << " ?";
+  else {
+    
+    what << "Delete keywords " << endl << "  ";
+    
+    unsigned int max_keywords = 10;
+    unsigned int index(0);
+    for( vector<Keyword>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+    {
+      what << *iter << " ";
+      index++;
+      if( index >= max_keywords ) 
+      { 
+        index = 0;
+        what << endl << "  ";
+      }
+    }
+    what << "?";
+    
+  }
+  
   mainLayout().addWidget( new QLabel( what.str().c_str(), this ) );
   
   QGroupBox *box = new QGroupBox( this );
@@ -63,13 +81,19 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const string& keyword
   box->layout()->setMargin(5);
   box->layout()->setSpacing(5);
         
+  
+  // radio buttons
+  QButtonGroup* group = new QButtonGroup( this );
+
   box->layout()->addWidget( move_radio_button_ = new QRadioButton( "Move entries to parent keyword", box ) );
   move_radio_button_->setToolTip( "Select this button to move entries associated to this keyword to the parent keyword." );
   group->addButton( move_radio_button_ );
   
   box->layout()->addWidget( delete_radio_button_ = new QRadioButton( "Delete entries", box ) );
   delete_radio_button_->setToolTip( "Select this button to delete entries associated to this keyword." );
-  group->addButton( move_radio_button_ );
+  group->addButton( delete_radio_button_ );
+
+  group->setExclusive( true );
   move_radio_button_->setChecked( true );
   
   if( !has_entries ) box->setEnabled( false );

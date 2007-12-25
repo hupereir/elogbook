@@ -34,9 +34,10 @@
 
 #include <QRadioButton>
 #include <string>
+#include <vector>
 
-#include "DeleteKeywordDialog.h"
 #include "CustomDialog.h"
+#include "Keyword.h"
 
 //! delete keyword popup dialog
 class DeleteKeywordDialog: public CustomDialog
@@ -45,7 +46,7 @@ class DeleteKeywordDialog: public CustomDialog
   public:
       
   //! constructor
-  DeleteKeywordDialog( QWidget* parent, const std::string&, const bool& has_entries );
+  DeleteKeywordDialog( QWidget* parent, const std::vector<Keyword>&, const bool& has_entries );
   
   //! destructor
   virtual ~DeleteKeywordDialog( void )
