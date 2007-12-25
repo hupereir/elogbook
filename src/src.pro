@@ -40,7 +40,6 @@ HEADERS = \
  HelpText.h \
  HtmlUtil.h \
  Icons.h \
- KeywordList.h \
  Logbook.h \
  LogbookInformationDialog.h \
  LogbookModifiedDialog.h \
@@ -76,7 +75,6 @@ SOURCES = \
  elogbook.cpp \
  FormatBar.cpp \
  HtmlUtil.cpp \
- KeywordList.cpp \
  Logbook.cpp \
  LogbookInformationDialog.cpp \
  LogbookModifiedDialog.cpp \

@@ -506,7 +506,7 @@ void EditFrame::newEntry( void )
   // create new entry, set author, set keyword
   LogEntry* entry = new LogEntry();
   entry->setAuthor( XmlOptions::get().raw( "USER" ) );
-  entry->setKeyword( _selectionFrame()->keywordList().current() );
+  entry->setKeyword( _selectionFrame()->currentKeyword() );
 
   // add logbook parent if any
   Logbook *logbook( _selectionFrame()->logbook() );

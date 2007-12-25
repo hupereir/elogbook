@@ -32,6 +32,7 @@
 */
 
 #include <QSplitter>
+#include <QTimer>
 
 #include "AskForSaveDialog.h"
 #include "Counter.h"
@@ -41,7 +42,6 @@
 
 #include "FileRecord.h"
 #include "Key.h"
-#include "KeywordList.h"
 #include "KeywordModel.h"
 #include "LogEntry.h"
 #include "LogEntryModel.h"
@@ -148,16 +148,16 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   virtual void resetAttachmentFrame( void ) const;
 
   //! return keyword list
-  KeywordList& keywordList( void )
-  {
-    assert( keyword_list_ );
-    return *keyword_list_;
-  }
-  
+  TreeView& keywordList( void ) const
+  { return *keyword_list_; }
+   
   //! log entry list
   virtual TreeView& logEntryList( void ) const
   { return *entry_list_; }
-    
+  
+  //! current keyword
+  Keyword currentKeyword( void ) const;
+   
   //!@name actions 
   //@{
   
@@ -292,6 +292,10 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   KeywordModel& _keywordModel( void )
   { return keyword_model_; }
   
+  //! keyword model
+  const KeywordModel& _keywordModel( void ) const
+  { return keyword_model_; }
+ 
   //! log entry model
   LogEntryModel& _logEntryModel( void )
   { return entry_model_; }
@@ -417,7 +421,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _renameEntryKeyword( std::string new_keyword );
   
   //! keyword selection changed
-  void _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* );
+  void _keywordSelectionChanged( const QModelIndex& );
     
   //! update keyword-list related actions
   void _updateKeywordActions( void );
@@ -480,7 +484,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   TreeView* entry_list_;
 
   //! Keyword list
-  KeywordList *keyword_list_;
+  TreeView *keyword_list_;
 
   //! color menu
   ColorMenu* color_menu_;

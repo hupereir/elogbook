@@ -128,35 +128,37 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   Debug::Throw() << "SelectionFrame::SelectionFrame - keyword toolbar created." << endl;
   
   // create keyword list
-  v_layout->addWidget( keyword_list_ = new KeywordList( left ), 1 );
+  v_layout->addWidget( keyword_list_ = new TreeView( left ), 1 );
+  keyword_list_->setModel( &_keywordModel() );
+  keyword_list_->setRootIsDecorated( true );
   
   // update LogEntryList when keyword selection change
-  connect( keyword_list_, SIGNAL( currentItemChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _keywordSelectionChanged( QTreeWidgetItem*, QTreeWidgetItem* ) ) );  
-  connect( keyword_list_, SIGNAL( itemSelectionChanged( void ) ), SLOT( _updateKeywordActions() ) );
+  connect( keyword_list_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );  
+  connect( keyword_list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection& ) ), SLOT( _updateKeywordActions() ) );
   _updateKeywordActions();
   
   // set sorting order
-  keyword_list_->sortItems( KeywordList::KEYWORD, Qt::AscendingOrder );
+  // keyword_list_->sortItems( KeywordList::KEYWORD, Qt::AscendingOrder );
   
   // rename selected entries when KeywordChanged is emitted with a single argument.
   // this correspond to drag and drop action from the logEntryList in the KeywordList
-  connect( keyword_list_, SIGNAL( entryKeywordChanged( std::string ) ), SLOT( _renameEntryKeyword( std::string ) ) );
+  // connect( keyword_list_, SIGNAL( entryKeywordChanged( std::string ) ), SLOT( _renameEntryKeyword( std::string ) ) );
   
   // rename all entries matching first keyword the second. This correspond to 
   // drag and drop inside the keyword list, or to direct edition of a keyword list item.
-  connect( keyword_list_, SIGNAL( keywordChanged( std::string, std::string ) ), SLOT( _renameKeyword( std::string, const std::string& ) ) );
+  // connect( keyword_list_, SIGNAL( keywordChanged( std::string, std::string ) ), SLOT( _renameKeyword( std::string, const std::string& ) ) );
     
   // popup menu for keyword list
-  keywordList().menu().addAction( &newKeywordAction() ); 
-  keywordList().menu().addAction( &editKeywordAction() );
-  keywordList().menu().addAction( &deleteKeywordAction() );
+  keyword_list_->menu().addAction( &newKeywordAction() ); 
+  keyword_list_->menu().addAction( &editKeywordAction() );
+  keyword_list_->menu().addAction( &deleteKeywordAction() );
 
   /* 
   add the delete_keyword_action to the keyword list,
   so that the corresponding shortcut gets activated whenever it is pressed
   while the list has focus
   */
-  keywordList().addAction( &deleteKeywordAction() );
+  keyword_list_->addAction( &deleteKeywordAction() );
   
   // right box for entries and buttons
   QWidget* right = new QWidget( splitter_ );
@@ -401,7 +403,7 @@ void SelectionFrame::reset( void )
   }
     
   // clear list of entries
-  keywordList().clear();
+  _keywordModel().clear();
   _logEntryModel().clear();
     
   // clear the AttachmentFrame
@@ -447,8 +449,13 @@ void SelectionFrame::selectEntry( LogEntry* entry )
   Debug::Throw( "SelectionFrame::selectEntry.\n" );
   
   if( !entry ) return;
-  keywordList().select( entry->keyword().get() );
-  QModelIndex index( _logEntryModel().index( entry ) );
+
+  // select entry keyword
+  QModelIndex index = _keywordModel().index( entry->keyword() );
+  keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  keywordList().scrollTo( index );
+
+  index = _logEntryModel().index( entry );
   logEntryList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
   logEntryList().scrollTo( index );
   return;
@@ -462,10 +469,10 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
   Debug::Throw( "SelectionFrame::updateEntry.\n" );
   
   // add entry into frame list or update existsing    
-  if( entry->keyword() != keywordList().current() )
+  if( entry->keyword() != currentKeyword() )
   {
-    keywordList().add( entry->keyword().get() );
-    keywordList().select( entry->keyword().get() );
+    _keywordModel().add( entry->keyword() );
+    keywordList().selectionModel()->select( _keywordModel().index( entry->keyword() ), QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
   }
 
   // umdate logEntry model
@@ -598,10 +605,19 @@ void SelectionFrame::resetAttachmentFrame( void ) const
 }
 
 //_______________________________________________
+Keyword SelectionFrame::currentKeyword( void ) const
+{
+  Debug::Throw( "SelectionFrame::currentKeyword.\n" );
+  QModelIndex index( keywordList().selectionModel()->currentIndex() );
+  return index.isValid() ? _keywordModel().get( index ) : Keyword();
+}
+
+//_______________________________________________
 void SelectionFrame::save( const bool& confirm_entries )
 {
-  Debug::Throw( "SelectionFrame::save - confirm.\n" );
 
+  Debug::Throw( "SelectionFrame::save.\n" );
+ 
   // check logbook
   if( !logbook_ ) 
   {
@@ -1009,24 +1025,15 @@ void SelectionFrame::_resetKeywordList( void )
   
   Debug::Throw( "SelectionFrame::_resetKeywordList.\n" );
   assert( logbook() );
-    
-  // retrieve current list of keywords
-  set<string> old_keywords = keywordList().keywords();
-  
+      
   // retrieve new list of keywords (from logbook)
   set<string> new_keywords;
   BASE::KeySet<LogEntry> entries( logbook()->entries() );
   for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )  
   { if( (*iter)->isFindSelected() ) new_keywords.insert( (*iter)->keyword().get() ); }
-  
-  // reset keyword list to new set
-  keywordList().reset( new_keywords );
-  
-  // sort list
-  keywordList().sort();
-  
+   
   // update model
-  _keywordModel().clear();
+  // _keywordModel().clear();
   _keywordModel().set( KeywordModel::List( new_keywords.begin(), new_keywords.end() ) );
   Debug::Throw(0) << _keywordModel().root() << endl;
   Debug::Throw( "SelectionFrame::_resetKeywordList - done.\n" );
@@ -1846,22 +1853,21 @@ void SelectionFrame::_newKeyword( void )
   EditKeywordDialog dialog( this );
   dialog.setWindowTitle( "New keyword" );
 
-  const set<string>& keywords( keywordList().keywords() );
-  for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  dialog.add( *iter );
-  dialog.setKeyword( keywordList().current() );
+  KeywordModel::List keywords( _keywordModel().values() );
+  for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+  dialog.add( iter->get() );
+  dialog.setKeyword( currentKeyword().get() );
   
   // map dialog
   QtUtil::centerOnParent( &dialog );
   if( dialog.exec() == QDialog::Rejected ) return;
 
   // retrieve keyword from line_edit
-  string keyword = LogEntry::formatKeyword( dialog.keyword() );
-  if( !keyword.empty() ) {
-    keywordList().add( keyword );
-    keywordList().sort();
-    keywordList().select( keyword );
-    
+  Keyword keyword( dialog.keyword() );
+  if( keyword != Keyword::NO_KEYWORD ) 
+  {
+    _keywordModel().add( keyword );
+    keywordList().selectionModel()->select( _keywordModel().index( keyword ), QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
   }
 }
   
@@ -1871,61 +1877,61 @@ void SelectionFrame::_deleteKeyword( void )
 {
   Debug::Throw("SelectionFrame::_deleteKeyword.\n" );
   
-  //! check that keywordlist has selected item
-  if( !keywordList().QTreeWidget::currentItem() )
-  {
-    QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
-    return;
-  }
-  
-  //! check that keywordlist selection is not root
-  if( keywordList().QTreeWidget::currentItem() == keywordList().rootItem() ) 
-  {
-    QtUtil::infoDialog( this, "can't delete root keyword. Request canceled" );
-    return;
-  }
-
-  // get current selected keyword
-  QTreeWidgetItem *selected_item( keywordList().QTreeWidget::currentItem() );
-  string keyword( keywordList().current() );
-
-  // retrieve associated entries
-  BASE::KeySet<LogEntry> entries( logbook()->entries() );
-  BASE::KeySet<LogEntry> associated_entries;
-  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  if( (*iter)->keyword().get().find( keyword ) == 0 )
-  associated_entries.insert( *iter );    
-                 
-  //! create dialog
-  DeleteKeywordDialog dialog( this, keyword, associated_entries.size() );
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
-  
-  // retrieve parent keyword
-  selected_item->setText( KeywordList::KEYWORD, "");
-  string new_keyword( LogEntry::formatKeyword( keywordList().keyword( selected_item ) ) );  
-
-  // move entries
-  if( dialog.moveEntries() && associated_entries.size() ) 
-  { 
-
-    _renameKeyword( keyword, new_keyword ); 
-    return;
-    
-  } else if( dialog.deleteEntries() ) {
-    
-    for( BASE::KeySet<LogEntry>::iterator iter = associated_entries.begin(); iter != associated_entries.end(); iter++ )
-    deleteEntry( *iter, false );
-  
-  }
-
-  _resetKeywordList();
-  keywordList().select( new_keyword );
-
-  _resetLogEntryList();
-    
-  // Save logbook
-  if( !logbook()->file().empty() ) save();  
+//   //! check that keywordlist has selected item
+//   if( !keywordList().QTreeWidget::currentItem() )
+//   {
+//     QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
+//     return;
+//   }
+//   
+//   //! check that keywordlist selection is not root
+//   if( keywordList().QTreeWidget::currentItem() == keywordList().rootItem() ) 
+//   {
+//     QtUtil::infoDialog( this, "can't delete root keyword. Request canceled" );
+//     return;
+//   }
+// 
+//   // get current selected keyword
+//   QTreeWidgetItem *selected_item( keywordList().QTreeWidget::currentItem() );
+//   string keyword( keywordList().current() );
+// 
+//   // retrieve associated entries
+//   BASE::KeySet<LogEntry> entries( logbook()->entries() );
+//   BASE::KeySet<LogEntry> associated_entries;
+//   for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+//   if( (*iter)->keyword().get().find( keyword ) == 0 )
+//   associated_entries.insert( *iter );    
+//                  
+//   //! create dialog
+//   DeleteKeywordDialog dialog( this, keyword, associated_entries.size() );
+//   QtUtil::centerOnParent( &dialog );
+//   if( dialog.exec() == QDialog::Rejected ) return;
+//   
+//   // retrieve parent keyword
+//   selected_item->setText( KeywordList::KEYWORD, "");
+//   string new_keyword( LogEntry::formatKeyword( keywordList().keyword( selected_item ) ) );  
+// 
+//   // move entries
+//   if( dialog.moveEntries() && associated_entries.size() ) 
+//   { 
+// 
+//     _renameKeyword( keyword, new_keyword ); 
+//     return;
+//     
+//   } else if( dialog.deleteEntries() ) {
+//     
+//     for( BASE::KeySet<LogEntry>::iterator iter = associated_entries.begin(); iter != associated_entries.end(); iter++ )
+//     deleteEntry( *iter, false );
+//   
+//   }
+// 
+//   _resetKeywordList();
+//   keywordList().select( new_keyword );
+// 
+//   _resetLogEntryList();
+//     
+//   // Save logbook
+//   if( !logbook()->file().empty() ) save();  
   
   return;
   
@@ -1935,39 +1941,39 @@ void SelectionFrame::_deleteKeyword( void )
 void SelectionFrame::_renameKeyword( void )
 {
   Debug::Throw("SelectionFrame::_renameKeyword.\n" );
-  
-  //! check that keywordlist has selected item
-  if( !keywordList().QTreeWidget::currentItem() )
-  {
-    QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
-    return;
-  }
-  
-  //! check that keywordlist selection is not root
-  if( keywordList().QTreeWidget::currentItem() == keywordList().rootItem() ) 
-  {
-    QtUtil::infoDialog( this, "can't rename root keyword. Request canceled" );
-    return;
-  }
-
-  // get current selected keyword
-  string keyword( keywordList().current() );
-      
-  //! create dialog
-  EditKeywordDialog dialog( this );
-  dialog.setWindowTitle( "Edit keyword" );
-
-  const set<string>& keywords( keywordList().keywords() );
-  for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  dialog.add( *iter );
-  dialog.setKeyword( keyword );
-  
-  // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
-
-  // change keyword for all entries that match the old one
-  _renameKeyword( keyword, dialog.keyword() );
+//   
+//   //! check that keywordlist has selected item
+//   if( !keywordList().QTreeWidget::currentItem() )
+//   {
+//     QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
+//     return;
+//   }
+//   
+//   //! check that keywordlist selection is not root
+//   if( keywordList().QTreeWidget::currentItem() == keywordList().rootItem() ) 
+//   {
+//     QtUtil::infoDialog( this, "can't rename root keyword. Request canceled" );
+//     return;
+//   }
+// 
+//   // get current selected keyword
+//   string keyword( keywordList().current() );
+//       
+//   //! create dialog
+//   EditKeywordDialog dialog( this );
+//   dialog.setWindowTitle( "Edit keyword" );
+// 
+//   const set<string>& keywords( keywordList().keywords() );
+//   for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+//   dialog.add( *iter );
+//   dialog.setKeyword( keyword );
+//   
+//   // map dialog
+//   QtUtil::centerOnParent( &dialog );
+//   if( dialog.exec() == QDialog::Rejected ) return;
+// 
+//   // change keyword for all entries that match the old one
+//   _renameKeyword( keyword, dialog.keyword() );
   
 }
 
@@ -1975,50 +1981,50 @@ void SelectionFrame::_renameKeyword( void )
 void SelectionFrame::_renameKeyword( string keyword, string new_keyword )
 {
 
-  Debug::Throw("SelectionFrame::_renameKeyword.\n" );
-  
-  // format keywords
-  keyword = LogEntry::formatKeyword( keyword );
-  new_keyword = LogEntry::formatKeyword( new_keyword );
-
-  // check keywords are different
-  if( keyword == new_keyword ) return;
-    
-  // get entries matching the old_keyword, change the keyword
-  BASE::KeySet<LogEntry> entries( logbook()->entries() );
-  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  {
-    LogEntry* entry( *iter );
-    
-    /* 
-      if keyword to modify is a leading subset of current entry keyword, 
-      update entry with new keyword
-    */
-    if( entry->keyword().get().find( keyword ) == 0 ) 
-    {
-      
-      entry->setKeyword( Str( entry->keyword().get() ).replace( keyword, new_keyword ) );
-      
-      /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
-      keyword change when synchronizing logbooks, without having all entries modification time
-      set to now() */
-      entry->setModification( entry->modification()+1 );
-
-      BASE::KeySet<Logbook> logbooks( entry );
-      for( BASE::KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
-      { (*log_iter)->setModified( true ); }
-    
-    }
-    
-  }
-
-  // reset lists
-  _resetKeywordList();
-  _resetLogEntryList();
-  keywordList().select( new_keyword );
-    
-  // Save logbook if needed
-  if( !logbook()->file().empty() ) save();     
+//   Debug::Throw("SelectionFrame::_renameKeyword.\n" );
+//   
+//   // format keywords
+//   keyword = LogEntry::formatKeyword( keyword );
+//   new_keyword = LogEntry::formatKeyword( new_keyword );
+// 
+//   // check keywords are different
+//   if( keyword == new_keyword ) return;
+//     
+//   // get entries matching the old_keyword, change the keyword
+//   BASE::KeySet<LogEntry> entries( logbook()->entries() );
+//   for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+//   {
+//     LogEntry* entry( *iter );
+//     
+//     /* 
+//       if keyword to modify is a leading subset of current entry keyword, 
+//       update entry with new keyword
+//     */
+//     if( entry->keyword().get().find( keyword ) == 0 ) 
+//     {
+//       
+//       entry->setKeyword( Str( entry->keyword().get() ).replace( keyword, new_keyword ) );
+//       
+//       /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
+//       keyword change when synchronizing logbooks, without having all entries modification time
+//       set to now() */
+//       entry->setModification( entry->modification()+1 );
+// 
+//       BASE::KeySet<Logbook> logbooks( entry );
+//       for( BASE::KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
+//       { (*log_iter)->setModified( true ); }
+//     
+//     }
+//     
+//   }
+// 
+//   // reset lists
+//   _resetKeywordList();
+//   _resetLogEntryList();
+//   keywordList().select( new_keyword );
+//     
+//   // Save logbook if needed
+//   if( !logbook()->file().empty() ) save();     
   
 }
  
@@ -2027,43 +2033,43 @@ void SelectionFrame::_renameEntryKeyword( void )
 {
   Debug::Throw("SelectionFrame::_renameEntryKeyword.\n" );
   
-  // retrieve current selection
-  LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
-  if( selection.empty() ) 
-  {
-    QtUtil::infoDialog( this, "no entry selected. Request canceled.");
-    return;
-  }
-        
-  //! check that current keyword make sense
-  if( !keywordList().QTreeWidget::currentItem() )
-  {
-    QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
-    return;
-  }
-  
-  // get current selected keyword
-  string keyword( keywordList().current() );
-  
-  //! create dialog
-  EditKeywordDialog dialog( this );
-  dialog.setWindowTitle( "Edit keyword" );
-
-  const set<string>& keywords( keywordList().keywords() );
-  for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  dialog.add( *iter );
-  dialog.setKeyword( keyword );
-  
-  // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
-
-  // check if keyword was changed
-  string new_keyword( LogEntry::formatKeyword( dialog.keyword() ) );
-  if( keyword == new_keyword ) return;
-  
-  // change keyword for all entries that match the old one
-  _renameEntryKeyword( new_keyword );
+//   // retrieve current selection
+//   LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
+//   if( selection.empty() ) 
+//   {
+//     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
+//     return;
+//   }
+//         
+//   //! check that current keyword make sense
+//   if( !keywordList().QTreeWidget::currentItem() )
+//   {
+//     QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
+//     return;
+//   }
+//   
+//   // get current selected keyword
+//   string keyword( keywordList().current() );
+//   
+//   //! create dialog
+//   EditKeywordDialog dialog( this );
+//   dialog.setWindowTitle( "Edit keyword" );
+// 
+//   const set<string>& keywords( keywordList().keywords() );
+//   for( set<string>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+//   dialog.add( *iter );
+//   dialog.setKeyword( keyword );
+//   
+//   // map dialog
+//   QtUtil::centerOnParent( &dialog );
+//   if( dialog.exec() == QDialog::Rejected ) return;
+// 
+//   // check if keyword was changed
+//   string new_keyword( LogEntry::formatKeyword( dialog.keyword() ) );
+//   if( keyword == new_keyword ) return;
+//   
+//   // change keyword for all entries that match the old one
+//   _renameEntryKeyword( new_keyword );
   
 }
 
@@ -2071,75 +2077,75 @@ void SelectionFrame::_renameEntryKeyword( void )
 void SelectionFrame::_renameEntryKeyword( string new_keyword )
 {
       
-  Debug::Throw() << "SelectionFrame::_renameEntryKeyword - new_keyword: " << new_keyword << endl;
-  
-  // keep track of modified entries
-  BASE::KeySet<LogEntry> entries;
-  
-  // retrieve current selection
-  LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
-  for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); iter++ )
-  {
-    
-    // retrieve entry
-    LogEntry* entry( *iter );
-    
-    // check if entry keyword has changed
-    if( entry->keyword() == new_keyword ) continue;
-    
-    // change keyword and set as modified
-    entry->setKeyword( new_keyword );
-    
-    /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
-    keyword change when synchronizing logbooks, without having all entries modification time
-    set to now() */
-    entry->setModification( entry->modification()+1 );
-    
-    // keep track of modified entries
-    entries.insert( entry );
-    
-    // set associated logbooks as modified
-    BASE::KeySet<Logbook> logbooks( entry );
-    for( BASE::KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
-    { (*log_iter)->setModified( true ); }
-  
-  }
-
-  // check if at least one entry was changed
-  if( entries.empty() ) return;
-  
-  // reset lists
-  _resetKeywordList();
-  _resetLogEntryList();
-  keywordList().select( new_keyword );
-  
-//   // update selection
-//   logEntryList().clearSelection();
-//   for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+//   Debug::Throw() << "SelectionFrame::_renameEntryKeyword - new_keyword: " << new_keyword << endl;
+//   
+//   // keep track of modified entries
+//   BASE::KeySet<LogEntry> entries;
+//   
+//   // retrieve current selection
+//   LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
+//   for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); iter++ )
 //   {
-//     LogEntryList::Item* item( logEntryList().item( *iter ) );
-//     logEntryList().setItemSelected( item, true );  
+//     
+//     // retrieve entry
+//     LogEntry* entry( *iter );
+//     
+//     // check if entry keyword has changed
+//     if( entry->keyword() == new_keyword ) continue;
+//     
+//     // change keyword and set as modified
+//     entry->setKeyword( new_keyword );
+//     
+//     /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the 
+//     keyword change when synchronizing logbooks, without having all entries modification time
+//     set to now() */
+//     entry->setModification( entry->modification()+1 );
+//     
+//     // keep track of modified entries
+//     entries.insert( entry );
+//     
+//     // set associated logbooks as modified
+//     BASE::KeySet<Logbook> logbooks( entry );
+//     for( BASE::KeySet<Logbook>::iterator log_iter = logbooks.begin(); log_iter!= logbooks.end(); log_iter++ )
+//     { (*log_iter)->setModified( true ); }
+//   
 //   }
-  
-//   // scroll to last item
-//   if( !entries.empty() ) logEntryList().scrollToItem( logEntryList().item( *entries.begin() ) );
-  
-  // Save logbook if needed
-  if( !logbook()->file().empty() ) save();
+// 
+//   // check if at least one entry was changed
+//   if( entries.empty() ) return;
+//   
+//   // reset lists
+//   _resetKeywordList();
+//   _resetLogEntryList();
+//   keywordList().select( new_keyword );
+//   
+// //   // update selection
+// //   logEntryList().clearSelection();
+// //   for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+// //   {
+// //     LogEntryList::Item* item( logEntryList().item( *iter ) );
+// //     logEntryList().setItemSelected( item, true );  
+// //   }
+//   
+// //   // scroll to last item
+// //   if( !entries.empty() ) logEntryList().scrollToItem( logEntryList().item( *entries.begin() ) );
+//   
+//   // Save logbook if needed
+//   if( !logbook()->file().empty() ) save();
   
   return;    
   
 }
 
 //_______________________________________________
-void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWidgetItem* )
+void SelectionFrame::_keywordSelectionChanged( const QModelIndex& index )
 {
 
   Debug::Throw( "SelectionFrame::_keywordSelectionChanged.\n" );
   if( !logbook_ ) return; 
-  if( !current ) return;
+  if( !index.isValid() ) return;
   
-  string keyword = keywordList().keyword( current );
+  Keyword keyword( _keywordModel().get( index ) );
   Debug::Throw() << "SelectionFrame::_keywordSelectionChanged - keyword: " << keyword << endl;
       
   // keep track of the last visible entry
@@ -2180,13 +2186,9 @@ void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWi
 void SelectionFrame::_updateKeywordActions( void )
 {
   Debug::Throw( "SelectionFrame::_updateKeywordActions.\n" );
-
-  QList<KeywordList::Item*> items( keywordList().selectedItems<KeywordList::Item>() );  
-  bool has_selection( !items.empty() );
-  bool selection_is_root( items.size() == 1 && items.front() == keywordList().rootItem() );
-  
-  editKeywordAction().setEnabled( has_selection && !selection_is_root );
-  deleteKeywordAction().setEnabled( has_selection && !selection_is_root );
+  bool has_selection( !keywordList().selectionModel()->selectedRows().empty() );  
+  editKeywordAction().setEnabled( has_selection );
+  deleteKeywordAction().setEnabled( has_selection );
   return;
 }
 

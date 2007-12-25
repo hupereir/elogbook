@@ -31,6 +31,7 @@
 */
 
 #include <assert.h>
+#include "Debug.h"
 #include "Keyword.h"
 
 using namespace std;
@@ -53,6 +54,10 @@ Keyword Keyword::parent( void ) const
 {
   
   size_t pos = value_.rfind( "/" );
+  
+  if( pos == string::npos ) 
+  { Debug::Throw(0) << "Keyword::parent - no parent for keyword " << *this << endl; }
+  
   assert( pos != string::npos );
   return Keyword( value_.substr( 0, pos ) );
   

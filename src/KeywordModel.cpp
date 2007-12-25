@@ -52,7 +52,7 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
   if( !index.isValid() ) return QVariant();
   if( role != Qt::DisplayRole ) return QVariant();
   if( index.column() != KEYWORD ) return QVariant();
-  return QString( _find( index.internalId() ).get().get().c_str() ); 
+  return QString( _find( index.internalId() ).get().current().c_str() ); 
   
 }
 

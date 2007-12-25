@@ -91,7 +91,6 @@ noinst_HEADERS = \
   HtmlUtil.h \
   Icons.h \
   Keyword.h \
-  KeywordList.h \
   KeywordModel.h \
   Logbook.h \
   LogbookInformationDialog.h \
@@ -124,7 +123,6 @@ elogbook_SOURCES = \
   EditFrame.cpp \
   EditKeywordDialog.cpp \
   FormatBar.cpp \
-  KeywordList.cpp \
   KeywordModel.cpp \
   LogbookInformationDialog.cpp \
   LogbookModifiedDialog.cpp \
@@ -152,7 +150,6 @@ nodist_elogbook_SOURCES = \
   moc_ConfigurationDialog.cpp \
   moc_EditFrame.cpp \
   moc_FormatBar.cpp \
-  moc_KeywordList.cpp \
   moc_LogbookModifiedDialog.cpp \
   moc_LogEntryModel.cpp \
   moc_MainFrame.cpp \

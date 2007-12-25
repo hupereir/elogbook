@@ -39,7 +39,6 @@
 #include "EditFrame.h"
 #include "IconEngine.h"
 #include "Icons.h"
-#include "KeywordList.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "MainFrame.h"
