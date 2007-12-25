@@ -182,7 +182,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
    
   // create logEntry list
   v_layout->addWidget( entry_list_ = new TreeView( right ), 1 );
-  entry_list_->setModel( &entry_model_ );
+  entry_list_->setModel( &_logEntryModel() );
   entry_list_->setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   entry_list_->setDragEnabled(true); 
   entry_list_->setItemDelegate( new LogEntryDelegate( this ) );
@@ -193,10 +193,10 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( entry_list_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _entryItemClicked( const QModelIndex& ) ) );
   _updateEntryActions();
 
-  connect( &entry_model_, SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeEntrySelection() ) );
-  connect( &entry_model_, SIGNAL( layoutChanged() ), SLOT( _restoreEntrySelection() ) );  
-  connect( &entry_model_, SIGNAL( layoutChanged() ), entry_list_, SLOT( resizeColumns() ) );  
-  connect( &entry_model_, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) ); 
+  connect( &_logEntryModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeEntrySelection() ) );
+  connect( &_logEntryModel(), SIGNAL( layoutChanged() ), SLOT( _restoreEntrySelection() ) );  
+  connect( &_logEntryModel(), SIGNAL( layoutChanged() ), entry_list_, SLOT( resizeColumns() ) );  
+  connect( &_logEntryModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) ); 
 
   /* 
   add the delete_entry_action to the list,
@@ -252,7 +252,7 @@ void SelectionFrame::setLogbook( File file )
   {
     // update listView with new entries
     _resetKeywordList();
-    _resetList();
+    _resetLogEntryList();
     emit ready();
     return;
   }
@@ -263,7 +263,7 @@ void SelectionFrame::setLogbook( File file )
   {
     // update listView with new entries
     _resetKeywordList();
-    _resetList();
+    _resetLogEntryList();
     emit ready();
     return;
   }
@@ -274,7 +274,7 @@ void SelectionFrame::setLogbook( File file )
 
   // update listView with new entries
   _resetKeywordList();
-  _resetList();
+  _resetLogEntryList();
   _loadColors();
   
   Debug::Throw( "SelectionFrame::setLogbook - lists set.\n" );
@@ -402,7 +402,7 @@ void SelectionFrame::reset( void )
     
   // clear list of entries
   keywordList().clear();
-  entry_model_.clear();
+  _logEntryModel().clear();
     
   // clear the AttachmentFrame
   static_cast<MainFrame*>(qApp)->attachmentFrame().list().clear();
@@ -448,7 +448,7 @@ void SelectionFrame::selectEntry( LogEntry* entry )
   
   if( !entry ) return;
   keywordList().select( entry->keyword().get() );
-  QModelIndex index( entry_model_.index( entry ) );
+  QModelIndex index( _logEntryModel().index( entry ) );
   logEntryList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
   logEntryList().scrollTo( index );
   return;
@@ -469,7 +469,7 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
   }
 
   // umdate logEntry model
-  entry_model_.add( entry );
+  _logEntryModel().add( entry );
 
 }
 
@@ -497,7 +497,7 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   };
 
   // remove from model
-  entry_model_.remove( entry );
+  _logEntryModel().remove( entry );
   
   /*
     hide associated EditFrames
@@ -552,16 +552,13 @@ LogEntry* SelectionFrame::previousEntry( LogEntry* entry, const bool& update_sel
 {
 
   Debug::Throw( "SelectionFrame::previousEntry.\n" );
-  return 0;
-//   LogEntryList::Item *item( logEntryList().item( entry ) );
-//   if( !( item && (item = logEntryList().itemAbove( item, update_selection ) ) ) )
-//   {
-//     Debug::Throw() << "SelectionFrame::previousEntry - no entry found" << endl;
-//     return 0;
-//   }
-//   
-//   return item->entry();
-
+  QModelIndex index( _logEntryModel().index( entry ) );
+  if( !( index.isValid() && index.row() > 0 ) ) return 0;
+  
+  QModelIndex previous_index( _logEntryModel().index( index.row()-1, index.column() ) );
+  if( update_selection ) logEntryList().selectionModel()->select( previous_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  return _logEntryModel().get( previous_index );
+  
 }
 
 //_______________________________________________
@@ -569,15 +566,12 @@ LogEntry* SelectionFrame::nextEntry( LogEntry* entry, const bool& update_selecti
 {
 
   Debug::Throw( "SelectionFrame::nextEntry.\n" );
-  return 0;
-//   LogEntryList::Item *item( logEntryList().item( entry ) );
-//   if( !( item && (item = logEntryList().itemBelow( item, update_selection ) ) ) )
-//   {
-//     Debug::Throw() << "SelectionFrame::previousEntry - no entry found" << endl;
-//     return 0;
-//   }
-//   
-//   return item->entry();
+  QModelIndex index( _logEntryModel().index( entry ) );
+  if( !( index.isValid() && index.row()+1 < _logEntryModel().rowCount() ) ) return 0;
+ 
+  QModelIndex next_index( _logEntryModel().index( index.row()+1, index.column() ) );
+  if( update_selection ) logEntryList().selectionModel()->select( next_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+  return _logEntryModel().get( next_index );
 
 }
 
@@ -720,7 +714,7 @@ void SelectionFrame::selectEntries( QString selection, unsigned int mode )
 
   // keep track of the current selected entry
   QModelIndex current_index( logEntryList().selectionModel()->currentIndex() );
-  LogEntry *selected_entry( current_index.isValid() ? entry_model_.get( current_index ):0 );
+  LogEntry *selected_entry( current_index.isValid() ? _logEntryModel().get( current_index ):0 );
 
   string selection_string( qPrintable( selection ) );
   
@@ -783,7 +777,7 @@ void SelectionFrame::selectEntries( QString selection, unsigned int mode )
 
   // reinitialize logEntry list
   _resetKeywordList();
-  _resetList();
+  _resetLogEntryList();
 
   // if EditFrame current entry is visible, select it;
   if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
@@ -806,7 +800,7 @@ void SelectionFrame::showAllEntries( void )
 
   // keep track of the current selected entry
   QModelIndex current_index( logEntryList().selectionModel()->currentIndex() );
-  LogEntry *selected_entry( current_index.isValid() ? entry_model_.get( current_index ):0 );
+  LogEntry *selected_entry( current_index.isValid() ? _logEntryModel().get( current_index ):0 );
 
   // set all logbook entries to find_visible
   BASE::KeySet<LogEntry> entries( logbook()->entries() );
@@ -815,10 +809,10 @@ void SelectionFrame::showAllEntries( void )
 
   // reinitialize logEntry list
   _resetKeywordList();
-  _resetList();
+  _resetLogEntryList();
 
   if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
-  else if( entry_model_.rowCount() ) selectEntry( entry_model_.get( entry_model_.index( entry_model_.rowCount()-1, 0 ) ) );
+  else if( _logEntryModel().rowCount() ) selectEntry( _logEntryModel().get( _logEntryModel().index( _logEntryModel().rowCount()-1, 0 ) ) );
    
   statusBar().label().setText( "" );
   return;
@@ -969,13 +963,13 @@ void SelectionFrame::_installActions( void )
 }
 
 //_______________________________________________
-void SelectionFrame::_resetList( void )
+void SelectionFrame::_resetLogEntryList( void )
 {
   
-  Debug::Throw( "SelectionFrame::_resetList.\n" );
+  Debug::Throw( "SelectionFrame::_resetLogEntryList.\n" );
 
   // clear list of entries
-  entry_model_.clear();
+  _logEntryModel().clear();
   
   if( logbook_ )
   {
@@ -985,25 +979,25 @@ void SelectionFrame::_resetList( void )
     for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
     { if( (*it)->isSelected() ) model_entries.push_back( *it ); }
     
-    entry_model_.add( model_entries );
+    _logEntryModel().add( model_entries );
     
   } 
   
-//   // loop over associated editframes
-//   // update navigation buttons
-//   BASE::KeySet<EditFrame> frames( this );
-//   for( BASE::KeySet<EditFrame>::iterator it = frames.begin(); it != frames.end(); it++ )
-//   {
-//     
-//     // skip frames that are about to be deleted
-//     if( (*it)->isClosed() ) continue;
-//     
-//     // get associated entry and see if selected
-//     LogEntry* entry( (*it)->entry() );
-//     (*it)->previousEntryAction().setEnabled( entry && entry->isSelected() && previousEntry(entry, false) );
-//     (*it)->nextEntryAction().setEnabled( entry && entry->isSelected() && nextEntry(entry, false) );
-//     
-//   }
+  // loop over associated editframes
+  // update navigation buttons
+  BASE::KeySet<EditFrame> frames( this );
+  for( BASE::KeySet<EditFrame>::iterator it = frames.begin(); it != frames.end(); it++ )
+  {
+    
+    // skip frames that are about to be deleted
+    if( (*it)->isClosed() ) continue;
+    
+    // get associated entry and see if selected
+    LogEntry* entry( (*it)->entry() );
+    (*it)->previousEntryAction().setEnabled( entry && entry->isSelected() && previousEntry(entry, false) );
+    (*it)->nextEntryAction().setEnabled( entry && entry->isSelected() && nextEntry(entry, false) );
+    
+  }
 
   return;
   
@@ -1032,9 +1026,9 @@ void SelectionFrame::_resetKeywordList( void )
   keywordList().sort();
   
   // update model
-  keyword_model_.clear();
-  keyword_model_.set( KeywordModel::List( new_keywords.begin(), new_keywords.end() ) );
-  Debug::Throw(0) << keyword_model_.root() << endl;
+  _keywordModel().clear();
+  _keywordModel().set( KeywordModel::List( new_keywords.begin(), new_keywords.end() ) );
+  Debug::Throw(0) << _keywordModel().root() << endl;
   Debug::Throw( "SelectionFrame::_resetKeywordList - done.\n" );
 
 }
@@ -1430,7 +1424,7 @@ void SelectionFrame::_synchronize( void )
 
   // reinitialize lists
   _resetKeywordList();
-  _resetList();
+  _resetLogEntryList();
   resetAttachmentFrame();
 
   // retrieve last modified entry
@@ -1517,7 +1511,7 @@ void SelectionFrame::_showDuplicatedEntries( void )
 
   // keep track of current index
   QModelIndex current_index( logEntryList().selectionModel()->currentIndex() );
-  LogEntry *selected_entry( current_index.isValid() ? entry_model_.get( current_index ):0 );
+  LogEntry *selected_entry( current_index.isValid() ? _logEntryModel().get( current_index ):0 );
 
   // keep track of found entries
   int found( 0 );
@@ -1565,7 +1559,7 @@ void SelectionFrame::_showDuplicatedEntries( void )
 
   // reinitialize logEntry list
   _resetKeywordList();
-  _resetList();
+  _resetLogEntryList();
 
   // if EditFrame current entry is visible, select it;
   if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
@@ -1671,7 +1665,7 @@ void SelectionFrame::_editEntries( void )
   Debug::Throw( "SelectionFrame::_EditEntries .\n" );
 
   // retrieve selected items; make sure they do not include the navigator
-  LogEntryModel::List selection( entry_model_.get( logEntryList().selectionModel()->selectedRows() ) );
+  LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   if( selection.empty() ) {
     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
     return;
@@ -1692,7 +1686,7 @@ void SelectionFrame::_deleteEntries ( void )
 
   // retrieve current selection
   // retrieve selected items; make sure they do not include the navigator
-  LogEntryModel::List selection( entry_model_.get( logEntryList().selectionModel()->selectedRows() ) );
+  LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   if( selection.empty() ) 
   {
     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
@@ -1805,7 +1799,7 @@ void SelectionFrame::_changeEntryColor( QColor color )
   Debug::Throw( "SelectionFrame::_changeEntryColor.\n" );
 
   // retrieve current selection
-  LogEntryModel::List selection( entry_model_.get( logEntryList().selectionModel()->selectedRows() ) );
+  LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   if( selection.empty() ) 
   {
     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
@@ -1835,7 +1829,7 @@ void SelectionFrame::_changeEntryColor( QColor color )
   }
 
   // update model
-  entry_model_.add( selection );
+  _logEntryModel().add( selection );
   
   // save Logbook
   if( !logbook()->file().empty() ) save();
@@ -1928,7 +1922,7 @@ void SelectionFrame::_deleteKeyword( void )
   _resetKeywordList();
   keywordList().select( new_keyword );
 
-  _resetList();
+  _resetLogEntryList();
     
   // Save logbook
   if( !logbook()->file().empty() ) save();  
@@ -2020,7 +2014,7 @@ void SelectionFrame::_renameKeyword( string keyword, string new_keyword )
 
   // reset lists
   _resetKeywordList();
-  _resetList();
+  _resetLogEntryList();
   keywordList().select( new_keyword );
     
   // Save logbook if needed
@@ -2034,7 +2028,7 @@ void SelectionFrame::_renameEntryKeyword( void )
   Debug::Throw("SelectionFrame::_renameEntryKeyword.\n" );
   
   // retrieve current selection
-  LogEntryModel::List selection( entry_model_.get( logEntryList().selectionModel()->selectedRows() ) );
+  LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   if( selection.empty() ) 
   {
     QtUtil::infoDialog( this, "no entry selected. Request canceled.");
@@ -2083,7 +2077,7 @@ void SelectionFrame::_renameEntryKeyword( string new_keyword )
   BASE::KeySet<LogEntry> entries;
   
   // retrieve current selection
-  LogEntryModel::List selection( entry_model_.get( logEntryList().selectionModel()->selectedRows() ) );
+  LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); iter++ )
   {
     
@@ -2116,7 +2110,7 @@ void SelectionFrame::_renameEntryKeyword( string new_keyword )
   
   // reset lists
   _resetKeywordList();
-  _resetList();
+  _resetLogEntryList();
   keywordList().select( new_keyword );
   
 //   // update selection
@@ -2153,7 +2147,7 @@ void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWi
   
   // keep track of the current selected entry
   QModelIndex current_index( logEntryList().selectionModel()->currentIndex() );
-  LogEntry *selected_entry( current_index.isValid() ? entry_model_.get( current_index ):0 );
+  LogEntry *selected_entry( current_index.isValid() ? _logEntryModel().get( current_index ):0 );
   
   // retrieve all logbook entries
   BASE::KeySet<LogEntry> entries( logbook()->entries() );
@@ -2173,7 +2167,7 @@ void SelectionFrame::_keywordSelectionChanged( QTreeWidgetItem* current, QTreeWi
   }
   
   // reinitialize logEntry list
-  _resetList();
+  _resetLogEntryList();
   
   // if EditFrame current entry is visible, select it;
   if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
@@ -2283,11 +2277,11 @@ void SelectionFrame::_viewHtml( void )
 
   } else if( dialog.visibleEntries() ) { 
     
-    entries = entry_model_.get();
+    entries = _logEntryModel().get();
     
   } else {
 
-    entries = entry_model_.get( logEntryList().selectionModel()->selectedRows() );
+    entries = _logEntryModel().get( logEntryList().selectionModel()->selectedRows() );
 
   }
 
@@ -2389,9 +2383,9 @@ void SelectionFrame::_storeSortMethod( int column, Qt::SortOrder order  )
 void SelectionFrame::_entryItemActivated( const QModelIndex& index )
 { 
   // stop edition timer
-  entry_model_.setEditionIndex( QModelIndex() );
+  _logEntryModel().setEditionIndex( QModelIndex() );
   edition_timer_.stop();
-  if( index.isValid() ) _displayEntry( entry_model_.get( index ) ); 
+  if( index.isValid() ) _displayEntry( _logEntryModel().get( index ) ); 
 }
 
 //____________________________________________________________
@@ -2405,8 +2399,8 @@ void SelectionFrame::_entryItemClicked( const QModelIndex& index )
   if( !logEntryList().selectionModel()->isSelected( index ) ) return;
 
   // compare to model edition index
-  if( index == entry_model_.editionIndex() ) edition_timer_.start( edition_delay_ );
-  else entry_model_.setEditionIndex( index );
+  if( index == _logEntryModel().editionIndex() ) edition_timer_.start( edition_delay_ );
+  else _logEntryModel().setEditionIndex( index );
   
 }
 
@@ -2416,7 +2410,7 @@ void SelectionFrame::_entryDataChanged( const QModelIndex& index )
   Debug::Throw( "SelectionFrame::_entryDataChanged.\n" );
   
   if( !( index.isValid() && index.column() == LogEntryModel::TITLE ) ) return;
-  LogEntry* entry( entry_model_.get( index ) );
+  LogEntry* entry( _logEntryModel().get( index ) );
     
   // update associated EditFrames
   BASE::KeySet<EditFrame> frames( entry );
@@ -2451,10 +2445,10 @@ void SelectionFrame::_startEntryEdition( void )
 
   Debug::Throw( "SelectionFrame::_startEntryEdition\n" );
   QModelIndex index( logEntryList().currentIndex() );
-  if( !( index.isValid() && index == entry_model_.editionIndex() ) ) return;
+  if( !( index.isValid() && index == _logEntryModel().editionIndex() ) ) return;
 
   // enable model edition
-  entry_model_.setEditionEnabled( true );
+  _logEntryModel().setEditionEnabled( true );
   
   // edit item
   logEntryList().edit( index );
@@ -2465,7 +2459,7 @@ void SelectionFrame::_startEntryEdition( void )
 void SelectionFrame::_storeEntrySelection( void )
 {   
   // clear
-  entry_model_.clearSelectedIndexes();
+  _logEntryModel().clearSelectedIndexes();
   
   // retrieve selected indexes in list
   QModelIndexList selected_indexes( logEntryList().selectionModel()->selectedRows() );
@@ -2473,7 +2467,7 @@ void SelectionFrame::_storeEntrySelection( void )
   { 
     // check column
     if( !iter->column() == 0 ) continue;
-    entry_model_.setIndexSelected( *iter, true ); 
+    _logEntryModel().setIndexSelected( *iter, true ); 
   }
     
 }
@@ -2483,7 +2477,7 @@ void SelectionFrame::_restoreEntrySelection( void )
 {
 
   // retrieve indexes
-  QModelIndexList selected_indexes( entry_model_.selectedIndexes() );
+  QModelIndexList selected_indexes( _logEntryModel().selectedIndexes() );
   if( selected_indexes.empty() ) logEntryList().selectionModel()->clear();
   else {
     

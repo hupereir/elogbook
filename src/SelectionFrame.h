@@ -287,9 +287,17 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! install actions
   virtual void _installActions( void );
-    
+  
+  //! keyword model
+  KeywordModel& _keywordModel( void )
+  { return keyword_model_; }
+  
+  //! log entry model
+  LogEntryModel& _logEntryModel( void )
+  { return entry_model_; }
+  
   //! clear list and reinitialize from logbook entries
-  virtual void _resetList( void );
+  virtual void _resetLogEntryList( void );
 
   //! clear list and reinitialize from logbook entries
   virtual void _resetKeywordList( void );
@@ -422,7 +430,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )
-  { _storeSortMethod( entry_model_.sortColumn(), entry_model_.sortOrder() ); }
+  { _storeSortMethod( _logEntryModel().sortColumn(), _logEntryModel().sortOrder() ); }
 
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int, Qt::SortOrder );
