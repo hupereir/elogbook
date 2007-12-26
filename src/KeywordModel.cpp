@@ -93,7 +93,8 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
   QMimeData *mime = new QMimeData();
   
   // set DRAG type
-  mime->setData( DRAG, 0 );
+  for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); iter++ )
+  { if( iter->isValid() ) mime->setData( DRAG, get( *iter ).get().c_str() ); }
   
   // retrieve associated entry
   ostringstream what;
@@ -114,15 +115,34 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
   
-  Debug::Throw( "KeywordModel::dropMimeData\n" );
+  Debug::Throw(0, "KeywordModel::dropMimeData\n" );
   
   // check action
   if( action == Qt::IgnoreAction) return true;
   
   // check format
-  if( !data->hasFormat( LogEntryModel::DRAG ) ) return false;
+  if( data->hasFormat( DRAG ) ) 
+  {
 
-  Debug::Throw( 0, "KeywordModel::dropMimeData - accepted.\n" );
-  return true;
+    Debug::Throw(0, "KeywordModel::dropMimeData - keyword drop.\n" );
+    
+    // retrieve/check string
+    QString keyword_string( data->data( DRAG ) );
+    if( keyword_string.isNull() || keyword_string.isEmpty() ) return false;
+    
+    // retrieve old keyword
+    Keyword old_keyword( qPrintable( keyword_string ) );
+    
+    // retrieve new location
+    QModelIndex new_index = parent.isValid() ? parent : QModelIndex();
+    Keyword new_keyword = get( new_index );
+    new_keyword.append( old_keyword.current() );
+    
+    Debug::Throw(0) << "KeywordModel::dropMimeData - old: " << old_keyword << " new: " << new_keyword << endl;
+    
+    return true;
+  }
+  
+  return false;
   
 }

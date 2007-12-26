@@ -42,6 +42,9 @@ class Keyword;
 //! Job model. Stores job information for display in lists
 class KeywordModel : public TreeModel<Keyword>
 {
+
+  //! Qt meta object declaration
+  Q_OBJECT
     
   public:
 
@@ -87,6 +90,20 @@ class KeywordModel : public TreeModel<Keyword>
   virtual bool dropMimeData(const QMimeData*, Qt::DropAction, int row, int column, const QModelIndex&);
 
   //@}
+
+  signals:
+
+  /*! \brief
+    emitted when a logEntryList drag is accepted.
+    Sends the new keyword
+  */
+  void entryKeywordChanged( Keyword new_keyword );
+
+  /*! \brief
+    emitted when a Keyword drag is accepted, or when keyword item
+    is emitted directly in the list. Sends old keyword, new keyword
+  */
+  void keywordChanged( Keyword old_keyword, Keyword new_keyword );
   
   private:
    

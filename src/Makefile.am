@@ -150,6 +150,7 @@ nodist_elogbook_SOURCES = \
   moc_ConfigurationDialog.cpp \
   moc_EditFrame.cpp \
   moc_FormatBar.cpp \
+  moc_KeywordModel.cpp \
   moc_LogbookModifiedDialog.cpp \
   moc_LogEntryModel.cpp \
   moc_MainFrame.cpp \

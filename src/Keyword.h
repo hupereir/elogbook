@@ -67,6 +67,9 @@ class Keyword: public Counter
   void set( const std::string& value )
   { value_ = _format( value ); }
   
+  //! append
+  void append( const std::string& value );
+  
   //! full keyword
   const std::string& get( void ) const
   { return value_; }
