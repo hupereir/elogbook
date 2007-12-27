@@ -418,7 +418,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   this is triggered by drag and drop from the logEntry list
   to the keyword list, and it is also called by the slot above 
   */
-  void _renameEntryKeyword( Keyword new_keyword );
+  void _renameEntryKeyword( Keyword new_keyword, bool update_selection = true );
   
   //! keyword selection changed
   void _keywordSelectionChanged( const QModelIndex& );

@@ -2075,9 +2075,16 @@ void SelectionFrame::_renameKeyword( Keyword keyword, Keyword new_keyword, bool 
   _resetKeywordList();  
   if( update_selection )
   {
+    
+    // make sure parent keyword index is expanded
+    QModelIndex parent_index( _keywordModel().index( new_keyword.parent() ) );
+    if( parent_index.isValid() ) keywordList().setExpanded( parent_index, true );
+    
+    // retrieve current index, and select
     QModelIndex index( _keywordModel().index( new_keyword ) );
     keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
     keywordList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
+    keywordList().scrollTo( index );
   }
   
   _resetLogEntryList();
@@ -2133,7 +2140,7 @@ void SelectionFrame::_renameEntryKeyword( void )
 }
 
 //_______________________________________________
-void SelectionFrame::_renameEntryKeyword( Keyword new_keyword )
+void SelectionFrame::_renameEntryKeyword( Keyword new_keyword, bool update_selection )
 {
       
   Debug::Throw() << "SelectionFrame::_renameEntryKeyword - new_keyword: " << new_keyword << endl;
@@ -2175,32 +2182,50 @@ void SelectionFrame::_renameEntryKeyword( Keyword new_keyword )
   
   // reset lists
   _resetKeywordList();
-  _resetLogEntryList();
 
   // update keyword selection
-  QModelIndex index( _keywordModel().index( new_keyword ) );
-  keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
-  keywordList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
+  if( update_selection )
+  {
+        
+    // make sure parent keyword index is expanded
+    QModelIndex parent_index( _keywordModel().index( new_keyword.parent() ) );
+    if( parent_index.isValid() ) keywordList().setExpanded( parent_index, true );
+
+    // retrieve current index, and select
+    QModelIndex index( _keywordModel().index( new_keyword ) );
+    keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
+    keywordList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );    
+    keywordList().scrollTo( index );
+  }
   
   // update entry selection
-  logEntryList().clearSelection();
-  QModelIndex last_index;
-  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  _resetLogEntryList();
+  
+  if( update_selection )
   {
-    QModelIndex index( _logEntryModel().index( *iter ) );
-    if( index.isValid() ) 
+    // clear current selection
+    logEntryList().clearSelection();
+    
+    // select all modified entries
+    QModelIndex last_index;
+    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
     {
-      last_index = index;
-      logEntryList().selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows );
+      QModelIndex index( _logEntryModel().index( *iter ) );
+      if( index.isValid() ) 
+      {
+        last_index = index;
+        logEntryList().selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows );
+      }
+    }
+    
+    // update current index
+    if( last_index.isValid() ) 
+    {
+      logEntryList().selectionModel()->setCurrentIndex( last_index,  QItemSelectionModel::Select|QItemSelectionModel::Rows );
+      logEntryList().scrollTo( last_index );
     }
   }
-
-  if( last_index.isValid() ) 
-  {
-    logEntryList().selectionModel()->setCurrentIndex( last_index,  QItemSelectionModel::Select|QItemSelectionModel::Rows );
-    logEntryList().scrollTo( last_index );
-  }
- 
+  
   // Save logbook if needed
   if( !logbook()->file().empty() ) save();
   
