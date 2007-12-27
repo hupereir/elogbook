@@ -76,9 +76,6 @@ class KeywordModel : public TreeModel<Keyword>
   // modify data
   virtual bool setData(const QModelIndex &index, const QVariant& value, int role = Qt::EditRole );
 
-  // insert row
-  bool insertRows( int row, int count, const QModelIndex & parent = QModelIndex() );
-
   //! header data
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
    

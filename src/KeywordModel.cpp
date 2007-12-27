@@ -47,7 +47,7 @@ KeywordModel::KeywordModel( QObject* parent ):
 //__________________________________________________________________
 Qt::ItemFlags KeywordModel::flags(const QModelIndex &index) const
 {
-  if (!index.isValid()) return 0;
+  if (!index.isValid()) return Qt::ItemIsDropEnabled;
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled| Qt::ItemIsDragEnabled | Qt::ItemIsEditable;
 }
 
@@ -80,13 +80,6 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
 
   return true;
   
-}
-
-//__________________________________________________________________
-bool KeywordModel::insertRows( int row, int count, const QModelIndex & parent )
-{ 
-  Debug::Throw( 0, "KeywordModel::insertRows" );
-  return true; 
 }
 
 //__________________________________________________________________
