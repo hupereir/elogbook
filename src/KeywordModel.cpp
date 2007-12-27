@@ -115,7 +115,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
   
-  Debug::Throw(0, "KeywordModel::dropMimeData\n" );
+  Debug::Throw( "KeywordModel::dropMimeData\n" );
   
   // check action
   if( action == Qt::IgnoreAction) return true;
@@ -124,8 +124,6 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
   if( data->hasFormat( DRAG ) ) 
   {
 
-    Debug::Throw(0, "KeywordModel::dropMimeData - keyword drop.\n" );
-    
     // retrieve/check string
     QString keyword_string( data->data( DRAG ) );
     if( keyword_string.isNull() || keyword_string.isEmpty() ) return false;
@@ -136,11 +134,22 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
     // retrieve new location
     QModelIndex new_index = parent.isValid() ? parent : QModelIndex();
     Keyword new_keyword = get( new_index );
+    
+    // check that keyword is different
+    if( new_keyword == old_keyword ) return false;
+    
+    // append new keyword to old
     new_keyword.append( old_keyword.current() );
     
-    Debug::Throw(0) << "KeywordModel::dropMimeData - old: " << old_keyword << " new: " << new_keyword << endl;
-    
+    // emit keyword modification signal
+    emit keywordChanged( old_keyword, new_keyword );
     return true;
+  }
+  
+  if( data->hasFormat( LogEntryModel::DRAG ) )
+  {
+    
+    
   }
   
   return false;

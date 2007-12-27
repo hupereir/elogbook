@@ -136,7 +136,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   keyword_list_->setAcceptDrops(true);
   keyword_list_->setDropIndicatorShown(true);
   keyword_list_->setAutoExpandDelay( 200 );
-  Debug::Throw(0) << "SelectionFrame::SelectionFrame - autoExpandDelay: " << keyword_list_->autoExpandDelay() << endl;
+  // Debug::Throw(0) << "SelectionFrame::SelectionFrame - autoExpandDelay: " << keyword_list_->autoExpandDelay() << endl;
   // update LogEntryList when keyword selection change
   connect( keyword_list_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );  
   connect( keyword_list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection& ) ), SLOT( _updateKeywordActions() ) );
@@ -148,7 +148,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   
   // rename all entries matching first keyword the second. This correspond to 
   // drag and drop inside the keyword list, or to direct edition of a keyword list item.
-  // connect( keyword_list_, SIGNAL( keywordChanged( std::string, std::string ) ), SLOT( _renameKeyword( std::string, const std::string& ) ) );
+  connect( &keyword_model_, SIGNAL( keywordChanged( Keyword, Keyword ) ), SLOT( _renameKeyword( Keyword, Keyword ) ) );
     
   // popup menu for keyword list
   keyword_list_->menu().addAction( &newKeywordAction() ); 

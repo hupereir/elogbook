@@ -81,16 +81,12 @@ class Keyword: public Counter
   Keyword parent( void ) const;
   
   //! true if this keyword is child of argument
-  bool isChild( const Keyword& keyword ) const
-  { return get().find( keyword.get() ) == 0; }
+  bool isChild( const Keyword& keyword ) const;
   
   //! true if this keyword is parent of argument
   bool isParent( const Keyword& keyword ) const
   { return keyword.isChild( *this ); }
  
-  //! parse keyword
-  static std::vector<std::string> parse( Keyword );
-  
   private:
 
   //! format keyword

@@ -76,20 +76,17 @@ Keyword Keyword::parent( void ) const
   
 }
 
-//_________________________________________________________________
-vector<string> Keyword::parse( Keyword keyword )
-{
-  vector<string>out;
-  if( keyword != NO_KEYWORD )
-  {
-    out = parse( keyword.parent() );
-    out.push_back( keyword.current() );
-  }
+//_______________________________________________
+bool Keyword::isChild( const Keyword& keyword ) const
+{ 
   
-  return out;
-
+  if( *this == keyword ) return true;
+  if( get().size() < keyword.get().size() ) return false;
+  size_t pos( get().find( keyword.get() ) );
+  return pos == 0 && get()[keyword.get().size()]=='/';
+  
 }
-
+ 
 //_________________________________________________________________
 string Keyword::_format( const string& value )
 {  
