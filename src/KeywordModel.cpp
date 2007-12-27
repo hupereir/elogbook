@@ -48,7 +48,7 @@ KeywordModel::KeywordModel( QObject* parent ):
 Qt::ItemFlags KeywordModel::flags(const QModelIndex &index) const
 {
   if (!index.isValid()) return 0;
-  return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled| Qt::ItemIsDragEnabled;
+  return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled| Qt::ItemIsDragEnabled | Qt::ItemIsEditable;
 }
 
 //__________________________________________________________________
@@ -61,6 +61,32 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
   if( index.column() != KEYWORD ) return QVariant();
   return QString( _find( index.internalId() ).get().current().c_str() ); 
   
+}
+
+//__________________________________________________________________
+bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int role )
+{
+  Debug::Throw( "KeywordModel::setData.\n" );
+  if( !(index.isValid() && index.column() == KEYWORD && role == Qt::EditRole ) ) return false;
+  Keyword keyword( get( index ) );
+  if( value.toString() != keyword.current().c_str() )
+  { 
+    // generate new keyword from value
+    Keyword new_keyword( keyword.parent().append( qPrintable( value.toString() ) ) );
+    Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << new_keyword << endl;
+    emit keywordChanged( keyword, new_keyword );
+    emit dataChanged( index, index ); 
+  }
+
+  return true;
+  
+}
+
+//__________________________________________________________________
+bool KeywordModel::insertRows( int row, int count, const QModelIndex & parent )
+{ 
+  Debug::Throw( 0, "KeywordModel::insertRows" );
+  return true; 
 }
 
 //__________________________________________________________________
@@ -120,7 +146,7 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
   // check action
   if( action == Qt::IgnoreAction) return true;
   
-  // check format
+  // Drag from Keyword model
   if( data->hasFormat( DRAG ) ) 
   {
 
@@ -132,8 +158,8 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
     Keyword old_keyword( qPrintable( keyword_string ) );
     
     // retrieve new location
-    QModelIndex new_index = parent.isValid() ? parent : QModelIndex();
-    Keyword new_keyword = get( new_index );
+    QModelIndex index = parent.isValid() ? parent : QModelIndex();
+    Keyword new_keyword = get( index );
     
     // check that keyword is different
     if( new_keyword == old_keyword ) return false;
@@ -146,9 +172,20 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
     return true;
   }
   
+  // drag from LogEntryModel
   if( data->hasFormat( LogEntryModel::DRAG ) )
   {
+    Debug::Throw( "KeywordModel::dropMimeData - LogEntryModel::DRAG.\n" );
     
+    // no drag if parent is invalid
+    if( !parent.isValid() ) return false;
+    
+    // retrieve new location
+    Keyword new_keyword = get( parent );
+    
+    // emit logEntry keyword changed signal
+    emit entryKeywordChanged( new_keyword );
+    return true;
     
   }
   

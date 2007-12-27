@@ -40,10 +40,10 @@ using namespace std;
 const Keyword Keyword::NO_KEYWORD( "/" );
 
 //_________________________________________________________________
-void Keyword::append( const string& value )
+Keyword& Keyword::append( const string& value )
 {
   // check string to append
-  if( value.empty() || ( value.size() == 1 && value[0] == '/' ) ) return;
+  if( value.empty() || ( value.size() == 1 && value[0] == '/' ) ) return *this;
   
   // make sure leading "/" is added
   if( value[0] == '/' || *this == NO_KEYWORD ) value_ += value;
@@ -52,7 +52,7 @@ void Keyword::append( const string& value )
   // reformat
   value_ = _format( value_ );
   
-  return;
+  return *this;
   
 }
 

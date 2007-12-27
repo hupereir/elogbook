@@ -45,6 +45,7 @@
 #include "HtmlUtil.h"
 #include "IconEngine.h"
 #include "Icons.h"
+#include "KeywordDelegate.h"
 #include "Logbook.h"
 #include "LogEntryDelegate.h"
 #include "LogbookInformationDialog.h"
@@ -135,8 +136,13 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   keyword_list_->setDragEnabled(true);
   keyword_list_->setAcceptDrops(true);
   keyword_list_->setDropIndicatorShown(true);
-  keyword_list_->setAutoExpandDelay( 200 );
-  // Debug::Throw(0) << "SelectionFrame::SelectionFrame - autoExpandDelay: " << keyword_list_->autoExpandDelay() << endl;
+  keyword_list_->setItemDelegate( new KeywordDelegate( this ) );
+ 
+  // right now don't set autoexpandDelay
+  // this implies that you first have to expand the keywords where drop
+  // should occur prior to processing with the drop
+  //keyword_list_->setAutoExpandDelay( 200 );
+
   // update LogEntryList when keyword selection change
   connect( keyword_list_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );  
   connect( keyword_list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection& ) ), SLOT( _updateKeywordActions() ) );
@@ -144,7 +150,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
     
   // rename selected entries when KeywordChanged is emitted with a single argument.
   // this correspond to drag and drop action from the logEntryList in the KeywordList
-  // connect( keyword_list_, SIGNAL( entryKeywordChanged( std::string ) ), SLOT( _renameEntryKeyword( std::string ) ) );
+  connect( &keyword_model_, SIGNAL( entryKeywordChanged( Keyword ) ), SLOT( _renameEntryKeyword( Keyword ) ) );
   
   // rename all entries matching first keyword the second. This correspond to 
   // drag and drop inside the keyword list, or to direct edition of a keyword list item.

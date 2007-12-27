@@ -91,6 +91,7 @@ noinst_HEADERS = \
   HtmlUtil.h \
   Icons.h \
   Keyword.h \
+  KeywordDelegate.h \
   KeywordModel.h \
   Logbook.h \
   LogbookInformationDialog.h \
@@ -123,6 +124,7 @@ elogbook_SOURCES = \
   EditFrame.cpp \
   EditKeywordDialog.cpp \
   FormatBar.cpp \
+  KeywordDelegate.cpp \
   KeywordModel.cpp \
   LogbookInformationDialog.cpp \
   LogbookModifiedDialog.cpp \

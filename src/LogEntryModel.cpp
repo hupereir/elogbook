@@ -137,7 +137,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 //__________________________________________________________________
 bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int role )
 {
-  Debug::Throw(0, "LogEntryModel::setData.\n" );
+  Debug::Throw( "LogEntryModel::setData.\n" );
   if( !(index.isValid() && index.column() == TITLE && role == Qt::EditRole ) ) return false;
   LogEntry* entry( get( index ) );
   if( value != entry->title().c_str() )
@@ -146,7 +146,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
     emit dataChanged( index, index );
   }
 
-  Debug::Throw(0, "LogEntryModel::setData - done. \n" );
+  Debug::Throw( "LogEntryModel::setData - done. \n" );
   return true;
   
 }
