@@ -114,11 +114,11 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   layout->addWidget( list_view, 1 );
   
   enum Columns{ FILE, ENTRIES, MODIFIED }; 
+  list_view->setSortingEnabled( false );
   list_view->setColumnCount( 3 );
   list_view->setColumnName( FILE, "file" );
   list_view->setColumnName( ENTRIES, "entries" );
   list_view->setColumnName( MODIFIED, "last modified" );
-  
   list_view->setColumnType( ENTRIES, TreeWidget::NUMBER );
   
   for( list< Logbook* >::iterator it=all.begin(); it!= all.end(); it++ )
