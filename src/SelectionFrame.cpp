@@ -1871,7 +1871,7 @@ void SelectionFrame::_changeEntryColor( QColor color )
     LogEntry* entry( *iter );
 
     entry->setColor( color.isValid() ? qPrintable( color.name() ):ColorMenu::NONE );
-    entry->modified();
+    entry->setModification( entry->modification()+1 );
         
     // update EditFrame color
     BASE::KeySet<EditFrame> frames( entry );
