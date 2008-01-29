@@ -66,19 +66,12 @@ SearchPanel::SearchPanel( QWidget* parent ):
   
   layout->addWidget( new QLabel( " in ", this ) );
   
-  QGroupBox* box = new QGroupBox( this );
-  box->setLayout( new QHBoxLayout() );
-  box->layout()->setSpacing(2);
-  box->layout()->setMargin(2);
-  layout->addWidget( box );
-  
-  box->layout()->addWidget( checkboxes_[TITLE] = new QCheckBox( "&Title", box ) );
-  box->layout()->addWidget( checkboxes_[KEYWORD] = new QCheckBox( "&Keyword", box ) );
-  box->layout()->addWidget( checkboxes_[TEXT]  = new QCheckBox( "&Text", box ) );
-  box->layout()->addWidget( checkboxes_[ATTACHMENT] = new QCheckBox( "&Attachment", box ) );
-  box->layout()->addWidget( checkboxes_[COLOR] = new QCheckBox( "&Color", box ) );
+  layout->addWidget( checkboxes_[TITLE] = new QCheckBox( "&Title", this ) );
+  layout->addWidget( checkboxes_[KEYWORD] = new QCheckBox( "&Keyword", this ) );
+  layout->addWidget( checkboxes_[TEXT]  = new QCheckBox( "&Text", this ) );
+  layout->addWidget( checkboxes_[ATTACHMENT] = new QCheckBox( "&Attachment", this ) );
+  layout->addWidget( checkboxes_[COLOR] = new QCheckBox( "&Color", this ) );
   checkboxes_[TEXT]->setChecked( true );
-  box->setToolTip( "Select which portion of the Logbook is searched." );
 
   // show_all button
   layout->addWidget( button = new QPushButton( "&Show All", this ) );
