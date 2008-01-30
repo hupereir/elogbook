@@ -995,15 +995,18 @@ void EditFrame::ColorWidget::paintEvent( QPaintEvent* e )
   gradient.setColorAt(1, color_.light(135));
  
   QPainter painter( this );
+  painter.setRenderHints(QPainter::Antialiasing );
   painter.setPen( NoPen );
+  //painter.setPen( color_ );
   painter.setBrush( gradient );
   
   int border = 2;
   int v_offset = -1;
   int w = min( width(), height() - 2*border ); 
-  int h_offset = (width() - w)/2;
+  int h_offset = (width() - w - 1)/2;
   QRect r( 
     QPoint( h_offset, border + v_offset ),
     QPoint( h_offset+w, height() ) + QPoint( 0, -border + v_offset ) );
-  painter.drawRect( r );
+  //painter.drawEllipse( r );
+  painter.drawRoundRect( r );
 }
