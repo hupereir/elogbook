@@ -476,6 +476,15 @@ void EditFrame::save( bool update_selection )
   setModified( false );
   updateWindowTitle();
 
+  // update associated EditFrames
+  BASE::KeySet<EditFrame> editors( entry );
+  for( BASE::KeySet<EditFrame>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+  {
+    assert( *iter == this || (*iter)->isReadOnly() );
+    if( *iter == this ) continue;
+    (*iter)->displayEntry( entry );
+  }
+  
   // update selection frame
   frame->updateEntry( entry, update_selection );
   frame->setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
