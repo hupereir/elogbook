@@ -137,11 +137,6 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   keyword_list_->setAcceptDrops(true);
   keyword_list_->setDropIndicatorShown(true);
   keyword_list_->setItemDelegate( new KeywordDelegate( this ) );
- 
-  // right now don't set autoexpandDelay
-  // this implies that you first have to expand the keywords where drop
-  // should occur prior to processing with the drop
-  //keyword_list_->setAutoExpandDelay( 200 );
 
   // update LogEntryList when keyword selection change
   connect( keyword_list_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );  
