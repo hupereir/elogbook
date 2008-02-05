@@ -1067,7 +1067,7 @@ void SelectionFrame::_resetKeywordList( void )
     }
   }
   
-  _keywordModel().set( KeywordModel::List( new_keywords.begin(), new_keywords.end() ) );
+  _keywordModel().set( new_keywords );
 
 }
 
@@ -1898,7 +1898,7 @@ void SelectionFrame::_newKeyword( void )
   EditKeywordDialog dialog( this );
   dialog.setWindowTitle( "New keyword" );
 
-  KeywordModel::List keywords( _keywordModel().values() );
+  KeywordModel::List keywords( _keywordModel().children() );
   for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
   dialog.add( *iter );
   dialog.setKeyword( currentKeyword() );
@@ -2014,7 +2014,7 @@ void SelectionFrame::_renameKeyword( void )
   EditKeywordDialog dialog( this );
   dialog.setWindowTitle( "Edit keyword" );
 
-  const KeywordModel::List& keywords( _keywordModel().values() );
+  const KeywordModel::List& keywords( _keywordModel().children() );
   for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
   { dialog.add( *iter ); }
   dialog.setKeyword( keyword );
@@ -2116,7 +2116,7 @@ void SelectionFrame::_renameEntryKeyword( void )
   EditKeywordDialog dialog( this );
   dialog.setWindowTitle( "Edit keyword" );
 
-  const KeywordModel::List& keywords( _keywordModel().values() );
+  const KeywordModel::List& keywords( _keywordModel().children() );
   for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
   dialog.add( *iter );
   dialog.setKeyword( keyword );
