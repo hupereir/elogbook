@@ -1944,7 +1944,7 @@ void SelectionFrame::_deleteKeyword( void )
   for( KeywordModel::List::iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
   {
     for( BASE::KeySet<LogEntry>::iterator entry_iter = entries.begin(); entry_iter != entries.end(); entry_iter++ )
-    { if( (*entry_iter)->keyword().isChild( *iter ) ) associated_entries.insert( *entry_iter );  }
+    { if( (*entry_iter)->keyword().inherits( *iter ) ) associated_entries.insert( *entry_iter );  }
   }
   
   //! create dialog
@@ -2048,7 +2048,7 @@ void SelectionFrame::_renameKeyword( Keyword keyword, Keyword new_keyword, bool 
       if keyword to modify is a leading subset of current entry keyword, 
       update entry with new keyword
     */
-    if( entry->keyword().isChild( keyword ) ) 
+    if( entry->keyword().inherits( keyword ) ) 
     {
       
       entry->setKeyword( Keyword( Str( entry->keyword().get() ).replace( keyword.get(), new_keyword.get() ) ) );

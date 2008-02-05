@@ -80,12 +80,11 @@ class Keyword: public Counter
   //! parent keyword
   Keyword parent( void ) const;
   
-  //! true if this keyword is child of argument
+  /*! true if this keyword is direct child of this one */
   bool isChild( const Keyword& keyword ) const;
   
-  //! true if this keyword is parent of argument
-  bool isParent( const Keyword& keyword ) const
-  { return keyword.isChild( *this ); }
+  //! true if this keyword in descendance of argument
+  bool inherits( const Keyword& keyword ) const;
  
   private:
 

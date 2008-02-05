@@ -78,6 +78,10 @@ Keyword Keyword::parent( void ) const
 
 //_______________________________________________
 bool Keyword::isChild( const Keyword& keyword ) const
+{ return parent() == keyword; }
+
+//_______________________________________________
+bool Keyword::inherits( const Keyword& keyword ) const
 { 
   
   if( *this == keyword ) return true;
@@ -86,6 +90,7 @@ bool Keyword::isChild( const Keyword& keyword ) const
   return pos == 0 && get()[keyword.get().size()]=='/';
   
 }
+ 
  
 //_________________________________________________________________
 string Keyword::_format( const string& value )

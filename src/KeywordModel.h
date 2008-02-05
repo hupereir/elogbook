@@ -37,8 +37,6 @@
 #include "Keyword.h"
 #include "TreeModel.h"
 
-class Keyword;
-
 //! Job model. Stores job information for display in lists
 class KeywordModel : public TreeModel<Keyword>
 {
