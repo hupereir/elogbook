@@ -81,9 +81,6 @@ class KeywordModel : public TreeModel<Keyword>
   virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
   { return n_columns; }
  
-  //! sort
-  virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
-
   //! mime type
   virtual QStringList mimeTypes( void ) const;
    
@@ -108,6 +105,11 @@ class KeywordModel : public TreeModel<Keyword>
     is emitted directly in the list. Sends old keyword, new keyword
   */
   void keywordChanged( Keyword old_keyword, Keyword new_keyword );
+
+  protected: 
+  
+  //! sort
+  virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
   
   private:
    

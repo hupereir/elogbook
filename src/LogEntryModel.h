@@ -96,14 +96,6 @@ class LogEntryModel : public ListModel<LogEntry*>
 
   //@}
   
-  //!@name interface
-  //@{
-
-  //! sort
-  virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
-
-  //@}
- 
   //!@name edition
   //@{
   
@@ -128,6 +120,11 @@ class LogEntryModel : public ListModel<LogEntry*>
   
   //@}
   
+  protected: 
+  
+  //! sort
+  virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
+
   private slots:
     
   //! update configuration

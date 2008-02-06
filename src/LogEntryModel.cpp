@@ -206,18 +206,10 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
 
 
 //____________________________________________________________
-void LogEntryModel::sort( int column, Qt::SortOrder order )
+void LogEntryModel::_sort( int column, Qt::SortOrder order )
 { 
   Debug::Throw() << "LogEntryModel::sort - column: " << column << " order: " << order << endl;
-
-  // base class implementation
-  ItemModel::sort( column, order );
-
-  // prepare modifications
-  emit layoutAboutToBeChanged();
   std::sort( _get().begin(), _get().end(), SortFTor( (ColumnType) column, order ) );
-  emit layoutChanged();
-      
 }
 
 //________________________________________________________
