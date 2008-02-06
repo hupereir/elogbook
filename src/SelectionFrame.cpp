@@ -132,7 +132,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->addWidget( keyword_list_ = new TreeView( left ), 1 );
   keyword_list_->setModel( &_keywordModel() );
   keyword_list_->setRootIsDecorated( true );
-  keyword_list_->setSortingEnabled( false );
+  keyword_list_->setSortingEnabled( true );
   keyword_list_->setDragEnabled(true);
   keyword_list_->setAcceptDrops(true);
   keyword_list_->setDropIndicatorShown(true);

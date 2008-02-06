@@ -189,3 +189,30 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
   return false;
   
 }
+
+//____________________________________________________________
+void KeywordModel::sort( int column, Qt::SortOrder order )
+{ 
+  Debug::Throw() << "KeywordModel::sort - column: " << column << " order: " << order << endl;
+
+  // base class sorting
+  TreeModel<Keyword>::sort( column, order );
+  
+  // check column
+  if( column != KEYWORD ) return;
+  
+  emit layoutAboutToBeChanged();
+  _root().sort( SortFTor(order) );
+  emit layoutChanged();
+      
+}
+
+
+//________________________________________________________
+bool KeywordModel::SortFTor::operator () ( Keyword first, Keyword second ) const
+{
+  
+  if( order_ == Qt::AscendingOrder ) swap( first, second );
+  return first < second;
+  
+}
