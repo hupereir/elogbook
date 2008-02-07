@@ -140,7 +140,10 @@ class LogEntry:public Counter, public BASE::Key
   
   //! LogEntry keyword
   void setKeyword( const Keyword& keyword )
-  { keyword_ = keyword; }
+  { 
+    keyword_ = keyword; 
+    if( keyword_ == Keyword() ) keyword_ = Keyword( "No keyword" );
+  }
   
   //! LogEntry keyword
   const Keyword& keyword( void ) const 
