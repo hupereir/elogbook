@@ -42,7 +42,6 @@
 #include "Counter.h"
 #include "Debug.h"
 
-
 //! application splash screen
 class SplashScreen: public QWidget, public Counter
 {
@@ -65,24 +64,21 @@ class SplashScreen: public QWidget, public Counter
   //! set application title
   virtual void setTitle( const std::string& title )
   {
-    assert( !realized_
- );
+    assert( !realized_ );
     title_ = title;
   }
   
   //! set splash pixmap
   virtual void setSplash( const QPixmap& pixmap )
   {
-    assert( !realized_
- );
+    assert( !realized_ );
     splash_ = pixmap; 
   }
   
   //! set splash screen displayed icon
   virtual void setIcon( const QPixmap& icon )
   {
-    assert( !realized_
- );
+    assert( !realized_ );
     icon_ = icon;
     QWidget::setWindowIcon( QIcon(icon) );
   }
@@ -90,24 +86,21 @@ class SplashScreen: public QWidget, public Counter
   //! set icon size
   virtual void setIconSize( const unsigned int& size )
   { 
-    assert( !realized_
- );
+    assert( !realized_ );
     icon_size_ = size;
   }    
     
   //! change default title font
   virtual void SetTitleFontSize( const unsigned int value )
   {
-    assert( !realized_
- );
+    assert( !realized_ );
     title_font_size_ = value;
   }
   
   //! set minimum size (to be used if splash is not specified
   virtual void setMinimumSize( const QSize& size )
   { 
-    assert( !realized_
- );
+    assert( !realized_ );
     minimum_size_ = size;
   }
       
@@ -123,7 +116,7 @@ class SplashScreen: public QWidget, public Counter
   protected:
       
   //! mouse press event
-  virtual void mousePressEvent ( QMouseEvent* )
+  virtual void mousePressEvent( QMouseEvent* )
   { close(); }
   
   private:

@@ -55,6 +55,9 @@ SplashScreen::SplashScreen( QWidget* parent, const std::string& title ):
 {
   Debug::Throw( "SplashScreen::SplashScreen.\n" );
   setAttribute( Qt::WA_DeleteOnClose );
+  
+  // add mask
+  
 
 }
 
