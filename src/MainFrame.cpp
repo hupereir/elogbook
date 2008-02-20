@@ -42,6 +42,8 @@
 #include "ErrorHandler.h"
 #include "File.h"
 #include "FlatStyle.h"
+#include "IconEngine.h"
+#include "Icons.h"
 #include "Logbook.h"
 #include "MainFrame.h"
 #include "Menu.h"
