@@ -64,6 +64,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
   Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
   
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( this, SIGNAL( layoutChanged() ), SLOT( _disableEdition() ) ); 
   _updateConfiguration();
   
 }
@@ -138,8 +139,26 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int role )
 {
   Debug::Throw( "LogEntryModel::setData.\n" );
-  if( !(index.isValid() && index.column() == TITLE && role == Qt::EditRole ) ) return false;
+  
+  if( !edition_enabled_ )
+  {
+    Debug::Throw(0, "LogEntryModel::setData - edition is disabled. setData canceled.\n" );
+    return false; 
+  }
+  
+  if( !(index.isValid() && index.column() == TITLE && role == Qt::EditRole ) ) 
+  {
+    Debug::Throw(0, "LogEntryModel::setData - invalid index/role. setData canceled.\n" );
+    return false;
+  }
+  
   LogEntry* entry( get( index ) );
+  if( !entry ) 
+  {
+    Debug::Throw(0, "LogEntryModel::setData - entry is null. setData canceled.\n" );
+    return false;
+  }
+  
   if( value != entry->title().c_str() )
   {
     entry->setTitle( qPrintable( value.toString() ) );

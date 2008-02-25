@@ -119,6 +119,7 @@ class LogEntryModel : public ListModel<LogEntry*>
   }
   
   //@}
+    
   
   protected: 
   
@@ -129,6 +130,10 @@ class LogEntryModel : public ListModel<LogEntry*>
     
   //! update configuration
   void _updateConfiguration( void );
+
+  //! used to disable edition when model is changed while editing
+  void _disableEdition( void )
+  { setEditionEnabled( false ); }
   
   private:
   
