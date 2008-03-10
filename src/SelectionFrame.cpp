@@ -119,13 +119,13 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
   
-  CustomToolBar* toolbar = new CustomToolBar( "keywords toolbar", left );
-  v_layout->addWidget( toolbar );
+  keyword_toolbar_ = new CustomToolBar( "keywords toolbar", left, "KEYWORD_TOOLBAR" );
+  v_layout->addWidget( keyword_toolbar_ );
   
   // keyword actions
-  toolbar->addAction( &newKeywordAction() );
-  toolbar->addAction( &editKeywordAction() );
-  toolbar->addAction( &deleteKeywordAction() );
+  keyword_toolbar_->addAction( &newKeywordAction() );
+  keyword_toolbar_->addAction( &editKeywordAction() );
+  keyword_toolbar_->addAction( &deleteKeywordAction() );
   Debug::Throw() << "SelectionFrame::SelectionFrame - keyword toolbar created." << endl;
   
   // create keyword list
@@ -176,20 +176,20 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->setSpacing( 5 );
   right->setLayout( v_layout );
     
-  toolbar = new CustomToolBar( "entries toolbar", right );
-  v_layout->addWidget( toolbar );
+  entry_toolbar_ = new CustomToolBar( "entries toolbar", right, "ENTRY_TOOLBAR" );
+  v_layout->addWidget( entry_toolbar_ );
 
   // entry actions
-  toolbar->addAction( &newEntryAction() );
-  toolbar->addAction( &editEntryAction() );
+  entry_toolbar_->addAction( &newEntryAction() );
+  entry_toolbar_->addAction( &editEntryAction() );
  
   CustomToolButton *button;
-  toolbar->addWidget( button = new CustomToolButton( toolbar,&entryColorAction(), 0 ) );
+  entry_toolbar_->addWidget( button = new CustomToolButton( entry_toolbar_,&entryColorAction(), 0 ) );
   button->setPopupMode( QToolButton::InstantPopup );
 
-  toolbar->addAction( &deleteEntryAction() );
-  toolbar->addAction( &saveAction() );
-  toolbar->addAction( &viewHtmlAction() );
+  entry_toolbar_->addAction( &deleteEntryAction() );
+  entry_toolbar_->addAction( &saveAction() );
+  entry_toolbar_->addAction( &viewHtmlAction() );
    
   // create logEntry list
   v_layout->addWidget( entry_list_ = new TreeView( right ), 1 );
@@ -226,13 +226,14 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   // main menu
   menu_ = new Menu( this , this );
   setMenuBar( menu_ );
-  
+    
   connect( menu_, SIGNAL( save() ), SLOT( save() ) );
   connect( menu_, SIGNAL( closeWindow() ), &static_cast<MainFrame*>(qApp)->closeAction(), SLOT( trigger() ) );
   connect( menu_, SIGNAL( viewHtml() ), this, SLOT( _viewHtml() ) );
  
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
 

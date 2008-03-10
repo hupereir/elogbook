@@ -50,7 +50,7 @@
 #include "TreeView.h"
 
 // class ColorMenu;
-class CustomLineEdit;
+class CustomToolBar;
 class EditFrame;
 class Logbook;
 class Menu;
@@ -158,6 +158,24 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! current keyword
   Keyword currentKeyword( void ) const;
    
+  //!@name toolbars
+  //@{
+  
+  //! keyword toolbar
+  CustomToolBar& keywordToolBar( void ) const
+  { 
+    assert( keyword_toolbar_ );
+    return *keyword_toolbar_;
+  }
+  
+  //! entry toolbar
+  CustomToolBar& entryToolBar( void ) const
+  { 
+    assert( entry_toolbar_ );
+    return *entry_toolbar_;
+  }  
+  //@}
+    
   //!@name actions 
   //@{
   
@@ -527,8 +545,14 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! ask entries for confirmation before saving
   bool confirm_entries_;
 
+  //@name toolbars
+  //@{
+  CustomToolBar *keyword_toolbar_;
+  CustomToolBar *entry_toolbar_;
+  //@}
+  
   //!@name actions
-  ///@{
+  //@{
   
   //! uniconify action
   QAction* uniconify_action_;

@@ -95,7 +95,6 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   layout->addLayout( title_layout_ );
   
   // title label and line
-  title_layout_->addWidget( new QLabel( " Title: ", main ), 0, Qt::AlignVCenter );
   title_layout_->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
     
   // splitter for EditFrame and attachment list
@@ -136,7 +135,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // lock toolbar is visible only when window is not editable
   lock_ = new CustomToolBar( "Lock", this );
   CustomToolButton *button;
-  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK, path_list ), "Unlock current editor", &statusbar_->label() );
+  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK, path_list ), "Unlock current editor" );
   connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
   button->setText("Unlock");  
   lock_->addWidget( button );
@@ -145,35 +144,35 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
 
   // main toolbar
   CustomToolBar* toolbar;
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" );
     
   // generic tool button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEW, path_list ), "Create a new entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEW, path_list ), "Create a new entry" );
   connect( button, SIGNAL( clicked() ), SLOT( newEntry() ) );
   button->setText("New");
   toolbar->addWidget( button );
   read_only_widgets_.push_back( button );
 
   // save_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SAVE, path_list ), "Save the current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SAVE, path_list ), "Save the current entry" );
   connect( button, SIGNAL( clicked() ), SLOT( save() ) );
   button->setText("Save");
   toolbar->addWidget( button );
   read_only_widgets_.push_back( button );
 
   // delete_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::DELETE, path_list ), "Delete the current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::DELETE, path_list ), "Delete the current entry" );
   connect( button, SIGNAL( clicked() ), SLOT( _deleteEntry() ) );
   button->setText("Delete");
   toolbar->addWidget( button );
   read_only_widgets_.push_back( button );
 
   // add_attachment button
-  toolbar->addWidget( new CustomToolButton( toolbar, &attachment_list->newAttachmentAction(), &statusbar_->label() ) );
+  toolbar->addAction( &attachment_list->newAttachmentAction() );
 
   #if WITH_ASPELL
   // spellcheck button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SPELLCHECK, path_list ), "Check spelling of current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SPELLCHECK, path_list ), "Check spelling of current entry" );
   connect( button, SIGNAL( clicked() ), SLOT( _spellCheck() ) );
   read_only_widgets_.push_back( button );
   toolbar->addWidget( button );
@@ -181,11 +180,11 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   #endif
 
   // format bar
-  addToolBar( LeftToolBarArea, format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" ) );
+  format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
   format_toolbar_->setTarget( text_ );
 
   // edition toolbars
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
   toolbar->addAction( undo_action_ );
   toolbar->addAction( redo_action_ );
 
@@ -199,28 +198,28 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
     
   // extra toolbar
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" );
 
   // view_html button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::HTML, path_list ), "Convert the current entry to HTML", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::HTML, path_list ), "Convert the current entry to HTML" );
   connect( button, SIGNAL( clicked() ), SLOT( _viewHtml() ) );
   button->setText("Html");
   toolbar->addWidget( button );
 
   // clone button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::COPY, path_list ), "Open a read-only editor for the current entry", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::COPY, path_list ), "Open a read-only editor for the current entry" );
   connect( button, SIGNAL( clicked() ), SLOT( _newWindow() ) );
   button->setText("Clone");
   toolbar->addWidget( button );
 
   // entry_info button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::INFO, path_list ), "Display the current entry informations", &statusbar_->label() );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::INFO, path_list ), "Display the current entry informations" );
   connect( button, SIGNAL( clicked() ), SLOT( _entryInfo() ) );
   button->setText("Info");
   toolbar->addWidget( button );
 
   // extra toolbar
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" );
   toolbar->addAction( &static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
   toolbar->addAction( &previousEntryAction() );
   toolbar->addAction( &nextEntryAction() );

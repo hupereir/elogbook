@@ -34,6 +34,7 @@
 
 #include "AttachmentFrame.h"
 #include "CustomPixmap.h"
+#include "CustomToolBar.h"
 #include "DebugMenu.h"
 #include "EditFrame.h"
 #include "File.h"
@@ -47,6 +48,7 @@
 #include "OpenPreviousMenu.h"
 #include "QtUtil.h"
 #include "SelectionFrame.h"
+#include "SearchPanel.h"
 #include "Str.h"
 #include "Util.h"
 #include "XmlOptions.h"
@@ -106,7 +108,14 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   // preferences menu
   menu = addMenu( "&Preferences" );
   menu->addAction( &mainframe.configurationAction() );
-
+  if( parent == selection_frame )
+  {
+    menu->addSeparator();
+    menu->addAction( &selection_frame->keywordToolBar().visibilityAction() );
+    menu->addAction( &selection_frame->entryToolBar().visibilityAction() );
+    menu->addAction( &selection_frame->searchPanel().visibilityAction() );
+  }
+  
   // windows menu
   editor_menu_ = addMenu( "&Windows" );
   connect( editor_menu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );

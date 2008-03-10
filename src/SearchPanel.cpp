@@ -29,6 +29,7 @@
   \date $Date$
 */
 
+#include <QApplication>
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
@@ -37,6 +38,7 @@
 #include "CustomLineEdit.h"
 #include "Debug.h"
 #include "SearchPanel.h"
+#include "XmlOptions.h"
 
 using namespace std;
 
@@ -78,12 +80,40 @@ SearchPanel::SearchPanel( QWidget* parent ):
   connect( button, SIGNAL( clicked() ), this, SIGNAL( showAllEntries() ) ); 
   button->setToolTip( "Show all logbook entries" );
   
+  // visibility action
+  visibility_action_ = new QAction( "Show &search panel", this );
+  visibility_action_->setCheckable( true );
+  visibility_action_->setChecked( true );
+  visibility_action_->setShortcut( Qt::CTRL+Qt::Key_F );
+  connect( visibility_action_, SIGNAL( toggled( bool ) ), SLOT( setVisible( bool ) ) );
+  
+  // configuration
+  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
+  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
+  _updateConfiguration();
+  
+}
+
+//___________________________________________________________
+void SearchPanel::_updateConfiguration( void )
+{
+
+  Debug::Throw( "SearchPanel::_updateConfiguration.\n" );
+  visibilityAction().setChecked( XmlOptions::get().get<bool>( "SHOW_SEARCHPANEL" ) );
+}
+  
+//___________________________________________________________
+void SearchPanel::_saveConfiguration( void )
+{
+
+  Debug::Throw( "SearchPanel::_saveConfiguration.\n" );
+  XmlOptions::get().set<bool>( "SHOW_SEARCHPANEL", visibilityAction().isChecked() );
 }
 
 //___________________________________________________________
 void SearchPanel::_selectionRequest( void )
-{
-  
+{  
   Debug::Throw( "SearchPanel::_selectionRequest.\n" );
   
   // build mode

@@ -104,6 +104,9 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "EXTRA_TOOLBAR_LOCATION", "left" , "toolbar location" ));
   XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
   
+  XmlOptions::get().add( Option( "KEYWORD_TOOLBAR", "1" , "keywords toolbar visibility" ));
+  XmlOptions::get().add( Option( "ENTRY_TOOLBAR", "1" , "entries toolbar visibility" ));
+  XmlOptions::get().add( Option( "SHOW_SEARCHPANEL", "1" , "search panel visibility" ));
   // add run-time non recordable options
         
   // user name and host

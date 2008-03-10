@@ -62,6 +62,10 @@ class SearchPanel: public QWidget, public Counter
     COLOR = 1<<4
   };
   
+  //! visibility action
+  QAction& visibilityAction( void ) const
+  { return *visibility_action_; }
+  
   signals:
   
   //! emitted when the Find button is pressed
@@ -71,7 +75,13 @@ class SearchPanel: public QWidget, public Counter
   void showAllEntries( void );
         
   private slots:
+ 
+  //! configuration
+  void _updateConfiguration( void );
 
+  //! save configuration
+  void _saveConfiguration( void );
+  
   //! send SelectEntries request
   void _selectionRequest( void );
   
@@ -98,5 +108,8 @@ class SearchPanel: public QWidget, public Counter
   //! selection text widget
   CustomLineEdit *selection_; 
 
+  //! action
+  QAction* visibility_action_;
+  
 };
 #endif

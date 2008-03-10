@@ -174,6 +174,24 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   spinbox->setMaximum( 2048 );
   addOptionWidget( spinbox );
 
+  box = new QGroupBox( "Main window layout", page );
+  box->setLayout( new QVBoxLayout() );
+  box->layout()->setMargin(5);
+  box->layout()->setSpacing(5);
+  page->layout()->addWidget( box );
+  
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show keywords toolbar", box, "KEYWORD_TOOLBAR" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "show keywords toolbar in main window" );
+  
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show entries toolbar", box, "ENTRY_TOOLBAR" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "show entries toolbar in main window" );
+  
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show search panel", box, "SHOW_SEARCHPANEL" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "show search panel in main window" );
+
   // listview configuration
   page = &addPage( "List configuration" );
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
