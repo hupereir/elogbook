@@ -81,7 +81,7 @@ SearchPanel::SearchPanel( QWidget* parent ):
   button->setToolTip( "Show all logbook entries" );
   
   // visibility action
-  visibility_action_ = new QAction( "Show &search panel", this );
+  visibility_action_ = new QAction( "&Search panel", this );
   visibility_action_->setCheckable( true );
   visibility_action_->setChecked( true );
   visibility_action_->setShortcut( Qt::CTRL+Qt::Key_F );
