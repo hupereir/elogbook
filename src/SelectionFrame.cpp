@@ -898,6 +898,7 @@ void SelectionFrame::_installActions( void )
 
   edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Rename keyword", this );
   edit_keyword_action_->setToolTip( "Rename selected keyword" );
+  edit_keyword_action_->setShortcut( CTRL+Key_K );
   connect( edit_keyword_action_, SIGNAL( triggered() ), SLOT( _renameKeyword() ) );
   
   /*
@@ -913,8 +914,9 @@ void SelectionFrame::_installActions( void )
 
   new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New entry", this );
   new_entry_action_->setToolTip( "Create a new entry" );
+  new_entry_action_->setShortcut( CTRL+Key_N );
   connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
-  
+
   edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit selected entries", this );
   edit_entry_action_->setToolTip( "Edit selected entries" );
   connect( edit_entry_action_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
@@ -945,7 +947,6 @@ void SelectionFrame::_installActions( void )
 
   new_logbook_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New", this );
   new_logbook_action_->setToolTip( "Create a new logbook" );
-  new_logbook_action_->setShortcut( CTRL+Key_N );
   connect( new_logbook_action_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
   open_action_ = new QAction( IconEngine::get( ICONS::OPEN, path_list ), "&Open", this );
