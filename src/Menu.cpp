@@ -105,6 +105,20 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   MainFrame& mainframe( *static_cast<MainFrame*>(qApp) );
   menu->addAction( &mainframe.closeAction() );
 
+  // edition menu
+  if( parent == selection_frame )
+  {
+    menu = addMenu( "&Edit" );
+    menu->addAction( &selection_frame->newKeywordAction() );
+    menu->addAction( &selection_frame->editKeywordAction() );
+    menu->addAction( &selection_frame->deleteKeywordAction() );
+    menu->addSeparator();
+    menu->addAction( &selection_frame->newEntryAction() );
+    menu->addAction( &selection_frame->editEntryAction() );
+    menu->addAction( &selection_frame->deleteEntryAction() );
+    menu->addAction( &selection_frame->saveAction() );
+  }
+  
   // preferences menu
   menu = addMenu( "&Preferences" );
   menu->addAction( &mainframe.configurationAction() );
