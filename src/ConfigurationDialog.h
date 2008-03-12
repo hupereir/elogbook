@@ -44,10 +44,10 @@ class ConfigurationDialog: public BaseConfigurationDialog
   //! creator
   ConfigurationDialog( QWidget *parent );
 
-  private slots:
+  protected slots:
 
   //! restore default options
-  void _restoreDefaults( void );  
+  virtual void _restoreDefaults( void );  
   
 };
 
