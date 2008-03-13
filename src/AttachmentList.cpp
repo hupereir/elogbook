@@ -72,6 +72,7 @@ AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
 { 
   Debug::Throw( "AttachmentList::AttachmentList.\n" ); 
 
+  setAllColumnsShowFocus( true );
   setColumnCount( n_columns );
   for( unsigned int i=0; i<n_columns; i++ ) 
   { setColumnName( i, column_titles_[i] ); }

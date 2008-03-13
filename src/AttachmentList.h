@@ -106,8 +106,7 @@ class AttachmentList: public TreeWidget, public BASE::Key
     Attachment* attachment( void ) const
     {
       BASE::KeySet<Attachment> attachments( this );
-      assert( attachments.size()==1
- );
+      assert( attachments.size()==1 );
       return *attachments.begin();
     }
     
