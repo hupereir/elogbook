@@ -91,17 +91,17 @@ int main (int argc, char *argv[])
     if( debug_level ) XmlOptions::get().dump();
     
     // try open input logbook   
-    cout << "copy_logbook - reading from: " << input << endl;
+    cout << "copy_logbook::main - reading from: " << input << endl;
     Logbook logbook;
     logbook.setFile( File(input).expand() );
     logbook.read();
     
     // debug
-    cout << "copy_logbook - number of files: " << logbook.children().size() << endl;
-    cout << "copy_logbook - number of entries: " << logbook.entries().size() << endl;
+    cout << "copy_logbook::main - number of files: " << logbook.children().size() << endl;
+    cout << "copy_logbook::main - number of entries: " << logbook.entries().size() << endl;
   
     // perform copy
-    cout << "copy_logbook - writing to: " << output << endl;
+    cout << "copy_logbook::main - writing to: " << output << endl;
     logbook.setFile( File( output ).expand() );
     logbook.setModifiedRecursive( true );
 
@@ -112,13 +112,13 @@ int main (int argc, char *argv[])
       // check file is not a directory
       if( fullname.isDirectory() ) 
       {
-        cout << "copy_logbook - selected file is a directory. <Save Logbook> canceled." << endl;
+        cout << "copy_logbook::main - selected file is a directory. <Save Logbook> canceled." << endl;
         return 0;
       }
 
       // check file is writable
       if( !fullname.isWritable() ) {
-        cout << "copy_logbook - selected file is not writable. <Save Logbook> canceled." << endl;
+        cout << "copy_logbook::main - selected file is not writable. <Save Logbook> canceled." << endl;
         return 0;
       }
       
@@ -126,7 +126,7 @@ int main (int argc, char *argv[])
       
       File path( fullname.path() );
       if( !path.isDirectory() ) {
-        cout << "copy_logbook - selected path is not valid. <Save Logbook> canceled." << endl;
+        cout << "copy_logbook::main - selected path is not valid. <Save Logbook> canceled." << endl;
         return 0;
       }
       
@@ -134,9 +134,9 @@ int main (int argc, char *argv[])
     
     // copy logbook to ouput
     if( !logbook.write() )
-    { cout << "copy_logbook - error writing to file " << output << endl; }
+    { cout << "copy_logbook::main - error writing to file " << output << endl; }
     
-  }catch ( exception& e ) { cout << e.what() << endl; }
+  } catch ( exception& e ) { cout << e.what() << endl; }
   
   return 0;
 }
@@ -144,6 +144,6 @@ int main (int argc, char *argv[])
 //_____________________________________________
 void interrupt( int sig )
 { 
-  Debug::Throw() << "interrupt - Recieved signal " << sig << endl;
+  Debug::Throw() << "copy_logbook::interrupt - Recieved signal " << sig << endl;
   exit(0);
 }
