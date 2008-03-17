@@ -30,7 +30,6 @@
 */
 
 #include <QApplication>
-#include <QFrame>
 #include <QLayout>
 #include <QLabel>
 #include <QPixmap>
@@ -82,9 +81,6 @@ SplashScreen::SplashScreen( QWidget* parent ):
   // size
   setMinimumSize( QSize( 350, 150 ) );
   
-  // mask
-  // setMask( QtUtil::round( rect() ) );
-
 }
 
 //_______________________________________________________________________
@@ -106,19 +102,15 @@ void SplashScreen::realizeWidget( void )
   QtUtil::setOpacity( this, opacity_ );
   QVBoxLayout *layout = new QVBoxLayout(); 
   setLayout( layout );
-  
-  QFrame *frame = new QFrame( this );
-  frame->setFixedSize( minimum_size_ );
-  layout->addWidget( frame );
-    
+      
   QHBoxLayout* h_layout = new QHBoxLayout();
   h_layout->setSpacing(10);
   h_layout->setMargin(0);
-  frame->setLayout( h_layout );
-    
+  layout->addLayout( h_layout );
+  
   if( !icon_.isNull() )
   { 
-    QLabel *icon_label = new QLabel( frame );
+    QLabel *icon_label = new QLabel( this );
     icon_label->setPixmap( CustomPixmap( icon_ ).scale( icon_size_, icon_size_ ) );
     QtUtil::fixSize( icon_label, QtUtil::WIDTH );
     h_layout->addWidget( icon_label );
@@ -129,7 +121,7 @@ void SplashScreen::realizeWidget( void )
   layout->setMargin(10);
   h_layout->addLayout( layout );
 
-  QLabel* title = new QLabel( frame );
+  QLabel* title = new QLabel( this );
   title->setAlignment( Qt::AlignCenter );
   title->setText( title_.c_str() );
   layout->addWidget( title );
@@ -142,7 +134,7 @@ void SplashScreen::realizeWidget( void )
     title->setFont( font );
   }
   
-  message_ = new QLabel( frame );
+  message_ = new QLabel( this );
   message_->setAlignment( AlignCenter );
   QtUtil::fixSize( message_, QtUtil::HEIGHT );
   layout->addWidget( message_ );
