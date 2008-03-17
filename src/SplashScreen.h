@@ -121,12 +121,8 @@ class SplashScreen: public QWidget, public Counter
   { close(); }
   
   //! mouse move event [overloaded]
-  virtual void resizeEvent( QResizeEvent *e)
-  {
-    setMask( QtUtil::round( rect() ) );
-    return QWidget::resizeEvent( e );
-  }
-
+  virtual void resizeEvent( QResizeEvent *e);
+  
   private:
   
   //! title
@@ -152,6 +148,9 @@ class SplashScreen: public QWidget, public Counter
   
   //! opacity
   double opacity_;
+  
+  //! true if transparent splash screen is to be shown
+  bool transparent_;
   
   //! true when RealizeWidget is called
   bool realized_;

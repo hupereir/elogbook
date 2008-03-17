@@ -34,6 +34,7 @@
 #include <QLayout>
 #include <QLabel>
 #include <QPixmap>
+#include <QResizeEvent>
 
 #include "SplashScreen.h"
 #include "CustomPixmap.h"
@@ -52,6 +53,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   icon_size_(64),
   minimum_size_( 300, 200 ),
   opacity_(1.0),
+  transparent_( XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" ) ), 
   realized_( false )
 {
   
@@ -59,7 +61,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   setAttribute( Qt::WA_DeleteOnClose );
   
   // colors and transparency
-  if( XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" ) )
+  if( transparent_ )
   {
     QPalette palette( this->palette() );
     palette.setColor( QPalette::Window, Qt::black );
@@ -81,7 +83,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   setMinimumSize( QSize( 350, 150 ) );
   
   // mask
-  setMask( QtUtil::round( rect() ) );
+  // setMask( QtUtil::round( rect() ) );
 
 }
 
@@ -106,7 +108,6 @@ void SplashScreen::realizeWidget( void )
   setLayout( layout );
   
   QFrame *frame = new QFrame( this );
-  if( opacity_ == 1 ) frame->setFrameStyle( QFrame::Panel | QFrame::Raised );
   frame->setFixedSize( minimum_size_ );
   layout->addWidget( frame );
     
@@ -156,4 +157,11 @@ void SplashScreen::displayMessage( const QString& text )
   assert( realized_ );
   message_->setText( text );
   qApp->processEvents();
+}
+
+//_____________________________________________________________________
+void SplashScreen::resizeEvent( QResizeEvent* event )
+{
+  QWidget::resizeEvent( event );
+  setMask( QtUtil::round( QRect( QPoint(0,0), event->size() ) ) );
 }
