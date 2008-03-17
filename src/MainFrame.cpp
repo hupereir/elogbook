@@ -174,14 +174,7 @@ void MainFrame::realizeWidget( void )
   _updateConfiguration();
 
   // splashscreen
-  QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
-  
-  ostringstream what;
-  what << "<B>eLogbook</B><BR> version " << VERSION;
-  ::SplashScreen *splash_screen = new ::SplashScreen( selection_frame_, what.str() );
-  splash_screen->setIcon( pixmap );
-  splash_screen->setOpacity( 0.7 );
-  splash_screen->setMinimumSize( QSize( 350, 150 ) );
+  ::SplashScreen *splash_screen = new ::SplashScreen( selection_frame_ );
   splash_screen->realizeWidget();
 
   // connections
@@ -217,10 +210,7 @@ void MainFrame::showSplashScreen( void )
 
   ostringstream what;
   what << "<B>eLogbook</B><BR> version " << VERSION;
-  ::SplashScreen *splash_screen = new ::SplashScreen( 0, what.str() );
-  splash_screen->setMinimumSize( QSize( 350, 150 ) );
-  splash_screen->setIcon( pixmap );
-  splash_screen->setOpacity( 0.7 );
+  ::SplashScreen *splash_screen = new ::SplashScreen();
   splash_screen->realizeWidget();
   QtUtil::centerOnDesktop( splash_screen );
   splash_screen->show();

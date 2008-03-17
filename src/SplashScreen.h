@@ -41,6 +41,7 @@
 
 #include "Counter.h"
 #include "Debug.h"
+#include "QtUtil.h"
 
 //! application splash screen
 class SplashScreen: public QWidget, public Counter
@@ -52,7 +53,7 @@ class SplashScreen: public QWidget, public Counter
   public:
       
   //! constructorc
-  SplashScreen( QWidget* parent, const std::string& title );
+  SplashScreen( QWidget* parent = 0 );
     
   //! destructor
   virtual ~SplashScreen( void )
@@ -119,6 +120,13 @@ class SplashScreen: public QWidget, public Counter
   virtual void mousePressEvent( QMouseEvent* )
   { close(); }
   
+  //! mouse move event [overloaded]
+  virtual void resizeEvent( QResizeEvent *e)
+  {
+    setMask( QtUtil::round( rect() ) );
+    return QWidget::resizeEvent( e );
+  }
+
   private:
   
   //! title

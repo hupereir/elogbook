@@ -33,31 +33,52 @@
 #include <QFrame>
 #include <QLayout>
 #include <QLabel>
+#include <QPixmap>
 
 #include "SplashScreen.h"
 #include "CustomPixmap.h"
 #include "Debug.h"
 #include "QtUtil.h"
+#include "XmlOptions.h"
 
 using namespace std;
 using namespace Qt;
 
 //_______________________________________________________________________
-SplashScreen::SplashScreen( QWidget* parent, const std::string& title ):
+SplashScreen::SplashScreen( QWidget* parent ):
   QWidget( parent, Qt::Window|Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint ),
   Counter( "SplashScreen" ),
-  title_( title ),
   title_font_size_( 20 ),
   icon_size_(64),
   minimum_size_( 300, 200 ),
   opacity_(1.0),
   realized_( false )
 {
+  
   Debug::Throw( "SplashScreen::SplashScreen.\n" );
   setAttribute( Qt::WA_DeleteOnClose );
   
-  // add mask
+  // colors and transparency
+  QPalette palette( this->palette() );
+  palette.setColor( QPalette::Window, Qt::black );
+  palette.setColor( QPalette::WindowText, Qt::white );
+  setPalette( palette );
+  setOpacity( 0.7 );
+
+  // title
+  ostringstream what;
+  what << "<B>eLogbook</B><BR> version " << VERSION;
+  setTitle( what.str() );
+
+  // pixmap
+  QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
+  setIcon( pixmap );
   
+  // size
+  setMinimumSize( QSize( 350, 150 ) );
+  
+  // mask
+  setMask( QtUtil::round( rect() ) );
 
 }
 
