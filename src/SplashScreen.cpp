@@ -59,12 +59,15 @@ SplashScreen::SplashScreen( QWidget* parent ):
   setAttribute( Qt::WA_DeleteOnClose );
   
   // colors and transparency
-  QPalette palette( this->palette() );
-  palette.setColor( QPalette::Window, Qt::black );
-  palette.setColor( QPalette::WindowText, Qt::white );
-  setPalette( palette );
-  setOpacity( 0.7 );
-
+  if( XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" ) )
+  {
+    QPalette palette( this->palette() );
+    palette.setColor( QPalette::Window, Qt::black );
+    palette.setColor( QPalette::WindowText, Qt::white );
+    setPalette( palette );
+    setOpacity( 0.7 );
+  }
+  
   // title
   ostringstream what;
   what << "<B>eLogbook</B><BR> version " << VERSION;
