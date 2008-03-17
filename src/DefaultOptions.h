@@ -83,6 +83,8 @@ void installDefaultOptions( void )
 
   XmlOptions::get().add( Option( "SIDE_EDITOR_TOOLBAR", "1" , "if true, editor toolbar is on the left instead of top"  ));
   XmlOptions::get().add( Option( "SPLASH_SCREEN", "1" , "1 to show splash screen"  ));
+  XmlOptions::get().add( Option( "TRANSPARENT_SPLASH_SCREEN", "1" , "1 to show transparent splash screen" ));
+  
   XmlOptions::get().add( Option( "SHOW_KEYWORD", "0" , "show keyword in editor"  ));
   XmlOptions::get().add( Option( "SHOW_EDITFRAME_MENU", "1", "show menu in EditFrame windows" ));
 
@@ -107,6 +109,8 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "KEYWORD_TOOLBAR", "1" , "keywords toolbar visibility" ));
   XmlOptions::get().add( Option( "ENTRY_TOOLBAR", "1" , "entries toolbar visibility" ));
   XmlOptions::get().add( Option( "SHOW_SEARCHPANEL", "1" , "search panel visibility" ));
+  XmlOptions::get().add( Option( "SHOW_SEARCHPANEL", "1" , "search panel visibility" ));
+
   // add run-time non recordable options
         
   // user name and host

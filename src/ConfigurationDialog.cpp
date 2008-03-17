@@ -344,6 +344,10 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   box->layout()->addWidget( checkbox = new OptionCheckBox( "Splash screen", box, "SPLASH_SCREEN" ) );
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Show splash screen at startup" );
+
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Transparent splash screen", box, "TRANSPARENT_SPLASH_SCREEN" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "Show transparent splash screen at startup" );
   
   // connect buttons
   connect( this, SIGNAL( apply() ), listview_config, SLOT( update() ) );
