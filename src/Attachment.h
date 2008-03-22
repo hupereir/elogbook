@@ -184,7 +184,7 @@ class Attachment: public Counter, public BASE::Key
     SOURCE_IS_DIR, 
     DEST_EXIST };
       
-  /*! \fn ErrorCode copy( Attachment::Command command, const std::string& destdir ) 
+  /*! \fn ErrorCode copy( const Attachment::Command& command, const std::string& destdir ) 
     \brief ErrorCode convert original file into attached file. Returns true in case of success
     \param command tells how the original file is to be converted into attached file. Is one of the following:
       Attachment::COPY use command cp, if the attached file is not present
