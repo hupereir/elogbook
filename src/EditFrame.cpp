@@ -522,6 +522,10 @@ void EditFrame::newEntry( void )
 
   // display new entry
   displayEntry( entry );
+  
+  // set focus to title bar 
+  title_->setFocus();
+  title_->selectAll();
 
 }
 
