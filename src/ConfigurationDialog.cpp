@@ -323,9 +323,11 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( spell_config );
   #endif
 
+  // edition
+  textEditConfiguration();
+
   // misc
   page = &addPage( "Misc" );
-  textEditConfiguration( page );
   
   box = new QGroupBox( "Misc", page );
   box->setLayout( new QVBoxLayout() );
