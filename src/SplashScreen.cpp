@@ -80,6 +80,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   
   // size
   setMinimumSize( QSize( 350, 150 ) );
+  setMouseTracking( true );
   
 }
 

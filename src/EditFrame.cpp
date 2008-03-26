@@ -130,7 +130,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // toolbars
   // toolbar buttons pixmap path list
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
+  assert( !path_list.empty() );
 
   // lock toolbar is visible only when window is not editable
   lock_ = new CustomToolBar( "Lock", this );
