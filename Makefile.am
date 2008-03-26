@@ -8,6 +8,7 @@ endif
 
 SUBDIRS = \
  pixmaps \
+ base-pixmaps \
  base \
  base-qt \
  base-help \

@@ -82,6 +82,7 @@ int main (int argc, char *argv[])
     
     // initialize main frame and run loop
     Q_INIT_RESOURCE( pixmaps );
+    Q_INIT_RESOURCE( basePixmaps );
     MainFrame main_frame(argc, argv);
     main_frame.initApplicationManager();
     main_frame.exec();

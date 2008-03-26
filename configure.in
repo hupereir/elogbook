@@ -160,6 +160,7 @@ AC_OUTPUT( Makefile \
   elogbook.spec \
   pixmaps/Makefile \
   base/Makefile \
+  base-pixmaps/Makefile \
   base-qt/Makefile \
   base-help/Makefile \
   base-server/Makefile \

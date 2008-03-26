@@ -45,40 +45,18 @@
 namespace ICONS
 {
   
-  //! new attachment icon
   static const std::string ATTACH="attach.png";
-    
-  //! keyword/entry edition icon
   static const std::string EDIT="edit.png";
-  
-  //! raise main window icon
   static const std::string HOME="homeB.png";
-  
-  //! convert logbook/entry to html icon
   static const std::string HTML="html.png";
-  
-  //! entry information icon
   static const std::string INFO="info.png";
-  
-  //! editframe lock icon
   static const std::string LOCK="encrypted.png";
-
-  //! previous entry icon
   static const std::string PREV="1leftarrow.png";
-  
-  //! next entry icon
   static const std::string NEXT="1rightarrow.png";
-
-  //! new entry/keyword icon
   static const std::string NEW="filenew.png";
-
-  //! open logbook
   static const std::string OPEN = "fileopen.png";
-    
-  //! logbook/entry save icon
+  static const std::string SAVE = "filesave.png";
   static const std::string SAVE_AS="filesaveas.png";
-
-  //! entry spellCheck icon
   static const std::string SPELLCHECK="fonts.png";
     
 };
