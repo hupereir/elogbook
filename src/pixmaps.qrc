@@ -7,7 +7,6 @@
     <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
     <file alias="pixmaps/encrypted.png">../pixmaps/encrypted.png</file>
     <file alias="pixmaps/filenew.png">../pixmaps/filenew.png</file>
-    <file alias="pixmaps/fileopen.png">../pixmaps/fileopen.png</file>
     <file alias="pixmaps/filesaveas.png">../pixmaps/filesaveas.png</file>
     <file alias="pixmaps/filesave.png">../pixmaps/filesave.png</file>
     <file alias="pixmaps/fonts.png">../pixmaps/fonts.png</file>

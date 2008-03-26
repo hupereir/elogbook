@@ -7,7 +7,6 @@ attach.png \
 edit.png \
 encrypted.png \
 filenew.png \
-fileopen.png \
 filesaveas.png \
 filesave.png \
 fonts.png \
