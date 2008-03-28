@@ -5,6 +5,7 @@
     <file alias="pixmaps/1leftarrow.png">../pixmaps/1leftarrow.png</file>
     <file alias="pixmaps/1rightarrow.png">../pixmaps/1rightarrow.png</file>
     <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
+    <file alias="pixmaps/edit.png">../pixmaps/edit.png</file>
     <file alias="pixmaps/encrypted.png">../pixmaps/encrypted.png</file>
     <file alias="pixmaps/filenew.png">../pixmaps/filenew.png</file>
     <file alias="pixmaps/filesaveas.png">../pixmaps/filesaveas.png</file>
