@@ -974,7 +974,7 @@ void SelectionFrame::_installActions( void )
   save_as_action_->setToolTip( "Save logbook with a different name" );
   connect( save_as_action_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
 
-  save_backup_action_ = new QAction( "Save &Backup", this );
+  save_backup_action_ = new QAction( IconEngine::get( ICONS::SAVE_AS, path_list ), "Save &Backup", this );
   save_backup_action_->setToolTip( "Save logbook backup" );
   connect( save_backup_action_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
 
