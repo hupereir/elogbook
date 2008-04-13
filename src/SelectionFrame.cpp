@@ -30,6 +30,7 @@
 */
 
 #include <QHeaderView>
+#include <QMenu>
 
 #include "AttachmentFrame.h"
 #include "BaseIcons.h"
@@ -878,6 +879,17 @@ void SelectionFrame::closeEvent( QCloseEvent *event )
   Debug::Throw( "SelectionFrame::closeEvent.\n" );
   event->accept();    
   static_cast<MainFrame*>(qApp)->closeAction().trigger();
+}
+
+//________________________________________________
+void SelectionFrame::contextMenuEvent( QContextMenuEvent* event )
+{
+  Debug::Throw( "SelectionFrame::contextMenuEvent.\n" );
+  QMenu menu( this );
+  menu.addAction( &keywordToolBar().visibilityAction() );
+  menu.addAction( &entryToolBar().visibilityAction() );
+  menu.addAction( &searchPanel().visibilityAction() );
+  menu.exec( event->globalPos() );
 }
 
 //_______________________________________________

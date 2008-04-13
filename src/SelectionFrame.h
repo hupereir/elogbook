@@ -31,6 +31,7 @@
   \date $Date$
 */
 
+#include <QContextMenuEvent>
 #include <QSplitter>
 #include <QTimer>
 
@@ -302,6 +303,9 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! close event
   virtual void closeEvent( QCloseEvent *event );
+  
+  //! context menu event [overloaded]
+  virtual void contextMenuEvent( QContextMenuEvent* );
   
   //! install actions
   virtual void _installActions( void );
