@@ -101,7 +101,10 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   menu->addSeparator();
   
   if( parent != selection_frame )
-  { menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W ); }
+  { 
+    action = menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W ); 
+    action->setIcon( IconEngine::get( ICONS::CLOSE, path_list ) );
+  }
  
   MainFrame& mainframe( *static_cast<MainFrame*>(qApp) );
   menu->addAction( &mainframe.closeAction() );

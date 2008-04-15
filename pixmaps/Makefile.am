@@ -6,6 +6,7 @@ EXTRA_DIST = \
 attach.png \
 edit.png \
 encrypted.png \
+fileclose.png \
 filenew.png \
 filesaveas.png \
 filesave.png \

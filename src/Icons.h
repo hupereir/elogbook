@@ -45,18 +45,19 @@
 namespace ICONS
 {
   
-  static const std::string ATTACH="attach.png";
-  static const std::string EDIT="edit.png";
-  static const std::string HOME="homeB.png";
-  static const std::string HTML="html.png";
-  static const std::string INFO="info.png";
-  static const std::string LOCK="encrypted.png";
-  static const std::string PREV="1leftarrow.png";
-  static const std::string NEXT="1rightarrow.png";
-  static const std::string NEW="filenew.png";
+  static const std::string ATTACH = "attach.png";
+  static const std::string CLOSE = "fileclose.png"; 
+  static const std::string EDIT = "edit.png";
+  static const std::string HOME = "homeB.png";
+  static const std::string HTML = "html.png";
+  static const std::string INFO = "info.png";
+  static const std::string LOCK = "encrypted.png";
+  static const std::string PREV = "1leftarrow.png";
+  static const std::string NEXT = "1rightarrow.png";
+  static const std::string NEW = "filenew.png";
   static const std::string SAVE = "filesave.png";
-  static const std::string SAVE_AS="filesaveas.png";
-  static const std::string SPELLCHECK="fonts.png";
+  static const std::string SAVE_AS = "filesaveas.png";
+  static const std::string SPELLCHECK = "fonts.png";
     
 };
 
