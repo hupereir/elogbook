@@ -493,6 +493,14 @@ void SelectionFrame::updateEntry( LogEntry* entry, const bool& update_selection 
 
   // umdate logEntry model
   _logEntryModel().add( entry );
+  
+  // select
+  if( update_selection )
+  { 
+    QModelIndex index( _logEntryModel().index( entry ) );
+    logEntryList().selectionModel()->select( index, QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    logEntryList().selectionModel()->setCurrentIndex(index, QItemSelectionModel::Current|QItemSelectionModel::Rows );
+  }
 
 }
 
