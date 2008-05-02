@@ -37,70 +37,70 @@
 namespace XML {
 
   //! logbook tag
-  static const std::string LOGBOOK( "Logbook" );
+  static const QString LOGBOOK( "Logbook" );
 
   //! attachment tag
-  static const std::string ATTACHMENT( "Attachment" );
+  static const QString ATTACHMENT( "Attachment" );
       
   //! entry tag
-  static const std::string ENTRY( "Entry" );  
+  static const QString ENTRY( "Entry" );  
   
   //! logbook child tag
-  static const std::string CHILD( "Child" );
+  static const QString CHILD( "Child" );
 
   //! attachment type
-  static const std::string TYPE( "type" );
+  static const QString TYPE( "type" );
   
   //! attachment destination file
-  static const std::string FILE( "file" );
+  static const QString FILE( "file" );
   
   //! attachment source file
-  static const std::string SOURCE_FILE( "orig" );
+  static const QString SOURCE_FILE( "orig" );
 
   //! parent file
-  static const std::string PARENT_FILE( "parent_file" );
+  static const QString PARENT_FILE( "parent_file" );
 
   //! directory
-  static const std::string DIRECTORY( "directory" );
+  static const QString DIRECTORY( "directory" );
   
   //! comments
-  static const std::string COMMENTS( "comments" );
+  static const QString COMMENTS( "comments" );
   
   //! creation time
-  static const std::string CREATION( "Creation" );
+  static const QString CREATION( "Creation" );
   
   //! modification time
-  static const std::string MODIFICATION( "Modification" );
+  static const QString MODIFICATION( "Modification" );
   
   //! backup time
-  static const std::string BACKUP( "Backup" );
+  static const QString BACKUP( "Backup" );
   
   //! title 
-  static const std::string TITLE( "title" );
+  static const QString TITLE( "title" );
   
   //! logbook author
-  static const std::string AUTHOR( "author" );
+  static const QString AUTHOR( "author" );
   
   //! logbook sort method
-  static const std::string SORT_METHOD( "sort_method" );
+  static const QString SORT_METHOD( "sort_method" );
   
   //! logbook sort order
-  static const std::string SORT_ORDER( "sort_order" );
+  static const QString SORT_ORDER( "sort_order" );
   
   //! logbook number of entries
-  static const std::string ENTRIES( "entries" );
+  static const QString ENTRIES( "entries" );
   
   //! logbook number of children
-  static const std::string CHILDREN( "children" );
+  static const QString CHILDREN( "children" );
   
   //! entry text
-  static const std::string TEXT( "Text" );
+  static const QString TEXT( "Text" );
   
   //! entry key
-  static const std::string KEYWORD( "key" );
+  static const QString KEYWORD( "key" );
     
   //! entry color
-  static const std::string COLOR( "color" );
+  static const QString COLOR( "color" );
  
 };
 

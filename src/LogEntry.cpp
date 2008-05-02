@@ -73,13 +73,13 @@ LogEntry::LogEntry( const QDomElement& element ):
   {
     QDomAttr attribute( attributes.item( i ).toAttr() );
     if( attribute.isNull() ) continue;
-    Str name( qPrintable( attribute.name() ) );
-    Str value( qPrintable( attribute.value() ) );
-    if( name == XML::TITLE ) setTitle( XmlUtil::xmlToText( value ) );
-    else if( name == XML::KEYWORD ) setKeyword( Keyword( XmlUtil::xmlToText( value ) ) );
-    else if( name == XML::AUTHOR ) setAuthor( XmlUtil::xmlToText( value ) );
-    else if( name == XML::COLOR ) setColor( XmlUtil::xmlToText( value ) );
-    else cerr << "LogEntry::LogEntry - unrecognized entry attribute: \"" << name << "\"\n";
+    QString name( attribute.name() );
+    QString value( attribute.value() );
+    if( name == XML::TITLE ) setTitle( qPrintable( XmlUtil::xmlToText( value ) ) );
+    else if( name == XML::KEYWORD ) setKeyword( Keyword( qPrintable( XmlUtil::xmlToText( value ) ) ) );
+    else if( name == XML::AUTHOR ) setAuthor( qPrintable( XmlUtil::xmlToText( value ) ) );
+    else if( name == XML::COLOR ) setColor( qPrintable( XmlUtil::xmlToText( value ) ) );
+    else cerr << "LogEntry::LogEntry - unrecognized entry attribute: \"" << qPrintable( name ) << "\"\n";
   }
 
   // parse children elements
@@ -88,8 +88,8 @@ LogEntry::LogEntry( const QDomElement& element ):
     QDomElement child_element = child_node.toElement();
     if( child_element.isNull() ) continue;
 
-    Str tag_name( qPrintable( child_element.tagName() ) );
-    if( tag_name == XML::TEXT ) setText( XmlUtil::xmlToText( qPrintable( child_element.text() ) ) );
+    QString tag_name( child_element.tagName() );
+    if( tag_name == XML::TEXT ) setText( qPrintable( XmlUtil::xmlToText( child_element.text() ) ) );
     else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( child_element ) );
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( child_element ) );
     else if( tag_name == FORMAT::XmlTextFormatBlock::XML_TAG ) addFormat( FORMAT::XmlTextFormatBlock( child_element ) );
@@ -115,14 +115,14 @@ LogEntry::~LogEntry( void )
 QDomElement LogEntry::domElement( QDomDocument& parent ) const
 {
   Debug::Throw( "LogEntry::domElement.\n" );
-  QDomElement out( parent.createElement( XML::ENTRY.c_str() ) );
-  if( !title().empty() ) out.setAttribute( XML::TITLE.c_str(), XmlUtil::textToXml(title()).c_str() );
-  if( !keyword().get().empty() ) out.setAttribute( XML::KEYWORD.c_str(), XmlUtil::textToXml(keyword().get()).c_str() );
-  if( !author().empty() ) out.setAttribute( XML::AUTHOR.c_str(), XmlUtil::textToXml(author()).c_str() );
+  QDomElement out( parent.createElement( XML::ENTRY ) );
+  if( !title().empty() ) out.setAttribute( XML::TITLE, XmlUtil::textToXml(title().c_str()) );
+  if( !keyword().get().empty() ) out.setAttribute( XML::KEYWORD, XmlUtil::textToXml(keyword().get().c_str()) );
+  if( !author().empty() ) out.setAttribute( XML::AUTHOR, XmlUtil::textToXml(author().c_str()) );
 
   // color
   bool color_valid( !( color().empty() || Str(color()).isEqual( ColorMenu::NONE, false ) ) && QColor( color().c_str() ).isValid() );
-  if( color_valid ) out.setAttribute( XML::COLOR.c_str(), XmlUtil::textToXml(color()).c_str() );
+  if( color_valid ) out.setAttribute( XML::COLOR, XmlUtil::textToXml(color().c_str()) );
 
   // dump timeStamp
   if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, parent ) );
@@ -135,8 +135,8 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
     if( text[text.size()-1] != '\n' ) text+='\n';
 
     out.
-      appendChild( parent.createElement( XML::TEXT.c_str() ) ).
-      appendChild( parent.createTextNode( XmlUtil::textToXml( text ).c_str() ) );
+      appendChild( parent.createElement( XML::TEXT ) ).
+      appendChild( parent.createTextNode( XmlUtil::textToXml( text.c_str() ) ) );
   }
 
   // dump text format
