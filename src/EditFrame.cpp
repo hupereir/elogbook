@@ -140,11 +140,12 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   button->setText("Unlock");  
   lock_->addWidget( button );
   lock_->setMovable( false );
-  addToolBar( LeftToolBarArea, lock_ );
+  //addToolBar( LeftToolBarArea, lock_ );
 
   // main toolbar
   CustomToolBar* toolbar;
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" ) );
+  //addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" );
     
   // generic tool button
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEW, path_list ), "Create a new entry" );
@@ -184,7 +185,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   format_toolbar_->setTarget( text_ );
 
   // edition toolbars
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" ) );
+  // addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
   toolbar->addAction( undo_action_ );
   toolbar->addAction( redo_action_ );
 
@@ -198,7 +200,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
     
   // extra toolbar
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" ) );
+  // addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" );
 
   // view_html button
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::HTML, path_list ), "Convert the current entry to HTML" );
@@ -219,7 +222,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbar->addWidget( button );
 
   // extra toolbar
-  addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" ) );
+  // addToolBar( LeftToolBarArea, toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" ) );
+  toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" );
   toolbar->addAction( &static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
   toolbar->addAction( &previousEntryAction() );
   toolbar->addAction( &nextEntryAction() );
