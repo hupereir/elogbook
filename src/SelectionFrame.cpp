@@ -35,7 +35,7 @@
 #include "AttachmentFrame.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
-#include "CustomLineEdit.h"
+#include "LineEditor.h"
 #include "CustomPixmap.h"
 #include "CustomToolBar.h"
 #include "CustomToolButton.h"

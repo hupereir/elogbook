@@ -38,7 +38,7 @@
 
 #include "BrowsedLineEdit.h"
 #include "CustomDialog.h"
-#include "CustomLineEdit.h"
+#include "LineEditor.h"
 #include "File.h"
 #include "QtUtil.h"
 

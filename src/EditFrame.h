@@ -42,8 +42,8 @@
 
 #include "AskForSaveDialog.h"
 #include "AttachmentList.h"
-#include "CustomLineEdit.h"
-#include "CustomTextEdit.h"
+#include "LineEditor.h"
+#include "TextEditor.h"
 #include "CustomMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
@@ -105,7 +105,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   }
   
   //! get text editor
-  CustomTextEdit& editor( void ) 
+  TextEditor& editor( void ) 
   { 
     assert( text_
  );
@@ -322,7 +322,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   QHBoxLayout* title_layout_;
     
   //! LogEntry title Object
-  CustomLineEdit *title_;          
+  LineEditor *title_;          
     
   //! color widget
   class ColorWidget: public QWidget, public Counter
@@ -356,7 +356,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   ColorWidget* color_widget_;
   
   //! LogEntry text Object
-  CustomTextEdit *text_;            
+  TextEditor *text_;            
   
   //! pointer to text format bar
   FormatBar* format_toolbar_;

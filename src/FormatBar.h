@@ -45,7 +45,7 @@
 #include "TextFormat.h"
 
 class ColorMenu;
-class CustomTextEdit;
+class TextEditor;
 
 //! text formating bar
 class FormatBar: public CustomToolBar
@@ -93,7 +93,7 @@ class FormatBar: public CustomToolBar
   }
           
   //! set target editor
-  void setTarget( CustomTextEdit* editor );
+  void setTarget( TextEditor* editor );
   
   //! load text formats
   void load( const FORMAT::TextFormatBlock::List& ) const;
@@ -136,7 +136,7 @@ class FormatBar: public CustomToolBar
   private:
    
   //! target text editor
-  CustomTextEdit* editor_;
+  TextEditor* editor_;
   
   //! button map
   typedef std::map< ButtonId, CustomToolButton* > ButtonMap;

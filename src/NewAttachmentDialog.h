@@ -39,7 +39,7 @@
 #include "AttachmentType.h"
 #include "BrowsedLineEdit.h"
 #include "CustomDialog.h"
-#include "CustomTextEdit.h"
+#include "TextEditor.h"
 #include "File.h"
 
 //! new attachment popup dialog
@@ -111,7 +111,7 @@ class NewAttachmentDialog: public CustomDialog
   QComboBox *action_combo_box_;  
   
   //! comments
-  CustomTextEdit *comments_text_edit_;
+  TextEditor *comments_text_edit_;
   
       
 };

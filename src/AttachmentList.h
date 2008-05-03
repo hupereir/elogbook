@@ -167,4 +167,3 @@ class AttachmentList: public TreeWidget, public BASE::Key
 };
 
 #endif
-

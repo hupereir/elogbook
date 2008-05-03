@@ -39,7 +39,7 @@
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"
-#include "CustomTextEdit.h"
+#include "TextEditor.h"
 #include "Debug.h"
 #include "FormatBar.h"
 #include "IconEngine.h"
@@ -122,7 +122,7 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
 }
 
 //________________________________________
-void FormatBar::setTarget( CustomTextEdit* editor )
+void FormatBar::setTarget( TextEditor* editor )
 {
   Debug::Throw( "FormatBar::setTarget.\n" );
   assert( editor_ == 0 );

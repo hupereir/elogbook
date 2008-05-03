@@ -134,4 +134,3 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   adjustSize();
   
 }
-

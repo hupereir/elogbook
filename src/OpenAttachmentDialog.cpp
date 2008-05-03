@@ -35,8 +35,8 @@
 
 #include "BrowsedLineEdit.h"
 #include "CustomGridLayout.h"
-#include "CustomLineEdit.h"
-#include "CustomTextEdit.h"
+#include "LineEditor.h"
+#include "TextEditor.h"
 #include "Debug.h"
 #include "File.h"
 #include "OpenAttachmentDialog.h"
@@ -59,7 +59,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 
   // file name
   grid_layout->addWidget(new QLabel( "File: ", this ) );
-  CustomLineEdit* file_line_edit = new CustomLineEdit( this );
+  LineEditor* file_line_edit = new LineEditor( this );
   grid_layout->addWidget( file_line_edit );
   file_line_edit->setReadOnly( true );
   file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );
@@ -114,7 +114,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   if( !( attachment.comments().empty() || attachment.comments()== Attachment::NO_COMMENTS ) )
   {
     mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );  
-    CustomTextEdit* comments_text_edit = new CustomTextEdit( this );
+    TextEditor* comments_text_edit = new TextEditor( this );
     mainLayout().addWidget( comments_text_edit, 1 );  
     comments_text_edit->setReadOnly( true );
     comments_text_edit->setPlainText( attachment.comments().c_str() );

@@ -38,9 +38,9 @@
 #include "BaseIcons.h"
 #include "BrowsedLineEdit.h"
 #include "ColorMenu.h"
-#include "CustomLineEdit.h"
+#include "LineEditor.h"
 #include "CustomPixmap.h"
-#include "CustomTextEdit.h"
+#include "TextEditor.h"
 #include "CustomToolBar.h"
 #include "CustomToolButton.h"
 #include "EditFrame.h"
@@ -95,7 +95,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   layout->addLayout( title_layout_ );
   
   // title label and line
-  title_layout_->addWidget( title_ = new CustomLineEdit( main ), 1, Qt::AlignVCenter );
+  title_layout_->addWidget( title_ = new LineEditor( main ), 1, Qt::AlignVCenter );
     
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
@@ -103,7 +103,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   layout->addWidget( splitter_, 1 );
   
   // create text
-  text_ = new CustomTextEdit( splitter_ );
+  text_ = new TextEditor( splitter_ );
   text_->setAcceptRichText( false );
   
   connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );

@@ -33,7 +33,7 @@
 #include <QLabel>
 
 #include "CustomGridLayout.h"
-#include "CustomLineEdit.h"
+#include "LineEditor.h"
 #include "Debug.h"
 #include "EditAttachmentDialog.h"
 #include "File.h"
@@ -50,7 +50,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 
   // file name
   mainLayout().addWidget( new QLabel( "File:", this ) );
-  CustomLineEdit *file_line_edit( new CustomLineEdit( this ) );
+  LineEditor *file_line_edit( new LineEditor( this ) );
   file_line_edit->setReadOnly( true );
   file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );
   mainLayout().addWidget( file_line_edit );
@@ -90,7 +90,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   mainLayout().addLayout( box_layout, 1 );
   
   box_layout->addWidget( new QLabel( "Comments:", this ), 0 );  
-  box_layout->addWidget( comments_text_edit_ = new CustomTextEdit( this ), 1 );
+  box_layout->addWidget( comments_text_edit_ = new TextEditor( this ), 1 );
   comments_text_edit_->setPlainText( attachment.comments().c_str() );
   comments_text_edit_->setToolTip( "Attachment comments." );
   

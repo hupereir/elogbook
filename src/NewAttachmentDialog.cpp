@@ -33,7 +33,7 @@
 
 #include "BrowsedLineEdit.h"
 #include "CustomGridLayout.h"
-#include "CustomLineEdit.h"
+#include "LineEditor.h"
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
 #include "QtUtil.h"
@@ -94,7 +94,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   
   // comments
   mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );  
-  mainLayout().addWidget( comments_text_edit_ = new CustomTextEdit( this ), 1 );
+  mainLayout().addWidget( comments_text_edit_ = new TextEditor( this ), 1 );
   comments_text_edit_->setToolTip( "Attachment comments." );
   
   adjustSize();

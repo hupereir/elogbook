@@ -789,4 +789,3 @@ File Logbook::_childFilename( const File& file, const int& child_number ) const
   return File( o.str() );
 
 }
-

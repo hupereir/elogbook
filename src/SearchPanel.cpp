@@ -35,7 +35,7 @@
 #include <QPushButton>
 #include <QLayout>
 
-#include "CustomLineEdit.h"
+#include "LineEditor.h"
 #include "Debug.h"
 #include "SearchPanel.h"
 #include "XmlOptions.h"
@@ -62,7 +62,7 @@ SearchPanel::SearchPanel( QWidget* parent ):
   button->setToolTip( "Find logbook entries matching selected text" );
   
   // selection text
-  layout->addWidget( selection_ = new CustomLineEdit( this ), 1 ); 
+  layout->addWidget( selection_ = new LineEditor( this ), 1 ); 
   connect( selection_, SIGNAL( returnPressed() ), SLOT( _selectionRequest() ) );
   selection_->setToolTip( "Text to be found in logbook" );
   

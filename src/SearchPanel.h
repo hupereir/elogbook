@@ -37,7 +37,7 @@
 
 #include "Counter.h"
 
-class CustomLineEdit;
+class LineEditor;
 
 //! selects entries from keyword/title/text/...
 class SearchPanel: public QWidget, public Counter
@@ -106,7 +106,7 @@ class SearchPanel: public QWidget, public Counter
   QCheckBox *color_selection_;    
   
   //! selection text widget
-  CustomLineEdit *selection_; 
+  LineEditor *selection_; 
 
   //! action
   QAction* visibility_action_;

@@ -33,8 +33,8 @@
 
 #include "BrowsedLineEdit.h"
 #include "CustomDialog.h"
-#include "CustomLineEdit.h"
-#include "CustomTextEdit.h"
+#include "LineEditor.h"
+#include "TextEditor.h"
 
 class Logbook;
 
@@ -65,16 +65,16 @@ class LogbookInformationDialog: public CustomDialog
   private:
   
   //! title line edit
-  CustomLineEdit* title_;
+  LineEditor* title_;
   
   //! author
-  CustomLineEdit* author_;
+  LineEditor* author_;
   
   //! attachment directory
   BrowsedLineEdit* attachment_directory_;
 
   //! comments
-  CustomTextEdit* comments_;
+  TextEditor* comments_;
     
 };
 

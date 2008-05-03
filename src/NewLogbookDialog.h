@@ -36,8 +36,8 @@
 
 #include "BrowsedLineEdit.h"
 #include "CustomDialog.h"
-#include "CustomLineEdit.h"
-#include "CustomTextEdit.h"
+#include "LineEditor.h"
+#include "TextEditor.h"
 #include "File.h"
 #include "QtUtil.h"
 #include "Debug.h"
@@ -132,10 +132,10 @@ class NewLogbookDialog: public CustomDialog
   private:
   
   //! title line edit
-  CustomLineEdit *title_;
+  LineEditor *title_;
   
   //! author line edit
-  CustomLineEdit *author_;
+  LineEditor *author_;
             
   //! filename browsed line editor
   BrowsedLineEdit *file_;  
@@ -144,7 +144,7 @@ class NewLogbookDialog: public CustomDialog
   BrowsedLineEdit *attachment_directory_;
   
   //! comments
-  CustomTextEdit *comments_;
+  TextEditor *comments_;
   
 };
 

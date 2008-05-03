@@ -33,7 +33,7 @@
 #include <QAbstractItemModel>
 
 #include "KeywordDelegate.h"
-#include "CustomLineEdit.h"
+#include "LineEditor.h"
 #include "Debug.h"
 
 using namespace std;
@@ -48,7 +48,7 @@ KeywordDelegate::KeywordDelegate( QObject *parent ):
 QWidget* KeywordDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 { 
   Debug::Throw( "KeywordDelegate::createEditor.\n" );
-  return new CustomLineEdit( parent ); 
+  return new LineEditor( parent ); 
 }
 
 //______________________________________________________________
@@ -56,7 +56,7 @@ void KeywordDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
 {
   Debug::Throw( "KeywordDelegate::setEditorData.\n" );
   QString text = index.model()->data(index, Qt::DisplayRole).toString();
-  CustomLineEdit *line_editor = static_cast<CustomLineEdit*>(editor);
+  LineEditor *line_editor = static_cast<LineEditor*>(editor);
   line_editor->setText( text );
 }
 
@@ -64,7 +64,7 @@ void KeywordDelegate::setEditorData(QWidget *editor, const QModelIndex &index) c
 void KeywordDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
   Debug::Throw( "KeywordDelegate::setModelData.\n" );
-  CustomLineEdit *line_editor = static_cast<CustomLineEdit*>(editor);
+  LineEditor *line_editor = static_cast<LineEditor*>(editor);
   QString value( line_editor->text() );
   model->setData( index, value, Qt::EditRole);
 }
@@ -75,4 +75,3 @@ void KeywordDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionVi
   Debug::Throw( "KeywordDelegate::updateEditorGeometry.\n" );
   editor->setGeometry(option.rect);
 }
-
