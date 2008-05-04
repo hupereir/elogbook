@@ -22,6 +22,7 @@ POST_TARGETDEPS = \
   ../base/libbase.a
 
 RESOURCES = pixmaps.qrc ../base-qt/basePixmaps.qrc
+RC_FILE = elogbook.rc
 
 HEADERS = \
  AskForSaveDialog.h \

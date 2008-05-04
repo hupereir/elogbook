@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = foreign
-EXTRA_DIST = src.pro pixmaps.qrc
+EXTRA_DIST = elogbook.rc src.pro pixmaps.qrc
 
 if WITH_ASPELL 
 INCLUDES = \
