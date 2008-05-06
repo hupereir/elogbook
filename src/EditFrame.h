@@ -32,9 +32,12 @@
   \date $Date$
 */
 
-#include <QFrame>
+#include <QBasicTimer>
 #include <QLayout>
+#include <QResizeEvent>
 #include <QSplitter>
+#include <QTimerEvent>
+
 #include <string>
 #include <set>
 #include <map>
@@ -215,7 +218,13 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! enter event handler
   void enterEvent( QEvent *event );
-    
+
+  //! resize event
+  void resizeEvent( QResizeEvent* );
+  
+  //! timer event
+  void timerEvent( QTimerEvent* );
+  
   private slots:
   
   //! install actions
@@ -363,32 +372,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
       
   //! pointer to statusbar    
   StatusBar* statusbar_;   
-    
-  //!@name editting
-  //@{
-
-  //! currently edited timer
-  QTreeWidgetItem* edit_item_;
-
-  //! backup keyword
-  QString backup_;
   
-  //! backup keyword (including full path)
-  std::string full_backup_;
+  //! resize timer
+  QBasicTimer resize_timer_;
   
-  //! editing timer
-  /*! editting is enabled only if a certain delay is passed during which no drag/drop starts */
-  QTimer edit_timer_;
-
-  //! edit_item delay (ms)
-  /* 
-    it is used to start delayed edition of keywords
-    directly from the list 
-  */
-  enum { edit_item_delay_ = 500 };
-
-  //@}
-
   //!@name actions
   //@{
   

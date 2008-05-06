@@ -556,6 +556,31 @@ void EditFrame::enterEvent( QEvent *event )
 
 }
 
+//_______________________________________________________
+void EditFrame::resizeEvent( QResizeEvent* event )
+{
+  resize_timer_.start( 200, this );
+  return CustomMainWindow::resizeEvent( event );
+}
+
+//_______________________________________________________
+void EditFrame::timerEvent( QTimerEvent* event )
+{
+
+  if( event->timerId() == resize_timer_.timerId() )
+  {
+    
+    // stop timer
+    resize_timer_.stop();
+    
+    // save size
+    XmlOptions::get().set<int>( "EDIT_FRAME_HEIGHT", height() );
+    XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
+    
+  } else return CustomMainWindow::timerEvent( event );
+  
+}
+
 //_____________________________________________
 void EditFrame::_installActions( void )
 {
@@ -609,8 +634,6 @@ void EditFrame::_saveConfiguration( void )
 {
   
   Debug::Throw( "EditFrame::_saveConfiguration.\n" );
-  XmlOptions::get().set<int>( "EDIT_FRAME_HEIGHT", height() );
-  XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
   
   // retrieve attachment list
   AttachmentList* atc_list( *BASE::KeySet<AttachmentList>(this).begin() );
