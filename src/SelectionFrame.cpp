@@ -153,6 +153,7 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   connect( &keyword_model_, SIGNAL( keywordChanged( Keyword, Keyword ) ), SLOT( _renameKeyword( Keyword, Keyword ) ) );
     
   // popup menu for keyword list
+  keyword_list_->menu().addAction( &newEntryAction() );
   keyword_list_->menu().addAction( &newKeywordAction() ); 
   keyword_list_->menu().addAction( &editKeywordAction() );
   keyword_list_->menu().addAction( &deleteKeywordAction() );
