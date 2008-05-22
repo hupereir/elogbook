@@ -85,8 +85,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   setCentralWidget( main );
 
   QVBoxLayout *layout = new QVBoxLayout();
-  layout->setMargin(5);
-  layout->setSpacing( 5 );
+  layout->setMargin(2);
+  layout->setSpacing(2);
   main->setLayout( layout );
   
   title_layout_ = new QHBoxLayout();

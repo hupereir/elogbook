@@ -87,8 +87,8 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   
   // local layout
   QVBoxLayout *layout = new QVBoxLayout();
-  layout->setMargin(5);
-  layout->setSpacing(5);
+  layout->setMargin(2);
+  layout->setSpacing(2);
   main->setLayout( layout );
     
   // splitter for KeywordList/LogEntryList
