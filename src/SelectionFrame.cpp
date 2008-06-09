@@ -1015,7 +1015,7 @@ void SelectionFrame::_installActions( void )
   logbook_informations_action_->setToolTip( "Edit logbook informations" );
   connect( logbook_informations_action_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 
-  close_frames_action_ = new QAction( "&Close editors", this );
+  close_frames_action_ = new QAction( IconEngine::get( ICONS::CLOSE, path_list ), "&Close editors", this );
   close_frames_action_->setToolTip( "Close all entry editors" );
   connect( close_frames_action_, SIGNAL( triggered() ), SLOT( _closeEditFrames() ) );
 
@@ -2640,7 +2640,6 @@ void SelectionFrame::_restoreSelectedKeywords( void )
   
   return;
 }
-
 
 //________________________________________
 void SelectionFrame::_storeExpandedKeywords( void )
