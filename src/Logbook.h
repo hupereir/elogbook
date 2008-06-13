@@ -408,6 +408,14 @@ class Logbook:public QObject, public Counter, public BASE::Key
   //! message emission for logbook status during reading/writting
   void messageAvailable( const QString& message );
   
+  //! emit maximum progress
+  /*! argument is the maximum number of entries to read */
+  void maximumProgressAvailable( unsigned int );
+  
+  //! emit progress when reading, saving
+  /*! argument is the number of entries read since last signal */
+  void progressAvailable( unsigned int );
+  
   private:
   
   //! generate tagged backup filename

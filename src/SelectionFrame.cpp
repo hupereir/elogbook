@@ -56,6 +56,7 @@
 #include "MainFrame.h"
 #include "NewLogbookDialog.h"
 #include "OpenPreviousMenu.h"
+#include "ProgressFrame.h"
 #include "QtUtil.h"
 #include "SearchPanel.h"
 #include "SelectionFrame.h"

@@ -97,7 +97,8 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     
   // total number of entries
   grid_layout->addWidget( new QLabel( "Entries: ", this ), 4, 0 );
-  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()) .c_str(), this ), 4, 1 );
+  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()).c_str(), this ), 4, 1 );
+  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->xmlEntries()).c_str(), this ), 4, 2 );
   
   // total number of attachments
   grid_layout->addWidget( new QLabel( "Attachments: ", this ), 5, 0 );

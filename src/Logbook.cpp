@@ -161,13 +161,18 @@ bool Logbook::read( void )
     else if( name == XML::AUTHOR ) setAuthor( qPrintable( XmlUtil::xmlToText( value ) ) );
     else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
     else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
-    else if( name == XML::ENTRIES ) setXmlEntries( value.toInt() );
-    else if( name == XML::CHILDREN ) setXmlChildren( value.toInt() );
+    else if( name == XML::ENTRIES ) {
+      
+      setXmlEntries( value.toInt() );
+      emit maximumProgressAvailable( value.toInt() );
+    } else if( name == XML::CHILDREN ) setXmlChildren( value.toInt() );
     else cout << "Logbook::read - unrecognized logbook attribute: \"" << qPrintable( name ) << "\"\n";
 
   }
 
   // parse children
+  static unsigned int progress( 10 );
+  unsigned int entry_count( 0 );
   QDomNode node = doc_element.firstChild();
   for(QDomNode node = doc_element.firstChild(); !node.isNull(); node = node.nextSibling() )
   {
@@ -186,7 +191,8 @@ bool Logbook::read( void )
 
       LogEntry* entry = new LogEntry( element );
       Key::associate( latestChild(), entry );
-
+      entry_count++;
+      if( !(entry_count%progress) ) emit progressAvailable( progress );
     } else if( tag_name == XML::CHILD ) {
 
       // try retrieve file from attributes
@@ -212,6 +218,8 @@ bool Logbook::read( void )
     } else cout << "Logbook::read - unrecognized tag_name: " << qPrintable( tag_name ) << endl;
 
   }
+  
+  emit progressAvailable( entry_count%progress );
 
   // discard modifications
   setModified( false );
@@ -231,6 +239,9 @@ bool Logbook::write( File file )
   Debug::Throw( ) << "Logbook::write - \"" << file << "\".\n";
   bool completed = true;
 
+  // check number of entries to save in header
+  if( setXmlEntries( entries().size() ) ) setModified( true );
+  
   // write logbook if filename differs from origin or logbook is modified
   if( file != Logbook::file() || modified_ )
   {
