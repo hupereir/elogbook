@@ -165,6 +165,7 @@ bool Logbook::read( void )
       
       setXmlEntries( value.toInt() );
       emit maximumProgressAvailable( value.toInt() );
+      
     } else if( name == XML::CHILDREN ) setXmlChildren( value.toInt() );
     else cout << "Logbook::read - unrecognized logbook attribute: \"" << qPrintable( name ) << "\"\n";
 
@@ -193,6 +194,7 @@ bool Logbook::read( void )
       Key::associate( latestChild(), entry );
       entry_count++;
       if( !(entry_count%progress) ) emit progressAvailable( progress );
+      
     } else if( tag_name == XML::CHILD ) {
 
       // try retrieve file from attributes
@@ -207,6 +209,9 @@ bool Logbook::read( void )
       if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
       Logbook* child = new Logbook();
       child->setFile( file );
+      
+      // propagate progressAvailable signal.
+      connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
 
       ostringstream what;
       what << "reading \"" << child->file().localName() << "\"";
@@ -239,9 +244,12 @@ bool Logbook::write( File file )
   Debug::Throw( ) << "Logbook::write - \"" << file << "\".\n";
   bool completed = true;
 
-  // check number of entries to save in header
-  if( setXmlEntries( entries().size() ) ) setModified( true );
+  // check number of entries and children to save in header
+  if( setXmlEntries( entries().size() ) || setXmlChildren( children().size() ) )
+  { setModified( true ); }  
   
+  emit maximumProgressAvailable( xmlEntries() );
+
   // write logbook if filename differs from origin or logbook is modified
   if( file != Logbook::file() || modified_ )
   {
@@ -277,10 +285,8 @@ bool Logbook::write( File file )
     top.setAttribute( XML::SORT_ORDER, Str().assign<int>(sort_order_).c_str() );
 
     // update number of entries and children
-    xml_entries_ = entries().size();
-    xml_children_ = children_.size();
-    top.setAttribute( XML::ENTRIES, Str().assign<int>(xml_entries_).c_str() );
-    top.setAttribute( XML::CHILDREN, Str().assign<int>(xml_children_).c_str() );
+    top.setAttribute( XML::ENTRIES, Str().assign<int>(xmlEntries()).c_str() );
+    top.setAttribute( XML::CHILDREN, Str().assign<int>(xmlChildren()).c_str() );
 
     // append node
     document.appendChild( top );
@@ -300,9 +306,19 @@ bool Logbook::write( File file )
     if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
 
     // write all entries
+    static unsigned int progress( 10 );
+    unsigned int entry_count( 0 );
     BASE::KeySet<LogEntry> entries( this );
     for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
-    top.appendChild( (*it)->domElement( document ) );
+    {
+      
+      top.appendChild( (*it)->domElement( document ) );
+      entry_count++;
+      if( !(entry_count%progress) ) emit progressAvailable( progress );
+
+    }
+    
+    emit progressAvailable( entry_count%progress );
 
     // dump all logbook childrens
     unsigned int child_number=0;
@@ -328,7 +344,8 @@ bool Logbook::write( File file )
       modified_ = false;
 
     }
-  }
+  } else { emit progressAvailable( BASE::KeySet<LogEntry>( this ).size() ); }
+
   
   // update saved timeStamp
   saved_ = Logbook::file().lastModified();

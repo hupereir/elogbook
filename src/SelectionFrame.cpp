@@ -283,10 +283,17 @@ void SelectionFrame::setLogbook( File file )
     return;
   }
 
-  connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
-
-  logbook()->read();
-
+  {
+    // create progressFrame
+    ProgressFrame progress( 0 );  
+    connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &progress, SLOT( setMaximumProgress( unsigned int ) ) );
+    connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &progress, SLOT( addToProgress( unsigned int ) ) );
+    statusBar().insertPermanentWidget( 1, &progress, 2 );
+    connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+    
+    logbook()->read();
+  }
+  
   // update listView with new entries
   _resetKeywordList();
   _resetLogEntryList();
@@ -714,6 +721,12 @@ void SelectionFrame::save( const bool& confirm_entries )
 
   }
 
+  // create progressFrame
+  ProgressFrame progress( 0 );  
+  connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &progress, SLOT( setMaximumProgress( unsigned int ) ) );
+  connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &progress, SLOT( addToProgress( unsigned int ) ) );
+  statusBar().insertPermanentWidget( 1, &progress, 2 );
+  
   // write logbook to file, retrieve result
   static_cast<MainFrame*>(qApp)->busy();
   bool written( logbook()->write() );

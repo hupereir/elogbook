@@ -135,7 +135,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
   
   //! retrieves first not full child.
   Logbook* latestChild( void );
-  
+    
   //! retrieve all associated entries [recursive]
   BASE::KeySet<LogEntry> entries( void ) const;
   
