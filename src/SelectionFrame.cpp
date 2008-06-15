@@ -286,6 +286,7 @@ void SelectionFrame::setLogbook( File file )
   {
     // create progressFrame
     ProgressFrame progress( 0 );  
+    progress.setFixedHeight( statusBar().height() - 6 );
     connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &progress, SLOT( setMaximumProgress( unsigned int ) ) );
     connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &progress, SLOT( addToProgress( unsigned int ) ) );
     statusBar().insertPermanentWidget( 1, &progress, 2 );
@@ -723,6 +724,7 @@ void SelectionFrame::save( const bool& confirm_entries )
 
   // create progressFrame
   ProgressFrame progress( 0 );  
+  progress.setFixedHeight( statusBar().height() - 6 );
   connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &progress, SLOT( setMaximumProgress( unsigned int ) ) );
   connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &progress, SLOT( addToProgress( unsigned int ) ) );
   statusBar().insertPermanentWidget( 1, &progress, 2 );
