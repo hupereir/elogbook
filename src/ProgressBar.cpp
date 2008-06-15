@@ -22,51 +22,56 @@
 *******************************************************************************/
  
 /*!
-  \file ProgressFrame.cc
+  \file ProgressBar.cc
   \brief display command progress
   \author Hugo Pereira
   \version $Revision$
   \date $Date$
 */
 
-#include <QLayout>
+#include <QStyleOptionProgressBarV2>
+#include <QStylePainter>
 
 #include "Debug.h"
-#include "ProgressFrame.h" 
+#include "ProgressBar.h" 
 
 using namespace std;
 
 //___________________________________________________________
-ProgressFrame::ProgressFrame( QWidget* parent ):
-  QWidget( parent ),
-  Counter( "ProgressFrame" ),
+ProgressBar::ProgressBar( QWidget* parent ):
+  QProgressBar( parent ),
+  Counter( "ProgressBar" ),
   current_( 0 )
-{
-  
-  Debug::Throw( "ProgressFrame::ProgressFrame.\n" );
-  
-  // layout
-  QHBoxLayout *layout = new QHBoxLayout();
-  layout->setSpacing( 5 );
-  layout->setMargin(0);
-  setLayout( layout );
+{ Debug::Throw( "ProgressBar::ProgressBar.\n" ); }
 
-  // progress bar
-  layout->addWidget( progress_bar_ = new QProgressBar( this ) );
-  
+//___________________________________________________________ 
+void ProgressBar::setText( const QString& text )
+{
+  text_ = text;
+  update();
 }
 
 //___________________________________________________________ 
-void ProgressFrame::setMaximumProgress( unsigned int value )
+void ProgressBar::setMaximumProgress( unsigned int value )
 {
-  Debug::Throw( "ProgressFrame::setMaximumProgress.\n" );
-  _progressBar().setRange( 0, value );
-  _progressBar().setValue( (current_ = 0 ) );
+  Debug::Throw( "ProgressBar::setMaximumProgress.\n" );
+  setRange( 0, value );
+  setValue( (current_ = 0 ) );
 }
 
 //___________________________________________________________ 
-void ProgressFrame::addToProgress( unsigned int value )
+void ProgressBar::addToProgress( unsigned int value )
 {
-  Debug::Throw( "ProgressFrame::addToProgress.\n" );
-  _progressBar().setValue( (current_ += value ) );
+  Debug::Throw( "ProgressBar::addToProgress.\n" );
+  setValue( (current_ += value ) );
+}
+
+//___________________________________________________________ 
+void ProgressBar::paintEvent( QPaintEvent* event )
+{
+  QStylePainter paint(this);
+  QStyleOptionProgressBarV2 opt;
+  initStyleOption(&opt);
+  opt.text = text_;
+  paint.drawControl(QStyle::CE_ProgressBar, opt);
 }

@@ -57,7 +57,7 @@ HEADERS = \
  NewAttachmentDialog.h \
  NewLogbookDialog.h \
  OpenAttachmentDialog.h \
- ProgressFrame.h \
+ ProgressBar.h \
  SearchPanel.h \
  SelectionFrame.h \
  SplashScreen.h \
@@ -96,7 +96,7 @@ SOURCES = \
  NewAttachmentDialog.cpp \
  NewLogbookDialog.cpp \
  OpenAttachmentDialog.cpp \
- ProgressFrame.cpp \
+ ProgressBar.cpp \
  SearchPanel.cpp \
  SelectionFrame.cpp \
  SplashScreen.cpp \

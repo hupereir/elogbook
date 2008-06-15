@@ -106,7 +106,7 @@ noinst_HEADERS = \
   NewAttachmentDialog.h \
   NewLogbookDialog.h \
   OpenAttachmentDialog.h \
-  ProgressFrame.h \
+  ProgressBar.h \
   SearchPanel.h \
   SelectionFrame.h \
   SplashScreen.h \
@@ -138,7 +138,7 @@ elogbook_SOURCES = \
   NewAttachmentDialog.cpp \
   NewLogbookDialog.cpp \
   OpenAttachmentDialog.cpp \
-  ProgressFrame.cpp \
+  ProgressBar.cpp \
   SearchPanel.cpp \
   SelectionFrame.cpp \
   SplashScreen.cpp \
@@ -160,7 +160,7 @@ nodist_elogbook_SOURCES = \
   moc_MainFrame.cpp \
   moc_Menu.cpp \
   moc_NewAttachmentDialog.cpp \
-  moc_ProgressFrame.cpp \
+  moc_ProgressBar.cpp \
   moc_SearchPanel.cpp \
   moc_SelectionFrame.cpp \
   moc_SplashScreen.cpp

@@ -1,5 +1,5 @@
-#ifndef ProgressFrame_h
-#define ProgressFrame_h
+#ifndef ProgressBar_h
+#define ProgressBar_h
 
 // $Id$
 
@@ -25,21 +25,21 @@
 *******************************************************************************/
  
 /*!
-  \file ProgressFrame.h
-  \brief display command progress and remaining time
+  \file ProgressBar.h
+  \brief display read/write progress and file name
   \author Hugo Pereira
   \version $Revision$
   \date $Date$
 */
 
+#include <QPaintEvent>
 #include <QProgressBar>
 #include <string>
 
 #include "Counter.h"
-#include "TimeStamp.h"
 
 //! display command progress and remaining time 
-class ProgressFrame:public QWidget, public Counter
+class ProgressBar:public QProgressBar, public Counter
 {
     
   Q_OBJECT
@@ -47,28 +47,29 @@ class ProgressFrame:public QWidget, public Counter
   public:
       
   //! constructor
-  ProgressFrame( QWidget* parent = 0 );
+  ProgressBar( QWidget* parent = 0 );
   
   public slots:
-    
+
+  //! change displayed text
+  void setText( const QString& );
+
   //! set maximum
   void setMaximumProgress( unsigned int );
   
   //! add to progress
   void addToProgress( unsigned int );
+
+  protected:
+  
+  //! paint
+  void paintEvent( QPaintEvent* );
   
   private:
-    
-  //! initialize
-  void _initialize( int total );
-    
-  //! progress bar
-  QProgressBar& _progressBar( void ) const
-  { return *progress_bar_; }
+
+  //! text
+  QString text_;
   
-  //! progress bar
-  QProgressBar *progress_bar_;
-      
   //! current progress
   unsigned int current_;
   
