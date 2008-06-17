@@ -46,3 +46,16 @@ SelectionStatusBar::SelectionStatusBar( QWidget* parent ):
   addClock();
   
 }
+
+//______________________________________________________
+void SelectionStatusBar::showProgressBar( void )
+{ 
+  // fix progress bar height, because normal display is too high 
+  // with respect to neighbor label
+  progressBar().setFixedHeight( fontMetrics().lineSpacing() + 6 );
+  _stack().setCurrentWidget( &progressBar() ); 
+}
+  
+//______________________________________________________
+void SelectionStatusBar::showLabel( void )
+{ _stack().setCurrentWidget( &_label() ); }

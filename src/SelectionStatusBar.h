@@ -62,12 +62,10 @@ class SelectionStatusBar: public StatusBar
   public slots:
   
   //! show progress bar as visible widget
-  void showProgressBar( void )
-  { _stack().setCurrentWidget( &progressBar() ); }
+  void showProgressBar( void );
   
   //! show label as visible widget
-  void showLabel( void )
-  { _stack().setCurrentWidget( &_label() ); }
+  void showLabel( void );
   
   protected:
   
