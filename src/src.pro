@@ -60,6 +60,7 @@ HEADERS = \
  ProgressBar.h \
  SearchPanel.h \
  SelectionFrame.h \
+ SelectionStatusBar.h \
  SplashScreen.h \
  ViewHtmlEntryDialog.h \
  ViewHtmlLogbookDialog.h \
@@ -99,6 +100,7 @@ SOURCES = \
  ProgressBar.cpp \
  SearchPanel.cpp \
  SelectionFrame.cpp \
+ SelectionStatusBar.cpp \
  SplashScreen.cpp \
  ViewHtmlEntryDialog.cpp \
  ViewHtmlLogbookDialog.cpp
