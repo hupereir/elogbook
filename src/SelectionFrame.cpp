@@ -297,6 +297,8 @@ void SelectionFrame::setLogbook( File file )
     logbook()->read();
   }
   
+  Debug::Throw( "SelectionFrame::setLogbook - finished reading.\n" );
+
   // update listView with new entries
   _resetKeywordList();
   _resetLogEntryList();
@@ -306,8 +308,11 @@ void SelectionFrame::setLogbook( File file )
   
   // change sorting
   Qt::SortOrder sort_order( (Qt::SortOrder) logbook()->sortOrder() );
+  Debug::Throw( "SelectionFrame::setLogbook - got sort order.\n" );
+
   switch( logbook()->sortMethod() )
   {
+    case Logbook::SORT_COLOR: logEntryList().sortByColumn( LogEntryModel::COLOR, sort_order ); break;
     case Logbook::SORT_TITLE: logEntryList().sortByColumn( LogEntryModel::TITLE, sort_order ); break;
     case Logbook::SORT_CREATION: logEntryList().sortByColumn( LogEntryModel::CREATION, sort_order ); break;
     case Logbook::SORT_MODIFICATION: logEntryList().sortByColumn( LogEntryModel::MODIFICATION , sort_order); break;
@@ -342,7 +347,7 @@ void SelectionFrame::setLogbook( File file )
   statusBar().label().setText( "" );
 
   statusBar().label(0).show();
-  
+    
   emit ready();
 
   // check errors
@@ -2500,22 +2505,29 @@ void SelectionFrame::_viewHtml( void )
 void SelectionFrame::_storeSortMethod( int column, Qt::SortOrder order  )
 {
   
-  Debug::Throw( "SelectionFrame::_storeSortMethod.\n");
+  Debug::Throw() 
+    << "SelectionFrame::_storeSortMethod -"
+    << " column: " << column 
+    << " order: " << order 
+    << endl ;
+  
   if( !logbook_ ) return;
 
+  bool changed( false );
   switch( column ) {
     
-    case LogEntryModel::TITLE: logbook()->setSortMethod( Logbook::SORT_TITLE ); break;
-    case LogEntryModel::CREATION: logbook()->setSortMethod( Logbook::SORT_CREATION ); break;
-    case LogEntryModel::MODIFICATION: logbook()->setSortMethod( Logbook::SORT_MODIFICATION ); break;
-    case LogEntryModel::AUTHOR: logbook()->setSortMethod( Logbook::SORT_AUTHOR ); break;
+    case LogEntryModel::COLOR: changed = logbook()->setSortMethod( Logbook::SORT_COLOR ); break;
+    case LogEntryModel::TITLE: changed = logbook()->setSortMethod( Logbook::SORT_TITLE ); break;
+    case LogEntryModel::CREATION: changed = logbook()->setSortMethod( Logbook::SORT_CREATION ); break;
+    case LogEntryModel::MODIFICATION: changed = logbook()->setSortMethod( Logbook::SORT_MODIFICATION ); break;
+    case LogEntryModel::AUTHOR: changed = logbook()->setSortMethod( Logbook::SORT_AUTHOR ); break;
     default: return;
     
   }
 
   // Save logbook if needed
-  logbook()->setSortOrder( int( order ) );
-  if( !logbook()->file().empty() ) save();
+  changed |= logbook()->setSortOrder( int( order ) );
+  if( changed && !logbook()->file().empty() ) save();
 
 }
 

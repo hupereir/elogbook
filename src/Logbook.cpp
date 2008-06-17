@@ -237,6 +237,8 @@ bool Logbook::read( void )
 bool Logbook::write( File file )
 {
 
+  Debug::Throw( "Logbook::write.\n" );
+  
   // check filename
   if( file.empty() ) file = Logbook::file();
   if( file.empty() ) return false;
@@ -771,6 +773,31 @@ bool Logbook::modified( void ) const
   return false;
 }
 
+//______________________________________________________________________
+bool Logbook::setSortMethod( const Logbook::SortMethod& sort_method )
+{
+  Debug::Throw( "Logbook::setSortMethod.\n" );
+  bool changed = ( sortMethod() != sort_method );
+  if( changed ) {
+    sort_method_ = sort_method;
+    setModified( true );
+  }
+  return changed;
+}
+
+//______________________________________________________________________
+bool Logbook::setSortOrder( const int& order )
+{
+  Debug::Throw( "Logbook::setSortOrder.\n" );
+  bool changed = (sortOrder() != order );
+  if( changed )
+  {
+    sort_order_ = order;
+    setModified( true );
+  }
+  return changed;
+}
+
 //_________________________________
 bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) const
 {
@@ -779,6 +806,11 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
   
   switch( sort_method_ )
   {
+    
+    case Logbook::SORT_COLOR:
+    return (first->color() < second->color() );
+    break;
+    
     case Logbook::SORT_CREATION:
     return (first->creation() < second->creation());
     break;

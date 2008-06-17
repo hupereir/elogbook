@@ -339,7 +339,11 @@ class Logbook:public QObject, public Counter, public BASE::Key
     SORT_KEYWORD,
     
     //! sort LogEntry objects according to author
-    SORT_AUTHOR
+    SORT_AUTHOR,
+    
+    //! colors
+    SORT_COLOR
+    
   };
   
   //! Sort entries depending on the sort method
@@ -371,31 +375,14 @@ class Logbook:public QObject, public Counter, public BASE::Key
   changes sort method associated to oldest parent
   returns true if changed
   */
-  bool setSortMethod( const SortMethod& sort_method )
-  {
-    bool changed = ( sortMethod() != sort_method );
-    if( changed ) {
-      sort_method_ = sort_method;
-      setModified( true );
-    }
-    return changed;
-  }
+  bool setSortMethod( const SortMethod& sort_method );
   
   //! retrieves current sort method associated to oldest parent
   SortMethod sortMethod( void ) 
   { return sort_method_; }
 
   //! sort order
-  bool setSortOrder( const int& order )
-  {
-    bool changed = (sortOrder() != order );
-    if( changed )
-    {
-      sort_order_ = order;
-      setModified( true );
-    }
-    return changed;
-  }
+  bool setSortOrder( const int& order );
   
   //! sort order
   const int& sortOrder( void ) const
