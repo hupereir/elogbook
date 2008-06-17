@@ -56,11 +56,10 @@
 #include "MainFrame.h"
 #include "NewLogbookDialog.h"
 #include "OpenPreviousMenu.h"
-#include "ProgressBar.h"
 #include "QtUtil.h"
 #include "SearchPanel.h"
 #include "SelectionFrame.h"
-#include "StatusBar.h"
+#include "SelectionStatusBar.h"
 #include "Util.h"
 #include "ViewHtmlLogbookDialog.h"
 #include "XmlOptions.h"
@@ -103,10 +102,9 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   layout->addWidget( search_panel_ );  
   
   // status bar
-  setStatusBar( statusbar_ = new StatusBar( this ) );
-  statusBar().addLabel(1);
-  statusBar().addClock();
-  //connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().label(), SLOT( setTextAndUpdate( const QString& ) ) );  
+  setStatusBar( statusbar_ = new SelectionStatusBar( this ) );
+  connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().label(), SLOT( setTextAndUpdate( const QString& ) ) );  
+  connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().progressBar(), SLOT( setText( const QString& ) ) );  
   
   // global scope actions
   _installActions();
@@ -282,20 +280,12 @@ void SelectionFrame::setLogbook( File file )
     emit ready();
     return;
   }
-
-  {
-    // create progress bar
-    ProgressBar progress( 0 );  
-    progress.setFixedHeight( statusBar().height() - 6 );
-    connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &progress, SLOT( setMaximumProgress( unsigned int ) ) );
-    connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &progress, SLOT( addToProgress( unsigned int ) ) );
-    statusBar().insertPermanentWidget( 0, &progress, 2 );
-    statusBar().label(0).hide();
-    connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), &progress, SLOT( setText( const QString& ) ) );
-    connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
-    
-    logbook()->read();
-  }
+  
+  connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &statusBar(), SLOT( showProgressBar() ) );
+  connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &statusBar().progressBar(), SLOT( setMaximumProgress( unsigned int ) ) );
+  connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &statusBar().progressBar(), SLOT( addToProgress( unsigned int ) ) );
+  connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+  logbook()->read();
   
   Debug::Throw( "SelectionFrame::setLogbook - finished reading.\n" );
 
@@ -345,8 +335,7 @@ void SelectionFrame::setLogbook( File file )
   // store logbook directory for next open, save comment
   working_directory_ = File( logbook()->file() ).path();
   statusBar().label().setText( "" );
-
-  statusBar().label(0).show();
+  statusBar().showLabel();
     
   emit ready();
 
@@ -730,15 +719,6 @@ void SelectionFrame::save( const bool& confirm_entries )
     }
 
   }
-
-  // create ProgressBar
-  ProgressBar progress( 0 );  
-  progress.setFixedHeight( statusBar().height() - 6 );
-  connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &progress, SLOT( setMaximumProgress( unsigned int ) ) );
-  connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &progress, SLOT( addToProgress( unsigned int ) ) );
-  connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), &progress, SLOT( setText( const QString& ) ) );
-  statusBar().insertPermanentWidget( 0, &progress, 2 );
-  statusBar().label(0).hide();
   
   // write logbook to file, retrieve result
   static_cast<MainFrame*>(qApp)->busy();
@@ -747,12 +727,10 @@ void SelectionFrame::save( const bool& confirm_entries )
 
   if( written ) { setWindowTitle( MainFrame::MAIN_TITLE );}
   
-  // re-show statusbar label
-  statusBar().label(0).show();
-
   // update StateFrame
   statusBar().label().setText( "" );
-
+  statusBar().showLabel();
+  
   // add new file to openPreviousMenu
   menu().openPreviousMenu().add( logbook()->file() );
 

@@ -109,6 +109,7 @@ noinst_HEADERS = \
   ProgressBar.h \
   SearchPanel.h \
   SelectionFrame.h \
+  SelectionStatusBar.h \
   SplashScreen.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
@@ -141,6 +142,7 @@ elogbook_SOURCES = \
   ProgressBar.cpp \
   SearchPanel.cpp \
   SelectionFrame.cpp \
+  SelectionStatusBar.cpp \
   SplashScreen.cpp \
   ViewHtmlEntryDialog.cpp \
   ViewHtmlLogbookDialog.cpp \
@@ -163,6 +165,7 @@ nodist_elogbook_SOURCES = \
   moc_ProgressBar.cpp \
   moc_SearchPanel.cpp \
   moc_SelectionFrame.cpp \
+  moc_SelectionStatusBar.cpp \
   moc_SplashScreen.cpp
 
 copy_logbook_SOURCES = copy_logbook.cpp

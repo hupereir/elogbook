@@ -56,7 +56,7 @@ class EditFrame;
 class Logbook;
 class Menu;
 class SearchPanel;
-class StatusBar;
+class SelectionStatusBar;
 class ColorMenu;
 
 //! display a set of log entries, allows selection of one
@@ -90,7 +90,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   }
 
   //! retrive state frame
-  StatusBar& statusBar( void )
+  SelectionStatusBar& statusBar( void )
   {
     assert( statusbar_ );
     return *statusbar_;
@@ -503,7 +503,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   SearchPanel *search_panel_;
 
   //! state frame
-  StatusBar* statusbar_;
+  SelectionStatusBar* statusbar_;
 
   //! main splitter
   QSplitter* splitter_;
