@@ -45,7 +45,7 @@ static const char* HelpText[] =
   "<ul>"
   "<li>A basic text editor. Each text entry is tagged using a title, several keywords and its creation time. The user may add new entries, modify/delete existing entries. The time of the last modifications of existing entries is also stored for tagging purposes.</li>"
   "<li>A compact display of all entry tags to allow fast browsing of the entries whose text is to be edited.</li>"
-  "<li>A basic search engine to select a fraction of the existing entries according to their title/keyword or full text.</li>"
+  "<li>A basic search engine to select a subset of the existing entries according to their title/keyword or full text.</li>"
   "<li>The possibility to attach files to the entries, for later editing. Attached file edition is based on the file type. Following types are supported: postscript, HTML and plain text. An <i>unknown</i> type is also used for all unsupported file types.</li>"   
   "</ul>"
   "<p>The text information are stored together with tags and attached file names/types in a collection of XML files. XML files are created automatically and store a finite number of entries to keep their size small and reduce the amount of disk access when saving modifications. A new file is generated each time the last filled file is full. The files are referred to in a <i>master</i> file which gets loaded first. </p>"

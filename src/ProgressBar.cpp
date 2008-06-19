@@ -42,7 +42,11 @@ ProgressBar::ProgressBar( QWidget* parent ):
   QProgressBar( parent ),
   Counter( "ProgressBar" ),
   current_( 0 )
-{ Debug::Throw( "ProgressBar::ProgressBar.\n" ); }
+{ 
+  Debug::Throw( "ProgressBar::ProgressBar.\n" ); 
+  QPalette palette( QProgressBar::palette() );
+  palette.setColor( QPalette::HighlightedText, palette.color( QPalette::Text ) );
+}
 
 //___________________________________________________________ 
 void ProgressBar::setText( const QString& text )
@@ -72,6 +76,16 @@ void ProgressBar::paintEvent( QPaintEvent* event )
   QStylePainter paint(this);
   QStyleOptionProgressBarV2 opt;
   initStyleOption(&opt);
-  opt.text = text_;
+
+  opt.text = "";
   paint.drawControl(QStyle::CE_ProgressBar, opt);
+
+  // need to draw the label separately 
+  // because the "BASE" color is used by default, which might be too light,
+  // when the selection color (used for the bar) is light
+  // one use HighlightedText instead
+  opt.text = text_;
+  opt.palette.setColor( QPalette::Base, palette().color( QPalette::HighlightedText ) );
+  paint.drawControl(QStyle::CE_ProgressBarLabel, opt);
+
 }
