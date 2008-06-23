@@ -122,17 +122,29 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
 }
 
 //________________________________________
-void FormatBar::setTarget( TextEditor* editor )
+void FormatBar::setTarget( TextEditor& editor )
 {
-  Debug::Throw( "FormatBar::setTarget.\n" );
-  assert( editor_ == 0 );
-  editor_ = editor;
+  
+  Debug::Throw() << "FormatBar::setTarget - key: " << editor.key() << endl;
+
+  if( editor_ )
+  { 
+    Debug::Throw( "FormatBar::setTarget - disconnecting old target\n" );
+    disconnect( editor_, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), this, SLOT( _updateState( const QTextCharFormat& ) ) ); 
+  }
+
+  editor_ = &editor;
+  Debug::Throw( "FormatBar::setTarget - editor updated\n" );
+
   connect( editor_, 
     SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 
     SLOT( _updateState( const QTextCharFormat& ) ) );
   
+  Debug::Throw( "FormatBar::setTarget - connection set\n" );
+  
   // first update
-  _updateState( editor->currentCharFormat() );
+  _updateState( editor_->currentCharFormat() );
+  Debug::Throw( "FormatBar::setTarget - done.\n" );
   
 }
 

@@ -17,4 +17,5 @@ info.png \
 text_bold.png \
 text_italic.png \
 text_strike.png \
-text_under.png
+text_under.png \
+view_top_bottom.png

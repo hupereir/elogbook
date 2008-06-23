@@ -93,7 +93,7 @@ class FormatBar: public CustomToolBar
   }
           
   //! set target editor
-  void setTarget( TextEditor* editor );
+  void setTarget( TextEditor& editor );
   
   //! load text formats
   void load( const FORMAT::TextFormatBlock::List& ) const;

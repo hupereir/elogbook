@@ -93,8 +93,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   LogEntry* entry( void ) const
   {
     BASE::KeySet<LogEntry> entries( this );
-    assert( entries.size() <= 1
- );
+    assert( entries.size() <= 1 );
     return( entries.size() ) ? *entries.begin():0;
   }
 
@@ -102,24 +101,14 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   AttachmentList& attachmentList( void )
   {
     BASE::KeySet<AttachmentList> attachment_list( this );
-    assert( attachment_list.size() == 1
- );
+    assert( attachment_list.size() == 1 );
     return **attachment_list.begin();
-  }
-
-  //! get text editor
-  TextEditor& editor( void )
-  {
-    assert( text_
- );
-    return *text_;
   }
 
   //! status bar
   StatusBar& statusBar( void )
   {
-    assert( statusbar_
- );
+    assert( statusbar_ );
     return *statusbar_;
   }
 
@@ -140,7 +129,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! check if current entry has been modified or not
   bool modified( void ) const
-  { return title_->isModified() || text_->document()->isModified(); }
+  { return title_->isModified() || _activeEditor().document()->isModified(); }
 
   //! computes window title
   std::string windowTitle() const;
@@ -182,7 +171,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     { return !frame->isClosed(); }
 
   };
-
+  
   //!@name actions
   //@{
 
@@ -193,7 +182,15 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! next entry action
   QAction& nextEntryAction( void ) const
   { return *next_entry_action_; }
-
+  
+  //! split view horizontal
+  QAction& splitAction( void ) const
+  { return *split_action_; }
+  
+  //! close view
+  QAction& closeAction( void ) const
+  { return *close_action_; }
+  
   //@}
 
   public slots:
@@ -283,14 +280,50 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! display cursor position
   void _displayCursorPosition( void )
-  { _displayCursorPosition( text_->textPosition() ); }
+  { _displayCursorPosition( _activeEditor().textPosition() ); }
 
   //! display cursor position
   void _displayCursorPosition( int, int new_position )
   { _displayCursorPosition( TextPosition( 0, new_position ) ); }
 
-  private:
+  //! clone current file
+  void _split( void )
+  { _split( Qt::Vertical ); }
 
+  //! display focus changed
+  void _displayFocusChanged( TextEditor* );  
+
+  private:  
+  
+  //!@name display management
+  //@{
+  
+  //! retrieve active display
+  TextEditor& _activeEditor( void )
+  { return *active_editor_; }
+  
+  //! retrieve active display
+  const TextEditor& _activeEditor( void ) const
+  { return *active_editor_; }
+
+  //! change active display manualy
+  void _setActiveEditor( TextEditor& ); 
+
+  //! close view
+  /*! Ask for save if view is modified */
+  void _closeEditor( TextEditor& );
+
+  //! split view
+  TextEditor& _split( const Qt::Orientation& );
+  
+  //! create new splitter
+  QSplitter& _newSplitter( const Qt::Orientation&  );
+  
+  //! create new TextEditor
+  TextEditor& _newTextEditor( QWidget* parent );
+
+  //@}
+  
   //! display cursor position
   void _displayCursorPosition( const TextPosition& position );
 
@@ -320,10 +353,33 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   QToolBar* lock_;
 
   //@}
+  
+  //! local QSplitter object, derived from Counter
+  /*! helps keeping track of how many splitters are created/deleted */
+  class LocalSplitter: public QSplitter, public Counter
+  {
+    
+    public:
+    
+    //! constructor
+    LocalSplitter( QWidget* parent ):
+      QSplitter( parent ),
+      Counter( "LocalSplitter" )
+    { Debug::Throw( "LocalSplitter::LocalSplitter.\n" ); }
 
+    //! destructor
+    virtual ~LocalSplitter( void )
+    { Debug::Throw( "LocalSplitter::~LocalSplitter.\n" ); }
+    
+  };
+
+  
   //! main splitter
   QSplitter *splitter_;
 
+  //! main widget (that contains first editor)
+  QWidget *main_;
+  
   //! titlebar layout
   QHBoxLayout* title_layout_;
 
@@ -362,7 +418,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   ColorWidget* color_widget_;
 
   //! LogEntry text Object
-  TextEditor *text_;
+  TextEditor *active_editor_;
 
   //! pointer to text format bar
   FormatBar* format_toolbar_;
@@ -388,6 +444,12 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! next entry action
   QAction* next_entry_action_;
 
+  //! split action
+  QAction* split_action_;
+  
+  //! close view (or window) action
+  QAction* close_action_;
+  
   //@}
 };
 
