@@ -216,7 +216,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->addWidget( new QLabel( "Location", box ) );
 
   OptionComboBox* combobox;
-  
+ 
   grid_layout->addWidget( checkbox = new OptionCheckBox( "Main toolbar", box, "MAIN_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) ); 
   addOptionWidget( checkbox );
@@ -240,6 +240,17 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation toolbar", box, "NAVIGATION_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
+  addOptionWidget( combobox );
+
+  box = new QGroupBox( page );
+  page->layout()->addWidget( box );
+  
+  box->setLayout( new QHBoxLayout() );
+  box->layout()->setSpacing( 5 );
+  box->layout()->setMargin( 5 );
+  
+  box->layout()->addWidget( new QLabel( "Lock position: ", box )); 
+  box->layout()->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "LOCK_TOOLBAR_LOCATION" ) ); 
   addOptionWidget( combobox );
 
   // colors

@@ -133,7 +133,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   assert( !path_list.empty() );
 
   // lock toolbar is visible only when window is not editable
-  lock_ = new CustomToolBar( "Lock", this );
+  lock_ = new CustomToolBar( "Lock", this, "LOCK_TOOLBAR" );
   CustomToolButton *button;
   button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK, path_list ), "Unlock current editor" );
   connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
@@ -181,6 +181,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // format bar
   format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
   format_toolbar_->setTarget( text_ );
+  read_only_widgets_.push_back( format_toolbar_ );
 
   // edition toolbars
   toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
@@ -203,12 +204,6 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::HTML, path_list ), "Convert the current entry to HTML" );
   connect( button, SIGNAL( clicked() ), SLOT( _viewHtml() ) );
   button->setText("Html");
-  toolbar->addWidget( button );
-
-  // clone button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::COPY, path_list ), "Open a read-only editor for the current entry" );
-  connect( button, SIGNAL( clicked() ), SLOT( _newWindow() ) );
-  button->setText("Clone");
   toolbar->addWidget( button );
 
   // entry_info button
@@ -296,8 +291,14 @@ void EditFrame::setReadOnly( const bool& value )
   { (*it)->setEnabled( !isReadOnly() ); }
 
   // changes lock button state
-  if( isReadOnly() && lock_->isHidden() ) lock_->show();
-  if( !(isReadOnly() || lock_->isHidden() ) ) lock_->hide();
+  if( isReadOnly() && lock_->isHidden() ) 
+  {
+    
+    Qt::ToolBarArea current_location = toolBarArea( lock_ );
+    if( current_location == Qt::NoToolBarArea ) { addToolBar( Qt::LeftToolBarArea, lock_ ); }
+    lock_->show();
+    
+  } else if( !(isReadOnly() || lock_->isHidden() ) ) { lock_->hide(); }
 
   // changes TextEdit readOnly status
   title_->setReadOnly( isReadOnly() );
@@ -791,31 +792,6 @@ void EditFrame::_spellCheck( void )
   XmlOptions::get().setRaw( "DICTIONARY", dialog.interface().dictionary() );
   
 #endif
-}
-
-//_____________________________________________
-void EditFrame::_newWindow( void )
-{
-  
-  Debug::Throw( "EditFrame::_newWindow.\n" );
-  LogEntry *entry( EditFrame::entry() );
-  if( !entry ) {
-    QtUtil::infoDialog( this, "No valid entry found. <New window> canceled." );
-    return;
-  }
-
-  // retrieve selection frame
-  SelectionFrame *frame( _selectionFrame() );
-
-  // create new EditFrame
-  EditFrame *edit_frame( new EditFrame( frame ) );
-  Key::associate( edit_frame, frame );
-  edit_frame->displayEntry( entry );
-
-  // raise EditFrame
-  edit_frame->show();
-
-  return;
 }
 
 //_____________________________________________
