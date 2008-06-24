@@ -22,5 +22,6 @@
     <file alias="pixmaps/view_left_right.png">../pixmaps/view_left_right.png</file>
     <file alias="pixmaps/view_remove.png">../pixmaps/view_remove.png</file>
     <file alias="pixmaps/view_top_bottom.png">../pixmaps/view_top_bottom.png</file>
+    <file alias="pixmaps/window_fullscreen.png">../pixmaps/window_fullscreen.png</file>
   </qresource>
 </RCC>

@@ -195,20 +195,11 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // extra toolbar
   toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" );
 
-  // editor_html button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::HTML, path_list ), "Convert the current entry to HTML" );
-  connect( button, SIGNAL( clicked() ), SLOT( _viewHtml() ) );
-  button->setText("Html");
-  toolbar->addWidget( button );
-
-  // entry_info button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::INFO, path_list ), "Display the current entry informations" );
-  connect( button, SIGNAL( clicked() ), SLOT( _entryInfo() ) );
-  button->setText("Info");
-  toolbar->addWidget( button );
-
+  toolbar->addAction( &viewHtmlAction() );
+  toolbar->addAction( &entryInfoAction() );
   toolbar->addAction( &splitViewHorizontalAction() );
   toolbar->addAction( &splitViewVerticalAction() );
+  toolbar->addAction( &cloneWindowAction() );
   toolbar->addAction( &closeAction() );
   
   // extra toolbar
@@ -622,6 +613,11 @@ void EditFrame::_installActions( void )
   connect( save_action_, SIGNAL( triggered() ), SLOT( _save() ) );
   save_action_->setShortcut( CTRL+Key_S );
   
+  // entry_info button
+  addAction( entry_info_action_ = new QAction( IconEngine::get( ICONS::INFO, path_list ), "Entry Information", this ) );
+  entry_info_action_->setToolTip( "Show current entry information" );
+  connect( entry_info_action_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
+  
   // html
   addAction( view_html_action_ = new QAction( IconEngine::get( ICONS::HTML, path_list ), "&View HTML", this ) );
   view_html_action_->setToolTip( "Convert current entry to HTML file" );
@@ -629,13 +625,19 @@ void EditFrame::_installActions( void )
     
   // split action
   addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM, path_list ), "Split view top/bottom", this ) );
-  split_view_horizontal_action_->setToolTip( "Clone current text editor vertically" );
+  split_view_horizontal_action_->setToolTip( "Split current text editor vertically" );
   connect( split_view_horizontal_action_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
 
   addAction( split_view_vertical_action_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT, path_list ), "Split view left/right", this ) );
-  split_view_vertical_action_->setToolTip( "Clone current text editor horizontally" );
+  split_view_vertical_action_->setToolTip( "Split current text editor horizontally" );
   connect( split_view_vertical_action_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
-  
+
+  // clone window action
+  addAction( clone_window_action_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE, path_list ), "Clone window", this ) );
+  clone_window_action_->setToolTip( "Create a new edition window displaying the same entry" );
+  connect( clone_window_action_, SIGNAL( triggered() ), SLOT( _cloneWindow() ) );
+
+  // close window action
   addAction( close_action_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE, path_list ), "&Close view", this ) );
   close_action_->setShortcut( CTRL+Key_W );
   close_action_->setToolTip( "Close current view" );
@@ -825,6 +827,32 @@ void EditFrame::_spellCheck( void )
   XmlOptions::get().setRaw( "DICTIONARY", dialog.interface().dictionary() );
   
 #endif
+}
+
+
+//_____________________________________________
+void EditFrame::_cloneWindow( void )
+{
+  
+  Debug::Throw( "EditFrame::_cloneWindow.\n" );
+  LogEntry *entry( EditFrame::entry() );
+  if( !entry ) {
+    QtUtil::infoDialog( this, "No valid entry found. <New window> canceled." );
+    return;
+  }
+
+  // retrieve selection frame
+  SelectionFrame *frame( _selectionFrame() );
+
+  // create new EditFrame
+  EditFrame *edit_frame( new EditFrame( frame ) );
+  Key::associate( edit_frame, frame );
+  edit_frame->displayEntry( entry );
+
+  // raise EditFrame
+  edit_frame->show();
+
+  return;
 }
 
 //_____________________________________________

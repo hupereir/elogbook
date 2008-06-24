@@ -191,6 +191,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   QAction& saveAction( void ) const
   { return *save_action_; }
   
+  //! entry information
+  QAction& entryInfoAction( void ) const
+  { return *entry_info_action_; }
+  
   //! view html
   QAction& viewHtmlAction( void ) const
   { return *view_html_action_; }
@@ -203,6 +207,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   QAction& splitViewVerticalAction( void ) const
   { return *split_view_vertical_action_; }
   
+  //! split view vertical
+  QAction& cloneWindowAction( void ) const
+  { return *clone_window_action_; }
+
   //! close view
   QAction& closeAction( void ) const
   { return *close_action_; }
@@ -269,6 +277,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! redo in focused editor (text/title/keyword);
   void _redo( void );
 
+  //! clone editor
+  void _cloneWindow( void );
+  
   //! view current entry as HTML
   void _viewHtml( void );
 
@@ -486,6 +497,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! save
   QAction* save_action_;
   
+  //! entry information
+  QAction* entry_info_action_;
+  
   //! view html
   QAction* view_html_action_;
   
@@ -494,6 +508,9 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   //! split view vertical
   QAction* split_view_vertical_action_;
+
+  //! new window action
+  QAction* clone_window_action_;
   
   //! close view (or window) action
   QAction* close_action_;

@@ -61,6 +61,7 @@ namespace ICONS
   static const std::string VIEW_LEFTRIGHT = "view_left_right.png";
   static const std::string VIEW_TOPBOTTOM = "view_top_bottom.png";
   static const std::string VIEW_REMOVE = "view_remove.png";
+  static const std::string VIEW_CLONE = "window_fullscreen.png";
     
 };
 

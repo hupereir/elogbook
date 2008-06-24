@@ -20,4 +20,5 @@ text_strike.png \
 text_under.png \
 view_left_right.png \
 view_remove.png \
-view_top_bottom.png
+view_top_bottom.png \
+window_fullscreen.png
