@@ -57,12 +57,15 @@ using namespace std;
 using namespace Qt;
 
 //_______________________________________________
-Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
+Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
   QMenuBar( parent ),
   Counter( "Menu" )
 {
   
   Debug::Throw( "Menu::Menu.\n" );
+  
+  // try cast parent to EditFrame
+  EditFrame* editframe( dynamic_cast<EditFrame*>( parent ) );
   
   // path list for menu
   list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
@@ -70,68 +73,69 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
 
   // generic menu/action
   QMenu *menu;
-  QAction *action;
   
   // file menu
   menu = addMenu( "&File" );
-  menu->addAction( &selection_frame->newLogbookAction() );
-  menu->addAction( &selection_frame->openAction() );
+  menu->addAction( &selectionframe->newLogbookAction() );
+  
+  if( editframe )
+  {
+    menu->addAction( &editframe->newEntryAction() );
+    menu->addAction( &editframe->splitViewHorizontalAction() );
+  }
+  
+  menu->addAction( &selectionframe->openAction() );
 
   // file menu
   open_previous_menu_ = new OpenPreviousMenu( this );
   open_previous_menu_->setTitle( "Open pre&vious" );
   open_previous_menu_->setCheck( true );
-  connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selection_frame, SLOT( open( FileRecord ) ) );  
+  connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selectionframe, SLOT( open( FileRecord ) ) );  
   menu->addMenu( open_previous_menu_ );
 
-  menu->addAction( &selection_frame->synchronizeAction() );
-  menu->addAction( &selection_frame->reorganizeAction() );
+  menu->addAction( &selectionframe->synchronizeAction() );
+  menu->addAction( &selectionframe->reorganizeAction() );
 
   menu->addSeparator();
-  action = menu->addAction( "&Save", this, SIGNAL( save() ), CTRL+Key_S );
-  action->setIcon( IconEngine::get( ICONS::SAVE, path_list ) );
+  if( editframe ) menu->addAction( &editframe->saveAction() );
+  else menu->addAction( &selectionframe->saveAction() );
   
-  menu->addAction( &selection_frame->saveAsAction() );
-  menu->addAction( &selection_frame->saveBackupAction() );
-  menu->addAction( &selection_frame->revertToSaveAction() );
+  menu->addAction( &selectionframe->saveAsAction() );
+  menu->addAction( &selectionframe->saveBackupAction() );
+  menu->addAction( &selectionframe->revertToSaveAction() );
   menu->addSeparator();
   
-  action = menu->addAction( "&View HTML", this, SIGNAL( viewHtml() ) );
-  action->setIcon( IconEngine::get( ICONS::HTML, path_list ) );
-  menu->addSeparator();
+  if( editframe ) menu->addAction( &editframe->viewHtmlAction() );
+  else menu->addAction( &selectionframe->viewHtmlAction() );
   
-  if( parent != selection_frame )
-  { 
-    action = menu->addAction( "&Close", this, SIGNAL( closeWindow() ), CTRL+Key_W ); 
-    action->setIcon( IconEngine::get( ICONS::CLOSE, path_list ) );
-  }
+  if( editframe ) menu->addAction( &editframe->closeAction() );
  
   MainFrame& mainframe( *static_cast<MainFrame*>(qApp) );
   menu->addAction( &mainframe.closeAction() );
 
   // edition menu
-  if( parent == selection_frame )
+  if( parent == selectionframe )
   {
     menu = addMenu( "&Edit" );
-    menu->addAction( &selection_frame->newKeywordAction() );
-    menu->addAction( &selection_frame->editKeywordAction() );
-    menu->addAction( &selection_frame->deleteKeywordAction() );
+    menu->addAction( &selectionframe->newKeywordAction() );
+    menu->addAction( &selectionframe->editKeywordAction() );
+    menu->addAction( &selectionframe->deleteKeywordAction() );
     menu->addSeparator();
-    menu->addAction( &selection_frame->newEntryAction() );
-    menu->addAction( &selection_frame->editEntryAction() );
-    menu->addAction( &selection_frame->deleteEntryAction() );
-    menu->addAction( &selection_frame->saveAction() );
+    menu->addAction( &selectionframe->newEntryAction() );
+    menu->addAction( &selectionframe->editEntryAction() );
+    menu->addAction( &selectionframe->deleteEntryAction() );
+    menu->addAction( &selectionframe->saveAction() );
   }
   
   // preferences menu
   menu = addMenu( "&Preferences" );
   menu->addAction( &mainframe.configurationAction() );
-  if( parent == selection_frame )
+  if( parent == selectionframe )
   {
     menu->addSeparator();
-    menu->addAction( &selection_frame->keywordToolBar().visibilityAction() );
-    menu->addAction( &selection_frame->entryToolBar().visibilityAction() );
-    menu->addAction( &selection_frame->searchPanel().visibilityAction() );
+    menu->addAction( &selectionframe->keywordToolBar().visibilityAction() );
+    menu->addAction( &selectionframe->entryToolBar().visibilityAction() );
+    menu->addAction( &selectionframe->searchPanel().visibilityAction() );
   }
   
   // windows menu
@@ -159,8 +163,8 @@ Menu::Menu( QWidget* parent, SelectionFrame* selection_frame ):
   DebugMenu *debug_menu( new DebugMenu( this ) );
   debug_menu->setTitle( "&Debug" );
   menu->addMenu( debug_menu );
-  debug_menu->addAction( &selection_frame->saveForcedAction() );
-  debug_menu->addAction( &selection_frame->showDuplicatesAction() );
+  debug_menu->addAction( &selectionframe->saveForcedAction() );
+  debug_menu->addAction( &selectionframe->showDuplicatesAction() );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
   debug_menu->addAction( &help->dumpAction() );
 
@@ -172,14 +176,14 @@ void Menu::_updateEditorMenu( void )
   Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
   editor_menu_->clear();
 
-  SelectionFrame &selection_frame( static_cast<MainFrame*>(qApp)->selectionFrame() );
+  SelectionFrame &selectionframe( static_cast<MainFrame*>(qApp)->selectionFrame() );
   AttachmentFrame &attachment_frame( static_cast<MainFrame*>(qApp)->attachmentFrame() );
   
   // editor attachments and logbook information
-  editor_menu_->addAction( &selection_frame.uniconifyAction() );
+  editor_menu_->addAction( &selectionframe.uniconifyAction() );
 
   
-  BASE::KeySet<EditFrame> frames( selection_frame );
+  BASE::KeySet<EditFrame> frames( selectionframe );
   bool has_alive_frame( find_if( frames.begin(), frames.end(), EditFrame::aliveFTor() ) != frames.end() );
   if( has_alive_frame )
   {
@@ -192,18 +196,18 @@ void Menu::_updateEditorMenu( void )
       
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
-      menu->addAction( title.c_str(), *iter, SLOT( uniconify() ) );
+      menu->addAction( title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
       
     }
     
     menu->addSeparator();
-    menu->addAction( &selection_frame.closeFramesAction() );
+    menu->addAction( &selectionframe.closeFramesAction() );
     
   }
   
   editor_menu_->addAction( &attachment_frame.uniconifyAction() );
-  editor_menu_->addAction( &selection_frame.logbookStatisticsAction() );
-  editor_menu_->addAction( &selection_frame.logbookInformationsAction() );
+  editor_menu_->addAction( &selectionframe.logbookStatisticsAction() );
+  editor_menu_->addAction( &selectionframe.logbookInformationsAction() );
   
   return;
 }

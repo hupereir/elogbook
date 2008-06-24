@@ -19,6 +19,8 @@
     <file alias="pixmaps/text_italic.png">../pixmaps/text_italic.png</file>
     <file alias="pixmaps/text_strike.png">../pixmaps/text_strike.png</file>
     <file alias="pixmaps/text_under.png">../pixmaps/text_under.png</file>
+    <file alias="pixmaps/view_left_right.png">../pixmaps/view_left_right.png</file>
+    <file alias="pixmaps/view_remove.png">../pixmaps/view_remove.png</file>
     <file alias="pixmaps/view_top_bottom.png">../pixmaps/view_top_bottom.png</file>
   </qresource>
 </RCC>

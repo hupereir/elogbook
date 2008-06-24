@@ -152,19 +152,9 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomToolBar* toolbar;
   toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" );
     
-  // generic tool button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::NEW, path_list ), "Create a new entry" );
-  connect( button, SIGNAL( clicked() ), SLOT( newEntry() ) );
-  button->setText("New");
-  toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
-
-  // save_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SAVE, path_list ), "Save the current entry" );
-  connect( button, SIGNAL( clicked() ), SLOT( save() ) );
-  button->setText("Save");
-  toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
+  // new entry
+  toolbar->addAction( &newEntryAction() );
+  toolbar->addAction( &saveAction() );
 
   // delete_entry button
   button = new CustomToolButton( toolbar, IconEngine::get( ICONS::DELETE, path_list ), "Delete the current entry" );
@@ -217,7 +207,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   button->setText("Info");
   toolbar->addWidget( button );
 
-  toolbar->addAction( &splitAction() );
+  toolbar->addAction( &splitViewHorizontalAction() );
+  toolbar->addAction( &splitViewVerticalAction() );
   toolbar->addAction( &closeAction() );
   
   // extra toolbar
@@ -230,10 +221,6 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
   setMenuBar( menu );
   
-  connect( menu, SIGNAL( save() ), SLOT( save() ) );
-  connect( menu, SIGNAL( closeWindow() ), SLOT( close() ) );
-  connect( menu, SIGNAL( viewHtml() ), SLOT( _viewHtml() ) );
-
   // changes display according to read_only flag
   setReadOnly( read_only_ );
   
@@ -365,7 +352,7 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
   
   // exec and check return code
   int state = dialog.exec();
-  if( state == AskForSaveDialog::YES ) save( false );
+  if( state == AskForSaveDialog::YES ) _save( false );
   else if( state == AskForSaveDialog::ALL ) 
   {
     /*
@@ -376,7 +363,7 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
     if( _selectionFrame()->logbook()->file().empty() )
     {
       for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter!= frames.end(); iter++ )
-      { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->save(enable_cancel); }
+      { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->_save(enable_cancel); }
     } else _selectionFrame()->save( false );
   }
   
@@ -441,10 +428,10 @@ void EditFrame::setModified( const bool& value )
 }
 
 //_____________________________________________
-void EditFrame::save( bool update_selection )
+void EditFrame::_save( bool update_selection )
 {
   
-  Debug::Throw( "EditFrame::save.\n" );
+  Debug::Throw( "EditFrame::_save.\n" );
   if( isReadOnly() ) return;
 
   // retrieve associated entry
@@ -515,10 +502,10 @@ void EditFrame::save( bool update_selection )
 }
 
 //_____________________________________________
-void EditFrame::newEntry( void )
+void EditFrame::_newEntry( void )
 {
 
-  Debug::Throw( "EditFrame::newEntry.\n" );
+  Debug::Throw( "EditFrame::_newEntry.\n" );
 
   // check if entry is modified
   if( modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -604,34 +591,58 @@ void EditFrame::_installActions( void )
   if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
 
   // undo action
-  undo_action_ = new QAction( IconEngine::get( ICONS::UNDO, path_list ), "&Undo", this );
+  addAction( undo_action_ = new QAction( IconEngine::get( ICONS::UNDO, path_list ), "&Undo", this ) );
   undo_action_->setToolTip( "Undo last modification" );
   connect( undo_action_, SIGNAL( triggered() ), SLOT( _undo() ) );
   
   // redo action
-  redo_action_ = new QAction( IconEngine::get( ICONS::REDO, path_list ), "&Redo", this );
+  addAction( redo_action_ = new QAction( IconEngine::get( ICONS::REDO, path_list ), "&Redo", this ) );
   redo_action_->setToolTip( "Redo last undone modification" );
   connect( redo_action_, SIGNAL( triggered() ), SLOT( _redo() ) );
 
+  // new entry
+  addAction( new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New Entry", this ) );
+  new_entry_action_->setToolTip( "Create new entry in current editor" );
+  connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
+  
   // previous_entry action
-  previous_entry_action_ = new QAction( IconEngine::get( ICONS::PREV, path_list ), "&Previous Entry", this );
+  addAction( previous_entry_action_ = new QAction( IconEngine::get( ICONS::PREV, path_list ), "&Previous Entry", this ) );
   previous_entry_action_->setToolTip( "Display previous entry in current list" );
   connect( previous_entry_action_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
 
   // previous_entry action
-  next_entry_action_ = new QAction( IconEngine::get( ICONS::NEXT, path_list ), "&Next Entry", this );
+  addAction( next_entry_action_ = new QAction( IconEngine::get( ICONS::NEXT, path_list ), "&Next Entry", this ) );
   next_entry_action_->setToolTip( "Display next entry in current list" );
   connect( next_entry_action_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
+  next_entry_action_->setShortcut( CTRL+Key_N );
 
+  // save
+  addAction( save_action_ = new QAction( IconEngine::get( ICONS::SAVE, path_list ), "&Save Entry", this ) );
+  save_action_->setToolTip( "Save current entry" );
+  connect( save_action_, SIGNAL( triggered() ), SLOT( _save() ) );
+  save_action_->setShortcut( CTRL+Key_S );
+  
+  // html
+  addAction( view_html_action_ = new QAction( IconEngine::get( ICONS::HTML, path_list ), "&View HTML", this ) );
+  view_html_action_->setToolTip( "Convert current entry to HTML file" );
+  connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
+    
   // split action
-  addAction( split_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM, path_list ), "Split view", this ) );
-  split_action_->setToolTip( "Split current text editor in two" );
-  connect( split_action_, SIGNAL( triggered() ), SLOT( _split() ) );
+  addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM, path_list ), "Split view top/bottom", this ) );
+  split_view_horizontal_action_->setToolTip( "Clone current text editor vertically" );
+  connect( split_view_horizontal_action_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
+
+  addAction( split_view_vertical_action_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT, path_list ), "Split view left/right", this ) );
+  split_view_vertical_action_->setToolTip( "Clone current text editor horizontally" );
+  connect( split_view_vertical_action_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
   
   addAction( close_action_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE, path_list ), "&Close view", this ) );
   close_action_->setShortcut( CTRL+Key_W );
   close_action_->setToolTip( "Close current view" );
-  connect( close_action_, SIGNAL( triggered() ), SLOT( _closeView() ) );
+  connect( close_action_, SIGNAL( triggered() ), SLOT( _close() ) );
+ 
+  addAction( uniconify_action_ = new QAction( "&uniconify", this ) );
+  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
 
 }
 
@@ -958,7 +969,6 @@ void EditFrame::_setActiveEditor( TextEditor& editor )
   assert( editor.isAssociated( this ) );
   
   active_editor_ = &editor;
-  if( format_toolbar_ ) format_toolbar_->setTarget( editor );
   if( !_activeEditor().isActive() )
   {
 
@@ -976,10 +986,74 @@ void EditFrame::_setActiveEditor( TextEditor& editor )
 }
 
 //___________________________________________________________
-TextEditor& EditFrame::_split( const Orientation& orientation )
+void EditFrame::_closeEditor( TextEditor& editor )
 {
+  Debug::Throw( "EditFrame::_closeEditor.\n" );
+ 
+  // retrieve number of editors
+  // if only one display, close the entire window
+  BASE::KeySet<TextEditor> editors( this );
+  if( editors.size() < 2 )
+  {
+    Debug::Throw() << "EditFrame::_closeEditor - full close." << endl;
+    close();
+    return;
+  }
+
+  // check if display is modified and has no associates in window
+  if( modified() && askForSave() ==  AskForSaveDialog::CANCEL ) return;
+
+  // retrieve parent and grandparent of current display
+  QWidget* parent( editor.parentWidget() );    
+  QSplitter* parent_splitter( dynamic_cast<QSplitter*>( parent ) );
   
-  Debug::Throw( "EditFrame::_split.\n" );
+  // retrieve editors associated to current
+  editors = BASE::KeySet<TextEditor>( &editor );
+    
+  // delete display
+  delete &editor;
+  
+  // check how many children remain in parent_splitter if any
+  if( parent_splitter && parent_splitter->count() == 1 ) 
+  {
+    
+    // retrieve child
+    QWidget* child( dynamic_cast<QWidget*>( parent_splitter->children().first() ) );
+    
+    // retrieve splitter parent
+    QWidget* grand_parent( parent_splitter->parentWidget() );
+    
+    // try cast to a splitter
+    QSplitter* grand_parent_splitter( dynamic_cast<QSplitter*>( grand_parent ) );
+    
+    // move child to grand_parent_splitter if any
+    if( grand_parent_splitter )
+    {  grand_parent_splitter->insertWidget( grand_parent_splitter->indexOf( parent_splitter ), child ); }
+    else
+    {
+      child->setParent( grand_parent );
+      grand_parent->layout()->addWidget( child );
+    }
+    
+    // delete parent_splitter, now that it is empty
+    delete parent_splitter;
+
+  }
+    
+  Debug::Throw( "EditFrame::_closeEditor - no associated display.\n" );
+  _setActiveEditor( **BASE::KeySet<TextEditor>( this ).rbegin() );
+  if( format_toolbar_ ) format_toolbar_->setTarget( _activeEditor() );
+
+  // change focus
+  _activeEditor().setFocus();
+  Debug::Throw( "EditFrame::_closeEditor - done.\n" );
+
+}
+
+//___________________________________________________________
+TextEditor& EditFrame::_splitView( const Orientation& orientation )
+{
+  Debug::Throw( "EditFrame::_splitView.\n" );
 
   // keep local pointer to current active display
   TextEditor& active_editor_local( _activeEditor() );  
@@ -1008,19 +1082,19 @@ TextEditor& EditFrame::_split( const Orientation& orientation )
   { sizes.push_back( dimension/splitter.count() ); }
   splitter.setSizes( sizes );
 
-  // synchronize both displays, if cloned
+  // synchronize both editors, if cloned
   /*
   if there exists no clone of active display,
   backup text and register a new Sync object
   */
-  BASE::KeySet<TextEditor> displays( &active_editor_local );
+  BASE::KeySet<TextEditor> editors( &active_editor_local );
 
   // clone new display
   editor.synchronize( &active_editor_local );
     
   // perform associations
-  // check if active displays has associates and propagate to new
-  for( BASE::KeySet<TextEditor>::iterator iter = displays.begin(); iter != displays.end(); iter++ )
+  // check if active editors has associates and propagate to new
+  for( BASE::KeySet<TextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
   { BASE::Key::associate( &editor, *iter ); }
   
   // associate new display to active

@@ -332,7 +332,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _loadColors( void );    
 
   private slots:
- 
+  
   //! configuration
   void _updateConfiguration( void );
 

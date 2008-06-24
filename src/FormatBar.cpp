@@ -127,11 +127,11 @@ void FormatBar::setTarget( TextEditor& editor )
   
   Debug::Throw() << "FormatBar::setTarget - key: " << editor.key() << endl;
 
-  if( editor_ )
-  { 
-    Debug::Throw( "FormatBar::setTarget - disconnecting old target\n" );
-    disconnect( editor_, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), this, SLOT( _updateState( const QTextCharFormat& ) ) ); 
-  }
+//   if( editor_ )
+//   { 
+//     Debug::Throw( "FormatBar::setTarget - disconnecting old target\n" );
+//     disconnect( editor_, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), this, SLOT( _updateState( const QTextCharFormat& ) ) ); 
+//   }
 
   editor_ = &editor;
   Debug::Throw( "FormatBar::setTarget - editor updated\n" );

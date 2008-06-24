@@ -175,6 +175,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //!@name actions
   //@{
 
+  //! new entry action
+  QAction& newEntryAction( void ) const
+  { return *new_entry_action_; }
+  
   //! previous entry action
   QAction& previousEntryAction( void ) const
   { return *previous_entry_action_; }
@@ -183,30 +187,31 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   QAction& nextEntryAction( void ) const
   { return *next_entry_action_; }
   
+  //! save
+  QAction& saveAction( void ) const
+  { return *save_action_; }
+  
+  //! view html
+  QAction& viewHtmlAction( void ) const
+  { return *view_html_action_; }
+  
   //! split view horizontal
-  QAction& splitAction( void ) const
-  { return *split_action_; }
+  QAction& splitViewHorizontalAction( void ) const
+  { return *split_view_horizontal_action_; }
+  
+  //! split view vertical
+  QAction& splitViewVerticalAction( void ) const
+  { return *split_view_vertical_action_; }
   
   //! close view
   QAction& closeAction( void ) const
   { return *close_action_; }
   
-  //@}
-
-  public slots:
-
-  //! Save Current entry
-  void save( bool update_selection = true );
-
-  //! creates a new entry
-  void newEntry( void );
-
   //! uniconify
-  void uniconify( void )
-  {
-    Debug::Throw( "EditFrame::uniconify.\n" );
-    QtUtil::uniconify( this );
-  }
+  QAction& uniconifyAction( void ) const
+  { return *uniconify_action_; } 
+
+  //@}
 
   protected:
 
@@ -224,8 +229,18 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   private slots:
 
-  //! install actions
-  void _installActions( void );
+  //! Save Current entry
+  void _save( bool update_selection = true );
+
+  //! creates a new entry
+  void _newEntry( void );
+
+  //! uniconify
+  void _uniconify( void )
+  {
+    Debug::Throw( "EditFrame::uniconify.\n" );
+    QtUtil::uniconify( this );
+  }
 
   //! configuration
   void _updateConfiguration( void );
@@ -254,6 +269,12 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! redo in focused editor (text/title/keyword);
   void _redo( void );
 
+  //! view current entry as HTML
+  void _viewHtml( void );
+
+  //! unlock read-only editors
+  void _unlock( void );
+
   //! update (enable/disable) undo action
   void _updateUndoAction( void );
 
@@ -265,12 +286,6 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     based on the widget that currently has focus
   */
   void _updateUndoRedoActions( QWidget* old, QWidget* current );
-
-  //! view current entry as HTML
-  void _viewHtml( void );
-
-  //! unlock read-only editors
-  void _unlock( void );
 
   //! Set entry as modified, change window title
   void _titleModified( bool );
@@ -286,15 +301,36 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _displayCursorPosition( int, int new_position )
   { _displayCursorPosition( TextPosition( 0, new_position ) ); }
 
+  //! close
+  void _close( void )
+  {
+    Debug::Throw( "EditFrame::_closeView (SLOT)\n" );
+    BASE::KeySet< TextEditor > editors( this );
+    if( editors.size() > 1 ) _closeEditor( _activeEditor() );
+    else close();    
+  }
+  
   //! clone current file
-  void _split( void )
-  { _split( Qt::Vertical ); }
+  void _splitView( void )
+  { _splitView( Qt::Vertical ); }
 
+  //! clone current file horizontal
+  void _splitViewHorizontal( void )
+  { _splitView( Qt::Horizontal ); }
+
+  //! clone current file horizontal
+  void _splitViewVertical( void )
+  { _splitView( Qt::Vertical ); }
+  
   //! display focus changed
   void _displayFocusChanged( TextEditor* );  
 
   private:  
   
+  //! install actions
+  void _installActions( void );
+
+
   //!@name display management
   //@{
   
@@ -314,7 +350,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _closeEditor( TextEditor& );
 
   //! split view
-  TextEditor& _split( const Qt::Orientation& );
+  TextEditor& _splitView( const Qt::Orientation& );
   
   //! create new splitter
   QSplitter& _newSplitter( const Qt::Orientation&  );
@@ -438,17 +474,32 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! redo
   QAction* redo_action_;
 
+  //! new entry
+  QAction* new_entry_action_;
+  
   //! previous entry action
   QAction* previous_entry_action_;
 
   //! next entry action
   QAction* next_entry_action_;
 
-  //! split action
-  QAction* split_action_;
+  //! save
+  QAction* save_action_;
+  
+  //! view html
+  QAction* view_html_action_;
+  
+  //! split view horizontal
+  QAction* split_view_horizontal_action_;
+  
+  //! split view vertical
+  QAction* split_view_vertical_action_;
   
   //! close view (or window) action
   QAction* close_action_;
+  
+  //! uniconify
+  QAction* uniconify_action_;
   
   //@}
 };

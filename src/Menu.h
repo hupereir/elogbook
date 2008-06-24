@@ -70,30 +70,7 @@ class Menu:public QMenuBar, public Counter
     assert( open_previous_menu_ );
     return *open_previous_menu_;
   }
-  
-  signals:
-  
-  //! close window
-  /*! 
-  this signal is reinterpreted by the parent to close either the
-  the entry edit frame or the whole application
-  */
-  void closeWindow( void );
-  
-  //! save
-  /*! 
-  this signal is reinterpreted by the parent to save
-  either the current entry or the full logbook
-  */
-  void save( void );
-  
-  //! view html
-  /*! 
-  this signal is reinterpreted by the parent to view
-  either the current entry or the full logbook
-  */
-  void viewHtml( void );
-  
+    
   private slots:
   
   //! get list of editor windows into menu

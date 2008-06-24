@@ -228,10 +228,6 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   menu_ = new Menu( this , this );
   setMenuBar( menu_ );
     
-  connect( menu_, SIGNAL( save() ), SLOT( save() ) );
-  connect( menu_, SIGNAL( closeWindow() ), &static_cast<MainFrame*>(qApp)->closeAction(), SLOT( trigger() ) );
-  connect( menu_, SIGNAL( viewHtml() ), this, SLOT( _viewHtml() ) );
- 
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
@@ -658,7 +654,7 @@ Keyword SelectionFrame::currentKeyword( void ) const
 void SelectionFrame::save( const bool& confirm_entries )
 {
 
-  Debug::Throw( "SelectionFrame::save.\n" );
+  Debug::Throw( "SelectionFrame::_save.\n" );
  
   // check logbook
   if( !logbook_ ) 
@@ -678,7 +674,7 @@ void SelectionFrame::save( const bool& confirm_entries )
     {
       if( !confirm_entries_ ) 
       {
-        (*iter)->save();
+        (*iter)->saveAction().trigger();
       } else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
     }
   }
@@ -974,7 +970,7 @@ void SelectionFrame::_installActions( void )
   entry_keyword_action_->setToolTip( "Edit selected entries keyword" );
   connect( entry_keyword_action_, SIGNAL( triggered() ), SLOT( _renameEntryKeyword() ) );
 
-  new_logbook_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New", this );
+  new_logbook_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New Logbook", this );
   new_logbook_action_->setToolTip( "Create a new logbook" );
   connect( new_logbook_action_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
@@ -1723,7 +1719,7 @@ void SelectionFrame::_newEntry( void )
   Key::associate( this, frame );
 
   // call NewEntry for the selected frame
-  frame->newEntry();
+  frame->newEntryAction().trigger();
   frame->show();
 
 }
@@ -1832,7 +1828,7 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
     edit_frame->displayEntry( entry );
     edit_frame->show();
 
-  } else edit_frame->uniconify();
+  } else edit_frame->uniconifyAction().trigger();
   
   Debug::Throw( "SelectionFrame::_displayEntry - done.\n" );
 
@@ -2697,7 +2693,7 @@ void SelectionFrame::_autoSave( void )
     // retrieve non read only editors; perform save
     BASE::KeySet<EditFrame> frames( this );
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    if( !((*iter)->isReadOnly() || (*iter)->isClosed() ) ) (*iter)->save();
+    if( !((*iter)->isReadOnly() || (*iter)->isClosed() ) ) (*iter)->saveAction().trigger();
 
     save();
   
