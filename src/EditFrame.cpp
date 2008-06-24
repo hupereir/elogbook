@@ -166,15 +166,6 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // add_attachment button
   toolbar->addAction( &attachment_list->newAttachmentAction() );
 
-  #if WITH_ASPELL
-  // spellcheck button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::SPELLCHECK, path_list ), "Check spelling of current entry" );
-  connect( button, SIGNAL( clicked() ), SLOT( _spellCheck() ) );
-  read_only_widgets_.push_back( button );
-  toolbar->addWidget( button );
-  button->setText("Spell");
-  #endif
-
   // format bar
   format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
   format_toolbar_->setTarget( _activeEditor() );
@@ -184,6 +175,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
   toolbar->addAction( undo_action_ );
   toolbar->addAction( redo_action_ );
+  read_only_widgets_.push_back( toolbar );
 
   // undo/redo connections
   connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
@@ -195,8 +187,15 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // extra toolbar
   toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" );
 
+  #if WITH_ASPELL
+  toolbar->addAction( &spellCheckAction() );
+  #endif
+
   toolbar->addAction( &viewHtmlAction() );
   toolbar->addAction( &entryInfoAction() );
+  
+  // extra toolbar
+  toolbar = new CustomToolBar( "Multiple views", this, "MULTIPLE_VIEW_TOOLBAR" );
   toolbar->addAction( &splitViewHorizontalAction() );
   toolbar->addAction( &splitViewVerticalAction() );
   toolbar->addAction( &cloneWindowAction() );
@@ -273,7 +272,7 @@ void EditFrame::setReadOnly( const bool& value )
   read_only_ = value;
 
   // changes button state
-  for( list< QWidget* >::iterator it=read_only_widgets_.begin(); it != read_only_widgets_.end(); it++ )
+  for( vector< QWidget* >::iterator it=read_only_widgets_.begin(); it != read_only_widgets_.end(); it++ )
   { (*it)->setEnabled( !isReadOnly() ); }
 
   // changes lock button state
@@ -612,7 +611,13 @@ void EditFrame::_installActions( void )
   save_action_->setToolTip( "Save current entry" );
   connect( save_action_, SIGNAL( triggered() ), SLOT( _save() ) );
   save_action_->setShortcut( CTRL+Key_S );
-  
+
+  #if WITH_ASPELL
+  addAction( spellcheck_action_ = new QAction( IconEngine::get( ICONS::SPELLCHECK, path_list ), "Spell", this ) );
+  spellcheck_action_->setToolTip( "Check spelling of current entry" );
+  connect( spellcheck_action_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
+  #endif
+
   // entry_info button
   addAction( entry_info_action_ = new QAction( IconEngine::get( ICONS::INFO, path_list ), "Entry Information", this ) );
   entry_info_action_->setToolTip( "Show current entry information" );

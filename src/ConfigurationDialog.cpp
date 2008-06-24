@@ -242,6 +242,11 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation toolbar", box, "MULTIPLE_VIEW_TOOLBAR" )); 
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" )); 
+  addOptionWidget( checkbox );
+  addOptionWidget( combobox );
+
   box = new QGroupBox( page );
   page->layout()->addWidget( box );
   

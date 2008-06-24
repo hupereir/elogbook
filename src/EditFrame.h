@@ -51,7 +51,7 @@
 #include "Counter.h"
 #include "Debug.h"
 
-
+#include "Config.h"
 #include "Key.h"
 #include "LogEntry.h"
 #include "QtUtil.h"
@@ -190,6 +190,12 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! save
   QAction& saveAction( void ) const
   { return *save_action_; }
+
+  #if WITH_ASPELL  
+  //! check spelling of current entry
+  QAction& spellCheckAction( void ) const
+  { return *spellcheck_action_; }
+  #endif
   
   //! entry information
   QAction& entryInfoAction( void ) const
@@ -387,7 +393,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   bool read_only_;
 
   //! list of buttons to disactivate in case of read-only
-  std::list< QWidget* > read_only_widgets_;
+  std::vector< QWidget* > read_only_widgets_;
 
   //! "closed" flag
   /*! this flag is used for delayed deletion of EditFrames, when direct deletion might cause flags */
@@ -496,6 +502,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! save
   QAction* save_action_;
+  
+  #if WITH_ASPELL
+  QAction* spellcheck_action_;
+  #endif
   
   //! entry information
   QAction* entry_info_action_;
