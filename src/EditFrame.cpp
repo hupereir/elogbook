@@ -1033,9 +1033,6 @@ void EditFrame::_closeEditor( TextEditor& editor )
     return;
   }
 
-  // check if display is modified and has no associates in window
-  if( modified() && askForSave() ==  AskForSaveDialog::CANCEL ) return;
-
   // retrieve parent and grandparent of current display
   QWidget* parent( editor.parentWidget() );    
   QSplitter* parent_splitter( dynamic_cast<QSplitter*>( parent ) );

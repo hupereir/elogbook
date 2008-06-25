@@ -97,17 +97,17 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "MAIN_TOOLBAR",   "1" , "toolbar visibility" ));
   XmlOptions::get().add( Option( "FORMAT_TOOLBAR",  "1" , "toolbar visibility" ));
   XmlOptions::get().add( Option( "EDITION_TOOLBAR", "0" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR", "1" , "toolbar visibility" ));
+  XmlOptions::get().add( Option( "EXTRA_TOOLBAR", "0" , "toolbar visibility" ));
   XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR", "0" , "toolbar visibility" ));
   XmlOptions::get().add( Option( "MULTIPLE_VIEW_TOOLBAR", "1" , "toolbar visibility" ));
 
-  XmlOptions::get().add( Option( "LOCK_TOOLBAR_LOCATION",   "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "MAIN_TOOLBAR_LOCATION",   "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "FORMAT_TOOLBAR_LOCATION",  "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "EDITION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_LOCATION", "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "left" , "toolbar location" ));
-  XmlOptions::get().add( Option( "MULTIPLE_VIEW_TOOLBAR_LOCATION", "left" , "toolbar location" ));
+  XmlOptions::get().add( Option( "LOCK_TOOLBAR_LOCATION",   "top" , "toolbar location" ));
+  XmlOptions::get().add( Option( "MAIN_TOOLBAR_LOCATION",   "top" , "toolbar location" ));
+  XmlOptions::get().add( Option( "FORMAT_TOOLBAR_LOCATION",  "top" , "toolbar location" ));
+  XmlOptions::get().add( Option( "EDITION_TOOLBAR_LOCATION", "top" , "toolbar location" ));
+  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_LOCATION", "top" , "toolbar location" ));
+  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "top" , "toolbar location" ));
+  XmlOptions::get().add( Option( "MULTIPLE_VIEW_TOOLBAR_LOCATION", "top" , "toolbar location" ));
   
   XmlOptions::get().add( Option( "LOCK_TOOLBAR", "0" , "keywords toolbar visibility" ));
   XmlOptions::get().add( Option( "ENTRY_TOOLBAR", "1" , "entries toolbar visibility" ));
