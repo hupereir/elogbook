@@ -379,7 +379,9 @@ void FormatBar::_updateColorPixmap( QColor color )
     painter.setBrush( gradient );
     painter.drawRect( QRectF( 0, base.height(), base.width(), (ratio-1)*base.height() ) );
   }
+  painter.end();
   
   button->setIcon( new_pixmap.scaleHeight( button->iconSize().height() ) );
+  
   
 }

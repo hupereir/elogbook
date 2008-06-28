@@ -272,8 +272,8 @@ QIcon LogEntryModel::_createIcon( const QColor& color ) const
     gradient.setColorAt(0, color );
     gradient.setColorAt(1, color.light(135) );
     painter.setBrush( gradient ); 
-    //painter.drawRect( rect );
     painter.drawEllipse( rect );
+    painter.end();
  
   }
   

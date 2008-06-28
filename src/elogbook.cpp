@@ -62,7 +62,7 @@ int main (int argc, char *argv[])
     qInstallMsgHandler( ErrorHandler::Throw );
     ErrorHandler::disableMessage( "QServerSocket: failed to bind or listen to the socket" );
     ErrorHandler::disableMessage( "QPixmap::resize: TODO: resize alpha data" );
-  
+ 
     // load possible command file
     ArgList args( argc, argv );
     if( args.find( "--help" ) )

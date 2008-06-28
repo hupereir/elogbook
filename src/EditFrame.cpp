@@ -1320,6 +1320,6 @@ void EditFrame::ColorWidget::paintEvent( QPaintEvent* e )
   QRect r( 
     QPoint( h_offset, border + v_offset ),
     QPoint( h_offset+w, height() ) + QPoint( 0, -border + v_offset ) );
-  //painter.drawEllipse( r );
   painter.drawRoundRect( r );
+  painter.end();
 }
