@@ -142,8 +142,9 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // lock toolbar is visible only when window is not editable
   lock_ = new CustomToolBar( "Lock", this, "LOCK_TOOLBAR" );
   CustomToolButton *button;
-  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK, path_list ), "Unlock current editor" );
+  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK, path_list ) );
   connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
+  button->setToolTip( "Remove read-only lock for current editor." );
   button->setText("Unlock");  
   lock_->addWidget( button );
   lock_->setMovable( false );
