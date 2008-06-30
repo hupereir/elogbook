@@ -1319,7 +1319,8 @@ void EditFrame::ColorWidget::paintEvent( QPaintEvent* e )
   int h_offset = (width() - w - 1)/2;
   QRect r( 
     QPoint( h_offset, border + v_offset ),
-    QPoint( h_offset+w, height() ) + QPoint( 0, -border + v_offset ) );
+    //QPoint( h_offset+w, height() ) + QPoint( 0, -border + v_offset ) );
+    QPoint( h_offset+w, w ) + QPoint( 0, -border + v_offset ) );
   painter.drawRoundRect( r );
   painter.end();
 }
