@@ -1313,14 +1313,15 @@ void EditFrame::ColorWidget::paintEvent( QPaintEvent* e )
   //painter.setPen( color_ );
   painter.setBrush( gradient );
   
-  int border = 2;
-  int v_offset = -1;
-  int w = min( width(), height() - 2*border ); 
+  int border = 3;
+  int w = max( width() - 2*border, height() - 2*border ); 
   int h_offset = (width() - w - 1)/2;
+  int v_offset = (height() - w - 1)/2;
   QRect r( 
-    QPoint( h_offset, border + v_offset ),
+    QPoint( border + h_offset, border + v_offset ),
     //QPoint( h_offset+w, height() ) + QPoint( 0, -border + v_offset ) );
-    QPoint( h_offset+w, w ) + QPoint( 0, -border + v_offset ) );
-  painter.drawRoundRect( r );
+    QPoint( h_offset+w, w ) + QPoint( -border, -border + v_offset ) );
+  //painter.drawRoundRect( r );
+  painter.drawEllipse( r );
   painter.end();
 }
