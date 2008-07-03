@@ -234,12 +234,11 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
   
   return out;
 }
-
+  
 //________________________________________
 void FormatBar::_updateConfiguration( void )
 {
   Debug::Throw( "FormatBar::_updateConfiguration.\n" );
-  
   // retrieve colors from options
   list<string> text_colors( XmlOptions::get().specialOptions<string>( "TEXT_COLOR" ) );
   if( text_colors.empty() ) 

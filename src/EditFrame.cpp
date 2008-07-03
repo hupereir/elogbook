@@ -170,7 +170,9 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // format bar
   format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
   format_toolbar_->setTarget( _activeEditor() );
-  read_only_widgets_.push_back( format_toolbar_ );
+  const FormatBar::ButtonMap& buttons( format_toolbar_->buttons() );
+  for( FormatBar::ButtonMap::const_iterator iter = buttons.begin(); iter != buttons.end(); iter++ )
+  { read_only_widgets_.push_back( iter->second ); }
 
   // edition toolbars
   toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );

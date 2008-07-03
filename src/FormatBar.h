@@ -100,6 +100,13 @@ class FormatBar: public CustomToolBar
   
   //! get text formats
   FORMAT::TextFormatBlock::List get( void ) const;
+    
+  //! button map
+  typedef std::map< ButtonId, CustomToolButton* > ButtonMap;
+  
+  //! buttons
+  const ButtonMap& buttons( void ) const
+  { return buttons_; }
   
   private slots:
   
@@ -137,9 +144,6 @@ class FormatBar: public CustomToolBar
    
   //! target text editor
   TextEditor* editor_;
-  
-  //! button map
-  typedef std::map< ButtonId, CustomToolButton* > ButtonMap;
   
   //! button map
   ButtonMap buttons_; 
