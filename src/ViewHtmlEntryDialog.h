@@ -36,7 +36,7 @@
 #include <map>
 #include <string>
 
-#include "BrowsedLineEdit.h"
+#include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 #include "LineEditor.h"
 #include "File.h"
@@ -121,10 +121,10 @@ class ViewHtmlEntryDialog: public CustomDialog
   CheckBoxMap entry_check_boxes_;
   
   //! command
-  BrowsedLineEdit *command_;
+  BrowsedLineEditor *command_;
   
   //! file
-  BrowsedLineEdit *file_;  
+  BrowsedLineEditor *file_;  
       
 };
 

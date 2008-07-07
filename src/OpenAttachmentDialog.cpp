@@ -33,7 +33,6 @@
 #include <QGroupBox>
 #include <QLayout>
 
-#include "BrowsedLineEdit.h"
 #include "CustomGridLayout.h"
 #include "LineEditor.h"
 #include "TextEditor.h"
@@ -87,7 +86,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   open_radio_button_->setToolTip( "Select this button to open attachment using the selected application." );
   group->addButton( open_radio_button_ );
   
-  group_box->layout()->addWidget( command_line_edit_ = new BrowsedLineEdit( group_box ) );
+  group_box->layout()->addWidget( command_line_edit_ = new BrowsedLineEditor( group_box ) );
   command_line_edit_->setFile( attachment.type().editCommand() );
   QtUtil::expand( &command_line_edit_->editor() );
   command_line_edit_->setToolTip( "Application to be used to display the attachment." );

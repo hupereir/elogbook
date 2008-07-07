@@ -52,12 +52,12 @@ ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
 
   // command
   mainLayout().addWidget( new QLabel( "Command:", this ) );
-  mainLayout().addWidget( command_ = new BrowsedLineEdit( this ) );
+  mainLayout().addWidget( command_ = new BrowsedLineEditor( this ) );
   command_->setFileMode( QFileDialog::ExistingFile );
   
   // file
   mainLayout().addWidget( new QLabel( "File:", this ) );
-  mainLayout().addWidget( file_ = new BrowsedLineEdit( this ) );
+  mainLayout().addWidget( file_ = new BrowsedLineEditor( this ) );
   file_->setFileMode( QFileDialog::AnyFile );
 
   QPushButton* button = new QPushButton( "more ... ", this );

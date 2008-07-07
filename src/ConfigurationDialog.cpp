@@ -39,7 +39,7 @@
 #include "Debug.h"
 #include "TreeViewConfiguration.h"
 #include "MainFrame.h"
-#include "OptionBrowsedLineEdit.h"
+#include "OptionBrowsedLineEditor.h"
 #include "OptionCheckBox.h"
 #include "OptionSpinBox.h"
 #include "OptionListBox.h"
@@ -83,30 +83,30 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->setMaxCount( 2 );
   box->setLayout( grid_layout );
 
-  OptionBrowsedLineEdit *editor;
+  OptionBrowsedLineEditor *editor;
   
   grid_layout->addWidget( new QLabel( "Default: ", box ) );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_UNKNOWN_ATC" ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_UNKNOWN_ATC" ) );
   addOptionWidget( editor );
   
   grid_layout->addWidget( new QLabel( "HTML: ", box ) );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_HTML_ATC" ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_HTML_ATC" ) );
   addOptionWidget( editor );
 
   grid_layout->addWidget( new QLabel( "URL: ", box ) );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_URL_ATC" ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_URL_ATC" ) );
   addOptionWidget( editor );
 
   grid_layout->addWidget( new QLabel( "Text: ", box ) );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_PLAIN_TEXT_ATC" ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_PLAIN_TEXT_ATC" ) );
   addOptionWidget( editor );
 
   grid_layout->addWidget( new QLabel( "Postscript: ", box ) );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_POSTSCRIPT_ATC" ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_POSTSCRIPT_ATC" ) );
   addOptionWidget( editor );
 
   grid_layout->addWidget( new QLabel( "Image: ", box ) );
-  grid_layout->addWidget( editor =  new OptionBrowsedLineEdit( box, "EDIT_IMAGE_ATC" ) );
+  grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_IMAGE_ATC" ) );
   addOptionWidget( editor );
   
   grid_layout->setColumnStretch( 1, 1 );

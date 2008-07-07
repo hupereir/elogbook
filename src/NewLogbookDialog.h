@@ -34,7 +34,7 @@
 
 #include <string>
 
-#include "BrowsedLineEdit.h"
+#include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 #include "LineEditor.h"
 #include "TextEditor.h"
@@ -138,10 +138,10 @@ class NewLogbookDialog: public CustomDialog
   LineEditor *author_;
             
   //! filename browsed line editor
-  BrowsedLineEdit *file_;  
+  BrowsedLineEditor *file_;  
   
   //! destination directory browsed line edti
-  BrowsedLineEdit *attachment_directory_;
+  BrowsedLineEditor *attachment_directory_;
   
   //! comments
   TextEditor *comments_;

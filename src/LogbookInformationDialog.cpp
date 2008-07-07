@@ -69,7 +69,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
   
   // attachment directory
   grid_layout->addWidget( new QLabel( "Directory: ", this ), 2, 0 );
-  grid_layout->addWidget( attachment_directory_ = new BrowsedLineEdit( this ), 2, 1 );
+  grid_layout->addWidget( attachment_directory_ = new BrowsedLineEditor( this ), 2, 1 );
   attachment_directory_->setFile( logbook->directory().empty() ? Util::workingDirectory().c_str() : logbook->directory().c_str() );
   attachment_directory_->setFileMode( QFileDialog::DirectoryOnly );
   attachment_directory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );

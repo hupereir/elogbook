@@ -184,15 +184,11 @@ void Menu::_updateEditorMenu( void )
 
   
   BASE::KeySet<EditFrame> frames( selectionframe );
-  bool has_alive_frame( find_if( frames.begin(), frames.end(), EditFrame::aliveFTor() ) != frames.end() );
-  if( has_alive_frame )
+  if( !frames.empty() )
   {
     QMenu *menu = editor_menu_->addMenu( "&Editors" );
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
-      
-      // ignore if frame is to be deleted
-      if( (*iter)->isClosed() ) continue;
       
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
@@ -202,7 +198,6 @@ void Menu::_updateEditorMenu( void )
     
     menu->addSeparator();
     menu->addAction( &selectionframe.closeFramesAction() );
-    
   }
   
   editor_menu_->addAction( &attachment_frame.uniconifyAction() );

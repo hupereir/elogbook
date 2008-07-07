@@ -37,7 +37,7 @@
 
 #include "Attachment.h"
 #include "AttachmentType.h"
-#include "BrowsedLineEdit.h"
+#include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 #include "TextEditor.h"
 #include "File.h"
@@ -96,13 +96,13 @@ class NewAttachmentDialog: public CustomDialog
   private:
   
   //! filename browsed line editor
-  BrowsedLineEdit *file_line_edit_;  
+  BrowsedLineEditor *file_line_edit_;  
       
   //! destination directory vbox
   QLayout* directory_layout_;
   
   //! destination directory browsed line edti
-  BrowsedLineEdit *dest_dir_line_edit_;
+  BrowsedLineEditor *dest_dir_line_edit_;
   
   //! file type combo box
   QComboBox *file_type_combo_box_;  

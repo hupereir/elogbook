@@ -31,7 +31,7 @@
   \date $Date$
 */
 
-#include "BrowsedLineEdit.h"
+#include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 #include "LineEditor.h"
 #include "TextEditor.h"
@@ -71,7 +71,7 @@ class LogbookInformationDialog: public CustomDialog
   LineEditor* author_;
   
   //! attachment directory
-  BrowsedLineEdit* attachment_directory_;
+  BrowsedLineEditor* attachment_directory_;
 
   //! comments
   TextEditor* comments_;

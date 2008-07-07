@@ -36,7 +36,6 @@
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
 #include "BaseIcons.h"
-#include "BrowsedLineEdit.h"
 #include "ColorMenu.h"
 #include "LineEditor.h"
 #include "CustomPixmap.h"
@@ -75,14 +74,13 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
   read_only_( read_only ),
-  closed_( false ),
   color_widget_( 0 ),
   active_editor_( 0 ),
   format_toolbar_( 0 )
 {
   Debug::Throw("EditFrame::EditFrame.\n" );
   setObjectName( "EDITFRAME" );
-    
+  
   QWidget* main( new QWidget( this ) ); 
   setCentralWidget( main );
 
@@ -110,8 +108,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   main_->layout()->setMargin(0);
   main_->layout()->setSpacing(0);
 
+  // create editor
   TextEditor& editor( _newTextEditor( main_ ) );
-  editor.setActive( true );
   main_->layout()->addWidget( &editor );
   
   connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );
@@ -389,7 +387,7 @@ void EditFrame::displayColor( void )
     // delete existing color widget if any
     if( color_widget_ )
     {
-      delete color_widget_;
+      color_widget_->deleteLater();
       color_widget_ = 0;
     }
     
@@ -443,6 +441,7 @@ void EditFrame::_save( bool update_selection )
     QtUtil::infoDialog( this, "No logbook opened. <Save> canceled." );
     return;
   }
+  Debug::Throw( "EditFrame::_save - logbook checked.\n" );
 
   //! update entry text
   entry->setText( qPrintable( _activeEditor().toPlainText() ) );
@@ -459,6 +458,7 @@ void EditFrame::_save( bool update_selection )
 
   // status bar
   statusbar_->label().setText(  "writting entry to logbook ..." );
+  Debug::Throw( "EditFrame::_save - statusbar set.\n" );
 
   // add entry to logbook, if needed
   if( entry_is_new ) Key::associate( entry, logbook->latestChild() );
@@ -466,6 +466,7 @@ void EditFrame::_save( bool update_selection )
   // update this window title, set unmodified.
   setModified( false );
   updateWindowTitle();
+  Debug::Throw( "EditFrame::_save - modified state saved.\n" );
 
   // update associated EditFrames
   BASE::KeySet<EditFrame> editors( entry );
@@ -475,20 +476,25 @@ void EditFrame::_save( bool update_selection )
     if( *iter == this ) continue;
     (*iter)->displayEntry( entry );
   }
+  Debug::Throw( "EditFrame::_save - editFrames updated.\n" );
   
   // update selection frame
   frame->updateEntry( entry, update_selection );
   frame->setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+  Debug::Throw( "EditFrame::_save - selectionFrame updated.\n" );
 
   // set logbook as modified
   BASE::KeySet<Logbook> logbooks( entry );
   for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
   (*iter)->setModified( true );
+  Debug::Throw( "EditFrame::_save - loogbook modified state updated.\n" );
 
   // Save logbook
   if( frame->logbook()->file().size() ) frame->save();
+  Debug::Throw( "EditFrame::_save - selectionFrame saved.\n" );
 
   statusbar_->label().setText( "" );
+  Debug::Throw( "EditFrame::_save - done.\n" );
 
   return;
 
@@ -527,11 +533,12 @@ void EditFrame::closeEvent( QCloseEvent *event )
   Debug::Throw( "EditFrame::closeEvent.\n" );
   
   // ask for save if entry is modified
-  if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
+  //if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
+  if( !isReadOnly() && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   else
   {
     _saveConfiguration();
-    setIsClosed( true );
+    deleteLater();
     event->accept();
   }
   
@@ -1016,6 +1023,9 @@ void EditFrame::_setActiveEditor( TextEditor& editor )
 
   }
   
+  // associate with toolbar
+  if( format_toolbar_ ) format_toolbar_->setTarget( _activeEditor() );
+
   Debug::Throw( "EditFrame::setActiveDisplay - done.\n" );
   
 
@@ -1043,15 +1053,24 @@ void EditFrame::_closeEditor( TextEditor& editor )
   // retrieve editors associated to current
   editors = BASE::KeySet<TextEditor>( &editor );
     
-  // delete display
-  delete &editor;
-  
   // check how many children remain in parent_splitter if any
-  if( parent_splitter && parent_splitter->count() == 1 ) 
+  // take action if it is less than 2 (the current one to be deleted, and another one)
+  if( parent_splitter && parent_splitter->count() <= 2 ) 
   {
     
-    // retrieve child
-    QWidget* child( dynamic_cast<QWidget*>( parent_splitter->children().first() ) );
+    // retrieve child that is not the current editor
+    // need to loop over existing widgets because the editor above has not been deleted yet
+    QWidget* child(0);
+    for( int index = 0; index < parent_splitter->count(); index++ )
+    { 
+      if( parent_splitter->widget( index ) != &editor ) 
+      {
+        child = parent_splitter->widget( index );
+        break;
+      }
+    }    
+    assert( child );
+    Debug::Throw( "EditFrame::_closeEditor - found child.\n" );
     
     // retrieve splitter parent
     QWidget* grand_parent( parent_splitter->parentWidget() );
@@ -1069,13 +1088,29 @@ void EditFrame::_closeEditor( TextEditor& editor )
     }
     
     // delete parent_splitter, now that it is empty
-    delete parent_splitter;
+    parent_splitter->deleteLater();
+    Debug::Throw( "EditFrame::_closeEditor - deleted splitter.\n" );
 
-  }
+  } else {
     
-  Debug::Throw( "EditFrame::_closeEditor - no associated display.\n" );
-  _setActiveEditor( **BASE::KeySet<TextEditor>( this ).rbegin() );
-  if( format_toolbar_ ) format_toolbar_->setTarget( _activeEditor() );
+    // the editor is deleted only if its parent splitter is not
+    // otherwise this will trigger double deletion of the editor 
+    // which will then crash
+    editor.deleteLater();
+    
+  }
+      
+  // update activeEditor
+  bool active_found( false );
+  for( BASE::KeySet<TextEditor>::reverse_iterator iter = editors.rbegin(); iter != editors.rend(); iter++ )
+  { 
+    if( (*iter) != &editor ) {
+      _setActiveEditor( **iter ); 
+      active_found = true;
+      break;
+    }
+  }  
+  assert( active_found );
 
   // change focus
   _activeEditor().setFocus();
@@ -1150,15 +1185,19 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
   // try catch to splitter
   // do not create a new splitter if the parent has same orientation
   QSplitter *parent_splitter( dynamic_cast<QSplitter*>( parent ) );
-  if( parent_splitter && parent_splitter->orientation() == orientation ) splitter = parent_splitter;
-  else {
+  if( parent_splitter && parent_splitter->orientation() == orientation ) {
+  
+    Debug::Throw( "EditFrame::_newSplitter - orientation match. No need to create new splitter.\n" );
+    splitter = parent_splitter;
+  
+  } else {
     
     
     // move splitter to the first place if needed
     if( parent_splitter ) 
     {
       
-      Debug::Throw( "EditFrame::_newSplitter - found parent splitter.\n" );
+      Debug::Throw( "EditFrame::_newSplitter - found parent splitter with incorrect orientation.\n" );
       // create a splitter with correct orientation
       // give him no parent, because the parent is set in QSplitter::insertWidget()
       splitter = new LocalSplitter(0);
@@ -1167,6 +1206,8 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
       
     } else {
       
+      Debug::Throw( "EditFrame::_newSplitter - no splitter found. Creating a new one.\n" );
+
       // create a splitter with correct orientation
       splitter = new LocalSplitter(parent);
       splitter->setOrientation( orientation );

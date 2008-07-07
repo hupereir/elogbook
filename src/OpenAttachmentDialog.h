@@ -36,7 +36,7 @@
 #include <string>
 
 #include "Attachment.h"
-#include "BrowsedLineEdit.h"
+#include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 
 //! open attachment popup dialog
@@ -72,7 +72,7 @@ class OpenAttachmentDialog: public CustomDialog
   private:
   
   //! command browsed line editor
-  BrowsedLineEdit *command_line_edit_;  
+  BrowsedLineEditor *command_line_edit_;  
   
   //! open with radio button
   QRadioButton* open_radio_button_;
