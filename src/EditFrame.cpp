@@ -74,6 +74,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
   Counter( "EditFrame" ),
   read_only_( read_only ),
+  closed_( false ),
   color_widget_( 0 ),
   active_editor_( 0 ),
   format_toolbar_( 0 )
@@ -534,11 +535,11 @@ void EditFrame::closeEvent( QCloseEvent *event )
   
   // ask for save if entry is modified
   //if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
-  if( !isReadOnly() && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
+  if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   else
   {
     _saveConfiguration();
-    deleteLater();
+    setIsClosed( true );
     event->accept();
   }
   

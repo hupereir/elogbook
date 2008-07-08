@@ -427,7 +427,10 @@ void SelectionFrame::reset( void )
   // make all EditFrames for deletion
   BASE::KeySet<EditFrame> frames( this ); 
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
-  { (*iter)->deleteLater(); }
+  { 
+    (*iter)->setIsClosed( true ); 
+    (*iter)->hide();
+  }
   
   return;
   
@@ -538,7 +541,10 @@ void SelectionFrame::deleteEntry( LogEntry* entry, const bool& save )
   */
   BASE::KeySet<EditFrame> frames( entry );
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  { (*iter)->deleteLater(); }
+  { 
+    (*iter)->setIsClosed( true );
+    (*iter)->hide();
+  }
 
   // set logbooks as modified
   BASE::KeySet<Logbook> logbooks( entry );
@@ -565,15 +571,14 @@ bool SelectionFrame::lockEntry( LogEntry* entry ) const
   
   BASE::KeySet<EditFrame> frames( entry );
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if(  !(*iter)->isReadOnly() )
   {
+    if( (*iter)->isReadOnly() || (*iter)->isClosed() ) continue;
     if( (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return false;
     (*iter)->setReadOnly( true );
   }
   
   return true;
 }
-
 
 //_______________________________________________
 LogEntry* SelectionFrame::previousEntry( LogEntry* entry, const bool& update_selection )
@@ -663,12 +668,10 @@ void SelectionFrame::save( const bool& confirm_entries )
   BASE::KeySet<EditFrame> frames( this );
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
-    if( !(*iter)->isReadOnly() && (*iter)->modified() )
+    if( !((*iter)->isReadOnly() || (*iter)->isClosed()) && (*iter)->modified() )
     {
-      if( !confirm_entries_ ) 
-      {
-        (*iter)->saveAction().trigger();
-      } else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+      if( !confirm_entries_ ) { (*iter)->saveAction().trigger(); }
+      else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
     }
   }
   
@@ -1049,6 +1052,9 @@ void SelectionFrame::_resetLogEntryList( void )
   for( BASE::KeySet<EditFrame>::iterator it = frames.begin(); it != frames.end(); it++ )
   {
     
+    // skip closed editors
+    if( (*it)->isClosed() ) continue;
+    
     // get associated entry and see if selected
     LogEntry* entry( (*it)->entry() );
     (*it)->previousEntryAction().setEnabled( entry && entry->isSelected() && previousEntry(entry, false) );
@@ -1405,7 +1411,7 @@ void SelectionFrame::_synchronize( void )
   // save EditFrames
   BASE::KeySet<EditFrame> frames( this );
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if( !(*iter)->isReadOnly() && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+  if( !((*iter)->isReadOnly() || (*iter)->isClosed()) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // save current logbook
   if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1692,7 +1698,7 @@ void SelectionFrame::_closeEditFrames( void ) const
   BASE::KeySet<EditFrame> frames( this );
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   {
-    if( (*iter)->modified() && !(*iter)->isReadOnly() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( (*iter)->modified() && !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
     (*iter)->deleteLater();
   }
   return;
@@ -1790,7 +1796,14 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
   for( BASE::KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
   {
     
-    //! check if EditFrame is editable and match editor
+    // delete closed editors
+    if( (*iter)->isClosed() )
+    { 
+      (*iter)->deleteLater(); 
+      continue;
+    }
+    
+    // check if EditFrame is editable and match editor
     if( !((*iter)->isReadOnly() ) && (*iter)->entry() == entry ) 
     {
       edit_frame = *iter;
@@ -1878,7 +1891,7 @@ void SelectionFrame::_changeEntryColor( QColor color )
     // update EditFrame color
     BASE::KeySet<EditFrame> frames( entry );
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    { (*iter)->displayColor(); }
+    { if( !(*iter)->isClosed() ) (*iter)->displayColor(); }
 
     // set logbooks as modified
     BASE::KeySet<Logbook> logbooks( entry );
@@ -2673,8 +2686,11 @@ void SelectionFrame::_autoSave( void )
     // retrieve non read only editors; perform save
     BASE::KeySet<EditFrame> frames( this );
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    if( !(*iter)->isReadOnly() ) (*iter)->saveAction().trigger();
-
+    { 
+      if( (*iter)->isReadOnly() || (*iter)->isClosed() ) continue;
+      (*iter)->saveAction().trigger();
+    }
+    
     save();
   
   } else

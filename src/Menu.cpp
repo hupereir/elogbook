@@ -182,14 +182,17 @@ void Menu::_updateEditorMenu( void )
   // editor attachments and logbook information
   editor_menu_->addAction( &selectionframe.uniconifyAction() );
 
-  
   BASE::KeySet<EditFrame> frames( selectionframe );
-  if( !frames.empty() )
+  bool has_alive_frame( find_if( frames.begin(), frames.end(), EditFrame::aliveFTor() ) != frames.end() );
+  if( has_alive_frame )
   {
     QMenu *menu = editor_menu_->addMenu( "&Editors" );
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       
+      // ignore if frame is to be deleted
+      if( (*iter)->isClosed() ) continue;
+
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
       menu->addAction( title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
