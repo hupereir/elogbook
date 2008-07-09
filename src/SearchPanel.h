@@ -74,6 +74,11 @@ class SearchPanel: public QWidget, public Counter
   //! emitted when the Show All button is pressed
   void showAllEntries( void );
         
+  public slots:
+  
+  //! toggle visibility [overloaded]
+  virtual void setVisible( bool );
+  
   private slots:
  
   //! configuration

@@ -96,6 +96,21 @@ SearchPanel::SearchPanel( QWidget* parent ):
 }
 
 //___________________________________________________________
+void SearchPanel::setVisible( bool value )
+{
+  Debug::Throw( 0, "SearchPanel::setVisible.\n" );
+  QWidget::setVisible( value );
+  if( !value ) return;
+  
+  // set focus to search editor and select all text
+  selection_->setFocus();
+  selection_->selectAll();
+  
+  return;
+
+}
+
+//___________________________________________________________
 void SearchPanel::_updateConfiguration( void )
 {
 
