@@ -39,8 +39,6 @@
 #include "Debug.h"
 #include "Counter.h"
 
-
-
 class OpenPreviousMenu;
 class SelectionFrame;
 

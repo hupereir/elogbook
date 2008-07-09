@@ -174,6 +174,7 @@ Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
 void Menu::_updateEditorMenu( void )
 {
   Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
+  
   editor_menu_->clear();
 
   SelectionFrame &selectionframe( static_cast<MainFrame*>(qApp)->selectionFrame() );
@@ -186,7 +187,11 @@ void Menu::_updateEditorMenu( void )
   bool has_alive_frame( find_if( frames.begin(), frames.end(), EditFrame::aliveFTor() ) != frames.end() );
   if( has_alive_frame )
   {
-    QMenu *menu = editor_menu_->addMenu( "&Editors" );
+    
+    // toolbar buttons pixmap path list
+    list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+    assert( !path_list.empty() );
+
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       
@@ -195,17 +200,20 @@ void Menu::_updateEditorMenu( void )
 
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
-      menu->addAction( title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
+      editor_menu_->addAction( IconEngine::get( ICONS::EDIT, path_list ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
       
     }
-    
-    menu->addSeparator();
-    menu->addAction( &selectionframe.closeFramesAction() );
   }
   
   editor_menu_->addAction( &attachment_frame.uniconifyAction() );
   editor_menu_->addAction( &selectionframe.logbookStatisticsAction() );
   editor_menu_->addAction( &selectionframe.logbookInformationsAction() );
+
+  if( has_alive_frame )
+  {
+    editor_menu_->addSeparator();
+    editor_menu_->addAction( &selectionframe.closeFramesAction() );
+  }
   
   return;
 }
