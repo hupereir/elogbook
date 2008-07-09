@@ -35,6 +35,8 @@
 
 #include "AskForSaveDialog.h"
 #include "CustomPixmap.h"
+#include "Icons.h"
+#include "IconEngine.h"
 #include "XmlOptions.h"
 #include "QtUtil.h"
 
@@ -55,16 +57,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message,
   setLayout( layout );
   
   //! try load Question icon
-  static CustomPixmap question_pixmap;
-  static bool first( true );
-  if( first )
-  {
-    first = false;
-    list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-    question_pixmap.find( "messagebox_warning.png", path_list );    
-  }
-  
-  // insert main vertical box
+  CustomPixmap question_pixmap( CustomPixmap().find( ICONS::WARNING ) );
   if( question_pixmap.isNull() )
   { layout->addWidget( new QLabel( message.c_str(), this ), 1, Qt::AlignHCenter ); }
   else
@@ -91,28 +84,28 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message,
   QPushButton* button;
   if( buttons & YES )
   {
-    button_layout->addWidget( button = new QPushButton( "&Yes", this ) );
+    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "&Yes", this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _yes() ) );
   }
   
+  // yes to all button
+  if( buttons & ALL )
+  {
+    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "Yes to &All", this ) );
+    connect( button, SIGNAL( clicked() ), SLOT( _all() ) );
+  }
+
   // no button
   if( buttons & NO )
   {
-    button_layout->addWidget( button = new QPushButton( "&No", this ) );
+    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), "&No", this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _no() ) );
   }
-  
-  // no button
-  if( buttons & ALL )
-  {
-    button_layout->addWidget( button = new QPushButton( "Yes to &All", this ) );
-    connect( button, SIGNAL( clicked() ), SLOT( _all() ) );
-  }
-  
+    
   // cancel button
   if( buttons & CANCEL )
   {
-    button_layout->addWidget( button = new QPushButton( "&Cancel", this ) );
+    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CANCEL ), "&Cancel", this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _cancel() ) );
   }
   

@@ -98,7 +98,7 @@ SearchPanel::SearchPanel( QWidget* parent ):
 //___________________________________________________________
 void SearchPanel::setVisible( bool value )
 {
-  Debug::Throw( 0, "SearchPanel::setVisible.\n" );
+  Debug::Throw( "SearchPanel::setVisible.\n" );
   QWidget::setVisible( value );
   if( !value ) return;
   

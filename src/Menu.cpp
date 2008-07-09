@@ -67,10 +67,6 @@ Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
   // try cast parent to EditFrame
   EditFrame* editframe( dynamic_cast<EditFrame*>( parent ) );
   
-  // path list for menu
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-
   // generic menu/action
   QMenu *menu;
   
@@ -188,10 +184,6 @@ void Menu::_updateEditorMenu( void )
   if( has_alive_frame )
   {
     
-    // toolbar buttons pixmap path list
-    list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-    assert( !path_list.empty() );
-
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       
@@ -200,7 +192,7 @@ void Menu::_updateEditorMenu( void )
 
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
-      editor_menu_->addAction( IconEngine::get( ICONS::EDIT, path_list ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
+      editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
       
     }
   }

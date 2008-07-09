@@ -116,9 +116,6 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   v_layout->setSpacing( 5 );
   left->setLayout( v_layout );
   
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-  
   keyword_toolbar_ = new CustomToolBar( "keywords toolbar", left, "KEYWORD_TOOLBAR" );
   v_layout->addWidget( keyword_toolbar_ );
   
@@ -906,18 +903,15 @@ void SelectionFrame::_installActions( void )
 {
   
   Debug::Throw( "SelectionFrame::_installActions.\n" );
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-
-  uniconify_action_ = new QAction( IconEngine::get( ICONS::HOME, path_list ), "&Main window", this );
+  uniconify_action_ = new QAction( IconEngine::get( ICONS::HOME ), "&Main window", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
 
-  new_keyword_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New keyword", this );
+  new_keyword_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New keyword", this );
   new_keyword_action_->setToolTip( "Create a new keyword" );
   connect( new_keyword_action_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
 
-  edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Rename keyword", this );
+  edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename keyword", this );
   edit_keyword_action_->setToolTip( "Rename selected keyword" );
   edit_keyword_action_->setShortcut( CTRL+Key_K );
   connect( edit_keyword_action_, SIGNAL( triggered() ), SLOT( _renameKeyword() ) );
@@ -927,18 +921,18 @@ void SelectionFrame::_installActions( void )
   it is associated to the Key_Delete shortcut
   but the later is enabled only if the KeywordList has focus.
   */
-  delete_keyword_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete keyword", this );
+  delete_keyword_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete keyword", this );
   delete_keyword_action_->setToolTip( "Delete selected keyword" );
   delete_keyword_action_->setShortcut( Key_Delete );
   delete_keyword_action_->setShortcutContext( WidgetShortcut );  
   connect( delete_keyword_action_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
 
-  new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New entry", this );
+  new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New entry", this );
   new_entry_action_->setToolTip( "Create a new entry" );
   new_entry_action_->setShortcut( CTRL+Key_N );
   connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
-  edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Edit selected entries", this );
+  edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit selected entries", this );
   edit_entry_action_->setToolTip( "Edit selected entries" );
   connect( edit_entry_action_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
 
@@ -947,7 +941,7 @@ void SelectionFrame::_installActions( void )
   it is associated to the Key_Delete shortcut
   but the later is enabled only if the KeywordList has focus.
   */
-  delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE, path_list ), "&Delete selected entries", this );
+  delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete selected entries", this );
   delete_entry_action_->setToolTip( "Delete selected entries" );
   delete_entry_action_->setShortcut( Key_Delete );
   delete_entry_action_->setShortcutContext( WidgetShortcut );  
@@ -958,19 +952,19 @@ void SelectionFrame::_installActions( void )
   color_menu_->setTitle( "&Change entry color" );
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
 
-  entry_color_action_ = new QAction( IconEngine::get( ICONS::COLOR, path_list ), "&Entry color", this );
+  entry_color_action_ = new QAction( IconEngine::get( ICONS::COLOR ), "&Entry color", this );
   entry_color_action_->setToolTip( "Change selected entries color" );
   entry_color_action_->setMenu( color_menu_ );
   
-  entry_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT, path_list ), "&Change keyword", this );
+  entry_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Change keyword", this );
   entry_keyword_action_->setToolTip( "Edit selected entries keyword" );
   connect( entry_keyword_action_, SIGNAL( triggered() ), SLOT( _renameEntryKeyword() ) );
 
-  new_logbook_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New Logbook", this );
+  new_logbook_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Logbook", this );
   new_logbook_action_->setToolTip( "Create a new logbook" );
   connect( new_logbook_action_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
-  open_action_ = new QAction( IconEngine::get( ICONS::OPEN, path_list ), "&Open", this );
+  open_action_ = new QAction( IconEngine::get( ICONS::OPEN ), "&Open", this );
   open_action_->setToolTip( "Open an existsing logbook" );
   open_action_->setShortcut( CTRL+Key_O );
   connect( open_action_, SIGNAL( triggered() ), SLOT( open() ) );
@@ -983,39 +977,39 @@ void SelectionFrame::_installActions( void )
   reorganize_action_->setToolTip( "Reoganize logbook entries in files" );
   connect( reorganize_action_, SIGNAL( triggered() ), SLOT( _reorganize() ) );
 
-  save_action_ = new QAction( IconEngine::get( ICONS::SAVE, path_list ), "&Save", this );
+  save_action_ = new QAction( IconEngine::get( ICONS::SAVE ), "&Save", this );
   save_action_->setToolTip( "Save all edited entries" );
   connect( save_action_, SIGNAL( triggered() ), SLOT( save() ) );
 
-  save_forced_action_ = new QAction( IconEngine::get( ICONS::SAVE, path_list ), "&Save (forced)", this );
+  save_forced_action_ = new QAction( IconEngine::get( ICONS::SAVE ), "&Save (forced)", this );
   save_forced_action_->setToolTip( "Save all entries" );
   connect( save_forced_action_, SIGNAL( triggered() ), SLOT( _saveForced() ) );
 
-  save_as_action_ = new QAction( IconEngine::get( ICONS::SAVE_AS, path_list ), "Save &As", this );
+  save_as_action_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save &As", this );
   save_as_action_->setToolTip( "Save logbook with a different name" );
   connect( save_as_action_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
 
-  save_backup_action_ = new QAction( IconEngine::get( ICONS::SAVE_AS, path_list ), "Save &Backup", this );
+  save_backup_action_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save &Backup", this );
   save_backup_action_->setToolTip( "Save logbook backup" );
   connect( save_backup_action_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
 
-  revert_to_save_action_ = new QAction( IconEngine::get( ICONS::RELOAD, path_list ), "&Revert to Saved", this );
+  revert_to_save_action_ = new QAction( IconEngine::get( ICONS::RELOAD ), "&Revert to Saved", this );
   revert_to_save_action_->setToolTip( "Restore saved logbook" );
   connect( revert_to_save_action_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
-  view_html_action_ = new QAction( IconEngine::get( ICONS::HTML, path_list ), "&Html", this );
+  view_html_action_ = new QAction( IconEngine::get( ICONS::HTML ), "&Html", this );
   view_html_action_->setToolTip( "Convert logbook to html" );
   connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
 
-  logbook_statistics_action_ = new QAction( IconEngine::get( ICONS::INFO, path_list ), "Logbook statistics", this );
+  logbook_statistics_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook statistics", this );
   logbook_statistics_action_->setToolTip( "View logbook statistics" );
   connect( logbook_statistics_action_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
   
-  logbook_informations_action_ = new QAction( IconEngine::get( ICONS::INFO, path_list ), "Logbook informations", this );
+  logbook_informations_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook informations", this );
   logbook_informations_action_->setToolTip( "Edit logbook informations" );
   connect( logbook_informations_action_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 
-  close_frames_action_ = new QAction( IconEngine::get( ICONS::CLOSE, path_list ), "&Close editors", this );
+  close_frames_action_ = new QAction( IconEngine::get( ICONS::CLOSE ), "&Close editors", this );
   close_frames_action_->setToolTip( "Close all entry editors" );
   connect( close_frames_action_, SIGNAL( triggered() ), SLOT( _closeEditFrames() ) );
 

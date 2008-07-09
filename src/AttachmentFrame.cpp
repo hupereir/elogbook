@@ -45,7 +45,6 @@
 #include "Options.h"
 #include "QtUtil.h"
 #include "SelectionFrame.h"
-#include "XmlOptions.h"
 
 using namespace std;
 using namespace Qt;
@@ -77,10 +76,7 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
 
-  std::list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-
-  uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH, path_list ), "&Attachments", this );
+  uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
   

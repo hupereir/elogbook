@@ -151,17 +151,15 @@ void MainFrame::realizeWidget( void )
   connect( about_action_, SIGNAL( triggered() ), SLOT( _about() ) );
 
   // path list for icons
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-
-  aboutqt_action_ = new QAction( IconEngine::get( ICONS::ABOUT_QT, path_list ), "About &Qt", 0 );
+  IconEngine::get().reload();
+  aboutqt_action_ = new QAction( IconEngine::get( ICONS::ABOUT_QT ), "About &Qt", 0 );
   connect( aboutqt_action_, SIGNAL( triggered() ), SLOT( aboutQt() ) ); 
 
-  close_action_ = new QAction( IconEngine::get( ICONS::EXIT, path_list ), "E&xit", 0 );
+  close_action_ = new QAction( IconEngine::get( ICONS::EXIT ), "E&xit", 0 );
   close_action_->setShortcut( CTRL+Key_Q );
   connect( close_action_, SIGNAL( triggered() ), SLOT( _exit() ) );
   
-  configuration_action_ = new QAction( IconEngine::get( ICONS::CONFIGURE, path_list ), "Default &Configuration", 0 );
+  configuration_action_ = new QAction( IconEngine::get( ICONS::CONFIGURE ), "Default &Configuration", 0 );
   connect( configuration_action_, SIGNAL( triggered() ), SLOT( _configuration() ) );  
   
   // create attachment window
@@ -283,7 +281,7 @@ void MainFrame::_updateConfiguration( void )
   setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
   
   // reload IconEngine cache (in case of icon_path_list that changed)
-  IconEngine::get().reload( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
+  IconEngine::get().reload();
 
   emit configurationChanged();
 }

@@ -35,6 +35,7 @@
 #include "CustomPixmap.h"
 #include "Debug.h"
 #include "Icons.h"
+#include "IconEngine.h"
 #include "LogEntryInformationDialog.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -52,14 +53,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
   Debug::Throw( "LogEntryInformationDialog::LogEntryInformationDialog.\n" );
 
   //! try load Question icon
-  static CustomPixmap pixmap;
-  static bool first( true );
-  if( first )
-  {
-    first = false;
-    list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-    pixmap.find( ICONS::INFO, path_list );
-  }
+  CustomPixmap pixmap( CustomPixmap().find( ICONS::INFORMATION ) );
   
   QVBoxLayout* layout = new QVBoxLayout();
   layout->setMargin(10);
@@ -106,7 +100,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     
   }
   
-  QPushButton* button = new QPushButton( "&Ok", this );
+  QPushButton* button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "&Ok", this );
   layout->addWidget( button );
   connect( button, SIGNAL( clicked() ), SLOT( close() ) );
 

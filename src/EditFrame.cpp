@@ -134,14 +134,10 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   _installActions();
   
   // toolbars
-  // toolbar buttons pixmap path list
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  assert( !path_list.empty() );
-
   // lock toolbar is visible only when window is not editable
   lock_ = new CustomToolBar( "Lock", this, "LOCK_TOOLBAR" );
   CustomToolButton *button;
-  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK, path_list ) );
+  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK ) );
   connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
   button->setToolTip( "Remove read-only lock for current editor." );
   button->setText("Unlock");  
@@ -157,7 +153,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   toolbar->addAction( &saveAction() );
 
   // delete_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::DELETE, path_list ), "Delete the current entry" );
+  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::DELETE ), "Delete the current entry" );
   connect( button, SIGNAL( clicked() ), SLOT( _deleteEntry() ) );
   button->setText("Delete");
   toolbar->addWidget( button );
@@ -587,74 +583,70 @@ void EditFrame::_installActions( void )
 {
   Debug::Throw( "EditFrame::_installActions.\n" );
   
-  // toolbar buttons pixmap path list
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-
   // undo action
-  addAction( undo_action_ = new QAction( IconEngine::get( ICONS::UNDO, path_list ), "&Undo", this ) );
+  addAction( undo_action_ = new QAction( IconEngine::get( ICONS::UNDO ), "&Undo", this ) );
   undo_action_->setToolTip( "Undo last modification" );
   connect( undo_action_, SIGNAL( triggered() ), SLOT( _undo() ) );
   
   // redo action
-  addAction( redo_action_ = new QAction( IconEngine::get( ICONS::REDO, path_list ), "&Redo", this ) );
+  addAction( redo_action_ = new QAction( IconEngine::get( ICONS::REDO ), "&Redo", this ) );
   redo_action_->setToolTip( "Redo last undone modification" );
   connect( redo_action_, SIGNAL( triggered() ), SLOT( _redo() ) );
 
   // new entry
-  addAction( new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW, path_list ), "&New Entry", this ) );
+  addAction( new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Entry", this ) );
   new_entry_action_->setToolTip( "Create new entry in current editor" );
   connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
   
   // previous_entry action
-  addAction( previous_entry_action_ = new QAction( IconEngine::get( ICONS::PREV, path_list ), "&Previous Entry", this ) );
+  addAction( previous_entry_action_ = new QAction( IconEngine::get( ICONS::PREV ), "&Previous Entry", this ) );
   previous_entry_action_->setToolTip( "Display previous entry in current list" );
   connect( previous_entry_action_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
 
   // previous_entry action
-  addAction( next_entry_action_ = new QAction( IconEngine::get( ICONS::NEXT, path_list ), "&Next Entry", this ) );
+  addAction( next_entry_action_ = new QAction( IconEngine::get( ICONS::NEXT ), "&Next Entry", this ) );
   next_entry_action_->setToolTip( "Display next entry in current list" );
   connect( next_entry_action_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
   next_entry_action_->setShortcut( CTRL+Key_N );
 
   // save
-  addAction( save_action_ = new QAction( IconEngine::get( ICONS::SAVE, path_list ), "&Save Entry", this ) );
+  addAction( save_action_ = new QAction( IconEngine::get( ICONS::SAVE ), "&Save Entry", this ) );
   save_action_->setToolTip( "Save current entry" );
   connect( save_action_, SIGNAL( triggered() ), SLOT( _save() ) );
   save_action_->setShortcut( CTRL+Key_S );
 
   #if WITH_ASPELL
-  addAction( spellcheck_action_ = new QAction( IconEngine::get( ICONS::SPELLCHECK, path_list ), "Spell", this ) );
+  addAction( spellcheck_action_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spell", this ) );
   spellcheck_action_->setToolTip( "Check spelling of current entry" );
   connect( spellcheck_action_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
   #endif
 
   // entry_info button
-  addAction( entry_info_action_ = new QAction( IconEngine::get( ICONS::INFO, path_list ), "Entry Information", this ) );
+  addAction( entry_info_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Entry Information", this ) );
   entry_info_action_->setToolTip( "Show current entry information" );
   connect( entry_info_action_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
   
   // html
-  addAction( view_html_action_ = new QAction( IconEngine::get( ICONS::HTML, path_list ), "&View HTML", this ) );
+  addAction( view_html_action_ = new QAction( IconEngine::get( ICONS::HTML ), "&View HTML", this ) );
   view_html_action_->setToolTip( "Convert current entry to HTML file" );
   connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
     
   // split action
-  addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM, path_list ), "Split view top/bottom", this ) );
+  addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split view top/bottom", this ) );
   split_view_horizontal_action_->setToolTip( "Split current text editor vertically" );
   connect( split_view_horizontal_action_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
 
-  addAction( split_view_vertical_action_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT, path_list ), "Split view left/right", this ) );
+  addAction( split_view_vertical_action_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), "Split view left/right", this ) );
   split_view_vertical_action_->setToolTip( "Split current text editor horizontally" );
   connect( split_view_vertical_action_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
 
   // clone window action
-  addAction( clone_window_action_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE, path_list ), "Clone window", this ) );
+  addAction( clone_window_action_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), "Clone window", this ) );
   clone_window_action_->setToolTip( "Create a new edition window displaying the same entry" );
   connect( clone_window_action_, SIGNAL( triggered() ), SLOT( _cloneWindow() ) );
 
   // close window action
-  addAction( close_action_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE, path_list ), "&Close view", this ) );
+  addAction( close_action_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), "&Close view", this ) );
   close_action_->setShortcut( CTRL+Key_W );
   close_action_->setToolTip( "Close current view" );
   connect( close_action_, SIGNAL( triggered() ), SLOT( _close() ) );

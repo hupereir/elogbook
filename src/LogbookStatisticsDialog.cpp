@@ -35,6 +35,8 @@
 #include "TreeWidget.h"
 #include "LineEditor.h" 
 #include "Debug.h"
+#include "IconEngine.h"
+#include "Icons.h"
 #include "Logbook.h"
 #include "LogbookStatisticsDialog.h"
 #include "LogEntry.h"
@@ -135,7 +137,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     
   }
 
-  QPushButton* button = new QPushButton( "&Ok", this );
+  QPushButton* button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "&Ok", this );
   layout->addWidget( button );
   connect( button, SIGNAL( clicked() ), SLOT( close() ) );
   

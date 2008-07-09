@@ -44,7 +44,6 @@
 #include "FormatBar.h"
 #include "IconEngine.h"
 #include "TextPosition.h"
-#include "XmlOptions.h"
 
 using namespace std;
 
@@ -62,14 +61,11 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   
   Debug::Throw( "ToolBar::ToolBar.\n" );
 
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-  
   // generic button
   CustomToolButton *button;
   
   // bold 
-  button = new CustomToolButton( this, IconEngine::get( BOLD_ICON, path_list ), "change current font to bold" );
+  button = new CustomToolButton( this, IconEngine::get( BOLD_ICON ), "change current font to bold" );
   button->setText("Bold");
   button->setCheckable( true );
   buttons_.insert( make_pair( BOLD, button ) );
@@ -77,7 +73,7 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   addWidget( button );
   
   // underline 
-  button = new CustomToolButton( this, IconEngine::get( ITALIC_ICON, path_list ), "change current font to italic" );
+  button = new CustomToolButton( this, IconEngine::get( ITALIC_ICON ), "change current font to italic" );
   button->setText("Italic");
   button->setCheckable( true );
   buttons_.insert( make_pair( ITALIC, button ) );
@@ -85,7 +81,7 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   addWidget( button );
 
   // underline 
-  button = new CustomToolButton( this, IconEngine::get( UNDERLINE_ICON, path_list ), "change current font to underline" );
+  button = new CustomToolButton( this, IconEngine::get( UNDERLINE_ICON ), "change current font to underline" );
   button->setText("Underline");
   button->setCheckable( true );
   buttons_.insert( make_pair( UNDERLINE, button ) );
@@ -93,7 +89,7 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   addWidget( button );
 
   // strike 
-  button = new CustomToolButton( this, IconEngine::get( STRIKE_ICON, path_list ), "change current font to strike" );
+  button = new CustomToolButton( this, IconEngine::get( STRIKE_ICON ), "change current font to strike" );
   button->setText("Strike");
   button->setCheckable( true );
   buttons_.insert( make_pair( STRIKE, button ) );
@@ -101,7 +97,7 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   addWidget( button );
  
   // color
-  button = new CustomToolButton( this, IconEngine::get( ICONS::COLOR, path_list ), "change current font color" );
+  button = new CustomToolButton( this, IconEngine::get( ICONS::COLOR ), "change current font color" );
   button->setText("Text color");
   buttons_.insert( make_pair( COLOR, button ) );
   addWidget( button );
@@ -353,12 +349,9 @@ void FormatBar::_updateColorPixmap( QColor color )
   // retrieve button
   CustomToolButton* button( buttons_[COLOR] );
   assert( button );
+
   
-  // retrieve color pixmap
-  list<string> path_list( XmlOptions::get().specialOptions<string>( "PIXMAP_PATH" ) );
-  if( !path_list.size() ) throw runtime_error( DESCRIPTION( "no path to pixmaps" ) );
-  
-  CustomPixmap base( CustomPixmap().find( ICONS::COLOR, path_list ) );
+  CustomPixmap base( CustomPixmap().find( ICONS::COLOR ) );
   assert( !base.isNull() );
   
   // create new empty pixmap
