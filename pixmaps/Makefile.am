@@ -4,7 +4,6 @@ EXTRA_DIST = \
 crystal/1leftarrow.png \
 crystal/1rightarrow.png \
 crystal/attach.png \
-crystal/edit.png \
 crystal/encrypted.png \
 crystal/fileclose.png \
 crystal/filenew.png \
@@ -26,7 +25,6 @@ crystal/window_fullscreen.png \
 oxygen/1leftarrow.png \
 oxygen/1rightarrow.png \
 oxygen/attach.png \
-oxygen/edit.png \
 oxygen/encrypted.png \
 oxygen/fileclose.png \
 oxygen/filenew.png \
