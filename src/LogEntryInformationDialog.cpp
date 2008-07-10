@@ -51,9 +51,6 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     Counter( "LogEntryInformationDialog" )
 {
   Debug::Throw( "LogEntryInformationDialog::LogEntryInformationDialog.\n" );
-
-  //! try load Question icon
-  CustomPixmap pixmap( CustomPixmap().find( ICONS::INFORMATION ) );
   
   QVBoxLayout* layout = new QVBoxLayout();
   layout->setMargin(10);
@@ -65,14 +62,17 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
   h_layout->setMargin(0);
   layout->addLayout( h_layout );
   
+  //! try load Question icon
+  CustomPixmap pixmap( CustomPixmap().find( ICONS::INFORMATION ) );
+
   QLabel* label = new QLabel(this);
   label->setPixmap( pixmap );
-  h_layout->addWidget( label );
+  h_layout->addWidget( label, 0, Qt::AlignHCenter );
   
   QGridLayout *grid_layout = new QGridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
-  h_layout->addLayout( grid_layout );
+  h_layout->addLayout( grid_layout, 1 );
   
   grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
   grid_layout->addWidget( new QLabel( entry->title().c_str(), this ), 0, 1 );
