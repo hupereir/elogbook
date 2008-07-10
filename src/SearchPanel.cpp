@@ -35,8 +35,10 @@
 #include <QPushButton>
 #include <QLayout>
 
-#include "LineEditor.h"
 #include "Debug.h"
+#include "Icons.h"
+#include "IconEngine.h"
+#include "LineEditor.h"
 #include "SearchPanel.h"
 #include "XmlOptions.h"
 
@@ -57,7 +59,7 @@ SearchPanel::SearchPanel( QWidget* parent ):
   
   // find selection button
   QPushButton* button;
-  layout->addWidget( button = new QPushButton( "&Find", this ) );
+  layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), "&Find", this ) );
   connect( button, SIGNAL( clicked() ), SLOT( _selectionRequest() ) ); 
   button->setToolTip( "Find logbook entries matching selected text" );
   
