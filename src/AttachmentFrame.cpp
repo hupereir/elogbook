@@ -35,7 +35,6 @@
 #include <list>
 
 #include "AttachmentFrame.h"
-#include "CustomPixmap.h"
 #include "EditFrame.h"
 #include "IconEngine.h"
 #include "Icons.h"

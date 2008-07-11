@@ -34,7 +34,7 @@
 #include <QPushButton>
 
 #include "AskForSaveDialog.h"
-#include "CustomPixmap.h"
+#include "PixmapEngine.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "XmlOptions.h"
@@ -57,7 +57,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message,
   setLayout( layout );
   
   //! try load Question icon
-  CustomPixmap question_pixmap( CustomPixmap().find( ICONS::WARNING ) );
+  QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
   if( question_pixmap.isNull() )
   { layout->addWidget( new QLabel( message.c_str(), this ), 1, Qt::AlignHCenter ); }
   else

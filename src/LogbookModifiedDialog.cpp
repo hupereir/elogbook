@@ -37,7 +37,7 @@
 #include <sstream>
 
 #include "LogbookModifiedDialog.h"
-#include "CustomPixmap.h"
+#include "PixmapEngine.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "XmlOptions.h"
@@ -71,7 +71,7 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
       << endl;
   
   //! try load Question icon
-  CustomPixmap question_pixmap( CustomPixmap().find( ICONS::WARNING ) );
+  QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
   if( question_pixmap.isNull() )
   { layout->addWidget( new QLabel( what.str().c_str(), this ), 1, Qt::AlignHCenter ); }
   else

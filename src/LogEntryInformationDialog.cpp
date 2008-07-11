@@ -32,7 +32,7 @@
 #include <QLayout>
 #include <QPushButton>
 
-#include "CustomPixmap.h"
+#include "PixmapEngine.h"
 #include "Debug.h"
 #include "Icons.h"
 #include "IconEngine.h"
@@ -63,7 +63,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
   layout->addLayout( h_layout );
   
   //! try load Question icon
-  CustomPixmap pixmap( CustomPixmap().find( ICONS::INFORMATION ) );
+  QPixmap pixmap( PixmapEngine::get( ICONS::INFORMATION ) );
 
   QLabel* label = new QLabel(this);
   label->setPixmap( pixmap );

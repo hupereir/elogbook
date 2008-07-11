@@ -39,10 +39,11 @@
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"
-#include "TextEditor.h"
 #include "Debug.h"
 #include "FormatBar.h"
 #include "IconEngine.h"
+#include "PixmapEngine.h"
+#include "TextEditor.h"
 #include "TextPosition.h"
 
 using namespace std;
@@ -351,7 +352,7 @@ void FormatBar::_updateColorPixmap( QColor color )
   assert( button );
 
   
-  CustomPixmap base( CustomPixmap().find( ICONS::COLOR ) );
+  QPixmap base( PixmapEngine::get( ICONS::COLOR ) );
   assert( !base.isNull() );
   
   // create new empty pixmap

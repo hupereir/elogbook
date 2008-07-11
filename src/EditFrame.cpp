@@ -38,7 +38,6 @@
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "LineEditor.h"
-#include "CustomPixmap.h"
 #include "TextEditor.h"
 #include "CustomToolBar.h"
 #include "CustomToolButton.h"

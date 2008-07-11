@@ -36,7 +36,6 @@
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "LineEditor.h"
-#include "CustomPixmap.h"
 #include "CustomToolBar.h"
 #include "CustomToolButton.h"
 #include "Debug.h"

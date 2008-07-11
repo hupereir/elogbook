@@ -37,7 +37,6 @@
 #include "AttachmentFrame.h"
 #include "AttachmentList.h"
 #include "CustomFileDialog.h"
-#include "CustomPixmap.h"
 #include "Debug.h"
 #include "DeleteAttachmentDialog.h"
 #include "EditAttachmentDialog.h"
