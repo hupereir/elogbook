@@ -115,11 +115,12 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   TreeWidget *list_view( new TreeWidget( this ) );
   layout->addWidget( list_view, 1 );
   
-  enum Columns{ FILE, ENTRIES, MODIFIED }; 
+  enum Columns{ FILE, ENTRIES, CREATED, MODIFIED }; 
   list_view->setSortingEnabled( false );
-  list_view->setColumnCount( 3 );
+  list_view->setColumnCount( 4 );
   list_view->setColumnName( FILE, "file" );
   list_view->setColumnName( ENTRIES, "entries" );
+  list_view->setColumnName( CREATED, "created" );
   list_view->setColumnName( MODIFIED, "last modified" );
   list_view->setColumnType( ENTRIES, TreeWidget::NUMBER );
   
@@ -133,6 +134,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     // fill
     item->setText( FILE, (*it)->file().localName().c_str() );
     item->setText( ENTRIES, Str().assign<unsigned int>( BASE::KeySet<LogEntry>(*it).size() ).c_str() );
+    item->setText( CREATED, (*it)->creation().string().c_str() );
     item->setText( MODIFIED, (*it)->modification().string().c_str() );
     
   }

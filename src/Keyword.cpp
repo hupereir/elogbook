@@ -110,12 +110,16 @@ string Keyword::_format( const string& value )
   size_t pos(0);
   while( ( pos = out.find( "/", pos ) ) != string::npos )
   {
-    if( pos+1 < out.length() ) 
+    if( pos+1 < out.length() )
     {
       out[pos+1] = toupper( out[pos+1] );
       pos++;
     } else break;
   }
+  
+  // remove trailing "/" if any
+  if( out.length() && out[out.length()-1] == '/' )
+  { out = out.substr(0, out.length()-1); }
   
   return out;
 }
