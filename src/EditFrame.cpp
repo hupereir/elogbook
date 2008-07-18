@@ -530,7 +530,6 @@ void EditFrame::closeEvent( QCloseEvent *event )
   Debug::Throw( "EditFrame::closeEvent.\n" );
   
   // ask for save if entry is modified
-  //if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   else
   {
