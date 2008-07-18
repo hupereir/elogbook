@@ -1789,23 +1789,41 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
   for( BASE::KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
   {
     
-    // delete closed editors
-    if( (*iter)->isClosed() )
-    { 
-      (*iter)->deleteLater(); 
-      continue;
-    }
+    // skip closed editors
+    if( (*iter)->isClosed() ) continue;
     
     // check if EditFrame is editable and match editor
     if( !((*iter)->isReadOnly() ) && (*iter)->entry() == entry ) 
     {
       edit_frame = *iter;
+      edit_frame->uniconifyAction().trigger();
       break;
     }
 
   }
 
-  // create editFrame if not found
+  // if no editFrame is found, try re-used a closed editor
+  if( !edit_frame )
+  {
+    
+    // the order is reversed to start from latest
+    for( BASE::KeySet<EditFrame>::reverse_iterator iter=frames.rbegin(); iter != frames.rend(); iter++ )
+    {
+      
+      // skip closed editors
+      if( !(*iter)->isClosed() ) continue;
+      edit_frame = *iter;
+      edit_frame->setIsClosed( false );
+      edit_frame->setReadOnly( false );
+      QtUtil::centerOnParent( edit_frame );
+      edit_frame->displayEntry( entry );
+      edit_frame->show();
+      break;
+    }
+    
+  }
+  
+  // if no editFrame is found create a new one
   if( !edit_frame )
   {
     edit_frame = new EditFrame( 0, false );
@@ -1814,7 +1832,12 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
     edit_frame->show();
     edit_frame->displayEntry( entry );
 
-  } else edit_frame->uniconifyAction().trigger();
+  }
+  
+  // finaly, delete closed editors 
+  /* one might skip that step to be more memory aggressive */
+  for( BASE::KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
+  { if( (*iter)->isClosed() ) (*iter)->deleteLater(); }
   
   Debug::Throw( "SelectionFrame::_displayEntry - done.\n" );
 
