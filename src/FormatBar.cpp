@@ -151,6 +151,8 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
   
   Debug::Throw( "FormatBar::loadFormats.\n" );
   assert( editor_ );
+  QTextCursor cursor( editor_->document() );
+  cursor.beginEditBlock();
   for( FORMAT::TextFormatBlock::List::const_iterator iter = format_list.begin(); iter != format_list.end(); iter++ )
   {
         
@@ -162,7 +164,6 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
     int index_end = iter->parEnd() ? editor_->indexFromPosition( end ) : iter->end();
     
     // define cursor
-    QTextCursor cursor( editor_->document() );
     cursor.setPosition( index_begin, QTextCursor::MoveAnchor );
     cursor.setPosition( index_end, QTextCursor::KeepAnchor );
     
@@ -181,6 +182,8 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
     cursor.setCharFormat( text_format );
     
   }
+  
+  cursor.endEditBlock();
   
 }
  //________________________________________
