@@ -48,7 +48,9 @@ KeywordDelegate::KeywordDelegate( QObject *parent ):
 QWidget* KeywordDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 { 
   Debug::Throw( "KeywordDelegate::createEditor.\n" );
-  return new LineEditor( parent ); 
+  LineEditor *editor = new LineEditor( parent ); 
+  editor->setFrame( false );
+  return editor;
 }
 
 //______________________________________________________________

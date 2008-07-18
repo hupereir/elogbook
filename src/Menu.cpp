@@ -118,7 +118,6 @@ Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
     menu->addAction( &selectionframe->newEntryAction() );
     menu->addAction( &selectionframe->editEntryAction() );
     menu->addAction( &selectionframe->deleteEntryAction() );
-    menu->addAction( &selectionframe->saveAction() );
   }
   
   // preferences menu

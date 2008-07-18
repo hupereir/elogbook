@@ -48,7 +48,9 @@ LogEntryDelegate::LogEntryDelegate( QObject *parent ):
 QWidget* LogEntryDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 { 
   Debug::Throw( "LogEntryDelegate::createEditor.\n" );
-  return new LineEditor( parent ); 
+  LineEditor *editor = new LineEditor( parent ); 
+  editor->setFrame( false );
+  return editor;
 }
 
 //______________________________________________________________

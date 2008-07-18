@@ -91,7 +91,8 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   
   title_layout_ = new QHBoxLayout();
   title_layout_->setMargin(0);
-  title_layout_->setSpacing(2);
+  //title_layout_->setSpacing(2);
+  title_layout_->setSpacing(0);
   layout->addLayout( title_layout_ );
   
   // title label and line

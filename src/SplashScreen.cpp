@@ -71,7 +71,8 @@ SplashScreen::SplashScreen( QWidget* parent ):
   
   // title
   ostringstream what;
-  what << "<B>eLogbook</B><BR> version " << VERSION;
+  //what << "<B>eLogbook</B><BR> version " << VERSION;
+  what << "<B>eLogbook</B>";
   setTitle( what.str() );
 
   // pixmap
