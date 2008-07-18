@@ -1706,10 +1706,10 @@ void SelectionFrame::_newEntry( void )
   // create new EditFrame
   EditFrame *frame = new EditFrame( 0, false );
   Key::associate( this, frame );
+  frame->show();
 
   // call NewEntry for the selected frame
   frame->newEntryAction().trigger();
-  frame->show();
 
 }
 
