@@ -21,6 +21,7 @@
  *
  *******************************************************************************/
 
+
 /*!
   \file EditFrame.cpp
   \brief log entry edition/creation object
