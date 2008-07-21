@@ -1836,8 +1836,8 @@ void SelectionFrame::_displayEntry( LogEntry* entry )
   
   // finaly, delete closed editors 
   /* one might skip that step to be more memory aggressive */
-  for( BASE::KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
-  { if( (*iter)->isClosed() ) (*iter)->deleteLater(); }
+  // for( BASE::KeySet<EditFrame>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
+  // { if( (*iter)->isClosed() ) (*iter)->deleteLater(); }
   
   Debug::Throw( "SelectionFrame::_displayEntry - done.\n" );
 
