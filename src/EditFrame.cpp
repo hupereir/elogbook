@@ -92,12 +92,12 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   
   title_layout_ = new QHBoxLayout();
   title_layout_->setMargin(0);
-  //title_layout_->setSpacing(2);
-  title_layout_->setSpacing(0);
+  title_layout_->setSpacing(2);
+  //title_layout_->setSpacing(0);
   layout->addLayout( title_layout_ );
   
   // title label and line
-  title_layout_->addWidget( title_ = new LineEditor( main ), 1, Qt::AlignVCenter );
+  title_layout_->addWidget( title_ = new LineEditor( main ), 1 );
     
   // splitter for EditFrame and attachment list
   splitter_ = new QSplitter( main );
@@ -398,7 +398,7 @@ void EditFrame::displayColor( void )
   if( !color_widget_ ) 
   { 
     color_widget_ = new ColorWidget( title_->parentWidget() );
-    color_widget_->setMinimumSize( QSize( ColorMenu::PixmapSize.width(), 0 ) );
+    //color_widget_->setMinimumSize( QSize( ColorMenu::PixmapSize.width(), 0 ) );
     title_layout_->addWidget( color_widget_ );
   }
   
@@ -1336,28 +1336,35 @@ void EditFrame::_displayAttachments( void )
 }
 
 //___________________________________________________________________________________
-void EditFrame::ColorWidget::paintEvent( QPaintEvent* e )
+EditFrame::ColorWidget::ColorWidget( QWidget* parent ):
+  QToolButton( parent ), 
+  Counter( "ColorWidget" )
+{ Debug::Throw( "ColorWidget::ColorWidget.\n" ); }
+
+//___________________________________________________________________________________
+void EditFrame::ColorWidget::setColor( const QColor& color )
 {
 
-  QLinearGradient gradient( QPoint(0,0), QPoint( width(), height() ) );
-  gradient.setColorAt(0, color_);
-  gradient.setColorAt(1, color_.light(135));
- 
-  QPainter painter( this );
-  painter.setRenderHints(QPainter::Antialiasing );
-  painter.setPen( NoPen );
-  //painter.setPen( color_ );
-  painter.setBrush( gradient );
+  // create pixmap
+  QPixmap pixmap( QSize( 32, 32 ) );
+  pixmap.fill( Qt::transparent );
   
-  int border = 3;
-  int w = max( width() - 2*border, height() - 2*border ); 
-  int h_offset = (width() - w - 1)/2;
-  int v_offset = (height() - w - 1)/2;
-  QRect r( 
-    QPoint( border + h_offset, border + v_offset ),
-    //QPoint( h_offset+w, height() ) + QPoint( 0, -border + v_offset ) );
-    QPoint( h_offset+w, w ) + QPoint( -border, -border + v_offset ) );
-  //painter.drawRoundRect( r );
-  painter.drawEllipse( r );
+  QPainter painter( &pixmap );
+  
+  painter.setPen( Qt::NoPen );
+   
+  QLinearGradient gradient( QPoint(0,0), QPoint( width(), height() ) );
+  gradient.setColorAt(0, color);
+  gradient.setColorAt(1, color.light(135));
+
+  painter.setBrush( gradient );
+  painter.setRenderHints(QPainter::Antialiasing );
+  
+  QRect rect( pixmap.rect() );
+  rect.adjust( 2, 2, -2, -2 );
+  
+  painter.drawEllipse( rect );
   painter.end();
+  
+  setIcon( QIcon( pixmap ) );
 }

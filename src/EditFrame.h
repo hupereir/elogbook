@@ -34,6 +34,7 @@
 
 #include <QBasicTimer>
 #include <QLayout>
+#include <QToolButton>
 #include <QResizeEvent>
 #include <QSplitter>
 #include <QTimerEvent>
@@ -440,30 +441,16 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   LineEditor *title_;
 
   //! color widget
-  class ColorWidget: public QWidget, public Counter
+  class ColorWidget: public QToolButton, public Counter
   {
 
     public:
 
     //! constructor
-    ColorWidget( QWidget* parent ):
-      QWidget( parent ),
-      Counter( "ColorWidget" )
-    { Debug::Throw( "ColorWidget::ColorWidget" ); }
+    ColorWidget( QWidget* parent );
 
     //! color
-    void setColor( const QColor& color )
-    { color_ = color; }
-
-    protected:
-
-    //! paint event
-    void paintEvent( QPaintEvent* );
-
-    private:
-
-    //! color
-    QColor color_;
+    void setColor( const QColor& color );
 
   };
 
