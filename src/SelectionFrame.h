@@ -321,7 +321,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! log entry model
   LogEntryModel& _logEntryModel( void )
   { return entry_model_; }
-  
+    
   //! clear list and reinitialize from logbook entries
   virtual void _resetLogEntryList( void );
 
@@ -349,28 +349,28 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   }
   
   //! create a new logbook
-  virtual void _newLogbook( void );
+  void _newLogbook( void );
 
   //! save logbook and children whether they are modified or not
-  virtual void _saveForced( void );
+  void _saveForced( void );
   
   /*! \brief
     save current logbook with a given filename
     returns true if logbook was saved
   */
-  virtual bool _saveAs( File default_file = File("") );
+  bool _saveAs( File default_file = File("") );
 
   //! save current logbook with a given filename
-  virtual void _saveBackup( void );
+  void _saveBackup( void );
 
   //! revert logbook to saved version
-  virtual void _revertToSaved( void );
+  void _revertToSaved( void );
 
   //! opens a logbook merge it to the existing onecomments
-  virtual void _synchronize( void );
+  void _synchronize( void );
 
   //! reorganize logbook to entries associations
-  virtual void _reorganize( void );
+  void _reorganize( void );
 
   /*! \brief
     show all entries which have equal creation time
@@ -496,6 +496,12 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   
   private:
   
+  //! returns true if logbook has modified entries
+  bool _hasModifiedEntries( void ) const;
+  
+  //! check modified entries
+  AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditFrame>, const bool& ) const;
+
   //! main menu
   Menu* menu_;
 

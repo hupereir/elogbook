@@ -566,12 +566,10 @@ bool SelectionFrame::lockEntry( LogEntry* entry ) const
   if( !entry ) return true;
   
   BASE::KeySet<EditFrame> frames( entry );
+  if( _checkModifiedEntries( frames, true ) == AskForSaveDialog::CANCEL ) return false;
+  
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  {
-    if( (*iter)->isReadOnly() || (*iter)->isClosed() ) continue;
-    if( (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return false;
-    (*iter)->setReadOnly( true );
-  }
+  { (*iter)->setReadOnly( true ); }
   
   return true;
 }
@@ -659,17 +657,7 @@ void SelectionFrame::save( const bool& confirm_entries )
 
   if( !confirm_entries ) confirm_entries_ = false;
   
-  // check if editable EditFrames needs save
-  // cancel if required
-  BASE::KeySet<EditFrame> frames( this );
-  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  {
-    if( !((*iter)->isReadOnly() || (*iter)->isClosed()) && (*iter)->modified() )
-    {
-      if( !confirm_entries_ ) { (*iter)->saveAction().trigger(); }
-      else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
-    }
-  }
+  if( _checkModifiedEntries( BASE::KeySet<EditFrame>( this ), confirm_entries_ ) == AskForSaveDialog::CANCEL ) return;
   
   // check logbook filename, go to Save As if no file is given and redirect is true
   if( logbook()->file().empty() ) {
@@ -1209,6 +1197,7 @@ void SelectionFrame::open( FileRecord record )
   Debug::Throw( "SelectionFrame::open.\n" );
 
   // check if current logbook needs save
+  if( _checkModifiedEntries( BASE::KeySet<EditFrame>( this ), confirm_entries_ ) == AskForSaveDialog::CANCEL ) return;
   if( logbook_ && logbook()->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // open file from dialog if not set as argument
@@ -1374,10 +1363,8 @@ void SelectionFrame::_revertToSaved( void )
   }
 
   // ask for confirmation
-  if(
-    logbook()->modified() &&
-    !QtUtil::questionDialog( this, "discard changes to current logbook ?" )
-  ) return;
+  if( ( _hasModifiedEntries() || logbook()->modified() ) && !QtUtil::questionDialog( this, "discard changes to current logbook ?" ) ) 
+  { return; }
 
   // reinit SelectionFrame
   static_cast<MainFrame*>(qApp)->busy();
@@ -1402,9 +1389,7 @@ void SelectionFrame::_synchronize( void )
   }
 
   // save EditFrames
-  BASE::KeySet<EditFrame> frames( this );
-  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  if( !((*iter)->isReadOnly() || (*iter)->isClosed()) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
+  if( _checkModifiedEntries( BASE::KeySet<EditFrame>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
   // save current logbook
   if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1689,11 +1674,9 @@ void SelectionFrame::_closeEditFrames( void ) const
 
   // get all EditFrames from SelectionFrame
   BASE::KeySet<EditFrame> frames( this );
+  if( _checkModifiedEntries( frames, true ) == AskForSaveDialog::CANCEL ) return;
   for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
-  {
-    if( (*iter)->modified() && !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return;
-    (*iter)->deleteLater();
-  }
+  { (*iter)->deleteLater(); }
   return;
 }
 
@@ -2712,4 +2695,30 @@ void SelectionFrame::_autoSave( void )
   } else
   statusBar().label().setText( "no logbook filename. <Autosave> skipped" );
 
+}
+
+//__________________________________________________________________
+bool SelectionFrame::_hasModifiedEntries( void ) const
+{
+  BASE::KeySet<EditFrame> frames( this );
+  return find_if( frames.begin(), frames.end(), EditFrame::ModifiedFTor() ) != frames.end();  
+}
+
+//__________________________________________________________________
+AskForSaveDialog::ReturnCode SelectionFrame::_checkModifiedEntries( BASE::KeySet<EditFrame> frames, const bool& confirm_entries ) const
+{  
+  Debug::Throw( "_SelectionFrame::checkModifiedEntries.\n" );
+
+  // check if editable EditFrames needs save
+  // cancel if required
+  for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+  {
+    if( !((*iter)->isReadOnly() || (*iter)->isClosed()) && (*iter)->modified() )
+    {
+      if( !confirm_entries ) { (*iter)->saveAction().trigger(); }
+      else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return AskForSaveDialog::CANCEL;
+    }
+  }
+  
+  return  AskForSaveDialog::YES;
 }
