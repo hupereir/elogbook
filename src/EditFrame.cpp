@@ -93,7 +93,6 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   title_layout_ = new QHBoxLayout();
   title_layout_->setMargin(0);
   title_layout_->setSpacing(2);
-  //title_layout_->setSpacing(0);
   layout->addLayout( title_layout_ );
   
   // title label and line
@@ -376,34 +375,22 @@ void EditFrame::displayColor( void )
 {
   Debug::Throw( "EditFrame::DisplayColor.\n" );
 
-  // try load entry color
-  QColor color;
-  Str colorname( entry()->color() );
-  if( colorname.isEqual( ColorMenu::NONE, false ) || !( color = QColor( colorname.c_str() ) ).isValid() )
-  { 
- 
-    // delete existing color widget if any
-    if( color_widget_ )
-    {
-      color_widget_->deleteLater();
-      color_widget_ = 0;
-    }
-    
-    // and return
-    return;
-    
-  }
-  
-  // color is valid. Create color widget if none
+  // Create color widget if none
   if( !color_widget_ ) 
   { 
     color_widget_ = new ColorWidget( title_->parentWidget() );
-    //color_widget_->setMinimumSize( QSize( ColorMenu::PixmapSize.width(), 0 ) );
     title_layout_->addWidget( color_widget_ );
   }
+
+  // try load entry color
+  QColor color;
+  Str colorname( entry()->color() );
+  if( colorname.isEqual( ColorMenu::NONE, false ) || !( color = QColor( colorname.c_str() ) ).isValid() ) { color_widget_->hide(); } 
+  else { 
+    color_widget_->setColor( color ); 
+    color_widget_->show();
+  }
   
-  // set color
-  color_widget_->setColor( color );
   return;
   
 }
@@ -1346,7 +1333,8 @@ void EditFrame::ColorWidget::setColor( const QColor& color )
 {
 
   // create pixmap
-  QPixmap pixmap( QSize( 32, 32 ) );
+  //QPixmap pixmap( QSize( 32, 32 ) );
+  QPixmap pixmap( QSize( 48, 48 ) );
   pixmap.fill( Qt::transparent );
   
   QPainter painter( &pixmap );
@@ -1358,10 +1346,10 @@ void EditFrame::ColorWidget::setColor( const QColor& color )
   gradient.setColorAt(1, color.light(135));
 
   painter.setBrush( gradient );
-  painter.setRenderHints(QPainter::Antialiasing );
+  painter.setRenderHints( QPainter::Antialiasing|QPainter::SmoothPixmapTransform );
   
   QRect rect( pixmap.rect() );
-  rect.adjust( 2, 2, -2, -2 );
+  //rect.adjust( 2, 2, -2, -2 );
   
   painter.drawEllipse( rect );
   painter.end();
