@@ -1341,15 +1341,14 @@ void EditFrame::ColorWidget::setColor( const QColor& color )
   
   painter.setPen( Qt::NoPen );
    
-  QLinearGradient gradient( QPoint(0,0), QPoint( width(), height() ) );
-  gradient.setColorAt(0, color);
-  gradient.setColorAt(1, color.light(135));
-
-  painter.setBrush( gradient );
+//   QLinearGradient gradient( QPoint(0,0), QPoint( width(), height() ) );
+//   gradient.setColorAt(0, color);
+//   gradient.setColorAt(1, color.light(135));
+//  painter.setBrush( gradient );
+  painter.setBrush( color );
   painter.setRenderHints( QPainter::Antialiasing|QPainter::SmoothPixmapTransform );
   
   QRect rect( pixmap.rect() );
-  //rect.adjust( 2, 2, -2, -2 );
   
   painter.drawEllipse( rect );
   painter.end();
