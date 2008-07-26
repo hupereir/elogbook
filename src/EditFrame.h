@@ -113,6 +113,19 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     return *statusbar_;
   }
 
+  //!@name active editor
+  //@{
+  
+  //! retrieve active display
+  TextEditor& activeEditor( void )
+  { return *active_editor_; }
+  
+  //! retrieve active display
+  const TextEditor& activeEditor( void ) const
+  { return *active_editor_; }
+
+  //@}
+  
   //! check if this editor is read_only or not
   const bool& isReadOnly( void ) const
   { return read_only_; }
@@ -130,7 +143,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! check if current entry has been modified or not
   bool modified( void ) const
-  { return title_->isModified() || _activeEditor().document()->isModified(); }
+  { return title_->isModified() || activeEditor().document()->isModified(); }
 
   //! computes window title
   std::string windowTitle() const;
@@ -313,7 +326,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
 
   //! display cursor position
   void _displayCursorPosition( void )
-  { _displayCursorPosition( _activeEditor().textPosition() ); }
+  { _displayCursorPosition( activeEditor().textPosition() ); }
 
   //! display cursor position
   void _displayCursorPosition( int, int new_position )
@@ -324,7 +337,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   {
     Debug::Throw( "EditFrame::_closeView (SLOT)\n" );
     BASE::KeySet< TextEditor > editors( this );
-    if( editors.size() > 1 ) _closeEditor( _activeEditor() );
+    if( editors.size() > 1 ) _closeEditor( activeEditor() );
     else close();    
   }
   
@@ -348,17 +361,8 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! install actions
   void _installActions( void );
 
-
   //!@name display management
   //@{
-  
-  //! retrieve active display
-  TextEditor& _activeEditor( void )
-  { return *active_editor_; }
-  
-  //! retrieve active display
-  const TextEditor& _activeEditor( void ) const
-  { return *active_editor_; }
 
   //! change active display manualy
   void _setActiveEditor( TextEditor& ); 

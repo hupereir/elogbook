@@ -74,6 +74,9 @@ class Menu:public QMenuBar, public Counter
   //! get list of editor windows into menu
   void _updateEditorMenu( void );
   
+  //! update preference menu
+  void _updatePreferenceMenu( void );
+  
   private:
 
   //! open previous menu, in which the open files are stored
@@ -82,6 +85,9 @@ class Menu:public QMenuBar, public Counter
   //! editor windows menu
   QMenu* editor_menu_;
  
+  //! preference menu
+  QMenu* preference_menu_;
+  
 };
 
 #endif

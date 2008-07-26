@@ -120,16 +120,9 @@ Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
     menu->addAction( &selectionframe->deleteEntryAction() );
   }
   
-  // preferences menu
-  menu = addMenu( "&Preferences" );
-  menu->addAction( &mainframe.configurationAction() );
-  if( parent == selectionframe )
-  {
-    menu->addSeparator();
-    menu->addAction( &selectionframe->keywordToolBar().visibilityAction() );
-    menu->addAction( &selectionframe->entryToolBar().visibilityAction() );
-    menu->addAction( &selectionframe->searchPanel().visibilityAction() );
-  }
+  // preferences
+  preference_menu_ = addMenu( "&Preferences" );
+  connect( preference_menu_, SIGNAL( aboutToShow() ), this, SLOT( _updatePreferenceMenu() ) );
   
   // windows menu
   editor_menu_ = addMenu( "&Windows" );
@@ -205,4 +198,37 @@ void Menu::_updateEditorMenu( void )
   }
   
   return;
+}
+
+
+//_______________________________________________
+void Menu::_updatePreferenceMenu( void )
+{
+  
+  Debug::Throw( "Menu::_updatePreferenceMenu.\n" );
+  
+  // preferences menu
+  MainFrame& mainframe( *static_cast<MainFrame*>(qApp) );
+  preference_menu_->addAction( &mainframe.configurationAction() );
+  
+  // additional preferences in case parent is a selection frame
+  SelectionFrame *selectionframe = dynamic_cast<SelectionFrame*>( parentWidget() );
+  if( selectionframe )
+  {
+    preference_menu_->addSeparator();
+    preference_menu_->addAction( &selectionframe->keywordToolBar().visibilityAction() );
+    preference_menu_->addAction( &selectionframe->entryToolBar().visibilityAction() );
+    preference_menu_->addAction( &selectionframe->searchPanel().visibilityAction() );
+  }
+  
+  // additional preferences in case parent is an edition frame
+  EditFrame *editframe = dynamic_cast<EditFrame*>( parentWidget() );
+  if( editframe )
+  {
+    preference_menu_->addSeparator();
+    preference_menu_->addAction( &editframe->activeEditor().showLineNumberAction() );
+    preference_menu_->addAction( &editframe->activeEditor().wrapModeAction() );
+    preference_menu_->addAction( &editframe->activeEditor().blockHighlightAction() );
+  }
+  
 }

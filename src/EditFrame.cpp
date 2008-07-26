@@ -114,7 +114,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   main_->layout()->addWidget( &editor );
   
   connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );
-  connect( _activeEditor().document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
+  connect( activeEditor().document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
   connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
   // create attachment list
@@ -164,7 +164,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
 
   // format bar
   format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
-  format_toolbar_->setTarget( _activeEditor() );
+  format_toolbar_->setTarget( activeEditor() );
   const FormatBar::ButtonMap& buttons( format_toolbar_->buttons() );
   for( FormatBar::ButtonMap::const_iterator iter = buttons.begin(); iter != buttons.end(); iter++ )
   { read_only_widgets_.push_back( iter->second ); }
@@ -400,7 +400,7 @@ void EditFrame::setModified( const bool& value )
 {
   Debug::Throw( "EditFrame::setModified.\n" );
   title_->setModified( value );
-  _activeEditor().document()->setModified( value );
+  activeEditor().document()->setModified( value );
 }
 
 //_____________________________________________
@@ -429,7 +429,7 @@ void EditFrame::_save( bool update_selection )
   Debug::Throw( "EditFrame::_save - logbook checked.\n" );
 
   //! update entry text
-  entry->setText( qPrintable( _activeEditor().toPlainText() ) );
+  entry->setText( qPrintable( activeEditor().toPlainText() ) );
   entry->setFormats( format_toolbar_->get() );
 
   //! update entry title
@@ -457,7 +457,7 @@ void EditFrame::_save( bool update_selection )
   BASE::KeySet<EditFrame> editors( entry );
   for( BASE::KeySet<EditFrame>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
   {
-    assert( *iter == this || (*iter)->isReadOnly() );
+    assert( *iter == this || (*iter)->isReadOnly() || (*iter)->isClosed() );
     if( *iter == this ) continue;
     (*iter)->displayEntry( entry );
   }
@@ -670,7 +670,7 @@ void EditFrame::_saveConfiguration( void )
   AttachmentList* atc_list( *BASE::KeySet<AttachmentList>(this).begin() );
   if( !atc_list->isHidden() )
   {
-    XmlOptions::get().set<int>( "EDT_HEIGHT", _activeEditor().height() );
+    XmlOptions::get().set<int>( "EDT_HEIGHT", activeEditor().height() );
     XmlOptions::get().set<int>( "ATC_HEIGHT", (*BASE::KeySet<AttachmentList>(this).begin())->height() );
   }
   
@@ -730,7 +730,7 @@ void EditFrame::_entryInfo( void )
 void EditFrame::_undo( void )
 {
   Debug::Throw( "EditFrame::_undo.\n" );
-  if( _activeEditor().QWidget::hasFocus() ) _activeEditor().document()->undo();
+  if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->undo();
   else if( title_->hasFocus() ) title_->undo();
   return;
 }
@@ -739,7 +739,7 @@ void EditFrame::_undo( void )
 void EditFrame::_redo( void )
 {
   Debug::Throw( "EditFrame::_redo.\n" );
-  if( _activeEditor().QWidget::hasFocus() ) _activeEditor().document()->redo();
+  if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->redo();
   else if( title_->hasFocus() ) title_->redo();
   return;
 }
@@ -749,7 +749,7 @@ void EditFrame::_updateUndoAction( void )
 { 
   Debug::Throw( "EditFrame::_updateUndoAction.\n" );
   if( title_->hasFocus() ) undo_action_->setEnabled( title_->isUndoAvailable() );
-  if( _activeEditor().QWidget::hasFocus() ) undo_action_->setEnabled( _activeEditor().document()->isUndoAvailable() );
+  if( activeEditor().QWidget::hasFocus() ) undo_action_->setEnabled( activeEditor().document()->isUndoAvailable() );
 }
 
 //_____________________________________________
@@ -757,7 +757,7 @@ void EditFrame::_updateRedoAction( void )
 { 
   Debug::Throw( "EditFrame::_updateRedoAction.\n" );
   if( title_->hasFocus() ) redo_action_->setEnabled( title_->isRedoAvailable() );
-  if( _activeEditor().QWidget::hasFocus() ) redo_action_->setEnabled( _activeEditor().document()->isRedoAvailable() );
+  if( activeEditor().QWidget::hasFocus() ) redo_action_->setEnabled( activeEditor().document()->isRedoAvailable() );
 }
 
 //_____________________________________________
@@ -770,10 +770,10 @@ void EditFrame::_updateUndoRedoActions( QWidget*, QWidget* current )
     redo_action_->setEnabled( title_->isRedoAvailable() );
   }
 
-  if( current == &_activeEditor() )
+  if( current == &activeEditor() )
   {
-    undo_action_->setEnabled( _activeEditor().document()->isUndoAvailable() );
-    redo_action_->setEnabled( _activeEditor().document()->isRedoAvailable() );
+    undo_action_->setEnabled( activeEditor().document()->isUndoAvailable() );
+    redo_action_->setEnabled( activeEditor().document()->isRedoAvailable() );
   }
 
 }
@@ -809,7 +809,7 @@ void EditFrame::_spellCheck( void )
   Debug::Throw( "EditFrame::_spellCheck.\n" );
   
   // create dialog
-  SPELLCHECK::SpellDialog dialog( &_activeEditor() );
+  SPELLCHECK::SpellDialog dialog( &activeEditor() );
   
   // set dictionary and filter
   dialog.setFilter( XmlOptions::get().raw("DICTIONARY_FILTER") );
@@ -955,7 +955,7 @@ void EditFrame::_titleModified( bool state )
   // check readonly status
   if( isReadOnly() ) return;
 
-  bool text_modified( _activeEditor().document()->isModified() );
+  bool text_modified( activeEditor().document()->isModified() );
   if( state && !text_modified ) updateWindowTitle();
   if( !(state || text_modified ) ) updateWindowTitle();
 
@@ -992,19 +992,19 @@ void EditFrame::_setActiveEditor( TextEditor& editor )
   assert( editor.isAssociated( this ) );
   
   active_editor_ = &editor;
-  if( !_activeEditor().isActive() )
+  if( !activeEditor().isActive() )
   {
 
     BASE::KeySet<TextEditor> editors( this );
     for( BASE::KeySet<TextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
     { (*iter)->setActive( false ); }
     
-    _activeEditor().setActive( true );
+    activeEditor().setActive( true );
 
   }
   
   // associate with toolbar
-  if( format_toolbar_ ) format_toolbar_->setTarget( _activeEditor() );
+  if( format_toolbar_ ) format_toolbar_->setTarget( activeEditor() );
 
   Debug::Throw( "EditFrame::setActiveDisplay - done.\n" );
   
@@ -1093,7 +1093,7 @@ void EditFrame::_closeEditor( TextEditor& editor )
   assert( active_found );
 
   // change focus
-  _activeEditor().setFocus();
+  activeEditor().setFocus();
   Debug::Throw( "EditFrame::_closeEditor - done.\n" );
 
 }
@@ -1104,7 +1104,7 @@ TextEditor& EditFrame::_splitView( const Orientation& orientation )
   Debug::Throw( "EditFrame::_splitView.\n" );
 
   // keep local pointer to current active display
-  TextEditor& active_editor_local( _activeEditor() );  
+  TextEditor& active_editor_local( activeEditor() );  
   
   // compute desired dimension of the new splitter
   // along its splitting direction
@@ -1160,7 +1160,7 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
   QSplitter *splitter = 0;
       
   // retrieve parent of current display
-  QWidget* parent( _activeEditor().parentWidget() );  
+  QWidget* parent( activeEditor().parentWidget() );  
   
   // try catch to splitter
   // do not create a new splitter if the parent has same orientation
@@ -1182,7 +1182,7 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
       // give him no parent, because the parent is set in QSplitter::insertWidget()
       splitter = new LocalSplitter(0);
       splitter->setOrientation( orientation );
-      parent_splitter->insertWidget( parent_splitter->indexOf( &_activeEditor() ), splitter );
+      parent_splitter->insertWidget( parent_splitter->indexOf( &activeEditor() ), splitter );
       
     } else {
       
@@ -1196,7 +1196,7 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
     }
     
     // reparent current display
-    splitter->addWidget( &_activeEditor() );
+    splitter->addWidget( &activeEditor() );
     
     // resize parent splitter if any
     if( parent_splitter )
@@ -1276,12 +1276,15 @@ SelectionFrame* EditFrame::_selectionFrame( void ) const
 void EditFrame::_displayText( void )
 {
   Debug::Throw( "EditFrame::_displayText.\n" );
-  if( !&_activeEditor() ) return;
+  if( !&activeEditor() ) return;
 
   LogEntry* entry( EditFrame::entry() );
-  _activeEditor().setPlainText( (entry) ? entry->text().c_str() : "" );
+  activeEditor().setPlainText( (entry) ? entry->text().c_str() : "" );
   format_toolbar_->load( entry->formats() );
-
+  
+  // reset undo/redo stack
+  activeEditor().resetUndoRedoStack();
+  
   return;
 }
 
