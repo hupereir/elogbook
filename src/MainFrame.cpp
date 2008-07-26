@@ -147,17 +147,17 @@ void MainFrame::realizeWidget( void )
   realized_ = true;
 
   // actions
-  about_action_ = new QAction( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).c_str() ), "About &eLogbook", 0 );
+  about_action_ = new QAction( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).c_str() ), "About &eLogbook", this );
   connect( about_action_, SIGNAL( triggered() ), SLOT( _about() ) );
 
-  aboutqt_action_ = new QAction( IconEngine::get( ICONS::ABOUT_QT ), "About &Qt", 0 );
+  aboutqt_action_ = new QAction( IconEngine::get( ICONS::ABOUT_QT ), "About &Qt", this );
   connect( aboutqt_action_, SIGNAL( triggered() ), SLOT( aboutQt() ) ); 
 
-  close_action_ = new QAction( IconEngine::get( ICONS::EXIT ), "E&xit", 0 );
+  close_action_ = new QAction( IconEngine::get( ICONS::EXIT ), "E&xit", this );
   close_action_->setShortcut( CTRL+Key_Q );
   connect( close_action_, SIGNAL( triggered() ), SLOT( _exit() ) );
   
-  configuration_action_ = new QAction( IconEngine::get( ICONS::CONFIGURE ), "Default &Configuration", 0 );
+  configuration_action_ = new QAction( IconEngine::get( ICONS::CONFIGURE ), "Default &Configuration", this );
   connect( configuration_action_, SIGNAL( triggered() ), SLOT( _configuration() ) );  
   
   // create attachment window

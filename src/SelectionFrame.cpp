@@ -898,7 +898,7 @@ void SelectionFrame::_installActions( void )
   new_keyword_action_->setToolTip( "Create a new keyword" );
   connect( new_keyword_action_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
 
-  edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename keyword", this );
+  addAction( edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename keyword", this ) );
   edit_keyword_action_->setToolTip( "Rename selected keyword" );
   edit_keyword_action_->setShortcut( CTRL+Key_K );
   connect( edit_keyword_action_, SIGNAL( triggered() ), SLOT( _renameKeyword() ) );

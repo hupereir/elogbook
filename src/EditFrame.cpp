@@ -1319,6 +1319,7 @@ void EditFrame::_displayAttachments( void )
 
   // show attachment list
   attachment_list.resizeColumns();
+  attachment_list.sort();
   attachment_list.show();
 
   return;
