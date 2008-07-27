@@ -1060,9 +1060,9 @@ void EditFrame::_closeEditor( TextEditor& editor )
     
     // move child to grand_parent_splitter if any
     if( grand_parent_splitter )
-    {  grand_parent_splitter->insertWidget( grand_parent_splitter->indexOf( parent_splitter ), child ); }
-    else
-    {
+    { 
+      grand_parent_splitter->insertWidget( grand_parent_splitter->indexOf( parent_splitter ), child );
+    }  else {
       child->setParent( grand_parent );
       grand_parent->layout()->addWidget( child );
     }
@@ -1342,13 +1342,7 @@ void EditFrame::ColorWidget::setColor( const QColor& color )
   pixmap.fill( Qt::transparent );
   
   QPainter painter( &pixmap );
-  
   painter.setPen( Qt::NoPen );
-   
-//   QLinearGradient gradient( QPoint(0,0), QPoint( width(), height() ) );
-//   gradient.setColorAt(0, color);
-//   gradient.setColorAt(1, color.light(135));
-//  painter.setBrush( gradient );
   painter.setBrush( color );
   painter.setRenderHints( QPainter::Antialiasing|QPainter::SmoothPixmapTransform );
   
