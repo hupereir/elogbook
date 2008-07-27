@@ -82,6 +82,9 @@ class Menu:public QMenuBar, public Counter
   //! open previous menu, in which the open files are stored
   OpenPreviousMenu* open_previous_menu_;      
  
+  //! editor windows action group
+  QActionGroup* editor_action_group_;
+  
   //! editor windows menu
   QMenu* editor_menu_;
  

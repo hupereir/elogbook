@@ -126,6 +126,8 @@ Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
   
   // windows menu
   editor_menu_ = addMenu( "&Windows" );
+  editor_action_group_ = new QActionGroup( editor_menu_ );
+  editor_action_group_->setExclusive( true );
   connect( editor_menu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
   // help manager
@@ -166,14 +168,22 @@ void Menu::_updateEditorMenu( void )
   SelectionFrame &selectionframe( static_cast<MainFrame*>(qApp)->selectionFrame() );
   AttachmentFrame &attachment_frame( static_cast<MainFrame*>(qApp)->attachmentFrame() );
   
+  // retrieve parent editFream if any
+  EditFrame* editframe = dynamic_cast<EditFrame*>( parentWidget() );
+  
   // editor attachments and logbook information
   editor_menu_->addAction( &selectionframe.uniconifyAction() );
+  
+  editor_menu_->addAction( &attachment_frame.uniconifyAction() );
+  editor_menu_->addAction( &selectionframe.logbookStatisticsAction() );
+  editor_menu_->addAction( &selectionframe.logbookInformationsAction() );
 
   BASE::KeySet<EditFrame> frames( selectionframe );
   bool has_alive_frame( find_if( frames.begin(), frames.end(), EditFrame::aliveFTor() ) != frames.end() );
   if( has_alive_frame )
   {
     
+    editor_menu_->addSeparator();
     for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       
@@ -182,19 +192,15 @@ void Menu::_updateEditorMenu( void )
 
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
-      editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
+      QAction* action = editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
+      //editor_action_group_->addAction( action );
+      action->setCheckable( true );
+      action->setChecked( editframe && ( editframe == (*iter) ) );
       
     }
-  }
-  
-  editor_menu_->addAction( &attachment_frame.uniconifyAction() );
-  editor_menu_->addAction( &selectionframe.logbookStatisticsAction() );
-  editor_menu_->addAction( &selectionframe.logbookInformationsAction() );
 
-  if( has_alive_frame )
-  {
-    editor_menu_->addSeparator();
     editor_menu_->addAction( &selectionframe.closeFramesAction() );
+  
   }
   
   return;
