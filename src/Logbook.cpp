@@ -64,6 +64,7 @@ Logbook::Logbook( const File& file ):
   author_( LOGBOOK_NO_AUTHOR ),
   creation_( TimeStamp::now() ),
   sort_method_( Logbook::SORT_CREATION ),
+  sort_order_( 0 ),
   xml_entries_( 0 ),
   xml_children_( 0 )
 {

@@ -240,6 +240,12 @@ SelectionFrame::SelectionFrame( QWidget *parent ):
   
 }
 
+//___________________________________________________________
+SelectionFrame::~SelectionFrame( void )
+{ 
+  Debug::Throw( "SelectionFrame::~SelectionFrame.\n" );
+  if( logbook_ ) delete logbook_; 
+}
 
 //_______________________________________________
 void SelectionFrame::setLogbook( File file )

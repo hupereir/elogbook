@@ -2,7 +2,7 @@ AC_INIT(configure.in)
 AM_INIT_AUTOMAKE(elogbook, qt4_1.3)
 AC_PROG_CXX
 AC_PROG_LIBTOOL
-CXXFLAGS="-Wall -Wno-non-virtual-dtor"
+CXXFLAGS="-Wall -O2 -Wno-non-virtual-dtor"
 
 dnl *********************************************
 dnl external programs

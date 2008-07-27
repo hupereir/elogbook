@@ -72,8 +72,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   SelectionFrame( QWidget *parent );
 
   //! destructor
-  virtual ~SelectionFrame( void )
-  { Debug::Throw( "SelectionFrame::~SelectionFrame.\n" ); }
+  virtual ~SelectionFrame( void );
 
   //! retrive menu
   Menu& menu( void )
