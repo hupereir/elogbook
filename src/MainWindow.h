@@ -1,6 +1,6 @@
 // $Id$
-#ifndef SelectionFrame_h
-#define SelectionFrame_h
+#ifndef MainWindow_h
+#define MainWindow_h
 
 /******************************************************************************
 *
@@ -24,7 +24,7 @@
 *******************************************************************************/
 
 /*!
-  \file SelectionFrame.h
+  \file MainWindow.h
   \brief base class to display entries and keyword
   \author Hugo Pereira
   \version $Revision$
@@ -52,7 +52,7 @@
 
 // class ColorMenu;
 class CustomToolBar;
-class EditFrame;
+class EditionWindow;
 class Logbook;
 class Menu;
 class SearchPanel;
@@ -60,7 +60,7 @@ class SelectionStatusBar;
 class ColorMenu;
 
 //! display a set of log entries, allows selection of one
-class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
+class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
 {
 
   //! Qt meta object declaration
@@ -69,10 +69,10 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   public:
 
   //! constructor
-  SelectionFrame( QWidget *parent );
+  MainWindow( QWidget *parent );
 
   //! destructor
-  virtual ~SelectionFrame( void );
+  virtual ~MainWindow( void );
 
   //! retrive menu
   Menu& menu( void )
@@ -135,7 +135,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! delete entry
   virtual void deleteEntry( LogEntry* entry, const bool& save = true );
 
-  //! look for EditFrames matching entry, set readonly
+  //! look for EditionWindows matching entry, set readonly
   virtual bool lockEntry( LogEntry* entry ) const;
 
   //! retrieve previous entry (if any)
@@ -262,7 +262,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   QAction& logbookStatisticsAction( void ) const
   { return *logbook_statistics_action_; }
 
-  //! close editframes
+  //! close editionwindows
   QAction& closeFramesAction( void ) const
   { return *close_frames_action_; }
   
@@ -342,7 +342,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   void _uniconify( void )
   { 
   
-    Debug::Throw( "SelectionFrame::_uniconify.\n" );
+    Debug::Throw( "MainWindow::_uniconify.\n" );
     QtUtil::uniconify( this ); 
     
   }
@@ -384,8 +384,8 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! edit current logbook informations
   virtual void _editLogbookInformations( void );
 
-  //! close EditFrames
-  virtual void _closeEditFrames( void ) const;
+  //! close EditionWindows
+  virtual void _closeEditionWindows( void ) const;
 
   //! create new entry
   virtual void _newEntry( void );
@@ -396,7 +396,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! delete selected entries
   virtual void _deleteEntries ( void );
 
-  //! show EditFrame associated to a given name
+  //! show EditionWindow associated to a given name
   virtual void _displayEntry( LogEntry* );
   
   //! rename entry with current title
@@ -499,7 +499,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   bool _hasModifiedEntries( void ) const;
   
   //! check modified entries
-  AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditFrame>, const bool& ) const;
+  AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditionWindow>, const bool& ) const;
 
   //! main menu
   Menu* menu_;
@@ -626,7 +626,7 @@ class SelectionFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! logbook information
   QAction* logbook_statistics_action_;
 
-  //! close editframes
+  //! close editionwindows
   QAction* close_frames_action_;
   
   //! show duplicates

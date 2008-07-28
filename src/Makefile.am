@@ -84,7 +84,7 @@ noinst_HEADERS = \
   DeleteAttachmentDialog.h \
   DeleteKeywordDialog.h \
   EditAttachmentDialog.h \
-  EditFrame.h \
+  EditionWindow.h \
   EditKeywordDialog.h \
   FormatBar.h \
   HelpText.h \
@@ -101,14 +101,14 @@ noinst_HEADERS = \
   LogEntryDelegate.h \
   LogEntryInformationDialog.h \
   LogEntryModel.h \
-  MainFrame.h \
+  Application.h \
   Menu.h \
   NewAttachmentDialog.h \
   NewLogbookDialog.h \
   OpenAttachmentDialog.h \
   ProgressBar.h \
   SearchPanel.h \
-  SelectionFrame.h \
+  MainWindow.h \
   SelectionStatusBar.h \
   SplashScreen.h \
   ViewHtmlEntryDialog.h \
@@ -123,7 +123,7 @@ elogbook_SOURCES = \
   DeleteAttachmentDialog.cpp \
   DeleteKeywordDialog.cpp \
   EditAttachmentDialog.cpp \
-  EditFrame.cpp \
+  EditionWindow.cpp \
   EditKeywordDialog.cpp \
   FormatBar.cpp \
   KeywordDelegate.cpp \
@@ -134,14 +134,14 @@ elogbook_SOURCES = \
   LogEntryDelegate.cpp \
   LogEntryInformationDialog.cpp \
   LogEntryModel.cpp \
-  MainFrame.cpp \
+  Application.cpp \
   Menu.cpp \
   NewAttachmentDialog.cpp \
   NewLogbookDialog.cpp \
   OpenAttachmentDialog.cpp \
   ProgressBar.cpp \
   SearchPanel.cpp \
-  SelectionFrame.cpp \
+  MainWindow.cpp \
   SelectionStatusBar.cpp \
   SplashScreen.cpp \
   ViewHtmlEntryDialog.cpp \
@@ -154,17 +154,17 @@ nodist_elogbook_SOURCES = \
   moc_AttachmentFrame.cpp \
   moc_AttachmentList.cpp \
   moc_ConfigurationDialog.cpp \
-  moc_EditFrame.cpp \
+  moc_EditionWindow.cpp \
   moc_FormatBar.cpp \
   moc_KeywordModel.cpp \
   moc_LogbookModifiedDialog.cpp \
   moc_LogEntryModel.cpp \
-  moc_MainFrame.cpp \
+  moc_Application.cpp \
   moc_Menu.cpp \
   moc_NewAttachmentDialog.cpp \
   moc_ProgressBar.cpp \
   moc_SearchPanel.cpp \
-  moc_SelectionFrame.cpp \
+  moc_MainWindow.cpp \
   moc_SelectionStatusBar.cpp \
   moc_SplashScreen.cpp
 

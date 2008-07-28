@@ -38,13 +38,13 @@
 #include "CustomToolBar.h"
 #include "Debug.h"
 #include "TreeViewConfiguration.h"
-#include "MainFrame.h"
+#include "Application.h"
 #include "OptionBrowsedLineEditor.h"
 #include "OptionCheckBox.h"
 #include "OptionSpinBox.h"
 #include "OptionListBox.h"
 #include "Options.h"
-#include "SelectionFrame.h"
+#include "MainWindow.h"
 
 #include "Config.h"
 #if WITH_ASPELL
@@ -196,7 +196,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   page = &addPage( "List configuration" );
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
     page, 
-    &static_cast<MainFrame*>(qApp)->selectionFrame().logEntryList(), 
+    &static_cast<Application*>(qApp)->selectionFrame().logEntryList(), 
     "Logbook entries display list" );
   
   page->layout()->addWidget( listview_config );

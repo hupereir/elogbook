@@ -21,11 +21,11 @@
 *                        
 *******************************************************************************/
 
-#ifndef MainFrame_h
-#define MainFrame_h
+#ifndef Application_h
+#define Application_h
 
 /*!
-  \file    MainFrame.h
+  \file    Application.h
   \brief  Main Window singleton object
   \author  Hugo Pereira
   \version $Revision$
@@ -44,14 +44,14 @@
 
 class AttachmentFrame;
 class LogEntry;
-class SelectionFrame;
+class MainWindow;
 
 /*!
-  \class  MainFrame
+  \class  Application
   \brief  Main Window singleton object
 */
 
-class MainFrame: public QApplication, public Counter
+class Application: public QApplication, public Counter
 {
 
   //! Qt meta object declaration
@@ -63,10 +63,10 @@ class MainFrame: public QApplication, public Counter
   static void usage( void );
   
   //! constructor
-  MainFrame( int argc, char*argv[] ); 
+  Application( int argc, char*argv[] ); 
   
   //! destructor
-  ~MainFrame( void );
+  ~Application( void );
   
   //! window title for modified logbook
   static const QString MAIN_TITLE_MODIFIED;
@@ -83,8 +83,8 @@ class MainFrame: public QApplication, public Counter
   //! create all widgets
   void realizeWidget( void );
   
-  //! retrieve SelectionFrame singleton
-  SelectionFrame& selectionFrame( void ) const
+  //! retrieve MainWindow singleton
+  MainWindow& selectionFrame( void ) const
   { 
     assert( selection_frame_
  );
@@ -176,7 +176,7 @@ class MainFrame: public QApplication, public Counter
   AttachmentFrame* attachment_frame_;
   
   //! main window entry selection frame
-  SelectionFrame* selection_frame_; 
+  MainWindow* selection_frame_; 
   
   //! true when Realized Widget has been called.
   bool realized_; 

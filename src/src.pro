@@ -35,7 +35,7 @@ HEADERS = \
  DeleteAttachmentDialog.h \
  DeleteKeywordDialog.h \
  EditAttachmentDialog.h \
- EditFrame.h \
+ EditionWindow.h \
  EditKeywordDialog.h \
  FormatBar.h \
  HelpText.h \
@@ -52,14 +52,14 @@ HEADERS = \
  LogEntryDelegate.h \
  LogEntryInformationDialog.h \
  LogEntryModel.h \
- MainFrame.h \
+ Application.h \
  Menu.h \
  NewAttachmentDialog.h \
  NewLogbookDialog.h \
  OpenAttachmentDialog.h \
  ProgressBar.h \
  SearchPanel.h \
- SelectionFrame.h \
+ MainWindow.h \
  SelectionStatusBar.h \
  SplashScreen.h \
  ViewHtmlEntryDialog.h \
@@ -76,7 +76,7 @@ SOURCES = \
  DeleteAttachmentDialog.cpp \
  DeleteKeywordDialog.cpp \
  EditAttachmentDialog.cpp \
- EditFrame.cpp \
+ EditionWindow.cpp \
  EditKeywordDialog.cpp \
  elogbook.cpp \
  FormatBar.cpp \
@@ -92,14 +92,14 @@ SOURCES = \
  LogEntryDelegate.cpp \
  LogEntryInformationDialog.cpp \
  LogEntryModel.cpp \
- MainFrame.cpp \
+ Application.cpp \
  Menu.cpp \
  NewAttachmentDialog.cpp \
  NewLogbookDialog.cpp \
  OpenAttachmentDialog.cpp \
  ProgressBar.cpp \
  SearchPanel.cpp \
- SelectionFrame.cpp \
+ MainWindow.cpp \
  SelectionStatusBar.cpp \
  SplashScreen.cpp \
  ViewHtmlEntryDialog.cpp \

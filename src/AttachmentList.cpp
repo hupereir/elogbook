@@ -40,17 +40,17 @@
 #include "Debug.h"
 #include "DeleteAttachmentDialog.h"
 #include "EditAttachmentDialog.h"
-#include "EditFrame.h"
+#include "EditionWindow.h"
 #include "File.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
-#include "MainFrame.h"
+#include "Application.h"
 #include "NewAttachmentDialog.h"
 #include "OpenAttachmentDialog.h"
 #include "QtUtil.h"
-#include "SelectionFrame.h"
+#include "MainWindow.h"
 #include "Util.h"
 
 using namespace std;
@@ -180,10 +180,10 @@ void AttachmentList::resizeColumns( void )
 void AttachmentList::_newAttachment( void )
 {  Debug::Throw( "AttachmentList::_newAttachment.\n" );  
   
-  // retrieve/check associated EditFrame/LogEntry
-  BASE::KeySet<EditFrame> edit_frames( this );
+  // retrieve/check associated EditionWindow/LogEntry
+  BASE::KeySet<EditionWindow> edit_frames( this );
   assert( edit_frames.size() == 1 );
-  EditFrame *edit_frame( *edit_frames.begin() );
+  EditionWindow *edit_frame( *edit_frames.begin() );
   
   BASE::KeySet<LogEntry> entries( edit_frame );
   if( entries.size() != 1 )
@@ -295,8 +295,8 @@ void AttachmentList::_newAttachment( void )
     Key::associate( entry, attachment );
     
     // update all edit_frames AttachmentList associated to entry
-    edit_frames = BASE::KeySet<EditFrame>( entry );
-    for( BASE::KeySet<EditFrame>::iterator iter = edit_frames.begin(); iter != edit_frames.end(); iter++ )
+    edit_frames = BASE::KeySet<EditionWindow>( entry );
+    for( BASE::KeySet<EditionWindow>::iterator iter = edit_frames.begin(); iter != edit_frames.end(); iter++ )
     {
       if( !(*iter)->attachmentList().topLevelItemCount() ) (*iter)->attachmentList().show();
       (*iter)->attachmentList().add( attachment );
@@ -304,8 +304,8 @@ void AttachmentList::_newAttachment( void )
     }
     
     // update attachment frame
-    static_cast<MainFrame*>(qApp)->attachmentFrame().list().add( attachment );
-    static_cast<MainFrame*>(qApp)->attachmentFrame().list().resizeColumns();
+    static_cast<Application*>(qApp)->attachmentFrame().list().add( attachment );
+    static_cast<Application*>(qApp)->attachmentFrame().list().resizeColumns();
    
     // update logbooks destination directory
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 
@@ -314,10 +314,10 @@ void AttachmentList::_newAttachment( void )
       (*iter)->setDirectory( full_directory );
     }
     
-    // change MainFrame window title
-    static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+    // change Application window title
+    static_cast<Application*>(qApp)->selectionFrame().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
 
-    // save EditFrame entry
+    // save EditionWindow entry
     edit_frame->saveAction().trigger();
     
     break;
@@ -421,10 +421,10 @@ void AttachmentList::_edit( void )
     return;
   }
 
-  // retrieve/check associated EditFrame/LogEntry
-  BASE::KeySet<EditFrame> edit_frames( this );
+  // retrieve/check associated EditionWindow/LogEntry
+  BASE::KeySet<EditionWindow> edit_frames( this );
   assert( edit_frames.size() == 1 );
-  EditFrame *edit_frame( *edit_frames.begin() );
+  EditionWindow *edit_frame( *edit_frames.begin() );
 
   // create/check attachment full name
   for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
@@ -456,9 +456,9 @@ void AttachmentList::_edit( void )
   }
   
   // set main window title
-  static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+  static_cast<Application*>(qApp)->selectionFrame().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
   
-  // save EditFrame entry
+  // save EditionWindow entry
   edit_frame->saveAction().trigger();
   
 }
@@ -476,10 +476,10 @@ void AttachmentList::_delete( void )
     return;
   }
 
-  // retrieve/check associated EditFrame/LogEntry
-  BASE::KeySet<EditFrame> edit_frames( this );
+  // retrieve/check associated EditionWindow/LogEntry
+  BASE::KeySet<EditionWindow> edit_frames( this );
   assert( edit_frames.size() == 1 );
-  EditFrame *edit_frame( *edit_frames.begin() );
+  EditionWindow *edit_frame( *edit_frames.begin() );
 
   // create/check attachment full name
   for( QList<Item*>::iterator iter = items.begin(); iter != items.end(); iter++ )
@@ -539,9 +539,9 @@ void AttachmentList::_delete( void )
   }
   
   // set main window title
-  static_cast<MainFrame*>(qApp)->selectionFrame().setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
+  static_cast<Application*>(qApp)->selectionFrame().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
   
-  // save EditFrame entry
+  // save EditionWindow entry
   edit_frame->saveAction().trigger();
 
   return;      

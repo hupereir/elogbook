@@ -35,18 +35,18 @@
 #include "AttachmentFrame.h"
 #include "CustomToolBar.h"
 #include "DebugMenu.h"
-#include "EditFrame.h"
+#include "EditionWindow.h"
 #include "File.h"
 #include "HelpManager.h"
 #include "HelpText.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
-#include "MainFrame.h"
+#include "Application.h"
 #include "Menu.h"
 #include "OpenPreviousMenu.h"
 #include "QtUtil.h"
-#include "SelectionFrame.h"
+#include "MainWindow.h"
 #include "SearchPanel.h"
 #include "Str.h"
 #include "Util.h"
@@ -56,68 +56,68 @@ using namespace std;
 using namespace Qt;
 
 //_______________________________________________
-Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
+Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   QMenuBar( parent ),
   Counter( "Menu" )
 {
   
   Debug::Throw( "Menu::Menu.\n" );
   
-  // try cast parent to EditFrame
-  EditFrame* editframe( dynamic_cast<EditFrame*>( parent ) );
+  // try cast parent to EditionWindow
+  EditionWindow* editionwindow( dynamic_cast<EditionWindow*>( parent ) );
   
   // generic menu/action
   QMenu *menu;
   
   // file menu
   menu = addMenu( "&File" );
-  menu->addAction( &selectionframe->newLogbookAction() );
+  menu->addAction( &mainwindow->newLogbookAction() );
   
-  if( editframe )
+  if( editionwindow )
   {
-    menu->addAction( &editframe->newEntryAction() );
-    menu->addAction( &editframe->splitViewHorizontalAction() );
+    menu->addAction( &editionwindow->newEntryAction() );
+    menu->addAction( &editionwindow->splitViewHorizontalAction() );
   }
   
-  menu->addAction( &selectionframe->openAction() );
+  menu->addAction( &mainwindow->openAction() );
 
   // file menu
   open_previous_menu_ = new OpenPreviousMenu( this );
   open_previous_menu_->setCheck( true );
-  connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), selectionframe, SLOT( open( FileRecord ) ) );  
+  connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
   menu->addMenu( open_previous_menu_ );
 
-  menu->addAction( &selectionframe->synchronizeAction() );
-  menu->addAction( &selectionframe->reorganizeAction() );
+  menu->addAction( &mainwindow->synchronizeAction() );
+  menu->addAction( &mainwindow->reorganizeAction() );
 
   menu->addSeparator();
-  if( editframe ) menu->addAction( &editframe->saveAction() );
-  else menu->addAction( &selectionframe->saveAction() );
+  if( editionwindow ) menu->addAction( &editionwindow->saveAction() );
+  else menu->addAction( &mainwindow->saveAction() );
   
-  menu->addAction( &selectionframe->saveAsAction() );
-  menu->addAction( &selectionframe->saveBackupAction() );
-  menu->addAction( &selectionframe->revertToSaveAction() );
+  menu->addAction( &mainwindow->saveAsAction() );
+  menu->addAction( &mainwindow->saveBackupAction() );
+  menu->addAction( &mainwindow->revertToSaveAction() );
   menu->addSeparator();
   
-  if( editframe ) menu->addAction( &editframe->viewHtmlAction() );
-  else menu->addAction( &selectionframe->viewHtmlAction() );
+  if( editionwindow ) menu->addAction( &editionwindow->viewHtmlAction() );
+  else menu->addAction( &mainwindow->viewHtmlAction() );
   
-  if( editframe ) menu->addAction( &editframe->closeAction() );
+  if( editionwindow ) menu->addAction( &editionwindow->closeAction() );
  
-  MainFrame& mainframe( *static_cast<MainFrame*>(qApp) );
-  menu->addAction( &mainframe.closeAction() );
+  Application& application( *static_cast<Application*>(qApp) );
+  menu->addAction( &application.closeAction() );
 
   // edition menu
-  if( parent == selectionframe )
+  if( parent == mainwindow )
   {
     menu = addMenu( "&Edit" );
-    menu->addAction( &selectionframe->newKeywordAction() );
-    menu->addAction( &selectionframe->editKeywordAction() );
-    menu->addAction( &selectionframe->deleteKeywordAction() );
+    menu->addAction( &mainwindow->newKeywordAction() );
+    menu->addAction( &mainwindow->editKeywordAction() );
+    menu->addAction( &mainwindow->deleteKeywordAction() );
     menu->addSeparator();
-    menu->addAction( &selectionframe->newEntryAction() );
-    menu->addAction( &selectionframe->editEntryAction() );
-    menu->addAction( &selectionframe->deleteEntryAction() );
+    menu->addAction( &mainwindow->newEntryAction() );
+    menu->addAction( &mainwindow->editEntryAction() );
+    menu->addAction( &mainwindow->deleteEntryAction() );
   }
   
   // preferences
@@ -143,16 +143,16 @@ Menu::Menu( QWidget* parent, SelectionFrame* selectionframe ):
   menu = addMenu( "&Help" );
   menu->addAction( &help->displayAction() );
   menu->addSeparator();
-  menu->addAction( &mainframe.aboutAction() );
-  menu->addAction( &mainframe.aboutQtAction() );
+  menu->addAction( &application.aboutAction() );
+  menu->addAction( &application.aboutQtAction() );
   menu->addSeparator();
   
   // debug menu
   DebugMenu *debug_menu( new DebugMenu( this ) );
   debug_menu->setTitle( "&Debug" );
   menu->addMenu( debug_menu );
-  debug_menu->addAction( &selectionframe->saveForcedAction() );
-  debug_menu->addAction( &selectionframe->showDuplicatesAction() );
+  debug_menu->addAction( &mainwindow->saveForcedAction() );
+  debug_menu->addAction( &mainwindow->showDuplicatesAction() );
   debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
   debug_menu->addAction( &help->dumpAction() );
 
@@ -165,26 +165,26 @@ void Menu::_updateEditorMenu( void )
   
   editor_menu_->clear();
 
-  SelectionFrame &selectionframe( static_cast<MainFrame*>(qApp)->selectionFrame() );
-  AttachmentFrame &attachment_frame( static_cast<MainFrame*>(qApp)->attachmentFrame() );
+  MainWindow &mainwindow( static_cast<Application*>(qApp)->selectionFrame() );
+  AttachmentFrame &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
   
   // retrieve parent editFream if any
-  EditFrame* editframe = dynamic_cast<EditFrame*>( parentWidget() );
+  EditionWindow* editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );
   
   // editor attachments and logbook information
-  editor_menu_->addAction( &selectionframe.uniconifyAction() );
+  editor_menu_->addAction( &mainwindow.uniconifyAction() );
   
   editor_menu_->addAction( &attachment_frame.uniconifyAction() );
-  editor_menu_->addAction( &selectionframe.logbookStatisticsAction() );
-  editor_menu_->addAction( &selectionframe.logbookInformationsAction() );
+  editor_menu_->addAction( &mainwindow.logbookStatisticsAction() );
+  editor_menu_->addAction( &mainwindow.logbookInformationsAction() );
 
-  BASE::KeySet<EditFrame> frames( selectionframe );
-  bool has_alive_frame( find_if( frames.begin(), frames.end(), EditFrame::aliveFTor() ) != frames.end() );
+  BASE::KeySet<EditionWindow> frames( mainwindow );
+  bool has_alive_frame( find_if( frames.begin(), frames.end(), EditionWindow::aliveFTor() ) != frames.end() );
   if( has_alive_frame )
   {
     
     editor_menu_->addSeparator();
-    for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       
       // ignore if frame is to be deleted
@@ -195,11 +195,11 @@ void Menu::_updateEditorMenu( void )
       QAction* action = editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
       //editor_action_group_->addAction( action );
       action->setCheckable( true );
-      action->setChecked( editframe && ( editframe == (*iter) ) );
+      action->setChecked( editionwindow && ( editionwindow == (*iter) ) );
       
     }
 
-    editor_menu_->addAction( &selectionframe.closeFramesAction() );
+    editor_menu_->addAction( &mainwindow.closeFramesAction() );
   
   }
   
@@ -214,27 +214,27 @@ void Menu::_updatePreferenceMenu( void )
   Debug::Throw( "Menu::_updatePreferenceMenu.\n" );
   
   // preferences menu
-  MainFrame& mainframe( *static_cast<MainFrame*>(qApp) );
-  preference_menu_->addAction( &mainframe.configurationAction() );
+  Application& application( *static_cast<Application*>(qApp) );
+  preference_menu_->addAction( &application.configurationAction() );
   
   // additional preferences in case parent is a selection frame
-  SelectionFrame *selectionframe = dynamic_cast<SelectionFrame*>( parentWidget() );
-  if( selectionframe )
+  MainWindow *mainwindow = dynamic_cast<MainWindow*>( parentWidget() );
+  if( mainwindow )
   {
     preference_menu_->addSeparator();
-    preference_menu_->addAction( &selectionframe->keywordToolBar().visibilityAction() );
-    preference_menu_->addAction( &selectionframe->entryToolBar().visibilityAction() );
-    preference_menu_->addAction( &selectionframe->searchPanel().visibilityAction() );
+    preference_menu_->addAction( &mainwindow->keywordToolBar().visibilityAction() );
+    preference_menu_->addAction( &mainwindow->entryToolBar().visibilityAction() );
+    preference_menu_->addAction( &mainwindow->searchPanel().visibilityAction() );
   }
   
   // additional preferences in case parent is an edition frame
-  EditFrame *editframe = dynamic_cast<EditFrame*>( parentWidget() );
-  if( editframe )
+  EditionWindow *editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );
+  if( editionwindow )
   {
     preference_menu_->addSeparator();
-    preference_menu_->addAction( &editframe->activeEditor().showLineNumberAction() );
-    preference_menu_->addAction( &editframe->activeEditor().wrapModeAction() );
-    preference_menu_->addAction( &editframe->activeEditor().blockHighlightAction() );
+    preference_menu_->addAction( &editionwindow->activeEditor().showLineNumberAction() );
+    preference_menu_->addAction( &editionwindow->activeEditor().wrapModeAction() );
+    preference_menu_->addAction( &editionwindow->activeEditor().blockHighlightAction() );
   }
   
 }

@@ -23,7 +23,7 @@
 
 
 /*!
-  \file EditFrame.cpp
+  \file EditionWindow.cpp
   \brief log entry edition/creation object
   \author Hugo Pereira
   \version $Revision$
@@ -42,7 +42,7 @@
 #include "TextEditor.h"
 #include "CustomToolBar.h"
 #include "CustomToolButton.h"
-#include "EditFrame.h"
+#include "EditionWindow.h"
 #include "File.h"
 #include "FormatBar.h"
 #include "HtmlUtil.h"
@@ -51,11 +51,11 @@
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryInformationDialog.h"
-#include "MainFrame.h"
+#include "Application.h"
 #include "Menu.h"
 #include "Options.h"
 #include "QtUtil.h"
-#include "SelectionFrame.h"
+#include "MainWindow.h"
 #include "StatusBar.h"
 #include "Str.h"
 #include "Util.h"
@@ -70,16 +70,16 @@ using namespace std;
 using namespace Qt;
 
 //_______________________________________________
-EditFrame::EditFrame( QWidget* parent, bool read_only ):
+EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   CustomMainWindow( parent ),
-  Counter( "EditFrame" ),
+  Counter( "EditionWindow" ),
   read_only_( read_only ),
   closed_( false ),
   color_widget_( 0 ),
   active_editor_( 0 ),
   format_toolbar_( 0 )
 {
-  Debug::Throw("EditFrame::EditFrame.\n" );
+  Debug::Throw("EditionWindow::EditionWindow.\n" );
   setObjectName( "EDITFRAME" );
   
   QWidget* main( new QWidget( this ) ); 
@@ -98,7 +98,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   // title label and line
   title_layout_->addWidget( title_ = new LineEditor( main ), 1 );
     
-  // splitter for EditFrame and attachment list
+  // splitter for EditionWindow and attachment list
   splitter_ = new QSplitter( main );
   splitter_->setOrientation( Qt::Vertical );
   layout->addWidget( splitter_, 1 );
@@ -121,7 +121,7 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   AttachmentList *attachment_list = new AttachmentList( splitter_, isReadOnly() );
   attachment_list->hide();
 
-  // associate EditFrame and attachment list
+  // associate EditionWindow and attachment list
   Key::associate( this, attachment_list );
 
   // status bar for tooltips
@@ -201,12 +201,12 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   
   // extra toolbar
   toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" );
-  toolbar->addAction( &static_cast<MainFrame*>(qApp)->selectionFrame().uniconifyAction() );
+  toolbar->addAction( &static_cast<Application*>(qApp)->selectionFrame().uniconifyAction() );
   toolbar->addAction( &previousEntryAction() );
   toolbar->addAction( &nextEntryAction() );
 
   // create menu if requested
-  Menu* menu = new Menu( this, &static_cast<MainFrame*>(qApp)->selectionFrame() ); 
+  Menu* menu = new Menu( this, &static_cast<Application*>(qApp)->selectionFrame() ); 
   setMenuBar( menu );
   
   // changes display according to read_only flag
@@ -216,18 +216,18 @@ EditFrame::EditFrame( QWidget* parent, bool read_only ):
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
-  Debug::Throw("EditFrame::EditFrame - done.\n" );
+  Debug::Throw("EditionWindow::EditionWindow - done.\n" );
 
 }
 
 //____________________________________________
-EditFrame::~EditFrame( void )
-{ Debug::Throw( "EditFrame::~EditFrame.\n" ); }
+EditionWindow::~EditionWindow( void )
+{ Debug::Throw( "EditionWindow::~EditionWindow.\n" ); }
 
 //____________________________________________
-void EditFrame::displayEntry( LogEntry *entry )
+void EditionWindow::displayEntry( LogEntry *entry )
 {
-  Debug::Throw( "EditFrame::displayEntry.\n" );
+  Debug::Throw( "EditionWindow::displayEntry.\n" );
 
   // disassociate with existing entries, if any
   clearAssociations< LogEntry >();
@@ -245,10 +245,10 @@ void EditFrame::displayEntry( LogEntry *entry )
   _displayAttachments();
 
   // retrieve selection frame
-  SelectionFrame *frame( _selectionFrame() );
+  MainWindow *frame( _selectionFrame() );
   
   // update previous and next action states
-  Debug::Throw( "EditFrame::displayEntry - setting button states.\n" );
+  Debug::Throw( "EditionWindow::displayEntry - setting button states.\n" );
   previousEntryAction().setEnabled( frame->previousEntry(entry, false) );
   nextEntryAction().setEnabled( frame->nextEntry(entry, false) );
   
@@ -256,15 +256,15 @@ void EditFrame::displayEntry( LogEntry *entry )
   setModified( false );
   updateWindowTitle();
 
-  Debug::Throw( "EditFrame::displayEntry - done.\n" );
+  Debug::Throw( "EditionWindow::displayEntry - done.\n" );
   return;
 }
 
 //____________________________________________
-void EditFrame::setReadOnly( const bool& value )
+void EditionWindow::setReadOnly( const bool& value )
 {
 
-  Debug::Throw() << "EditFrame::setReadOnly - " << (value ? "true":"false" ) << endl;
+  Debug::Throw() << "EditionWindow::setReadOnly - " << (value ? "true":"false" ) << endl;
   
   // update read_only value
   read_only_ = value;
@@ -300,11 +300,11 @@ void EditFrame::setReadOnly( const bool& value )
 }
   
 //_____________________________________________
-string EditFrame::windowTitle( void ) const
+string EditionWindow::windowTitle( void ) const
 {
 
-  Debug::Throw( "EditFrame::windowTitle.\n" );
-  LogEntry* entry( EditFrame::entry() );
+  Debug::Throw( "EditionWindow::windowTitle.\n" );
+  LogEntry* entry( EditionWindow::entry() );
 
   ostringstream title;
   if( entry )
@@ -322,13 +322,13 @@ string EditFrame::windowTitle( void ) const
 }
 
 //____________________________________________
-AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
+AskForSaveDialog::ReturnCode EditionWindow::askForSave( const bool& enable_cancel )
 {
   
-  Debug::Throw( "EditFrame::askForSave.\n" );
+  Debug::Throw( "EditionWindow::askForSave.\n" );
   
   // retrieve other editFrames
-  BASE::KeySet<EditFrame> frames( _selectionFrame() );
+  BASE::KeySet<EditionWindow> frames( _selectionFrame() );
   unsigned int count( count_if( frames.begin(), frames.end(), ModifiedFTor() ) );
   
   // create dialog
@@ -350,7 +350,7 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
     */
     if( _selectionFrame()->logbook()->file().empty() )
     {
-      for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter!= frames.end(); iter++ )
+      for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter!= frames.end(); iter++ )
       { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->_save(enable_cancel); }
     } else _selectionFrame()->save( false );
   }
@@ -360,20 +360,20 @@ AskForSaveDialog::ReturnCode EditFrame::askForSave( const bool& enable_cancel )
 }
 
 //_____________________________________________
-void EditFrame::displayTitle( void )
+void EditionWindow::displayTitle( void )
 {
-  Debug::Throw( "EditFrame::displayTitle.\n" );
+  Debug::Throw( "EditionWindow::displayTitle.\n" );
 
-  LogEntry* entry( EditFrame::entry() );
+  LogEntry* entry( EditionWindow::entry() );
   title_->setText( ( entry && entry->title().size() ) ? entry->title().c_str(): LogEntry::UNTITLED.c_str()  );
   title_->setCursorPosition( 0 );
   return;
 }
 
 //_____________________________________________
-void EditFrame::displayColor( void )
+void EditionWindow::displayColor( void )
 {
-  Debug::Throw( "EditFrame::DisplayColor.\n" );
+  Debug::Throw( "EditionWindow::DisplayColor.\n" );
 
   // Create color widget if none
   if( !color_widget_ ) 
@@ -396,22 +396,22 @@ void EditFrame::displayColor( void )
 }
 
 //______________________________________________________
-void EditFrame::setModified( const bool& value )
+void EditionWindow::setModified( const bool& value )
 {
-  Debug::Throw( "EditFrame::setModified.\n" );
+  Debug::Throw( "EditionWindow::setModified.\n" );
   title_->setModified( value );
   activeEditor().document()->setModified( value );
 }
 
 //_____________________________________________
-void EditFrame::_save( bool update_selection )
+void EditionWindow::_save( bool update_selection )
 {
   
-  Debug::Throw( "EditFrame::_save.\n" );
+  Debug::Throw( "EditionWindow::_save.\n" );
   if( isReadOnly() ) return;
 
   // retrieve associated entry
-  LogEntry *entry( EditFrame::entry() );
+  LogEntry *entry( EditionWindow::entry() );
 
   // see if entry is new
   bool entry_is_new( !entry || BASE::KeySet<Logbook>( entry ).empty() );
@@ -420,13 +420,13 @@ void EditFrame::_save( bool update_selection )
   if( !entry ) entry = new LogEntry();
 
   // check logbook
-  SelectionFrame *frame( _selectionFrame() );
+  MainWindow *frame( _selectionFrame() );
   Logbook *logbook( frame->logbook() );
   if( !logbook ) {
     QtUtil::infoDialog( this, "No logbook opened. <Save> canceled." );
     return;
   }
-  Debug::Throw( "EditFrame::_save - logbook checked.\n" );
+  Debug::Throw( "EditionWindow::_save - logbook checked.\n" );
 
   //! update entry text
   entry->setText( qPrintable( activeEditor().toPlainText() ) );
@@ -443,7 +443,7 @@ void EditFrame::_save( bool update_selection )
 
   // status bar
   statusbar_->label().setText(  "writting entry to logbook ..." );
-  Debug::Throw( "EditFrame::_save - statusbar set.\n" );
+  Debug::Throw( "EditionWindow::_save - statusbar set.\n" );
 
   // add entry to logbook, if needed
   if( entry_is_new ) Key::associate( entry, logbook->latestChild() );
@@ -451,45 +451,45 @@ void EditFrame::_save( bool update_selection )
   // update this window title, set unmodified.
   setModified( false );
   updateWindowTitle();
-  Debug::Throw( "EditFrame::_save - modified state saved.\n" );
+  Debug::Throw( "EditionWindow::_save - modified state saved.\n" );
 
-  // update associated EditFrames
-  BASE::KeySet<EditFrame> editors( entry );
-  for( BASE::KeySet<EditFrame>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+  // update associated EditionWindows
+  BASE::KeySet<EditionWindow> editors( entry );
+  for( BASE::KeySet<EditionWindow>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
   {
     assert( *iter == this || (*iter)->isReadOnly() || (*iter)->isClosed() );
     if( *iter == this ) continue;
     (*iter)->displayEntry( entry );
   }
-  Debug::Throw( "EditFrame::_save - editFrames updated.\n" );
+  Debug::Throw( "EditionWindow::_save - editFrames updated.\n" );
   
   // update selection frame
   frame->updateEntry( entry, update_selection );
-  frame->setWindowTitle( MainFrame::MAIN_TITLE_MODIFIED );
-  Debug::Throw( "EditFrame::_save - selectionFrame updated.\n" );
+  frame->setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+  Debug::Throw( "EditionWindow::_save - selectionFrame updated.\n" );
 
   // set logbook as modified
   BASE::KeySet<Logbook> logbooks( entry );
   for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
   (*iter)->setModified( true );
-  Debug::Throw( "EditFrame::_save - loogbook modified state updated.\n" );
+  Debug::Throw( "EditionWindow::_save - loogbook modified state updated.\n" );
 
   // Save logbook
   if( frame->logbook()->file().size() ) frame->save();
-  Debug::Throw( "EditFrame::_save - selectionFrame saved.\n" );
+  Debug::Throw( "EditionWindow::_save - selectionFrame saved.\n" );
 
   statusbar_->label().setText( "" );
-  Debug::Throw( "EditFrame::_save - done.\n" );
+  Debug::Throw( "EditionWindow::_save - done.\n" );
 
   return;
 
 }
 
 //_____________________________________________
-void EditFrame::_newEntry( void )
+void EditionWindow::_newEntry( void )
 {
 
-  Debug::Throw( "EditFrame::_newEntry.\n" );
+  Debug::Throw( "EditionWindow::_newEntry.\n" );
 
   // check if entry is modified
   if( modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -513,9 +513,9 @@ void EditFrame::_newEntry( void )
 }
 
 //____________________________________________
-void EditFrame::closeEvent( QCloseEvent *event )
+void EditionWindow::closeEvent( QCloseEvent *event )
 {
-  Debug::Throw( "EditFrame::closeEvent.\n" );
+  Debug::Throw( "EditionWindow::closeEvent.\n" );
   
   // ask for save if entry is modified
   if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
@@ -530,9 +530,9 @@ void EditFrame::closeEvent( QCloseEvent *event )
 }
 
 //____________________________________________
-void EditFrame::enterEvent( QEvent *event )
+void EditionWindow::enterEvent( QEvent *event )
 {
-  Debug::Throw( "EditFrame::enterEvent.\n" );
+  Debug::Throw( "EditionWindow::enterEvent.\n" );
 
   // base class enterEvent
   QMainWindow::enterEvent( event );
@@ -541,14 +541,14 @@ void EditFrame::enterEvent( QEvent *event )
 }
 
 //_______________________________________________________
-void EditFrame::resizeEvent( QResizeEvent* event )
+void EditionWindow::resizeEvent( QResizeEvent* event )
 {
   resize_timer_.start( 200, this );
   return CustomMainWindow::resizeEvent( event );
 }
 
 //_______________________________________________________
-void EditFrame::timerEvent( QTimerEvent* event )
+void EditionWindow::timerEvent( QTimerEvent* event )
 {
 
   if( event->timerId() == resize_timer_.timerId() )
@@ -566,9 +566,9 @@ void EditFrame::timerEvent( QTimerEvent* event )
 }
 
 //_____________________________________________
-void EditFrame::_installActions( void )
+void EditionWindow::_installActions( void )
 {
-  Debug::Throw( "EditFrame::_installActions.\n" );
+  Debug::Throw( "EditionWindow::_installActions.\n" );
   
   // undo action
   addAction( undo_action_ = new QAction( IconEngine::get( ICONS::UNDO ), "&Undo", this ) );
@@ -644,10 +644,10 @@ void EditFrame::_installActions( void )
 }
 
 //_____________________________________________
-void EditFrame::_updateConfiguration( void )
+void EditionWindow::_updateConfiguration( void )
 {
   
-  Debug::Throw( "EditFrame::_updateConfiguration.\n" );
+  Debug::Throw( "EditionWindow::_updateConfiguration.\n" );
   
   // window size
   resize( XmlOptions::get().get<int>( "EDIT_FRAME_WIDTH" ), XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" ) );
@@ -661,10 +661,10 @@ void EditFrame::_updateConfiguration( void )
 }
 
 //_____________________________________________
-void EditFrame::_saveConfiguration( void )
+void EditionWindow::_saveConfiguration( void )
 {
   
-  Debug::Throw( "EditFrame::_saveConfiguration.\n" );
+  Debug::Throw( "EditionWindow::_saveConfiguration.\n" );
   
   // retrieve attachment list
   AttachmentList* atc_list( *BASE::KeySet<AttachmentList>(this).begin() );
@@ -677,14 +677,14 @@ void EditFrame::_saveConfiguration( void )
 }
 
 //_______________________________________________
-void EditFrame::_previousEntry( void )
+void EditionWindow::_previousEntry( void )
 {
-  Debug::Throw( "EditFrame::_previousEntry.\n" );
+  Debug::Throw( "EditionWindow::_previousEntry.\n" );
 
   //if( isReadOnly() ) return;
     
-  SelectionFrame *frame( _selectionFrame() );
-  LogEntry* entry( frame->previousEntry( EditFrame::entry(), true ) );
+  MainWindow *frame( _selectionFrame() );
+  LogEntry* entry( frame->previousEntry( EditionWindow::entry(), true ) );
   if( !( entry  && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
   setReadOnly( false );
@@ -692,14 +692,14 @@ void EditFrame::_previousEntry( void )
 }
 
 //_______________________________________________
-void EditFrame::_nextEntry( void )
+void EditionWindow::_nextEntry( void )
 {
-  Debug::Throw( "EditFrame::_nextEntry.\n" );
+  Debug::Throw( "EditionWindow::_nextEntry.\n" );
 
   //if( isReadOnly() ) return;
 
-  SelectionFrame *frame( _selectionFrame() );
-  LogEntry* entry( frame->nextEntry( EditFrame::entry(), true ) );
+  MainWindow *frame( _selectionFrame() );
+  LogEntry* entry( frame->nextEntry( EditionWindow::entry(), true ) );
   if( !( entry && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
   setReadOnly( false );
@@ -707,13 +707,13 @@ void EditFrame::_nextEntry( void )
 }
 
 //_____________________________________________
-void EditFrame::_entryInfo( void )
+void EditionWindow::_entryInfo( void )
 {
 
-  Debug::Throw( "EditFrame::_EntryInfo.\n" );
+  Debug::Throw( "EditionWindow::_EntryInfo.\n" );
 
   // check entry
-  LogEntry *entry( EditFrame::entry() );
+  LogEntry *entry( EditionWindow::entry() );
   if( !entry ) {
     QtUtil::infoDialog( this, "No valid entry."  );
     return;
@@ -727,43 +727,43 @@ void EditFrame::_entryInfo( void )
 }
 
 //_____________________________________________
-void EditFrame::_undo( void )
+void EditionWindow::_undo( void )
 {
-  Debug::Throw( "EditFrame::_undo.\n" );
+  Debug::Throw( "EditionWindow::_undo.\n" );
   if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->undo();
   else if( title_->hasFocus() ) title_->undo();
   return;
 }
 
 //_____________________________________________
-void EditFrame::_redo( void )
+void EditionWindow::_redo( void )
 {
-  Debug::Throw( "EditFrame::_redo.\n" );
+  Debug::Throw( "EditionWindow::_redo.\n" );
   if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->redo();
   else if( title_->hasFocus() ) title_->redo();
   return;
 }
 
 //_____________________________________________
-void EditFrame::_updateUndoAction( void )
+void EditionWindow::_updateUndoAction( void )
 { 
-  Debug::Throw( "EditFrame::_updateUndoAction.\n" );
+  Debug::Throw( "EditionWindow::_updateUndoAction.\n" );
   if( title_->hasFocus() ) undo_action_->setEnabled( title_->isUndoAvailable() );
   if( activeEditor().QWidget::hasFocus() ) undo_action_->setEnabled( activeEditor().document()->isUndoAvailable() );
 }
 
 //_____________________________________________
-void EditFrame::_updateRedoAction( void )
+void EditionWindow::_updateRedoAction( void )
 { 
-  Debug::Throw( "EditFrame::_updateRedoAction.\n" );
+  Debug::Throw( "EditionWindow::_updateRedoAction.\n" );
   if( title_->hasFocus() ) redo_action_->setEnabled( title_->isRedoAvailable() );
   if( activeEditor().QWidget::hasFocus() ) redo_action_->setEnabled( activeEditor().document()->isRedoAvailable() );
 }
 
 //_____________________________________________
-void EditFrame::_updateUndoRedoActions( QWidget*, QWidget* current )
+void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 {
-  Debug::Throw( "EditFrame::_updateUndoRedoAction.\n" );
+  Debug::Throw( "EditionWindow::_updateUndoRedoAction.\n" );
   if( current == title_ )
   {
     undo_action_->setEnabled( title_->isUndoAvailable() );
@@ -779,13 +779,13 @@ void EditFrame::_updateUndoRedoActions( QWidget*, QWidget* current )
 }
 
 //_____________________________________________
-void EditFrame::_deleteEntry( void )
+void EditionWindow::_deleteEntry( void )
 {
 
-  Debug::Throw( "EditFrame::_deleteEntry.\n" );
+  Debug::Throw( "EditionWindow::_deleteEntry.\n" );
 
   // check current entry
-  LogEntry *entry( EditFrame::entry() );
+  LogEntry *entry( EditionWindow::entry() );
 
   if( !entry ) {
     QtUtil::infoDialog( this, "No entry selected. <Delete Entry> canceled." );
@@ -803,10 +803,10 @@ void EditFrame::_deleteEntry( void )
 }
 
 //_____________________________________________
-void EditFrame::_spellCheck( void )
+void EditionWindow::_spellCheck( void )
 {
 #if WITH_ASPELL
-  Debug::Throw( "EditFrame::_spellCheck.\n" );
+  Debug::Throw( "EditionWindow::_spellCheck.\n" );
   
   // create dialog
   SPELLCHECK::SpellDialog dialog( &activeEditor() );
@@ -826,37 +826,37 @@ void EditFrame::_spellCheck( void )
 
 
 //_____________________________________________
-void EditFrame::_cloneWindow( void )
+void EditionWindow::_cloneWindow( void )
 {
   
-  Debug::Throw( "EditFrame::_cloneWindow.\n" );
-  LogEntry *entry( EditFrame::entry() );
+  Debug::Throw( "EditionWindow::_cloneWindow.\n" );
+  LogEntry *entry( EditionWindow::entry() );
   if( !entry ) {
     QtUtil::infoDialog( this, "No valid entry found. <New window> canceled." );
     return;
   }
 
   // retrieve selection frame
-  SelectionFrame *frame( _selectionFrame() );
+  MainWindow *frame( _selectionFrame() );
 
-  // create new EditFrame
-  EditFrame *edit_frame( new EditFrame( frame ) );
+  // create new EditionWindow
+  EditionWindow *edit_frame( new EditionWindow( frame ) );
   Key::associate( edit_frame, frame );
   edit_frame->displayEntry( entry );
 
-  // raise EditFrame
+  // raise EditionWindow
   edit_frame->show();
 
   return;
 }
 
 //_____________________________________________
-void EditFrame::_viewHtml( void )
+void EditionWindow::_viewHtml( void )
 {
-  Debug::Throw( "EditFrame::_viewHtml.\n" );
+  Debug::Throw( "EditionWindow::_viewHtml.\n" );
 
   // check logbook entry
-  LogEntry *entry( EditFrame::entry() );
+  LogEntry *entry( EditionWindow::entry() );
   if( !entry ){
     QtUtil::infoDialog( this, "No entry. <View HTML> canceled." );
     return;
@@ -932,13 +932,13 @@ void EditFrame::_viewHtml( void )
 }
 
 //_____________________________________________
-void EditFrame::_unlock( void )
+void EditionWindow::_unlock( void )
 {
   
-  Debug::Throw( "EditFrame::_unlock.\n" );
+  Debug::Throw( "EditionWindow::_unlock.\n" );
   
   if( !isReadOnly() ) return;
-  LogEntry *entry( EditFrame::entry() );
+  LogEntry *entry( EditionWindow::entry() );
   
   if( entry && ! _selectionFrame()->lockEntry( entry ) ) return;
   setReadOnly( false );
@@ -948,9 +948,9 @@ void EditFrame::_unlock( void )
 }
 
 //_____________________________________________
-void EditFrame::_titleModified( bool state )
+void EditionWindow::_titleModified( bool state )
 {
-  Debug::Throw() << "EditFrame::_titleModified - state: " << (state ? "true":"false" ) << endl;
+  Debug::Throw() << "EditionWindow::_titleModified - state: " << (state ? "true":"false" ) << endl;
 
   // check readonly status
   if( isReadOnly() ) return;
@@ -963,9 +963,9 @@ void EditFrame::_titleModified( bool state )
 }
 
 //_____________________________________________
-void EditFrame::_textModified( bool state )
+void EditionWindow::_textModified( bool state )
 {
-  Debug::Throw() << "EditFrame::_textModified - state: " << (state ? "true":"false" ) << endl;
+  Debug::Throw() << "EditionWindow::_textModified - state: " << (state ? "true":"false" ) << endl;
 
   // check readonly status
   if( isReadOnly() ) return;
@@ -977,18 +977,18 @@ void EditFrame::_textModified( bool state )
 }
 
 //_____________________________________________
-void EditFrame::_displayFocusChanged( TextEditor* editor )
+void EditionWindow::_displayFocusChanged( TextEditor* editor )
 {
   
-  Debug::Throw() << "EditFrame::_DisplayFocusChanged - " << editor->key() << endl;
+  Debug::Throw() << "EditionWindow::_DisplayFocusChanged - " << editor->key() << endl;
   _setActiveEditor( *editor );  
 
 }  
 
 //________________________________________________________________
-void EditFrame::_setActiveEditor( TextEditor& editor )
+void EditionWindow::_setActiveEditor( TextEditor& editor )
 { 
-  Debug::Throw() << "EditFrame::_setActiveEditor - key: " << editor.key() << std::endl;
+  Debug::Throw() << "EditionWindow::_setActiveEditor - key: " << editor.key() << std::endl;
   assert( editor.isAssociated( this ) );
   
   active_editor_ = &editor;
@@ -1006,22 +1006,22 @@ void EditFrame::_setActiveEditor( TextEditor& editor )
   // associate with toolbar
   if( format_toolbar_ ) format_toolbar_->setTarget( activeEditor() );
 
-  Debug::Throw( "EditFrame::setActiveDisplay - done.\n" );
+  Debug::Throw( "EditionWindow::setActiveDisplay - done.\n" );
   
 
 }
 
 //___________________________________________________________
-void EditFrame::_closeEditor( TextEditor& editor )
+void EditionWindow::_closeEditor( TextEditor& editor )
 {
-  Debug::Throw( "EditFrame::_closeEditor.\n" );
+  Debug::Throw( "EditionWindow::_closeEditor.\n" );
  
   // retrieve number of editors
   // if only one display, close the entire window
   BASE::KeySet<TextEditor> editors( this );
   if( editors.size() < 2 )
   {
-    Debug::Throw() << "EditFrame::_closeEditor - full close." << endl;
+    Debug::Throw() << "EditionWindow::_closeEditor - full close." << endl;
     close();
     return;
   }
@@ -1050,7 +1050,7 @@ void EditFrame::_closeEditor( TextEditor& editor )
       }
     }    
     assert( child );
-    Debug::Throw( "EditFrame::_closeEditor - found child.\n" );
+    Debug::Throw( "EditionWindow::_closeEditor - found child.\n" );
     
     // retrieve splitter parent
     QWidget* grand_parent( parent_splitter->parentWidget() );
@@ -1069,7 +1069,7 @@ void EditFrame::_closeEditor( TextEditor& editor )
     
     // delete parent_splitter, now that it is empty
     parent_splitter->deleteLater();
-    Debug::Throw( "EditFrame::_closeEditor - deleted splitter.\n" );
+    Debug::Throw( "EditionWindow::_closeEditor - deleted splitter.\n" );
 
   } else {
     
@@ -1094,14 +1094,14 @@ void EditFrame::_closeEditor( TextEditor& editor )
 
   // change focus
   activeEditor().setFocus();
-  Debug::Throw( "EditFrame::_closeEditor - done.\n" );
+  Debug::Throw( "EditionWindow::_closeEditor - done.\n" );
 
 }
 
 //___________________________________________________________
-TextEditor& EditFrame::_splitView( const Orientation& orientation )
+TextEditor& EditionWindow::_splitView( const Orientation& orientation )
 {
-  Debug::Throw( "EditFrame::_splitView.\n" );
+  Debug::Throw( "EditionWindow::_splitView.\n" );
 
   // keep local pointer to current active display
   TextEditor& active_editor_local( activeEditor() );  
@@ -1153,10 +1153,10 @@ TextEditor& EditFrame::_splitView( const Orientation& orientation )
 }
 
 //____________________________________________________________
-QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
+QSplitter& EditionWindow::_newSplitter( const Orientation& orientation )
 {
 
-  Debug::Throw( "EditFrame::_newSplitter.\n" );
+  Debug::Throw( "EditionWindow::_newSplitter.\n" );
   QSplitter *splitter = 0;
       
   // retrieve parent of current display
@@ -1167,7 +1167,7 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
   QSplitter *parent_splitter( dynamic_cast<QSplitter*>( parent ) );
   if( parent_splitter && parent_splitter->orientation() == orientation ) {
   
-    Debug::Throw( "EditFrame::_newSplitter - orientation match. No need to create new splitter.\n" );
+    Debug::Throw( "EditionWindow::_newSplitter - orientation match. No need to create new splitter.\n" );
     splitter = parent_splitter;
   
   } else {
@@ -1177,7 +1177,7 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
     if( parent_splitter ) 
     {
       
-      Debug::Throw( "EditFrame::_newSplitter - found parent splitter with incorrect orientation.\n" );
+      Debug::Throw( "EditionWindow::_newSplitter - found parent splitter with incorrect orientation.\n" );
       // create a splitter with correct orientation
       // give him no parent, because the parent is set in QSplitter::insertWidget()
       splitter = new LocalSplitter(0);
@@ -1186,7 +1186,7 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
       
     } else {
       
-      Debug::Throw( "EditFrame::_newSplitter - no splitter found. Creating a new one.\n" );
+      Debug::Throw( "EditionWindow::_newSplitter - no splitter found. Creating a new one.\n" );
 
       // create a splitter with correct orientation
       splitter = new LocalSplitter(parent);
@@ -1220,9 +1220,9 @@ QSplitter& EditFrame::_newSplitter( const Orientation& orientation )
 }
 
 //_____________________________________________________________
-TextEditor& EditFrame::_newTextEditor( QWidget* parent )
+TextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 {
-  Debug::Throw( "EditFrame::_newTextEditor.\n" );
+  Debug::Throw( "EditionWindow::_newTextEditor.\n" );
 
   // create textDisplay
   TextEditor* editor = new TextEditor( parent );  
@@ -1239,17 +1239,17 @@ TextEditor& EditFrame::_newTextEditor( QWidget* parent )
   // update current display and focus
   _setActiveEditor( *editor );
   editor->setFocus();
-  Debug::Throw() << "EditFrame::_newTextEditor - key: " << editor->key() << endl;
-  Debug::Throw( "EditFrame::_newTextEditor - done.\n" );
+  Debug::Throw() << "EditionWindow::_newTextEditor - key: " << editor->key() << endl;
+  Debug::Throw( "EditionWindow::_newTextEditor - done.\n" );
     
   return *editor;
   
 }
 
 //_____________________________________________
-void EditFrame::_displayCursorPosition( const TextPosition& position)
+void EditionWindow::_displayCursorPosition( const TextPosition& position)
 {
-  Debug::Throw( "EditFrame::_DisplayCursorPosition.\n" );
+  Debug::Throw( "EditionWindow::_DisplayCursorPosition.\n" );
   if( !statusbar_ ) return;
   
   ostringstream what;
@@ -1264,21 +1264,21 @@ void EditFrame::_displayCursorPosition( const TextPosition& position)
 }
 
 //_______________________________________________
-SelectionFrame* EditFrame::_selectionFrame( void ) const
+MainWindow* EditionWindow::_selectionFrame( void ) const
 {
-  Debug::Throw( "EditFrame::_selectionFrame.\n" );
-  BASE::KeySet<SelectionFrame> frames( this );
+  Debug::Throw( "EditionWindow::_selectionFrame.\n" );
+  BASE::KeySet<MainWindow> frames( this );
   assert( frames.size()==1 );
   return *frames.begin();
 }
 
 //_____________________________________________
-void EditFrame::_displayText( void )
+void EditionWindow::_displayText( void )
 {
-  Debug::Throw( "EditFrame::_displayText.\n" );
+  Debug::Throw( "EditionWindow::_displayText.\n" );
   if( !&activeEditor() ) return;
 
-  LogEntry* entry( EditFrame::entry() );
+  LogEntry* entry( EditionWindow::entry() );
   activeEditor().setPlainText( (entry) ? entry->text().c_str() : "" );
   format_toolbar_->load( entry->formats() );
   
@@ -1289,14 +1289,14 @@ void EditFrame::_displayText( void )
 }
 
 //_____________________________________________
-void EditFrame::_displayAttachments( void )
+void EditionWindow::_displayAttachments( void )
 {
-  Debug::Throw( "EditFrame::_DisplayAttachments.\n" );
+  Debug::Throw( "EditionWindow::_DisplayAttachments.\n" );
 
   AttachmentList &attachment_list( attachmentList() );
   attachment_list.clear();
 
-  LogEntry* entry( EditFrame::entry() );
+  LogEntry* entry( EditionWindow::entry() );
   if( !entry ) {
     
     attachment_list.hide();
@@ -1327,13 +1327,13 @@ void EditFrame::_displayAttachments( void )
 }
 
 //___________________________________________________________________________________
-EditFrame::ColorWidget::ColorWidget( QWidget* parent ):
+EditionWindow::ColorWidget::ColorWidget( QWidget* parent ):
   QToolButton( parent ), 
   Counter( "ColorWidget" )
 { Debug::Throw( "ColorWidget::ColorWidget.\n" ); }
 
 //___________________________________________________________________________________
-void EditFrame::ColorWidget::setColor( const QColor& color )
+void EditionWindow::ColorWidget::setColor( const QColor& color )
 {
 
   // create pixmap

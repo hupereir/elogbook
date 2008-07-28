@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file MainFrame.cpp
+  \file Application.cpp
   \brief application Main Window singleton object
   \author Hugo Pereira
   \version $Revision$
@@ -38,31 +38,31 @@
 #include "Config.h"
 #include "ConfigurationDialog.h"
 #include "Debug.h"
-#include "EditFrame.h"
+#include "EditionWindow.h"
 #include "ErrorHandler.h"
 #include "File.h"
 #include "FlatStyle.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
-#include "MainFrame.h"
+#include "Application.h"
 #include "Menu.h"
 #include "XmlOptions.h"
 #include "OpenPreviousMenu.h"
 #include "QtUtil.h"
-#include "SelectionFrame.h"
+#include "MainWindow.h"
 #include "SplashScreen.h"
 
 using namespace std;
 using namespace Qt;
 
 //____________________________________________
-const QString MainFrame::MAIN_TITLE_MODIFIED = "elogbook (modified)";
-const QString MainFrame::MAIN_TITLE = "elogbook";
-const QString MainFrame::ATTACHMENT_TITLE = "elogbook - attachments";
+const QString Application::MAIN_TITLE_MODIFIED = "elogbook (modified)";
+const QString Application::MAIN_TITLE = "elogbook";
+const QString Application::ATTACHMENT_TITLE = "elogbook - attachments";
 
 //____________________________________________
-void MainFrame::usage( void )
+void Application::usage( void )
 {
   std::cout << "usage : eLogbook [options] [file]" << std::endl;
   std::cout << std::endl;
@@ -73,23 +73,23 @@ void MainFrame::usage( void )
 }
 
 //____________________________________________
-MainFrame::MainFrame( int argc, char*argv[] ) :
+Application::Application( int argc, char*argv[] ) :
   QApplication( argc, argv ),
-  Counter( "MainFrame" ),
+  Counter( "Application" ),
   args_( argc, argv ),
   application_manager_( 0 ),
   attachment_frame_( 0 ),
   selection_frame_( 0 ),
   realized_( false )
 { 
-  Debug::Throw( "MainFrame::MainFrame.\n" ); 
+  Debug::Throw( "Application::Application.\n" ); 
   if( XmlOptions::get().get<bool>( "USE_FLAT_THEME" ) ) setStyle( new FlatStyle() );
 } 
 
 //____________________________________________
-MainFrame::~MainFrame( void ) 
+Application::~Application( void ) 
 {
-  Debug::Throw( "MainFrame::~MainFrame.\n" );
+  Debug::Throw( "Application::~Application.\n" );
   XmlOptions::write();
   
   if( selection_frame_ )
@@ -112,9 +112,9 @@ MainFrame::~MainFrame( void )
 } 
 
 //____________________________________________
-void MainFrame::initApplicationManager(  void )
+void Application::initApplicationManager(  void )
 {
-  Debug::Throw( "MainFrame::InitApplicationManager. Done.\n" ); 
+  Debug::Throw( "Application::InitApplicationManager. Done.\n" ); 
 
   // disable server mode from option
   if( args_.find( "--no-server" ) ) {
@@ -138,9 +138,9 @@ void MainFrame::initApplicationManager(  void )
 }
   
 //____________________________________________
-void MainFrame::realizeWidget( void )
+void Application::realizeWidget( void )
 {
-  Debug::Throw( "MainFrame::realizeWidget.\n" );
+  Debug::Throw( "Application::realizeWidget.\n" );
  
   //! check if the method has already been called.
   if( realized_ ) return;
@@ -164,7 +164,7 @@ void MainFrame::realizeWidget( void )
   attachment_frame_ = new AttachmentFrame( 0 );
   
   // create selection frame
-  selection_frame_ = new SelectionFrame( 0 );
+  selection_frame_ = new MainWindow( 0 );
 
   // update configuration
   _updateConfiguration();
@@ -199,7 +199,7 @@ void MainFrame::realizeWidget( void )
 }
 
 //_______________________________________________
-void MainFrame::showSplashScreen( void )
+void Application::showSplashScreen( void )
 {
 
   QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
@@ -218,10 +218,10 @@ void MainFrame::showSplashScreen( void )
 
  
 //_______________________________________________
-void MainFrame::_about( void )
+void Application::_about( void )
 {
 
-  Debug::Throw( "MainFrame::_about.\n" );
+  Debug::Throw( "Application::_about.\n" );
   ostringstream what;
   what << "<b>eLogbook</b> version " << VERSION << " (" << BUILD_TIMESTAMP << ")";
   what 
@@ -245,10 +245,10 @@ void MainFrame::_about( void )
 }
 
 //_________________________________________________
-void MainFrame::_configuration( void )
+void Application::_configuration( void )
 {
   
-  Debug::Throw( "MainFrame::_configuration" );
+  Debug::Throw( "Application::_configuration" );
   emit saveConfiguration();
   ConfigurationDialog dialog(0);
   connect( &dialog, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
@@ -258,10 +258,10 @@ void MainFrame::_configuration( void )
 }
 
 //_________________________________________________
-void MainFrame::_updateConfiguration( void )
+void Application::_updateConfiguration( void )
 {
   
-  Debug::Throw( "MainFrame::_updateConfiguration.\n" );
+  Debug::Throw( "Application::_updateConfiguration.\n" );
 
   // set fonts
   QFont font;
@@ -285,23 +285,23 @@ void MainFrame::_updateConfiguration( void )
 }
 
 //_________________________________________________
-void MainFrame::_exit( void )
+void Application::_exit( void )
 {
   
-  Debug::Throw( "MainFrame::_exit.\n" );
+  Debug::Throw( "Application::_exit.\n" );
       
   // ensure everything is saved properly
   if( selection_frame_ )
   {
-    // check if editable EditFrames needs save 
-    BASE::KeySet<EditFrame> frames( selection_frame_ );
-    for( BASE::KeySet<EditFrame>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    // check if editable EditionWindows needs save 
+    BASE::KeySet<EditionWindow> frames( selection_frame_ );
+    for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       if( (!(*iter)->isReadOnly()) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) 
       { return; }
     }
     
-    Debug::Throw( "EditFrames saved.\n" );
+    Debug::Throw( "EditionWindows saved.\n" );
     
     // check if current logbook is modified
     if( 
@@ -315,10 +315,10 @@ void MainFrame::_exit( void )
   
 }
 //________________________________________________
-void MainFrame::_processRequest( const ArgList& args )
+void Application::_processRequest( const ArgList& args )
 {
 
-  Debug::Throw() << "MainFrame::_processRequest - " << args << endl;
+  Debug::Throw() << "Application::_processRequest - " << args << endl;
   
   if( selection_frame_ ) selection_frame_->uniconifyAction().trigger();
 
@@ -336,10 +336,10 @@ void MainFrame::_processRequest( const ArgList& args )
 }
 
 //________________________________________________
-void MainFrame::_applicationManagerStateChanged( SERVER::ApplicationManager::State state )
+void Application::_applicationManagerStateChanged( SERVER::ApplicationManager::State state )
 {
 
-  Debug::Throw() << "MainFrame::_applicationManagerStateChanged - state=" << state << endl;
+  Debug::Throw() << "Application::_applicationManagerStateChanged - state=" << state << endl;
 
   switch ( state ) {
     case SERVER::ApplicationManager::ALIVE:

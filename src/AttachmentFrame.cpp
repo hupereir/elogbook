@@ -35,15 +35,15 @@
 #include <list>
 
 #include "AttachmentFrame.h"
-#include "EditFrame.h"
+#include "EditionWindow.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
 #include "LogEntry.h"
-#include "MainFrame.h"
+#include "Application.h"
 #include "Options.h"
 #include "QtUtil.h"
-#include "SelectionFrame.h"
+#include "MainWindow.h"
 
 using namespace std;
 using namespace Qt;
@@ -55,7 +55,7 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
 {
   
   Debug::Throw( "AttachmentFrame::AttachmentFrame.\n" );
-  setWindowTitle( MainFrame::ATTACHMENT_TITLE );
+  setWindowTitle( Application::ATTACHMENT_TITLE );
   
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout(this);
@@ -105,11 +105,11 @@ void AttachmentFrame::show( void )
 //____________________________________________
 void AttachmentFrame::enterEvent( QEvent *event )
 {
-  Debug::Throw( "SelectionFrame::enterEvent.\n" );
+  Debug::Throw( "MainWindow::enterEvent.\n" );
   
   // base class enterEvent
   QWidget::enterEvent( event );
-  static_cast<MainFrame*>(qApp)->selectionFrame().checkLogbookModified();
+  static_cast<Application*>(qApp)->selectionFrame().checkLogbookModified();
     
   return;
 }
@@ -163,9 +163,9 @@ void AttachmentFrame::_displayEntry( QTreeWidgetItem *current, QTreeWidgetItem* 
   LogEntry *entry( item->attachment()->entry() );
   
   // check if entry is visible
-  static_cast<MainFrame*>(qApp)->selectionFrame().clearSelection();
+  static_cast<Application*>(qApp)->selectionFrame().clearSelection();
   
   if( entry && !entry->isSelected() ) entry->setFindSelected( true );  
-  static_cast<MainFrame*>(qApp)->selectionFrame().selectEntry( entry );
+  static_cast<Application*>(qApp)->selectionFrame().selectEntry( entry );
   
 }

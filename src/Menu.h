@@ -40,7 +40,7 @@
 #include "Counter.h"
 
 class OpenPreviousMenu;
-class SelectionFrame;
+class MainWindow;
 
 /*!
   \class Menu
@@ -56,7 +56,7 @@ class Menu:public QMenuBar, public Counter
   public:  
   
   //! creator
-  Menu( QWidget* parent, SelectionFrame* frame );
+  Menu( QWidget* parent, MainWindow* frame );
   
   //! destructor
   ~Menu( void ) 

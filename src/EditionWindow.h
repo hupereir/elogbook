@@ -1,5 +1,5 @@
-#ifndef EditFrame_h
-#define EditFrame_h
+#ifndef EditionWindow_h
+#define EditionWindow_h
 
 // $Id$
 
@@ -25,7 +25,7 @@
 *******************************************************************************/
 
 /*!
-  \file EditFrame.h
+  \file EditionWindow.h
   \brief log entry edition/creation singleton object
   \author Hugo Pereira
   \version $Revision$
@@ -60,20 +60,20 @@
 
 class Attachment;
 class FormatBar;
-class SelectionFrame;
+class MainWindow;
 class StatusBar;
 
 //! log entry edition/creation object
 /*!
   Note:
-  though EditFrames are TopLevel widgets, they are not deleted at window closure
+  though EditionWindows are TopLevel widgets, they are not deleted at window closure
   to avoid crash when object is deleted when still within one of its methods.
-  On the contrary, a close event hides the window, and the SelectionFrame will delete it
-  because of that next time it is asked to create a new EditFrame, thus acting like a
+  On the contrary, a close event hides the window, and the MainWindow will delete it
+  because of that next time it is asked to create a new EditionWindow, thus acting like a
   garbage collector
 */
 
-class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
+class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
 {
 
   //! Qt meta object declaration
@@ -82,10 +82,10 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   public:
 
   //! creator
-  EditFrame( QWidget* parent, bool read_only = true );
+  EditionWindow( QWidget* parent, bool read_only = true );
 
   //! destructor
-  ~EditFrame( void );
+  ~EditionWindow( void );
 
   //! display all entries informations
   void displayEntry( LogEntry *entry = 0 );
@@ -130,7 +130,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   const bool& isReadOnly( void ) const
   { return read_only_; }
 
-  //! set read_only state of the EditFrame
+  //! set read_only state of the EditionWindow
   void setReadOnly( const bool& value );
 
   //! closed flag
@@ -164,13 +164,13 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! check if current entry has been modified or not
   void setModified( const bool& value );
 
-  //! used to count modified EditFrames
+  //! used to count modified EditionWindows
   class ModifiedFTor
   {
     public:
 
     //! predicate
-    bool operator() (const EditFrame* frame )
+    bool operator() (const EditionWindow* frame )
     { return frame->modified() && !frame->isReadOnly() && !frame->isClosed(); }
 
   };
@@ -181,7 +181,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
     public:
 
     //! predicate
-    bool operator() (const EditFrame* frame )
+    bool operator() (const EditionWindow* frame )
     { return !frame->isClosed(); }
 
   };
@@ -266,7 +266,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! uniconify
   void _uniconify( void )
   {
-    Debug::Throw( "EditFrame::uniconify.\n" );
+    Debug::Throw( "EditionWindow::uniconify.\n" );
     QtUtil::uniconify( this );
   }
 
@@ -335,7 +335,7 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! close
   void _close( void )
   {
-    Debug::Throw( "EditFrame::_closeView (SLOT)\n" );
+    Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
     BASE::KeySet< TextEditor > editors( this );
     if( editors.size() > 1 ) _closeEditor( activeEditor() );
     else close();    
@@ -385,8 +385,8 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! display cursor position
   void _displayCursorPosition( const TextPosition& position );
 
-  //! retrieve associated SelectionFrame
-  SelectionFrame* _selectionFrame( void ) const;
+  //! retrieve associated MainWindow
+  MainWindow* _selectionFrame( void ) const;
 
   //! update text Widget from current entry
   void _displayText( void );
@@ -394,14 +394,14 @@ class EditFrame: public CustomMainWindow, public Counter, public BASE::Key
   //! update attachment list Widget from current entry
   void _displayAttachments( void );
 
-  //! if true, LogEntry associated to EditFrame cannot be modified
+  //! if true, LogEntry associated to EditionWindow cannot be modified
   bool read_only_;
 
   //! list of buttons to disactivate in case of read-only
   std::vector< QWidget* > read_only_widgets_;
 
   //! "closed" flag
-  /*! this flag is used for delayed deletion of EditFrames, when direct deletion might cause flags */
+  /*! this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
   bool closed_;
 
   //!@name stored actions to toggle visibility

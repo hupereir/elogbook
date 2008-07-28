@@ -70,11 +70,11 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "ATC_FRAME_HEIGHT", "400" , "requested AttachmentFrame height [pixels]"  ));
   XmlOptions::get().add( Option( "ATC_FRAME_WIDTH", "600" , "requested AttachmentFrame width [pixels]"  ));
   XmlOptions::get().add( Option( "ATC_HEIGHT", "150" , "requested height of attachment list in editor [pixels]"  ));
-  XmlOptions::get().add( Option( "EDT_HEIGHT", "600" , "requested EditFrame height [pixels]"  ));
-  XmlOptions::get().add( Option( "EDIT_FRAME_HEIGHT", "750" , "requested EditFrame height [pixels]"  ));
-  XmlOptions::get().add( Option( "EDIT_FRAME_WIDTH", "700" , "requested EditFrame width [pixels]"  ));
-  XmlOptions::get().add( Option( "SELECTION_FRAME_HEIGHT", "750" , "requested SelectionFrame height [pixels]"  ));
-  XmlOptions::get().add( Option( "SELECTION_FRAME_WIDTH", "700" , "requested SelectionFrame width [pixels]"  ));
+  XmlOptions::get().add( Option( "EDT_HEIGHT", "600" , "requested EditionWindow height [pixels]"  ));
+  XmlOptions::get().add( Option( "EDIT_FRAME_HEIGHT", "750" , "requested EditionWindow height [pixels]"  ));
+  XmlOptions::get().add( Option( "EDIT_FRAME_WIDTH", "700" , "requested EditionWindow width [pixels]"  ));
+  XmlOptions::get().add( Option( "SELECTION_FRAME_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
+  XmlOptions::get().add( Option( "SELECTION_FRAME_WIDTH", "700" , "requested MainWindow width [pixels]"  ));
   XmlOptions::get().add( Option( "ENTRYLIST_MASK", "94" ));
   
   XmlOptions::get().add( Option( "KEYWORD_LIST_WIDTH", "250" , "requested keyword list width [pixels]"  ));
@@ -95,7 +95,7 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "TRANSPARENT_SPLASH_SCREEN", "0" , "1 to show transparent splash screen" ));
   
   XmlOptions::get().add( Option( "SHOW_KEYWORD", "0" , "show keyword in editor"  ));
-  XmlOptions::get().add( Option( "SHOW_EDITFRAME_MENU", "1", "show menu in EditFrame windows" ));
+  XmlOptions::get().add( Option( "SHOW_EDITFRAME_MENU", "1", "show menu in EditionWindow windows" ));
 
   #ifdef WITH_ASPELL
   XmlOptions::get().add( Option( "ASPELL", "@ASPELL@", "aspell command" ));
