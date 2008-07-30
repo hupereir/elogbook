@@ -48,7 +48,7 @@
 #include "Application.h"
 #include "Menu.h"
 #include "XmlOptions.h"
-#include "OpenPreviousMenu.h"
+#include "RecentFilesMenu.h"
 #include "QtUtil.h"
 #include "MainWindow.h"
 #include "SplashScreen.h"

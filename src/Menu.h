@@ -39,7 +39,7 @@
 #include "Debug.h"
 #include "Counter.h"
 
-class OpenPreviousMenu;
+class RecentFilesMenu;
 class MainWindow;
 
 /*!
@@ -62,11 +62,11 @@ class Menu:public QMenuBar, public Counter
   ~Menu( void ) 
   { Debug::Throw() << "Menu::~Menu.\n"; }
 
-  //! retrieve OpenPreviousMenu
-  OpenPreviousMenu& openPreviousMenu( void ) const
+  //! retrieve RecentFilesMenu
+  RecentFilesMenu& openPreviousMenu( void ) const
   {
-    assert( open_previous_menu_ );
-    return *open_previous_menu_;
+    assert( recent_files_menu_ );
+    return *recent_files_menu_;
   }
     
   private slots:
@@ -80,7 +80,7 @@ class Menu:public QMenuBar, public Counter
   private:
 
   //! open previous menu, in which the open files are stored
-  OpenPreviousMenu* open_previous_menu_;      
+  RecentFilesMenu* recent_files_menu_;      
  
   //! editor windows action group
   QActionGroup* editor_action_group_;

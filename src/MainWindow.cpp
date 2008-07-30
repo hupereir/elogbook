@@ -54,7 +54,7 @@
 #include "Menu.h"
 #include "Application.h"
 #include "NewLogbookDialog.h"
-#include "OpenPreviousMenu.h"
+#include "RecentFilesMenu.h"
 #include "QtUtil.h"
 #include "SearchPanel.h"
 #include "MainWindow.h"

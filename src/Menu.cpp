@@ -44,7 +44,7 @@
 #include "Logbook.h"
 #include "Application.h"
 #include "Menu.h"
-#include "OpenPreviousMenu.h"
+#include "RecentFilesMenu.h"
 #include "QtUtil.h"
 #include "MainWindow.h"
 #include "SearchPanel.h"
@@ -82,10 +82,10 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addAction( &mainwindow->openAction() );
 
   // file menu
-  open_previous_menu_ = new OpenPreviousMenu( this );
-  open_previous_menu_->setCheck( true );
-  connect( open_previous_menu_, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
-  menu->addMenu( open_previous_menu_ );
+  recent_files_menu_ = new RecentFilesMenu( this );
+  recent_files_menu_->setCheck( true );
+  connect( recent_files_menu_, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
+  menu->addMenu( recent_files_menu_ );
 
   menu->addAction( &mainwindow->synchronizeAction() );
   menu->addAction( &mainwindow->reorganizeAction() );
