@@ -268,10 +268,13 @@ QIcon LogEntryModel::_createIcon( const QColor& color ) const
     painter.setPen( Qt::NoPen );
     
     QRectF rect( QPointF( offset, offset ), QSizeF( pixmap_size, pixmap_size ) );
-    QLinearGradient gradient(rect.topLeft(), rect.bottomRight());
-    gradient.setColorAt(0, color );
-    gradient.setColorAt(1, color.light(135) );
-    painter.setBrush( gradient ); 
+
+//     QLinearGradient gradient(rect.topLeft(), rect.bottomRight());
+//     gradient.setColorAt(0, color );
+//     gradient.setColorAt(1, color.light(135) );
+//     painter.setBrush( gradient ); 
+    
+    painter.setBrush( color ); 
     painter.drawEllipse( rect );
     painter.end();
  
