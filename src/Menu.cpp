@@ -193,7 +193,7 @@ void Menu::_updateEditorMenu( void )
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
       QAction* action = editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
-      //editor_action_group_->addAction( action );
+      editor_action_group_->addAction( action );
       action->setCheckable( true );
       action->setChecked( editionwindow && ( editionwindow == (*iter) ) );
       
