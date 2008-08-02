@@ -34,7 +34,7 @@
 #include <QGroupBox>
 
 #include "ConfigurationDialog.h"
-#include "CustomGridLayout.h"
+#include "GridLayout.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
 #include "TreeViewConfiguration.h"
@@ -77,7 +77,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   QWidget* page = &addPage( "Attachments" );
   page->layout()->addWidget( box = new QGroupBox( "Editors", page ));
 
-  CustomGridLayout* grid_layout = new CustomGridLayout();
+  GridLayout* grid_layout = new GridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   grid_layout->setMaxCount( 2 );
@@ -126,7 +126,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   box = new QGroupBox( "Window sizes", page );
   page->layout()->addWidget( box );
 
-  grid_layout = new CustomGridLayout();
+  grid_layout = new GridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   grid_layout->setMaxCount(3);
@@ -206,7 +206,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   box = new QGroupBox( "Toolbars", page );
   page->layout()->addWidget( box );
 
-  grid_layout = new CustomGridLayout();
+  grid_layout = new GridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   grid_layout->setMaxCount(2);
@@ -295,7 +295,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Automatically save logbook at fixed time interval" );
 
-  grid_layout = new CustomGridLayout();
+  grid_layout = new GridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   layout->addLayout( grid_layout );
@@ -319,7 +319,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   checkbox->setToolTip( "Make a backup of the logbook at fixed time schedule" );
   addOptionWidget( checkbox );
  
-  grid_layout = new CustomGridLayout();
+  grid_layout = new GridLayout();
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   layout->addLayout( grid_layout );

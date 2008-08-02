@@ -31,7 +31,7 @@
 
 #include <QLayout>
 
-#include "CustomGridLayout.h"
+#include "GridLayout.h"
 #include "LineEditor.h"
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
@@ -64,7 +64,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   dest_dir_line_edit_->setFileMode( QFileDialog::DirectoryOnly );
   dest_dir_line_edit_->setToolTip( "Attachment directory where attached file is stored (either copied or linked)." );
     
-  CustomGridLayout* grid_layout = new CustomGridLayout();
+  GridLayout* grid_layout = new GridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
   grid_layout->setMaxCount(2);

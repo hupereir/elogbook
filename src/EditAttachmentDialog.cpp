@@ -32,7 +32,7 @@
 #include <QLayout>
 #include <QLabel>
 
-#include "CustomGridLayout.h"
+#include "GridLayout.h"
 #include "LineEditor.h"
 #include "Debug.h"
 #include "EditAttachmentDialog.h"
@@ -60,7 +60,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   file_line_edit->setText( fullname.c_str() );
   QtUtil::expand( file_line_edit );
 
-  CustomGridLayout* grid_layout = new CustomGridLayout();
+  GridLayout* grid_layout = new GridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
   grid_layout->setMaxCount(2);
