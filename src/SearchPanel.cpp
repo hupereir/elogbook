@@ -78,7 +78,7 @@ SearchPanel::SearchPanel( QWidget* parent ):
   checkboxes_[TEXT]->setChecked( true );
 
   // show_all button
-  layout->addWidget( button = new QPushButton( "&Show All", this ) );
+  layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::CLEAR ), "&Show All", this ) );
   connect( button, SIGNAL( clicked() ), this, SIGNAL( showAllEntries() ) ); 
   button->setToolTip( "Show all logbook entries" );
   
