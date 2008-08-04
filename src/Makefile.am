@@ -74,6 +74,7 @@ nodist_libelogbook_a_SOURCES = \
   moc_Logbook.cpp
 
 noinst_HEADERS = \
+  Application.h \
   AskForSaveDialog.h \
   AttachmentFrame.h \
   Attachment.h \
@@ -101,14 +102,13 @@ noinst_HEADERS = \
   LogEntryDelegate.h \
   LogEntryInformationDialog.h \
   LogEntryModel.h \
-  Application.h \
+  MainWindow.h \
   Menu.h \
   NewAttachmentDialog.h \
   NewLogbookDialog.h \
   OpenAttachmentDialog.h \
   ProgressBar.h \
   SearchPanel.h \
-  MainWindow.h \
   SelectionStatusBar.h \
   SplashScreen.h \
   ViewHtmlEntryDialog.h \
@@ -116,6 +116,7 @@ noinst_HEADERS = \
   XmlDef.h
 
 elogbook_SOURCES = \
+  Application.cpp \
   AskForSaveDialog.cpp \
   AttachmentFrame.cpp \
   AttachmentList.cpp \
@@ -134,14 +135,13 @@ elogbook_SOURCES = \
   LogEntryDelegate.cpp \
   LogEntryInformationDialog.cpp \
   LogEntryModel.cpp \
-  Application.cpp \
+  MainWindow.cpp \
   Menu.cpp \
   NewAttachmentDialog.cpp \
   NewLogbookDialog.cpp \
   OpenAttachmentDialog.cpp \
   ProgressBar.cpp \
   SearchPanel.cpp \
-  MainWindow.cpp \
   SelectionStatusBar.cpp \
   SplashScreen.cpp \
   ViewHtmlEntryDialog.cpp \
@@ -150,6 +150,7 @@ elogbook_SOURCES = \
 
 nodist_elogbook_SOURCES = \
   qrc_pixmaps.cpp \
+  moc_Application.cpp \
   moc_AskForSaveDialog.cpp \
   moc_AttachmentFrame.cpp \
   moc_AttachmentList.cpp \
@@ -159,12 +160,11 @@ nodist_elogbook_SOURCES = \
   moc_KeywordModel.cpp \
   moc_LogbookModifiedDialog.cpp \
   moc_LogEntryModel.cpp \
-  moc_Application.cpp \
+  moc_MainWindow.cpp \
   moc_Menu.cpp \
   moc_NewAttachmentDialog.cpp \
   moc_ProgressBar.cpp \
   moc_SearchPanel.cpp \
-  moc_MainWindow.cpp \
   moc_SelectionStatusBar.cpp \
   moc_SplashScreen.cpp
 

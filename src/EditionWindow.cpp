@@ -38,7 +38,6 @@
 #include "AttachmentList.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
-#include "LineEditor.h"
 #include "TextEditor.h"
 #include "CustomToolBar.h"
 #include "CustomToolButton.h"
@@ -96,7 +95,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   layout->addLayout( title_layout_ );
   
   // title label and line
-  title_layout_->addWidget( title_ = new LineEditor( main ), 1 );
+  title_layout_->addWidget( title_ = new Editor( main ), 1 );
     
   // splitter for EditionWindow and attachment list
   splitter_ = new QSplitter( main );

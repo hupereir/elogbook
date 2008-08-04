@@ -46,7 +46,10 @@
 
 #include "AskForSaveDialog.h"
 #include "AttachmentList.h"
+
+#include "ImprovedLineEditor.h"
 #include "LineEditor.h"
+
 #include "TextEditor.h"
 #include "CustomMainWindow.h"
 #include "Counter.h"
@@ -81,6 +84,8 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
 
   public:
 
+  typedef ImprovedLineEditor Editor;
+    
   //! creator
   EditionWindow( QWidget* parent, bool read_only = true );
 
@@ -442,7 +447,7 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   QHBoxLayout* title_layout_;
 
   //! LogEntry title Object
-  LineEditor *title_;
+  Editor *title_;
 
   //! color widget
   class ColorWidget: public QToolButton, public Counter
