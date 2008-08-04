@@ -33,7 +33,7 @@
 
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
-#include "LineEditor.h"
+#include "ImprovedLineEditor.h"
 #include "TextEditor.h"
 
 class Logbook;

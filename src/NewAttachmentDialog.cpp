@@ -32,7 +32,7 @@
 #include <QLayout>
 
 #include "GridLayout.h"
-#include "LineEditor.h"
+#include "ImprovedLineEditor.h"
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
 #include "QtUtil.h"
