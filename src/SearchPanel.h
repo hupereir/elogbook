@@ -47,9 +47,7 @@ class SearchPanel: public QWidget, public Counter
   Q_OBJECT
   
   public:
-  
-  typedef LineEditor Editor;
-    
+      
   //! constructor
   SearchPanel( QWidget* parent );
   
@@ -113,7 +111,7 @@ class SearchPanel: public QWidget, public Counter
   QCheckBox *color_selection_;    
   
   //! selection text widget
-  Editor *selection_; 
+  LineEditor *selection_; 
 
   //! action
   QAction* visibility_action_;

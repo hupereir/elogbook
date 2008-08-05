@@ -96,7 +96,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   
   // title label and line
   title_layout_->addWidget( title_ = new Editor( main ), 1 );
-    
+  title_->setHasClearButton( true );  
+  
   // splitter for EditionWindow and attachment list
   splitter_ = new QSplitter( main );
   splitter_->setOrientation( Qt::Vertical );

@@ -64,9 +64,11 @@ SearchPanel::SearchPanel( QWidget* parent ):
   button->setToolTip( "Find logbook entries matching selected text" );
   
   // selection text
-  layout->addWidget( selection_ = new Editor( this ), 1 ); 
-  connect( selection_, SIGNAL( returnPressed() ), SLOT( _selectionRequest() ) );
+  selection_ = new LineEditor( this );
+  selection_->setHasClearButton( true );
   selection_->setToolTip( "Text to be found in logbook" );
+  layout->addWidget( selection_, 1 ); 
+  connect( selection_, SIGNAL( returnPressed() ), SLOT( _selectionRequest() ) );
   
   layout->addWidget( new QLabel( " in ", this ) );
   
