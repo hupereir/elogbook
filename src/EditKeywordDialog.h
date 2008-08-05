@@ -32,9 +32,9 @@
    \date $Date$
 */
 
-#include <QComboBox>
 #include <string>
 
+#include "CustomComboBox.h"
 #include "CustomDialog.h"
 #include "Keyword.h"
 
@@ -66,7 +66,7 @@ class EditKeywordDialog: public CustomDialog
   private:
         
   //!keyword combo box
-  QComboBox *combo_box_;  
+  CustomComboBox *combo_box_;  
         
 };
 

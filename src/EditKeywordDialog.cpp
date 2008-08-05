@@ -42,7 +42,7 @@ EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
   
   Debug::Throw( "EditKeywordDialog::EditKeywordDialog.\n" );
   
-  mainLayout().addWidget( combo_box_ = new QComboBox( this ) );
+  mainLayout().addWidget( combo_box_ = new CustomComboBox( this ) );
   combo_box_->setAutoCompletion( true );
   combo_box_->setEditable( true );
   

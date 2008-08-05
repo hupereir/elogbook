@@ -56,7 +56,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   // destination directory
   directory_layout_ = new QVBoxLayout();
   directory_layout_->setSpacing( 5 );
-  directory_layout_->setMargin( 5 );
+  directory_layout_->setMargin( 0 );
   mainLayout().addLayout( directory_layout_ );
   
   directory_layout_->addWidget( new QLabel( "Destination directory:", this ) );
