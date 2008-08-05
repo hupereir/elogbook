@@ -37,7 +37,6 @@
 
 #include "Counter.h"
 
-class ImprovedLineEditor;
 class LineEditor;
 
 //! selects entries from keyword/title/text/...
@@ -49,7 +48,7 @@ class SearchPanel: public QWidget, public Counter
   
   public:
   
-  typedef ImprovedLineEditor Editor;
+  typedef LineEditor Editor;
     
   //! constructor
   SearchPanel( QWidget* parent );

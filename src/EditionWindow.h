@@ -47,7 +47,6 @@
 #include "AskForSaveDialog.h"
 #include "AttachmentList.h"
 
-#include "ImprovedLineEditor.h"
 #include "LineEditor.h"
 
 #include "TextEditor.h"
@@ -84,7 +83,7 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
 
   public:
 
-  typedef ImprovedLineEditor Editor;
+  typedef LineEditor Editor;
     
   //! creator
   EditionWindow( QWidget* parent, bool read_only = true );

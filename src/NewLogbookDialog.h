@@ -36,7 +36,7 @@
 
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
-#include "ImprovedLineEditor.h"
+#include "LineEditor.h"
 #include "TextEditor.h"
 #include "File.h"
 #include "QtUtil.h"

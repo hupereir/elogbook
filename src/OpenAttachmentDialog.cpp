@@ -34,7 +34,7 @@
 #include <QLayout>
 
 #include "GridLayout.h"
-#include "ImprovedLineEditor.h"
+#include "LineEditor.h"
 #include "TextEditor.h"
 #include "Debug.h"
 #include "File.h"

@@ -38,7 +38,7 @@
 #include "Debug.h"
 #include "Icons.h"
 #include "IconEngine.h"
-#include "ImprovedLineEditor.h"
+#include "LineEditor.h"
 #include "SearchPanel.h"
 #include "XmlOptions.h"
 
