@@ -62,58 +62,46 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   
   Debug::Throw( "ToolBar::ToolBar.\n" );
 
-  // generic button
-  CustomToolButton *button;
-  
   // bold 
-  button = new CustomToolButton( this, IconEngine::get( BOLD_ICON ), "change current font to bold" );
-  button->setText("Bold");
-  button->setCheckable( true );
-  buttons_.insert( make_pair( BOLD, button ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _bold() ) );
-  addWidget( button );
+  QAction* action;
+  addAction( action = new QAction( IconEngine::get( BOLD_ICON ), "&Bold", this ) );
+  action->setCheckable( true );
+  actions_.insert( make_pair( BOLD, action ) );
+  connect( action, SIGNAL( triggered() ), SLOT( _bold() ) );
   
   // underline 
-  button = new CustomToolButton( this, IconEngine::get( ITALIC_ICON ), "change current font to italic" );
-  button->setText("Italic");
-  button->setCheckable( true );
-  buttons_.insert( make_pair( ITALIC, button ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _italic() ) );
-  addWidget( button );
+  addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), "&Italic", this ) );
+  action->setCheckable( true );
+  actions_.insert( make_pair( ITALIC, action ) );
+  connect( action, SIGNAL( triggered() ), SLOT( _italic() ) );
 
   // underline 
-  button = new CustomToolButton( this, IconEngine::get( UNDERLINE_ICON ), "change current font to underline" );
-  button->setText("Underline");
-  button->setCheckable( true );
-  buttons_.insert( make_pair( UNDERLINE, button ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _underline() ) );
-  addWidget( button );
+  addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), "&Underline", this ) );
+  action->setCheckable( true );
+  actions_.insert( make_pair( UNDERLINE, action ) );
+  connect( action, SIGNAL( triggered() ), SLOT( _underline() ) );
 
   // strike 
-  button = new CustomToolButton( this, IconEngine::get( STRIKE_ICON ), "change current font to strike" );
-  button->setText("Strike");
-  button->setCheckable( true );
-  buttons_.insert( make_pair( STRIKE, button ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _strike() ) );
-  addWidget( button );
+  addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), "&Strike", this ) );
+  action->setCheckable( true );
+  actions_.insert( make_pair( STRIKE, action ) );
+  connect( action, SIGNAL( triggered() ), SLOT( _strike() ) );
  
   // color
-  button = new CustomToolButton( this, IconEngine::get( ICONS::COLOR ), "change current font color" );
-  button->setText("Text color");
-  buttons_.insert( make_pair( COLOR, button ) );
-  addWidget( button );
-  
+  addAction( action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this ) );
+  actions_.insert( make_pair( COLOR, action ) );
+
   // color menu
-  color_menu_ = new ColorMenu( button );
-  button->setMenu( color_menu_ );
+  color_menu_ = new ColorMenu( this );
+  action->setMenu( color_menu_ );
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _updateColorPixmap( QColor ) ) );
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _color( QColor ) ) );
-  connect( button, SIGNAL( pressed() ), SLOT( _lastColor() ) );
+  action->setMenu( color_menu_ );
   _updateColorPixmap();
     
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
+  connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
   
 }
@@ -289,21 +277,21 @@ void FormatBar::_saveConfiguration( void )
 void FormatBar::_bold( void )
 {
   Debug::Throw( "FormatBar::_bold.\n" );
-  if( editor_ ) editor_->setFontWeight( buttons_[BOLD]->isChecked() ? QFont::Bold : QFont::Normal);
+  if( editor_ ) editor_->setFontWeight( actions_[BOLD]->isChecked() ? QFont::Bold : QFont::Normal);
 }
   
 //________________________________________
 void FormatBar::_italic( void )
 {
   Debug::Throw( "FormatBar::_italic.\n" );
-  if( editor_ ) editor_->setFontItalic(buttons_[ITALIC]->isChecked());
+  if( editor_ ) editor_->setFontItalic(actions_[ITALIC]->isChecked());
 }
   
 //________________________________________
 void FormatBar::_underline( void )
 {
   Debug::Throw( "FormatBar::_underline.\n" );
-  if( editor_ ) editor_->setFontUnderline(buttons_[UNDERLINE]->isChecked());
+  if( editor_ ) editor_->setFontUnderline(actions_[UNDERLINE]->isChecked());
 }
 
 //________________________________________
@@ -315,7 +303,7 @@ void FormatBar::_strike( void )
     // strike out fonts cannot be set directly in the editor
     // one must retrieve the current font, strike it and reassign
     QFont font( editor_->currentFont() );
-    font.setStrikeOut(buttons_[STRIKE]->isChecked());
+    font.setStrikeOut(actions_[STRIKE]->isChecked());
     editor_->setCurrentFont( font );
   }
 }
@@ -339,10 +327,10 @@ void FormatBar::_lastColor( void )
 void FormatBar::_updateState( const QTextCharFormat& format )
 {
   Debug::Throw( "FormatBar::_updateState.\n" );
-  buttons_[BOLD]->setChecked( format.fontWeight() == QFont::Bold );
-  buttons_[ITALIC]->setChecked( format.fontItalic() );
-  buttons_[UNDERLINE]->setChecked( format.fontUnderline() );
-  buttons_[STRIKE]->setChecked( format.fontStrikeOut() );
+  actions_[BOLD]->setChecked( format.fontWeight() == QFont::Bold );
+  actions_[ITALIC]->setChecked( format.fontItalic() );
+  actions_[UNDERLINE]->setChecked( format.fontUnderline() );
+  actions_[STRIKE]->setChecked( format.fontStrikeOut() );
 }
   
 //________________________________________
@@ -350,10 +338,9 @@ void FormatBar::_updateColorPixmap( QColor color )
 {
   Debug::Throw( "FormatBar::_updateColorPixmap.\n" );
   
-  // retrieve button
-  CustomToolButton* button( buttons_[COLOR] );
-  assert( button );
-
+  // retrieve action
+  QAction* action( actions_[COLOR] );
+  assert( action );
   
   QPixmap base( PixmapEngine::get( ICONS::COLOR ) );
   assert( !base.isNull() );
@@ -377,7 +364,6 @@ void FormatBar::_updateColorPixmap( QColor color )
   }
   painter.end();
   
-  button->setIcon( new_pixmap.scaleHeight( button->iconSize().height() ) );
-  
+  action->setIcon( new_pixmap.scaleHeight( iconSize().height() ) );
   
 }

@@ -40,7 +40,6 @@
 #include "ColorMenu.h"
 #include "TextEditor.h"
 #include "CustomToolBar.h"
-#include "CustomToolButton.h"
 #include "EditionWindow.h"
 #include "File.h"
 #include "FormatBar.h"
@@ -136,13 +135,12 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   // toolbars
   // lock toolbar is visible only when window is not editable
   lock_ = new CustomToolBar( "Lock", this, "LOCK_TOOLBAR" );
-  CustomToolButton *button;
-  button = new CustomToolButton( lock_, IconEngine::get( ICONS::LOCK ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _unlock() ) );
-  button->setToolTip( "Remove read-only lock for current editor." );
-  button->setText("Unlock");  
-  lock_->addWidget( button );
   lock_->setMovable( false );
+
+  QAction *action;
+  lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), "&Unlock", this ) );
+  connect( action, SIGNAL( triggered() ), SLOT( _unlock() ) );
+  action->setToolTip( "Remove read-only lock for current editor." );
 
   // main toolbar
   CustomToolBar* toolbar;
@@ -153,11 +151,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   toolbar->addAction( &saveAction() );
 
   // delete_entry button
-  button = new CustomToolButton( toolbar, IconEngine::get( ICONS::DELETE ), "Delete the current entry" );
-  connect( button, SIGNAL( clicked() ), SLOT( _deleteEntry() ) );
-  button->setText("Delete");
-  toolbar->addWidget( button );
-  read_only_widgets_.push_back( button );
+  toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete entry", this ) );
+  connect( action, SIGNAL( triggered() ), SLOT( _deleteEntry() ) );
+  read_only_actions_.push_back( action );
 
   // add_attachment button
   toolbar->addAction( &attachment_list->newAttachmentAction() );
@@ -165,15 +161,16 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   // format bar
   format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
   format_toolbar_->setTarget( activeEditor() );
-  const FormatBar::ButtonMap& buttons( format_toolbar_->buttons() );
-  for( FormatBar::ButtonMap::const_iterator iter = buttons.begin(); iter != buttons.end(); iter++ )
-  { read_only_widgets_.push_back( iter->second ); }
+  const FormatBar::ActionMap& actions( format_toolbar_->actions() );
+  for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); iter++ )
+  { read_only_actions_.push_back( iter->second ); }
 
   // edition toolbars
   toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
   toolbar->addAction( undo_action_ );
   toolbar->addAction( redo_action_ );
-  read_only_widgets_.push_back( toolbar );
+  read_only_actions_.push_back( undo_action_ );
+  read_only_actions_.push_back( redo_action_ );
 
   // undo/redo connections
   connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
@@ -270,7 +267,7 @@ void EditionWindow::setReadOnly( const bool& value )
   read_only_ = value;
 
   // changes button state
-  for( vector< QWidget* >::iterator it=read_only_widgets_.begin(); it != read_only_widgets_.end(); it++ )
+  for( ActionList::iterator it=read_only_actions_.begin(); it != read_only_actions_.end(); it++ )
   { (*it)->setEnabled( !isReadOnly() ); }
 
   // changes lock button state

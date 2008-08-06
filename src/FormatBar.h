@@ -33,13 +33,12 @@
 
 #include <string>
 #include <map>
+#include <QAction>
 #include <QFont>   
 #include <QTextCharFormat>   
 
 #include "Counter.h"
 #include "CustomToolBar.h"
-#include "CustomToolButton.h"
-
 
 #include "TextFormatBlock.h"
 #include "TextFormat.h"
@@ -68,8 +67,8 @@ class FormatBar: public CustomToolBar
   //! underline icon name
   static const std::string UNDERLINE_ICON;
   
-  //! button id enumeration
-  enum ButtonId
+  //! action id enumeration
+  enum ActionId
   {
     BOLD,
     ITALIC,
@@ -84,14 +83,7 @@ class FormatBar: public CustomToolBar
   //! destructor
   virtual ~FormatBar( void )
   { Debug::Throw( "FormatBar::~FormatBar.\n" ); }
-  
-  //! set destination label
-  void setToolTipLabel( QLabel* tooltip_label )
-  { 
-    for( ButtonMap::iterator iter = buttons_.begin(); iter != buttons_.end(); iter++ )
-    iter->second->setToolTipLabel( tooltip_label );
-  }
-          
+            
   //! set target editor
   void setTarget( TextEditor& editor );
   
@@ -102,11 +94,11 @@ class FormatBar: public CustomToolBar
   FORMAT::TextFormatBlock::List get( void ) const;
     
   //! button map
-  typedef std::map< ButtonId, CustomToolButton* > ButtonMap;
+  typedef std::map< ActionId, QAction* > ActionMap;
   
-  //! buttons
-  const ButtonMap& buttons( void ) const
-  { return buttons_; }
+  //! actions
+  const ActionMap& actions( void ) const
+  { return actions_; }
   
   private slots:
   
@@ -146,7 +138,7 @@ class FormatBar: public CustomToolBar
   TextEditor* editor_;
   
   //! button map
-  ButtonMap buttons_; 
+  ActionMap actions_; 
       
   //! color menu
   ColorMenu* color_menu_;

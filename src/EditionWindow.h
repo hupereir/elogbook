@@ -402,7 +402,10 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   bool read_only_;
 
   //! list of buttons to disactivate in case of read-only
-  std::vector< QWidget* > read_only_widgets_;
+  typedef std::vector< QAction* > ActionList;
+  
+  //! list of buttons to disactivate in case of read-only
+  ActionList read_only_actions_;
 
   //! "closed" flag
   /*! this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */

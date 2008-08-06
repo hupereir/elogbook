@@ -37,7 +37,6 @@
 #include "ColorMenu.h"
 #include "LineEditor.h"
 #include "CustomToolBar.h"
-#include "CustomToolButton.h"
 #include "Debug.h"
 #include "DeleteKeywordDialog.h"
 #include "EditionWindow.h"
@@ -181,10 +180,13 @@ MainWindow::MainWindow( QWidget *parent ):
   // entry actions
   entry_toolbar_->addAction( &newEntryAction() );
   entry_toolbar_->addAction( &editEntryAction() );
- 
-  CustomToolButton *button;
-  entry_toolbar_->addWidget( button = new CustomToolButton( entry_toolbar_,&entryColorAction(), 0 ) );
+  entry_toolbar_->addAction( &entryColorAction() );
+  
+  // need to use a button to be able to set the popup mode
+  QToolButton *button = new QToolButton(0);
   button->setPopupMode( QToolButton::InstantPopup );
+  button->setDefaultAction( &entryColorAction() );
+  entry_toolbar_->addWidget( button );
 
   entry_toolbar_->addAction( &deleteEntryAction() );
   entry_toolbar_->addAction( &saveAction() );
