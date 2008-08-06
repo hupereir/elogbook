@@ -180,12 +180,13 @@ MainWindow::MainWindow( QWidget *parent ):
   // entry actions
   entry_toolbar_->addAction( &newEntryAction() );
   entry_toolbar_->addAction( &editEntryAction() );
-  entry_toolbar_->addAction( &entryColorAction() );
   
   // need to use a button to be able to set the popup mode
   QToolButton *button = new QToolButton(0);
+  button->setText( "&Entry color" );
+  button->setIcon( IconEngine::get( ICONS::COLOR ) );
   button->setPopupMode( QToolButton::InstantPopup );
-  button->setDefaultAction( &entryColorAction() );
+  button->setMenu( color_menu_ );
   entry_toolbar_->addWidget( button );
 
   entry_toolbar_->addAction( &deleteEntryAction() );
