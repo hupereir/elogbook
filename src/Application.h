@@ -84,11 +84,11 @@ class Application: public QApplication, public Counter
   void realizeWidget( void );
   
   //! retrieve MainWindow singleton
-  MainWindow& selectionFrame( void ) const
+  MainWindow& mainWindow( void ) const
   { 
-    assert( selection_frame_
+    assert( main_window_
  );
-    return *selection_frame_; 
+    return *main_window_; 
   }
   
   //! retrieve AttachmentFrame singleton
@@ -176,7 +176,7 @@ class Application: public QApplication, public Counter
   AttachmentFrame* attachment_frame_;
   
   //! main window entry selection frame
-  MainWindow* selection_frame_; 
+  MainWindow* main_window_; 
   
   //! true when Realized Widget has been called.
   bool realized_; 

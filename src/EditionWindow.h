@@ -32,12 +32,9 @@
   \date $Date$
 */
 
-#include <QBasicTimer>
 #include <QLayout>
 #include <QToolButton>
-#include <QResizeEvent>
 #include <QSplitter>
-#include <QTimerEvent>
 
 #include <string>
 #include <set>
@@ -253,12 +250,6 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! enter event handler
   void enterEvent( QEvent *event );
 
-  //! resize event
-  void resizeEvent( QResizeEvent* );
-
-  //! timer event
-  void timerEvent( QTimerEvent* );
-
   private slots:
 
   //! Save Current entry
@@ -390,7 +381,7 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   void _displayCursorPosition( const TextPosition& position );
 
   //! retrieve associated MainWindow
-  MainWindow* _selectionFrame( void ) const;
+  MainWindow* _mainWindow( void ) const;
 
   //! update text Widget from current entry
   void _displayText( void );
@@ -476,9 +467,6 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
 
   //! pointer to statusbar
   StatusBar* statusbar_;
-
-  //! resize timer
-  QBasicTimer resize_timer_;
 
   //!@name actions
   //@{

@@ -135,32 +135,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->addWidget( new QLabel( "Width", box ), 0, 1 );
   grid_layout->addWidget( new QLabel( "Height", box ), 0, 2 );
 
-  grid_layout->addWidget( label = new QLabel( "Main window: ", box ) );
-  label->setToolTip( "Main window size (width x height)" );
-
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SELECTION_FRAME_WIDTH" ) );
-  spinbox->setMinimum( 5 );
-  spinbox->setMaximum( 2048 );
-  addOptionWidget( spinbox );
-
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SELECTION_FRAME_HEIGHT" ) );
-  spinbox->setMinimum( 5 );
-  spinbox->setMaximum( 2048 );
-  addOptionWidget( spinbox );
-
-  grid_layout->addWidget( label = new QLabel( "Editor: ", box ) );
-  label->setToolTip( "Editor window size (width x height)" );
-  
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "EDIT_FRAME_WIDTH" ), 2, 1 );
-  spinbox->setMinimum( 5 );
-  spinbox->setMaximum( 2048 );
-  addOptionWidget( spinbox );
-
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "EDIT_FRAME_HEIGHT" ), 2, 2 );
-  spinbox->setMinimum( 5 );
-  spinbox->setMaximum( 2048 );
-  addOptionWidget( spinbox );
-
   grid_layout->addWidget( label = new QLabel( "Attachment: ", box ), 3, 0 );
   label->setToolTip( "Attachment window size (width x height)" );
   
@@ -196,7 +170,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   page = &addPage( "List configuration" );
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
     page, 
-    &static_cast<Application*>(qApp)->selectionFrame().logEntryList(), 
+    &static_cast<Application*>(qApp)->mainWindow().logEntryList(), 
     "Logbook entries display list" );
   
   page->layout()->addWidget( listview_config );

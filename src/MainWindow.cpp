@@ -77,6 +77,7 @@ MainWindow::MainWindow( QWidget *parent ):
   confirm_entries_( true )
 {
   Debug::Throw( "MainWindow::MainWindow.\n" );
+  _setSizeOptionName( "SELECTION_FRAME" );
   setWindowTitle( Application::MAIN_TITLE );
   
   // main widget
@@ -1113,9 +1114,9 @@ void MainWindow::_updateConfiguration( void )
   bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
   if( autosave ) autosave_timer_.start();
   else autosave_timer_.stop();
-    
-  // resize
-  resize( XmlOptions::get().get<int>("SELECTION_FRAME_WIDTH"), XmlOptions::get().get<int>("SELECTION_FRAME_HEIGHT") );
+  
+  // size hint
+  resize( sizeHint() );
   
   QList<int> sizes;
   sizes.push_back( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
@@ -1138,9 +1139,6 @@ void MainWindow::_saveConfiguration( void )
   
   Debug::Throw( "MainWindow::_saveConfiguration.\n" );
   
-  // sizes
-  XmlOptions::get().set<int>( "SELECTION_FRAME_WIDTH", width() );
-  XmlOptions::get().set<int>( "SELECTION_FRAME_HEIGHT", height() );
   XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
   XmlOptions::get().set<int>( "ENTRY_LIST_WIDTH", logEntryList().width() );
   

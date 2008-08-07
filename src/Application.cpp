@@ -79,7 +79,7 @@ Application::Application( int argc, char*argv[] ) :
   args_( argc, argv ),
   application_manager_( 0 ),
   attachment_frame_( 0 ),
-  selection_frame_( 0 ),
+  main_window_( 0 ),
   realized_( false )
 { 
   Debug::Throw( "Application::Application.\n" ); 
@@ -92,10 +92,10 @@ Application::~Application( void )
   Debug::Throw( "Application::~Application.\n" );
   XmlOptions::write();
   
-  if( selection_frame_ )
+  if( main_window_ )
   {
-    delete selection_frame_;
-    selection_frame_ = 0;
+    delete main_window_;
+    main_window_ = 0;
   }
   
   if( application_manager_ ) 
@@ -117,7 +117,8 @@ void Application::initApplicationManager(  void )
   Debug::Throw( "Application::InitApplicationManager. Done.\n" ); 
 
   // disable server mode from option
-  if( args_.find( "--no-server" ) ) {
+  if( args_.find( "--no-server" ) ) 
+  {
     realizeWidget();
     return;
   }
@@ -164,36 +165,36 @@ void Application::realizeWidget( void )
   attachment_frame_ = new AttachmentFrame( 0 );
   
   // create selection frame
-  selection_frame_ = new MainWindow( 0 );
+  main_window_ = new MainWindow( 0 );
 
   // update configuration
   _updateConfiguration();
 
   // splashscreen
-  ::SplashScreen *splash_screen = new ::SplashScreen( selection_frame_ );
+  ::SplashScreen *splash_screen = new ::SplashScreen( main_window_ );
   splash_screen->realizeWidget();
 
   // connections
-  connect( selection_frame_, SIGNAL( messageAvailable( const QString& ) ), splash_screen, SLOT( displayMessage( const QString& ) ) );
-  connect( selection_frame_, SIGNAL( ready() ), splash_screen, SLOT( close() ) );
+  connect( main_window_, SIGNAL( messageAvailable( const QString& ) ), splash_screen, SLOT( displayMessage( const QString& ) ) );
+  connect( main_window_, SIGNAL( ready() ), splash_screen, SLOT( close() ) );
 
   QtUtil::centerOnDesktop( splash_screen );
   if( XmlOptions::get().get<bool>("SPLASH_SCREEN") )
   { splash_screen->show(); }
   
-  QtUtil::centerOnDesktop( selection_frame_ );
-  selection_frame_->show();
+  QtUtil::centerOnDesktop( main_window_ );
+  main_window_->show();
     
   // update
   processEvents();
     
   // try open file from argument
   File file( args_.last() );
-  if( file.size() ) selection_frame_->setLogbook( file );
-  else if( !selection_frame_->menu().openPreviousMenu().openLastValidFile() )
+  if( file.size() ) main_window_->setLogbook( file );
+  else if( !main_window_->menu().openPreviousMenu().openLastValidFile() )
   { 
     splash_screen->close();
-    selection_frame_->newLogbookAction().trigger();
+    main_window_->newLogbookAction().trigger();
   }
   
 }
@@ -291,10 +292,10 @@ void Application::_exit( void )
   Debug::Throw( "Application::_exit.\n" );
       
   // ensure everything is saved properly
-  if( selection_frame_ )
+  if( main_window_ )
   {
     // check if editable EditionWindows needs save 
-    BASE::KeySet<EditionWindow> frames( selection_frame_ );
+    BASE::KeySet<EditionWindow> frames( main_window_ );
     for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
       if( (!(*iter)->isReadOnly()) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) 
@@ -305,9 +306,9 @@ void Application::_exit( void )
     
     // check if current logbook is modified
     if( 
-      selection_frame_->logbook() &&
-      selection_frame_->logbook()->modified() &&
-      selection_frame_->askForSave() == AskForSaveDialog::CANCEL ) 
+      main_window_->logbook() &&
+      main_window_->logbook()->modified() &&
+      main_window_->askForSave() == AskForSaveDialog::CANCEL ) 
     return;
   }
   
@@ -320,7 +321,7 @@ void Application::_processRequest( const ArgList& args )
 
   Debug::Throw() << "Application::_processRequest - " << args << endl;
   
-  if( selection_frame_ ) selection_frame_->uniconifyAction().trigger();
+  if( main_window_ ) main_window_->uniconifyAction().trigger();
 
   // check argument. Last argument, if starting with a "-" is possibly a filename
   string filename( args.last() );
@@ -329,8 +330,8 @@ void Application::_processRequest( const ArgList& args )
   {
     ostringstream what;
     what << "Accept request for file \"" << filename << "\" ?";
-    if( QtUtil::questionDialog( selection_frame_, what.str(), QtUtil::CENTER_ON_PARENT ) )
-    { selection_frame_->menu().openPreviousMenu().select( filename ); }
+    if( QtUtil::questionDialog( main_window_, what.str(), QtUtil::CENTER_ON_PARENT ) )
+    { main_window_->menu().openPreviousMenu().select( filename ); }
   }
 
 }

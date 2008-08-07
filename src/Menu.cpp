@@ -165,7 +165,7 @@ void Menu::_updateEditorMenu( void )
   
   editor_menu_->clear();
 
-  MainWindow &mainwindow( static_cast<Application*>(qApp)->selectionFrame() );
+  MainWindow &mainwindow( static_cast<Application*>(qApp)->mainWindow() );
   AttachmentFrame &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
   
   // retrieve parent editFream if any

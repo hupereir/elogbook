@@ -78,6 +78,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   format_toolbar_( 0 )
 {
   Debug::Throw("EditionWindow::EditionWindow.\n" );
+  _setSizeOptionName( "EDIT_FRAME" );
   setObjectName( "EDITFRAME" );
   
   QWidget* main( new QWidget( this ) ); 
@@ -198,12 +199,12 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   
   // extra toolbar
   toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" );
-  toolbar->addAction( &static_cast<Application*>(qApp)->selectionFrame().uniconifyAction() );
+  toolbar->addAction( &static_cast<Application*>(qApp)->mainWindow().uniconifyAction() );
   toolbar->addAction( &previousEntryAction() );
   toolbar->addAction( &nextEntryAction() );
 
   // create menu if requested
-  Menu* menu = new Menu( this, &static_cast<Application*>(qApp)->selectionFrame() ); 
+  Menu* menu = new Menu( this, &static_cast<Application*>(qApp)->mainWindow() ); 
   setMenuBar( menu );
   
   // changes display according to read_only flag
@@ -242,7 +243,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
   _displayAttachments();
 
   // retrieve selection frame
-  MainWindow *frame( _selectionFrame() );
+  MainWindow *frame( _mainWindow() );
   
   // update previous and next action states
   Debug::Throw( "EditionWindow::displayEntry - setting button states.\n" );
@@ -325,7 +326,7 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( const bool& enable_cance
   Debug::Throw( "EditionWindow::askForSave.\n" );
   
   // retrieve other editFrames
-  BASE::KeySet<EditionWindow> frames( _selectionFrame() );
+  BASE::KeySet<EditionWindow> frames( _mainWindow() );
   unsigned int count( count_if( frames.begin(), frames.end(), ModifiedFTor() ) );
   
   // create dialog
@@ -345,11 +346,11 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( const bool& enable_cance
       otherwise one directly save the loogbook, while disabling the confirmation for modified
       entries
     */
-    if( _selectionFrame()->logbook()->file().empty() )
+    if( _mainWindow()->logbook()->file().empty() )
     {
       for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter!= frames.end(); iter++ )
       { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->_save(enable_cancel); }
-    } else _selectionFrame()->save( false );
+    } else _mainWindow()->save( false );
   }
   
   return AskForSaveDialog::ReturnCode(state);
@@ -417,7 +418,7 @@ void EditionWindow::_save( bool update_selection )
   if( !entry ) entry = new LogEntry();
 
   // check logbook
-  MainWindow *frame( _selectionFrame() );
+  MainWindow *frame( _mainWindow() );
   Logbook *logbook( frame->logbook() );
   if( !logbook ) {
     QtUtil::infoDialog( this, "No logbook opened. <Save> canceled." );
@@ -463,7 +464,7 @@ void EditionWindow::_save( bool update_selection )
   // update selection frame
   frame->updateEntry( entry, update_selection );
   frame->setWindowTitle( Application::MAIN_TITLE_MODIFIED );
-  Debug::Throw( "EditionWindow::_save - selectionFrame updated.\n" );
+  Debug::Throw( "EditionWindow::_save - mainWindow updated.\n" );
 
   // set logbook as modified
   BASE::KeySet<Logbook> logbooks( entry );
@@ -473,7 +474,7 @@ void EditionWindow::_save( bool update_selection )
 
   // Save logbook
   if( frame->logbook()->file().size() ) frame->save();
-  Debug::Throw( "EditionWindow::_save - selectionFrame saved.\n" );
+  Debug::Throw( "EditionWindow::_save - mainWindow saved.\n" );
 
   statusbar_->label().setText( "" );
   Debug::Throw( "EditionWindow::_save - done.\n" );
@@ -494,10 +495,10 @@ void EditionWindow::_newEntry( void )
   // create new entry, set author, set keyword
   LogEntry* entry = new LogEntry();
   entry->setAuthor( XmlOptions::get().raw( "USER" ) );
-  entry->setKeyword( _selectionFrame()->currentKeyword() );
+  entry->setKeyword( _mainWindow()->currentKeyword() );
 
   // add logbook parent if any
-  Logbook *logbook( _selectionFrame()->logbook() );
+  Logbook *logbook( _mainWindow()->logbook() );
   if( logbook ) Key::associate( entry, logbook->latestChild() );
 
   // display new entry
@@ -533,33 +534,8 @@ void EditionWindow::enterEvent( QEvent *event )
 
   // base class enterEvent
   QMainWindow::enterEvent( event );
-  _selectionFrame()->checkLogbookModified();
+  _mainWindow()->checkLogbookModified();
 
-}
-
-//_______________________________________________________
-void EditionWindow::resizeEvent( QResizeEvent* event )
-{
-  resize_timer_.start( 200, this );
-  return CustomMainWindow::resizeEvent( event );
-}
-
-//_______________________________________________________
-void EditionWindow::timerEvent( QTimerEvent* event )
-{
-
-  if( event->timerId() == resize_timer_.timerId() )
-  {
-    
-    // stop timer
-    resize_timer_.stop();
-    
-    // save size
-    XmlOptions::get().set<int>( "EDIT_FRAME_HEIGHT", height() );
-    XmlOptions::get().set<int>( "EDIT_FRAME_WIDTH", width() );
-    
-  } else return CustomMainWindow::timerEvent( event );
-  
 }
 
 //_____________________________________________
@@ -646,14 +622,13 @@ void EditionWindow::_updateConfiguration( void )
   
   Debug::Throw( "EditionWindow::_updateConfiguration.\n" );
   
-  // window size
-  resize( XmlOptions::get().get<int>( "EDIT_FRAME_WIDTH" ), XmlOptions::get().get<int>( "EDIT_FRAME_HEIGHT" ) );
-  
   // set splitter default size
   QList<int> sizes;
   sizes << XmlOptions::get().get<int>( "EDT_HEIGHT" );
   sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
   splitter_->setSizes( sizes );
+  
+  resize( sizeHint() );
   
 }
 
@@ -680,7 +655,7 @@ void EditionWindow::_previousEntry( void )
 
   //if( isReadOnly() ) return;
     
-  MainWindow *frame( _selectionFrame() );
+  MainWindow *frame( _mainWindow() );
   LogEntry* entry( frame->previousEntry( EditionWindow::entry(), true ) );
   if( !( entry  && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
@@ -695,7 +670,7 @@ void EditionWindow::_nextEntry( void )
 
   //if( isReadOnly() ) return;
 
-  MainWindow *frame( _selectionFrame() );
+  MainWindow *frame( _mainWindow() );
   LogEntry* entry( frame->nextEntry( EditionWindow::entry(), true ) );
   if( !( entry && frame->lockEntry( entry ) ) ) return;
   displayEntry( entry );
@@ -793,7 +768,7 @@ void EditionWindow::_deleteEntry( void )
   if( !QtUtil::questionDialog( this, "Delete current entry ?" ) ) return;
 
   // get associated attachments
-  _selectionFrame()->deleteEntry( entry );
+  _mainWindow()->deleteEntry( entry );
 
   return;
 
@@ -834,15 +809,15 @@ void EditionWindow::_cloneWindow( void )
   }
 
   // retrieve selection frame
-  MainWindow *frame( _selectionFrame() );
+  MainWindow *frame( _mainWindow() );
 
   // create new EditionWindow
-  EditionWindow *edit_frame( new EditionWindow( frame ) );
-  Key::associate( edit_frame, frame );
-  edit_frame->displayEntry( entry );
+  EditionWindow *edition_window( new EditionWindow( frame ) );
+  Key::associate( edition_window, frame );
+  edition_window->displayEntry( entry );
 
   // raise EditionWindow
-  edit_frame->show();
+  edition_window->show();
 
   return;
 }
@@ -937,7 +912,7 @@ void EditionWindow::_unlock( void )
   if( !isReadOnly() ) return;
   LogEntry *entry( EditionWindow::entry() );
   
-  if( entry && ! _selectionFrame()->lockEntry( entry ) ) return;
+  if( entry && ! _mainWindow()->lockEntry( entry ) ) return;
   setReadOnly( false );
   
   return;
@@ -1261,9 +1236,9 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
 }
 
 //_______________________________________________
-MainWindow* EditionWindow::_selectionFrame( void ) const
+MainWindow* EditionWindow::_mainWindow( void ) const
 {
-  Debug::Throw( "EditionWindow::_selectionFrame.\n" );
+  Debug::Throw( "EditionWindow::_mainWindow.\n" );
   BASE::KeySet<MainWindow> frames( this );
   assert( frames.size()==1 );
   return *frames.begin();

@@ -315,7 +315,7 @@ void AttachmentList::_newAttachment( void )
     }
     
     // change Application window title
-    static_cast<Application*>(qApp)->selectionFrame().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    static_cast<Application*>(qApp)->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
 
     // save EditionWindow entry
     edit_frame->saveAction().trigger();
@@ -456,7 +456,7 @@ void AttachmentList::_edit( void )
   }
   
   // set main window title
-  static_cast<Application*>(qApp)->selectionFrame().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+  static_cast<Application*>(qApp)->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
   
   // save EditionWindow entry
   edit_frame->saveAction().trigger();
@@ -539,7 +539,7 @@ void AttachmentList::_delete( void )
   }
   
   // set main window title
-  static_cast<Application*>(qApp)->selectionFrame().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+  static_cast<Application*>(qApp)->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
   
   // save EditionWindow entry
   edit_frame->saveAction().trigger();
