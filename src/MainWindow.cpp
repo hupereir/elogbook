@@ -655,6 +655,16 @@ Keyword MainWindow::currentKeyword( void ) const
 }
 
 //_______________________________________________
+QMenu* MainWindow::createPopupMenu( void )
+{
+  Debug::Throw( "MainWindow::createPopupMenu.\n" );
+  QMenu *menu = new QMenu();
+  menu->addAction( &searchPanel().visibilityAction() );
+  installToolBarsActions( *menu );
+  return menu;
+}
+
+//_______________________________________________
 void MainWindow::save( const bool& confirm_entries )
 {
 
@@ -889,13 +899,38 @@ void MainWindow::closeEvent( QCloseEvent *event )
 //________________________________________________
 void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 {
+
   Debug::Throw( "MainWindow::contextMenuEvent.\n" );
-  QMenu menu( this );
-  menu.addAction( &searchPanel().visibilityAction() );
-  installToolBarsActions( menu );
-  //menu.addAction( &keywordToolBar().visibilityAction() );
-  //menu.addAction( &entryToolBar().visibilityAction() );
-  menu.exec( event->globalPos() );
+  CustomMainWindow::contextMenuEvent( event );
+  if( event->isAccepted() ) return;
+
+  // if event was rejected it means it is outer of one of the 
+  // relevant window area. However here we want it to also be accepted
+  // in the 'customized' keyword and entry toolbars.
+  Debug::Throw( "MainWindow::contextMenuEvent - event rejected.\n" );
+  
+  // get child under widget
+  bool accepted( false );
+  QWidget *child = childAt(event->pos());
+  while (child && child != this) 
+  {
+    if( child == &keywordToolBar() || child == &entryToolBar() ) 
+    {
+      accepted = true;
+      break;
+    }
+    
+    child = child->parentWidget();
+  }
+  
+  if( !accepted ) return;
+  QMenu* menu = createPopupMenu();
+  menu->exec( event->globalPos() );
+  menu->deleteLater();
+  event->accept();
+  
+  return;
+  
 }
 
 //_______________________________________________

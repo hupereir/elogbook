@@ -272,6 +272,9 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   
   //@}
   
+  //! context popup menu [overloaded]
+  QMenu* createPopupMenu( void );
+  
   signals:
 
   //! emmited when a message is available from logbook
