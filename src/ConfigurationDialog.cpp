@@ -341,6 +341,29 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Show transparent splash screen at startup" );
   
+  // misc
+  page->layout()->addWidget( box = new QGroupBox( "Recent files", page ) );  
+   
+  grid_layout = new GridLayout();
+  grid_layout->setSpacing(5);
+  grid_layout->setMargin(5);
+  grid_layout->setMaxCount(2);
+  box->setLayout( grid_layout );
+
+  // previous file history size
+  grid_layout->addWidget( new QLabel( "recent files history size", box ) );
+  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "DB_SIZE" ) );
+  spinbox->setMinimum( 0 );
+  spinbox->setMaximum( 100 );
+  addOptionWidget( spinbox );
+  spinbox->setToolTip( "number of previously opened files to appear in the Open Previous menu" );
+
+  // sort previous files by date
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "sort recent files by date", box, "SORT_FILES_BY_DATE" ), 3, 0, 1, 2 );
+  checkbox->setToolTip( "Sort files by date rather than name in Open Previous menu." );
+  addOptionWidget( checkbox );
+  new QWidget( box );
+      
   // connect buttons
   connect( this, SIGNAL( apply() ), listview_config, SLOT( update() ) );
   connect( this, SIGNAL( ok() ), listview_config, SLOT( update() ) );

@@ -34,7 +34,7 @@
 #include <QLayout>
 #include <QPainter>
 
-#include "AttachmentFrame.h"
+#include "AttachmentWindow.h"
 #include "AttachmentList.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
@@ -89,6 +89,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   layout->setSpacing(2);
   main->setLayout( layout );
   
+  // title layout (for editor and button)
   title_layout_ = new QHBoxLayout();
   title_layout_->setMargin(0);
   title_layout_->setSpacing(2);

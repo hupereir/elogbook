@@ -34,7 +34,7 @@
 #include <QShortcut>
 
 #include "Attachment.h"
-#include "AttachmentFrame.h"
+#include "AttachmentWindow.h"
 #include "AttachmentList.h"
 #include "CustomFileDialog.h"
 #include "Debug.h"

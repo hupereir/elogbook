@@ -34,7 +34,7 @@
 #include <string>
 
 #include "Application.h"
-#include "AttachmentFrame.h"
+#include "AttachmentWindow.h"
 #include "AttachmentType.h"
 #include "Config.h"
 #include "ConfigurationDialog.h"
@@ -78,8 +78,8 @@ Application::Application( int argc, char*argv[] ) :
   QApplication( argc, argv ),
   Counter( "Application" ),
   args_( argc, argv ),
-  recent_files_( 0 ),
   application_manager_( 0 ),
+  recent_files_( 0 ),
   attachment_frame_( 0 ),
   main_window_( 0 ),
   realized_( false )
@@ -159,7 +159,7 @@ void Application::realizeWidget( void )
   recent_files_->setCheck( true );
   
   // create attachment window
-  attachment_frame_ = new AttachmentFrame();
+  attachment_frame_ = new AttachmentWindow();
   
   // create selection frame
   main_window_ = new MainWindow();
@@ -180,18 +180,18 @@ void Application::realizeWidget( void )
   { splash_screen->show(); }
   
   QtUtil::centerOnDesktop( main_window_ );
-  main_window_->show();
+  mainWindow().show();
     
   // update
   processEvents();
     
   // try open file from argument
   File file( args_.last() );
-  if( file.size() ) main_window_->setLogbook( file );
-  else if( !main_window_->menu().openPreviousMenu().openLastValidFile() )
+  if( file.size() ) mainWindow().setLogbook( file );
+  else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) )
   { 
     splash_screen->close();
-    main_window_->newLogbookAction().trigger();
+    mainWindow().newLogbookAction().trigger();
   }
   
 }
@@ -303,9 +303,9 @@ void Application::_exit( void )
     
     // check if current logbook is modified
     if( 
-      main_window_->logbook() &&
-      main_window_->logbook()->modified() &&
-      main_window_->askForSave() == AskForSaveDialog::CANCEL ) 
+      mainWindow().logbook() &&
+      mainWindow().logbook()->modified() &&
+      mainWindow().askForSave() == AskForSaveDialog::CANCEL ) 
     return;
   }
   
@@ -318,7 +318,7 @@ void Application::_processRequest( const ArgList& args )
 
   Debug::Throw() << "Application::_processRequest - " << args << endl;
   
-  if( main_window_ ) main_window_->uniconifyAction().trigger();
+  if( main_window_ ) mainWindow().uniconifyAction().trigger();
 
   // check argument. Last argument, if starting with a "-" is possibly a filename
   string filename( args.last() );
@@ -328,7 +328,8 @@ void Application::_processRequest( const ArgList& args )
     ostringstream what;
     what << "Accept request for file \"" << filename << "\" ?";
     if( QtUtil::questionDialog( main_window_, what.str(), QtUtil::CENTER_ON_PARENT ) )
-    { main_window_->menu().openPreviousMenu().select( filename ); }
+    { mainWindow().setLogbook( recentFiles().add( filename ).file() ); }
+    
   }
 
 }

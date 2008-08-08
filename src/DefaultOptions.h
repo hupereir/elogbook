@@ -67,8 +67,8 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "ICON_PIXMAP", ":/icon.png" , "application icon"  ));
   
   // normal (overwritten) options
-  XmlOptions::get().add( Option( "ATC_FRAME_HEIGHT", "400" , "requested AttachmentFrame height [pixels]"  ));
-  XmlOptions::get().add( Option( "ATC_FRAME_WIDTH", "600" , "requested AttachmentFrame width [pixels]"  ));
+  XmlOptions::get().add( Option( "ATC_FRAME_HEIGHT", "400" , "requested AttachmentWindow height [pixels]"  ));
+  XmlOptions::get().add( Option( "ATC_FRAME_WIDTH", "600" , "requested AttachmentWindow width [pixels]"  ));
   XmlOptions::get().add( Option( "ATC_HEIGHT", "150" , "requested height of attachment list in editor [pixels]"  ));
   XmlOptions::get().add( Option( "EDT_HEIGHT", "600" , "requested EditionWindow height [pixels]"  ));
   XmlOptions::get().add( Option( "EDIT_FRAME_HEIGHT", "750" , "requested EditionWindow height [pixels]"  ));

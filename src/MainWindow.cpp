@@ -32,7 +32,8 @@
 #include <QHeaderView>
 #include <QMenu>
 
-#include "AttachmentFrame.h"
+#include "Application.h"
+#include "AttachmentWindow.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "LineEditor.h"
@@ -41,6 +42,7 @@
 #include "DeleteKeywordDialog.h"
 #include "EditionWindow.h"
 #include "EditKeywordDialog.h"
+#include "FileList.h"
 #include "HtmlUtil.h"
 #include "IconEngine.h"
 #include "Icons.h"
@@ -50,13 +52,11 @@
 #include "LogbookInformationDialog.h"
 #include "LogbookModifiedDialog.h"
 #include "LogbookStatisticsDialog.h"
+#include "MainWindow.h"
 #include "Menu.h"
-#include "Application.h"
 #include "NewLogbookDialog.h"
-#include "RecentFilesMenu.h"
 #include "QtUtil.h"
 #include "SearchPanel.h"
-#include "MainWindow.h"
 #include "SelectionStatusBar.h"
 #include "Util.h"
 #include "ViewHtmlLogbookDialog.h"
@@ -254,8 +254,9 @@ MainWindow::~MainWindow( void )
 }
 
 //_______________________________________________
-void MainWindow::setLogbook( File file )
+bool MainWindow::setLogbook( File file )
 {
+  
   Debug::Throw("MainWindow::SetLogbook.\n" );
 
   // reset current logbook
@@ -271,7 +272,7 @@ void MainWindow::setLogbook( File file )
     _resetKeywordList();
     _resetLogEntryList();
     emit ready();
-    return;
+    return false;
   }
 
   // set file
@@ -282,7 +283,7 @@ void MainWindow::setLogbook( File file )
     _resetKeywordList();
     _resetLogEntryList();
     emit ready();
-    return;
+    return false;
   }
   
   connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &statusBar(), SLOT( showProgressBar() ) );
@@ -317,7 +318,7 @@ void MainWindow::setLogbook( File file )
   Debug::Throw( "MainWindow::setLogbook - lists sorted.\n" );
 
   // update attachment frame
-  resetAttachmentFrame();
+  resetAttachmentWindow();
   Debug::Throw( "MainWindow::setLogbook - attachment frame reset.\n" );
 
   // retrieve last modified entry
@@ -355,9 +356,10 @@ void MainWindow::setLogbook( File file )
   }
   
   // add opened file to OpenPrevious mennu.
-  menu().openPreviousMenu().add( logbook()->file() );
+  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() );
   
   ignore_warnings_ = false;
+  return true;
   
 }
 
@@ -429,7 +431,7 @@ void MainWindow::reset( void )
   _keywordModel().clear();
   _logEntryModel().clear();
     
-  // clear the AttachmentFrame
+  // clear the AttachmentWindow
   static_cast<Application*>(qApp)->attachmentFrame().list().clear();
   
   // make all EditionWindows for deletion
@@ -625,19 +627,19 @@ LogEntry* MainWindow::nextEntry( LogEntry* entry, const bool& update_selection )
 }
 
 //_______________________________________________
-void MainWindow::resetAttachmentFrame( void ) const
+void MainWindow::resetAttachmentWindow( void ) const
 {
 
-  Debug::Throw( "MainWindow::resetAttachmentFrame.\n" );
+  Debug::Throw( "MainWindow::resetAttachmentWindow.\n" );
 
-  // clear the AttachmentFrame
-  AttachmentFrame &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
+  // clear the AttachmentWindow
+  AttachmentWindow &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
   attachment_frame.list().clear();
 
   // check current logbook
   if( !logbook_ ) return;
 
-  // retrieve logbook attachments, adds to AttachmentFrame
+  // retrieve logbook attachments, adds to AttachmentWindow
   BASE::KeySet<Attachment> attachments( logbook()->attachments() );
   for( BASE::KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
   { attachment_frame.list().add( *it ); }
@@ -730,7 +732,7 @@ void MainWindow::save( const bool& confirm_entries )
   statusBar().showLabel();
   
   // add new file to openPreviousMenu
-  menu().openPreviousMenu().add( logbook()->file() );
+  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -1231,7 +1233,7 @@ void MainWindow::_newLogbook( void )
 
   // add new file to openPreviousMenu
   if( !logbook()->file().empty() )
-  { menu().openPreviousMenu().add( logbook()->file() ); }
+  { static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() ); }
 
 }
 
@@ -1325,7 +1327,7 @@ bool MainWindow::_saveAs( File default_file )
   logbook()->setModifiedRecursive( false );
 
   // add new file to openPreviousMenu
-  menu().openPreviousMenu().add( logbook()->file() );
+  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -1379,7 +1381,7 @@ void MainWindow::_saveBackup( void )
 
   // remove the "backup" filename from the openPrevious list
   // to avoid confusion
-  menu().openPreviousMenu().remove( filename );
+  static_cast<Application*>(qApp)->recentFiles().remove( filename );
 
   // restore initial filename
   logbook()->setFile( current_filename );
@@ -1509,7 +1511,7 @@ void MainWindow::_synchronize( void )
   // reinitialize lists
   _resetKeywordList();
   _resetLogEntryList();
-  resetAttachmentFrame();
+  resetAttachmentWindow();
 
   // retrieve last modified entry
   BASE::KeySet<LogEntry> entries( MainWindow::logbook()->entries() );

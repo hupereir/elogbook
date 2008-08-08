@@ -69,7 +69,7 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   public:
 
   //! constructor
-  MainWindow( QWidget *parent );
+  MainWindow( QWidget *parent = 0 );
 
   //! destructor
   virtual ~MainWindow( void );
@@ -101,7 +101,7 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   when the file that is passed is from the currently opened logbook,
   since the later gets deleted in the method and the file is being re-used
   */
-  virtual void setLogbook( File file );
+  virtual bool setLogbook( File );
 
   //! check if logbook needs a backup, ask for it if needed
   virtual void checkLogbookBackup( void );
@@ -127,25 +127,25 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   virtual void clearSelection( void );
 
   //! select entry
-  virtual void selectEntry( LogEntry *entry );
+  virtual void selectEntry( LogEntry* );
 
   //! update entry (create new if not found )
-  virtual void updateEntry( LogEntry *entry, const bool& update_selection );
+  virtual void updateEntry( LogEntry*, const bool& );
 
   //! delete entry
-  virtual void deleteEntry( LogEntry* entry, const bool& save = true );
+  virtual void deleteEntry( LogEntry*, const bool& save = true );
 
   //! look for EditionWindows matching entry, set readonly
-  virtual bool lockEntry( LogEntry* entry ) const;
+  virtual bool lockEntry( LogEntry* ) const;
 
   //! retrieve previous entry (if any)
-  virtual LogEntry* previousEntry( LogEntry* entry, const bool& update_selection );
+  virtual LogEntry* previousEntry( LogEntry*, const bool& );
 
   //! retrieve next entry (if any)
-  virtual LogEntry* nextEntry( LogEntry* entry, const bool& update_selection );
+  virtual LogEntry* nextEntry( LogEntry*, const bool& );
 
   //! reset attachment frame
-  virtual void resetAttachmentFrame( void ) const;
+  virtual void resetAttachmentWindow( void ) const;
 
   //! return keyword list
   TreeView& keywordList( void ) const
@@ -293,7 +293,7 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   virtual void save( const bool& confirm_entries = true );
 
   //! select entries using selection criterions
-  virtual void selectEntries( QString text, unsigned int mode );
+  virtual void selectEntries( QString, unsigned int );
 
   //! show all entries
   virtual void showAllEntries( void );
@@ -301,10 +301,10 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   protected:
 
   //! enter event handler
-  virtual void enterEvent( QEvent *event );
+  virtual void enterEvent( QEvent* );
   
   //! close event
-  virtual void closeEvent( QCloseEvent *event );
+  virtual void closeEvent( QCloseEvent* );
   
   //! context menu event [overloaded]
   virtual void contextMenuEvent( QContextMenuEvent* );

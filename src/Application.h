@@ -42,7 +42,7 @@
 
 
 
-class AttachmentFrame;
+class AttachmentWindow;
 class FileList;
 class LogEntry;
 class MainWindow;
@@ -91,8 +91,8 @@ class Application: public QApplication, public Counter
     return *recent_files_;
   }
   
-  //! retrieve AttachmentFrame singleton
-  AttachmentFrame & attachmentFrame( void ) const
+  //! retrieve AttachmentWindow singleton
+  AttachmentWindow & attachmentFrame( void ) const
   { 
     assert( attachment_frame_ );
     return *attachment_frame_; 
@@ -182,7 +182,7 @@ class Application: public QApplication, public Counter
   FileList* recent_files_;
   
   //! toplevel attachment frame
-  AttachmentFrame* attachment_frame_;
+  AttachmentWindow* attachment_frame_;
   
   //! main window entry selection frame
   MainWindow* main_window_; 

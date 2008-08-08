@@ -39,7 +39,6 @@
 #include "Debug.h"
 #include "Counter.h"
 
-class RecentFilesMenu;
 class MainWindow;
 
 /*!
@@ -62,13 +61,6 @@ class Menu:public QMenuBar, public Counter
   ~Menu( void ) 
   { Debug::Throw() << "Menu::~Menu.\n"; }
 
-  //! retrieve RecentFilesMenu
-  RecentFilesMenu& openPreviousMenu( void ) const
-  {
-    assert( recent_files_menu_ );
-    return *recent_files_menu_;
-  }
-    
   private slots:
   
   //! get list of editor windows into menu
@@ -79,9 +71,6 @@ class Menu:public QMenuBar, public Counter
   
   private:
 
-  //! open previous menu, in which the open files are stored
-  RecentFilesMenu* recent_files_menu_;      
-  
   //! editor windows menu
   QMenu* editor_menu_;
  

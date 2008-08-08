@@ -26,7 +26,7 @@ RC_FILE = elogbook.rc
 
 HEADERS = \
  AskForSaveDialog.h \
- AttachmentFrame.h \
+ AttachmentWindow.h \
  Attachment.h \
  AttachmentList.h \
  AttachmentType.h \
@@ -69,7 +69,7 @@ HEADERS = \
 SOURCES = \
  AskForSaveDialog.cpp \
  Attachment.cpp \
- AttachmentFrame.cpp \
+ AttachmentWindow.cpp \
  AttachmentList.cpp \
  AttachmentType.cpp \
  ConfigurationDialog.cpp \

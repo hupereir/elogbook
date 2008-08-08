@@ -32,7 +32,8 @@
 #include <qmessagebox.h>
 #include <sstream>
 
-#include "AttachmentFrame.h"
+#include "Application.h"
+#include "AttachmentWindow.h"
 #include "CustomToolBar.h"
 #include "DebugMenu.h"
 #include "EditionWindow.h"
@@ -42,11 +43,10 @@
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
-#include "Application.h"
+#include "MainWindow.h"
 #include "Menu.h"
 #include "RecentFilesMenu.h"
 #include "QtUtil.h"
-#include "MainWindow.h"
 #include "SearchPanel.h"
 #include "Str.h"
 #include "Util.h"
@@ -82,10 +82,9 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addAction( &mainwindow->openAction() );
 
   // file menu
-  recent_files_menu_ = new RecentFilesMenu( this );
-  recent_files_menu_->setCheck( true );
-  connect( recent_files_menu_, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
-  menu->addMenu( recent_files_menu_ );
+  RecentFilesMenu* recent_files_menu( new RecentFilesMenu( this, static_cast<Application*>(qApp)->recentFiles() ) );
+  connect( recent_files_menu, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
+  menu->addMenu( recent_files_menu );
 
   menu->addAction( &mainwindow->synchronizeAction() );
   menu->addAction( &mainwindow->reorganizeAction() );
@@ -164,7 +163,7 @@ void Menu::_updateEditorMenu( void )
   editor_menu_->clear();
 
   MainWindow &mainwindow( static_cast<Application*>(qApp)->mainWindow() );
-  AttachmentFrame &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
+  AttachmentWindow &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
   
   // retrieve parent editFream if any
   EditionWindow* editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );

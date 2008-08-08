@@ -22,7 +22,7 @@
 *******************************************************************************/
 
 /*!
-  \file AttachmentFrame.cpp
+  \file AttachmentWindow.cpp
   \brief popup window to list/edit all attachments independantly from entries
   \author  Hugo Pereira
   \version $Revision$
@@ -34,7 +34,7 @@
 #include <QPushButton>
 #include <list>
 
-#include "AttachmentFrame.h"
+#include "AttachmentWindow.h"
 #include "EditionWindow.h"
 #include "IconEngine.h"
 #include "Icons.h"
@@ -49,12 +49,12 @@ using namespace std;
 using namespace Qt;
 
 //________________________________________
-AttachmentFrame::AttachmentFrame( QWidget* parent ):
+AttachmentWindow::AttachmentWindow( QWidget* parent ):
   QDialog( parent ),
-  Counter( "AttachmentFrame" )
+  Counter( "AttachmentWindow" )
 {
   
-  Debug::Throw( "AttachmentFrame::AttachmentFrame.\n" );
+  Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
   setWindowTitle( Application::ATTACHMENT_TITLE );
   
   // create vbox layout
@@ -94,16 +94,16 @@ AttachmentFrame::AttachmentFrame( QWidget* parent ):
 };
 
 //________________________________________
-void AttachmentFrame::show( void )
+void AttachmentWindow::show( void )
 {
-  Debug::Throw( "AttachmentFrame::show.\n" );
+  Debug::Throw( "AttachmentWindow::show.\n" );
   QtUtil::centerOnPointer( this );
   QWidget::show();
   QWidget::raise();
 }
   
 //____________________________________________
-void AttachmentFrame::enterEvent( QEvent *event )
+void AttachmentWindow::enterEvent( QEvent *event )
 {
   Debug::Throw( "MainWindow::enterEvent.\n" );
   
@@ -116,10 +116,10 @@ void AttachmentFrame::enterEvent( QEvent *event )
 
 
 //________________________________________
-void AttachmentFrame::_updateConfiguration( void )
+void AttachmentWindow::_updateConfiguration( void )
 {
   
-  Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
+  Debug::Throw( "AttachmentWindow::_updateConfiguration.\n" );
   
   // resize window
   resize( XmlOptions::get().get<int>( "ATC_FRAME_WIDTH" ), XmlOptions::get().get<int>( "ATC_FRAME_HEIGHT" ) );  
@@ -127,10 +127,10 @@ void AttachmentFrame::_updateConfiguration( void )
 }    
 
 //________________________________________
-void AttachmentFrame::_saveConfiguration( void )
+void AttachmentWindow::_saveConfiguration( void )
 {
   
-  Debug::Throw( "AttachmentFrame::_saveConfiguration.\n" );
+  Debug::Throw( "AttachmentWindow::_saveConfiguration.\n" );
   
   // resize window
   XmlOptions::get().set<int>( "ATC_FRAME_WIDTH", width() );
@@ -139,9 +139,9 @@ void AttachmentFrame::_saveConfiguration( void )
 }  
 
 //_______________________________________________
-void AttachmentFrame::_uniconify( void )
+void AttachmentWindow::_uniconify( void )
 {
-  Debug::Throw( "AttachmentFrame::_uniconify.\n" );
+  Debug::Throw( "AttachmentWindow::_uniconify.\n" );
   QtUtil::centerOnWidget( this, qApp->activeWindow() );
   show();
   QtUtil::uniconify( window() );
@@ -149,10 +149,10 @@ void AttachmentFrame::_uniconify( void )
 }
 
 //________________________________________
-void AttachmentFrame::_displayEntry( QTreeWidgetItem *current, QTreeWidgetItem* old )
+void AttachmentWindow::_displayEntry( QTreeWidgetItem *current, QTreeWidgetItem* old )
 {
   
-  Debug::Throw( "AttachmentFrame::_displayEntry.\n");
+  Debug::Throw( "AttachmentWindow::_displayEntry.\n");
   
   if( !current ) current = old;
   

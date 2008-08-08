@@ -21,11 +21,11 @@
 *                        
 *******************************************************************************/
 
-#ifndef AttachmentFrame_h
-#define AttachmentFrame_h
+#ifndef AttachmentWindow_h
+#define AttachmentWindow_h
 
 /*!
-   \file    AttachmentFrame.h
+   \file    AttachmentWindow.h
    \brief   popup window to list/edit all attachments 
             independantly from entries
    \author  Hugo Pereira
@@ -44,11 +44,11 @@
 class Attachment;
 
 /*!
-  \class  AttachmentFrame
+  \class  AttachmentWindow
    \brief popup window to list/edit all attachments independantly from entries
 */ 
 
-class AttachmentFrame: public QDialog, public Counter
+class AttachmentWindow: public QDialog, public Counter
 {
 
   //! Qt meta object declaration
@@ -57,7 +57,7 @@ class AttachmentFrame: public QDialog, public Counter
   public:
 
   //! creator 
-  AttachmentFrame( QWidget* parent );
+  AttachmentWindow( QWidget* parent = 0 );
     
   //! display widget
   void show( void );
