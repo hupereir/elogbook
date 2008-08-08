@@ -50,7 +50,6 @@ namespace ICONS
   static const std::string HOME = "homeB.png";
   static const std::string HTML = "html.png";
   static const std::string INFO = "info.png";
-  static const std::string LOCK = "encrypted.png";
   static const std::string PREV = "1leftarrow.png";
   static const std::string NEXT = "1rightarrow.png";
   static const std::string NEW = "filenew.png";

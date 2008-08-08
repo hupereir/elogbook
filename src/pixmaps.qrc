@@ -5,7 +5,6 @@
     <file alias="pixmaps/crystal/1leftarrow.png">../pixmaps/crystal/1leftarrow.png</file>
     <file alias="pixmaps/crystal/1rightarrow.png">../pixmaps/crystal/1rightarrow.png</file>
     <file alias="pixmaps/crystal/attach.png">../pixmaps/crystal/attach.png</file>
-    <file alias="pixmaps/crystal/encrypted.png">../pixmaps/crystal/encrypted.png</file>
     <file alias="pixmaps/crystal/fileclose.png">../pixmaps/crystal/fileclose.png</file>
     <file alias="pixmaps/crystal/filenew.png">../pixmaps/crystal/filenew.png</file>
     <file alias="pixmaps/crystal/filesaveas.png">../pixmaps/crystal/filesaveas.png</file>
@@ -26,7 +25,6 @@
     <file alias="pixmaps/oxygen/1leftarrow.png">../pixmaps/oxygen/1leftarrow.png</file>
     <file alias="pixmaps/oxygen/1rightarrow.png">../pixmaps/oxygen/1rightarrow.png</file>
     <file alias="pixmaps/oxygen/attach.png">../pixmaps/oxygen/attach.png</file>
-    <file alias="pixmaps/oxygen/encrypted.png">../pixmaps/oxygen/encrypted.png</file>
     <file alias="pixmaps/oxygen/fileclose.png">../pixmaps/oxygen/fileclose.png</file>
     <file alias="pixmaps/oxygen/filenew.png">../pixmaps/oxygen/filenew.png</file>
     <file alias="pixmaps/oxygen/filesaveas.png">../pixmaps/oxygen/filesaveas.png</file>
