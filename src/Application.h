@@ -43,6 +43,7 @@
 
 
 class AttachmentFrame;
+class FileList;
 class LogEntry;
 class MainWindow;
 
@@ -83,20 +84,25 @@ class Application: public QApplication, public Counter
   //! create all widgets
   void realizeWidget( void );
   
-  //! retrieve MainWindow singleton
-  MainWindow& mainWindow( void ) const
+  //! file list
+  FileList& recentFiles( void ) const
   { 
-    assert( main_window_
- );
-    return *main_window_; 
+    assert( recent_files_ );
+    return *recent_files_;
   }
   
   //! retrieve AttachmentFrame singleton
   AttachmentFrame & attachmentFrame( void ) const
   { 
-    assert( attachment_frame_
- );
+    assert( attachment_frame_ );
     return *attachment_frame_; 
+  }
+  
+  //! retrieve MainWindow singleton
+  MainWindow& mainWindow( void ) const
+  { 
+    assert( main_window_ );
+    return *main_window_; 
   }
   
   //! set application busy
@@ -171,6 +177,9 @@ class Application: public QApplication, public Counter
   
   //! application manager
   SERVER::ApplicationManager* application_manager_;
+
+  //! recent files
+  FileList* recent_files_;
   
   //! toplevel attachment frame
   AttachmentFrame* attachment_frame_;

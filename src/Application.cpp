@@ -33,6 +33,7 @@
 #include <iostream>
 #include <string>
 
+#include "Application.h"
 #include "AttachmentFrame.h"
 #include "AttachmentType.h"
 #include "Config.h"
@@ -45,13 +46,13 @@
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
-#include "Application.h"
+#include "MainWindow.h"
 #include "Menu.h"
 #include "XmlOptions.h"
 #include "RecentFilesMenu.h"
 #include "QtUtil.h"
-#include "MainWindow.h"
 #include "SplashScreen.h"
+#include "XmlFileList.h"
 
 using namespace std;
 using namespace Qt;
@@ -77,6 +78,7 @@ Application::Application( int argc, char*argv[] ) :
   QApplication( argc, argv ),
   Counter( "Application" ),
   args_( argc, argv ),
+  recent_files_( 0 ),
   application_manager_( 0 ),
   attachment_frame_( 0 ),
   main_window_( 0 ),
@@ -90,21 +92,12 @@ Application::Application( int argc, char*argv[] ) :
 Application::~Application( void ) 
 {
   Debug::Throw( "Application::~Application.\n" );
+  
+  if( main_window_ ) delete main_window_;
+  if( application_manager_ ) delete application_manager_; 
+  if( recent_files_ ) delete recent_files_;
+  
   XmlOptions::write();
-  
-  if( main_window_ )
-  {
-    delete main_window_;
-    main_window_ = 0;
-  }
-  
-  if( application_manager_ ) 
-  {
-    delete application_manager_; 
-    application_manager_ = 0;
-  }
-
-  
   
   // error handler
   ErrorHandler::exit();
@@ -161,11 +154,15 @@ void Application::realizeWidget( void )
   configuration_action_ = new QAction( IconEngine::get( ICONS::CONFIGURE ), "Default &Configuration", this );
   connect( configuration_action_, SIGNAL( triggered() ), SLOT( _configuration() ) );  
   
+  // recent files
+  recent_files_ = new XmlFileList();
+  recent_files_->setCheck( true );
+  
   // create attachment window
-  attachment_frame_ = new AttachmentFrame( 0 );
+  attachment_frame_ = new AttachmentFrame();
   
   // create selection frame
-  main_window_ = new MainWindow( 0 );
+  main_window_ = new MainWindow();
 
   // update configuration
   _updateConfiguration();
