@@ -891,9 +891,10 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 {
   Debug::Throw( "MainWindow::contextMenuEvent.\n" );
   QMenu menu( this );
-  menu.addAction( &keywordToolBar().visibilityAction() );
-  menu.addAction( &entryToolBar().visibilityAction() );
   menu.addAction( &searchPanel().visibilityAction() );
+  installToolBarsActions( menu );
+  //menu.addAction( &keywordToolBar().visibilityAction() );
+  //menu.addAction( &entryToolBar().visibilityAction() );
   menu.exec( event->globalPos() );
 }
 
