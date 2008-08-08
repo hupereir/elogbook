@@ -137,7 +137,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   // lock toolbar is visible only when window is not editable
   lock_ = new CustomToolBar( "Lock", this, "LOCK_TOOLBAR" );
   lock_->setMovable( false );
-  lock_->visibilityAction().setEnabled( false );
+  
+  // hide lock_ visibility action because the latter should not be checkable in any menu
+  lock_->visibilityAction().setVisible( false );
   
   QAction *action;
   lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), "&Unlock", this ) );
