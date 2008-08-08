@@ -121,7 +121,6 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "LOCK_TOOLBAR", "0" , "keywords toolbar visibility" ));
   XmlOptions::get().add( Option( "ENTRY_TOOLBAR", "1" , "entries toolbar visibility" ));
   XmlOptions::get().add( Option( "SHOW_SEARCHPANEL", "1" , "search panel visibility" ));
-  XmlOptions::get().add( Option( "SHOW_SEARCHPANEL", "1" , "search panel visibility" ));
 
   // add run-time non recordable options
         

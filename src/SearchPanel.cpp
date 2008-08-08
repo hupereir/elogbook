@@ -65,7 +65,6 @@ SearchPanel::SearchPanel( QWidget* parent ):
   
   // selection text
   selection_ = new LineEditor( this );
-  selection_->setHasClearButton( true );
   selection_->setToolTip( "Text to be found in logbook" );
   layout->addWidget( selection_, 1 ); 
   connect( selection_, SIGNAL( returnPressed() ), SLOT( _selectionRequest() ) );
@@ -120,6 +119,15 @@ void SearchPanel::_updateConfiguration( void )
 
   Debug::Throw( "SearchPanel::_updateConfiguration.\n" );
   visibilityAction().setChecked( XmlOptions::get().get<bool>( "SHOW_SEARCHPANEL" ) );
+  
+  // load mask
+  if( XmlOptions::get().find( "SEARCHPANEL_MASK" ) )
+  {
+    unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCHPANEL_MASK" ) );
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+    { iter->second->setChecked( mask & iter->first ); }
+  }
+  
 }
   
 //___________________________________________________________
@@ -128,6 +136,14 @@ void SearchPanel::_saveConfiguration( void )
 
   Debug::Throw( "SearchPanel::_saveConfiguration.\n" );
   XmlOptions::get().set<bool>( "SHOW_SEARCHPANEL", visibilityAction().isChecked() );
+
+  // store mask
+  unsigned int mask(0);
+  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+  { if( iter->second->isChecked() ) mask |= iter->first; }
+  
+  XmlOptions::get().set<unsigned int>( "SEARCHPANEL_MASK", mask );
+
 }
 
 //___________________________________________________________
@@ -137,7 +153,7 @@ void SearchPanel::_selectionRequest( void )
   
   // build mode
   unsigned int mode = NONE;
-  for( std::map<SearchMode,QCheckBox*>::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
   { if( iter->second->isChecked() ) mode |= iter->first; }
   
   // text selection

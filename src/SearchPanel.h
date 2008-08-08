@@ -93,7 +93,10 @@ class SearchPanel: public QWidget, public Counter
   private:
   
   //! checkboxes
-  std::map<SearchMode, QCheckBox* > checkboxes_;
+  typedef std::map<SearchMode, QCheckBox* > CheckBoxMap;
+  
+  //! checkboxes
+  CheckBoxMap checkboxes_;
   
   //! select LogEntry according to title
   QCheckBox *title_selection_;  

@@ -58,6 +58,7 @@
 #include "TextPosition.h"
 
 class Attachment;
+class CustomToolBar;
 class FormatBar;
 class MainWindow;
 class StatusBar;
@@ -406,7 +407,7 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //@{
 
   //! lock toolbar
-  QToolBar* lock_;
+  CustomToolBar* lock_;
 
   //@}
   
