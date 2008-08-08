@@ -126,8 +126,6 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   
   // windows menu
   editor_menu_ = addMenu( "&Windows" );
-  editor_action_group_ = new QActionGroup( editor_menu_ );
-  editor_action_group_->setExclusive( true );
   connect( editor_menu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
   // help manager
@@ -193,7 +191,6 @@ void Menu::_updateEditorMenu( void )
       // add menu entry for this frame
       string title( (*iter)->windowTitle() );
       QAction* action = editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
-      editor_action_group_->addAction( action );
       action->setCheckable( true );
       action->setChecked( editionwindow && ( editionwindow == (*iter) ) );
       
