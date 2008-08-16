@@ -63,7 +63,6 @@
 #include "XmlOptions.h"
 
 using namespace std;
-using namespace Qt;
 
 //_____________________________________________
 MainWindow::MainWindow( QWidget *parent ):
@@ -92,7 +91,7 @@ MainWindow::MainWindow( QWidget *parent ):
     
   // splitter for KeywordList/LogEntryList
   layout->addWidget( splitter_ = new QSplitter( main ), 1 );  
-  splitter_->setOrientation( Horizontal );
+  splitter_->setOrientation( Qt::Horizontal );
  
   // search panel
   search_panel_ = new SearchPanel( main );
@@ -950,23 +949,23 @@ void MainWindow::_installActions( void )
 
   addAction( edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename keyword", this ) );
   edit_keyword_action_->setToolTip( "Rename selected keyword" );
-  edit_keyword_action_->setShortcut( CTRL+Key_K );
+  edit_keyword_action_->setShortcut( Qt::CTRL+Qt::Key_K );
   connect( edit_keyword_action_, SIGNAL( triggered() ), SLOT( _renameKeyword() ) );
   
   /*
   delete keyword action
-  it is associated to the Key_Delete shortcut
+  it is associated to the Qt::Key_Delete shortcut
   but the later is enabled only if the KeywordList has focus.
   */
   delete_keyword_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete keyword", this );
   delete_keyword_action_->setToolTip( "Delete selected keyword" );
-  delete_keyword_action_->setShortcut( Key_Delete );
-  delete_keyword_action_->setShortcutContext( WidgetShortcut );  
+  delete_keyword_action_->setShortcut( Qt::Key_Delete );
+  delete_keyword_action_->setShortcutContext( Qt::WidgetShortcut );  
   connect( delete_keyword_action_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
 
   new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New entry", this );
   new_entry_action_->setToolTip( "Create a new entry" );
-  new_entry_action_->setShortcut( CTRL+Key_N );
+  new_entry_action_->setShortcut( Qt::CTRL+Qt::Key_N );
   connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
   edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit selected entries", this );
@@ -975,13 +974,13 @@ void MainWindow::_installActions( void )
 
   /*
   delete entry action
-  it is associated to the Key_Delete shortcut
+  it is associated to the Qt::Key_Delete shortcut
   but the later is enabled only if the KeywordList has focus.
   */
   delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete selected entries", this );
   delete_entry_action_->setToolTip( "Delete selected entries" );
-  delete_entry_action_->setShortcut( Key_Delete );
-  delete_entry_action_->setShortcutContext( WidgetShortcut );  
+  delete_entry_action_->setShortcut( Qt::Key_Delete );
+  delete_entry_action_->setShortcutContext( Qt::WidgetShortcut );  
   connect( delete_entry_action_, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
 
   // color menu
@@ -1003,7 +1002,7 @@ void MainWindow::_installActions( void )
 
   open_action_ = new QAction( IconEngine::get( ICONS::OPEN ), "&Open", this );
   open_action_->setToolTip( "Open an existsing logbook" );
-  open_action_->setShortcut( CTRL+Key_O );
+  open_action_->setShortcut( Qt::CTRL+Qt::Key_O );
   connect( open_action_, SIGNAL( triggered() ), SLOT( open() ) );
 
   synchronize_action_ = new QAction( "&Synchronize", this );
