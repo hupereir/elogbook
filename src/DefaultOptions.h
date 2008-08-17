@@ -29,6 +29,8 @@
   \date $Date$
 */
 
+#include "LogEntryModel.h"
+#include "AttachmentList.h"
 #include "XmlOptions.h"
 #include "Config.h"
 #include "Util.h"
@@ -75,7 +77,6 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "EDIT_FRAME_WIDTH", "700" , "requested EditionWindow width [pixels]"  ));
   XmlOptions::get().add( Option( "SELECTION_FRAME_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
   XmlOptions::get().add( Option( "SELECTION_FRAME_WIDTH", "700" , "requested MainWindow width [pixels]"  ));
-  XmlOptions::get().add( Option( "ENTRYLIST_MASK", "94" ));
   
   XmlOptions::get().add( Option( "KEYWORD_LIST_WIDTH", "250" , "requested keyword list width [pixels]"  ));
   XmlOptions::get().add( Option( "ENTRY_LIST_WIDTH", "450" , "requested entry list width [pixels]"  ));
@@ -122,6 +123,20 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "ENTRY_TOOLBAR", "1" , "entries toolbar visibility" ));
   XmlOptions::get().add( Option( "SHOW_SEARCHPANEL", "1" , "search panel visibility" ));
 
+  // masks
+  XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", 
+    (1<< LogEntryModel::COLOR)|
+    (1<< LogEntryModel::TITLE)|
+    (1<< LogEntryModel::CREATION)|
+    (1<< LogEntryModel::MODIFICATION)|
+    (1<< LogEntryModel::AUTHOR) );
+  
+  XmlOptions::get().set<unsigned int>( "ATTACHMENT_LIST_MASK", 
+    (1<< AttachmentList::FILE)|
+    (1<< AttachmentList::SIZE)|
+    (1<< AttachmentList::TYPE)|
+    (1<< AttachmentList::MODIFICATION) );
+  
   // add run-time non recordable options
         
   // user name and host

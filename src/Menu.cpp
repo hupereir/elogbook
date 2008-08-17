@@ -163,7 +163,7 @@ void Menu::_updateEditorMenu( void )
   editor_menu_->clear();
 
   MainWindow &mainwindow( static_cast<Application*>(qApp)->mainWindow() );
-  AttachmentWindow &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
+  AttachmentWindow &attachment_window( static_cast<Application*>(qApp)->attachmentWindow() );
   
   // retrieve parent editFream if any
   EditionWindow* editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );
@@ -171,7 +171,7 @@ void Menu::_updateEditorMenu( void )
   // editor attachments and logbook information
   editor_menu_->addAction( &mainwindow.uniconifyAction() );
   
-  editor_menu_->addAction( &attachment_frame.uniconifyAction() );
+  editor_menu_->addAction( &attachment_window.uniconifyAction() );
   editor_menu_->addAction( &mainwindow.logbookStatisticsAction() );
   editor_menu_->addAction( &mainwindow.logbookInformationsAction() );
 

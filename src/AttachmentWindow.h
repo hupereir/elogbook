@@ -65,8 +65,7 @@ class AttachmentWindow: public QDialog, public Counter
   //! retrieve associated List
   AttachmentList& list()
   { 
-    assert( list_
- );
+    assert( list_ );
     return *list_; 
   }
     

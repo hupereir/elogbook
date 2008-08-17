@@ -80,6 +80,7 @@ AttachmentList::AttachmentList( QWidget *parent, bool read_only ):
   setSortingEnabled( true );
   setSelectionMode( QAbstractItemView::ContiguousSelection );
   setTextElideMode ( Qt::ElideMiddle );
+  setMaskOptionName( "ATTACHMENT_LIST_MASK" );
   
   addAction( new_attachment_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&New", this ) );
   new_attachment_action_->setToolTip( "Attach a file/URL to the current entry" );
@@ -304,8 +305,8 @@ void AttachmentList::_newAttachment( void )
     }
     
     // update attachment frame
-    static_cast<Application*>(qApp)->attachmentFrame().list().add( attachment );
-    static_cast<Application*>(qApp)->attachmentFrame().list().resizeColumns();
+    static_cast<Application*>(qApp)->attachmentWindow().list().add( attachment );
+    static_cast<Application*>(qApp)->attachmentWindow().list().resizeColumns();
    
     // update logbooks destination directory
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 

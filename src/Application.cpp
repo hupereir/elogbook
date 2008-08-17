@@ -80,7 +80,7 @@ Application::Application( int argc, char*argv[] ) :
   args_( argc, argv ),
   application_manager_( 0 ),
   recent_files_( 0 ),
-  attachment_frame_( 0 ),
+  attachment_window_( 0 ),
   main_window_( 0 ),
   realized_( false )
 { 
@@ -159,7 +159,7 @@ void Application::realizeWidget( void )
   recent_files_->setCheck( true );
   
   // create attachment window
-  attachment_frame_ = new AttachmentWindow();
+  attachment_window_ = new AttachmentWindow();
   
   // create selection frame
   main_window_ = new MainWindow();

@@ -127,17 +127,17 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // create keyword list
   v_layout->addWidget( keyword_list_ = new TreeView( left ), 1 );
-  keyword_list_->setModel( &_keywordModel() );
-  keyword_list_->setRootIsDecorated( true );
-  keyword_list_->setSortingEnabled( true );
-  keyword_list_->setDragEnabled(true);
-  keyword_list_->setAcceptDrops(true);
-  keyword_list_->setDropIndicatorShown(true);
-  keyword_list_->setItemDelegate( new KeywordDelegate( this ) );
+  keywordList().setModel( &_keywordModel() );
+  keywordList().setRootIsDecorated( true );
+  keywordList().setSortingEnabled( true );
+  keywordList().setDragEnabled(true);
+  keywordList().setAcceptDrops(true);
+  keywordList().setDropIndicatorShown(true);
+  keywordList().setItemDelegate( new KeywordDelegate( this ) );
   
   // update LogEntryList when keyword selection change
-  connect( keyword_list_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );  
-  connect( keyword_list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection& ) ), SLOT( _updateKeywordActions() ) );
+  connect( keywordList().selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );  
+  connect( keywordList().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection& ) ), SLOT( _updateKeywordActions() ) );
   _updateKeywordActions();
     
   // rename selected entries when KeywordChanged is emitted with a single argument.
@@ -149,10 +149,10 @@ MainWindow::MainWindow( QWidget *parent ):
   connect( &keyword_model_, SIGNAL( keywordChanged( Keyword, Keyword ) ), SLOT( _renameKeyword( Keyword, Keyword ) ) );
     
   // popup menu for keyword list
-  keyword_list_->menu().addAction( &newEntryAction() );
-  keyword_list_->menu().addAction( &newKeywordAction() ); 
-  keyword_list_->menu().addAction( &editKeywordAction() );
-  keyword_list_->menu().addAction( &deleteKeywordAction() );
+  keywordList().menu().addAction( &newEntryAction() );
+  keywordList().menu().addAction( &newKeywordAction() ); 
+  keywordList().menu().addAction( &editKeywordAction() );
+  keywordList().menu().addAction( &deleteKeywordAction() );
 
   connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedKeywords() ) );
   connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeExpandedKeywords() ) );
@@ -165,7 +165,7 @@ MainWindow::MainWindow( QWidget *parent ):
   so that the corresponding shortcut gets activated whenever it is pressed
   while the list has focus
   */
-  keyword_list_->addAction( &deleteKeywordAction() );
+  keywordList().addAction( &deleteKeywordAction() );
   
   // right box for entries and buttons
   QWidget* right = new QWidget( splitter_ );
@@ -195,13 +195,14 @@ MainWindow::MainWindow( QWidget *parent ):
    
   // create logEntry list
   v_layout->addWidget( entry_list_ = new TreeView( right ), 1 );
-  entry_list_->setModel( &_logEntryModel() );
-  entry_list_->setSelectionMode( QAbstractItemView::ContiguousSelection ); 
-  entry_list_->setDragEnabled(true); 
-  entry_list_->setItemDelegate( new LogEntryDelegate( this ) );
+  logEntryList().setModel( &_logEntryModel() );
+  logEntryList().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
+  logEntryList().setDragEnabled(true); 
+  logEntryList().setItemDelegate( new LogEntryDelegate( this ) );
+  logEntryList().setMaskOptionName( "ENTRY_LIST_MASK" );
   
-  connect( entry_list_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
-  connect( entry_list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
+  connect( logEntryList().header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
+  connect( logEntryList().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
   connect( entry_list_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _entryItemActivated( const QModelIndex& ) ) ); 
   connect( entry_list_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _entryItemClicked( const QModelIndex& ) ) );
   _updateEntryActions();
@@ -216,14 +217,14 @@ MainWindow::MainWindow( QWidget *parent ):
   so that the corresponding shortcut gets activated whenever it is pressed
   while the list has focus
   */
-  entry_list_->addAction( &deleteEntryAction() );
+  logEntryList().addAction( &deleteEntryAction() );
   
   // create popup menu for list
-  entry_list_->menu().addAction( &newEntryAction() );
-  entry_list_->menu().addAction( &editEntryAction() ); 
-  entry_list_->menu().addAction( &entryKeywordAction() );
-  entry_list_->menu().addAction( &deleteEntryAction() ); 
-  entry_list_->menu().addAction( &entryColorAction() );
+  logEntryList().menu().addAction( &newEntryAction() );
+  logEntryList().menu().addAction( &editEntryAction() ); 
+  logEntryList().menu().addAction( &entryKeywordAction() );
+  logEntryList().menu().addAction( &deleteEntryAction() ); 
+  logEntryList().menu().addAction( &entryColorAction() );
   
   // main menu
   menu_ = new Menu( this , this );
@@ -431,7 +432,7 @@ void MainWindow::reset( void )
   _logEntryModel().clear();
     
   // clear the AttachmentWindow
-  static_cast<Application*>(qApp)->attachmentFrame().list().clear();
+  static_cast<Application*>(qApp)->attachmentWindow().list().clear();
   
   // make all EditionWindows for deletion
   BASE::KeySet<EditionWindow> frames( this ); 
@@ -632,8 +633,8 @@ void MainWindow::resetAttachmentWindow( void ) const
   Debug::Throw( "MainWindow::resetAttachmentWindow.\n" );
 
   // clear the AttachmentWindow
-  AttachmentWindow &attachment_frame( static_cast<Application*>(qApp)->attachmentFrame() );
-  attachment_frame.list().clear();
+  AttachmentWindow &attachment_window( static_cast<Application*>(qApp)->attachmentWindow() );
+  attachment_window.list().clear();
 
   // check current logbook
   if( !logbook_ ) return;
@@ -641,8 +642,8 @@ void MainWindow::resetAttachmentWindow( void ) const
   // retrieve logbook attachments, adds to AttachmentWindow
   BASE::KeySet<Attachment> attachments( logbook()->attachments() );
   for( BASE::KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
-  { attachment_frame.list().add( *it ); }
-  attachment_frame.list().resizeColumns();
+  { attachment_window.list().add( *it ); }
+  attachment_window.list().resizeColumns();
   return;
 
 }
@@ -1160,9 +1161,6 @@ void MainWindow::_updateConfiguration( void )
   sizes.push_back( XmlOptions::get().get<int>( "ENTRY_LIST_WIDTH" ) );
   splitter_->setSizes( sizes );
   
-  // entry list mask
-  if( XmlOptions::get().find( "ENTRY_LIST_MASK" ) ) logEntryList().setMask( XmlOptions::get().get<unsigned int>( "ENTRY_LIST_MASK" ) );
-  
   // colors
   list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );
   for( list<string>::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
@@ -1178,10 +1176,7 @@ void MainWindow::_saveConfiguration( void )
   
   XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
   XmlOptions::get().set<int>( "ENTRY_LIST_WIDTH", logEntryList().width() );
-  
-  // entry list mask
-  XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", logEntryList().mask() );
-  
+    
 }
 
 //_______________________________________________

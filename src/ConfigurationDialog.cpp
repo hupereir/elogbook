@@ -33,6 +33,7 @@
 #include <QLayout>
 #include <QGroupBox>
 
+#include "AttachmentWindow.h"
 #include "ConfigurationDialog.h"
 #include "GridLayout.h"
 #include "CustomToolBar.h"
@@ -167,12 +168,23 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   checkbox->setToolTip( "show search panel in main window" );
 
   // listview configuration
-  page = &addPage( "List configuration" );
+  page = &addPage( "List configuration" );  
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
     page, 
     &static_cast<Application*>(qApp)->mainWindow().logEntryList(), 
-    "Logbook entries display list" );
+    static_cast<Application*>(qApp)->mainWindow().logEntryList().maskOptionName() );
   
+  listview_config->setTitle( "Logbook entries list" );
+  addOptionWidget( listview_config );
+  page->layout()->addWidget( listview_config );
+
+  // attachment configuration
+  listview_config = new TreeViewConfiguration( 
+    page, 
+    &static_cast<Application*>(qApp)->attachmentWindow().list(), 
+    static_cast<Application*>(qApp)->attachmentWindow().list().maskOptionName() );
+  listview_config->setTitle( "Attachments list" );
+  addOptionWidget( listview_config );
   page->layout()->addWidget( listview_config );
   
   // toolbars
@@ -363,12 +375,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   checkbox->setToolTip( "Sort files by date rather than name in Open Previous menu." );
   addOptionWidget( checkbox );
   new QWidget( box );
-      
-  // connect buttons
-  connect( this, SIGNAL( apply() ), listview_config, SLOT( update() ) );
-  connect( this, SIGNAL( ok() ), listview_config, SLOT( update() ) );
-  connect( this, SIGNAL( cancel() ), listview_config, SLOT( restore() ) );
-  
+        
   // load initial configuration
   _read();
   adjustSize();
