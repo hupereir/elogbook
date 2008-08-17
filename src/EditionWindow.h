@@ -61,6 +61,7 @@ class Attachment;
 class CustomToolBar;
 class FormatBar;
 class MainWindow;
+class Menu;
 class StatusBar;
 
 //! log entry edition/creation object
@@ -382,8 +383,15 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   void _displayCursorPosition( const TextPosition& position );
 
   //! retrieve associated MainWindow
-  MainWindow* _mainWindow( void ) const;
+  MainWindow& _mainWindow( void ) const;
 
+  //! menu
+  Menu& _menu( void ) const
+  {
+    assert( menu_ );
+    return *menu_;
+  }
+  
   //! update text Widget from current entry
   void _displayText( void );
 
@@ -463,12 +471,15 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! LogEntry text Object
   TextEditor *active_editor_;
 
-  //! pointer to text format bar
+  //! text format bar
   FormatBar* format_toolbar_;
 
-  //! pointer to statusbar
+  //! statusbar
   StatusBar* statusbar_;
 
+  //! menu
+  Menu* menu_;
+  
   //!@name actions
   //@{
 

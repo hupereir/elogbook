@@ -56,6 +56,7 @@
 #include "Menu.h"
 #include "NewLogbookDialog.h"
 #include "QtUtil.h"
+#include "RecentFilesMenu.h"
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
 #include "Util.h"
@@ -265,6 +266,9 @@ bool MainWindow::setLogbook( File file )
   // create new logbook
   logbook_ = new Logbook();
 
+  // save in menu
+  menu().recentFilesMenu().setCurrentFile( file );
+  
   // if filename is empty, return
   if( file.empty() )
   {
@@ -1313,6 +1317,9 @@ bool MainWindow::_saveAs( File default_file )
   logbook()->setFile( fullname );
   logbook()->setModifiedRecursive( true );
   save();
+  
+  // update current file in menu
+  menu().recentFilesMenu().setCurrentFile( fullname );
 
   /*
     force logbook state to unmodified since

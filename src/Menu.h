@@ -40,6 +40,7 @@
 #include "Counter.h"
 
 class MainWindow;
+class RecentFilesMenu;
 
 /*!
   \class Menu
@@ -61,6 +62,10 @@ class Menu:public QMenuBar, public Counter
   ~Menu( void ) 
   { Debug::Throw() << "Menu::~Menu.\n"; }
 
+  //! recent files menu
+  RecentFilesMenu& recentFilesMenu( void ) const
+  { return *recent_files_menu_; }
+  
   private slots:
   
   //! get list of editor windows into menu
@@ -76,6 +81,9 @@ class Menu:public QMenuBar, public Counter
  
   //! preference menu
   QMenu* preference_menu_;
+  
+  //! recent files menu
+  RecentFilesMenu* recent_files_menu_;
   
 };
 

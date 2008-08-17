@@ -82,10 +82,15 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addAction( &mainwindow->openAction() );
 
   // file menu
-  RecentFilesMenu* recent_files_menu( new RecentFilesMenu( this, static_cast<Application*>(qApp)->recentFiles() ) );
-  connect( recent_files_menu, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
-  menu->addMenu( recent_files_menu );
+  recent_files_menu_ = new RecentFilesMenu( this, static_cast<Application*>(qApp)->recentFiles() );
+  connect( recent_files_menu_, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
+  menu->addMenu( recent_files_menu_ );
 
+//   // if parent is an edition window, 
+//   // propagate the current file from mainwindow menu to this menu
+//   if( editionwindow )
+//   { recentFilesMenu().setCurrentFile( mainwindow->menu().recentFilesMenu().currentFile() ); }
+  
   menu->addAction( &mainwindow->synchronizeAction() );
   menu->addAction( &mainwindow->reorganizeAction() );
 
