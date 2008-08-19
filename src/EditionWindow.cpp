@@ -171,6 +171,13 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); iter++ )
   { read_only_actions_.push_back( iter->second ); }
 
+  // set proper connection for first editor
+  // (because it could not be performed in _newTextEditor)
+  connect( 
+    &editor, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 
+    format_toolbar_, SLOT( updateState( const QTextCharFormat& ) ) );
+
+  
   // edition toolbars
   toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
   toolbar->addAction( undo_action_ );
@@ -982,7 +989,6 @@ void EditionWindow::_setActiveEditor( TextEditor& editor )
 
   Debug::Throw( "EditionWindow::setActiveDisplay - done.\n" );
   
-
 }
 
 //___________________________________________________________
@@ -1206,6 +1212,13 @@ TextEditor& EditionWindow::_newTextEditor( QWidget* parent )
   connect( editor, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
   connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction() ) );
   connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
+  
+  if( format_toolbar_ )
+  {
+    connect( 
+      editor, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 
+      format_toolbar_, SLOT( updateState( const QTextCharFormat& ) ) );
+  } 
   
   // associate display to this editFrame
   BASE::Key::associate( this, editor );

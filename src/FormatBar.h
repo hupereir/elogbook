@@ -100,6 +100,11 @@ class FormatBar: public CustomToolBar
   const ActionMap& actions( void ) const
   { return actions_; }
   
+  public slots:
+  
+  //! update button state
+  void updateState( const QTextCharFormat& );
+ 
   private slots:
   
   //! update configuration
@@ -107,10 +112,7 @@ class FormatBar: public CustomToolBar
   
   //! save configuration
   void _saveConfiguration( void );
-    
-  //! update button state
-  void _updateState( const QTextCharFormat& );
-    
+        
   //! bold
   void _bold( void );
   

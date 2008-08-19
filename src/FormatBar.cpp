@@ -89,6 +89,7 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
  
   // color
   addAction( action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this ) );
+  connect( action, SIGNAL( triggered() ), SLOT( _lastColor() ) );
   actions_.insert( make_pair( COLOR, action ) );
 
   // color menu
@@ -111,24 +112,10 @@ void FormatBar::setTarget( TextEditor& editor )
 {
   
   Debug::Throw() << "FormatBar::setTarget - key: " << editor.key() << endl;
-
-//   if( editor_ )
-//   { 
-//     Debug::Throw( "FormatBar::setTarget - disconnecting old target\n" );
-//     disconnect( editor_, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), this, SLOT( _updateState( const QTextCharFormat& ) ) ); 
-//   }
-
   editor_ = &editor;
-  Debug::Throw( "FormatBar::setTarget - editor updated\n" );
-
-  connect( editor_, 
-    SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 
-    SLOT( _updateState( const QTextCharFormat& ) ) );
-  
-  Debug::Throw( "FormatBar::setTarget - connection set\n" );
   
   // first update
-  _updateState( editor_->currentCharFormat() );
+  updateState( editor_->currentCharFormat() );
   Debug::Throw( "FormatBar::setTarget - done.\n" );
   
 }
@@ -324,9 +311,9 @@ void FormatBar::_lastColor( void )
 }
   
 //________________________________________
-void FormatBar::_updateState( const QTextCharFormat& format )
+void FormatBar::updateState( const QTextCharFormat& format )
 {
-  Debug::Throw( "FormatBar::_updateState.\n" );
+  Debug::Throw( "FormatBar::updateState.\n" );
   actions_[BOLD]->setChecked( format.fontWeight() == QFont::Bold );
   actions_[ITALIC]->setChecked( format.fontItalic() );
   actions_[UNDERLINE]->setChecked( format.fontUnderline() );
