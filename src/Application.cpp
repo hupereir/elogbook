@@ -169,7 +169,6 @@ void Application::realizeWidget( void )
 
   // splashscreen
   ::SplashScreen *splash_screen = new ::SplashScreen( main_window_ );
-  splash_screen->realizeWidget();
 
   // connections
   connect( main_window_, SIGNAL( messageAvailable( const QString& ) ), splash_screen, SLOT( displayMessage( const QString& ) ) );
@@ -205,7 +204,6 @@ void Application::showSplashScreen( void )
   ostringstream what;
   what << "<B>eLogbook</B><BR> version " << VERSION;
   ::SplashScreen *splash_screen = new ::SplashScreen();
-  splash_screen->realizeWidget();
   QtUtil::centerOnDesktop( splash_screen );
   splash_screen->show();
   splash_screen->displayMessage( "click on the window to close" );

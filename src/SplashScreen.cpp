@@ -32,6 +32,7 @@
 #include <QApplication>
 #include <QLayout>
 #include <QLabel>
+#include <QPainter>
 #include <QPixmap>
 #include <QResizeEvent>
 
@@ -48,19 +49,17 @@ using namespace Qt;
 SplashScreen::SplashScreen( QWidget* parent ):
   QWidget( parent, Qt::Window|Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint ),
   Counter( "SplashScreen" ),
-  title_font_size_( 20 ),
-  icon_size_(64),
-  minimum_size_( 300, 200 ),
-  opacity_(1.0),
-  transparent_( XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" ) ), 
-  realized_( false )
+  icon_size_(0),
+  margin_(0),
+  minimum_width_(0)
 {
   
   Debug::Throw( "SplashScreen::SplashScreen.\n" );
   setAttribute( Qt::WA_DeleteOnClose );
   
   // colors and transparency
-  if( transparent_ )
+  bool transparent( XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" ) );
+  if( transparent )
   {
     QPalette palette( this->palette() );
     palette.setColor( QPalette::Window, Qt::black );
@@ -71,91 +70,157 @@ SplashScreen::SplashScreen( QWidget* parent ):
   
   // title
   ostringstream what;
-  //what << "<B>eLogbook</B><BR> version " << VERSION;
-  what << "<B>eLogbook</B>";
-  setTitle( what.str() );
+  what << "eLogbook";
+  setTitle( what.str().c_str() );
 
+  // icon size
+  setIconSize( 64 );
+  setMargin( 20 );
+  setMinimumWidth( 300 );
+  
   // pixmap
   QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
   setIcon( pixmap );
   
-  // size
-  setMinimumSize( QSize( 350, 150 ) );
+  // fonts
+  large_font_ = font();
+  large_font_.setBold( true );
+  setTitleFontSize( 20 );
+  normal_font_ = font();
+  
+  setMinimumSize( QSize( 300, icon_size_ + 2*margin_ ) );
   setMouseTracking( true );
   
 }
 
 //_______________________________________________________________________
-void SplashScreen::realizeWidget( void )
+void SplashScreen::setSplash( QPixmap pixmap )
 {
-  assert( !realized_ );
-  
-  if( !splash_.isNull() )
-  {
-    minimum_size_ = splash_.size();
-    QPalette palette( QWidget::palette() );
-    palette.setBrush( QPalette::Background, splash_ );
-    setPalette( palette );
-  }
-  
-  setMinimumSize( minimum_size_ );    
-  resize( minimum_size_ );
+  if( pixmap.isNull() ) return;
 
-  QtUtil::setOpacity( this, opacity_ );
-  QVBoxLayout *layout = new QVBoxLayout(); 
-  setLayout( layout );
-      
-  QHBoxLayout* h_layout = new QHBoxLayout();
-  h_layout->setSpacing(10);
-  h_layout->setMargin(0);
-  layout->addLayout( h_layout );
-  
-  if( !icon_.isNull() )
-  { 
-    QLabel *icon_label = new QLabel( this );
-    icon_label->setPixmap( CustomPixmap( icon_ ).scale( icon_size_, icon_size_ ) );
-    QtUtil::fixSize( icon_label, QtUtil::WIDTH );
-    h_layout->addWidget( icon_label );
-  }
-  
-  layout = new QVBoxLayout();
-  layout->setSpacing(10);
-  layout->setMargin(10);
-  h_layout->addLayout( layout );
-
-  QLabel* title = new QLabel( this );
-  title->setAlignment( Qt::AlignCenter );
-  title->setText( title_.c_str() );
-  layout->addWidget( title );
-  
-  {
-    // change title font
-    QFont font( title->font() );
-    font.setPointSize( title_font_size_ );
-    font.setWeight( QFont::Bold );
-    title->setFont( font );
-  }
-  
-  message_ = new QLabel( this );
-  message_->setAlignment( AlignCenter );
-  QtUtil::fixSize( message_, QtUtil::HEIGHT );
-  layout->addWidget( message_ );
-  
-  realized_ = true;
+  QPalette palette( QWidget::palette() );
+  palette.setBrush( QPalette::Background, pixmap );
+  setPalette( palette );
+  setMinimumWidth( pixmap.width() );
   
 }
     
 //_______________________________________________________________________
+void SplashScreen::setIcon( QPixmap pixmap )
+{
+  icon_ = CustomPixmap( pixmap ).scale( QSize( icon_size_, icon_size_ ) );
+  QWidget::setWindowIcon( QIcon(pixmap) );
+}
+
+//_______________________________________________________________________
+void SplashScreen::setOpacity( const double& opacity )
+{ QtUtil::setOpacity( this, opacity ); }
+
+//_______________________________________________________________________
+void SplashScreen::setTitleFontSize( int value )
+{ large_font_.setPointSize( value ); }
+
+//_______________________________________________________________________
+void SplashScreen::setIconSize( int value )
+{
+  // check value changed
+  if( icon_size_ == value ) return;
+
+  // store new size
+  icon_size_ = value;
+  
+  // resize icon
+  if( !icon_.isNull() ) setIcon( icon_ );
+  
+  // resize widget
+  if( minimum_width_ > 0 ) setMinimumWidth( minimum_width_ );
+  
+}
+
+//_______________________________________________________________________
+void SplashScreen::setMargin( int value )
+{
+  
+  // check value changed
+  if( margin_ == value  ) return;
+  margin_ = value;
+ 
+  // resize widget
+  if( minimum_width_ > 0 ) setMinimumWidth( minimum_width_ );
+ 
+}
+
+//_______________________________________________________________________
+void SplashScreen::setMinimumWidth( int value )
+{ 
+  
+  QSize size( value, max( icon_size_+2*margin_, 
+    3*margin_ + 
+    QFontMetrics( normal_font_ ).lineSpacing() +
+    QFontMetrics( large_font_ ).lineSpacing() )
+    );
+  
+  QWidget::setMinimumSize( size ); 
+  resize( size );
+}
+
+//_______________________________________________________________________
 void SplashScreen::displayMessage( const QString& text )
 {
-  assert( realized_ );
-  message_->setText( text );
-  qApp->processEvents();
+  message_ = text;
+  update();
 }
+
+//_____________________________________________________________________
+void SplashScreen::mousePressEvent( QMouseEvent* event )
+{ close(); }
 
 //_____________________________________________________________________
 void SplashScreen::resizeEvent( QResizeEvent* event )
 {
   QWidget::resizeEvent( event );
   setMask( QtUtil::round( QRect( QPoint(0,0), event->size() ) ) );
+}
+
+//_____________________________________________________________________
+void SplashScreen::paintEvent( QPaintEvent* event )
+{
+
+  QWidget::paintEvent( event );
+  QPainter painter( this );
+  
+  // prepare rect for drawing
+  QRect pixmap_rect;
+  QRect title_rect( rect() );
+  QRect message_rect( rect() );
+  QRect bounding_rect;
+  
+  if( !icon_.isNull() ) { 
+    pixmap_rect = QRect( 0, 0, icon_.width()+margin_, height() ); 
+    painter.drawPixmap( 
+      pixmap_rect.left()+(pixmap_rect.width() - icon_.width() )/2, 
+      pixmap_rect.top()+(pixmap_rect.height() - icon_.height() )/2, 
+      icon_ );
+    
+    title_rect.setLeft( pixmap_rect.right() );
+    message_rect.setLeft( pixmap_rect.right() );
+    
+  }
+  
+  // font metrics
+  QFontMetrics normal_metrics( normal_font_ );
+
+  // title
+  title_rect.setTop( margin_ );
+  title_rect.setBottom( height() - 3*margin_/2 - normal_metrics.lineSpacing() );
+  painter.setFont( large_font_ );
+  painter.drawText( title_rect, Qt::AlignCenter, title_, &bounding_rect );
+  
+  // comments
+  message_rect.setTop( title_rect.bottom() + margin_/2 );
+  message_rect.setBottom( height() - margin_ );
+  painter.setFont( normal_font_ );
+  painter.drawText( message_rect, Qt::AlignCenter, message_ );
+  painter.end();
+
 }

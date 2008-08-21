@@ -35,7 +35,10 @@
 #include <assert.h>
 #include <QIcon>
 #include <QLabel>
+#include <QMouseEvent>
+#include <QPaintEvent>
 #include <QPixmap>
+#include <QResizeEvent>
 #include <QWidget>
 #include <string>
 
@@ -58,57 +61,32 @@ class SplashScreen: public QWidget, public Counter
   //! destructor
   virtual ~SplashScreen( void )
   { Debug::Throw( "SplashScreen::~SplashScreen.\n" ); }
-
-  //! realize widget
-  void realizeWidget( void );
   
   //! set application title
-  virtual void setTitle( const std::string& title )
-  {
-    assert( !realized_ );
-    title_ = title;
-  }
+  virtual void setTitle( const QString& title )
+  { title_ = title; }
   
   //! set splash pixmap
-  virtual void setSplash( const QPixmap& pixmap )
-  {
-    assert( !realized_ );
-    splash_ = pixmap; 
-  }
+  virtual void setSplash( QPixmap );
   
   //! set splash screen displayed icon
-  virtual void setIcon( const QPixmap& icon )
-  {
-    assert( !realized_ );
-    icon_ = icon;
-    QWidget::setWindowIcon( QIcon(icon) );
-  }
-  
-  //! set icon size
-  virtual void setIconSize( const unsigned int& size )
-  { 
-    assert( !realized_ );
-    icon_size_ = size;
-  }    
+  virtual void setIcon( QPixmap );
+
+  //! set (composite) opacity
+  virtual void setOpacity( const double& opacity );
     
   //! change default title font
-  virtual void SetTitleFontSize( const unsigned int value )
-  {
-    assert( !realized_ );
-    title_font_size_ = value;
-  }
+  virtual void setTitleFontSize( int value );
   
-  //! set minimum size (to be used if splash is not specified
-  virtual void setMinimumSize( const QSize& size )
-  { 
-    assert( !realized_ );
-    minimum_size_ = size;
-  }
-      
-  //! set (composite) opacity
-  virtual void setOpacity( const double& opacity )
-  { opacity_ = opacity; }
+  //! set icon size
+  virtual void setIconSize( int );
   
+  //! set icon size
+  virtual void setMargin( int );
+
+  //! set icon size
+  virtual void setMinimumWidth( int );
+
   public slots:
   
   //! display new message
@@ -116,44 +94,40 @@ class SplashScreen: public QWidget, public Counter
   
   protected:
       
-  //! mouse press event
-  virtual void mousePressEvent( QMouseEvent* )
-  { close(); }
-  
+  //! mouse press event [overloaded]
+  virtual void mousePressEvent( QMouseEvent* );
+ 
+  //! paint event [overloaded]
+  virtual void paintEvent( QPaintEvent* );
+       
   //! mouse move event [overloaded]
   virtual void resizeEvent( QResizeEvent *e);
   
   private:
   
   //! title
-  std::string title_;
+  QString title_;
   
-  //! splash
-  QPixmap splash_;
-  
+  //! message
+  QString message_;
+    
   //! icon 
   QPixmap icon_;
-      
-  //! title default font size
-  unsigned int title_font_size_;
-      
-  //! icon size
-  unsigned int icon_size_;
+              
+  //! fonts
+  QFont large_font_;
 
-  //! minimum size (used if splash is not specified
-  QSize minimum_size_;
-        
-  //! message label
-  QLabel* message_;
+  //! fonts
+  QFont normal_font_;
   
-  //! opacity
-  double opacity_;
+  //! icon size
+  int icon_size_;
   
-  //! true if transparent splash screen is to be shown
-  bool transparent_;
+  //! margin
+  int margin_;
   
-  //! true when RealizeWidget is called
-  bool realized_;
+  //! minimum width
+  int minimum_width_;
   
 };
 
