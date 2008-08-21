@@ -360,7 +360,7 @@ bool MainWindow::setLogbook( File file )
   }
   
   // add opened file to OpenPrevious mennu.
-  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() );
+  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() );
   
   ignore_warnings_ = false;
   return true;
@@ -736,7 +736,7 @@ void MainWindow::save( const bool& confirm_entries )
   statusBar().showLabel();
   
   // add new file to openPreviousMenu
-  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() );
+  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -1231,7 +1231,7 @@ void MainWindow::_newLogbook( void )
 
   // add new file to openPreviousMenu
   if( !logbook()->file().empty() )
-  { static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() ); }
+  { static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() ); }
 
 }
 
@@ -1328,7 +1328,7 @@ bool MainWindow::_saveAs( File default_file )
   logbook()->setModifiedRecursive( false );
 
   // add new file to openPreviousMenu
-  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file() );
+  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -1382,7 +1382,7 @@ void MainWindow::_saveBackup( void )
 
   // remove the "backup" filename from the openPrevious list
   // to avoid confusion
-  static_cast<Application*>(qApp)->recentFiles().remove( filename );
+  static_cast<Application*>(qApp)->recentFiles().remove( File(filename).expand() );
 
   // restore initial filename
   logbook()->setFile( current_filename );

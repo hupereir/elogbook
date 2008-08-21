@@ -29,6 +29,7 @@
   \date    $Date$
 */
 
+#include <QCoreApplication>
 
 #include <iostream>
 #include <signal.h>
@@ -88,6 +89,10 @@ int main (int argc, char *argv[])
     int debug_level( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
     Debug::setLevel( debug_level );
     if( debug_level ) XmlOptions::get().dump();
+    
+    // the core application is needed to have locale, fonts, etc. set properly, notably for QSting
+    // not having it might result in lost accents and special characters.
+    QCoreApplication application( argc, argv );
     
     // try open local_logbook   
     cout << "synchronize_logbook - reading local logbook from: " << local << endl;
