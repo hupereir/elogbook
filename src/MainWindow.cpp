@@ -134,6 +134,9 @@ MainWindow::MainWindow( QWidget *parent ):
   keywordList().setDragEnabled(true);
   keywordList().setAcceptDrops(true);
   keywordList().setDropIndicatorShown(true);
+  
+  // the use of a custom delegate unfortunately disable the 
+  // nice selection appearance of the oxygen style.
   keywordList().setItemDelegate( new KeywordDelegate( this ) );
   
   // update LogEntryList when keyword selection change
@@ -199,8 +202,11 @@ MainWindow::MainWindow( QWidget *parent ):
   logEntryList().setModel( &_logEntryModel() );
   logEntryList().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   logEntryList().setDragEnabled(true); 
-  logEntryList().setItemDelegate( new LogEntryDelegate( this ) );
   logEntryList().setMaskOptionName( "ENTRY_LIST_MASK" );
+  
+  // the use of a custom delegate unfortunately disable the 
+  // nice selection appearance of the oxygen style.
+  logEntryList().setItemDelegate( new LogEntryDelegate( this ) );
   
   connect( logEntryList().header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
   connect( logEntryList().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
