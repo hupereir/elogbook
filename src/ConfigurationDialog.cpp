@@ -33,19 +33,19 @@
 #include <QLayout>
 #include <QGroupBox>
 
+#include "Application.h"
 #include "AttachmentWindow.h"
 #include "ConfigurationDialog.h"
-#include "GridLayout.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
-#include "TreeViewConfiguration.h"
-#include "Application.h"
+#include "GridLayout.h"
+#include "MainWindow.h"
 #include "OptionBrowsedLineEditor.h"
 #include "OptionCheckBox.h"
 #include "OptionSpinBox.h"
 #include "OptionListBox.h"
 #include "Options.h"
-#include "MainWindow.h"
+#include "TreeViewConfiguration.h"
 
 #include "Config.h"
 #if WITH_ASPELL
