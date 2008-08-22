@@ -31,11 +31,11 @@
   \date $Date$
 */
 
-#include <QDialog>
+#include "BaseDialog.h"
 #include "Counter.h"
 
 class Logbook;
-class LogbookStatisticsDialog: public QDialog, public Counter
+class LogbookStatisticsDialog: public BaseDialog, public Counter
 {
   
   public:

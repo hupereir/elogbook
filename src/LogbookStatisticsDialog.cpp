@@ -47,12 +47,13 @@ using namespace std;
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
-  QDialog( parent ),
+  BaseDialog( parent ),
   Counter( "LogbookStatisticsDialog" )
 {
   Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
   setWindowTitle( "eLogbook - logbook statistics" );
+  _setSizeOptionName( "LOGBOOK_STATISTICS_DIALOG" );
   
   QVBoxLayout* layout( new QVBoxLayout() );
   layout->setMargin( 10 );
@@ -143,7 +144,6 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   layout->addWidget( button );
   connect( button, SIGNAL( clicked() ), SLOT( close() ) );
   
-  resize( 350, 350 );
   list_view->resizeColumnToContents( ENTRIES );
   list_view->resizeColumnToContents( MODIFIED );
   list_view->resizeColumnToContents( FILE );
