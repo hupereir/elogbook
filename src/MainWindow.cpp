@@ -667,13 +667,12 @@ Keyword MainWindow::currentKeyword( void ) const
 }
 
 //_______________________________________________
-QMenu* MainWindow::createPopupMenu( void )
+bool MainWindow::installToolBarsActions( QMenu& menu )
 {
-  Debug::Throw( "MainWindow::createPopupMenu.\n" );
-  QMenu *menu = new QMenu();
-  menu->addAction( &searchPanel().visibilityAction() );
-  installToolBarsActions( *menu );
-  return menu;
+  Debug::Throw( "MainWindow::installToolBarsActions.\n" );
+  bool out( CustomMainWindow::installToolBarsActions( menu ) );
+  menu.addAction( &searchPanel().visibilityAction() );
+  return out;
 }
 
 //_______________________________________________
