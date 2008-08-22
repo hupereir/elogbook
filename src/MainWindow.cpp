@@ -91,8 +91,9 @@ MainWindow::MainWindow( QWidget *parent ):
   main->setLayout( layout );
     
   // splitter for KeywordList/LogEntryList
-  layout->addWidget( splitter_ = new QSplitter( main ), 1 );  
-  splitter_->setOrientation( Qt::Horizontal );
+  QSplitter* splitter( new QSplitter( main ) );
+  layout->addWidget( splitter = new QSplitter( main ), 1 );  
+  splitter->setOrientation( Qt::Horizontal );
  
   // search panel
   search_panel_ = new SearchPanel( main );
@@ -111,7 +112,9 @@ MainWindow::MainWindow( QWidget *parent ):
   _installActions();
 
   // left box for Keywords and buttons
-  QWidget* left = new QWidget( splitter_ );
+  QWidget* left = new QWidget();
+  
+  // set layout
   QVBoxLayout* v_layout = new QVBoxLayout();
   v_layout->setMargin(0);
   v_layout->setSpacing( 5 );
@@ -127,7 +130,8 @@ MainWindow::MainWindow( QWidget *parent ):
   Debug::Throw() << "MainWindow::MainWindow - keyword toolbar created." << endl;
   
   // create keyword list
-  v_layout->addWidget( keyword_list_ = new TreeView( left ), 1 );
+  v_layout->addWidget( keyword_list_ = new KeywordList( left ), 1 );
+  keyword_list_->setDefaultWidth( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
   keywordList().setModel( &_keywordModel() );
   keywordList().setRootIsDecorated( true );
   keywordList().setSortingEnabled( true );
@@ -172,7 +176,8 @@ MainWindow::MainWindow( QWidget *parent ):
   keywordList().addAction( &deleteKeywordAction() );
   
   // right box for entries and buttons
-  QWidget* right = new QWidget( splitter_ );
+  QWidget* right = new QWidget();
+  
   v_layout = new QVBoxLayout();
   v_layout->setMargin(0);
   v_layout->setSpacing( 5 );
@@ -233,14 +238,23 @@ MainWindow::MainWindow( QWidget *parent ):
   logEntryList().menu().addAction( &deleteEntryAction() ); 
   logEntryList().menu().addAction( &entryColorAction() );
   
+  
+  // add widgets to splitters
+  splitter->addWidget( left );
+  splitter->addWidget( right );
+
+  // assign stretch factors
+  splitter->setStretchFactor( 0, 0 );
+  splitter->setStretchFactor( 1, 1 );
+ 
+  connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( _splitterMoved( void ) ) );
+ 
   // main menu
   menu_ = new Menu( this , this );
   setMenuBar( menu_ );
     
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
 
   // autosave_timer_
@@ -907,6 +921,22 @@ void MainWindow::closeEvent( QCloseEvent *event )
   static_cast<Application*>(qApp)->closeAction().trigger();
 }
 
+
+//_______________________________________________________
+void MainWindow::timerEvent( QTimerEvent* event )
+{
+
+  if( event->timerId() == resize_timer_.timerId() )
+  {
+    
+    // stop timer and save time
+    resize_timer_.stop();
+    XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
+  
+  } else return CustomMainWindow::timerEvent( event );
+  
+}
+
 //________________________________________________
 void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 {
@@ -1163,13 +1193,8 @@ void MainWindow::_updateConfiguration( void )
   else autosave_timer_.stop();
   
   // size hint
-  resize( sizeHint() );
-  
-  QList<int> sizes;
-  sizes.push_back( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
-  sizes.push_back( XmlOptions::get().get<int>( "ENTRY_LIST_WIDTH" ) );
-  splitter_->setSizes( sizes );
-  
+  // resize( sizeHint() );
+    
   // colors
   list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );
   for( list<string>::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
@@ -1177,16 +1202,13 @@ void MainWindow::_updateConfiguration( void )
   
 }
 
-//_______________________________________________
-void MainWindow::_saveConfiguration( void )
+//________________________________________________________
+void MainWindow::_splitterMoved( void )
 {
-  
-  Debug::Throw( "MainWindow::_saveConfiguration.\n" );
-  
-  XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
-  XmlOptions::get().set<int>( "ENTRY_LIST_WIDTH", logEntryList().width() );
-    
+  Debug::Throw( "MainWindow::_splitterMoved.\n" );
+  resize_timer_.start( 200, this );  
 }
+
 
 //_______________________________________________
 void MainWindow::_newLogbook( void )
@@ -2775,3 +2797,11 @@ AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( BASE::KeySet<Edi
   
   return  AskForSaveDialog::YES;
 }
+
+//______________________________________________________________________
+void MainWindow::KeywordList::setDefaultWidth( const int& value )
+{ default_width_ = value; }
+
+//____________________________________________
+QSize MainWindow::KeywordList::sizeHint( void ) const
+{ return (default_width_ ) >= 0 ? QSize( default_width_, 0 ):TreeView::sizeHint(); }

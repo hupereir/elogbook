@@ -133,22 +133,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->setMaxCount(3);
   box->setLayout( grid_layout );
 
-  grid_layout->addWidget( new QLabel( "Width", box ), 0, 1 );
-  grid_layout->addWidget( new QLabel( "Height", box ), 0, 2 );
-
-  grid_layout->addWidget( label = new QLabel( "Attachment: ", box ), 3, 0 );
-  label->setToolTip( "Attachment window size (width x height)" );
-  
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "ATC_FRAME_WIDTH" ), 3, 1 );
-  spinbox->setMinimum( 5 );
-  spinbox->setMaximum( 2048 );
-  addOptionWidget( spinbox );
-
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "ATC_FRAME_HEIGHT" ), 3, 2 );
-  spinbox->setMinimum( 5 );
-  spinbox->setMaximum( 2048 );
-  addOptionWidget( spinbox );
-
   box = new QGroupBox( "Main window layout", page );
   box->setLayout( new QVBoxLayout() );
   box->layout()->setMargin(5);

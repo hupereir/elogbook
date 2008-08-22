@@ -34,9 +34,9 @@
 */
 
 #include <QEvent>
-#include <QDialog>
 #include <string>
 
+#include "BaseDialog.h"
 #include "Counter.h"
 #include "AttachmentList.h"
 #include "Debug.h"
@@ -48,7 +48,7 @@ class Attachment;
    \brief popup window to list/edit all attachments independantly from entries
 */ 
 
-class AttachmentWindow: public QDialog, public Counter
+class AttachmentWindow: public BaseDialog, public Counter
 {
 
   //! Qt meta object declaration
@@ -80,12 +80,6 @@ class AttachmentWindow: public QDialog, public Counter
 
   protected slots:
   
-  //! update configuration
-  void _updateConfiguration( void );
-  
-  //! save configuration
-  void _saveConfiguration( void );
-    
   //! uniconify window
   void _uniconify( void );
 

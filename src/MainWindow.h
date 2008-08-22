@@ -31,9 +31,11 @@
   \date $Date$
 */
 
+#include <QBasicTimer>
 #include <QContextMenuEvent>
 #include <QSplitter>
 #include <QTimer>
+#include <QTimerEvent>
 
 #include "AskForSaveDialog.h"
 #include "Counter.h"
@@ -307,6 +309,9 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! close event
   virtual void closeEvent( QCloseEvent* );
   
+  //! timer event
+  virtual void timerEvent( QTimerEvent* );
+
   //! context menu event [overloaded]
   virtual void contextMenuEvent( QContextMenuEvent* );
   
@@ -339,9 +344,9 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! configuration
   void _updateConfiguration( void );
 
-  //! save configuration
-  void _saveConfiguration( void );
-
+  //! splitter moved
+  void _splitterMoved( void );
+  
   //! uniconify
   void _uniconify( void )
   { 
@@ -526,8 +531,38 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! logEntry list
   TreeView* entry_list_;
 
+  //! local TreeView to store size hint
+  class KeywordList: public TreeView
+  {
+    
+    public:
+        
+    //! constructor
+    KeywordList( QWidget* parent = 0 ):
+      TreeView( parent ),
+      default_width_( -1 )
+    {} 
+   
+    //! default size
+    void setDefaultWidth( const int& );
+    
+    //! default width
+    const int& defaultWidth( void ) const
+    { return default_width_; }
+    
+  
+    //! size
+    QSize sizeHint( void ) const;  
+    
+    private:
+    
+    //! default width;
+    int default_width_;
+    
+  };
+  
   //! Keyword list
-  TreeView *keyword_list_;
+  KeywordList *keyword_list_;
 
   //! color menu
   ColorMenu* color_menu_;
@@ -637,6 +672,10 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   QAction* show_duplicates_action_;
     
   //@}
+      
+  //! timer
+  /*! needed to store Keyword list width */
+  QBasicTimer resize_timer_;
   
 };
 

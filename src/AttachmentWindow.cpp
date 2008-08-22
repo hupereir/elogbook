@@ -50,12 +50,13 @@ using namespace Qt;
 
 //________________________________________
 AttachmentWindow::AttachmentWindow( QWidget* parent ):
-  QDialog( parent ),
+  BaseDialog( parent ),
   Counter( "AttachmentWindow" )
 {
   
   Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
   setWindowTitle( Application::ATTACHMENT_TITLE );
+  _setSizeOptionName( "ATC_FRAME" );
   
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout(this);
@@ -70,11 +71,6 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   connect( new QShortcut( CTRL+Key_Q, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
   connect( new QShortcut( CTRL+Key_W, this ), SIGNAL( activated() ), SLOT( close() ) );
   
-  // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
-  _updateConfiguration();
-
   uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
@@ -113,30 +109,6 @@ void AttachmentWindow::enterEvent( QEvent *event )
     
   return;
 }
-
-
-//________________________________________
-void AttachmentWindow::_updateConfiguration( void )
-{
-  
-  Debug::Throw( "AttachmentWindow::_updateConfiguration.\n" );
-  
-  // resize window
-  resize( XmlOptions::get().get<int>( "ATC_FRAME_WIDTH" ), XmlOptions::get().get<int>( "ATC_FRAME_HEIGHT" ) );  
-  
-}    
-
-//________________________________________
-void AttachmentWindow::_saveConfiguration( void )
-{
-  
-  Debug::Throw( "AttachmentWindow::_saveConfiguration.\n" );
-  
-  // resize window
-  XmlOptions::get().set<int>( "ATC_FRAME_WIDTH", width() );
-  XmlOptions::get().set<int>( "ATC_FRAME_HEIGHT", height() );
-  
-}  
 
 //_______________________________________________
 void AttachmentWindow::_uniconify( void )

@@ -78,8 +78,6 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "SELECTION_FRAME_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
   XmlOptions::get().add( Option( "SELECTION_FRAME_WIDTH", "700" , "requested MainWindow width [pixels]"  ));
   
-  XmlOptions::get().add( Option( "KEYWORD_LIST_WIDTH", "250" , "requested keyword list width [pixels]"  ));
-  XmlOptions::get().add( Option( "ENTRY_LIST_WIDTH", "450" , "requested entry list width [pixels]"  ));
   XmlOptions::get().add( Option( "LIST_ICON_SIZE", "10", "default icon size in lists" ) );
 
   XmlOptions::get().add( Option( "CHECK_ATTACHMENT", "0", "check if attachment exists at startup" ) );
