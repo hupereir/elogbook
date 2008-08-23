@@ -178,7 +178,8 @@ void Application::realizeWidget( void )
   if( XmlOptions::get().get<bool>("SPLASH_SCREEN") )
   { splash_screen->show(); }
   
-  QtUtil::centerOnDesktop( main_window_ );
+  //QtUtil::centerOnDesktop( main_window_ );
+  mainWindow().move( QtUtil::centerOnDesktop( mainWindow().sizeHint() ) );
   mainWindow().show();
     
   // update
