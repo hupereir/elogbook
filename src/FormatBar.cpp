@@ -358,16 +358,27 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
   QPainter painter( this );
   painter.setRenderHint( QPainter::Antialiasing );
   
+  QLinearGradient gradient( rect().topLeft(), rect().bottomLeft() );
+
+  QColor first( color_ );
+  first.setAlpha( 50 );
+  gradient.setColorAt(0, first );
+  
+  QColor second( color_ );
+  gradient.setColorAt(1, second );
+
+  
   QPen pen;
   pen.setWidth( 2 );
-  pen.setBrush( color_ );
+  // pen.setBrush( color_ );
+  pen.setBrush( gradient );
   pen.setJoinStyle( Qt::RoundJoin );
   painter.setPen( pen );
   painter.setBrush( Qt::transparent );
   
   
-  // painter.drawRoundedRect( rect().adjusted( 1, 1, -1, -1 ), 5, 5 );
-  painter.drawRect( rect().adjusted( 1, 1, -1, -1 ) );
+  painter.drawRoundedRect( rect().adjusted( 1, 1, -1, -1 ), 5, 5 );
+  // painter.drawRect( rect().adjusted( 1, 1, -1, -1 ) );
   painter.end();
   return;
   

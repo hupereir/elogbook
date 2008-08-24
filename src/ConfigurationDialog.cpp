@@ -122,35 +122,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Check if attached file exists at start-up" );
 
-  // window sizes
-  page = &addPage( "Window sizes" );
-  box = new QGroupBox( "Window sizes", page );
-  page->layout()->addWidget( box );
-
-  grid_layout = new GridLayout();
-  grid_layout->setSpacing(5);
-  grid_layout->setMargin(5);
-  grid_layout->setMaxCount(3);
-  box->setLayout( grid_layout );
-
-  box = new QGroupBox( "Main window layout", page );
-  box->setLayout( new QVBoxLayout() );
-  box->layout()->setMargin(5);
-  box->layout()->setSpacing(5);
-  page->layout()->addWidget( box );
-  
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show keywords toolbar", box, "KEYWORD_TOOLBAR" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "show keywords toolbar in main window" );
-  
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show entries toolbar", box, "ENTRY_TOOLBAR" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "show entries toolbar in main window" );
-  
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show search panel", box, "SHOW_SEARCHPANEL" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "show search panel in main window" );
-
   // listview configuration
   page = &addPage( "List configuration" );  
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
@@ -362,7 +333,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         
   // load initial configuration
   _read();
-  adjustSize();
   
 }
 

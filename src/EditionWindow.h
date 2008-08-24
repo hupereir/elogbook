@@ -462,6 +462,11 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
 
     //! color
     void setColor( const QColor& color );
+    
+    protected:
+    
+    //! paint event
+    void paintEvent( QPaintEvent* );
 
   };
 

@@ -249,7 +249,7 @@ void Application::_configuration( void )
   emit saveConfiguration();
   ConfigurationDialog dialog(0);
   connect( &dialog, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  QtUtil::centerOnWidget( &dialog, activeWindow() );
+  dialog.move( QtUtil::centerOnWidget( dialog.sizeHint(), activeWindow() ) );
   dialog.exec();
 
 }

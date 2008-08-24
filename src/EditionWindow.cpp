@@ -32,7 +32,8 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <QPainter>
+#include <QStylePainter>
+#include <QStyleOptionToolButton>
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -1323,7 +1324,6 @@ void EditionWindow::ColorWidget::setColor( const QColor& color )
 {
 
   // create pixmap
-  //QPixmap pixmap( QSize( 32, 32 ) );
   QPixmap pixmap( QSize( 48, 48 ) );
   pixmap.fill( Qt::transparent );
   
@@ -1338,4 +1338,23 @@ void EditionWindow::ColorWidget::setColor( const QColor& color )
   painter.end();
   
   setIcon( QIcon( pixmap ) );
+}
+
+//___________________________________________________________________________________
+void EditionWindow::ColorWidget::paintEvent( QPaintEvent* )
+{
+  
+  // rotated paint
+  QStylePainter painter(this);
+  QStyleOptionToolButton option;
+  initStyleOption(&option);
+  
+  // first draw normal frame and not text/icon
+  option.state &= (~QStyle::State_MouseOver );
+  option.state &= (~QStyle::State_Sunken );
+  option.state |= QStyle::State_Raised;
+  painter.drawComplexControl(QStyle::CC_ToolButton, option);
+
+  
+  
 }
