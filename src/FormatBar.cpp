@@ -32,6 +32,7 @@
 #include <QApplication>
 #include <QPainter>
 #include <QTextBlock>
+#include <QTextCursor>
 #include <QTextEdit>
 #include <QTextFragment>
 #include <list>
@@ -57,7 +58,8 @@ const std::string FormatBar::UNDERLINE_ICON = "text_under.png";
 //________________________________________
 FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   CustomToolBar( "Text format", parent, option_name ),
-  editor_(0)
+  editor_(0),
+  enabled_( true )
 {
   
   Debug::Throw( "ToolBar::ToolBar.\n" );
@@ -67,25 +69,25 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   addAction( action = new QAction( IconEngine::get( BOLD_ICON ), "&Bold", this ) );
   action->setCheckable( true );
   actions_.insert( make_pair( BOLD, action ) );
-  connect( action, SIGNAL( triggered() ), SLOT( _bold() ) );
+  connect( action, SIGNAL( toggled( bool ) ), SLOT( _bold( bool ) ) );
   
   // underline 
   addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), "&Italic", this ) );
   action->setCheckable( true );
   actions_.insert( make_pair( ITALIC, action ) );
-  connect( action, SIGNAL( triggered() ), SLOT( _italic() ) );
+  connect( action, SIGNAL( toggled( bool ) ), SLOT( _italic( bool ) ) );
 
   // underline 
   addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), "&Underline", this ) );
   action->setCheckable( true );
   actions_.insert( make_pair( UNDERLINE, action ) );
-  connect( action, SIGNAL( triggered() ), SLOT( _underline() ) );
+  connect( action, SIGNAL( toggled( bool ) ), SLOT( _underline( bool ) ) );
 
   // strike 
   addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), "&Strike", this ) );
   action->setCheckable( true );
   actions_.insert( make_pair( STRIKE, action ) );
-  connect( action, SIGNAL( triggered() ), SLOT( _strike() ) );
+  connect( action, SIGNAL( toggled( bool ) ), SLOT( _strike( bool ) ) );
  
   // color
   addAction( action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this ) );
@@ -261,37 +263,50 @@ void FormatBar::_saveConfiguration( void )
 }
     
 //________________________________________
-void FormatBar::_bold( void )
+void FormatBar::_bold( bool state )
 {
   Debug::Throw( "FormatBar::_bold.\n" );
-  if( editor_ ) editor_->setFontWeight( actions_[BOLD]->isChecked() ? QFont::Bold : QFont::Normal);
+  if( editor_ && enabled_ ) 
+  {
+    QTextCharFormat format;
+    format.setFontWeight( state ? QFont::Bold : QFont::Normal );
+    editor_->mergeCurrentCharFormat( format );
+  }
 }
   
 //________________________________________
-void FormatBar::_italic( void )
+void FormatBar::_italic( bool state )
 {
   Debug::Throw( "FormatBar::_italic.\n" );
-  if( editor_ ) editor_->setFontItalic(actions_[ITALIC]->isChecked());
+  if( editor_ && enabled_ ) 
+  {
+    QTextCharFormat format;
+    format.setFontItalic( state );
+    editor_->mergeCurrentCharFormat( format );
+  }
 }
   
 //________________________________________
-void FormatBar::_underline( void )
+void FormatBar::_underline( bool state )
 {
   Debug::Throw( "FormatBar::_underline.\n" );
-  if( editor_ ) editor_->setFontUnderline(actions_[UNDERLINE]->isChecked());
+  if( editor_ && enabled_ ) 
+  {
+    QTextCharFormat format;
+    format.setFontUnderline( state );
+    editor_->mergeCurrentCharFormat( format );
+  }
 }
 
 //________________________________________
-void FormatBar::_strike( void )
+void FormatBar::_strike( bool state )
 {
   Debug::Throw( "FormatBar::_strike.\n" );
-  if( editor_ ) 
+  if( editor_ && enabled_ ) 
   {
-    // strike out fonts cannot be set directly in the editor
-    // one must retrieve the current font, strike it and reassign
-    QFont font( editor_->currentFont() );
-    font.setStrikeOut(actions_[STRIKE]->isChecked());
-    editor_->setCurrentFont( font );
+    QTextCharFormat format;
+    format.setFontStrikeOut( state );
+    editor_->mergeCurrentCharFormat( format );
   }
 }
 
@@ -299,8 +314,12 @@ void FormatBar::_strike( void )
 void FormatBar::_color( QColor color )
 {
   Debug::Throw( "FormatBar::_color.\n" );
-  if( !editor_ ) return;
-  editor_->setTextColor( color.isValid() ? color:editor_->palette().color( QPalette::Text ) );
+  if( editor_ && enabled_ ) 
+  {
+    QTextCharFormat format;
+    format.setForeground( color );
+    editor_->mergeCurrentCharFormat( format );
+  }
 }
 
 //______________________________________
@@ -314,10 +333,12 @@ void FormatBar::_lastColor( void )
 void FormatBar::updateState( const QTextCharFormat& format )
 {
   Debug::Throw( "FormatBar::updateState.\n" );
+  enabled_ = false;
   actions_[BOLD]->setChecked( format.fontWeight() == QFont::Bold );
   actions_[ITALIC]->setChecked( format.fontItalic() );
   actions_[UNDERLINE]->setChecked( format.fontUnderline() );
   actions_[STRIKE]->setChecked( format.fontStrikeOut() );
+  enabled_ = true;
 }
   
 //________________________________________
@@ -332,25 +353,24 @@ void FormatBar::_updateColorPixmap( QColor color )
   QPixmap base( PixmapEngine::get( ICONS::COLOR ) );
   assert( !base.isNull() );
   
-  // create new empty pixmap
-  static const double ratio = 1.15;
-  QSize size( base.width(), int( ratio*base.height() ) );
-  CustomPixmap new_pixmap = CustomPixmap().empty( size );
-  QPainter painter( &new_pixmap );
-  painter.drawPixmap( QPoint(0, 0), base, base.rect() );
-  
-  if( color.isValid() )
+  if( !color.isValid() ) action->setIcon( IconEngine::get( base ) );
+  else
   {
-    QLinearGradient gradient(QPointF(0, 0), QPointF( base.width(), int( 0.4*base.height() ) ) );
-    gradient.setColorAt(0, color);
-    gradient.setColorAt(1, color.light(135));
+    QPixmap pixmap( CustomPixmap().empty( base.size() ) );
+    QPainter painter( &pixmap );
+    painter.setRenderHint( QPainter::Antialiasing );
+
+    QPen pen;
+    pen.setWidth( 2 );
+    pen.setBrush( color );
     
-    painter.setPen( Qt::NoPen );
-    painter.setBrush( gradient );
-    painter.drawRect( QRectF( 0, base.height(), base.width(), (ratio-1)*base.height() ) );
+    painter.setPen( pen );
+    painter.setBrush( Qt::transparent );
+    
+    painter.drawRoundedRect( base.rect().adjusted( 1, 1, -1, -1 ), 5, 5 );
+    painter.drawPixmap( base.rect(), base );
+    painter.end();
+    action->setIcon( pixmap );
   }
-  painter.end();
-  
-  action->setIcon( new_pixmap.scaleHeight( iconSize().height() ) );
-  
+    
 }

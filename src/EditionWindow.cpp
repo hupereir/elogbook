@@ -177,7 +177,6 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
     &editor, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ), 
     format_toolbar_, SLOT( updateState( const QTextCharFormat& ) ) );
 
-  
   // edition toolbars
   toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
   toolbar->addAction( undo_action_ );

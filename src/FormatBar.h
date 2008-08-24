@@ -114,16 +114,16 @@ class FormatBar: public CustomToolBar
   void _saveConfiguration( void );
         
   //! bold
-  void _bold( void );
+  void _bold( bool );
   
   //! italic
-  void _italic( void );
+  void _italic( bool );
   
   //! underline
-  void _underline( void );
+  void _underline( bool );
   
   //! strike
-  void _strike( void );
+  void _strike( bool );
   
   //! color
   void _color( QColor );
@@ -135,9 +135,12 @@ class FormatBar: public CustomToolBar
   void _updateColorPixmap( QColor color = QColor() );
  
   private:
-   
+  
   //! target text editor
   TextEditor* editor_;
+  
+  // enabled 
+  bool enabled_;
   
   //! button map
   ActionMap actions_; 
