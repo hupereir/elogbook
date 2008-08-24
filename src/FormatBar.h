@@ -36,6 +36,7 @@
 #include <QAction>
 #include <QFont>   
 #include <QTextCharFormat>   
+#include <QToolButton>   
 
 #include "Counter.h"
 #include "CustomToolBar.h"
@@ -45,6 +46,42 @@
 
 class ColorMenu;
 class TextEditor;
+
+//! used for customized color button
+class FormatColorButton: public QToolButton, public Counter
+{
+  
+  Q_OBJECT
+  
+  public:
+  
+  //! constructor
+  FormatColorButton( QWidget* parent ):
+    QToolButton( parent ),
+    Counter( "FormatColorButton" )
+    {}
+  
+  public slots:
+    
+  //! set color
+  void setColor( QColor color )
+  { 
+    color_ = color; 
+    update();
+  }
+  
+  protected:
+  
+  //! paint
+  void paintEvent( QPaintEvent* event );
+  
+  private:
+  
+  // associated color
+  QColor color_;
+  
+};
+  
 
 //! text formating bar
 class FormatBar: public CustomToolBar
@@ -130,12 +167,9 @@ class FormatBar: public CustomToolBar
   
   //! last selected color
   void _lastColor( void );
-  
-  //! modify ColorButton pixmap to change the current color
-  void _updateColorPixmap( QColor color = QColor() );
  
   private:
-  
+    
   //! target text editor
   TextEditor* editor_;
   

@@ -31,6 +31,7 @@
 
 #include <QApplication>
 #include <QPainter>
+#include <QStylePainter>
 #include <QTextBlock>
 #include <QTextCursor>
 #include <QTextEdit>
@@ -90,18 +91,23 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   connect( action, SIGNAL( toggled( bool ) ), SLOT( _strike( bool ) ) );
  
   // color
-  addAction( action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this ) );
+  action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this );
   connect( action, SIGNAL( triggered() ), SLOT( _lastColor() ) );
   actions_.insert( make_pair( COLOR, action ) );
 
   // color menu
   color_menu_ = new ColorMenu( this );
   action->setMenu( color_menu_ );
-  connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _updateColorPixmap( QColor ) ) );
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _color( QColor ) ) );
   action->setMenu( color_menu_ );
-  _updateColorPixmap();
-    
+  
+  // color button
+  FormatColorButton *button( new FormatColorButton( this ) );
+  addWidget( button );
+  button->setDefaultAction( action );
+  button->setPopupMode( QToolButton::DelayedPopup );
+  connect( color_menu_, SIGNAL( selected( QColor ) ), button, SLOT( setColor( QColor ) ) );
+  
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
@@ -342,35 +348,27 @@ void FormatBar::updateState( const QTextCharFormat& format )
 }
   
 //________________________________________
-void FormatBar::_updateColorPixmap( QColor color )
+void FormatColorButton::paintEvent( QPaintEvent* event )
 {
-  Debug::Throw( "FormatBar::_updateColorPixmap.\n" );
   
-  // retrieve action
-  QAction* action( actions_[COLOR] );
-  assert( action );
+  // default handling if color is invalid
+  QToolButton::paintEvent( event );
+  if( !color_.isValid() ) return;
   
-  QPixmap base( PixmapEngine::get( ICONS::COLOR ) );
-  assert( !base.isNull() );
+  QPainter painter( this );
+  painter.setRenderHint( QPainter::Antialiasing );
   
-  if( !color.isValid() ) action->setIcon( IconEngine::get( base ) );
-  else
-  {
-    QPixmap pixmap( CustomPixmap().empty( base.size() ) );
-    QPainter painter( &pixmap );
-    painter.setRenderHint( QPainter::Antialiasing );
-
-    QPen pen;
-    pen.setWidth( 2 );
-    pen.setBrush( color );
-    
-    painter.setPen( pen );
-    painter.setBrush( Qt::transparent );
-    
-    painter.drawRoundedRect( base.rect().adjusted( 1, 1, -1, -1 ), 5, 5 );
-    painter.drawPixmap( base.rect(), base );
-    painter.end();
-    action->setIcon( pixmap );
-  }
-    
+  QPen pen;
+  pen.setWidth( 2 );
+  pen.setBrush( color_ );
+  pen.setJoinStyle( Qt::RoundJoin );
+  painter.setPen( pen );
+  painter.setBrush( Qt::transparent );
+  
+  
+  // painter.drawRoundedRect( rect().adjusted( 1, 1, -1, -1 ), 5, 5 );
+  painter.drawRect( rect().adjusted( 1, 1, -1, -1 ) );
+  painter.end();
+  return;
+  
 }
