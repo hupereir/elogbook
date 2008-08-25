@@ -456,7 +456,7 @@ void MainWindow::reset( void )
   _logEntryModel().clear();
     
   // clear the AttachmentWindow
-  static_cast<Application*>(qApp)->attachmentWindow().list().clear();
+  static_cast<Application*>(qApp)->attachmentWindow().frame().clear();
   
   // make all EditionWindows for deletion
   BASE::KeySet<EditionWindow> frames( this ); 
@@ -555,10 +555,10 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
   for( BASE::KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
   {
 
-    // retrieve/delete associated attachmentlist items
-    BASE::KeySet<AttachmentList::Item> items( *iter );
-    for( BASE::KeySet<AttachmentList::Item>::iterator attachment_iter = items.begin(); attachment_iter != items.end(); attachment_iter++ )
-    delete *attachment_iter;
+    // retrieve/delete associated attachment frames
+    BASE::KeySet<AttachmentFrame> frames( *iter );
+    for( BASE::KeySet<AttachmentFrame>::iterator frame_iter = frames.begin(); frame_iter != frames.end(); frame_iter++ )
+    { (*frame_iter)->remove( **iter ); }
 
     // delete attachment
     delete (*iter);
@@ -658,16 +658,15 @@ void MainWindow::resetAttachmentWindow( void ) const
 
   // clear the AttachmentWindow
   AttachmentWindow &attachment_window( static_cast<Application*>(qApp)->attachmentWindow() );
-  attachment_window.list().clear();
+  attachment_window.frame().clear();
 
   // check current logbook
   if( !logbook_ ) return;
 
   // retrieve logbook attachments, adds to AttachmentWindow
   BASE::KeySet<Attachment> attachments( logbook()->attachments() );
-  for( BASE::KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
-  { attachment_window.list().add( *it ); }
-  attachment_window.list().resizeColumns();
+  attachment_window.frame().add( AttachmentModel::List( attachments.begin(), attachments.end() ) );
+
   return;
 
 }

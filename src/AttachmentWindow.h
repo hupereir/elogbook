@@ -38,7 +38,7 @@
 
 #include "BaseDialog.h"
 #include "Counter.h"
-#include "AttachmentList.h"
+#include "AttachmentFrame.h"
 #include "Debug.h"
 
 class Attachment;
@@ -63,10 +63,10 @@ class AttachmentWindow: public BaseDialog, public Counter
   void show( void );
 
   //! retrieve associated List
-  AttachmentList& list()
+  AttachmentFrame& frame()
   { 
-    assert( list_ );
-    return *list_; 
+    assert( frame_ );
+    return *frame_; 
   }
     
   //! uniconify window
@@ -84,12 +84,12 @@ class AttachmentWindow: public BaseDialog, public Counter
   void _uniconify( void );
 
   //! display entry associated to selected attachment when selection changes
-  void _displayEntry( QTreeWidgetItem*, QTreeWidgetItem* );
+  void _displayEntry( Attachment& );
 
   private:
   
   //! associated attachment list
-  AttachmentList* list_;
+  AttachmentFrame* frame_;
 
   //! uniconify action
   QAction* uniconify_action_;

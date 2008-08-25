@@ -26,11 +26,11 @@ RC_FILE = elogbook.rc
 
 HEADERS = \
   AskForSaveDialog.h \
-  AttachmentWindow.h \
   Attachment.h \
-  AttachmentList.h \
+  AttachmentFrame.h \
   AttachmentModel.h \
   AttachmentType.h \
+  AttachmentWindow.h \
   ConfigurationDialog.h \
   DefaultOptions.h \
   DeleteAttachmentDialog.h \
@@ -70,10 +70,10 @@ HEADERS = \
 SOURCES = \
   AskForSaveDialog.cpp \
   Attachment.cpp \
-  AttachmentWindow.cpp \
-  AttachmentList.cpp \
+  AttachmentFrame.cpp \
   AttachmentModel.cpp \
   AttachmentType.cpp \
+  AttachmentWindow.cpp \
   ConfigurationDialog.cpp \
   DeleteAttachmentDialog.cpp \
   DeleteKeywordDialog.cpp \

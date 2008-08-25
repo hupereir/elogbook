@@ -41,7 +41,7 @@
 #include "Debug.h"
 #include "Key.h"
 
-class TreeView
+class TreeView;
 
 /*!
   \class  AttachmentFrame
@@ -58,8 +58,24 @@ class AttachmentFrame: public QWidget, public BASE::Key
   //! constructor
   AttachmentFrame( QWidget *parent, bool read_only );
   
+  //! clear
+  void clear( void )
+  { 
+    // clear model and associations
+    _model().clear(); 
+    BASE::Key::clearAssociations<Attachment>();
+  }
+
   //! add attachment to the list
-  void add( Attachment& attachment );
+  void add( Attachment& attachment )
+  {
+    AttachmentModel::List attachments;
+    attachments.push_back( &attachment );
+    add( attachments );
+  }
+  
+  //! add attachments to list
+  void add( const AttachmentModel::List& attachments );
   
   //! update attachment in the list
   void update( Attachment& attachment );
@@ -67,6 +83,10 @@ class AttachmentFrame: public QWidget, public BASE::Key
   //! select attachment in the list
   void select( Attachment& attachment );
  
+  //! remove attachment from list
+  void remove( Attachment& attachment )
+  { _model().remove( &attachment ); }
+  
    //! change read only status
   void setReadOnly( bool value )
   { 
@@ -76,6 +96,10 @@ class AttachmentFrame: public QWidget, public BASE::Key
    
   //!@name actions
   //@{
+  
+  //! visibility action
+  QAction& visibilityAction( void ) const
+  { return *visibility_action_; }
   
   //! new attachment action
   QAction& newAttachmentAction( void ) const
@@ -95,6 +119,11 @@ class AttachmentFrame: public QWidget, public BASE::Key
   
   //@}
   
+  signals:
+  
+  //! emitted when an item is selected in list
+  void _itemSelected( Attachment& );
+  
   private slots:
       
   //! update context menu
@@ -111,6 +140,17 @@ class AttachmentFrame: public QWidget, public BASE::Key
  
   //! delete current attachment
   void _delete( void );
+
+  //!@name selections
+  //@{
+
+  //! restore selection
+  void _storeSelection( void );
+  
+  //! store selection
+  void _restoreSelection( void );
+
+  //@}
 
   private:
   
@@ -133,6 +173,9 @@ class AttachmentFrame: public QWidget, public BASE::Key
   
   //!@name actions
   //@{
+  
+  //! visibility action
+  QAction* visibility_action_;
   
   //! new attachment
   QAction* new_attachment_action_;

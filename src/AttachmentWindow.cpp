@@ -64,8 +64,8 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   layout->setSpacing(10);
   setLayout( layout );
   
-  layout->addWidget( list_ = new AttachmentList( this, true ) );
-  connect( list_, SIGNAL( currentItemChanged ( QTreeWidgetItem*, QTreeWidgetItem* ) ), SLOT( _displayEntry( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
+  layout->addWidget( frame_ = new AttachmentFrame( this, true ) );
+  connect( frame_, SIGNAL( attachmentSelected( Attachment& ) ), SLOT( _displayEntry( Attachment& ) ) );
   
   // shortcuts
   connect( new QShortcut( CTRL+Key_Q, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
@@ -121,21 +121,16 @@ void AttachmentWindow::_uniconify( void )
 }
 
 //________________________________________
-void AttachmentWindow::_displayEntry( QTreeWidgetItem *current, QTreeWidgetItem* old )
-{
+void AttachmentWindow::_displayEntry( Attachment& attachment )
+{ 
   
   Debug::Throw( "AttachmentWindow::_displayEntry.\n");
-  
-  if( !current ) current = old;
-  
-  AttachmentList::Item *item = static_cast<AttachmentList::Item*>( current );
-  assert( item );
-  
+    
   // retrieve associated entry
-  LogEntry *entry( item->attachment()->entry() );
+  LogEntry *entry( attachment.entry() );
   
   // check if entry is visible
-  static_cast<Application*>(qApp)->mainWindow().clearSelection();
+  // static_cast<Application*>(qApp)->mainWindow().clearSelection();
   
   if( entry && !entry->isSelected() ) entry->setFindSelected( true );  
   static_cast<Application*>(qApp)->mainWindow().selectEntry( entry );

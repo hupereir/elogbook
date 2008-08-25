@@ -42,7 +42,7 @@
 #include <list>
 
 #include "AskForSaveDialog.h"
-#include "AttachmentList.h"
+#include "AttachmentFrame.h"
 
 #include "LineEditor.h"
 
@@ -102,11 +102,11 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   }
 
   //! retrieve attachment list
-  AttachmentList& attachmentList( void )
+  AttachmentFrame& attachmentFrame( void )
   {
-    BASE::KeySet<AttachmentList> attachment_list( this );
-    assert( attachment_list.size() == 1 );
-    return **attachment_list.begin();
+    BASE::KeySet<AttachmentFrame> frames( this );
+    assert( frames.size() == 1 );
+    return **frames.begin();
   }
 
   //! status bar

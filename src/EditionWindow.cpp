@@ -37,7 +37,7 @@
 
 #include "Application.h"
 #include "AttachmentWindow.h"
-#include "AttachmentList.h"
+#include "AttachmentFrame.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "TextEditor.h"
@@ -121,11 +121,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
   // create attachment list
-  AttachmentList *attachment_list = new AttachmentList( splitter_, isReadOnly() );
-  attachment_list->hide();
-
-  // associate EditionWindow and attachment list
-  Key::associate( this, attachment_list );
+  AttachmentFrame *frame = new AttachmentFrame( splitter_, isReadOnly() );
+  frame->visibilityAction().setChecked( false );
+  Key::associate( this, frame );
 
   // status bar for tooltips
   setStatusBar( statusbar_ = new StatusBar( this ) );
@@ -163,7 +161,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   read_only_actions_.push_back( action );
 
   // add_attachment button
-  toolbar->addAction( &attachment_list->newAttachmentAction() );
+  toolbar->addAction( &frame->newAttachmentAction() );
 
   // format bar
   format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
@@ -303,7 +301,7 @@ void EditionWindow::setReadOnly( const bool& value )
   { (*iter)->setReadOnly( isReadOnly() ); }
 
   // changes attachment list status
-  attachmentList().setReadOnly( isReadOnly() );
+  attachmentFrame().setReadOnly( isReadOnly() );
 
   // changes window title
   updateWindowTitle();
@@ -651,13 +649,13 @@ void EditionWindow::_saveConfiguration( void )
   
   Debug::Throw( "EditionWindow::_saveConfiguration.\n" );
   
-  // retrieve attachment list
-  AttachmentList* atc_list( *BASE::KeySet<AttachmentList>(this).begin() );
-  if( !atc_list->isHidden() )
-  {
-    XmlOptions::get().set<int>( "EDT_HEIGHT", activeEditor().height() );
-    XmlOptions::get().set<int>( "ATC_HEIGHT", (*BASE::KeySet<AttachmentList>(this).begin())->height() );
-  }
+//   // retrieve attachment list
+//   AttachmentFrame* atc_list( *BASE::KeySet<AttachmentFrame>(this).begin() );
+//   if( !atc_list->isHidden() )
+//   {
+//     XmlOptions::get().set<int>( "EDT_HEIGHT", activeEditor().height() );
+//     XmlOptions::get().set<int>( "ATC_HEIGHT", (*BASE::KeySet<AttachmentFrame>(this).begin())->height() );
+//   }
   
 }
 
@@ -1280,13 +1278,13 @@ void EditionWindow::_displayAttachments( void )
 {
   Debug::Throw( "EditionWindow::_DisplayAttachments.\n" );
 
-  AttachmentList &attachment_list( attachmentList() );
-  attachment_list.clear();
+  AttachmentFrame &frame( attachmentFrame() );
+  frame.clear();
 
   LogEntry* entry( EditionWindow::entry() );
   if( !entry ) {
     
-    attachment_list.hide();
+    frame.visibilityAction().setChecked( false );
     return;
   
   }
@@ -1295,19 +1293,13 @@ void EditionWindow::_displayAttachments( void )
   BASE::KeySet<Attachment> attachments( entry );
   if( attachments.empty() ) {
   
-    attachment_list.hide();
+    frame.visibilityAction().setChecked( false );
     return;
   
   }
 
   // display associated attachments
-  for( BASE::KeySet<Attachment>::iterator it = attachments.begin(); it != attachments.end(); it++ )
-  { attachment_list.add( *it ); }
-
-  // show attachment list
-  attachment_list.resizeColumns();
-  attachment_list.sort();
-  attachment_list.show();
+  frame.add( AttachmentModel::List( attachments.begin(), attachments.end() ) );
 
   return;
 

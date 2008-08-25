@@ -70,7 +70,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   
   // create list
   layout()->addWidget( list_ = new TreeView( this ) );
-  _list().setModel( &_logEntryModel() );
+  _list().setModel( &_model() );
   _list().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   _list().setMaskOptionName( "ATTACHMENT_LIST_MASK" );
   _list().setTextElideMode ( Qt::ElideMiddle );
@@ -79,24 +79,28 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   _installActions();
   
   _list().menu().addAction( &newAttachmentAction() );
-  _list().menu().addSeparator();
   _list().menu().addAction( &openAttachmentAction() );
   _list().menu().addAction( &editAttachmentAction() );
   _list().menu().addAction( &deleteAttachmentAction() );
   
   // connections
-  // connect( this, SIGNAL( itemActivated( QTreeWidgetItem*, int ) ), SLOT( _open() ) );
-  // connect( this, SIGNAL( itemSelectionChanged() ), SLOT( _updateActions() ) );
+  connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );
+  connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
+  connect( _list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
+  connect( &_list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
+
   _updateActions();
 }
 
 //_____________________________________________
-void AttachmentFrame::add( Attachment& attachment )
+void AttachmentFrame::add( const AttachmentModel::List& attachments )
 {
 
   Debug::Throw( "AttachmentFrame::add.\n" ); 
-  BASE::Key::associate( this, &attachment );
-  _model().add( &attachment );
+  for( AttachmentModel::List::const_iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  { BASE::Key::associate( this, *iter ); }
+  
+  _model().add( attachments );
   
 }
 
@@ -105,7 +109,7 @@ void AttachmentFrame::update( Attachment& attachment )
 {
   
   Debug::Throw( "AttachmentFrame::update.\n" ); 
-  assert( BASE::Key::isAssociated( &attachment, this ) );
+  assert( attachment.isAssociated( this ) );
   _model().add( &attachment );
 
 }
@@ -115,13 +119,13 @@ void AttachmentFrame::select( Attachment& attachment )
 {
   
   Debug::Throw( "AttachmentFrame::SelectAttachment.\n" ); 
-  assert( BASE::Key::isAssociated( &attachment, this ) );
+  assert( attachment.isAssociated( this ) );
     
   // get matching model index
-  QModelIndex index( _model().get( &attachment ) );
+  QModelIndex index( _model().index( &attachment ) );
 
   // check if index is valid and not selected
-  if( ( !index.isValid() ) || list().selectionModel()->isSelected( index ) ) return;
+  if( ( !index.isValid() ) || _list().selectionModel()->isSelected( index ) ) return;
   
   // select
   _list().selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
@@ -140,7 +144,7 @@ void AttachmentFrame::_new( void )
   BASE::KeySet<EditionWindow> windows( this );
   assert( windows.size() == 1 );
   
-  EditionWindow &window( *windows.begin() );
+  EditionWindow &window( **windows.begin() );
   
   BASE::KeySet<LogEntry> entries( window );
   if( entries.size() != 1 )
@@ -249,18 +253,18 @@ void AttachmentFrame::_new( void )
     // associate attachment to entry
     Key::associate( entry, attachment );
     
-    // update all windows AttachmentFrame associated to entry
+    // update all windows edition windows associated to entry
     windows = BASE::KeySet<EditionWindow>( entry );
     for( BASE::KeySet<EditionWindow>::iterator iter = windows.begin(); iter != windows.end(); iter++ )
     {
-      if( !(*iter)->attachmentList().topLevelItemCount() ) (*iter)->attachmentList().show();
-      (*iter)->attachmentList().add( attachment );
-      (*iter)->attachmentList().resizeColumns();
+      
+      (*iter)->attachmentFrame().visibilityAction().setChecked( true );
+      (*iter)->attachmentFrame().add( *attachment );
+      
     }
     
     // update attachment frame
-    static_cast<Application*>(qApp)->attachmentWindow().list().add( attachment );
-    static_cast<Application*>(qApp)->attachmentWindow().list().resizeColumns();
+    static_cast<Application*>(qApp)->attachmentWindow().frame().add( *attachment );
    
     // update logbooks destination directory
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 
@@ -273,7 +277,7 @@ void AttachmentFrame::_new( void )
     static_cast<Application*>(qApp)->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
 
     // save EditionWindow entry
-    window->saveAction().trigger();
+    window.saveAction().trigger();
     
     break;
     
@@ -302,10 +306,10 @@ void AttachmentFrame::_open( void )
   Debug::Throw( "AttachmentFrame::_open.\n" );  
 
   // get selection
-  AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+  AttachmentModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
  
   // check items
-  if( selection.isEmpty() ) 
+  if( selection.empty() ) 
   {
     QtUtil::infoDialog( this, "No attachment selected. <Open Attachment> canceled.\n" );
     return;
@@ -315,7 +319,7 @@ void AttachmentFrame::_open( void )
   for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
   {
     
-    Attachment& attachment( *iter ); 
+    Attachment& attachment( **iter ); 
     AttachmentType type = attachment.type();
     File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
     if( !( type == AttachmentType::URL || fullname.exists() ) )
@@ -369,10 +373,10 @@ void AttachmentFrame::_edit( void )
   
   // store selected item locally
   // get selection
-  AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+  AttachmentModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
  
   // check items
-  if( selection.isEmpty() ) 
+  if( selection.empty() ) 
   {
     QtUtil::infoDialog( this, "No attachment selected. <Edit Attachment> canceled.\n" );
     return;
@@ -388,7 +392,7 @@ void AttachmentFrame::_edit( void )
   {
 
     // create/check attachment full name
-    Attachment& attachment( *iter ); 
+    Attachment& attachment( **iter ); 
     EditAttachmentDialog dialog( this, attachment );
   
     // map dialog
@@ -408,7 +412,7 @@ void AttachmentFrame::_edit( void )
     // update attachment associated list items
     BASE::KeySet<AttachmentFrame> frames( &attachment );
     for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); iter++ )
-    { (*iter)->_update( attachment ); }
+    { (*iter)->update( attachment ); }
           
   }
   
@@ -427,10 +431,10 @@ void AttachmentFrame::_delete( void )
   
   // store selected item locally
   // get selection
-  AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+  AttachmentModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
  
   // check items
-  if( selection.isEmpty() ) 
+  if( selection.empty() ) 
   {
     QtUtil::infoDialog( this, "No attachment selected. <Delete Attachment> canceled.\n" );
     return;
@@ -459,7 +463,7 @@ void AttachmentFrame::_delete( void )
     // retrieve/delete associated attachment frames and remove item
     BASE::KeySet<AttachmentFrame> frames( *attachment );
     for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
-    { (*iter)->_model().remove( *attachment ); }
+    { (*iter)->_model().remove( attachment ); }
   
     // retrieve associated entries
     BASE::KeySet<LogEntry> entries( attachment );
@@ -504,12 +508,59 @@ void AttachmentFrame::_delete( void )
   return;      
   
 }
- 
+
+//______________________________________________________________________
+void AttachmentFrame::_storeSelection( void )
+{ 
+  Debug::Throw( "AttachmentFrame::_storeSelection.\n" ); 
+
+  // clear
+  _model().clearSelectedIndexes();
+  
+  // retrieve selected indexes in list
+  QModelIndexList selected_indexes( _list().selectionModel()->selectedRows() );
+  for( QModelIndexList::iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
+  { 
+    // check column
+    if( !iter->column() == 0 ) continue;
+    _model().setIndexSelected( *iter, true ); 
+  }
+
+  return;
+  
+}
+
+//______________________________________________________________________
+void AttachmentFrame::_restoreSelection( void )
+{ 
+  
+  Debug::Throw( "AttachmentFrame::_restoreSelection.\n" ); 
+
+  // retrieve indexes
+  QModelIndexList selected_indexes( _model().selectedIndexes() );
+  if( selected_indexes.empty() ) _list().selectionModel()->clear();
+  else {
+    
+    _list().selectionModel()->select( selected_indexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    for( QModelIndexList::const_iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
+    { _list().selectionModel()->select( *iter, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+  
+  }
+  
+  return;
+  
+}
+
 //_______________________________________________________________________
 void AttachmentFrame::_installActions( void )
 {
   Debug::Throw( "AttachmentFrame::_installActions.\n" );
 
+  addAction( visibility_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachment list", this ) );
+  visibilityAction().setToolTip( "Show/hide attachment list" );
+  visibilityAction().setCheckable( true );
+  connect( &visibilityAction(), SIGNAL( toggled( bool ) ), SLOT( setVisible( bool ) ) );
+  
   addAction( new_attachment_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&New", this ) );
   newAttachmentAction().setToolTip( "Attach a file/URL to the current entry" );
   connect( &newAttachmentAction(), SIGNAL( triggered() ), SLOT( _newAttachment() ) );

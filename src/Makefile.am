@@ -76,11 +76,11 @@ nodist_libelogbook_a_SOURCES = \
 noinst_HEADERS = \
   Application.h \
   AskForSaveDialog.h \
-  AttachmentWindow.h \
   Attachment.h \
-  AttachmentList.h \
+  AttachmentFrame.h \
   AttachmentModel.h \
   AttachmentType.h \
+  AttachmentWindow.h \
   ConfigurationDialog.h \
   DefaultOptions.h \
   DeleteAttachmentDialog.h \
@@ -119,9 +119,9 @@ noinst_HEADERS = \
 elogbook_SOURCES = \
   Application.cpp \
   AskForSaveDialog.cpp \
-  AttachmentWindow.cpp \
-  AttachmentList.cpp \
+  AttachmentFrame.cpp \
   AttachmentModel.cpp \
+  AttachmentWindow.cpp \
   ConfigurationDialog.cpp \
   DeleteAttachmentDialog.cpp \
   DeleteKeywordDialog.cpp \
@@ -154,8 +154,8 @@ nodist_elogbook_SOURCES = \
   qrc_pixmaps.cpp \
   moc_Application.cpp \
   moc_AskForSaveDialog.cpp \
+  moc_AttachmentFrame.cpp \
   moc_AttachmentWindow.cpp \
-  moc_AttachmentList.cpp \
   moc_ConfigurationDialog.cpp \
   moc_EditionWindow.cpp \
   moc_FormatBar.cpp \
