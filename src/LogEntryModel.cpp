@@ -73,18 +73,18 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
 {
   
-    if (!index.isValid()) return 0;
-    
-    // default flags
-    Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
- 
-    // check against edition index
-    if( index == editionIndex() && edition_enabled_ ) 
-    { out |= Qt::ItemIsEditable; }
-    
-    // check column
-    if( index.column() == TITLE ) out |= Qt::ItemIsDragEnabled;
-    return out;
+  if (!index.isValid()) return 0;
+  
+  // default flags
+  Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
+  
+  // check against edition index
+  if( index == editionIndex() && edition_enabled_ ) 
+  { out |= Qt::ItemIsEditable; }
+  
+  // check column
+  if( index.column() == TITLE ) out |= Qt::ItemIsDragEnabled;
+  return out;
     
 }
 
@@ -268,12 +268,6 @@ QIcon LogEntryModel::_createIcon( const QColor& color ) const
     painter.setPen( Qt::NoPen );
     
     QRectF rect( QPointF( offset, offset ), QSizeF( pixmap_size, pixmap_size ) );
-
-//     QLinearGradient gradient(rect.topLeft(), rect.bottomRight());
-//     gradient.setColorAt(0, color );
-//     gradient.setColorAt(1, color.light(135) );
-//     painter.setBrush( gradient ); 
-    
     painter.setBrush( color ); 
     painter.drawEllipse( rect );
     painter.end();

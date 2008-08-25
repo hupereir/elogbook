@@ -79,6 +79,7 @@ noinst_HEADERS = \
   AttachmentWindow.h \
   Attachment.h \
   AttachmentList.h \
+  AttachmentModel.h \
   AttachmentType.h \
   ConfigurationDialog.h \
   DefaultOptions.h \
@@ -120,6 +121,7 @@ elogbook_SOURCES = \
   AskForSaveDialog.cpp \
   AttachmentWindow.cpp \
   AttachmentList.cpp \
+  AttachmentModel.cpp \
   ConfigurationDialog.cpp \
   DeleteAttachmentDialog.cpp \
   DeleteKeywordDialog.cpp \
