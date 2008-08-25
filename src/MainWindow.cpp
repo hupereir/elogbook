@@ -77,7 +77,7 @@ MainWindow::MainWindow( QWidget *parent ):
   confirm_entries_( true )
 {
   Debug::Throw( "MainWindow::MainWindow.\n" );
-  _setSizeOptionName( "SELECTION_FRAME" );
+  _setSizeOptionName( "MAIN_WINDOW" );
   setWindowTitle( Application::MAIN_TITLE );
   
   // main widget
@@ -314,8 +314,13 @@ bool MainWindow::setLogbook( File file )
   connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &statusBar().progressBar(), SLOT( setMaximumProgress( unsigned int ) ) );
   connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &statusBar().progressBar(), SLOT( addToProgress( unsigned int ) ) );
   connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+
+  // one need to disable everything in the window
+  // to prevent user to interact with the application while loading
+  setEnabled( false );
   logbook()->read();
-  
+  setEnabled( true );
+
   Debug::Throw( "MainWindow::setLogbook - finished reading.\n" );
 
   // update listView with new entries

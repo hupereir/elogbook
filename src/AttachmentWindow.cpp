@@ -56,7 +56,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   
   Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
   setWindowTitle( Application::ATTACHMENT_TITLE );
-  _setSizeOptionName( "ATC_FRAME" );
+  _setSizeOptionName( "ATTACHMENT_WINDOW" );
   
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout(this);

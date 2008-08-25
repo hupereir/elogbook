@@ -70,24 +70,24 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   
   // create list
   layout()->addWidget( list_ = new TreeView( this ) );
-  _list().setModel( &_model() );
-  _list().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
-  _list().setMaskOptionName( "ATTACHMENT_LIST_MASK" );
-  _list().setTextElideMode ( Qt::ElideMiddle );
+  list().setModel( &_model() );
+  list().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
+  list().setMaskOptionName( "ATTACHMENTLIST_MASK" );
+  list().setTextElideMode ( Qt::ElideMiddle );
   
   // install actions
   _installActions();
   
-  _list().menu().addAction( &newAttachmentAction() );
-  _list().menu().addAction( &openAttachmentAction() );
-  _list().menu().addAction( &editAttachmentAction() );
-  _list().menu().addAction( &deleteAttachmentAction() );
+  list().menu().addAction( &newAttachmentAction() );
+  list().menu().addAction( &openAttachmentAction() );
+  list().menu().addAction( &editAttachmentAction() );
+  list().menu().addAction( &deleteAttachmentAction() );
   
   // connections
   connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );
   connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
-  connect( _list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
-  connect( &_list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
+  connect( list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
+  connect( &list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
 
   _updateActions();
 }
@@ -125,10 +125,10 @@ void AttachmentFrame::select( Attachment& attachment )
   QModelIndex index( _model().index( &attachment ) );
 
   // check if index is valid and not selected
-  if( ( !index.isValid() ) || _list().selectionModel()->isSelected( index ) ) return;
+  if( ( !index.isValid() ) || list().selectionModel()->isSelected( index ) ) return;
   
   // select
-  _list().selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+  list().selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
   
   return;
     
@@ -291,7 +291,7 @@ void AttachmentFrame::_new( void )
 void AttachmentFrame::_updateActions( void )
 {
   
-  bool has_selection( !_list().selectionModel()->selectedRows().isEmpty() );
+  bool has_selection( !list().selectionModel()->selectedRows().isEmpty() );
   newAttachmentAction().setEnabled( !read_only_ );
   openAttachmentAction().setEnabled( has_selection );
   editAttachmentAction().setEnabled( has_selection && !read_only_ );
@@ -306,7 +306,7 @@ void AttachmentFrame::_open( void )
   Debug::Throw( "AttachmentFrame::_open.\n" );  
 
   // get selection
-  AttachmentModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
+  AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
  
   // check items
   if( selection.empty() ) 
@@ -373,7 +373,7 @@ void AttachmentFrame::_edit( void )
   
   // store selected item locally
   // get selection
-  AttachmentModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
+  AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
  
   // check items
   if( selection.empty() ) 
@@ -431,7 +431,7 @@ void AttachmentFrame::_delete( void )
   
   // store selected item locally
   // get selection
-  AttachmentModel::List selection( _model().get( _list().selectionModel()->selectedRows() ) );
+  AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
  
   // check items
   if( selection.empty() ) 
@@ -518,7 +518,7 @@ void AttachmentFrame::_storeSelection( void )
   _model().clearSelectedIndexes();
   
   // retrieve selected indexes in list
-  QModelIndexList selected_indexes( _list().selectionModel()->selectedRows() );
+  QModelIndexList selected_indexes( list().selectionModel()->selectedRows() );
   for( QModelIndexList::iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
   { 
     // check column
@@ -538,12 +538,12 @@ void AttachmentFrame::_restoreSelection( void )
 
   // retrieve indexes
   QModelIndexList selected_indexes( _model().selectedIndexes() );
-  if( selected_indexes.empty() ) _list().selectionModel()->clear();
+  if( selected_indexes.empty() ) list().selectionModel()->clear();
   else {
     
-    _list().selectionModel()->select( selected_indexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    list().selectionModel()->select( selected_indexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
     for( QModelIndexList::const_iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
-    { _list().selectionModel()->select( *iter, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+    { list().selectionModel()->select( *iter, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
   
   }
   

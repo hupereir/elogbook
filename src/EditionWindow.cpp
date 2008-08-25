@@ -80,7 +80,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   format_toolbar_( 0 )
 {
   Debug::Throw("EditionWindow::EditionWindow.\n" );
-  _setSizeOptionName( "EDIT_FRAME" );
+  _setSizeOptionName( "EDITION_WINDOW" );
   setObjectName( "EDITFRAME" );
   
   QWidget* main( new QWidget( this ) ); 

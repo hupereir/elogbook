@@ -72,7 +72,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   QGroupBox *box;
   OptionCheckBox *checkbox;
   OptionSpinBox* spinbox;
-  QLabel* label;
 
   // attachment editors
   QWidget* page = &addPage( "Attachments" );
@@ -136,8 +135,8 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   // attachment configuration
   listview_config = new TreeViewConfiguration( 
     page, 
-    &static_cast<Application*>(qApp)->attachmentWindow().list(), 
-    static_cast<Application*>(qApp)->attachmentWindow().list().maskOptionName() );
+    &static_cast<Application*>(qApp)->attachmentWindow().frame().list(), 
+    static_cast<Application*>(qApp)->attachmentWindow().frame().list().maskOptionName() );
   listview_config->setTitle( "Attachments list" );
   addOptionWidget( listview_config );
   page->layout()->addWidget( listview_config );

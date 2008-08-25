@@ -58,6 +58,14 @@ class AttachmentFrame: public QWidget, public BASE::Key
   //! constructor
   AttachmentFrame( QWidget *parent, bool read_only );
   
+  //! list
+  TreeView& list( void ) const
+  { 
+    assert( list_ );
+    return *list_;
+  }
+  
+
   //! clear
   void clear( void )
   { 
@@ -157,13 +165,6 @@ class AttachmentFrame: public QWidget, public BASE::Key
   //! model
   AttachmentModel& _model( void )
   { return model_; }
-  
-  //! list
-  TreeView& _list( void ) const
-  { 
-    assert( list_ );
-    return *list_;
-  }
   
   //! install actions
   void _installActions( void );

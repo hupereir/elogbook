@@ -30,7 +30,7 @@
 */
 
 #include "LogEntryModel.h"
-#include "AttachmentList.h"
+#include "AttachmentModel.h"
 #include "XmlOptions.h"
 #include "Config.h"
 #include "Util.h"
@@ -69,14 +69,21 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "ICON_PIXMAP", ":/icon.png" , "application icon"  ));
   
   // normal (overwritten) options
-  XmlOptions::get().add( Option( "ATC_FRAME_HEIGHT", "400" , "requested AttachmentWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "ATC_FRAME_WIDTH", "600" , "requested AttachmentWindow width [pixels]"  ));
+  
+  // window sizes
+  XmlOptions::get().add( Option( "ATTACHMENT_WINDOW_HEIGHT", "400" , "requested AttachmentWindow height [pixels]"  ));
+  XmlOptions::get().add( Option( "ATTACHMENT_WINDOW_WIDTH", "600" , "requested AttachmentWindow width [pixels]"  ));
+  
+  XmlOptions::get().add( Option( "EDITION_WINDOW_HEIGHT", "750" , "requested EditionWindow height [pixels]"  ));
+  XmlOptions::get().add( Option( "EDITION_WINDOW_WIDTH", "700" , "requested EditionWindow width [pixels]"  ));
+
+  XmlOptions::get().add( Option( "MAIN_WINDOW_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
+  XmlOptions::get().add( Option( "MAIN_WINDOW_WIDTH", "700" , "requested MainWindow width [pixels]"  ));
+
+  // these options will be removed
+  // one should use ATTACHMENT_FRAME_HEIGHT instead
   XmlOptions::get().add( Option( "ATC_HEIGHT", "150" , "requested height of attachment list in editor [pixels]"  ));
   XmlOptions::get().add( Option( "EDT_HEIGHT", "600" , "requested EditionWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "EDIT_FRAME_HEIGHT", "750" , "requested EditionWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "EDIT_FRAME_WIDTH", "700" , "requested EditionWindow width [pixels]"  ));
-  XmlOptions::get().add( Option( "SELECTION_FRAME_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "SELECTION_FRAME_WIDTH", "700" , "requested MainWindow width [pixels]"  ));
   
   XmlOptions::get().add( Option( "LIST_ICON_SIZE", "10", "default icon size in lists" ) );
 
@@ -130,10 +137,10 @@ void installDefaultOptions( void )
     (1<< LogEntryModel::AUTHOR) );
   
   XmlOptions::get().set<unsigned int>( "ATTACHMENT_LIST_MASK", 
-    (1<< AttachmentList::FILE)|
-    (1<< AttachmentList::SIZE)|
-    (1<< AttachmentList::TYPE)|
-    (1<< AttachmentList::MODIFICATION) );
+    (1<< AttachmentModel::FILE)|
+    (1<< AttachmentModel::SIZE)|
+    (1<< AttachmentModel::TYPE)|
+    (1<< AttachmentModel::MODIFICATION) );
   
   // add run-time non recordable options
         
