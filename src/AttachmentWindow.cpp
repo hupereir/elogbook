@@ -130,8 +130,6 @@ void AttachmentWindow::_displayEntry( Attachment& attachment )
   LogEntry *entry( attachment.entry() );
   
   // check if entry is visible
-  // static_cast<Application*>(qApp)->mainWindow().clearSelection();
-  
   if( entry && !entry->isSelected() ) entry->setFindSelected( true );  
   static_cast<Application*>(qApp)->mainWindow().selectEntry( entry );
   

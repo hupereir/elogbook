@@ -40,6 +40,7 @@
 #include "AttachmentModel.h"
 #include "Debug.h"
 #include "Key.h"
+#include "ValidFileThread.h"
 
 class TreeView;
 
@@ -57,6 +58,20 @@ class AttachmentFrame: public QWidget, public BASE::Key
   
   //! constructor
   AttachmentFrame( QWidget *parent, bool read_only );
+
+  //! default size
+  void setDefaultHeight( const int& );
+    
+  //! default height
+  const int& defaultHeight( void ) const
+  { return default_height_; }
+    
+  //! size
+  QSize sizeHint( void ) const;  
+
+  //! list
+  bool hasList( void ) const
+  { return (bool) list_; }
   
   //! list
   TreeView& list( void ) const
@@ -95,13 +110,17 @@ class AttachmentFrame: public QWidget, public BASE::Key
   void remove( Attachment& attachment )
   { _model().remove( &attachment ); }
   
-   //! change read only status
+  //! change read only status
   void setReadOnly( bool value )
   { 
     read_only_ = value; 
     _updateActions();
   }
    
+  //! read only state
+  const bool& readOnly( void ) const
+  { return read_only_; }
+  
   //!@name actions
   //@{
   
@@ -110,27 +129,39 @@ class AttachmentFrame: public QWidget, public BASE::Key
   { return *visibility_action_; }
   
   //! new attachment action
-  QAction& newAttachmentAction( void ) const
-  { return *new_attachment_action_; }
+  QAction& newAction( void ) const
+  { return *new_action_; }
      
   //! view attachment action
-  QAction& openAttachmentAction( void ) const
-  { return *open_attachment_action_; }
+  QAction& openAction( void ) const
+  { return *open_action_; }
   
   //! edit attachment action
-  QAction& editAttachmentAction( void ) const
-  { return *edit_attachment_action_; }
+  QAction& editAction( void ) const
+  { return *edit_action_; }
   
   //! delete attachment action
-  QAction& deleteAttachmentAction( void ) const
-  { return *delete_attachment_action_; }
+  QAction& deleteAction( void ) const
+  { return *delete_action_; }
+  
+  //! clean action
+  QAction& cleanAction( void ) const
+  { return *clean_action_; }
   
   //@}
   
   signals:
   
   //! emitted when an item is selected in list
-  void _itemSelected( Attachment& );
+  void attachmentSelected( Attachment& );
+  
+  protected:
+  
+  //! enter event
+  virtual void enterEvent( QEvent* );
+
+  //! custom event, used to retrieve file validity check event
+  void customEvent( QEvent* );  
   
   private slots:
       
@@ -149,9 +180,15 @@ class AttachmentFrame: public QWidget, public BASE::Key
   //! delete current attachment
   void _delete( void );
 
+  //! clean 
+  void _clean( void );
+  
   //!@name selections
   //@{
 
+  //! current item changed
+  void _itemSelected( const QModelIndex& );
+  
   //! restore selection
   void _storeSelection( void );
   
@@ -161,17 +198,20 @@ class AttachmentFrame: public QWidget, public BASE::Key
   //@}
 
   private:
+
+  //! install actions
+  void _installActions( void );
   
   //! model
   AttachmentModel& _model( void )
   { return model_; }
   
-  //! install actions
-  void _installActions( void );
-  
   //! if true, listbox is read only
   bool read_only_;
-  
+
+  //! default height;
+  int default_height_;  
+
   //!@name actions
   //@{
   
@@ -179,17 +219,20 @@ class AttachmentFrame: public QWidget, public BASE::Key
   QAction* visibility_action_;
   
   //! new attachment
-  QAction* new_attachment_action_;
+  QAction* new_action_;
   
   //! view attachment
-  QAction* open_attachment_action_;
+  QAction* open_action_;
     
   //! edit attachment
-  QAction* edit_attachment_action_;
+  QAction* edit_action_;
   
   //! delete attachment
-  QAction* delete_attachment_action_;
+  QAction* delete_action_;
 
+  //! clean action
+  QAction* clean_action_;
+  
   //@}
   
   //! model
@@ -197,7 +240,10 @@ class AttachmentFrame: public QWidget, public BASE::Key
   
   //! list
   TreeView* list_;
-  
+
+  // valid file thread
+  ValidFileThread thread_;
+
 };
 
 #endif

@@ -60,6 +60,12 @@ namespace XML {
   //! parent file
   static const QString PARENT_FILE( "parent_file" );
 
+  //! attachment validity
+  static const QString VALID( "valid" );
+  
+  //! attachement is link
+  static const QString IS_LINK( "is_link" );
+  
   //! directory
   static const QString DIRECTORY( "directory" );
   

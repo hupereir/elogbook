@@ -57,11 +57,18 @@ AttachmentModel::AttachmentModel( QObject* parent ):
 Qt::ItemFlags AttachmentModel::flags(const QModelIndex &index) const
 {
   
-  if (!index.isValid()) return 0;
-  
   // default flags
-  Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
-  return out;
+  Qt::ItemFlags flags;
+  if( index.isValid() )
+  {
+  
+    // check associated record validity
+    const Attachment& attachment( *get(index) );
+    if( attachment.isValid() ) flags |=  Qt::ItemIsEnabled |  Qt::ItemIsSelectable;
+  
+  }
+  
+  return flags;
   
 }
 

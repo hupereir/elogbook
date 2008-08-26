@@ -102,12 +102,12 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   title_->setHasClearButton( true );  
   
   // splitter for EditionWindow and attachment list
-  splitter_ = new QSplitter( main );
-  splitter_->setOrientation( Qt::Vertical );
-  layout->addWidget( splitter_, 1 );
+  QSplitter* splitter = new QSplitter( main );
+  splitter->setOrientation( Qt::Vertical );
+  layout->addWidget( splitter, 1 );
   
   // create text
-  splitter_->addWidget( main_ = new QWidget() );
+  splitter->addWidget( main_ = new QWidget() );
   main_->setLayout( new QVBoxLayout() );
   main_->layout()->setMargin(0);
   main_->layout()->setSpacing(0);
@@ -121,8 +121,10 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
   // create attachment list
-  AttachmentFrame *frame = new AttachmentFrame( splitter_, isReadOnly() );
+  AttachmentFrame *frame = new AttachmentFrame( 0, isReadOnly() );
   frame->visibilityAction().setChecked( false );
+  frame->setDefaultHeight( XmlOptions::get().get<int>( "ATTACHMENT_FRAME_HEIGHT" ) );
+  splitter->addWidget( frame );
   Key::associate( this, frame );
 
   // status bar for tooltips
@@ -161,7 +163,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   read_only_actions_.push_back( action );
 
   // add_attachment button
-  toolbar->addAction( &frame->newAttachmentAction() );
+  toolbar->addAction( &frame->newAction() );
 
   // format bar
   format_toolbar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
@@ -222,7 +224,6 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
   Debug::Throw("EditionWindow::EditionWindow - done.\n" );
 
@@ -530,7 +531,6 @@ void EditionWindow::closeEvent( QCloseEvent *event )
   if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
   else
   {
-    _saveConfiguration();
     setIsClosed( true );
     event->accept();
   }
@@ -547,6 +547,24 @@ void EditionWindow::enterEvent( QEvent *event )
   QMainWindow::enterEvent( event );
   _mainWindow().checkLogbookModified();
 
+}
+
+//_______________________________________________________
+void EditionWindow::timerEvent( QTimerEvent* event )
+{
+
+  if( event->timerId() == resize_timer_.timerId() )
+  {
+    
+    // stop timer
+    resize_timer_.stop();
+    
+    // save size
+    if( attachmentFrame().visibilityAction().isChecked() )
+    { XmlOptions::get().set<int>( "ATTACHMENT_FRAME_HEIGHT", attachmentFrame().height() ); }
+  
+  } else return CustomMainWindow::timerEvent( event );
+  
 }
 
 //_____________________________________________
@@ -631,32 +649,16 @@ void EditionWindow::_installActions( void )
 void EditionWindow::_updateConfiguration( void )
 {
   
-  Debug::Throw( "EditionWindow::_updateConfiguration.\n" );
-  
-  // set splitter default size
-  QList<int> sizes;
-  sizes << XmlOptions::get().get<int>( "EDT_HEIGHT" );
-  sizes << XmlOptions::get().get<int>( "ATC_HEIGHT" );
-  splitter_->setSizes( sizes );
-  
+  // one should check whether this is needed or not.
+  Debug::Throw( "EditionWindow::_updateConfiguration.\n" ); 
   resize( sizeHint() );
-  
 }
 
 //_____________________________________________
-void EditionWindow::_saveConfiguration( void )
+void EditionWindow::_splitterMoved( void )
 {
-  
-  Debug::Throw( "EditionWindow::_saveConfiguration.\n" );
-  
-//   // retrieve attachment list
-//   AttachmentFrame* atc_list( *BASE::KeySet<AttachmentFrame>(this).begin() );
-//   if( !atc_list->isHidden() )
-//   {
-//     XmlOptions::get().set<int>( "EDT_HEIGHT", activeEditor().height() );
-//     XmlOptions::get().set<int>( "ATC_HEIGHT", (*BASE::KeySet<AttachmentFrame>(this).begin())->height() );
-//   }
-  
+  Debug::Throw( "MainWindow::_splitterMoved.\n" );
+  resize_timer_.start( 200, this );    
 }
 
 //_______________________________________________
@@ -1296,11 +1298,13 @@ void EditionWindow::_displayAttachments( void )
     frame.visibilityAction().setChecked( false );
     return;
   
+  } else {
+    
+    frame.visibilityAction().setChecked( true );
+    frame.add( AttachmentModel::List( attachments.begin(), attachments.end() ) );
+  
   }
-
-  // display associated attachments
-  frame.add( AttachmentModel::List( attachments.begin(), attachments.end() ) );
-
+  
   return;
 
 }

@@ -32,10 +32,11 @@
   \date $Date$
 */
 
+#include <QBasicTimer>
 #include <QLayout>
 #include <QToolButton>
 #include <QSplitter>
-
+#include <QTimerEvent>
 #include <string>
 #include <set>
 #include <map>
@@ -247,10 +248,13 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   protected:
 
   //! close window event handler
-  void closeEvent( QCloseEvent *event );
+  virtual void closeEvent( QCloseEvent *event );
 
   //! enter event handler
-  void enterEvent( QEvent *event );
+  virtual void enterEvent( QEvent *event );
+
+  //! timer event
+  virtual void timerEvent( QTimerEvent* );
 
   private slots:
 
@@ -270,8 +274,8 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! configuration
   void _updateConfiguration( void );
 
-  //! configuration
-  void _saveConfiguration( void );
+  //! splitter moved
+  void _splitterMoved( void );
 
   //! select previous entry
   void _previousEntry( void );
@@ -438,10 +442,6 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
     
   };
 
-  
-  //! main splitter
-  QSplitter *splitter_;
-
   //! main widget (that contains first editor)
   QWidget *main_;
   
@@ -532,6 +532,9 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   QAction* uniconify_action_;
   
   //@}
+  
+  QBasicTimer resize_timer_;
+  
 };
 
 #endif

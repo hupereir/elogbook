@@ -85,6 +85,8 @@ void ProgressBar::paintEvent( QPaintEvent* event )
   // when the selection color (used for the bar) is light
   // one use HighlightedText instead
   opt.text = text_;
+  
+  // ope should use a different color whether the bar is enabled or disabled
   opt.palette.setColor( QPalette::Base, palette().color( QPalette::HighlightedText ) );
   paint.drawControl(QStyle::CE_ProgressBarLabel, opt);
 

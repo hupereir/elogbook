@@ -49,6 +49,17 @@ const string Attachment::NO_FILE( "" );
 const string Attachment::NO_COMMENTS( "no comments" );
 
 //_______________________________________
+Attachment::Attachment( const std::string orig, const AttachmentType& type ):
+  Counter( "Attachment" ),
+  type_( AttachmentType::UNKNOWN ),
+  source_file_( orig ),
+  file_( NO_FILE ),
+  comments_( NO_COMMENTS ),
+  is_link_( UNKNOWN ),
+  is_valid_( false )
+{ setType( type ); }
+  
+//_______________________________________
 Attachment::Attachment( const QDomElement& element):
   Counter( "Attachment" ),
   type_( AttachmentType::UNKNOWN ),
@@ -57,6 +68,7 @@ Attachment::Attachment( const QDomElement& element):
   comments_( NO_COMMENTS ),
   size_( 0 ),
   size_str_( "-" ),
+  is_link_( UNKNOWN ),
   is_valid_( false )
 {
   Debug::Throw() << "Attachment::Attachment.\n";
@@ -74,6 +86,8 @@ Attachment::Attachment( const QDomElement& element):
     else if( name == XML::TYPE ) setType( AttachmentType::get( qPrintable( value ) ) );
     else if( name == XML::FILE ) _setFile( File( qPrintable( XmlUtil::xmlToText( value ) ) ) );
     else if( name == XML::COMMENTS ) setComments( qPrintable( XmlUtil::xmlToText(value) ) );
+    else if( name == XML::VALID ) setIsValid( (bool) value.toInt() );
+    else if( name == XML::IS_LINK ) setIsLink( (LinkState) value.toInt() );  
     else cerr << "unrecognized attachment attribute: \"" << qPrintable( name ) << "\"\n";
   }
   
@@ -97,7 +111,8 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
   if( file().size() ) out.setAttribute( XML::FILE, XmlUtil::textToXml( file().c_str() ) );
   if( sourceFile().size() ) out.setAttribute( XML::SOURCE_FILE, XmlUtil::textToXml( sourceFile().c_str() ) );
   out.setAttribute( XML::TYPE, type().key().c_str() );
-  
+  out.setAttribute( XML::VALID, QString().setNum( (int) isValid() ) );
+  out.setAttribute( XML::IS_LINK, QString().setNum( (int) isLink() ) );
   if( comments().size())
   {
     out.
@@ -112,9 +127,16 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 //_______________________________________
 void Attachment::setType( const AttachmentType& type )
 {
+  
   Debug::Throw() << "Attachment::setType.\n";
   type_  = type;
-  if( type_ == AttachmentType::URL ) is_valid_ = true;
+  
+  if( type_ == AttachmentType::URL ) 
+  {
+    setIsValid( true );
+    setIsLink( YES );
+  }
+  
   return;
 } 
 
@@ -170,6 +192,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     if( destname.exists() ) return DEST_EXIST;
     else {
       command_string << "cp" << source_file_.c_str() << destname.c_str();
+      setIsLink( NO );
       break;
     }
     
@@ -177,29 +200,34 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     if( destname.exists() ) return DEST_EXIST;
     else {
       command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
+      setIsLink( YES );
       break;
     }
     
     case COPY_FORCED:
     destname.remove();
     command_string << "cp" << source_file_.c_str() << destname.c_str();
+    setIsLink( NO );
     break;
   
     case LINK_FORCED:
     destname.remove();
     command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
+    setIsLink( YES );
     break;
     
     case COPY_VERSION:
     if( destname.exists() && destname.diff( source_file_ ) ) 
     { destname = destname.version(); }
     command_string << "cp" << source_file_.c_str() << destname.c_str();
+    setIsLink( NO );
     break;
     
     case LINK_VERSION:
     if( destname.exists() && destname.diff( source_file_ ) ) 
     { destname = destname.version(); }
     command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
+    setIsLink( YES );
     break;
     
     case DO_NOTHING:
@@ -253,15 +281,6 @@ void Attachment::_setFile( const File& file )
 {
   Debug::Throw() << "Attachment::_SetFile.\n";
   file_  = file;
-  if( XmlOptions::get().get<bool>("CHECK_ATTACHMENT") )
-  {
-    if( file.exists() ) 
-    {    
-      size_ = file.size();
-      size_str_ = file.sizeString();
-      is_valid_ = true;
-      modification_ = TimeStamp( file.lastModified() );
-    } else is_valid_ = false;
-  }
+  setIsValid( true );
   return;
 } 

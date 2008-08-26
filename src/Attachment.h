@@ -63,16 +63,7 @@ class Attachment: public Counter, public BASE::Key
 
 
   //! contructor
-  Attachment( 
-    const std::string orig = "", 
-    const AttachmentType& type = AttachmentType::UNKNOWN 
-  ):
-    Counter( "Attachment" ),
-    type_( AttachmentType::UNKNOWN ),
-    source_file_( orig ),
-    file_( NO_FILE ),
-    comments_( NO_COMMENTS )
-  { setType( type ); }
+  Attachment( const std::string orig = "", const AttachmentType& type = AttachmentType::UNKNOWN ); 
 
   //! creator from DomElement
   Attachment( const QDomElement& element );
@@ -118,9 +109,37 @@ class Attachment: public Counter, public BASE::Key
   
   };
   
-  //! retrieves original file name
+  //! validity 
+  bool setIsValid( const bool& value )
+  { 
+    if( is_valid_ == value ) return false;
+    is_valid_ = value; 
+    return true;
+  }
+  
+  //! validity
   bool isValid( void ) const 
-  { return is_valid_; }    
+  { return is_valid_; }
+  
+  //! link state
+  enum LinkState
+  {
+    UNKNOWN,
+    YES,
+    NO
+  };
+  
+  //! link 
+  bool setIsLink( const LinkState& value )
+  { 
+    if( is_link_ == value ) return false;
+    is_link_ = value; 
+    return true;
+  }
+  
+  //! link
+  LinkState isLink( void ) const
+  { return is_link_; }
   
   //! retrieves local file size
   double size( void ) const 
@@ -226,6 +245,9 @@ class Attachment: public Counter, public BASE::Key
   
   //! file last modification timestamp 
   TimeStamp modification_;  
+  
+  //! is link
+  LinkState is_link_;
   
   //! true for URL or if file exist
   bool is_valid_;    

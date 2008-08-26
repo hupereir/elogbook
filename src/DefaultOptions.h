@@ -73,21 +73,14 @@ void installDefaultOptions( void )
   // window sizes
   XmlOptions::get().add( Option( "ATTACHMENT_WINDOW_HEIGHT", "400" , "requested AttachmentWindow height [pixels]"  ));
   XmlOptions::get().add( Option( "ATTACHMENT_WINDOW_WIDTH", "600" , "requested AttachmentWindow width [pixels]"  ));
+  XmlOptions::get().add( Option( "ATTACHMENT_FRAME_HEIGHT", "150" , "requested height of attachment list in editor [pixels]"  ));
   
   XmlOptions::get().add( Option( "EDITION_WINDOW_HEIGHT", "750" , "requested EditionWindow height [pixels]"  ));
   XmlOptions::get().add( Option( "EDITION_WINDOW_WIDTH", "700" , "requested EditionWindow width [pixels]"  ));
 
   XmlOptions::get().add( Option( "MAIN_WINDOW_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "MAIN_WINDOW_WIDTH", "700" , "requested MainWindow width [pixels]"  ));
-
-  // these options will be removed
-  // one should use ATTACHMENT_FRAME_HEIGHT instead
-  XmlOptions::get().add( Option( "ATC_HEIGHT", "150" , "requested height of attachment list in editor [pixels]"  ));
-  XmlOptions::get().add( Option( "EDT_HEIGHT", "600" , "requested EditionWindow height [pixels]"  ));
-  
+  XmlOptions::get().add( Option( "MAIN_WINDOW_WIDTH", "700" , "requested MainWindow width [pixels]"  ));  
   XmlOptions::get().add( Option( "LIST_ICON_SIZE", "10", "default icon size in lists" ) );
-
-  XmlOptions::get().add( Option( "CHECK_ATTACHMENT", "0", "check if attachment exists at startup" ) );
   
   XmlOptions::get().add( Option( "AUTO_BACKUP", "1" , "1 to make a backup of logbook file prior to any writting"  ));
   XmlOptions::get().add( Option( "AUTO_SAVE", "0" , "1 to save logbook automaticaly every given interval"  ));

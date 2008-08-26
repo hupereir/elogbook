@@ -43,6 +43,7 @@
 #include "EditAttachmentDialog.h"
 #include "EditionWindow.h"
 #include "File.h"
+#include "FileRecord.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "Logbook.h"
@@ -59,7 +60,9 @@ using namespace std;
 //_____________________________________________
 AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   QWidget( parent ),
-  read_only_( read_only )
+  read_only_( read_only ),
+  default_height_( -1 ),
+  thread_( this )
 { 
   Debug::Throw( "AttachmentFrame::AttachmentFrame.\n" ); 
 
@@ -78,19 +81,31 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   // install actions
   _installActions();
   
-  list().menu().addAction( &newAttachmentAction() );
-  list().menu().addAction( &openAttachmentAction() );
-  list().menu().addAction( &editAttachmentAction() );
-  list().menu().addAction( &deleteAttachmentAction() );
+  list().menu().addAction( &newAction() );
+  list().menu().addAction( &openAction() );
+  list().menu().addAction( &editAction() );
+  list().menu().addAction( &deleteAction() );
+  list().menu().addSeparator();
+  list().menu().addAction( &cleanAction() );
   
   // connections
   connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );
   connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
   connect( list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
+  connect( list().selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
   connect( &list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
 
   _updateActions();
 }
+
+
+//______________________________________________________________________
+void AttachmentFrame::setDefaultHeight( const int& value )
+{ default_height_ = value; }
+
+//____________________________________________
+QSize AttachmentFrame::sizeHint( void ) const
+{ return (default_height_ ) >= 0 ? QSize( 0, default_height_ ):QWidget::sizeHint(); }
 
 //_____________________________________________
 void AttachmentFrame::add( const AttachmentModel::List& attachments )
@@ -118,7 +133,7 @@ void AttachmentFrame::update( Attachment& attachment )
 void AttachmentFrame::select( Attachment& attachment )
 {
   
-  Debug::Throw( "AttachmentFrame::SelectAttachment.\n" ); 
+  Debug::Throw( "AttachmentFrame::select.\n" ); 
   assert( attachment.isAssociated( this ) );
     
   // get matching model index
@@ -288,14 +303,117 @@ void AttachmentFrame::_new( void )
 }  
 
 //_____________________________________________
+void AttachmentFrame::enterEvent( QEvent* event )
+{
+  
+  Debug::Throw( "AttachmentFrame::enterEvent.\n" );
+  if( thread_.isRunning() || !hasList() ) return;
+  
+  // create file records
+  FileRecord::List records;
+
+  // retrieve all attachments from model
+  AttachmentModel::List attachments( _model().get() );
+  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  {
+    
+    assert( *iter );
+    Attachment &attachment( **iter );
+    
+    if( attachment.type() == AttachmentType::URL ) continue;
+    if( attachment.file().empty() ) continue;
+    
+    records.push_back( FileRecord( attachment.file() ) );
+    
+    if( attachment.isLink() == Attachment::YES || attachment.isLink() == Attachment::UNKNOWN )
+    { records.push_back( FileRecord( attachment.sourceFile() ) ); }
+    
+  }
+  
+  // setup thread and start
+  thread_.setRecords( records );
+  thread_.start();
+  
+  return QWidget::enterEvent( event );
+  
+}
+
+//_______________________________________________ 
+void AttachmentFrame::customEvent( QEvent* event )
+{
+  
+  if( event->type() != QEvent::User ) return QWidget::customEvent( event ); 
+  
+  ValidFileEvent* valid_file_event( dynamic_cast<ValidFileEvent*>(event) );
+  if( !valid_file_event ) return QWidget::customEvent( event );
+  
+  Debug::Throw(0) << "AttachmentFrame::customEvent." << endl;
+  
+  // set file records validity
+  const FileRecord::List& records( valid_file_event->records() ); 
+
+  // retrieve all attachments from model
+  AttachmentModel::List attachments( _model().get() );
+  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  {
+    
+    assert( *iter );
+    Attachment &attachment( **iter );
+        
+    if( attachment.type() == AttachmentType::URL ) continue;
+    if( attachment.file().empty() ) continue;
+    
+    bool is_valid( attachment.isValid() );
+    Attachment::LinkState is_link( attachment.isLink() );
+
+    // check destination file
+    FileRecord::List::const_iterator found = find_if( 
+      records.begin(),
+      records.end(), 
+      FileRecord::SameFileFTor( attachment.file() ) );
+    if( found != records.end() ) { is_valid = found->isValid(); }
+        
+    // check link status
+    if( is_valid && is_link == Attachment::UNKNOWN )
+    {
+      // check if destination is a link
+      QFileInfo file_info( attachment.file().c_str() );
+      is_link = file_info.isSymLink() ? Attachment::YES : Attachment::NO;
+    }
+    
+    // check source file
+    if( is_valid && is_link == Attachment::YES )
+    {
+      found = find_if( 
+        records.begin(),
+        records.end(), 
+        FileRecord::SameFileFTor( attachment.sourceFile() ) );
+      if( found != records.end() ) { is_valid &= found->isValid(); }
+    }
+   
+    // update validity flag and set parent logbook as modified if needed
+    if( attachment.setIsValid( is_valid ) || attachment.setIsLink( is_link ) )
+    {
+      BASE::KeySet<Logbook> logbooks( &attachment );
+      for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
+      { (*iter)->setModified( true ); }
+    }
+
+  }
+  cleanAction().setEnabled( valid_file_event->hasInvalidRecords() );
+  return QWidget::customEvent( event ); 
+
+}
+
+//_____________________________________________
 void AttachmentFrame::_updateActions( void )
 {
   
   bool has_selection( !list().selectionModel()->selectedRows().isEmpty() );
-  newAttachmentAction().setEnabled( !read_only_ );
-  openAttachmentAction().setEnabled( has_selection );
-  editAttachmentAction().setEnabled( has_selection && !read_only_ );
-  deleteAttachmentAction().setEnabled( has_selection && !read_only_ );
+  newAction().setEnabled( !readOnly() );
+  openAction().setEnabled( has_selection );
+  editAction().setEnabled( has_selection && !readOnly() );
+  deleteAction().setEnabled( has_selection && !readOnly() );
   return;
   
 }
@@ -509,6 +627,19 @@ void AttachmentFrame::_delete( void )
   
 }
 
+//_________________________________________________________________________
+void AttachmentFrame::_clean( void )
+{ Debug::Throw( "AttachmentFrame::clean.\n" ); }
+  
+//_________________________________________________________________________
+void AttachmentFrame::_itemSelected( const QModelIndex& index )
+{
+  Debug::Throw( "AttachmentFrame::_itemSelected.\n" );
+  if( !index.isValid() ) return;
+  emit attachmentSelected( *model_.get( index ) );
+  
+}
+  
 //______________________________________________________________________
 void AttachmentFrame::_storeSelection( void )
 { 
@@ -556,25 +687,29 @@ void AttachmentFrame::_installActions( void )
 {
   Debug::Throw( "AttachmentFrame::_installActions.\n" );
 
-  addAction( visibility_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachment list", this ) );
+  addAction( visibility_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "Show &Attachment list", this ) );
   visibilityAction().setToolTip( "Show/hide attachment list" );
   visibilityAction().setCheckable( true );
+  visibilityAction().setChecked( true );
   connect( &visibilityAction(), SIGNAL( toggled( bool ) ), SLOT( setVisible( bool ) ) );
   
-  addAction( new_attachment_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&New", this ) );
-  newAttachmentAction().setToolTip( "Attach a file/URL to the current entry" );
-  connect( &newAttachmentAction(), SIGNAL( triggered() ), SLOT( _newAttachment() ) );
+  addAction( new_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&New", this ) );
+  newAction().setToolTip( "Attach a file/URL to the current entry" );
+  connect( &newAction(), SIGNAL( triggered() ), SLOT( _new() ) );
   
-  addAction( open_attachment_action_ = new QAction( IconEngine::get( ICONS::OPEN ), "&Open", this ) );
-  openAttachmentAction().setToolTip( "Open selected attachments" );
-  connect( &openAttachmentAction(), SIGNAL( triggered() ), SLOT( _open() ) );
+  addAction( open_action_ = new QAction( IconEngine::get( ICONS::OPEN ), "&Open", this ) );
+  openAction().setToolTip( "Open selected attachments" );
+  connect( &openAction(), SIGNAL( triggered() ), SLOT( _open() ) );
      
-  addAction( edit_attachment_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit", this ) );
-  editAttachmentAction().setToolTip( "Edit selected attachments informations" );
-  connect( &editAttachmentAction(), SIGNAL( triggered() ), SLOT( _edit() ) );
+  addAction( edit_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit", this ) );
+  editAction().setToolTip( "Edit selected attachments informations" );
+  connect( &editAction(), SIGNAL( triggered() ), SLOT( _edit() ) );
 
-  delete_attachment_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete", this );
-  deleteAttachmentAction().setToolTip( "Delete selected attachments" );
-  connect( &deleteAttachmentAction(), SIGNAL( triggered() ), SLOT( _delete() ) );
-  
+  delete_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete", this );
+  deleteAction().setToolTip( "Delete selected attachments" );
+  connect( &deleteAction(), SIGNAL( triggered() ), SLOT( _delete() ) );
+
+  clean_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Clean", this );
+  cleanAction().setToolTip( "Delete selected attachments" );
+  connect( &cleanAction(), SIGNAL( triggered() ), SLOT( _clean() ) );  
 }

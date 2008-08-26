@@ -111,16 +111,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   
   grid_layout->setColumnStretch( 1, 1 );
   
-  box = new QGroupBox( "Misc", page );
-  box->setLayout( new QVBoxLayout() );
-  box->layout()->setMargin(5);
-  box->layout()->setSpacing(5);
-  page->layout()->addWidget( box );
-  
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Check attached file", box, "CHECK_ATTACHMENT" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Check if attached file exists at start-up" );
-
   // listview configuration
   page = &addPage( "List configuration" );  
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
