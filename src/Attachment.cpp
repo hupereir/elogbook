@@ -132,10 +132,7 @@ void Attachment::setType( const AttachmentType& type )
   type_  = type;
   
   if( type_ == AttachmentType::URL ) 
-  {
-    setIsValid( true );
-    setIsLink( YES );
-  }
+  { setIsLink( YES ); }
   
   return;
 } 
@@ -242,6 +239,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   
   // update long/short filenames.
   _setFile( destname );
+  setIsValid( true );
   return SUCCESS;
 }
 
@@ -281,6 +279,5 @@ void Attachment::_setFile( const File& file )
 {
   Debug::Throw() << "Attachment::_SetFile.\n";
   file_  = file;
-  setIsValid( true );
   return;
 } 

@@ -64,7 +64,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
   from_disk_radio_button_->setToolTip( "Select this button to remove attachment file from disk and logbook." );
   group->addButton( from_disk_radio_button_ );
   
-  group_box->layout()->addWidget( from_logbook_radio_button_ = new QRadioButton( "from dialog", group_box ) );
+  group_box->layout()->addWidget( from_logbook_radio_button_ = new QRadioButton( "from frame", group_box ) );
   from_logbook_radio_button_->setToolTip( "Select this button to remove attachment file from logbook only (attachment is kept on disk)." );
   group->addButton( from_logbook_radio_button_ );
 

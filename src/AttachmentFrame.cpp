@@ -347,12 +347,14 @@ void AttachmentFrame::customEvent( QEvent* event )
   ValidFileEvent* valid_file_event( dynamic_cast<ValidFileEvent*>(event) );
   if( !valid_file_event ) return QWidget::customEvent( event );
   
-  Debug::Throw(0) << "AttachmentFrame::customEvent." << endl;
+  Debug::Throw() << "AttachmentFrame::customEvent." << endl;
   
   // set file records validity
   const FileRecord::List& records( valid_file_event->records() ); 
 
   // retrieve all attachments from model
+  // true if some modifications are to be saved
+  bool modified( false );
   AttachmentModel::List attachments( _model().get() );
   for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
   {
@@ -363,6 +365,8 @@ void AttachmentFrame::customEvent( QEvent* event )
     if( attachment.type() == AttachmentType::URL ) continue;
     if( attachment.file().empty() ) continue;
     
+    Debug::Throw() << "AttachmentFrame::customEvent - checking: " << attachment.file() << endl;
+    
     bool is_valid( attachment.isValid() );
     Attachment::LinkState is_link( attachment.isLink() );
 
@@ -372,7 +376,8 @@ void AttachmentFrame::customEvent( QEvent* event )
       records.end(), 
       FileRecord::SameFileFTor( attachment.file() ) );
     if( found != records.end() ) { is_valid = found->isValid(); }
-        
+    else { Debug::Throw() << "AttachmentFrame::customEvent - not found." << endl; }
+    
     // check link status
     if( is_valid && is_link == Attachment::UNKNOWN )
     {
@@ -389,17 +394,42 @@ void AttachmentFrame::customEvent( QEvent* event )
         records.end(), 
         FileRecord::SameFileFTor( attachment.sourceFile() ) );
       if( found != records.end() ) { is_valid &= found->isValid(); }
+      else { Debug::Throw() << "AttachmentFrame::customEvent - not found." << endl; }
     }
    
     // update validity flag and set parent logbook as modified if needed
+    Debug::Throw() << "AttachmentFrame::customEvent - valid: " << is_valid << " link: " << is_link << endl;
     if( attachment.setIsValid( is_valid ) || attachment.setIsLink( is_link ) )
     {
-      BASE::KeySet<Logbook> logbooks( &attachment );
+      
+      // get associated entry
+      BASE::KeySet<LogEntry> entries( &attachment );
+      assert( entries.size() == 1 );
+      LogEntry& entry( **entries.begin() );
+      entry.modified();
+      
+      // get associated logbooks
+      BASE::KeySet<Logbook> logbooks( &entry );
       for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
       { (*iter)->setModified( true ); }
+      
+      modified = true;
+      
     }
 
   }
+  
+  // save logbooks
+  if( modified ) 
+  {
+        
+    // set main window title
+    MainWindow& mainwindow( static_cast<Application*>(qApp)->mainWindow() );
+    mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    if( mainwindow.logbook()->file().size() ) mainwindow.save();
+    
+  }
+  
   cleanAction().setEnabled( valid_file_event->hasInvalidRecords() );
   return QWidget::customEvent( event ); 
 
@@ -567,7 +597,7 @@ void AttachmentFrame::_delete( void )
   for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
   {
     
-    Attachment* attachment( *iter ); 
+    Attachment *attachment( *iter ); 
   
     // dialog
     DeleteAttachmentDialog dialog( this, *attachment );
@@ -578,8 +608,8 @@ void AttachmentFrame::_delete( void )
     // retrieve action
     bool from_disk( dialog.action() == DeleteAttachmentDialog::FROM_DISK );
     
-    // retrieve/delete associated attachment frames and remove item
-    BASE::KeySet<AttachmentFrame> frames( *attachment );
+    // retrieve associated attachment frames and remove item
+    BASE::KeySet<AttachmentFrame> frames( attachment );
     for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
     { (*iter)->_model().remove( attachment ); }
   
@@ -629,7 +659,59 @@ void AttachmentFrame::_delete( void )
 
 //_________________________________________________________________________
 void AttachmentFrame::_clean( void )
-{ Debug::Throw( "AttachmentFrame::clean.\n" ); }
+{ 
+  Debug::Throw( "AttachmentFrame::clean.\n" ); 
+
+  // ask for confirmation
+  if( !QtUtil::questionDialog( this, "Remove all invalid attachments ?" ) ) return;
+  
+  // retrieve all attachments from model
+  // true if some modifications are to be saved
+  bool modified( false );
+  AttachmentModel::List attachments( _model().get() );
+  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  {
+    
+    assert( *iter );
+    Attachment *attachment( *iter );
+        
+    // skip attachment if valid
+    if( attachment->isValid() ) continue;
+    
+    Debug::Throw(0) << "AttachmentFrame::_clean - removing: " << attachment->file() << endl;
+    
+    // retrieve associated attachment frames and remove item
+    BASE::KeySet<AttachmentFrame> frames( attachment );
+    for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); iter++ ) 
+    { (*iter)->_model().remove( attachment ); }
+    
+    // retrieve associated entries
+    BASE::KeySet<LogEntry> entries( attachment );
+    assert( entries.size() == 1 );
+    LogEntry& entry( **entries.begin() );
+    entry.modified();
+    
+    // retrieve associated logbooks
+    BASE::KeySet<Logbook> logbooks( &entry );
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
+    { (*iter)->setModified( true ); }
+
+    // delete attachment
+    delete attachment;
+    modified = true;
+  }
+  
+  if( modified ) 
+  {
+   
+    // set main window title
+    MainWindow& mainwindow( static_cast<Application*>(qApp)->mainWindow() );
+    mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    if( mainwindow.logbook()->file().size() ) mainwindow.save();
+    
+  }
+
+}
   
 //_________________________________________________________________________
 void AttachmentFrame::_itemSelected( const QModelIndex& index )

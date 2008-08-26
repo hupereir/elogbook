@@ -78,20 +78,23 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   
   QGroupBox *group_box = new QGroupBox( this );
   mainLayout().addWidget( group_box, 0 );
-  group_box->setLayout( new QVBoxLayout() );
-  group_box->layout()->setMargin(5);
-  group_box->layout()->setSpacing(5);
+  grid_layout = new GridLayout();
+  
+  group_box->setLayout( grid_layout );
+  grid_layout->setMargin(5);
+  grid_layout->setSpacing(5);
+  grid_layout->setMaxCount(2);
 
-  group_box->layout()->addWidget( open_radio_button_ = new QRadioButton( "open using: ", group_box ) );
+  grid_layout->addWidget( open_radio_button_ = new QRadioButton( "open using: ", group_box ) );
   open_radio_button_->setToolTip( "Select this button to open attachment using the selected application." );
   group->addButton( open_radio_button_ );
   
-  group_box->layout()->addWidget( command_line_edit_ = new BrowsedLineEditor( group_box ) );
+  grid_layout->addWidget( command_line_edit_ = new BrowsedLineEditor( group_box ) );
   command_line_edit_->setFile( attachment.type().editCommand() );
   QtUtil::expand( &command_line_edit_->editor() );
   command_line_edit_->setToolTip( "Application to be used to display the attachment." );
 
-  group_box->layout()->addWidget( save_radio_button_ = new QRadioButton( "save to disk ", group_box ) );
+  grid_layout->addWidget( save_radio_button_ = new QRadioButton( "save to disk ", group_box ) );
   save_radio_button_->setToolTip( "Select this button to save a copy of the attachment on disk." );
   group->addButton( save_radio_button_ );
 

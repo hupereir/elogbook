@@ -112,6 +112,12 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   main_->layout()->setMargin(0);
   main_->layout()->setSpacing(0);
 
+  // assign stretch factors
+  splitter->setStretchFactor( 0, 1 );
+  splitter->setStretchFactor( 1, 0 );
+  
+  connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( _splitterMoved( void ) ) );
+
   // create editor
   TextEditor& editor( _newTextEditor( main_ ) );
   main_->layout()->addWidget( &editor );
