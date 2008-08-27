@@ -84,7 +84,6 @@ Qt::ItemFlags AttachmentModel::flags(const QModelIndex &index) const
 //__________________________________________________________________
 QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
 {
-  Debug::Throw( "AttachmentModel::data.\n" );
   
   // check index, role and column
   if( !index.isValid() ) return QVariant();

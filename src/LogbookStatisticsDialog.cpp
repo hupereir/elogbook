@@ -32,11 +32,9 @@
 #include <QLayout>
 #include <QPushButton>
 
-#include "TreeWidget.h"
+#include "TreeView.h"
 #include "LineEditor.h" 
 #include "Debug.h"
-#include "IconEngine.h"
-#include "Icons.h"
 #include "Logbook.h"
 #include "LogbookStatisticsDialog.h"
 #include "LogEntry.h"
@@ -47,23 +45,17 @@ using namespace std;
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
-  BaseDialog( parent ),
-  Counter( "LogbookStatisticsDialog" )
+  CustomDialog( parent, CustomDialog::OK_BUTTON )
 {
   Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
   setWindowTitle( "eLogbook - logbook statistics" );
   _setSizeOptionName( "LOGBOOK_STATISTICS_DIALOG" );
   
-  QVBoxLayout* layout( new QVBoxLayout() );
-  layout->setMargin( 10 );
-  layout->setSpacing( 10 );
-  setLayout( layout );
-  
   QGridLayout* grid_layout = new QGridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
-  layout->addLayout( grid_layout, 0 );
+  mainLayout().addLayout( grid_layout, 0 );
   
   // file
   grid_layout->addWidget( new QLabel( "File: ", this ), 0, 0 );
@@ -110,42 +102,54 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   
   
   // detail
+  TreeView *list_view( new TreeView( this ) );
+  list_view->setModel( &model_ );
+  list_view->setSortingEnabled( false );
+  mainLayout().addWidget( list_view, 1 );
+
   list< Logbook* > all( logbook->children() );
   all.push_front( logbook ); 
+  model_.add( Model::List( all.begin(), all.end() ) );
+  
+  list_view->resizeColumns();
+  
+}
 
-  TreeWidget *list_view( new TreeWidget( this ) );
-  layout->addWidget( list_view, 1 );
+
+//_______________________________________________
+const char* LogbookStatisticsDialog::Model::column_titles_[ LogbookStatisticsDialog::Model::n_columns ] =
+{ 
+  "file",
+  "entries",
+  "created",
+  "modified"
+};
+
+
+//_______________________________________________________________________________________
+QVariant LogbookStatisticsDialog::Model::data( const QModelIndex& index, int role ) const
+{
   
-  enum Columns{ FILE, ENTRIES, CREATED, MODIFIED }; 
-  list_view->setSortingEnabled( false );
-  list_view->setColumnCount( 4 );
-  list_view->setColumnName( FILE, "file" );
-  list_view->setColumnName( ENTRIES, "entries" );
-  list_view->setColumnName( CREATED, "created" );
-  list_view->setColumnName( MODIFIED, "last modified" );
-  list_view->setColumnType( ENTRIES, TreeWidget::NUMBER );
+  // check index, role and column
+  if( !index.isValid() ) return QVariant();
   
-  for( list< Logbook* >::iterator it=all.begin(); it!= all.end(); it++ )
+  // retrieve associated file info
+  Logbook& logbook( *get()[index.row()] );
+     // return text associated to file and column
+  if( role == Qt::DisplayRole ) 
   {
     
-    // create
-    TreeWidget::Item* item( new TreeWidget::Item() );
-    list_view->addTopLevelItem( item );
-    
-    // fill
-    item->setText( FILE, (*it)->file().localName().c_str() );
-    item->setText( ENTRIES, Str().assign<unsigned int>( BASE::KeySet<LogEntry>(*it).size() ).c_str() );
-    item->setText( CREATED, (*it)->creation().string().c_str() );
-    item->setText( MODIFIED, (*it)->modification().string().c_str() );
-    
+    switch( index.column() )
+    {
+      
+      case FILE: return logbook.file().localName().c_str();
+      case ENTRIES: return BASE::KeySet<LogEntry>(&logbook).size();
+      case CREATED: return logbook.creation().string().c_str();
+      case MODIFIED: return logbook.modification().string().c_str();
+      default: return QVariant();
+    }
   }
-
-  QPushButton* button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "&Ok", this );
-  layout->addWidget( button );
-  connect( button, SIGNAL( clicked() ), SLOT( close() ) );
   
-  list_view->resizeColumnToContents( ENTRIES );
-  list_view->resizeColumnToContents( MODIFIED );
-  list_view->resizeColumnToContents( FILE );
+  return QVariant();
   
 }
