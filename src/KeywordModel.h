@@ -38,7 +38,7 @@
 #include "TreeModel.h"
 
 //! Job model. Stores job information for display in lists
-class KeywordModel : public TreeModel<Keyword>
+class KeywordModel : public TreeModel<Keyword>, public Counter
 {
 
   //! Qt meta object declaration

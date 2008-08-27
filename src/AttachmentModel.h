@@ -38,7 +38,7 @@
 class Attachment;
 
 //! Job model. Stores job information for display in lists
-class AttachmentModel : public ListModel<Attachment*>
+class AttachmentModel : public ListModel<Attachment*>, public Counter
 {
  
   Q_OBJECT

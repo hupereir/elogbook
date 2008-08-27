@@ -56,7 +56,8 @@ const char* AttachmentModel::column_titles_[ AttachmentModel::n_columns ] =
 
 //_______________________________________________________________
 AttachmentModel::AttachmentModel( QObject* parent ):
-  ListModel<Attachment*>( parent )
+  ListModel<Attachment*>( parent ),
+  Counter( "AttachmentModel" )
 { 
   Debug::Throw( "AttachmentModel::AttachmentModel.\n" ); 
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );

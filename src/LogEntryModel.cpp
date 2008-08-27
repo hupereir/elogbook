@@ -59,6 +59,7 @@ const char* LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
 //_______________________________________________________________
 LogEntryModel::LogEntryModel( QObject* parent ):
   ListModel<LogEntry*>( parent ),
+  Counter( "LogEntryModel" ),
   edition_enabled_( false )
 { 
   Debug::Throw( "LogEntryModel::LogEntryModel.\n" );

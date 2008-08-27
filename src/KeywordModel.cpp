@@ -40,7 +40,8 @@ const QString KeywordModel::DRAG = "elogbook/keywordmodel/drag";
 
 //______________________________________________________________
 KeywordModel::KeywordModel( QObject* parent ):
-  TreeModel<Keyword>( parent )
+  TreeModel<Keyword>( parent ),
+  Counter( "KeywordModel" )
 {}
 
 

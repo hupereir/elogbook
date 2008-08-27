@@ -31,8 +31,8 @@
   \date $Date$
 */
 
-#include "CustomDialog.h"
 #include "Counter.h"
+#include "CustomDialog.h"
 #include "ListModel.h"
 
 class Logbook;
@@ -48,7 +48,7 @@ class LogbookStatisticsDialog: public CustomDialog
   private:
   
   //! logbook information model
-  class Model: public ListModel<Logbook*>
+  class Model: public ListModel<Logbook*>, public Counter
   {
     
     public:
@@ -63,6 +63,12 @@ class LogbookStatisticsDialog: public CustomDialog
       CREATED, 
       MODIFIED
     };
+    
+    //! constructor
+    Model( QObject* parent = 0 ):
+      ListModel<Logbook*>( parent ),
+      Counter( "LogbookStatisticsDialog::Model" )
+    {}
     
     //!@name methods reimplemented from base class
     //@{
