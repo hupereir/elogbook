@@ -61,7 +61,9 @@ class Attachment: public Counter, public BASE::Key
   //! default string when no comments given
   static const std::string NO_COMMENTS;  
 
-
+  //! no size
+  static const std::string NO_SIZE;
+  
   //! contructor
   Attachment( const std::string orig = "", const AttachmentType& type = AttachmentType::UNKNOWN ); 
 
@@ -140,6 +142,9 @@ class Attachment: public Counter, public BASE::Key
   //! link
   LinkState isLink( void ) const
   { return is_link_; }
+  
+  //! read file size
+  void updateSize( void );
   
   //! retrieves local file size
   double size( void ) const 

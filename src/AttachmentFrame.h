@@ -165,6 +165,12 @@ class AttachmentFrame: public QWidget, public BASE::Key
   
   private slots:
       
+  //! update configuration
+  void _updateConfiguration( void );
+  
+  //! session files sort order
+  void _storeSortMethod( int, Qt::SortOrder );
+
   //! update context menu
   void _updateActions( void );
 

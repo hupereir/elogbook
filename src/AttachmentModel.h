@@ -41,6 +41,8 @@ class Attachment;
 class AttachmentModel : public ListModel<Attachment*>
 {
  
+  Q_OBJECT
+  
   public:
 
   //! constructor
@@ -51,10 +53,11 @@ class AttachmentModel : public ListModel<Attachment*>
   {}
   
   //! number of columns
-  enum { n_columns = 4 };
+  enum { n_columns = 5 };
 
  //! column type enumeration
   enum ColumnType {
+    ICON,
     FILE,
     TYPE, 
     SIZE,
@@ -118,6 +121,15 @@ class AttachmentModel : public ListModel<Attachment*>
   
   //! list column names
   static const char* column_titles_[n_columns];
+
+  //! icon
+  static QIcon _icon( std::string );
+  
+  //! icon cache
+  typedef std::map<std::string, QIcon> IconCache;
+   
+  //! type icon cache
+  static IconCache icons_; 
 
 };
 

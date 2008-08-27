@@ -47,6 +47,7 @@ using namespace std;
 //_______________________________________
 const string Attachment::NO_FILE( "" );
 const string Attachment::NO_COMMENTS( "no comments" );
+const string Attachment::NO_SIZE( " - " );
 
 //_______________________________________
 Attachment::Attachment( const std::string orig, const AttachmentType& type ):
@@ -55,6 +56,8 @@ Attachment::Attachment( const std::string orig, const AttachmentType& type ):
   source_file_( orig ),
   file_( NO_FILE ),
   comments_( NO_COMMENTS ),
+  size_( 0 ),
+  size_str_( NO_SIZE ),
   is_link_( UNKNOWN ),
   is_valid_( false )
 { setType( type ); }
@@ -67,7 +70,7 @@ Attachment::Attachment( const QDomElement& element):
   file_( NO_FILE ),
   comments_( NO_COMMENTS ),
   size_( 0 ),
-  size_str_( "-" ),
+  size_str_( NO_SIZE ),
   is_link_( UNKNOWN ),
   is_valid_( false )
 {
@@ -131,7 +134,7 @@ void Attachment::setType( const AttachmentType& type )
   Debug::Throw() << "Attachment::setType.\n";
   type_  = type;
   
-  if( type_ == AttachmentType::URL ) 
+  if( Attachment::type() == AttachmentType::URL ) 
   { setIsLink( YES ); }
   
   return;
@@ -140,6 +143,17 @@ void Attachment::setType( const AttachmentType& type )
 //___________________________________
 bool Attachment::operator < ( const Attachment &attachment ) const 
 { return Str( shortFile() ).isLower( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ); }  
+
+//__________________________________
+void Attachment::updateSize( void )
+{
+  
+  // check type
+  if( type() == AttachmentType::URL || size() != 0 || !isValid() ) return;
+  size_ = file().fileSize();
+  size_str_ = file().sizeString();
+  
+}
 
 //__________________________________
 LogEntry* Attachment::entry( void ) const
@@ -161,7 +175,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   }
 
   // for URL attachments, just copy origin to file, whatever the command
-  if( type_ == AttachmentType::URL ) {
+  if( type() == AttachmentType::URL ) {
     _setFile( source_file_ );
     return SUCCESS;
   }
@@ -174,8 +188,8 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   
   // generate expanded source name
   File fullname( source_file_ .expand() );
-  if( !( type_ == AttachmentType::URL || fullname.exists() ) ) return SOURCE_NOT_FOUND;
-  else if( !( type_ == AttachmentType::URL ) && fullname.isDirectory() ) return SOURCE_IS_DIR;
+  if( !( type() == AttachmentType::URL || fullname.exists() ) ) return SOURCE_NOT_FOUND;
+  else if( !( type() == AttachmentType::URL ) && fullname.isDirectory() ) return SOURCE_IS_DIR;
     
   // destination filename
   File destname( fullname.localName().addPath( destdir ).expand() );
@@ -247,7 +261,13 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
 File Attachment::shortFile( void ) const
 {
   Debug::Throw( "Attachment::shortFile.\n" );
-  return( type_ == AttachmentType::URL ) ? file_:file_.localName();
+  
+  File file( file_ );
+  
+  // remove trailing slash
+  if( file.size() && file[file.size()-1] == '/' ) { file = File( file.substr( 0, file.size()-1 ) ); }
+   
+  return file.localName();
 }
 
 //_______________________________________
@@ -278,6 +298,14 @@ void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) cons
 void Attachment::_setFile( const File& file )
 {
   Debug::Throw() << "Attachment::_SetFile.\n";
+
+  // store file
   file_  = file;
+ 
+  // remove trailing spaces
+  static QRegExp regexp( "\\s+$" );
+  if( regexp.indexIn( file_.c_str() ) >= 0 )
+  { file_ = File( file_.substr( 0, file_.size() - regexp.matchedLength() ) ); }
+
   return;
 } 

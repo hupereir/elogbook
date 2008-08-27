@@ -658,6 +658,7 @@ void EditionWindow::_updateConfiguration( void )
   // one should check whether this is needed or not.
   Debug::Throw( "EditionWindow::_updateConfiguration.\n" ); 
   resize( sizeHint() );
+  
 }
 
 //_____________________________________________
@@ -1308,7 +1309,7 @@ void EditionWindow::_displayAttachments( void )
     
     frame.visibilityAction().setChecked( true );
     frame.add( AttachmentModel::List( attachments.begin(), attachments.end() ) );
-  
+
   }
   
   return;

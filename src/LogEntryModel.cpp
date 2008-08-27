@@ -126,10 +126,8 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
     
   }
  
-  if( role == Qt::TextAlignmentRole ) 
-  {
-    if( index.column() == COLOR ) return Qt::AlignCenter;
-  }
+  // alignment
+  if( role == Qt::TextAlignmentRole && index.column() == COLOR ) return Qt::AlignCenter;
   
   return QVariant();
   

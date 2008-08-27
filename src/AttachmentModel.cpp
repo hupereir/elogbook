@@ -35,13 +35,19 @@
 
 #include "AttachmentModel.h"
 #include "Attachment.h"
+#include "CustomPixmap.h"
 #include "TimeStamp.h"
+#include "XmlOptions.h"
 
 using namespace std;
+
+//__________________________________________________________________
+AttachmentModel::IconCache AttachmentModel::icons_;
 
 //_______________________________________________
 const char* AttachmentModel::column_titles_[ AttachmentModel::n_columns ] =
 { 
+  "",
   "file",
   "type",
   "size",
@@ -51,7 +57,10 @@ const char* AttachmentModel::column_titles_[ AttachmentModel::n_columns ] =
 //_______________________________________________________________
 AttachmentModel::AttachmentModel( QObject* parent ):
   ListModel<Attachment*>( parent )
-{ Debug::Throw( "AttachmentModel::AttachmentModel.\n" ); }
+{ 
+  Debug::Throw( "AttachmentModel::AttachmentModel.\n" ); 
+  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+}
   
 //__________________________________________________________________
 Qt::ItemFlags AttachmentModel::flags(const QModelIndex &index) const
@@ -84,7 +93,8 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
   Attachment* attachment( get()[index.row()] );
   
   // return text associated to file and column
-  if( role == Qt::DisplayRole ) {
+  if( role == Qt::DisplayRole ) 
+  {
     
     switch( index.column() )
     {
@@ -100,8 +110,10 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
       
       default: return QVariant();
     }
-  }
-  
+  } else if( role == Qt::ToolTipRole ) return QString( attachment->file().c_str() );
+  else if( role == Qt::DecorationRole && index.column() == ICON ) return _icon( attachment->type().icon() );
+  else if( role == Qt::TextAlignmentRole && index.column() == ICON ) return Qt::AlignCenter;
+
   return QVariant();
   
 }
@@ -123,6 +135,13 @@ QVariant AttachmentModel::headerData(int section, Qt::Orientation orientation, i
 }
 
 //____________________________________________________________
+void AttachmentModel::_updateConfiguration( void )
+{
+  Debug::Throw( "AttachmentModel::_updateConfiguration.\n" );
+  icons_.clear();
+}
+
+//____________________________________________________________
 void AttachmentModel::_sort( int column, Qt::SortOrder order )
 { 
   Debug::Throw() << "AttachmentModel::sort - column: " << column << " order: " << order << endl;
@@ -140,6 +159,7 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
 
     // check if column is a TimeStamp
     case FILE: return first->file() < second->file();
+    case ICON: return first->type().name() < second->type().name();
     case TYPE: return first->type().name() < second->type().name();
     case SIZE: return  first->size() < second->size();
     case MODIFICATION: return first->modification() < second->modification();
@@ -150,4 +170,32 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
     
   }
  
+}
+//________________________________________________________
+QIcon AttachmentModel::_icon( string type )
+{
+
+  //Debug::Throw( "SessionFilesModel::_icon.\n" );
+   
+  IconCache::const_iterator iter( icons_.find( type ) );
+  if( iter != icons_.end() ) return iter->second;
+
+  // pixmap size
+  unsigned int pixmap_size = XmlOptions::get().get<unsigned int>( "ATTACHMENT_LIST_ICON_SIZE" );
+  QSize size( pixmap_size, pixmap_size );
+  QSize scaled(size*0.9);
+ 
+  QIcon icon;
+  CustomPixmap pixmap( CustomPixmap().find( type ) );
+  if( !pixmap.isNull() )
+  {
+    icon = CustomPixmap()
+      .empty( size )
+      .merge( pixmap.scale( scaled ), CustomPixmap::CENTER );
+  }
+  
+  // store in map and return
+  icons_.insert( make_pair( type, icon ) );
+  return icon;
+   
 }

@@ -131,6 +131,21 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( listview_config );
   page->layout()->addWidget( listview_config );
   
+  box = new QGroupBox( "Misc", page );
+  page->layout()->addWidget( box );
+  grid_layout = new GridLayout();
+  grid_layout->setSpacing(5);
+  grid_layout->setMargin(5);
+  grid_layout->setMaxCount(2);
+  box->setLayout( grid_layout );
+  
+  grid_layout->addWidget( new QLabel( "Icon size: ", box ) );
+  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
+  spinbox->setMinimum( 8 );
+  spinbox->setMaximum( 96 );
+  spinbox->setToolTip( "Icon size in attachment lists" );
+  addOptionWidget( spinbox );
+
   // toolbars
   page = &addPage( "Toolbars" );
   box = new QGroupBox( "Toolbars", page );

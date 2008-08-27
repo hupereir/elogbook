@@ -81,6 +81,7 @@ void installDefaultOptions( void )
   XmlOptions::get().add( Option( "MAIN_WINDOW_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
   XmlOptions::get().add( Option( "MAIN_WINDOW_WIDTH", "700" , "requested MainWindow width [pixels]"  ));  
   XmlOptions::get().add( Option( "LIST_ICON_SIZE", "10", "default icon size in lists" ) );
+  XmlOptions::get().add( Option( "ATTACHMENT_LIST_ICON_SIZE", "22", "default icon size in lists" ) );
   
   XmlOptions::get().add( Option( "AUTO_BACKUP", "1" , "1 to make a backup of logbook file prior to any writting"  ));
   XmlOptions::get().add( Option( "AUTO_SAVE", "0" , "1 to save logbook automaticaly every given interval"  ));

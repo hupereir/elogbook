@@ -73,13 +73,8 @@ class AttachmentType: public Counter{
   { return key_ == type.key_; }
 
   //! creator
-  AttachmentType( const std::string& key, const std::string& name, const std::string& option = "" ):
-    Counter( "AttachmentType" ),
-    key_( key ),
-    name_( name ),
-    option_( option )
-    {}
-  
+  AttachmentType( const std::string& key, const std::string& name, const std::string& icon, const std::string& option = ""  );
+    
   //! retrieves attachment key
   const std::string& key( void ) const 
   { return key_; }
@@ -87,6 +82,10 @@ class AttachmentType: public Counter{
   //! retrieves attachment name
   const std::string& name( void ) const 
   { return name_; }
+  
+  //! icon
+  const std::string& icon( void ) const
+  { return icon_; }
   
   //! retrieves command used to edit the attachment
   std::string editCommand( void ) const;
@@ -111,6 +110,9 @@ class AttachmentType: public Counter{
   
   //! used to display the file type in readable format
   std::string name_;          
+  
+  //! icon
+  std::string icon_;
   
   //! option name for looking up command
   std::string option_;   

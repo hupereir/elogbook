@@ -31,6 +31,7 @@
 
 #include <list>
 #include <sstream>
+#include <QHeaderView>
 #include <QShortcut>
 
 #include "Application.h"
@@ -66,6 +67,10 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
 { 
   Debug::Throw( "AttachmentFrame::AttachmentFrame.\n" ); 
 
+  // tell validFile thread not to check duplicates
+  // this is needed when checking files that are links
+  thread_.setCheckDuplicates( false );
+  
   // default layout
   setLayout( new QVBoxLayout() );
   layout()->setMargin(0);
@@ -91,10 +96,13 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   // connections
   connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );
   connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
+  connect( list().header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
   connect( list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
   connect( list().selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
   connect( &list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
 
+  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  _updateConfiguration();
   _updateActions();
 }
 
@@ -116,6 +124,7 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
   { BASE::Key::associate( this, *iter ); }
   
   _model().add( attachments );
+  list().resizeColumns();
   
 }
 
@@ -416,6 +425,9 @@ void AttachmentFrame::customEvent( QEvent* event )
       modified = true;
       
     }
+    
+    // update attachment size
+    attachment.updateSize();
 
   }
   
@@ -433,6 +445,35 @@ void AttachmentFrame::customEvent( QEvent* event )
   cleanAction().setEnabled( valid_file_event->hasInvalidRecords() );
   return QWidget::customEvent( event ); 
 
+}
+
+//_____________________________________________
+void AttachmentFrame::_updateConfiguration( void )
+{
+  
+  Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
+  int icon_size( XmlOptions::get().get<int>( "ATTACHMENT_LIST_ICON_SIZE" ) );
+  list().setIconSize( QSize( icon_size, icon_size ) );
+  
+  // session files list sorting
+  if( XmlOptions::get().find( "ATTACHMENT_LIST_SORT_COLUMN" ) && XmlOptions::get().find( "ATTACHMENT_LIST_SORT_ORDER" ) )
+  { 
+    
+    list().sortByColumn( 
+      XmlOptions::get().get<int>( "ATTACHMENT_LIST_SORT_COLUMN" ), 
+      (Qt::SortOrder) XmlOptions::get().get<int>( "ATTACHMENT_LIST_SORT_ORDER" ) ); 
+  }
+  
+}
+
+//______________________________________________________________________
+void AttachmentFrame::_storeSortMethod( int column, Qt::SortOrder order )
+{
+  
+  Debug::Throw( "SessionFilesFrame::_storeSortMethod.\n" );
+  XmlOptions::get().set<int>( "ATTACHMENT_LIST_SORT_COLUMN", column );
+  XmlOptions::get().set<int>( "ATTACHMENT_LIST_SORT_ORDER", order );
+  
 }
 
 //_____________________________________________
@@ -678,7 +719,7 @@ void AttachmentFrame::_clean( void )
     // skip attachment if valid
     if( attachment->isValid() ) continue;
     
-    Debug::Throw(0) << "AttachmentFrame::_clean - removing: " << attachment->file() << endl;
+    Debug::Throw() << "AttachmentFrame::_clean - removing: " << attachment->file() << endl;
     
     // retrieve associated attachment frames and remove item
     BASE::KeySet<AttachmentFrame> frames( attachment );
@@ -787,7 +828,8 @@ void AttachmentFrame::_installActions( void )
   editAction().setToolTip( "Edit selected attachments informations" );
   connect( &editAction(), SIGNAL( triggered() ), SLOT( _edit() ) );
 
-  delete_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete", this );
+  addAction( delete_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete", this ) );
+  deleteAction().setShortcut( Qt::Key_Delete );
   deleteAction().setToolTip( "Delete selected attachments" );
   connect( &deleteAction(), SIGNAL( triggered() ), SLOT( _delete() ) );
 
