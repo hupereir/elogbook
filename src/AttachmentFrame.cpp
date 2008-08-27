@@ -470,7 +470,7 @@ void AttachmentFrame::_updateConfiguration( void )
 void AttachmentFrame::_storeSortMethod( int column, Qt::SortOrder order )
 {
   
-  Debug::Throw( "SessionFilesFrame::_storeSortMethod.\n" );
+  Debug::Throw( 0, "AttachmentFrame::_storeSortMethod.\n" );
   XmlOptions::get().set<int>( "ATTACHMENT_LIST_SORT_COLUMN", column );
   XmlOptions::get().set<int>( "ATTACHMENT_LIST_SORT_ORDER", order );
   
@@ -757,9 +757,10 @@ void AttachmentFrame::_clean( void )
 //_________________________________________________________________________
 void AttachmentFrame::_itemSelected( const QModelIndex& index )
 {
-  Debug::Throw( "AttachmentFrame::_itemSelected.\n" );
   if( !index.isValid() ) return;
-  emit attachmentSelected( *model_.get( index ) );
+  Attachment& attachment( *model_.get( index ) );
+  Debug::Throw() << "AttachmentFrame::_itemSelected - " << attachment.file() << endl;
+  emit attachmentSelected( attachment );
   
 }
   

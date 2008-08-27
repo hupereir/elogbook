@@ -152,7 +152,7 @@ void Attachment::updateSize( void )
   if( type() == AttachmentType::URL || size() != 0 || !isValid() ) return;
   size_ = file().fileSize();
   size_str_ = file().sizeString();
-  
+   
 }
 
 //__________________________________
