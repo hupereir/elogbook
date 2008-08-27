@@ -93,7 +93,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 void AttachmentWindow::show( void )
 {
   Debug::Throw( "AttachmentWindow::show.\n" );
-  QtUtil::centerOnPointer( this );
+  centerOnWidget( qApp->activeWindow());
   QWidget::show();
   QWidget::raise();
 }
@@ -114,7 +114,6 @@ void AttachmentWindow::enterEvent( QEvent *event )
 void AttachmentWindow::_uniconify( void )
 {
   Debug::Throw( "AttachmentWindow::_uniconify.\n" );
-  QtUtil::centerOnWidget( this, qApp->activeWindow() );
   show();
   QtUtil::uniconify( window() );
   return;

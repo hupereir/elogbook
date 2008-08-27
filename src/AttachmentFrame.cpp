@@ -184,8 +184,12 @@ void AttachmentFrame::_new( void )
   NewAttachmentDialog dialog( this );
     
   // update destination directory
-  if( logbooks.size() && !(*logbooks.begin())->directory().empty() )
-  dialog.setDestinationDirectory( (*logbooks.begin())->directory() );
+  if( logbooks.size() && !(*logbooks.begin())->directory().empty() ) { dialog.setDestinationDirectory( (*logbooks.begin())->directory() ); }
+  else { 
+    MainWindow& mainwindow( static_cast<Application*>(qApp)->mainWindow() );
+    if( mainwindow.logbook() && !mainwindow.logbook()->directory().empty() )
+    { dialog.setDestinationDirectory( mainwindow.logbook()->directory() ); }
+  }
   
   // type and action
   dialog.setType( AttachmentType::UNKNOWN );

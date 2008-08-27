@@ -516,8 +516,8 @@ void EditionWindow::_newEntry( void )
   entry->setKeyword( _mainWindow().currentKeyword() );
 
   // add logbook parent if any
-  Logbook *logbook( _mainWindow().logbook() );
-  if( logbook ) Key::associate( entry, logbook->latestChild() );
+  // Logbook *logbook( _mainWindow().logbook() );
+  // if( logbook ) Key::associate( entry, logbook->latestChild() );
 
   // display new entry
   displayEntry( entry );

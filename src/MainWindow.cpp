@@ -1765,14 +1765,32 @@ void MainWindow::_newEntry( void )
   
   Debug::Throw( "MainWindow::_NewEntry.\n" );
 
-  // create new EditionWindow
-  EditionWindow *frame = new EditionWindow( 0, false );
-  Key::associate( this, frame );
-  frame->centerOnWidget( this );
-  frame->show();
+  // retrieve associated EditionWindows, check if one matches the selected entry
+  EditionWindow *edit_frame( 0 );
+  BASE::KeySet<EditionWindow> frames( this );
+  
+  // the order is reversed to start from latest
+  for( BASE::KeySet<EditionWindow>::reverse_iterator iter=frames.rbegin(); iter != frames.rend(); iter++ )
+  {
+    // skip closed editors
+    if( !(*iter)->isClosed() ) continue;
+    edit_frame = *iter;
+    edit_frame->setIsClosed( false );
+    edit_frame->setReadOnly( false );
+  }
+  
+  if( !edit_frame )
+  {
+    // create new EditionWindow
+    edit_frame = new EditionWindow( 0, false );
+    Key::associate( this, edit_frame );
+  }
+  
+  edit_frame->centerOnWidget( this );
+  edit_frame->show();
 
   // call NewEntry for the selected frame
-  frame->newEntryAction().trigger();
+  edit_frame->newEntryAction().trigger();
 
 }
 
@@ -1878,9 +1896,6 @@ void MainWindow::_displayEntry( LogEntry* entry )
       edit_frame = *iter;
       edit_frame->setIsClosed( false );
       edit_frame->setReadOnly( false );
-      QtUtil::centerOnParent( edit_frame );
-      edit_frame->displayEntry( entry );
-      edit_frame->show();
       break;
     }
     
@@ -1891,11 +1906,11 @@ void MainWindow::_displayEntry( LogEntry* entry )
   {
     edit_frame = new EditionWindow( 0, false );
     Key::associate( this, edit_frame );
-    edit_frame->centerOnWidget( this );
-    edit_frame->show();
-    edit_frame->displayEntry( entry );
-
   }
+  
+  edit_frame->centerOnWidget( this );
+  edit_frame->displayEntry( entry );
+  edit_frame->show();
   
   // finaly, delete closed editors 
   /* one might skip that step to be more memory aggressive */
