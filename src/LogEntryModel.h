@@ -143,28 +143,20 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
   //! create icon for a given color
   QIcon _createIcon( const QColor& ) const;
   
-  //! used to sort LogEntrys
-  class SortFTor
+  
+  //! used to sort IconCaches
+  class SortFTor: public ItemModel::SortFTor
   {
     
     public:
     
     //! constructor
-    SortFTor( const ColumnType& type, Qt::SortOrder order = Qt::AscendingOrder ):
-      type_( type ),
-      order_( order )
+    SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
+      ItemModel::SortFTor( type, order )
       {}
       
     //! prediction
-    bool operator() ( LogEntry* first, LogEntry* second ) const;
-    
-    private:
-    
-    //! column
-    ColumnType type_;
-    
-    //! order
-    Qt::SortOrder order_;
+    bool operator() ( LogEntry*, LogEntry* ) const;
     
   };
 
