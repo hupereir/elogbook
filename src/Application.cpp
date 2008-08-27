@@ -160,6 +160,7 @@ void Application::realizeWidget( void )
   
   // create attachment window
   attachment_window_ = new AttachmentWindow();
+  attachmentWindow().centerOnDesktop();
   
   // create selection frame
   main_window_ = new MainWindow();
@@ -178,8 +179,7 @@ void Application::realizeWidget( void )
   if( XmlOptions::get().get<bool>("SPLASH_SCREEN") )
   { splash_screen->show(); }
   
-  //QtUtil::centerOnDesktop( main_window_ );
-  mainWindow().move( QtUtil::centerOnDesktop( mainWindow().sizeHint() ) );
+  mainWindow().centerOnDesktop();
   mainWindow().show();
     
   // update
@@ -249,7 +249,7 @@ void Application::_configuration( void )
   emit saveConfiguration();
   ConfigurationDialog dialog(0);
   connect( &dialog, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  dialog.move( QtUtil::centerOnWidget( dialog.sizeHint(), activeWindow() ) );
+  dialog.centerOnWidget( activeWindow() );
   dialog.exec();
 
 }

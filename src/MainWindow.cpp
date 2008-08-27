@@ -1768,6 +1768,7 @@ void MainWindow::_newEntry( void )
   // create new EditionWindow
   EditionWindow *frame = new EditionWindow( 0, false );
   Key::associate( this, frame );
+  frame->centerOnWidget( this );
   frame->show();
 
   // call NewEntry for the selected frame
@@ -1890,7 +1891,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
   {
     edit_frame = new EditionWindow( 0, false );
     Key::associate( this, edit_frame );
-    QtUtil::centerOnParent( edit_frame );
+    edit_frame->centerOnWidget( this );
     edit_frame->show();
     edit_frame->displayEntry( entry );
 
