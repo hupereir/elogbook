@@ -108,6 +108,7 @@ class LogbookStatisticsDialog: public CustomDialog
     
   };
   
+  //! model
   Model model_;
   
 };
