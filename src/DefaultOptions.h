@@ -45,82 +45,72 @@ void installDefaultOptions( void )
   
   // COLOR options are special. Keep the full list
   XmlOptions::get().keep( "COLOR" );
-  XmlOptions::get().add( Option( "COLOR", "#aa0000" , "entry display color"  ));
-  XmlOptions::get().add( Option( "COLOR", "#FF9900" , "entry display color"  ));
-  XmlOptions::get().add( Option( "COLOR", "#FF8C00" , "entry display color"  ));
-  XmlOptions::get().add( Option( "COLOR", "#009900" , "entry display color"  ));
-  XmlOptions::get().add( Option( "COLOR", "#3333FF" , "entry display color"  ));
-  XmlOptions::get().add( Option( "COLOR", "#993399" , "entry display color"  ));
+  XmlOptions::get().add( "COLOR", Option( "#aa0000" , "entry display color"  ) );
+  XmlOptions::get().add( "COLOR", Option( "#FF9900" , "entry display color"  ) );
+  XmlOptions::get().add( "COLOR", Option( "#FF8C00" , "entry display color"  ) );
+  XmlOptions::get().add( "COLOR", Option( "#009900" , "entry display color"  ) );
+  XmlOptions::get().add( "COLOR", Option( "#3333FF" , "entry display color"  ) );
+  XmlOptions::get().add( "COLOR", Option( "#993399" , "entry display color"  ) );
  
     // COLOR options are special. Keep the full list
   XmlOptions::get().keep( "TEXT_COLOR" );
-  XmlOptions::get().add( Option( "TEXT_COLOR", "#aa0000" , "entry display color"  ));
-  XmlOptions::get().add( Option( "TEXT_COLOR", "#FF9900" , "entry display color"  ));
-  XmlOptions::get().add( Option( "TEXT_COLOR", "#FF8C00" , "entry display color"  ));
-  XmlOptions::get().add( Option( "TEXT_COLOR", "#009900" , "entry display color"  ));
-  XmlOptions::get().add( Option( "TEXT_COLOR", "#3333FF" , "entry display color"  ));
-  XmlOptions::get().add( Option( "TEXT_COLOR", "#993399" , "entry display color"  ));
-  
-  // pixmap path options are special. Keep the full list
-  XmlOptions::get().keep( "PIXMAP_PATH" );
-  XmlOptions::get().add( Option( "PIXMAP_PATH", ":/pixmaps" , "directory where application pixmaps are taken from."  ));
+  XmlOptions::get().add( "TEXT_COLOR", Option( "#aa0000" , "entry display color"  ) );
+  XmlOptions::get().add( "TEXT_COLOR", Option( "#FF9900" , "entry display color"  ) );
+  XmlOptions::get().add( "TEXT_COLOR", Option( "#FF8C00" , "entry display color"  ) );
+  XmlOptions::get().add( "TEXT_COLOR", Option( "#009900" , "entry display color"  ) );
+  XmlOptions::get().add( "TEXT_COLOR", Option( "#3333FF" , "entry display color"  ) );
+  XmlOptions::get().add( "TEXT_COLOR", Option( "#993399" , "entry display color"  ) );
   
   // icon
-  XmlOptions::get().add( Option( "ICON_PIXMAP", ":/icon.png" , "application icon"  ));
+  XmlOptions::get().add( "ICON_PIXMAP", Option( ":/icon.png" , "application icon"  ) );
   
   // normal (overwritten) options
   
   // window sizes
-  XmlOptions::get().add( Option( "ATTACHMENT_WINDOW_HEIGHT", "400" , "requested AttachmentWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "ATTACHMENT_WINDOW_WIDTH", "600" , "requested AttachmentWindow width [pixels]"  ));
-  XmlOptions::get().add( Option( "ATTACHMENT_FRAME_HEIGHT", "150" , "requested height of attachment list in editor [pixels]"  ));
+  XmlOptions::get().add( "ATTACHMENT_WINDOW_HEIGHT", Option( "400" , "requested AttachmentWindow height [pixels]"  ) );
+  XmlOptions::get().add( "ATTACHMENT_WINDOW_WIDTH", Option( "600" , "requested AttachmentWindow width [pixels]"  ) );
+  XmlOptions::get().add( "ATTACHMENT_FRAME_HEIGHT", Option( "150" , "requested height of attachment list in editor [pixels]"  ) );
   
-  XmlOptions::get().add( Option( "EDITION_WINDOW_HEIGHT", "750" , "requested EditionWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "EDITION_WINDOW_WIDTH", "700" , "requested EditionWindow width [pixels]"  ));
+  XmlOptions::get().add( "EDITION_WINDOW_HEIGHT", Option( "750" , "requested EditionWindow height [pixels]"  ) );
+  XmlOptions::get().add( "EDITION_WINDOW_WIDTH", Option( "700" , "requested EditionWindow width [pixels]"  ) );
 
-  XmlOptions::get().add( Option( "MAIN_WINDOW_HEIGHT", "750" , "requested MainWindow height [pixels]"  ));
-  XmlOptions::get().add( Option( "MAIN_WINDOW_WIDTH", "700" , "requested MainWindow width [pixels]"  ));  
-  XmlOptions::get().add( Option( "LIST_ICON_SIZE", "10", "default icon size in lists" ) );
-  XmlOptions::get().add( Option( "ATTACHMENT_LIST_ICON_SIZE", "22", "default icon size in lists" ) );
+  XmlOptions::get().add( "MAIN_WINDOW_HEIGHT", Option( "750" , "requested MainWindow height [pixels]"  ) );
+  XmlOptions::get().add( "MAIN_WINDOW_WIDTH", Option( "700" , "requested MainWindow width [pixels]"  ) );  
+  XmlOptions::get().add( "LIST_ICON_SIZE", Option( "10", "default icon size in lists" ) );
+  XmlOptions::get().add( "ATTACHMENT_LIST_ICON_SIZE", Option( "22", "default icon size in lists" ) );
   
-  XmlOptions::get().add( Option( "AUTO_BACKUP", "1" , "1 to make a backup of logbook file prior to any writting"  ));
-  XmlOptions::get().add( Option( "AUTO_SAVE", "0" , "1 to save logbook automaticaly every given interval"  ));
-  XmlOptions::get().add( Option( "AUTO_SAVE_ITV", "60" , "interval between two consecutive automatic save [seconds]"  ));
-  XmlOptions::get().add( Option( "BACKUP_ITV", "30" , "interval between two consecutive auto backup [days]"  ));
-  XmlOptions::get().add( Option( "CASE_SENSITIVE", "0" , "1 to distinguish upper and lower case when sorting/selecting text"  ));
-  XmlOptions::get().add( Option( "DB_SIZE", "10" , "max number of files stored in the open previous menu"  ));
+  XmlOptions::get().add( "AUTO_BACKUP", Option( "1" , "1 to make a backup of logbook file prior to any writting"  ) );
+  XmlOptions::get().add( "AUTO_SAVE", Option( "0" , "1 to save logbook automaticaly every given interval"  ) );
+  XmlOptions::get().add( "AUTO_SAVE_ITV", Option( "60" , "interval between two consecutive automatic save [seconds]"  ) );
+  XmlOptions::get().add( "BACKUP_ITV", Option( "30" , "interval between two consecutive auto backup [days]"  ) );
+  XmlOptions::get().add( "CASE_SENSITIVE", Option( "0" , "1 to distinguish upper and lower case when sorting/selecting text"  ) );
+  XmlOptions::get().add( "DB_SIZE", Option( "10" , "max number of files stored in the open previous menu"  ) );
 
-  XmlOptions::get().add( Option( "SIDE_EDITOR_TOOLBAR", "1" , "if true, editor toolbar is on the left instead of top"  ));
-  XmlOptions::get().add( Option( "SPLASH_SCREEN", "1" , "1 to show splash screen"  ));
-  XmlOptions::get().add( Option( "TRANSPARENT_SPLASH_SCREEN", "0" , "1 to show transparent splash screen" ));
+  XmlOptions::get().add( "SIDE_EDITOR_TOOLBAR", Option( "1" , "if true, editor toolbar is on the left instead of top"  ) );
+  XmlOptions::get().add( "SPLASH_SCREEN", Option( "1" , "1 to show splash screen"  ) );
+  XmlOptions::get().add( "TRANSPARENT_SPLASH_SCREEN", Option( "0" , "1 to show transparent splash screen" ) );
   
-  XmlOptions::get().add( Option( "SHOW_KEYWORD", "0" , "show keyword in editor"  ));
-  XmlOptions::get().add( Option( "SHOW_EDITFRAME_MENU", "1", "show menu in EditionWindow windows" ));
+  XmlOptions::get().add( "SHOW_KEYWORD", Option( "0" , "show keyword in editor"  ) );
+  XmlOptions::get().add( "SHOW_EDITFRAME_MENU", Option( "1", "show menu in EditionWindow windows" ) );
+  
+  XmlOptions::get().add( "MAIN_TOOLBAR", Option( "1" , "toolbar visibility" ) );
+  XmlOptions::get().add( "FORMAT_TOOLBAR", Option( "1" , "toolbar visibility" ) );
+  XmlOptions::get().add( "EDITION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().add( "EXTRA_TOOLBAR", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().add( "NAVIGATION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().add( "MULTIPLE_VIEW_TOOLBAR", Option( "1" , "toolbar visibility" ) );
 
-  #ifdef WITH_ASPELL
-  XmlOptions::get().add( Option( "ASPELL", "@ASPELL@", "aspell command" ));
-  XmlOptions::get().add( Option( "DICTIONARY", "en" , "default dictionary"  ));
-  XmlOptions::get().add( Option( "DICTIONARY_FILTER", "none" , "default filter"  ));
-  #endif
+  XmlOptions::get().add( "LOCK_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().add( "MAIN_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().add( "FORMAT_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().add( "EDITION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().add( "EXTRA_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().add( "NAVIGATION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().add( "MULTIPLE_VIEW_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
   
-  XmlOptions::get().add( Option( "MAIN_TOOLBAR",   "1" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "FORMAT_TOOLBAR",  "1" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "EDITION_TOOLBAR", "0" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR", "0" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR", "0" , "toolbar visibility" ));
-  XmlOptions::get().add( Option( "MULTIPLE_VIEW_TOOLBAR", "1" , "toolbar visibility" ));
-
-  XmlOptions::get().add( Option( "LOCK_TOOLBAR_LOCATION",   "top" , "toolbar location" ));
-  XmlOptions::get().add( Option( "MAIN_TOOLBAR_LOCATION",   "top" , "toolbar location" ));
-  XmlOptions::get().add( Option( "FORMAT_TOOLBAR_LOCATION",  "top" , "toolbar location" ));
-  XmlOptions::get().add( Option( "EDITION_TOOLBAR_LOCATION", "top" , "toolbar location" ));
-  XmlOptions::get().add( Option( "EXTRA_TOOLBAR_LOCATION", "top" , "toolbar location" ));
-  XmlOptions::get().add( Option( "NAVIGATION_TOOLBAR_LOCATION", "top" , "toolbar location" ));
-  XmlOptions::get().add( Option( "MULTIPLE_VIEW_TOOLBAR_LOCATION", "top" , "toolbar location" ));
-  
-  XmlOptions::get().add( Option( "LOCK_TOOLBAR", "0" , "keywords toolbar visibility" ));
-  XmlOptions::get().add( Option( "ENTRY_TOOLBAR", "1" , "entries toolbar visibility" ));
-  XmlOptions::get().add( Option( "SHOW_SEARCHPANEL", "1" , "search panel visibility" ));
+  XmlOptions::get().add( "LOCK_TOOLBAR", "0" , Option( "keywords toolbar visibility" ) );
+  XmlOptions::get().add( "ENTRY_TOOLBAR", "1" , Option( "entries toolbar visibility" ) );
+  XmlOptions::get().add( "SHOW_SEARCHPANEL", "1" , Option( "search panel visibility" ) );
 
   // masks
   XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", 
@@ -137,27 +127,11 @@ void installDefaultOptions( void )
     (1<< AttachmentModel::MODIFICATION) );
   
   // add run-time non recordable options
-        
-  // user name and host
   string user( Util::user( ) );
   string host( Util::host() );
-  Option option( "USER", user+"@"+host );  
-  option.setRecordable( false );
-  XmlOptions::get().add( option );
-
-  // help file
-  option = Option( "HELP_FILE",  File( ".elogbook_help" ).addPath( Util::home() ) );  
-  option.setRecordable( false );
-  XmlOptions::get().add( option );
-  
-  // DB file (for previously opened files
-  option = Option( "DB_FILE", File( ".elogbook_db" ).addPath( Util::home() ) );  
-  option.setRecordable( false );
-  XmlOptions::get().add( option );
-
-  // user resource file
-  option = Option( "RC_FILE", File(".elogbookrc").addPath(Util::home()));
-  option.setRecordable( false );
-  XmlOptions::get().add( option );
+  XmlOption::get().add( "USER", Option( user+"@"+host, Option::NONE ) );  
+  XmlOptions::get().add( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::NONE ) );  
+  XmlOptions::get().add( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::NONE ) );
+  XmlOptions::get().add( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::NONE ) );
   
 };

@@ -38,17 +38,17 @@ void installSystemOptions( void )
 {
   // set system dependent options
   
-  XmlOptions::get().add( Option( "EDIT_HTML_ATC", "@KONQUEROR@" , "to edit html attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_IMAGE_ATC", "@KUICKSHOW@" , "to edit image type attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_PLAIN_TEXT_ATC", "@QEDIT@" , "to edit plain text attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_POSTSCRIPT_ATC", "@GV@" , "to edit postscript attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_UNKNOWN_ATC", "@QEDIT@" , "to edit unknown type attachments"  ));
-  XmlOptions::get().add( Option( "EDIT_URL_ATC", "@KONQUEROR@" , "to edit url attachments"  ));
+  XmlOptions::get().add( "EDIT_HTML_ATC", Option( "@KONQUEROR@" , "to edit html attachments"  ) );
+  XmlOptions::get().add( "EDIT_IMAGE_ATC", Option( "@KUICKSHOW@" , "to edit image type attachments"  ) );
+  XmlOptions::get().add( "EDIT_PLAIN_TEXT_ATC", Option( "@QEDIT@" , "to edit plain text attachments"  ) );
+  XmlOptions::get().add( "EDIT_POSTSCRIPT_ATC", Option( "@GV@" , "to edit postscript attachments"  ) );
+  XmlOptions::get().add( "EDIT_UNKNOWN_ATC", Option( "@QEDIT@" , "to edit unknown type attachments"  ) );
+  XmlOptions::get().add( "EDIT_URL_ATC", Option( "@KONQUEROR@" , "to edit url attachments"  ) );
 
   #ifdef WITH_ASPELL
-  XmlOptions::get().add( Option( "ASPELL", "@ASPELL@", "aspell command" ));
-  XmlOptions::get().add( Option( "DICTIONARY", "en" , "default dictionary"  ));
-  XmlOptions::get().add( Option( "DICTIONARY_FILTER", "none" , "default filter"  ));
+  XmlOptions::get().add( "ASPELL", Option( "@ASPELL@", "aspell command" ) );
+  XmlOptions::get().add( "DICTIONARY", Option( "en" , "default dictionary"  ) );
+  XmlOptions::get().add( "DICTIONARY_FILTER", Option( "none" , "default filter"  ) );
   #endif
   
 };
