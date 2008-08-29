@@ -43,14 +43,12 @@ HEADERS = \
   HtmlUtil.h \
   Icons.h \
   Keyword.h \
-  KeywordDelegate.h \
   KeywordModel.h \
   Logbook.h \
   LogbookInformationDialog.h \
   LogbookModifiedDialog.h \
   LogbookStatisticsDialog.h \
   LogEntry.h \
-  LogEntryDelegate.h \
   LogEntryInformationDialog.h \
   LogEntryModel.h \
   Application.h \
@@ -84,14 +82,12 @@ SOURCES = \
   FormatBar.cpp \
   HtmlUtil.cpp \
   Keyword.cpp \
-  KeywordDelegate.cpp \
   KeywordModel.cpp \
   Logbook.cpp \
   LogbookInformationDialog.cpp \
   LogbookModifiedDialog.cpp \
   LogbookStatisticsDialog.cpp \
   LogEntry.cpp \
-  LogEntryDelegate.cpp \
   LogEntryInformationDialog.cpp \
   LogEntryModel.cpp \
   Application.cpp \

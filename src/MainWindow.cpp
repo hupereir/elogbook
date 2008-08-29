@@ -46,9 +46,8 @@
 #include "HtmlUtil.h"
 #include "IconEngine.h"
 #include "Icons.h"
-#include "KeywordDelegate.h"
+#include "TextEditionDelegate.h"
 #include "Logbook.h"
-#include "LogEntryDelegate.h"
 #include "LogbookInformationDialog.h"
 #include "LogbookModifiedDialog.h"
 #include "LogbookStatisticsDialog.h"
@@ -141,7 +140,7 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // the use of a custom delegate unfortunately disable the 
   // nice selection appearance of the oxygen style.
-  keywordList().setItemDelegate( new KeywordDelegate( this ) );
+  keywordList().setItemDelegate( new TextEditionDelegate( this ) );
   
   // update LogEntryList when keyword selection change
   connect( keywordList().selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );  
@@ -211,7 +210,7 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // the use of a custom delegate unfortunately disable the 
   // nice selection appearance of the oxygen style.
-  logEntryList().setItemDelegate( new LogEntryDelegate( this ) );
+  logEntryList().setItemDelegate( new TextEditionDelegate( this ) );
   
   connect( logEntryList().header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
   connect( logEntryList().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
@@ -1190,6 +1189,8 @@ void MainWindow::_updateConfiguration( void )
   
   Debug::Throw( "MainWindow::_updateConfiguration.\n" );
     
+  resize( sizeHint() );
+  
   // autoSave
   autosave_timer_.setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
   bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
