@@ -75,85 +75,49 @@ void Application::usage( void )
 
 //____________________________________________
 Application::Application( int argc, char*argv[] ) :
-  QApplication( argc, argv ),
+  BaseApplication( argc, argv ),
   Counter( "Application" ),
-  args_( argc, argv ),
-  application_manager_( 0 ),
   recent_files_( 0 ),
   attachment_window_( 0 ),
-  main_window_( 0 ),
-  realized_( false )
-{ 
-  Debug::Throw( "Application::Application.\n" ); 
-  if( XmlOptions::get().get<bool>( "USE_FLAT_THEME" ) ) setStyle( new FlatStyle() );
-} 
+  main_window_( 0 )
+{} 
 
 //____________________________________________
 Application::~Application( void ) 
 {
-  Debug::Throw( "Application::~Application.\n" );
-  
+  Debug::Throw( "Application::~Application.\n" );  
   if( main_window_ ) delete main_window_;
-  if( application_manager_ ) delete application_manager_; 
   if( recent_files_ ) delete recent_files_;
-  
-  XmlOptions::write();
-  
-  // error handler
-  ErrorHandler::exit();
 
 } 
 
 //____________________________________________
-void Application::initApplicationManager(  void )
+void Application::initApplicationManager( void )
 {
-  Debug::Throw( "Application::InitApplicationManager. Done.\n" ); 
+  Debug::Throw( "Application::initApplicationManager.\n" );
 
-  // disable server mode from option
-  if( args_.find( "--no-server" ) ) 
-  {
-    realizeWidget();
-    return;
-  }
-  
-  if( application_manager_ ) return;
+  // retrieve files from arguments and expand if needed
+  ArgList::Arg& last( _arguments().get().back() );
+  for( list< string >::iterator iter = last.options().begin(); iter != last.options().end(); iter++ )
+  { if( File( *iter ).size() ) (*iter) = File( *iter ).expand(); }
 
-  // create application manager
-  application_manager_ = new SERVER::ApplicationManager( this );
-  application_manager_->setApplicationName( "ELOGBOOK" );
-  connect( 
-    application_manager_, SIGNAL( stateChanged( SERVER::ApplicationManager::State ) ),
-    SLOT( _applicationManagerStateChanged( SERVER::ApplicationManager::State ) ) );
-    
-  connect( application_manager_, SIGNAL( serverRequest( const ArgList& ) ), SLOT( _processRequest( const ArgList& ) ) );
-    
-  // initialize application manager  
-  application_manager_->init( args_ );
+  // base class initialization
+  BaseApplication::initApplicationManager();
+
 }
-  
+
 //____________________________________________
-void Application::realizeWidget( void )
+bool Application::realizeWidget( void )
 {
   Debug::Throw( "Application::realizeWidget.\n" );
  
-  //! check if the method has already been called.
-  if( realized_ ) return;
-  realized_ = true;
+  // check if the method has already been called.
+  if( !BaseApplication::realizeWidget() ) return false;
 
-  // actions
-  about_action_ = new QAction( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).c_str() ), "About &eLogbook", this );
-  connect( about_action_, SIGNAL( triggered() ), SLOT( _about() ) );
-
-  aboutqt_action_ = new QAction( IconEngine::get( ICONS::ABOUT_QT ), "About &Qt", this );
-  connect( aboutqt_action_, SIGNAL( triggered() ), SLOT( aboutQt() ) ); 
-
-  close_action_ = new QAction( IconEngine::get( ICONS::EXIT ), "E&xit", this );
-  close_action_->setShortcut( CTRL+Key_Q );
-  connect( close_action_, SIGNAL( triggered() ), SLOT( _exit() ) );
-  
-  configuration_action_ = new QAction( IconEngine::get( ICONS::CONFIGURE ), "Default &Configuration", this );
-  connect( configuration_action_, SIGNAL( triggered() ), SLOT( _configuration() ) );  
-  
+  // need to redirect closeAction to proper exit
+  closeAction().disconnect();
+  connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
+    
   // recent files
   recent_files_ = new XmlFileList();
   recent_files_->setCheck( true );
@@ -166,7 +130,7 @@ void Application::realizeWidget( void )
   main_window_ = new MainWindow();
 
   // update configuration
-  _updateConfiguration();
+  emit configurationChanged();
 
   // splashscreen
   ::SplashScreen *splash_screen = new ::SplashScreen( main_window_ );
@@ -186,13 +150,15 @@ void Application::realizeWidget( void )
   processEvents();
     
   // try open file from argument
-  File file( args_.last() );
+  File file( _arguments().last() );
   if( file.size() ) mainWindow().setLogbook( file );
   else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) )
   { 
     splash_screen->close();
     mainWindow().newLogbookAction().trigger();
   }
+  
+  return true;
   
 }
 
@@ -213,34 +179,6 @@ void Application::showSplashScreen( void )
 
 }
 
- 
-//_______________________________________________
-void Application::_about( void )
-{
-
-  Debug::Throw( "Application::_about.\n" );
-  ostringstream what;
-  what << "<b>eLogbook</b> version " << VERSION << " (" << BUILD_TIMESTAMP << ")";
-  what 
-    << "<p>This application was written for personal use only. "
-    << "It is not meant to be bug free, although all efforts "
-    << "are made so that it remains/becomes so. "
-    
-    << "<p>Suggestions, comments and bug reports are welcome. "
-    << "Please use the following e-mail address:"
-
-    << "<p><a href=\"mailto:hugo.pereira@free.fr\">hugo.pereira@free.fr</a>";
-
-  QMessageBox dialog;
-  dialog.setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
-  dialog.setIconPixmap( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
-  dialog.setText( what.str().c_str() );
-  dialog.adjustSize();
-  QtUtil::centerOnWidget( &dialog, activeWindow() );
-  dialog.exec();
-
-}
-
 //_________________________________________________
 void Application::_configuration( void )
 {
@@ -248,37 +186,10 @@ void Application::_configuration( void )
   Debug::Throw( "Application::_configuration" );
   emit saveConfiguration();
   ConfigurationDialog dialog(0);
-  connect( &dialog, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( &dialog, SIGNAL( configurationChanged() ), SIGNAL( configurationChanged() ) );
   dialog.centerOnWidget( activeWindow() );
   dialog.exec();
 
-}
-
-//_________________________________________________
-void Application::_updateConfiguration( void )
-{
-  
-  Debug::Throw( "Application::_updateConfiguration.\n" );
-
-  // set fonts
-  QFont font;
-  font.fromString( XmlOptions::get().raw( "FONT_NAME" ).c_str() );
-  setFont( font );
-  
-  font.fromString( XmlOptions::get().raw( "FIXED_FONT_NAME" ).c_str() );
-  setFont( font, "QLineEdit" ); 
-  setFont( font, "QTextEdit" ); 
-    
-  // debug
-  Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
-
-  // window icon
-  setWindowIcon( QPixmap( File( XmlOptions::get().raw( "ICON_PIXMAP" ) ).expand().c_str() ) );
-  
-  // reload IconEngine cache (in case of icon_path_list that changed)
-  IconEngine::get().reload();
-
-  emit configurationChanged();
 }
 
 //_________________________________________________
@@ -311,6 +222,7 @@ void Application::_exit( void )
   quit();
   
 }
+
 //________________________________________________
 void Application::_processRequest( const ArgList& args )
 {
@@ -331,27 +243,4 @@ void Application::_processRequest( const ArgList& args )
     
   }
 
-}
-
-//________________________________________________
-void Application::_applicationManagerStateChanged( SERVER::ApplicationManager::State state )
-{
-
-  Debug::Throw() << "Application::_applicationManagerStateChanged - state=" << state << endl;
-
-  switch ( state ) {
-    case SERVER::ApplicationManager::ALIVE:
-    realizeWidget();
-    break;
-    
-    case SERVER::ApplicationManager::DEAD:
-    quit();
-    break;
-    
-    default:
-    break;
-  }
-  
-  return;
-  
 }

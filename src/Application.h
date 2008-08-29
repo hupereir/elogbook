@@ -32,15 +32,9 @@
   \date    $Date$
 */
 
-#include <QAction>
-#include <QApplication>
-#include <QCursor>
-
-#include "ApplicationManager.h"
-#include "ArgList.h"
+#include "BaseApplication.h"
+#include "Config.h"
 #include "Counter.h"
-
-
 
 class AttachmentWindow;
 class FileList;
@@ -52,7 +46,7 @@ class MainWindow;
   \brief  Main Window singleton object
 */
 
-class Application: public QApplication, public Counter
+class Application: public BaseApplication, public Counter
 {
 
   //! Qt meta object declaration
@@ -77,12 +71,12 @@ class Application: public QApplication, public Counter
 
   //! default window title
   static const QString ATTACHMENT_TITLE;
-    
-  //! initialize application manager
-  void initApplicationManager( void );
+  
+  //! application manager
+  virtual void initApplicationManager( void );
   
   //! create all widgets
-  void realizeWidget( void );
+  virtual bool realizeWidget( void );
   
   //! file list
   FileList& recentFiles( void ) const
@@ -104,62 +98,20 @@ class Application: public QApplication, public Counter
     assert( main_window_ );
     return *main_window_; 
   }
-  
-  //! set application busy
-  void busy( void ) 
-  {
-    setOverrideCursor( Qt::WaitCursor ); 
-    processEvents(); 
-  }
-  
-  //! set application idle
-  void idle( void )
-  { restoreOverrideCursor(); }
-  
-  //!@name actions
-  //@{
-  
-  //! about
-  QAction& aboutAction( void ) const
-  { return *about_action_; }
 
-  //! about
-  QAction& aboutQtAction( void ) const
-  { return *aboutqt_action_; }
-  
-  //! configuration
-  QAction& configurationAction( void ) const
-  { return *configuration_action_; }
-  
-  //! exit safely
-  QAction& closeAction( void ) const
-  { return *close_action_; }
-  
-  //@}
-  
-  signals:
-  
-  //! request widget to save their current configuration
-  void saveConfiguration( void );
-  
-  //! configuration has changed
-  void configurationChanged( void );
-  
   public slots:
   
   //! show splash screen
   void showSplashScreen( void );
   
-  private slots:
-  
-  //! configuration
-  void _configuration( void );
-  
-  //! Update Configuration
-  void _updateConfiguration( void );
+  protected slots:
       
   //! about eLogbook
-  void _about( void );
+  virtual void _about( void )
+  { BaseApplication::_about( qPrintable( MAIN_TITLE ), VERSION, BUILD_TIMESTAMP ); }
+  
+  //! configuration
+  virtual void _configuration( void );
   
   //! exit safely
   void _exit( void );
@@ -167,17 +119,8 @@ class Application: public QApplication, public Counter
   //! process request from application manager
   void _processRequest( const ArgList&);
   
-  //! application manager state is changed
-  void _applicationManagerStateChanged( SERVER::ApplicationManager::State );
-  
   private:
-  
-  //! command line arguments
-  ArgList args_;
-  
-  //! application manager
-  SERVER::ApplicationManager* application_manager_;
-
+ 
   //! recent files
   FileList* recent_files_;
   
@@ -186,27 +129,7 @@ class Application: public QApplication, public Counter
   
   //! main window entry selection frame
   MainWindow* main_window_; 
-  
-  //! true when Realized Widget has been called.
-  bool realized_; 
 
-  //!@name actions
-  //@{
-  
-  //! about
-  QAction* about_action_;
-  
-  //! about qt
-  QAction* aboutqt_action_;
-  
-  //! configure
-  QAction* configuration_action_;
-  
-  //! close
-  QAction* close_action_;
-  
-  //@}
-  
 };
 
 #endif  

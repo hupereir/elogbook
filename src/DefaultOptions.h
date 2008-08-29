@@ -133,5 +133,6 @@ void installDefaultOptions( void )
   XmlOptions::get().add( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::NONE ) );  
   XmlOptions::get().add( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::NONE ) );
   XmlOptions::get().add( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::NONE ) );
+  XmlOptions::get().add( "APP_NAME", Option(  "ELOGBOOK", Option::NONE ) );
   
 };
