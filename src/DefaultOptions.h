@@ -108,9 +108,9 @@ void installDefaultOptions( void )
   XmlOptions::get().add( "NAVIGATION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
   XmlOptions::get().add( "MULTIPLE_VIEW_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
   
-  XmlOptions::get().add( "LOCK_TOOLBAR", "0" , Option( "keywords toolbar visibility" ) );
-  XmlOptions::get().add( "ENTRY_TOOLBAR", "1" , Option( "entries toolbar visibility" ) );
-  XmlOptions::get().add( "SHOW_SEARCHPANEL", "1" , Option( "search panel visibility" ) );
+  XmlOptions::get().add( "LOCK_TOOLBAR", Option( "0" , "keywords toolbar visibility" ) );
+  XmlOptions::get().add( "ENTRY_TOOLBAR", Option( "1" , "entries toolbar visibility" ) );
+  XmlOptions::get().add( "SHOW_SEARCHPANEL", Option( "1" , "search panel visibility" ) );
 
   // masks
   XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", 
@@ -129,7 +129,7 @@ void installDefaultOptions( void )
   // add run-time non recordable options
   string user( Util::user( ) );
   string host( Util::host() );
-  XmlOption::get().add( "USER", Option( user+"@"+host, Option::NONE ) );  
+  XmlOptions::get().add( "USER", Option( user+"@"+host, Option::NONE ) );  
   XmlOptions::get().add( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::NONE ) );  
   XmlOptions::get().add( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::NONE ) );
   XmlOptions::get().add( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::NONE ) );

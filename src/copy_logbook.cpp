@@ -72,9 +72,7 @@ int main (int argc, char *argv[])
     // load options
     string user( Util::user( ) );
     string host( Util::host() );
-    Option option( "USER", user+"@"+host );  
-    option.setRecordable( false );
-    XmlOptions::get().add( option );
+    XmlOptions::get().add( "USER", Option( user+"@"+host, Option::NONE ) );
 
     // install default options
     installDefaultOptions();

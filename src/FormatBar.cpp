@@ -242,7 +242,7 @@ void FormatBar::_updateConfiguration( void )
     XmlOptions::get().keep( "TEXT_COLOR" );
     for( unsigned int i=0; default_colors[i].size(); i++ )
     {
-      XmlOptions::get().add( Option( "TEXT_COLOR", default_colors[i] , "text color"  ));
+      XmlOptions::get().add( "TEXT_COLOR", Option( default_colors[i] , "text color"  ));
       color_menu_->add( default_colors[i] );
     }
         
@@ -263,7 +263,7 @@ void FormatBar::_saveConfiguration( void )
   
   const ColorMenu::ColorSet colors( color_menu_->colors() );
   for( ColorMenu::ColorSet::const_iterator iter = colors.begin(); iter != colors.end(); iter++ )
-  { XmlOptions::get().add( Option( "TEXT_COLOR", qPrintable( iter->name() ) , "text color"  )); }
+  { XmlOptions::get().add( "TEXT_COLOR", Option( qPrintable( iter->name() ) , "text color"  )); }
 
   return;
 }
