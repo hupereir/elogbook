@@ -5,7 +5,7 @@ QT += xml network
 TARGET = elogbook
 
 VERSION = 1.1
-DEFINES += QT_STATIC VERSION="\"$$VERSION\""
+DEFINES += QT_STATIC VERSION=\"$$VERSION\"
 
 INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../extra-includes
 DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../extra-includes
