@@ -377,8 +377,12 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
   painter.setBrush( Qt::transparent );
   
   
+  #if QT_VERSION >= 0x040400
   painter.drawRoundedRect( rect().adjusted( 1, 1, -1, -1 ), 5, 5 );
-  // painter.drawRect( rect().adjusted( 1, 1, -1, -1 ) );
+  #else
+  painter.drawRect( rect().adjusted( 1, 1, -1, -1 ) );
+  #endif
+  
   painter.end();
   return;
   
