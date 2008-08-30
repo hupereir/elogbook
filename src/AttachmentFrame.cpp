@@ -52,8 +52,9 @@
 #include "MainWindow.h"
 #include "NewAttachmentDialog.h"
 #include "OpenAttachmentDialog.h"
+#include "QuestionDialog.h"
 #include "TreeView.h"
-#include "QtUtil.h"
+#include "InformationDialog.h"
 #include "Util.h"
 
 using namespace std;
@@ -173,7 +174,7 @@ void AttachmentFrame::_new( void )
   BASE::KeySet<LogEntry> entries( window );
   if( entries.size() != 1 )
   {
-    QtUtil::infoDialog( this, "No valid entry found. <New Attachment> canceled." );
+    InformationDialog( this, "No valid entry found. <New Attachment> canceled." ).exec();
     return;
   }
   
@@ -216,15 +217,16 @@ void AttachmentFrame::_new( void )
     
       ostringstream o;
       o << "File \"" << full_directory << "\" is not a directory.";
-      QtUtil::infoDialog( this, o.str() );
+      InformationDialog( this, o.str().c_str() ).exec();
     
     } else {
   
       // check destination directory
-      if( !full_directory.exists() ) {
+      if( !full_directory.exists() ) 
+      {
         ostringstream o; 
         o << "Directory \"" << full_directory << "\" does not exists. Create ?";
-        if( QtUtil::questionDialog( this, o.str() ) ) 
+        if( QuestionDialog( this, o.str().c_str() ).exec() ) 
         { Util::run( QStringList() << "mkdir" << full_directory.c_str() ); }
       }
     }
@@ -234,7 +236,7 @@ void AttachmentFrame::_new( void )
   File file( dialog.file() );
   if( file.empty() ) 
   {
-    QtUtil::infoDialog( this, "Invalid name. <New Attachment> canceled." );
+    InformationDialog( this, "Invalid name. <New Attachment> canceled." ).exec();
     return;
   }
 
@@ -255,25 +257,25 @@ void AttachmentFrame::_new( void )
   
     case Attachment::SOURCE_NOT_FOUND:
     o << "Cannot find file \"" << file << "\" - <Add Attachment> canceled.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
     delete attachment;
     break;
     
     case Attachment::DEST_NOT_FOUND:
     o << "Cannot find directory \"" << full_directory << "\" - <Add Attachment> canceled.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
     delete attachment;
     break;
     
     case Attachment::SOURCE_IS_DIR:
     o << "File \"" << file << "\" is a directory - <Add Attachment> canceled.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
     delete attachment;
     break;
     
     case Attachment::DEST_EXIST:
     o << "File \"" << file << "\" is allready in list.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
     delete attachment;
     break;
     
@@ -505,7 +507,7 @@ void AttachmentFrame::_open( void )
   // check items
   if( selection.empty() ) 
   {
-    QtUtil::infoDialog( this, "No attachment selected. <Open Attachment> canceled.\n" );
+    InformationDialog( this, "No attachment selected. <Open Attachment> canceled.\n" ).exec();
     return;
   }
  
@@ -520,7 +522,7 @@ void AttachmentFrame::_open( void )
     {
       ostringstream what; 
       what << "Cannot find file \"" << fullname << "\". <Open Attachment> canceled.";
-      QtUtil::infoDialog( this, what.str() );
+      InformationDialog( this, what.str().c_str() ).exec();
       return;
     }
     
@@ -547,7 +549,7 @@ void AttachmentFrame::_open( void )
       if( files.empty() ) return;
       
       destname = File( qPrintable( files.front() ) ).expand();
-      if( destname.exists() && !QtUtil::questionDialog( this, "selected file already exists. Overwrite ?" ) ) return;
+      if( destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) return;
       
       // make the copy
       Util::run( QStringList() << "cp" << fullname.c_str() << destname.c_str() );
@@ -572,7 +574,7 @@ void AttachmentFrame::_edit( void )
   // check items
   if( selection.empty() ) 
   {
-    QtUtil::infoDialog( this, "No attachment selected. <Edit Attachment> canceled.\n" );
+    InformationDialog( this, "No attachment selected. <Edit Attachment> canceled.\n" ).exec();
     return;
   }
  
@@ -630,7 +632,7 @@ void AttachmentFrame::_delete( void )
   // check items
   if( selection.empty() ) 
   {
-    QtUtil::infoDialog( this, "No attachment selected. <Delete Attachment> canceled.\n" );
+    InformationDialog( this, "No attachment selected. <Delete Attachment> canceled.\n" ).exec();
     return;
   }
 
@@ -676,7 +678,7 @@ void AttachmentFrame::_delete( void )
       unsigned int n_share = count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) ); 
       if( n_share > 1 ) {
         
-        QtUtil::infoDialog( this, "Attachment still in use by other entries. Kept on disk." );
+        InformationDialog( this, "Attachment still in use by other entries. Kept on disk." ).exec();
         from_disk = false;
         
       }
@@ -709,7 +711,7 @@ void AttachmentFrame::_clean( void )
   Debug::Throw( "AttachmentFrame::clean.\n" ); 
 
   // ask for confirmation
-  if( !QtUtil::questionDialog( this, "Remove all invalid attachments ?" ) ) return;
+  if( !QuestionDialog( this, "Remove all invalid attachments ?" ).exec() ) return;
   
   // retrieve all attachments from model
   // true if some modifications are to be saved

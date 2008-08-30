@@ -39,7 +39,6 @@
 #include "LineEditor.h"
 #include "TextEditor.h"
 #include "File.h"
-#include "QtUtil.h"
 #include "Debug.h"
 
 //! new attachment popup dialog
@@ -57,11 +56,7 @@ class NewLogbookDialog: public CustomDialog
 
   //! title
   void setTitle( const std::string& title )
-  {
-    Debug::Throw( "NewLogbookDialog::setTitle.\n" ); 
-    title_->setText( title.c_str() );
-    QtUtil::expand( title_ );
-  }
+  { title_->setText( title.c_str() ); }
   
   //! title
   std::string title( void ) const
@@ -72,11 +67,7 @@ class NewLogbookDialog: public CustomDialog
 
   //! author
   void setAuthor( const std::string& author )
-  {
-    Debug::Throw( "NewLogbookDialog::setAuthor.\n" ); 
-    author_->setText( author.c_str() );
-    QtUtil::expand( author_ );
-  }
+  { author_->setText( author.c_str() ); }
   
   //! filename
   std::string author( void ) const
@@ -87,11 +78,7 @@ class NewLogbookDialog: public CustomDialog
   
   //! filename
   void setFile( const File& file )
-  {
-    Debug::Throw( "NewLogbookDialog::setFile.\n" ); 
-    file_->setFile( file );
-    QtUtil::expand( &file_->editor() );
-  }
+  { file_->setFile( file ); }
   
   //! filename
   File file( void ) const
@@ -102,11 +89,7 @@ class NewLogbookDialog: public CustomDialog
   
   //! attachment directory
   void setAttachmentDirectory( const File& file )
-  {
-    Debug::Throw( "NewLogbookDialog::setAttachmentDirectory.\n" ); 
-    attachment_directory_->setFile( file );
-    QtUtil::expand( &attachment_directory_->editor() );
-  }
+  { attachment_directory_->setFile( file ); }
   
   //! attachment directory
   File attachmentDirectory( void ) const

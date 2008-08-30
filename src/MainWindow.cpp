@@ -53,7 +53,8 @@
 #include "MainWindow.h"
 #include "Menu.h"
 #include "NewLogbookDialog.h"
-#include "QtUtil.h"
+#include "QuestionDialog.h"
+#include "InformationDialog.h"
 #include "RecentFilesMenu.h"
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
@@ -361,7 +362,7 @@ bool MainWindow::setLogbook( File file )
   if( logbook()->parentFile().size() ) {
     ostringstream o; 
     o << "Warning: this logbook should be oppened via \"" << logbook()->parentFile() << "\" only.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
   }
 
   // store logbook directory for next open, save comment
@@ -379,7 +380,7 @@ bool MainWindow::setLogbook( File file )
     if( errors.size() > 1 ) what << "Errors occured while parsing files." << endl;
     else what << "An error occured while parsing files." << endl;
     what << errors;
-    QtUtil::infoDialog( 0, what.str().c_str() );
+    InformationDialog( 0, what.str().c_str() ).exec();
   }
   
   // add opened file to OpenPrevious mennu.
@@ -406,7 +407,7 @@ void MainWindow::checkLogbookBackup( void )
   {
 
     // ask if backup needs to be saved; save if yes
-    if( QtUtil::questionDialog( this, "Current logbook needs backup. Make one?" )) 
+    if( QuestionDialog( this, "Current logbook needs backup. Make one?" ).exec() ) 
     { _saveBackup(); }
 
   }
@@ -698,7 +699,7 @@ void MainWindow::save( const bool& confirm_entries )
   // check logbook
   if( !logbook_ ) 
   {
-    QtUtil::infoDialog( this, "no Logbook opened. <Save> canceled." );
+    InformationDialog( this, "no Logbook opened. <Save> canceled." ).exec();
     return;
   }
 
@@ -718,14 +719,14 @@ void MainWindow::save( const bool& confirm_entries )
 
     // check file is not a directory
     if( fullname.isDirectory() ) {
-      QtUtil::infoDialog( this, "selected file is a directory. <Save Logbook> canceled." );
+      InformationDialog( this, "selected file is a directory. <Save Logbook> canceled." ).exec();
       confirm_entries_ = true;
       return;
     }
 
     // check file is writable
     if( !fullname.isWritable() ) {
-      QtUtil::infoDialog( this, "selected file is not writable. <Save Logbook> canceled." );
+      InformationDialog( this, "selected file is not writable. <Save Logbook> canceled." ).exec();
       confirm_entries_ = true;
       return;
     }
@@ -734,9 +735,7 @@ void MainWindow::save( const bool& confirm_entries )
 
     File path( fullname.path() );
     if( !path.isDirectory() ) {
-      QtUtil::infoDialog(
-        this, "selected path is not vallid. <Save Logbook> canceled."
-      );
+      InformationDialog( this, "selected path is not vallid. <Save Logbook> canceled." ).exec();
       confirm_entries_ = true;
       return;
     }
@@ -783,7 +782,7 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
   // retrieve selection source
   if( mode == SearchPanel::NONE ) 
   {
-    QtUtil::infoDialog( this, "At least on field must be selected" , QtUtil::CENTER_ON_PARENT );
+    InformationDialog( this, "At least on field must be selected" , BaseDialog::CENTER_ON_PARENT ).exec();
     return;
   }
 
@@ -1246,7 +1245,7 @@ void MainWindow::_newLogbook( void )
 
     ostringstream o;
     o << "File \"" << directory << "\" is not a directory.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
 
   } else logbook()->setDirectory( directory );
 
@@ -1302,7 +1301,7 @@ bool MainWindow::_saveAs( File default_file )
 
   // check current logbook
   if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no logbook opened. <Save Logbook> canceled." );
+    InformationDialog( this, "no logbook opened. <Save Logbook> canceled." ).exec();
     return false;
   }
 
@@ -1331,7 +1330,7 @@ bool MainWindow::_saveAs( File default_file )
   // check if file exists
   if(
     fullname.exists() &&
-    !QtUtil::questionDialog( this, "selected file already exists. Overwrite ?" ) )
+    !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() )
   return false;
 
   // change logbook filename and save
@@ -1365,7 +1364,7 @@ void MainWindow::_saveForced( void )
 
   // retrieve/check MainWindow/Logbook
   if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no Logbook opened. <Save> canceled." );
+    InformationDialog( this, "no Logbook opened. <Save> canceled." ).exec();
     return;
   }
 
@@ -1382,13 +1381,13 @@ void MainWindow::_saveBackup( void )
 
   // check current logbook
   if( !logbook_ ) {
-    QtUtil::infoDialog( this, "no logbook opened. <Save Backup> canceled." );
+    InformationDialog( this, "no logbook opened. <Save Backup> canceled." ).exec();
     return;
   }
 
   string filename( logbook()->backupFilename( ) );
   if( filename.empty() ) {
-    QtUtil::infoDialog( this, "no valid filename. Use <Save As> first." );
+    InformationDialog( this, "no valid filename. Use <Save As> first." ).exec();
     return;
   }
 
@@ -1427,12 +1426,12 @@ void MainWindow::_revertToSaved( void )
 
   // check logbook
   if( !logbook_ ){
-    QtUtil::infoDialog( this, "No logbook opened. <Revert to save> canceled." );
+    InformationDialog( this, "No logbook opened. <Revert to save> canceled." ).exec();
     return;
   }
 
   // ask for confirmation
-  if( ( _hasModifiedEntries() || logbook()->modified() ) && !QtUtil::questionDialog( this, "discard changes to current logbook ?" ) ) 
+  if( ( _hasModifiedEntries() || logbook()->modified() ) && !QuestionDialog( this, "discard changes to current logbook ?" ).exec() ) 
   { return; }
 
   // reinit MainWindow
@@ -1453,7 +1452,7 @@ void MainWindow::_synchronize( void )
 
   // check current logbook is valid
   if( !logbook_ ) {
-    QtUtil::infoDialog( this, "No logbook opened. <Merge> canceled." );
+    InformationDialog( this, "No logbook opened. <Merge> canceled." ).exec();
     return;
   }
 
@@ -1499,7 +1498,7 @@ void MainWindow::_synchronize( void )
     if( errors.size() > 1 ) what << "Errors occured while parsing files." << endl;
     else what << "An error occured while parsing files." << endl;
     what << errors;
-    QtUtil::infoDialog( 0, what.str().c_str() );
+    InformationDialog( 0, what.str().c_str() ).exec();
 
     static_cast<Application*>(qApp)->idle();
     return;
@@ -1568,7 +1567,7 @@ void MainWindow::_reorganize( void )
 
   if( !logbook_ )
   {
-    QtUtil::infoDialog( this,"No valid logbook. Canceled.\n");
+    InformationDialog( this,"No valid logbook. Canceled.\n").exec();
     return;
   }
 
@@ -1653,10 +1652,10 @@ void MainWindow::_showDuplicatedEntries( void )
   }
 
   if( !found ) {
-    QtUtil::infoDialog(
+    InformationDialog(
       this,
       "No matching entry found.\n"
-      "Request canceled.", QtUtil::CENTER_ON_PARENT );
+      "Request canceled.", BaseDialog::CENTER_ON_PARENT ).exec();
 
     // reset flag for the turned off entries to true
     for( BASE::KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )
@@ -1683,7 +1682,7 @@ void MainWindow::_viewLogbookStatistics( void )
   
   if( !logbook_ ) 
   {
-    QtUtil::infoDialog( this, "No logbook opened." );
+    InformationDialog( this, "No logbook opened." ).exec();
     return;
   }
 
@@ -1698,7 +1697,7 @@ void MainWindow::_editLogbookInformations( void )
   
   if( !logbook_ ) 
   {
-    QtUtil::infoDialog( this, "No logbook opened." );
+    InformationDialog( this, "No logbook opened." ).exec();
     return;
   }
 
@@ -1722,7 +1721,7 @@ void MainWindow::_editLogbookInformations( void )
 
     ostringstream o;
     o << "File \"" << directory << "\" is not a directory.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
 
   } else modified |= logbook()->setDirectory( directory );
 
@@ -1789,7 +1788,7 @@ void MainWindow::_editEntries( void )
   // retrieve selected items; make sure they do not include the navigator
   LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   if( selection.empty() ) {
-    QtUtil::infoDialog( this, "no entry selected. Request canceled.");
+    InformationDialog( this, "no entry selected. Request canceled.").exec();
     return;
   }
 
@@ -1818,21 +1817,21 @@ void MainWindow::_deleteEntries( void )
     if( _logEntryModel().editionEnabled() && *iter ==  _logEntryModel().editionIndex() )
     { 
       has_edited_index = true;
-      QtUtil::infoDialog( this, "Cannot delete entry that is being edited." ); 
+      InformationDialog( this, "Cannot delete entry that is being edited." ).exec(); 
     } else selection.push_back( _logEntryModel().get( *iter ) ); 
   }
   
   // check selection size
   if( selection.empty() && !has_edited_index ) 
   {
-    QtUtil::infoDialog( this, "no entry selected. Request canceled.");
+    InformationDialog( this, "no entry selected. Request canceled.").exec();
     return;
   }
 
   // ask confirmation
   ostringstream what;
   what << "Delete selected entr" << ( selection.size() == 1 ? "y":"ies" );
-  if( !QtUtil::questionDialog( this, what.str() ) ) return;
+  if( !QuestionDialog( this, what.str().c_str() ).exec() ) return;
 
   // retrieve associated entry
   for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); iter++ )
@@ -1955,7 +1954,7 @@ void MainWindow::_changeEntryColor( QColor color )
   LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   if( selection.empty() ) 
   {
-    QtUtil::infoDialog( this, "no entry selected. Request canceled.");
+    InformationDialog( this, "no entry selected. Request canceled.").exec();
     return;
   }
 
@@ -2028,7 +2027,7 @@ void MainWindow::_deleteKeyword( void )
   QModelIndexList selected_indexes( keywordList().selectionModel()->selectedRows() );
   if( selected_indexes.empty() )
   {
-    QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
+    InformationDialog( this, "no keyword selected. Request canceled" ).exec();
     return;
   }
   
@@ -2103,7 +2102,7 @@ void MainWindow::_renameKeyword( void )
   //! check that keywordlist has selected item
   if( !keywordList().selectionModel()->currentIndex().isValid() )
   {
-    QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
+    InformationDialog( this, "no keyword selected. Request canceled" ).exec();
     return;
   }
 
@@ -2197,14 +2196,14 @@ void MainWindow::_renameEntryKeyword( void )
   LogEntryModel::List selection( _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
   if( selection.empty() ) 
   {
-    QtUtil::infoDialog( this, "no entry selected. Request canceled.");
+    InformationDialog( this, "no entry selected. Request canceled.").exec();
     return;
   }
         
   //! check that current keyword make sense
   if( !keywordList().selectionModel()->currentIndex().isValid() )
   {
-    QtUtil::infoDialog( this, "no keyword selected. Request canceled" );
+    InformationDialog( this, "no keyword selected. Request canceled" ).exec();
     return;
   }
   
@@ -2401,7 +2400,7 @@ void MainWindow::_viewHtml( void )
   // check logbook
   if( !logbook_ )
   {
-    QtUtil::infoDialog( this, "No logbook opened. <View HTML> canceled." );
+    InformationDialog( this, "No logbook opened. <View HTML> canceled." ).exec();
     return;
   }
 
@@ -2425,7 +2424,7 @@ void MainWindow::_viewHtml( void )
   File file( dialog.file() );
   if( file.empty() ) 
   {
-    QtUtil::infoDialog(this, "No output file specified. <View HTML> canceled." );
+    InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
     return;
   }
 
@@ -2434,7 +2433,7 @@ void MainWindow::_viewHtml( void )
   if( !out.open( QIODevice::WriteOnly ) ) {
     ostringstream o;
     o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
     return;
   }
 

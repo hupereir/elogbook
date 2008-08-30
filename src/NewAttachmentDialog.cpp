@@ -35,7 +35,6 @@
 #include "LineEditor.h"
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
-#include "QtUtil.h"
 
 using namespace std;
 
@@ -106,7 +105,6 @@ void NewAttachmentDialog::setFile( const File& file )
   
   Debug::Throw( "NewAttachmentDialog::SetFile.\n" );
   file_line_edit_->setFile( file );
-  QtUtil::expand( &file_line_edit_->editor() );
   
 }
 
@@ -122,7 +120,6 @@ void NewAttachmentDialog::setDestinationDirectory( const File& file )
 {
   Debug::Throw( "NewAttachmentDialog::SetDestinationDirectory.\n" );
   dest_dir_line_edit_->setFile( file );
-  QtUtil::expand( &file_line_edit_->editor() );
 }
 
 //____________________________________________________

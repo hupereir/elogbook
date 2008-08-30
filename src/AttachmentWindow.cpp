@@ -42,7 +42,6 @@
 #include "LogEntry.h"
 #include "Application.h"
 #include "Options.h"
-#include "QtUtil.h"
 #include "MainWindow.h"
 
 using namespace std;
@@ -114,8 +113,8 @@ void AttachmentWindow::enterEvent( QEvent *event )
 void AttachmentWindow::_uniconify( void )
 {
   Debug::Throw( "AttachmentWindow::_uniconify.\n" );
+  uniconify();
   show();
-  QtUtil::uniconify( window() );
   return;
 }
 

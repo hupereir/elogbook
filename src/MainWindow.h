@@ -48,7 +48,6 @@
 #include "KeywordModel.h"
 #include "LogEntry.h"
 #include "LogEntryModel.h"
-#include "QtUtil.h"
 
 #include "TreeView.h"
 

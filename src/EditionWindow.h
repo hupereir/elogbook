@@ -55,7 +55,6 @@
 #include "Config.h"
 #include "Key.h"
 #include "LogEntry.h"
-#include "QtUtil.h"
 #include "TextPosition.h"
 
 class Attachment;

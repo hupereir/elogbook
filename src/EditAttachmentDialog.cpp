@@ -37,7 +37,6 @@
 #include "Debug.h"
 #include "EditAttachmentDialog.h"
 #include "File.h"
-#include "QtUtil.h"
 
 using namespace std;
 
@@ -58,7 +57,6 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   AttachmentType type( attachment.type() );
   File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );  
   file_line_edit->setText( fullname.c_str() );
-  QtUtil::expand( file_line_edit );
 
   GridLayout* grid_layout = new GridLayout();
   grid_layout->setMargin(0);

@@ -39,7 +39,6 @@
 #include "Debug.h"
 #include "File.h"
 #include "OpenAttachmentDialog.h"
-#include "QtUtil.h"
 
 using namespace std;
 
@@ -91,7 +90,6 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   
   grid_layout->addWidget( command_line_edit_ = new BrowsedLineEditor( group_box ) );
   command_line_edit_->setFile( attachment.type().editCommand() );
-  QtUtil::expand( &command_line_edit_->editor() );
   command_line_edit_->setToolTip( "Application to be used to display the attachment." );
 
   grid_layout->addWidget( save_radio_button_ = new QRadioButton( "save to disk ", group_box ) );

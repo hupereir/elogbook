@@ -38,7 +38,6 @@
 #include "Logbook.h"
 #include "LogbookStatisticsDialog.h"
 #include "LogEntry.h"
-#include "QtUtil.h"
 #include "Util.h"
 
 using namespace std;
@@ -65,7 +64,6 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   grid_layout->addWidget( edit, 0, 1 );
   edit->setReadOnly( true );
   edit->setText( logbook->file().expand().c_str() );
-  QtUtil::expand( edit, logbook->file().expand() );
   
   // creation time
   if( logbook->creation().isValid() ) 

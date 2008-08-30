@@ -40,7 +40,6 @@
 #include "CustomDialog.h"
 #include "LineEditor.h"
 #include "File.h"
-#include "QtUtil.h"
 
 //! new attachment popup dialog
 class ViewHtmlEntryDialog: public CustomDialog
@@ -91,7 +90,7 @@ class ViewHtmlEntryDialog: public CustomDialog
   void setCommand( const std::string& file )
   { 
     command_->setFile( file ); 
-    QtUtil::expand( &command_->editor() );
+    command_->editor().expand();
   } 
   
   //! command
@@ -100,10 +99,7 @@ class ViewHtmlEntryDialog: public CustomDialog
   
   //! file
   void setFile( const File& file )
-  { 
-    file_->setFile( file ); 
-    QtUtil::expand( &file_->editor() );
-  }
+  { file_->setFile( file ); }
   
   //! file
   File file( void ) const

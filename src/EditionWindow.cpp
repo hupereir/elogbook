@@ -55,7 +55,8 @@
 #include "MainWindow.h"
 #include "Menu.h"
 #include "Options.h"
-#include "QtUtil.h"
+#include "QuestionDialog.h"
+#include "InformationDialog.h"
 #include "RecentFilesMenu.h"
 #include "StatusBar.h"
 #include "Str.h"
@@ -439,7 +440,7 @@ void EditionWindow::_save( bool update_selection )
   MainWindow &mainwindow( _mainWindow() );
   Logbook *logbook( mainwindow.logbook() );
   if( !logbook ) {
-    QtUtil::infoDialog( this, "No logbook opened. <Save> canceled." );
+    InformationDialog( this, "No logbook opened. <Save> canceled." ).exec();
     return;
   }
   Debug::Throw( "EditionWindow::_save - logbook checked.\n" );
@@ -703,7 +704,7 @@ void EditionWindow::_entryInfo( void )
   // check entry
   LogEntry *entry( EditionWindow::entry() );
   if( !entry ) {
-    QtUtil::infoDialog( this, "No valid entry."  );
+    InformationDialog( this, "No valid entry."  ).exec();
     return;
   }
 
@@ -774,12 +775,12 @@ void EditionWindow::_deleteEntry( void )
   LogEntry *entry( EditionWindow::entry() );
 
   if( !entry ) {
-    QtUtil::infoDialog( this, "No entry selected. <Delete Entry> canceled." );
+    InformationDialog( this, "No entry selected. <Delete Entry> canceled." ).exec();
     return;
   }
 
   // ask confirmation
-  if( !QtUtil::questionDialog( this, "Delete current entry ?" ) ) return;
+  if( !QuestionDialog( this, "Delete current entry ?" ).exec() ) return;
 
   // get associated attachments
   _mainWindow().deleteEntry( entry );
@@ -818,7 +819,7 @@ void EditionWindow::_cloneWindow( void )
   Debug::Throw( "EditionWindow::_cloneWindow.\n" );
   LogEntry *entry( EditionWindow::entry() );
   if( !entry ) {
-    QtUtil::infoDialog( this, "No valid entry found. <New window> canceled." );
+    InformationDialog( this, "No valid entry found. <New window> canceled." ).exec();
     return;
   }
 
@@ -844,7 +845,7 @@ void EditionWindow::_viewHtml( void )
   // check logbook entry
   LogEntry *entry( EditionWindow::entry() );
   if( !entry ){
-    QtUtil::infoDialog( this, "No entry. <View HTML> canceled." );
+    InformationDialog( this, "No entry. <View HTML> canceled." ).exec();
     return;
   }
 
@@ -865,7 +866,7 @@ void EditionWindow::_viewHtml( void )
   // retrieve/check file
   File file( dialog.file() );
   if( file.empty() ) {
-    QtUtil::infoDialog(this, "No output file specified. <View HTML> canceled." );
+    InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
     return;
   }
 
@@ -874,7 +875,7 @@ void EditionWindow::_viewHtml( void )
   {
     ostringstream o;
     o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-    QtUtil::infoDialog( this, o.str() );
+    InformationDialog( this, o.str().c_str() ).exec();
     return;
   }
 

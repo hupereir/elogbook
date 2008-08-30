@@ -51,6 +51,7 @@
 #include "XmlOptions.h"
 #include "RecentFilesMenu.h"
 #include "QtUtil.h"
+#include "QuestionDialog.h"
 #include "SplashScreen.h"
 #include "XmlFileList.h"
 
@@ -238,7 +239,7 @@ void Application::_processRequest( const ArgList& args )
   {
     ostringstream what;
     what << "Accept request for file \"" << filename << "\" ?";
-    if( QtUtil::questionDialog( &mainWindow(), what.str(), QtUtil::CENTER_ON_PARENT ) )
+    if( QuestionDialog( &mainWindow(), what.str().c_str(), BaseDialog::CENTER_ON_PARENT ).exec() )
     { mainWindow().setLogbook( recentFiles().add( filename ).file() ); }
     
   }

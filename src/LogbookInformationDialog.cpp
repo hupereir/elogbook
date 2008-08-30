@@ -35,7 +35,6 @@
 #include "Debug.h"
 #include "Logbook.h"
 #include "LogbookInformationDialog.h"
-#include "QtUtil.h"
 #include "Util.h"
 
 using namespace std;
@@ -57,14 +56,12 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
   grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
   grid_layout->addWidget( title_ = new LineEditor( this ), 0, 1 );
   title_->setText( logbook->title().empty() ?   Logbook::LOGBOOK_NO_TITLE.c_str():logbook->title().c_str()  );
-  QtUtil::expand( title_ );
   title_->setToolTip( "Logbook title" );
 
   // logbook author
   grid_layout->addWidget( new QLabel( "Author: ", this ), 1, 0 );
   grid_layout->addWidget( author_ = new LineEditor( this ), 1, 1 );
   author_->setText( logbook->author().empty() ? Logbook::LOGBOOK_NO_AUTHOR.c_str():logbook->author().c_str() );
-  QtUtil::expand( author_ );
   author_->setToolTip( "Logbook author." );
   
   // attachment directory
