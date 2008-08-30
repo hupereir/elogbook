@@ -47,6 +47,7 @@
 #include "FormatBar.h"
 #include "HtmlUtil.h"
 #include "Icons.h"
+#include "IconSize.h"
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -1327,7 +1328,7 @@ void EditionWindow::ColorWidget::setColor( const QColor& color )
 {
 
   // create pixmap
-  QPixmap pixmap( QSize( 48, 48 ) );
+  QPixmap pixmap( IconSize( IconSize::HUGE ) );
   pixmap.fill( Qt::transparent );
   
   QPainter painter( &pixmap );
