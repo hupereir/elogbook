@@ -353,10 +353,9 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( const bool& enable_cance
   if( enable_cancel ) buttons |= AskForSaveDialog::CANCEL;
   if( count > 1 ) buttons |= AskForSaveDialog::ALL; 
   AskForSaveDialog dialog( this, "Entry has been modified. Save ?", buttons );
-  QtUtil::centerOnParent( &dialog );
   
   // exec and check return code
-  int state = dialog.exec();
+  int state = dialog.centerOnParent().exec();
   if( state == AskForSaveDialog::YES ) _save( false );
   else if( state == AskForSaveDialog::ALL ) 
   {
@@ -648,7 +647,7 @@ void EditionWindow::_installActions( void )
   connect( close_action_, SIGNAL( triggered() ), SLOT( _close() ) );
  
   addAction( uniconify_action_ = new QAction( "&uniconify", this ) );
-  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
+  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
 }
 
@@ -709,9 +708,7 @@ void EditionWindow::_entryInfo( void )
   }
 
   // create dialog
-  LogEntryInformationDialog dialog( this, entry );
-  QtUtil::centerOnParent( &dialog );
-  dialog.exec();
+  LogEntryInformationDialog( this, entry ).centerOnParent().exec();
 
 }
 
@@ -863,8 +860,7 @@ void EditionWindow::_viewHtml( void )
   dialog.setFile( File( what.str() ).addPath( Util::tmp() ) );
 
   // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
+  if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
 
   // retrieve/check file
   File file( dialog.file() );

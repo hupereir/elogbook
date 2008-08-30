@@ -264,13 +264,6 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! creates a new entry
   void _newEntry( void );
 
-  //! uniconify
-  void _uniconify( void )
-  {
-    Debug::Throw( "EditionWindow::uniconify.\n" );
-    QtUtil::uniconify( this );
-  }
-
   //! configuration
   void _updateConfiguration( void );
 

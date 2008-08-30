@@ -73,7 +73,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   
   uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );
-  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
+  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( uniconify() ) );
   
   // button layout
   QHBoxLayout *button_layout( new QHBoxLayout() );

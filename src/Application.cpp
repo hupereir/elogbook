@@ -238,7 +238,7 @@ void Application::_processRequest( const ArgList& args )
   {
     ostringstream what;
     what << "Accept request for file \"" << filename << "\" ?";
-    if( QtUtil::questionDialog( main_window_, what.str(), QtUtil::CENTER_ON_PARENT ) )
+    if( QtUtil::questionDialog( &mainWindow(), what.str(), QtUtil::CENTER_ON_PARENT ) )
     { mainWindow().setLogbook( recentFiles().add( filename ).file() ); }
     
   }

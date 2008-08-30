@@ -347,15 +347,6 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! splitter moved
   void _splitterMoved( void );
   
-  //! uniconify
-  void _uniconify( void )
-  { 
-  
-    Debug::Throw( "MainWindow::_uniconify.\n" );
-    QtUtil::uniconify( this ); 
-    
-  }
-  
   //! create a new logbook
   void _newLogbook( void );
 

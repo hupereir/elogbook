@@ -44,7 +44,7 @@ using namespace std;
 
 //________________________________________________________
 AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message, const unsigned int& buttons ):
-  QDialog( parent ),
+  BaseDialog( parent ),
   Counter( "AskForSaveDialog" )
 {
   

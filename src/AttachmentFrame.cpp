@@ -196,8 +196,9 @@ void AttachmentFrame::_new( void )
   dialog.setAction( Attachment::COPY_VERSION );
   
   // map dialog
-  QtUtil::centerOnParent( &dialog );
   dialog.resize( 400, 350 );
+  dialog.centerOnParent();
+  
   if( dialog.exec() == QDialog::Rejected ) return;
  
   // retrieve Attachment type
@@ -524,7 +525,7 @@ void AttachmentFrame::_open( void )
     }
     
     OpenAttachmentDialog dialog( this, attachment );  
-    QtUtil::centerOnParent( &dialog );
+    dialog.centerOnParent();
     
     if( dialog.exec() == QDialog::Rejected ) return;
     if( dialog.action() == OpenAttachmentDialog::OPEN )
@@ -589,7 +590,7 @@ void AttachmentFrame::_edit( void )
     EditAttachmentDialog dialog( this, attachment );
   
     // map dialog
-    QtUtil::centerOnParent( &dialog );
+    dialog.centerOnParent();
     if( dialog.exec() == QDialog::Rejected ) return;
   
     // change attachment type
@@ -646,7 +647,7 @@ void AttachmentFrame::_delete( void )
   
     // dialog
     DeleteAttachmentDialog dialog( this, *attachment );
-    QtUtil::centerOnParent( &dialog );
+    dialog.centerOnParent();
 
     if( dialog.exec() == QDialog::Rejected ) return;    
     

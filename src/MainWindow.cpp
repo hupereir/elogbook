@@ -1,4 +1,3 @@
-// $Id$
 
 /******************************************************************************
 *
@@ -483,11 +482,9 @@ AskForSaveDialog::ReturnCode MainWindow::askForSave( const bool& enable_cancel )
   // create dialog 
   unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
   if( enable_cancel ) buttons |= AskForSaveDialog::CANCEL;
-  AskForSaveDialog dialog( this, "Logbook has been modified. Save ?", buttons );
-  QtUtil::centerOnParent( &dialog );
   
   // exec and check return code 
-  int state = dialog.exec();
+  int state = AskForSaveDialog( this, "Logbook has been modified. Save ?", buttons ).centerOnParent().exec();
   if( state == AskForSaveDialog::YES ) save();
   return AskForSaveDialog::ReturnCode(state);
 }
@@ -984,7 +981,7 @@ void MainWindow::_installActions( void )
   Debug::Throw( "MainWindow::_installActions.\n" );
   uniconify_action_ = new QAction( IconEngine::get( ICONS::HOME ), "&Main window", this );
   uniconify_action_->setToolTip( "Raise application main window" );
-  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( _uniconify() ) );
+  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
   new_keyword_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New keyword", this );
   new_keyword_action_->setToolTip( "Create a new keyword" );
@@ -1227,18 +1224,10 @@ void MainWindow::_newLogbook( void )
   NewLogbookDialog dialog( this );
   dialog.setTitle( Logbook::LOGBOOK_NO_TITLE );
   dialog.setAuthor( XmlOptions::get().raw( "USER" ) );
-
-  // filename and directory
   File file = File( "log.xml" ).addPath( workingDirectory() );
   dialog.setFile( file );
   dialog.setAttachmentDirectory( workingDirectory() );
-
-  // map dialog
-  Debug::Throw( "MainWindow::newLogbook - dialog created.\n" );
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
-
-  Debug::Throw() << "MainWindow::new - file: " << dialog.file() << endl;
+  if( !dialog.centerOnParent().exec() ) return;
   
   // create a new logbook, with no file
   setLogbook( dialog.file() );
@@ -1287,7 +1276,7 @@ void MainWindow::open( FileRecord record )
     dialog.setDirectory( workingDirectory().c_str() );
 
     QtUtil::centerOnParent( &dialog );
-    if( dialog.exec() == QDialog::Rejected ) return;
+    if( !dialog.exec() ) return;
 
     QStringList files( dialog.selectedFiles() );
     if( files.empty() ) return;
@@ -1327,7 +1316,7 @@ bool MainWindow::_saveAs( File default_file )
   dialog.setDirectory( QDir( default_file.path().c_str() ) );
   dialog.selectFile( default_file.localName().c_str() );
   QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return false;
+  if( !dialog.exec() ) return false;
 
   // retrieve files
   QStringList files( dialog.selectedFiles() );
@@ -1479,7 +1468,7 @@ void MainWindow::_synchronize( void )
   dialog.setFileMode( QFileDialog::ExistingFile );
 
   QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() != QDialog::Accepted ) return;
+  if( !dialog.exec() ) return;
 
   QStringList files( dialog.selectedFiles() );
   if( files.empty() ) return;
@@ -1698,10 +1687,8 @@ void MainWindow::_viewLogbookStatistics( void )
     return;
   }
 
-  // create dialog
-  LogbookStatisticsDialog dialog( this, logbook_ );
-  QtUtil::centerOnWidget( &dialog, qApp->activeWindow() );
-  dialog.exec();
+  LogbookStatisticsDialog( this, logbook_ ).centerOnWidget( qApp->activeWindow() ).exec();
+
 }
 
 //_______________________________________________
@@ -1717,8 +1704,7 @@ void MainWindow::_editLogbookInformations( void )
 
   // create dialog
   LogbookInformationDialog dialog( this, logbook_ );
-  QtUtil::centerOnWidget( &dialog, qApp->activeWindow() );
-  if( dialog.exec() == QDialog::Rejected ) return;
+  if( !dialog.centerOnWidget( qApp->activeWindow() ).exec() ) return;
 
   // keep track of logbook modifications
   bool modified( false );
@@ -2019,8 +2005,7 @@ void MainWindow::_newKeyword( void )
   dialog.setKeyword( currentKeyword() );
   
   // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
+  if( !dialog.centerOnParent().exec() ) return;
 
   // retrieve keyword from line_edit
   Keyword keyword( dialog.keyword() );
@@ -2064,8 +2049,8 @@ void MainWindow::_deleteKeyword( void )
   
   //! create dialog
   DeleteKeywordDialog dialog( this, keywords, !associated_entries.empty() );
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
+  if( !dialog.centerOnParent().exec() ) 
+  { return; }
   
   if( dialog.moveEntries() && associated_entries.size() ) 
   {
@@ -2135,8 +2120,7 @@ void MainWindow::_renameKeyword( void )
   dialog.setKeyword( keyword );
   
   // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
+  if( !dialog.centerOnParent().exec() ) return;
 
   // change keyword for all entries that match the old one
   _renameKeyword( keyword, dialog.keyword() );
@@ -2237,8 +2221,7 @@ void MainWindow::_renameEntryKeyword( void )
   dialog.setKeyword( keyword );
   
   // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
+  if( !dialog.centerOnParent().exec() ) return;
 
   // check if keyword was changed
   Keyword new_keyword( dialog.keyword() );
@@ -2436,8 +2419,7 @@ void MainWindow::_viewHtml( void )
   dialog.setFile( File( what.str() ).addPath( Util::tmp() ) );
 
   // map dialog
-  QtUtil::centerOnParent( &dialog );
-  if( dialog.exec() == QDialog::Rejected ) return;
+  if( !dialog.centerOnParent().exec() ) return;
 
   // retrieve/check file
   File file( dialog.file() );

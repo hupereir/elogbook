@@ -79,9 +79,6 @@ class AttachmentWindow: public BaseDialog, public Counter
   void enterEvent( QEvent *event );
 
   protected slots:
-  
-  //! uniconify window
-  void _uniconify( void );
 
   //! display entry associated to selected attachment when selection changes
   void _displayEntry( Attachment& );
