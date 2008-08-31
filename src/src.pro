@@ -40,7 +40,7 @@ HEADERS = \
   EditKeywordDialog.h \
   FormatBar.h \
   HelpText.h \
-  HtmlUtil.h \
+  HtmlHeaderNode.h \
   Icons.h \
   Keyword.h \
   KeywordModel.h \
@@ -80,7 +80,7 @@ SOURCES = \
   EditKeywordDialog.cpp \
   elogbook.cpp \
   FormatBar.cpp \
-  HtmlUtil.cpp \
+  HtmlHeaderNode.cpp \
   Keyword.cpp \
   KeywordModel.cpp \
   Logbook.cpp \

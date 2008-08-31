@@ -45,7 +45,7 @@
 #include "EditionWindow.h"
 #include "File.h"
 #include "FormatBar.h"
-#include "HtmlUtil.h"
+#include "HtmlHeaderNode.h"
 #include "Icons.h"
 #include "IconSize.h"
 #include "IconEngine.h"
@@ -891,7 +891,7 @@ void EditionWindow::_viewHtml( void )
   html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
   
   // head
-  HtmlUtil::header( html, document );
+  HtmlHeaderNode( html, document );
   
   // body
   QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();

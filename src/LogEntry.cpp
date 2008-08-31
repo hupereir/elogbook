@@ -35,7 +35,7 @@
 #include "Debug.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
-#include "HtmlUtil.h"
+#include "HtmlTextNode.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "TextFormat.h"
@@ -410,7 +410,7 @@ void LogEntry::_htmlTextNode(
       Debug::Throw() << *iter << endl;
       
       // write previous text
-      HtmlUtil::textNode( what.str().c_str(), parent, document );
+      HtmlTextNode( what.str().c_str(), parent, document );
       what.str("");
       
       // open new element define format
@@ -435,14 +435,14 @@ void LogEntry::_htmlTextNode(
       formats.erase( iter );
       
       // process text
-      HtmlUtil::textNode( what.str().c_str(), local_node, document );
+      HtmlTextNode( what.str().c_str(), local_node, document );
       
       // reset stream
       what.str("");
     }
   }
 
-  HtmlUtil::textNode( what.str().c_str(), parent, document );
+  HtmlTextNode( what.str().c_str(), parent, document );
   what.str("");
 
 }

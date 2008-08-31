@@ -32,7 +32,7 @@
 #include "Attachment.h"
 #include "Debug.h"
 #include "File.h"
-#include "HtmlUtil.h"
+#include "HtmlTextNode.h"
 #include "LogEntry.h"
 #include "Str.h"
 #include "Util.h"
@@ -290,7 +290,7 @@ void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) cons
   
   // comments
   if( comments().size() )
-  HtmlUtil::textNode( comments().c_str(), par, document );
+  HtmlTextNode( comments().c_str(), par, document );
   return;
 }  
   

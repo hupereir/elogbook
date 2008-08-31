@@ -65,7 +65,7 @@ synchronize_logbook_LDADD =  $(libraries)
 libelogbook_a_SOURCES = \
   Attachment.cpp \
   AttachmentType.cpp \
-  HtmlUtil.cpp \
+  HtmlHeaderNode.cpp \
   Keyword.cpp \
   Logbook.cpp \
   LogEntry.cpp
@@ -90,7 +90,7 @@ noinst_HEADERS = \
   EditKeywordDialog.h \
   FormatBar.h \
   HelpText.h \
-  HtmlUtil.h \
+  HtmlHeaderNode.h \
   Icons.h \
   Keyword.h \
   KeywordModel.h \

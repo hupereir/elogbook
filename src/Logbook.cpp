@@ -34,7 +34,7 @@
 
 #include "Attachment.h"
 #include "Debug.h"
-#include "HtmlUtil.h"
+#include "HtmlTextNode.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "XmlOptions.h"
@@ -706,7 +706,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
       appendChild( document.createElement( "tr" ) ).
       appendChild( document.createElement( "td" ) ).toElement();
     column.setAttribute( "colspan", "2" );
-    HtmlUtil::textNode( comments().c_str(), column, document );
+    HtmlTextNode( comments().c_str(), column, document );
   }
 
   return out;
