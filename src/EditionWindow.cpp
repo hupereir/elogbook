@@ -904,7 +904,9 @@ void EditionWindow::_viewHtml( void )
   // dump entry
   body.appendChild( entry->htmlElement( document, html_entry_mask ) );
 
-  out.write( document.toByteArray() );
+  // Debug::Throw(0) << "EditionWindow::_viewHtml - " << qPrintable( document.toString() ) << endl;
+  
+  out.write( document.toString().toAscii() );
   out.close();
 
   // retrieve command

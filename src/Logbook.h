@@ -49,7 +49,6 @@
 #include "Key.h"
 #include "TimeStamp.h"
 #include "XmlError.h"
-#include "XmlUtil.h"
 
 class LogEntry;
 class Attachment;

@@ -38,6 +38,7 @@
 #include "Util.h"
 #include "XmlDef.h"
 #include "XmlOptions.h"
+#include "XmlString.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -85,10 +86,10 @@ Attachment::Attachment( const QDomElement& element):
     QString name( attribute.name() );
     QString value( attribute.value() );
     
-    if( name == XML::SOURCE_FILE ) _setSourceFile( File( qPrintable( XmlUtil::xmlToText( value ) ) ) );
+    if( name == XML::SOURCE_FILE ) _setSourceFile( File( qPrintable( XmlString( value ).toText() ) ) );
     else if( name == XML::TYPE ) setType( AttachmentType::get( qPrintable( value ) ) );
-    else if( name == XML::FILE ) _setFile( File( qPrintable( XmlUtil::xmlToText( value ) ) ) );
-    else if( name == XML::COMMENTS ) setComments( qPrintable( XmlUtil::xmlToText(value) ) );
+    else if( name == XML::FILE ) _setFile( File( qPrintable( XmlString( value ).toText() ) ) );
+    else if( name == XML::COMMENTS ) setComments( qPrintable( XmlString( value ).toText() ) );
     else if( name == XML::VALID ) setIsValid( (bool) value.toInt() );
     else if( name == XML::IS_LINK ) setIsLink( (LinkState) value.toInt() );  
     else cerr << "unrecognized attachment attribute: \"" << qPrintable( name ) << "\"\n";
@@ -99,7 +100,7 @@ Attachment::Attachment( const QDomElement& element):
   {
     QDomElement child_element = child_node.toElement(); 
     if( child_element.tagName() == XML::COMMENTS )
-    setComments( qPrintable( XmlUtil::xmlToText( child_element.text() ) ) );
+    setComments( qPrintable( XmlString( child_element.text() ).toText() ) );
     else cout << "Attachment::Attachment - unrecognized child " << qPrintable( child_element.tagName() ) << ".\n";
   }
   
@@ -111,8 +112,8 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
   
   Debug::Throw( "Attachment::DomElement.\n" );
   QDomElement out( parent.createElement( XML::ATTACHMENT ) );
-  if( file().size() ) out.setAttribute( XML::FILE, XmlUtil::textToXml( file().c_str() ) );
-  if( sourceFile().size() ) out.setAttribute( XML::SOURCE_FILE, XmlUtil::textToXml( sourceFile().c_str() ) );
+  if( file().size() ) out.setAttribute( XML::FILE, XmlString( file().c_str() ).toXml() );
+  if( sourceFile().size() ) out.setAttribute( XML::SOURCE_FILE, XmlString( sourceFile().c_str() ).toXml() );
   out.setAttribute( XML::TYPE, type().key().c_str() );
   out.setAttribute( XML::VALID, QString().setNum( (int) isValid() ) );
   out.setAttribute( XML::IS_LINK, QString().setNum( (int) isLink() ) );
@@ -120,7 +121,7 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
   {
     out.
       appendChild( parent.createElement(  XML::COMMENTS ) ).
-      appendChild( parent.createTextNode( XmlUtil::textToXml( comments().c_str() ) ) );
+      appendChild( parent.createTextNode( XmlString( comments().c_str() ).toXml() ) );
   }
   
   return out;

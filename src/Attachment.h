@@ -42,7 +42,6 @@
 #include "File.h"
 #include "Key.h"
 #include "TimeStamp.h"
-#include "XmlUtil.h"
 
 class LogEntry;
 

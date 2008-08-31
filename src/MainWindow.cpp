@@ -2533,7 +2533,7 @@ void MainWindow::_viewHtml( void )
     { body.appendChild( (*it)->htmlElement( document, html_entry_mask ) ); }
   }
 
-  out.write( document.toByteArray() );
+  out.write( document.toString().toAscii() );
   out.close();
 
   // retrieve command

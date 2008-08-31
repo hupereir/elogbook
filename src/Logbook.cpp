@@ -41,6 +41,7 @@
 #include "Str.h"
 #include "Util.h"
 #include "XmlDef.h"
+#include "XmlString.h"
 #include "XmlTimeStamp.h"
 
 using namespace std;
@@ -155,11 +156,11 @@ bool Logbook::read( void )
     QString name( attribute.name() );
     QString value( attribute.value() );
 
-    if( name == XML::TITLE ) setTitle( qPrintable( XmlUtil::xmlToText( value ) ) );
-    else if( name == XML::FILE ) setFile( File( qPrintable( XmlUtil::xmlToText( value ) ) ) );
-    else if( name == XML::PARENT_FILE ) setParentFile( qPrintable( XmlUtil::xmlToText( value ) ) );
-    else if( name == XML::DIRECTORY ) setDirectory( File( qPrintable( XmlUtil::xmlToText( value ) ) ) );
-    else if( name == XML::AUTHOR ) setAuthor( qPrintable( XmlUtil::xmlToText( value ) ) );
+    if( name == XML::TITLE ) setTitle( qPrintable( XmlString( value ).toText() ) );
+    else if( name == XML::FILE ) setFile( File( qPrintable( XmlString( value ).toText() ) ) );
+    else if( name == XML::PARENT_FILE ) setParentFile( qPrintable( XmlString( value ).toText() ) );
+    else if( name == XML::DIRECTORY ) setDirectory( File( qPrintable( XmlString( value ).toText() ) ) );
+    else if( name == XML::AUTHOR ) setAuthor( qPrintable( XmlString( value ).toText() ) );
     else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
     else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
     else if( name == XML::ENTRIES ) {
@@ -184,7 +185,7 @@ bool Logbook::read( void )
     QString tag_name( element.tagName() );
 
     // children
-    if( tag_name == XML::COMMENTS ) setComments( qPrintable( XmlUtil::xmlToText( element.text() ) ) );
+    if( tag_name == XML::COMMENTS ) setComments( qPrintable( XmlString( element.text() ).toText() ) );
     else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
     else if( tag_name == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
@@ -280,9 +281,9 @@ bool Logbook::write( File file )
 
     // create main element
     QDomElement top = document.createElement( XML::LOGBOOK );
-    if( !title().empty() ) top.setAttribute( XML::TITLE, XmlUtil::textToXml(title().c_str()) );
-    if( !directory().empty() ) top.setAttribute( XML::DIRECTORY, XmlUtil::textToXml(directory().c_str()) );
-    if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlUtil::textToXml(author().c_str())) ;
+    if( !title().empty() ) top.setAttribute( XML::TITLE, XmlString( title().c_str() ).toXml() );
+    if( !directory().empty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory().c_str()) );
+    if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlString( author().c_str() ).toXml() ) ;
 
     top.setAttribute( XML::SORT_METHOD, Str().assign<unsigned int>(sort_method_).c_str() );
     top.setAttribute( XML::SORT_ORDER, Str().assign<int>(sort_order_).c_str() );
@@ -298,7 +299,7 @@ bool Logbook::write( File file )
     if( comments().size() )
     {
       QDomElement comments_element = document.createElement( XML::COMMENTS );
-      QDomText comments_text = document.createTextNode( XmlUtil::textToXml( comments().c_str() ) );
+      QDomText comments_text = document.createTextNode( XmlString( comments().c_str() ).toXml() );
       comments_element.appendChild( comments_text );
       top.appendChild( comments_element );
     }
@@ -329,7 +330,7 @@ bool Logbook::write( File file )
     {
       File child_filename = _childFilename( file, child_number );
       QDomElement child_element = document.createElement( XML::CHILD );
-      child_element.setAttribute( XML::FILE, XmlUtil::textToXml( child_filename.c_str() ) );
+      child_element.setAttribute( XML::FILE, XmlString( child_filename.c_str() ).toXml() );
       top.appendChild( child_element );
     }
 
