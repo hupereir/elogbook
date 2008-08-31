@@ -175,6 +175,8 @@ void Menu::_updateEditorMenu( void )
   editor_menu_->addAction( &mainwindow.logbookStatisticsAction() );
   editor_menu_->addAction( &mainwindow.logbookInformationsAction() );
 
+  if( editionwindow ) { editor_menu_->addAction( &editionwindow->entryInfoAction() ); }
+  
   BASE::KeySet<EditionWindow> frames( mainwindow );
   bool has_alive_frame( find_if( frames.begin(), frames.end(), EditionWindow::aliveFTor() ) != frames.end() );
   if( has_alive_frame )

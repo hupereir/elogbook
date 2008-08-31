@@ -617,7 +617,7 @@ void EditionWindow::_installActions( void )
   connect( spellcheck_action_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
   #endif
 
-  // entry_info button
+  // entry_info
   addAction( entry_info_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Entry Information", this ) );
   entry_info_action_->setToolTip( "Show current entry information" );
   connect( entry_info_action_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
