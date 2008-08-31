@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QGroupBox>
+#include <QLabel>
 #include <QLayout>
 
 #include "ViewHtmlLogbookDialog.h"

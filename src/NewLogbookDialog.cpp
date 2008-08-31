@@ -30,6 +30,7 @@
    \date $Date$
 */
 
+#include <QLabel>
 #include <QLayout>
 
 #include "Debug.h"

@@ -29,6 +29,7 @@
   \date $Date$
 */
 
+#include <QLabel>
 #include <QLayout>
 #include <QPushButton>
 

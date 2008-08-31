@@ -30,6 +30,7 @@
 */
 
 #include <QLayout>
+#include <QLabel>
 
 #include "GridLayout.h"
 #include "LineEditor.h"

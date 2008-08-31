@@ -30,6 +30,7 @@
 */
 
 #include <QLayout>
+#include <QLabel>
 #include <QPushButton>
 
 #include "TreeView.h"

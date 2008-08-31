@@ -109,15 +109,6 @@ void AttachmentWindow::enterEvent( QEvent *event )
   return;
 }
 
-//_______________________________________________
-void AttachmentWindow::_uniconify( void )
-{
-  Debug::Throw( "AttachmentWindow::_uniconify.\n" );
-  uniconify();
-  show();
-  return;
-}
-
 //________________________________________
 void AttachmentWindow::_displayEntry( Attachment& attachment )
 { 

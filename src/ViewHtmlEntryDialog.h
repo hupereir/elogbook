@@ -88,10 +88,7 @@ class ViewHtmlEntryDialog: public CustomDialog
     
   //! command
   void setCommand( const std::string& file )
-  { 
-    command_->setFile( file ); 
-    command_->editor().expand();
-  } 
+  { command_->setFile( file ); } 
   
   //! command
   std::string command( void ) const

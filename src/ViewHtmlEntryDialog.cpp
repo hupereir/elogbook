@@ -34,6 +34,7 @@
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QLayout>
+#include <QLabel>
 
 #include "ViewHtmlEntryDialog.h"
 #include "Logbook.h"

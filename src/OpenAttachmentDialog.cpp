@@ -31,6 +31,7 @@
 
 #include <QButtonGroup>
 #include <QGroupBox>
+#include <QLabel>
 #include <QLayout>
 
 #include "GridLayout.h"

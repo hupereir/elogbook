@@ -30,6 +30,7 @@
 */
 
 #include <QLayout>
+#include <QLabel>
 
 #include "TextEditor.h"
 #include "Debug.h"
