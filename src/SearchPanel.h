@@ -35,12 +35,12 @@
 #include <string>
 #include <map>
 
-#include "Counter.h"
+#include "CustomToolBar.h"
 
-class LineEditor;
+class CustomComboBox;
 
 //! selects entries from keyword/title/text/...
-class SearchPanel: public QWidget, public Counter
+class SearchPanel: public CustomToolBar
 {
 
   //! Qt meta object declaration
@@ -49,7 +49,7 @@ class SearchPanel: public QWidget, public Counter
   public:
       
   //! constructor
-  SearchPanel( QWidget* parent );
+  SearchPanel( const QString&, QWidget*, const std::string& );
   
   //! search mode enumeration
   enum SearchMode 
@@ -61,11 +61,7 @@ class SearchPanel: public QWidget, public Counter
     ATTACHMENT = 1<<3,
     COLOR = 1<<4
   };
-  
-  //! visibility action
-  QAction& visibilityAction( void ) const
-  { return *visibility_action_; }
-  
+   
   signals:
   
   //! emitted when the Find button is pressed
@@ -73,12 +69,7 @@ class SearchPanel: public QWidget, public Counter
 
   //! emitted when the Show All button is pressed
   void showAllEntries( void );
-        
-  public slots:
-  
-  //! toggle visibility [overloaded]
-  virtual void setVisible( bool );
-  
+   
   private slots:
  
   //! configuration
@@ -91,6 +82,10 @@ class SearchPanel: public QWidget, public Counter
   void _selectionRequest( void );
   
   private:
+  
+  //! editor
+  CustomComboBox& _editor( void ) const
+  { return *editor_; }
   
   //! checkboxes
   typedef std::map<SearchMode, QCheckBox* > CheckBoxMap;
@@ -114,10 +109,7 @@ class SearchPanel: public QWidget, public Counter
   QCheckBox *color_selection_;    
   
   //! selection text widget
-  LineEditor *selection_; 
-
-  //! action
-  QAction* visibility_action_;
+  CustomComboBox *editor_; 
   
 };
 #endif

@@ -92,6 +92,9 @@ void installDefaultOptions( void )
   
   XmlOptions::get().add( "SHOW_KEYWORD", Option( "0" , "show keyword in editor"  ) );
   XmlOptions::get().add( "SHOW_EDITFRAME_MENU", Option( "1", "show menu in EditionWindow windows" ) );
+
+  XmlOptions::get().add( "SEARCH_PANEL", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().add( "SEARCH_PANEL_LOCATION", Option( "bottom" , "toolbar location" ) );
   
   XmlOptions::get().add( "MAIN_TOOLBAR", Option( "1" , "toolbar visibility" ) );
   XmlOptions::get().add( "FORMAT_TOOLBAR", Option( "1" , "toolbar visibility" ) );

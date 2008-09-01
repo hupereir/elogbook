@@ -96,12 +96,13 @@ MainWindow::MainWindow( QWidget *parent ):
   splitter->setOrientation( Qt::Horizontal );
  
   // search panel
-  search_panel_ = new SearchPanel( main );
-  connect( search_panel_, SIGNAL( selectEntries( QString, unsigned int ) ), SLOT( selectEntries( QString, unsigned int ) ) );
-  connect( search_panel_, SIGNAL( showAllEntries() ), SLOT( showAllEntries() ) );
-  layout->addWidget( search_panel_ );  
+  search_panel_ = new SearchPanel( "Search panel", this, "SEARCH_PANEL" );
+  connect( &searchPanel(), SIGNAL( selectEntries( QString, unsigned int ) ), SLOT( selectEntries( QString, unsigned int ) ) );
+  connect( &searchPanel(), SIGNAL( showAllEntries() ), SLOT( showAllEntries() ) );
+  // layout->addWidget( search_panel_ );  
   
-  addAction( &search_panel_->visibilityAction() );
+  searchPanel().visibilityAction().setShortcut( Qt::CTRL+Qt::Key_F );
+  addAction( &searchPanel().visibilityAction() );
   
   // status bar
   setStatusBar( statusbar_ = new SelectionStatusBar( this ) );
@@ -680,15 +681,6 @@ Keyword MainWindow::currentKeyword( void ) const
   Debug::Throw( "MainWindow::currentKeyword.\n" );
   QModelIndex index( keywordList().selectionModel()->currentIndex() );
   return index.isValid() ? _keywordModel().get( index ) : Keyword();
-}
-
-//_______________________________________________
-bool MainWindow::installToolBarsActions( QMenu& menu )
-{
-  Debug::Throw( "MainWindow::installToolBarsActions.\n" );
-  bool out( CustomMainWindow::installToolBarsActions( menu ) );
-  menu.addAction( &searchPanel().visibilityAction() );
-  return out;
 }
 
 //_______________________________________________

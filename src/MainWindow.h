@@ -272,10 +272,6 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   { return *show_duplicates_action_; }
   
   //@}
-
-  //! install toolbar visibility actions
-  /*! returns true if lockable toolbars are found */
-  virtual bool installToolBarsActions( QMenu& );
   
   signals:
 
