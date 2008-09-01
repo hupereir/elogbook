@@ -115,6 +115,9 @@ bool Application::realizeWidget( void )
   // check if the method has already been called.
   if( !BaseApplication::realizeWidget() ) return false;
 
+  // rename about action
+  aboutAction().setText( "About &elogbook" );
+
   // need to redirect closeAction to proper exit
   closeAction().disconnect();
   connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
