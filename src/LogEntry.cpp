@@ -94,7 +94,7 @@ LogEntry::LogEntry( const QDomElement& element ):
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( child_element ) );
     else if( tag_name == FORMAT::XmlTextFormatBlock::XML_TAG ) addFormat( FORMAT::XmlTextFormatBlock( child_element ) );
     else if( tag_name == XML::ATTACHMENT ) Key::associate( this, new Attachment( child_element ) );
-    else cout << "Option::Option - unrecognized child " << qPrintable( child_element.tagName() ) << ".\n";
+    else cout << "LogEntry::LogEntry - unrecognized child " << qPrintable( child_element.tagName() ) << ".\n";
   }
 
 }
