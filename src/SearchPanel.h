@@ -69,6 +69,11 @@ class SearchPanel: public CustomToolBar
 
   //! emitted when the Show All button is pressed
   void showAllEntries( void );
+
+  protected slots:
+  
+  //! toggle visibility [overloaded]
+  virtual void _toggleVisibility( bool );
    
   private slots:
  

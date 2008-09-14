@@ -87,12 +87,21 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const std::stri
   
 }
 
+//_______________________________________________________________
+void SearchPanel::_toggleVisibility( bool state )
+{
+
+  Debug::Throw( "SearchPanel::_toggleVisibility.\n" );
+  CustomToolBar::_toggleVisibility( state );
+  if( state ) _editor().setFocus();
+
+}
+  
 //___________________________________________________________
 void SearchPanel::_updateConfiguration( void )
 {
 
   Debug::Throw( "SearchPanel::_updateConfiguration.\n" );
-  // visibilityAction().setChecked( XmlOptions::get().get<bool>( "SHOW_SEARCHPANEL" ) );
   
   // load mask
   if( XmlOptions::get().find( "SEARCHPANEL_MASK" ) )
