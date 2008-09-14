@@ -40,6 +40,7 @@
 #include "CustomPixmap.h"
 #include "Debug.h"
 #include "QtUtil.h"
+#include "SvgEngine.h"
 #include "XmlOptions.h"
 
 using namespace std;
@@ -189,6 +190,9 @@ void SplashScreen::paintEvent( QPaintEvent* event )
   QWidget::paintEvent( event );
   QPainter painter( this );
   
+  // draw background
+  painter.DrawPixmap( SvgEngine::get().get( size() ) );
+    
   // prepare rect for drawing
   QRect pixmap_rect;
   QRect title_rect( rect() );

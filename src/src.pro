@@ -1,7 +1,7 @@
 TEMPLATE = app
 
 CONFIG += qt release
-QT += xml network
+QT += xml network svg
 TARGET = elogbook
 
 VERSION = 1.1
@@ -62,6 +62,8 @@ HEADERS = \
   MainWindow.h \
   SelectionStatusBar.h \
   SplashScreen.h \
+  Svg.h \
+  SvgEngine.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
@@ -98,6 +100,7 @@ SOURCES = \
   OpenAttachmentDialog.cpp \
   ProgressBar.cpp \
   SearchPanel.cpp \
+  SvgEngine.cpp \
   MainWindow.cpp \
   SelectionStatusBar.cpp \
   SplashScreen.cpp \

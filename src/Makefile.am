@@ -10,6 +10,7 @@ INCLUDES = \
   -I$(qt_includes)/QtNetwork  \
   -I$(qt_includes)/QtXml \
   -I$(qt_includes)/QtGui \
+  -I$(qt_includes)/QtSvg \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-help \
@@ -23,6 +24,7 @@ INCLUDES = \
   -I$(qt_includes)/QtNetwork  \
   -I$(qt_includes)/QtXml \
   -I$(qt_includes)/QtGui \
+  -I$(qt_includes)/QtSvg \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-help \
@@ -36,7 +38,7 @@ bin_PROGRAMS = elogbook copy_logbook synchronize_logbook
 
 if WITH_ASPELL 
 libraries = \
-  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
+  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtSvg\
   -L$(aspell_libraries) -laspell  \
   libelogbook.a \
   ../base-spellcheck/libbase-spellcheck.a \
@@ -48,7 +50,7 @@ libraries = \
 else
 
 libraries =  \
-  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork\
+  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtSvg\
   libelogbook.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
@@ -110,6 +112,8 @@ noinst_HEADERS = \
   SearchPanel.h \
   SelectionStatusBar.h \
   SplashScreen.h \
+  Svg.h \
+  SvgEngine.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
@@ -142,6 +146,7 @@ elogbook_SOURCES = \
   SearchPanel.cpp \
   SelectionStatusBar.cpp \
   SplashScreen.cpp \
+  SvgEngine.cpp \
   ViewHtmlEntryDialog.cpp \
   ViewHtmlLogbookDialog.cpp \
   elogbook.cpp

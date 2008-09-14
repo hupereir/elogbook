@@ -303,6 +303,43 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   box->layout()->addWidget( checkbox = new OptionCheckBox( "Transparent splash screen", box, "TRANSPARENT_SPLASH_SCREEN" ) );
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Show transparent splash screen at startup" );
+
+  // svg background
+  page->layout()->addWidget( box = new QGroupBox( "svg background", page ));
+
+  box_layout = new QVBoxLayout();
+  box_layout->setSpacing(5);
+  box_layout->setMargin(5);
+  box->setLayout( box_layout );
+
+  box_layout->addWidget( checkbox = new OptionCheckBox( "use svg background", box, "USE_SVG" )); 
+  checkbox->setToolTip( "use svg to paint background" );
+  addOptionWidget( checkbox ); 
+
+  grid_layout = new GridLayout();
+  grid_layout->setSpacing(5);
+  grid_layout->setMargin(0);
+  grid_layout->setMaxCount( 2 );
+  box_layout->addLayout( grid_layout );
+
+  grid_layout->addWidget( new QLabel( "filename: ", box ) );
+  QPushButton *button = new QPushButton( "Edit svg file list", box );
+  connect( button, SIGNAL( clicked() ), SLOT( _editSvgPathList() ) );
+  grid_layout->addWidget( button );
+  button->setToolTip( 
+    "Set the list of valid backgrounds.\n"
+    "Valid backgrounds are typical plasma svg backgrounds.\n"
+    "They must contains element ids like \"topleft\",\n"
+    "\"top\", \"center\", etc." );
+  grid_layout->addWidget( new QLabel( "offset: ", box ) );
+  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "SVG_OFFSET" ) );
+  spinbox->setMinimum( -16 );
+  spinbox->setMaximum( 16 );
+  spinbox->setToolTip( 
+    "Offset used to draw svg.\n"
+    "positive offset will make the SVG larger than the\n"
+    "actual window size, thus shinking its edges\n" );
+  addOptionWidget( spinbox );
   
   // misc
   page->layout()->addWidget( box = new QGroupBox( "Recent files", page ) );  
@@ -329,6 +366,35 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         
   // load initial configuration
   _read();
+  
+}
+
+//__________________________________________________
+void ConfigurationDialog::_editSvgPathList( void )
+{
+  
+  CustomDialog dialog( this );
+
+  // store backup
+  Options::List backup_options = XmlOptions::get().specialOptions( "SVG_BACKGROUND" );
+  
+  dialog.mainLayout().addWidget( new QLabel("Svg pathname: ", &dialog ) );
+  OptionListBox *listbox = new OptionListBox( &dialog, "SVG_BACKGROUND" );
+  listbox->setBrowsable( true );
+  //listbox->setFileMode( QFileDialog::Directory );
+  listbox->setToolTip( "Pathname to load background svg" );
+  listbox->read();
+  dialog.mainLayout().addWidget( listbox );
+  
+  // 
+  if( dialog.exec() ) listbox->write();
+  else { 
+    // restore old values
+    XmlOptions::get().clearSpecialOptions( "SVG_BACKGROUND" );
+    for( Options::List::iterator iter = backup_options.begin(); iter != backup_options.end(); iter++ )
+    { XmlOptions::get().add( "SVG_BACKGROUND", *iter ); }
+  }
+  return;
   
 }
 

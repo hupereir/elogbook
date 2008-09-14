@@ -15,6 +15,7 @@ SUBDIRS = \
  base-server \
  $(SPELLCHECK_SOURCE_DIR) \
  extra-includes \
+ svg \
  src
 
 EXTRA_DIST = \

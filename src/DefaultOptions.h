@@ -42,6 +42,10 @@ using namespace std;
 void installDefaultOptions( void )
 {
   // set options default values
+  XmlOptions::get().keep( "SVG_BACKGROUND" );
+  XmlOptions::get().add( "SVG_BACKGROUND", Option( ":/svg/background.svg" ).setFlag( Option::RECORDABLE, false ) );
+  XmlOptions::get().add( "USE_SVG", "1" );
+  XmlOptions::get().add( "SVG_OFFSET", "3");
   
   // COLOR options are special. Keep the full list
   XmlOptions::get().keep( "COLOR" );
