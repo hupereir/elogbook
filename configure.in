@@ -164,9 +164,9 @@ AC_OUTPUT( Makefile \
   base-qt/Makefile \
   base-help/Makefile \
   base-server/Makefile \
+  base-svg/Makefile \
   base-spellcheck/Makefile \
   extra-includes/Makefile \
-  svg/Makefile \
   src/Makefile \
   src/Config.h \
   src/SystemOptions.h )

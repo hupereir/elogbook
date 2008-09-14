@@ -13,9 +13,9 @@ SUBDIRS = \
  base-qt \
  base-help \
  base-server \
+ base-svg \
  $(SPELLCHECK_SOURCE_DIR) \
  extra-includes \
- svg \
  src
 
 EXTRA_DIST = \

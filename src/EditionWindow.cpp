@@ -21,7 +21,6 @@
  *
  *******************************************************************************/
 
-
 /*!
   \file EditionWindow.cpp
   \brief log entry edition/creation object
@@ -196,8 +195,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   // undo/redo connections
   connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
   connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateRedoAction() ) );
+  connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
   connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
-
   connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
     
   // extra toolbar
@@ -313,6 +312,7 @@ void EditionWindow::setReadOnly( const bool& value )
   attachmentFrame().setReadOnly( isReadOnly() );
 
   // changes window title
+  _updateSaveAction();
   updateWindowTitle();
   
 }
@@ -747,6 +747,10 @@ void EditionWindow::_updateRedoAction( void )
   if( activeEditor().QWidget::hasFocus() ) redo_action_->setEnabled( activeEditor().document()->isRedoAvailable() );
 }
 
+//_____________________________________________
+void EditionWindow::_updateSaveAction( void )
+{ saveAction().setEnabled( !isReadOnly() && modified() ); }
+  
 //_____________________________________________
 void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 {
@@ -1219,6 +1223,7 @@ TextEditor& EditionWindow::_newTextEditor( QWidget* parent )
   connect( editor, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
   connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction() ) );
   connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
+  connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction() ) );
   
   if( format_toolbar_ )
   {

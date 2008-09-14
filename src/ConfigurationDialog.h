@@ -46,9 +46,6 @@ class ConfigurationDialog: public BaseConfigurationDialog
 
   protected slots:
 
-//! show svg path dialog
-  virtual void _editSvgPathList( void );
-
   //! restore default options
   virtual void _restoreDefaults( void );  
   

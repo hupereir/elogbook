@@ -15,7 +15,8 @@ INCLUDES = \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-help \
   -I$(top_srcdir)/base-server \
-  -I$(top_srcdir)/base-spellcheck
+  -I$(top_srcdir)/base-spellcheck \
+  -I$(top_srcdir)/base-svg
 else
 INCLUDES = \
   -I$(qt_includes) \
@@ -28,7 +29,8 @@ INCLUDES = \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-help \
-  -I$(top_srcdir)/base-server
+  -I$(top_srcdir)/base-server \
+  -I$(top_srcdir)/base-svg
 endif
 
 CXXFLAGS = @CXXFLAGS@
@@ -42,6 +44,7 @@ libraries = \
   -L$(aspell_libraries) -laspell  \
   libelogbook.a \
   ../base-spellcheck/libbase-spellcheck.a \
+  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
@@ -52,6 +55,7 @@ else
 libraries =  \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtSvg\
   libelogbook.a \
+  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
@@ -62,7 +66,6 @@ endif
 elogbook_LDADD =  $(libraries)
 copy_logbook_LDADD =  $(libraries)
 synchronize_logbook_LDADD =  $(libraries)
-
 
 libelogbook_a_SOURCES = \
   Attachment.cpp \
@@ -112,8 +115,6 @@ noinst_HEADERS = \
   SearchPanel.h \
   SelectionStatusBar.h \
   SplashScreen.h \
-  Svg.h \
-  SvgEngine.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
@@ -146,14 +147,12 @@ elogbook_SOURCES = \
   SearchPanel.cpp \
   SelectionStatusBar.cpp \
   SplashScreen.cpp \
-  SvgEngine.cpp \
   ViewHtmlEntryDialog.cpp \
   ViewHtmlLogbookDialog.cpp \
   elogbook.cpp
 
 nodist_elogbook_SOURCES = \
   qrc_pixmaps.cpp \
-  qrc_svg.cpp \
   moc_Application.cpp \
   moc_AskForSaveDialog.cpp \
   moc_AttachmentFrame.cpp \

@@ -7,22 +7,24 @@ TARGET = elogbook
 VERSION = 1.1
 DEFINES += QT_STATIC VERSION=\"$$VERSION\"
 
-INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../extra-includes
-DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../extra-includes
+INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../base-svg ../extra-includes
+DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../base-svg ../extra-includes
 
 LIBS += \
+  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
 
 POST_TARGETDEPS = \
+  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
 
-RESOURCES = pixmaps.qrc svg.qrc ../base-qt/basePixmaps.qrc
+RESOURCES = pixmaps.qrc ../base-svg/svg.qrc ../base-qt/basePixmaps.qrc
 RC_FILE = elogbook.rc
 
 HEADERS = \
@@ -62,8 +64,6 @@ HEADERS = \
   MainWindow.h \
   SelectionStatusBar.h \
   SplashScreen.h \
-  Svg.h \
-  SvgEngine.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
@@ -100,7 +100,6 @@ SOURCES = \
   OpenAttachmentDialog.cpp \
   ProgressBar.cpp \
   SearchPanel.cpp \
-  SvgEngine.cpp \
   MainWindow.cpp \
   SelectionStatusBar.cpp \
   SplashScreen.cpp \

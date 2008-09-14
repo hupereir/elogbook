@@ -305,6 +305,9 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! update (enable/disable) redo action
   void _updateRedoAction( void );
 
+  //! update (enable/disable) save action
+  void _updateSaveAction( void );
+  
   /*!
     \brief update (enable/disable) undo/redo action
     based on the widget that currently has focus
