@@ -153,6 +153,7 @@ elogbook_SOURCES = \
 
 nodist_elogbook_SOURCES = \
   qrc_pixmaps.cpp \
+  qrc_svg.cpp \
   moc_Application.cpp \
   moc_AskForSaveDialog.cpp \
   moc_AttachmentFrame.cpp \

@@ -60,13 +60,14 @@ SplashScreen::SplashScreen( QWidget* parent ):
   
   // colors and transparency
   bool transparent( XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" ) );
-  if( transparent )
+  use_svg_ = XmlOptions::get().get<bool>( "USE_SVG" );
+  if( transparent || use_svg_ )
   {
     QPalette palette( this->palette() );
     palette.setColor( QPalette::Window, Qt::black );
     palette.setColor( QPalette::WindowText, Qt::white );
     setPalette( palette );
-    setOpacity( 0.7 );
+    if( transparent ) setOpacity( 0.9 );
   }
   
   // title
@@ -91,6 +92,8 @@ SplashScreen::SplashScreen( QWidget* parent ):
   
   setMinimumSize( QSize( 300, icon_size_ + 2*margin_ ) );
   setMouseTracking( true );
+  
+  SvgEngine::get().reload();
   
 }
 
@@ -191,7 +194,7 @@ void SplashScreen::paintEvent( QPaintEvent* event )
   QPainter painter( this );
   
   // draw background
-  painter.DrawPixmap( SvgEngine::get().get( size() ) );
+  if( use_svg_ ) painter.drawPixmap( QPoint(0,0), SvgEngine::get().get( size() ) );
     
   // prepare rect for drawing
   QRect pixmap_rect;

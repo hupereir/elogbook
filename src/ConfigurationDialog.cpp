@@ -307,7 +307,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   // svg background
   page->layout()->addWidget( box = new QGroupBox( "svg background", page ));
 
-  box_layout = new QVBoxLayout();
+  QVBoxLayout *box_layout = new QVBoxLayout();
   box_layout->setSpacing(5);
   box_layout->setMargin(5);
   box->setLayout( box_layout );

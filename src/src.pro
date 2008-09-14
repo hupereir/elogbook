@@ -22,7 +22,7 @@ POST_TARGETDEPS = \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
 
-RESOURCES = pixmaps.qrc ../base-qt/basePixmaps.qrc
+RESOURCES = pixmaps.qrc svg.qrc ../base-qt/basePixmaps.qrc
 RC_FILE = elogbook.rc
 
 HEADERS = \

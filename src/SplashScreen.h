@@ -129,6 +129,9 @@ class SplashScreen: public QWidget, public Counter
   //! minimum width
   int minimum_width_;
   
+  //! svg
+  bool use_svg_;
+  
 };
 
 #endif
