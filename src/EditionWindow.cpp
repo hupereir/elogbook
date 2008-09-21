@@ -137,7 +137,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   // status bar for tooltips
   setStatusBar( statusbar_ = new StatusBar( this ) );
   statusBar().addLabel( 2 );
-  statusBar().addLabels( 2, 0 );
+  statusBar().addLabels( 3, 0 );
   statusBar().addClock();
 
   // actions
@@ -459,7 +459,7 @@ void EditionWindow::_save( bool update_selection )
   entry->modified();
 
   // status bar
-  statusbar_->label().setText(  "writting entry to logbook ..." );
+  statusBar().label().setText(  "writting entry to logbook ..." );
   Debug::Throw( "EditionWindow::_save - statusbar set.\n" );
 
   // add entry to logbook, if needed
@@ -495,7 +495,7 @@ void EditionWindow::_save( bool update_selection )
   if( mainwindow.logbook()->file().size() ) mainwindow.save();
   Debug::Throw( "EditionWindow::_save - mainWindow saved.\n" );
 
-  statusbar_->label().setText( "" );
+  statusBar().label().setText( "" );
   Debug::Throw( "EditionWindow::_save - done.\n" );
 
   return;
@@ -978,6 +978,13 @@ void EditionWindow::_displayFocusChanged( TextEditor* editor )
 }  
 
 //________________________________________________________________
+void EditionWindow::_overwriteModeChanged( void )
+{ 
+  if( !_hasStatusBar() ) return;
+  statusBar().label(1).setText( activeEditor().overwriteMode() ? "INS":"" );
+}
+
+//________________________________________________________________
 void EditionWindow::_setActiveEditor( TextEditor& editor )
 { 
   Debug::Throw() << "EditionWindow::_setActiveEditor - key: " << editor.key() << std::endl;
@@ -998,7 +1005,7 @@ void EditionWindow::_setActiveEditor( TextEditor& editor )
   // associate with toolbar
   if( format_toolbar_ ) format_toolbar_->setTarget( activeEditor() );
 
-  Debug::Throw( "EditionWindow::setActiveDisplay - done.\n" );
+  Debug::Throw( "EditionWindow::_setActiveEditor - done.\n" );
   
 }
 
@@ -1221,6 +1228,7 @@ TextEditor& EditionWindow::_newTextEditor( QWidget* parent )
   // connections
   connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
   connect( editor, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
+  connect( editor, SIGNAL( overwriteModeChanged() ), SLOT( _overwriteModeChanged() ) );
   connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction() ) );
   connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
   connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction() ) );
@@ -1249,15 +1257,15 @@ TextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 void EditionWindow::_displayCursorPosition( const TextPosition& position)
 {
   Debug::Throw( "EditionWindow::_DisplayCursorPosition.\n" );
-  if( !statusbar_ ) return;
+  if( !_hasStatusBar() ) return;
   
   ostringstream what;
   what << "line : " << position.paragraph()+1;
-  statusbar_->label(1).setText( what.str().c_str(), false );
+  statusBar().label(2).setText( what.str().c_str(), false );
 
   what.str("");
   what << "column : " << position.index()+1;
-  statusbar_->label(2).setText( what.str().c_str(), true );
+  statusBar().label(3).setText( what.str().c_str(), true );
   
   return;
 }

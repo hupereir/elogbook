@@ -352,6 +352,9 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! display focus changed
   void _displayFocusChanged( TextEditor* );  
 
+  //! overwrite mode changed
+  void _overwriteModeChanged( void );
+  
   private:  
   
   //! install actions
@@ -397,6 +400,10 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! update attachment list Widget from current entry
   void _displayAttachments( void );
 
+  //! true if status bar is set
+  bool _hasStatusBar( void ) const
+  { return (bool) statusbar_; }
+  
   //! if true, LogEntry associated to EditionWindow cannot be modified
   bool read_only_;
 
