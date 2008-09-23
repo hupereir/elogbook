@@ -45,6 +45,7 @@
 #include "FormatBar.h"
 #include "IconEngine.h"
 #include "PixmapEngine.h"
+#include "RoundedPath.h"
 #include "TextEditor.h"
 #include "TextPosition.h"
 
@@ -350,40 +351,42 @@ void FormatBar::updateState( const QTextCharFormat& format )
 //________________________________________
 void FormatColorButton::paintEvent( QPaintEvent* event )
 {
+  if( color_.isValid() ) 
+  {
+  
+    QPainter painter( this );
+    painter.setRenderHint( QPainter::Antialiasing );
+    
+    QLinearGradient gradient( rect().topLeft(), rect().bottomLeft() );
+    
+    QColor first( color_ );
+    first.setAlpha( 50 );
+    gradient.setColorAt(1, first );
+    
+    QColor second( color_ );
+    gradient.setColorAt(0, second );
+
+    if( 1 )
+    {
+      QPen pen;
+      pen.setWidth( 2 );
+      pen.setBrush( gradient );
+      pen.setJoinStyle( Qt::RoundJoin );
+      painter.setPen( pen );
+      painter.setBrush( Qt::transparent );
+    } else {
+      painter.setPen( Qt::NoPen );
+      painter.setBrush( gradient );
+    }
+    
+    painter.drawPath( RoundedPath( QRectF( rect().adjusted( 1, 1, -1, -1 ) ) ) );
+    
+    painter.end();
+  }
   
   // default handling if color is invalid
   QToolButton::paintEvent( event );
-  if( !color_.isValid() ) return;
-  
-  QPainter painter( this );
-  painter.setRenderHint( QPainter::Antialiasing );
-  
-  QLinearGradient gradient( rect().topLeft(), rect().bottomLeft() );
 
-  QColor first( color_ );
-  first.setAlpha( 50 );
-  gradient.setColorAt(0, first );
-  
-  QColor second( color_ );
-  gradient.setColorAt(1, second );
-
-  
-  QPen pen;
-  pen.setWidth( 2 );
-  // pen.setBrush( color_ );
-  pen.setBrush( gradient );
-  pen.setJoinStyle( Qt::RoundJoin );
-  painter.setPen( pen );
-  painter.setBrush( Qt::transparent );
-  
-  
-  #if QT_VERSION >= 0x040400
-  painter.drawRoundedRect( rect().adjusted( 1, 1, -1, -1 ), 5, 5 );
-  #else
-  painter.drawRect( rect().adjusted( 1, 1, -1, -1 ) );
-  #endif
-  
-  painter.end();
   return;
   
 }
