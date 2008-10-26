@@ -69,8 +69,8 @@ using namespace std;
 MainWindow::MainWindow( QWidget *parent ):
   CustomMainWindow( parent ),
   Counter( "MainWindow" ),
-  autosave_timer_( this ),
-  edition_timer_( this ),
+  autosave_delay_( 6e4 ),
+  edition_delay_( 200 ),
   logbook_( 0 ),
   working_directory_( Util::workingDirectory() ),
   ignore_warnings_( false ),
@@ -257,14 +257,6 @@ MainWindow::MainWindow( QWidget *parent ):
   // configuration
   connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
-
-  // autosave_timer_
-  autosave_timer_.setSingleShot( false );
-  connect( &autosave_timer_, SIGNAL( timeout() ), SLOT( _autoSave() ) );
-  
-  // edition timer
-  edition_timer_.setSingleShot( true );
-  connect( &edition_timer_, SIGNAL( timeout() ), SLOT( _startEntryEdition() ) );
   
 }
 
@@ -925,6 +917,21 @@ void MainWindow::timerEvent( QTimerEvent* event )
     resize_timer_.stop();
     XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
   
+  } else if(event->timerId() == drag_timer_.timerId() ) {
+  
+    Debug::Throw(0) << "MainWindow::timerEvent - enabling drag" << endl;
+    drag_timer_.stop();
+    _logEntryModel().setDragEnabled( true );
+
+  } else if(event->timerId() == edition_timer_.timerId() ) {
+  
+    edition_timer_.stop();
+    _startEntryEdition();
+
+  } else if(event->timerId() == autosave_timer_.timerId() ) {
+    
+    _autoSave();
+    
   } else return CustomMainWindow::timerEvent( event );
   
 }
@@ -1181,14 +1188,11 @@ void MainWindow::_updateConfiguration( void )
   resize( sizeHint() );
   
   // autoSave
-  autosave_timer_.setInterval( 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" ) );
+  autosave_delay_ = 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" );
   bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
-  if( autosave ) autosave_timer_.start();
+  if( autosave ) autosave_timer_.start( autosave_delay_, this );
   else autosave_timer_.stop();
   
-  // size hint
-  // resize( sizeHint() );
-    
   // colors
   list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );
   for( list<string>::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
@@ -2583,12 +2587,12 @@ void MainWindow::_entryItemClicked( const QModelIndex& index )
   
   // do nothing if index do not correspond to an entry title
   if( !(index.isValid() && index.column() == LogEntryModel::TITLE ) ) return;
-  
+
   // do nothing if index is not already selected
   if( !logEntryList().selectionModel()->isSelected( index ) ) return;
 
   // compare to model edition index
-  if( index == _logEntryModel().editionIndex() ) edition_timer_.start( edition_delay_ );
+  if( index == _logEntryModel().editionIndex() ) edition_timer_.start( edition_delay_, this );
   else _logEntryModel().setEditionIndex( index );
   
 }

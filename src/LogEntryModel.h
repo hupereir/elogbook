@@ -96,6 +96,14 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
 
   //@}
   
+  //! enable edition
+  const bool& dragEnabled( void ) const
+  { return drag_enabled_; }
+  
+  //! enable drag
+  void setDragEnabled( const bool& value )
+  { drag_enabled_ = value; }
+  
   //!@name edition
   //@{
   
@@ -160,6 +168,9 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     
   };
 
+  //! drag flag
+  bool drag_enabled_;
+  
   //! edition flag
   bool edition_enabled_;
   

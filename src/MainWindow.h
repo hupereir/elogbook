@@ -485,13 +485,13 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! restore expanded jobs from model
   void _restoreExpandedKeywords( void );
 
-  //! perform autoSave
-  void _autoSave( void );
-  
   private:
   
   //! returns true if logbook has modified entries
   bool _hasModifiedEntries( void ) const;
+
+  //! perform autoSave
+  void _autoSave( void );
   
   //! check modified entries
   AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditionWindow>, const bool& ) const;
@@ -554,16 +554,19 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   ColorMenu* color_menu_;
   
   //! autoSaveTimer
-  QTimer autosave_timer_;
+  QBasicTimer autosave_timer_;
 
+  //! autosave interval
+  int autosave_delay_;
+  
   //!@name item edition
   //@{
   
   //! edition timer
-  QTimer edition_timer_;
+  QBasicTimer edition_timer_;
 
   //! edit_item delay (ms)
-  enum { edition_delay_ = 500 };
+  int edition_delay_;
   
   //@}
   
@@ -659,9 +662,12 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
     
   //@}
       
-  //! timer
+  //! resize timer
   /*! needed to store Keyword list width */
   QBasicTimer resize_timer_;
+  
+  //! drag timer
+  QBasicTimer drag_timer_;
   
 };
 

@@ -60,6 +60,7 @@ const char* LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
 LogEntryModel::LogEntryModel( QObject* parent ):
   ListModel<LogEntry*>( parent ),
   Counter( "LogEntryModel" ),
+  drag_enabled_( false ),
   edition_enabled_( false )
 { 
   Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
@@ -80,7 +81,7 @@ Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
   Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
   
   // check against edition index
-  if( index == editionIndex() && edition_enabled_ ) 
+  if( index == editionIndex() && editionEnabled() ) 
   { out |= Qt::ItemIsEditable; }
   
   // check column
@@ -139,7 +140,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
 {
   Debug::Throw( "LogEntryModel::setData.\n" );
   
-  if( !edition_enabled_ )
+  if( !editionEnabled() )
   {
     Debug::Throw(0, "LogEntryModel::setData - edition is disabled. setData canceled.\n" );
     return false; 
