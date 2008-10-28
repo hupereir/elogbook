@@ -1286,6 +1286,7 @@ void EditionWindow::_displayText( void )
   if( !&activeEditor() ) return;
 
   LogEntry* entry( EditionWindow::entry() );
+  activeEditor().setCurrentTextCharFormat( QTextCharFormat() );
   activeEditor().setPlainText( (entry) ? entry->text().c_str() : "" );
   format_toolbar_->load( entry->formats() );
   
@@ -1371,6 +1372,4 @@ void EditionWindow::ColorWidget::paintEvent( QPaintEvent* )
   option.state |= QStyle::State_Raised;
   painter.drawComplexControl(QStyle::CC_ToolButton, option);
 
-  
-  
 }

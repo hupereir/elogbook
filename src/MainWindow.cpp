@@ -69,7 +69,7 @@ using namespace std;
 MainWindow::MainWindow( QWidget *parent ):
   CustomMainWindow( parent ),
   Counter( "MainWindow" ),
-  autosave_delay_( 6e4 ),
+  autosave_delay_( 60000 ),
   edition_delay_( 200 ),
   logbook_( 0 ),
   working_directory_( Util::workingDirectory() ),
