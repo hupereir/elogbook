@@ -1286,7 +1286,7 @@ void EditionWindow::_displayText( void )
   if( !&activeEditor() ) return;
 
   LogEntry* entry( EditionWindow::entry() );
-  activeEditor().setCurrentTextCharFormat( QTextCharFormat() );
+  activeEditor().setCurrentCharFormat( QTextCharFormat() );
   activeEditor().setPlainText( (entry) ? entry->text().c_str() : "" );
   format_toolbar_->load( entry->formats() );
   
