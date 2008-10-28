@@ -93,7 +93,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   setMinimumSize( QSize( 300, icon_size_ + 2*margin_ ) );
   setMouseTracking( true );
   
-  SvgEngine::get().reload();
+  SVG::SvgEngine::get().reload();
   
 }
 
@@ -194,7 +194,7 @@ void SplashScreen::paintEvent( QPaintEvent* event )
   QPainter painter( this );
   
   // draw background
-  if( use_svg_ ) painter.drawPixmap( QPoint(0,0), SvgEngine::get().get( size() ) );
+  if( use_svg_ ) painter.drawPixmap( QPoint(0,0), SVG::SvgEngine::get().get( size() ) );
     
   // prepare rect for drawing
   QRect pixmap_rect;

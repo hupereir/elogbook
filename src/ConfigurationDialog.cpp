@@ -306,7 +306,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   checkbox->setToolTip( "Show transparent splash screen at startup" );
 
   // svg background
-  SvgConfiguration* svg_configuration( new SvgConfiguration( page ) );
+  SVG::SvgConfiguration* svg_configuration( new SVG::SvgConfiguration( page ) );
   page->layout()->addWidget( svg_configuration);
   addOptionWidget( svg_configuration );
   

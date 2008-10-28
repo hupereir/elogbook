@@ -50,6 +50,7 @@
 #include "QtUtil.h"
 #include "SearchPanel.h"
 #include "Str.h"
+#include "SvgHelpText.h"
 #include "Util.h"
 #include "XmlOptions.h"
 
@@ -135,6 +136,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   else {
     BASE::HelpManager::setFile( help_file );
     BASE::HelpManager::install( HelpText );
+    BASE::HelpManager::install( SVG::HelpText, false );
     BASE::HelpManager::install( BASE::HelpText, false );
   }
   
