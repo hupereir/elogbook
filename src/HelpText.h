@@ -1,3 +1,6 @@
+#ifndef HelpText_h
+#define HelpText_h
+
 // $Id$
 
 /******************************************************************************
@@ -20,9 +23,6 @@
 *                        
 *                        
 *******************************************************************************/
-
-#ifndef HelpText_h
-#define HelpText_h
 
 /*!
   \file    HelpText.h
@@ -228,23 +228,8 @@ static const char* HelpText[] =
   "<h3>Spell-checking</h3>"
   "<p>The Spell-checking tab is available only if eLogbook was compiled with <i>aspell</i> support. It allows to select the default dictionary and filter used for the spell-checking and the <i>aspell</i> command that is used to load the list of available dictionaries and filters.</p>"
   "<h3>Misc</h3>"
-  "<p>the Misc tab allows to modify additional settings that don't enter the above categories. It covers tab emulation, paragraph highlighting and line-wrapping for the log-entry text edition window; case-sensitivity of the log-entry selection criteria, display of the menu bar in the entry edition windows (on by default) and visibility of eLogbook splash-screen at start-up.</p>",
-  
-  //_________________________________________________________
-  "Contact",
-  "<h2>Contact</h2>\n"
-  "\n"
-  "<p>Latest versions of eLogbook can be downloaded at <p><a href=\"http://www.phenix.bnl.gov/WWW/publish/hpereira/php/show_software_package.php?package=eLogbook\">http://www.phenix.bnl.gov/WWW/publish/hpereira/php/show_software_package.php?package=eLogbook</a>\n"
-  "\n"
-  "<p>For suggestions and bug reports, please contact the author directly at: \n"
-  "\n"
-  "<p><a href=\"mailto:hugo.pereira@free.fr\">hugo.pereira@free.fr</a>",
-
-  //_________________________________________________________
-  "Notes",
-  "<h2>Notes</h2>\n"
-  "\n"
-  "<p>This section is left empty for the user to add his own comments on QEdit.",  0 };
+  "<p>the Misc tab allows to modify additional settings that don't enter the above categories. It covers tab emulation, paragraph highlighting and line-wrapping for the log-entry text edition window; case-sensitivity of the log-entry selection criteria, display of the menu bar in the entry edition windows (on by default) and visibility of eLogbook splash-screen at start-up.</p>",  
+  0 };
 
 
 #endif

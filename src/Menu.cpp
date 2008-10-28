@@ -36,6 +36,7 @@
 #include "AttachmentWindow.h"
 #include "CustomToolBar.h"
 #include "DebugMenu.h"
+#include "DefaultHelpText.h"
 #include "EditionWindow.h"
 #include "File.h"
 #include "HelpManager.h"
@@ -130,11 +131,12 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   // help manager
   BASE::HelpManager* help( new BASE::HelpManager( this ) );
   File help_file( XmlOptions::get().raw( "HELP_FILE" ) );
-  if( help_file.exists() )   BASE::HelpManager::install( help_file );
+  if( help_file.exists() ) BASE::HelpManager::install( help_file );
   else {
     BASE::HelpManager::setFile( help_file );
     BASE::HelpManager::install( HelpText );
-  }  
+    BASE::HelpManager::install( BASE::HelpText, false );
+  }
   
   // help menu
   menu = addMenu( "&Help" );
