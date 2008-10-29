@@ -31,6 +31,8 @@
 */
 
 #include <assert.h>
+#include <sstream>
+
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QLabel>
