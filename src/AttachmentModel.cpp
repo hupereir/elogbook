@@ -163,10 +163,7 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
     case TYPE: return first->type().name() < second->type().name();
     case SIZE: return  first->size() < second->size();
     case MODIFICATION: return first->modification() < second->modification();
-
-    default:
-    throw runtime_error( DESCRIPTION( "invalid column" ) );
-    return true;
+    default: return true;
     
   }
  

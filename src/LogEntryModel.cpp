@@ -294,9 +294,7 @@ bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) 
     case AUTHOR: return first->author() < second->author();
     case COLOR: return  first->color() < second->color();
 
-    default:
-    throw runtime_error( DESCRIPTION( "invalid column" ) );
-    return true;
+    default: return true;
     
   }
  

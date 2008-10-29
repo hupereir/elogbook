@@ -52,44 +52,43 @@ void interrupt( int sig );
 //! main function
 int main (int argc, char *argv[])
 {
-  try {
-              
-    // Ensure proper cleaning at exit
-    signal(SIGINT,  interrupt);
-    signal(SIGTERM, interrupt);
-        
-    // install error handler
-    qInstallMsgHandler( ErrorHandler::Throw );
-    ErrorHandler::disableMessage( "QServerSocket: failed to bind or listen to the socket" );
-    ErrorHandler::disableMessage( "QPixmap::resize: TODO: resize alpha data" );
- 
-    // load possible command file
-    ArgList args( argc, argv );
-    if( args.find( "--help" ) )
-    {
-      Application::usage();
-      return 0;
-    }
-   
-    // install default options
-    installDefaultOptions();
-    installSystemOptions();
-    XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
-               
-    // set debug level
-    Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
-    if( Debug::level() ) XmlOptions::get().dump();
-    
-    // initialize main frame and run loop
-    Q_INIT_RESOURCE( basePixmaps );
-    Q_INIT_RESOURCE( pixmaps );
-    Q_INIT_RESOURCE( svg );
-    Application main_frame(argc, argv);
-    main_frame.initApplicationManager();
-    main_frame.exec();
-
-  } catch ( exception& e ) { cout << e.what() << endl; }
+  
+  // Ensure proper cleaning at exit
+  signal(SIGINT,  interrupt);
+  signal(SIGTERM, interrupt);
+  
+  // install error handler
+  qInstallMsgHandler( ErrorHandler::Throw );
+  ErrorHandler::disableMessage( "QServerSocket: failed to bind or listen to the socket" );
+  ErrorHandler::disableMessage( "QPixmap::resize: TODO: resize alpha data" );
+  
+  // load possible command file
+  ArgList args( argc, argv );
+  if( args.find( "--help" ) )
+  {
+    Application::usage();
+    return 0;
+  }
+  
+  // install default options
+  installDefaultOptions();
+  installSystemOptions();
+  XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
+  
+  // set debug level
+  Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
+  if( Debug::level() ) XmlOptions::get().dump();
+  
+  // initialize main frame and run loop
+  Q_INIT_RESOURCE( basePixmaps );
+  Q_INIT_RESOURCE( pixmaps );
+  Q_INIT_RESOURCE( svg );
+  Application main_frame(argc, argv);
+  main_frame.initApplicationManager();
+  main_frame.exec();
+  
   return 0;
+
 }
 
 //_____________________________________________

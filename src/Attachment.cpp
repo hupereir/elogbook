@@ -243,10 +243,9 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     break;
     
     case DO_NOTHING:
-    break;
-    
     default:
-    throw runtime_error( DESCRIPTION( "unrecognized command" ) );
+    break;
+        
   }
   
   // process copy
