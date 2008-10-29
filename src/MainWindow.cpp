@@ -132,7 +132,7 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // create keyword list
   v_layout->addWidget( keyword_list_ = new KeywordList( left ), 1 );
-  keyword_list_->setDefaultWidth( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) );
+    
   keywordList().setModel( &_keywordModel() );
   keywordList().setRootIsDecorated( true );
   keywordList().setSortingEnabled( true );
@@ -140,6 +140,10 @@ MainWindow::MainWindow( QWidget *parent ):
   keywordList().setAcceptDrops(true);
   keywordList().setDropIndicatorShown(true);
   
+  // default width from options, if found
+  if( XmlOptions::get().find( "KEYWORD_LIST_WIDTH" ) )
+  { keyword_list_->setDefaultWidth( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) ); }
+
   // the use of a custom delegate unfortunately disable the 
   // nice selection appearance of the oxygen style.
   keywordList().setItemDelegate( new TextEditionDelegate( this ) );
