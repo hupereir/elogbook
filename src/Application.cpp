@@ -84,6 +84,17 @@ Application::Application( int argc, char*argv[] ) :
 {} 
 
 //____________________________________________
+#ifdef Q_WS_X11
+Application::Application( Display* display, int argc, char*argv[], Qt::HANDLE visual, Qt::HANDLE colormap ) :
+  BaseApplication( display, argc, argv, visual, colormap ),
+  Counter( "Application" ),
+  recent_files_( 0 ),
+  attachment_window_( 0 ),
+  main_window_( 0 )
+{} 
+#endif
+
+//____________________________________________
 Application::~Application( void ) 
 {
   Debug::Throw( "Application::~Application.\n" );  

@@ -16,6 +16,7 @@ INCLUDES = \
   -I$(top_srcdir)/base-help \
   -I$(top_srcdir)/base-server \
   -I$(top_srcdir)/base-spellcheck \
+  -I$(top_srcdir)/base-transparency \
   -I$(top_srcdir)/base-svg
 else
 INCLUDES = \
@@ -30,6 +31,7 @@ INCLUDES = \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-help \
   -I$(top_srcdir)/base-server \
+  -I$(top_srcdir)/base-transparency \
   -I$(top_srcdir)/base-svg
 endif
 
@@ -44,6 +46,7 @@ libraries = \
   -L$(aspell_libraries) -laspell  \
   libelogbook.a \
   ../base-spellcheck/libbase-spellcheck.a \
+  ../base-transparency/libbase-transparency.a \
   ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
@@ -55,6 +58,7 @@ else
 libraries =  \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtSvg\
   libelogbook.a \
+  ../base-transparency/libbase-transparency.a \
   ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \

@@ -166,6 +166,7 @@ AC_OUTPUT( Makefile \
   base-server/Makefile \
   base-svg/Makefile \
   base-spellcheck/Makefile \
+  base-transparency/Makefile \
   extra-includes/Makefile \
   src/Makefile \
   src/Config.h \

@@ -15,6 +15,7 @@ SUBDIRS = \
  base-server \
  base-svg \
  $(SPELLCHECK_SOURCE_DIR) \
+ base-transparency \
  extra-includes \
  src
 

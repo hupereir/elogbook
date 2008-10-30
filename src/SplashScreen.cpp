@@ -37,6 +37,7 @@
 #include <QResizeEvent>
 
 #include "SplashScreen.h"
+#include "CompositeEngine.h"
 #include "CustomPixmap.h"
 #include "Debug.h"
 #include "QtUtil.h"
@@ -63,11 +64,20 @@ SplashScreen::SplashScreen( QWidget* parent ):
   use_svg_ = XmlOptions::get().get<bool>( "USE_SVG" );
   if( transparent || use_svg_ )
   {
+    
     QPalette palette( this->palette() );
     palette.setColor( QPalette::Window, Qt::black );
     palette.setColor( QPalette::WindowText, Qt::white );
     setPalette( palette );
-    if( transparent ) setOpacity( 0.9 );
+    
+  }
+  
+  if( transparent ) setOpacity( 0.9 );
+    
+  if( use_svg_ && TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
+  { 
+    setAttribute( Qt::WA_OpaquePaintEvent );
+    setAttribute( Qt::WA_NoSystemBackground ); 
   }
   
   // title
@@ -193,8 +203,17 @@ void SplashScreen::paintEvent( QPaintEvent* event )
   QWidget::paintEvent( event );
   QPainter painter( this );
   
+  if( use_svg_ && TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
+  { 
+    painter.setRenderHints(QPainter::SmoothPixmapTransform);
+    painter.setCompositionMode(QPainter::CompositionMode_Source );
+    painter.fillRect( rect(), Qt::transparent );
+  }
+
   // draw background
   if( use_svg_ ) painter.drawPixmap( QPoint(0,0), SVG::SvgEngine::get().get( size() ) );
+
+  painter.setCompositionMode(QPainter::CompositionMode_SourceOver );
     
   // prepare rect for drawing
   QRect pixmap_rect;

@@ -42,6 +42,8 @@
 #include "Application.h"
 #include "XmlOptions.h"
 
+#include "CompositeEngine.h"
+
 using namespace std;
 
 //_______________________________
@@ -83,9 +85,27 @@ int main (int argc, char *argv[])
   Q_INIT_RESOURCE( basePixmaps );
   Q_INIT_RESOURCE( pixmaps );
   Q_INIT_RESOURCE( svg );
-  Application main_frame(argc, argv);
-  main_frame.initApplicationManager();
-  main_frame.exec();
+  
+  // create Application
+  Application* application( 0 );
+  
+  #ifdef Q_WS_X11
+  TRANSPARENCY::CompositeEngine::get().initialize();
+  if( TRANSPARENCY::CompositeEngine::get().isAvailable() )
+  { 
+    application = new Application( 
+      TRANSPARENCY::CompositeEngine::get().display(), 
+      argc, argv, 
+      TRANSPARENCY::CompositeEngine::get().visual(), 
+      TRANSPARENCY::CompositeEngine::get().colormap() );
+  } else application = new Application( argc, argv );
+  #else
+  application = new Application( argc, argv );
+  #endif
+
+  application->initApplicationManager();
+  application->exec();
+  delete application;
   
   return 0;
 

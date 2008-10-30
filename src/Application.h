@@ -60,6 +60,11 @@ class Application: public BaseApplication, public Counter
   //! constructor
   Application( int argc, char*argv[] ); 
   
+  #ifdef Q_WS_X11
+  //! constructor
+  Application( Display*, int argc, char*argv[], Qt::HANDLE, Qt::HANDLE ); 
+  #endif
+  
   //! destructor
   ~Application( void );
   
