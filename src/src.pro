@@ -2,7 +2,12 @@ TEMPLATE = app
 
 CONFIG += qt release
 QT += xml network svg
+
 TARGET = elogbook
+
+win32 {
+  DESTDIR = "C:/Program Files" 
+}
 
 VERSION = 1.1
 DEFINES += QT_STATIC VERSION=\"$$VERSION\"
