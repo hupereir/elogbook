@@ -122,7 +122,7 @@ void SplashScreen::setSplash( QPixmap pixmap )
 //_______________________________________________________________________
 void SplashScreen::setIcon( QPixmap pixmap )
 {
-  icon_ = CustomPixmap( pixmap ).scale( QSize( icon_size_, icon_size_ ) );
+  icon_ = CustomPixmap( pixmap ).scaled( QSize( icon_size_, icon_size_ ), Qt::KeepAspectRatio, Qt::SmoothTransformation );
   QWidget::setWindowIcon( QIcon(pixmap) );
 }
 

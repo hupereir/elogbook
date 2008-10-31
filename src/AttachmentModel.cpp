@@ -180,7 +180,7 @@ QIcon AttachmentModel::_icon( string type )
   // pixmap size
   unsigned int pixmap_size = XmlOptions::get().get<unsigned int>( "ATTACHMENT_LIST_ICON_SIZE" );
   QSize size( pixmap_size, pixmap_size );
-  QSize scaled(size*0.9);
+  QSize scale(size*0.9);
  
   QIcon icon;
   CustomPixmap pixmap( CustomPixmap().find( type ) );
@@ -188,7 +188,7 @@ QIcon AttachmentModel::_icon( string type )
   {
     icon = CustomPixmap()
       .empty( size )
-      .merge( pixmap.scale( scaled ), CustomPixmap::CENTER );
+      .merge( pixmap.scaled( scale, Qt::KeepAspectRatio, Qt::SmoothTransformation ), CustomPixmap::CENTER );
   }
   
   // store in map and return
