@@ -41,6 +41,7 @@
 #include "CustomPixmap.h"
 #include "Debug.h"
 #include "QtUtil.h"
+#include "RoundedRegion.h"
 #include "SvgEngine.h"
 #include "XmlOptions.h"
 
@@ -128,7 +129,7 @@ void SplashScreen::setIcon( QPixmap pixmap )
 
 //_______________________________________________________________________
 void SplashScreen::setOpacity( const double& opacity )
-{ QtUtil::setOpacity( this, opacity ); }
+{ setOpacity( opacity ); }
 
 //_______________________________________________________________________
 void SplashScreen::setTitleFontSize( int value )
@@ -193,7 +194,7 @@ void SplashScreen::mousePressEvent( QMouseEvent* event )
 void SplashScreen::resizeEvent( QResizeEvent* event )
 {
   QWidget::resizeEvent( event );
-  setMask( QtUtil::round( QRect( QPoint(0,0), event->size() ) ) );
+  setMask( RoundedRegion( rect() ) );
 }
 
 //_____________________________________________________________________
