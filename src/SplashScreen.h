@@ -72,9 +72,6 @@ class SplashScreen: public QWidget, public Counter
   //! set splash screen displayed icon
   virtual void setIcon( QPixmap );
 
-  //! set (composite) opacity
-  virtual void setOpacity( const double& opacity );
-    
   //! change default title font
   virtual void setTitleFontSize( int value );
   
