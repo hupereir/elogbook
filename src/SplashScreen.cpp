@@ -57,7 +57,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   minimum_width_(0)
 {
   
-  Debug::Throw( 0, "SplashScreen::SplashScreen.\n" );
+  Debug::Throw( "SplashScreen::SplashScreen.\n" );
   setAttribute( Qt::WA_DeleteOnClose );
   
   // colors and transparency
@@ -73,10 +73,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
     
   }
   
-  Debug::Throw( 0, "SplashScreen::SplashScreen - palette set.\n" );
-  
   if( transparent ) setWindowOpacity( 0.9 );
-  Debug::Throw( 0, "SplashScreen::SplashScreen - opacity set.\n" );
     
   if( use_svg_ && TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
   { 
@@ -108,7 +105,6 @@ SplashScreen::SplashScreen( QWidget* parent ):
   setMouseTracking( true );
   
   SVG::SvgEngine::get().reload();
-  Debug::Throw( 0, "SplashScreen::SplashScreen - done.\n" );
 
 }
 

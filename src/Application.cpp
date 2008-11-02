@@ -149,7 +149,8 @@ bool Application::realizeWidget( void )
 
   // splashscreen
   ::SplashScreen *splash_screen = new ::SplashScreen( main_window_ );
-
+  splash_screen->displayMessage( "initializing" );
+  
   // connections
   connect( main_window_, SIGNAL( messageAvailable( const QString& ) ), splash_screen, SLOT( displayMessage( const QString& ) ) );
   connect( main_window_, SIGNAL( ready() ), splash_screen, SLOT( close() ) );
