@@ -44,6 +44,7 @@
 #include "RoundedRegion.h"
 #include "SvgEngine.h"
 #include "XmlOptions.h"
+#include "WinUtil.h"
 
 using namespace std;
 using namespace Qt;
@@ -61,9 +62,9 @@ SplashScreen::SplashScreen( QWidget* parent ):
   setAttribute( Qt::WA_DeleteOnClose );
   
   // colors and transparency
-  bool transparent( XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" ) );
+  transparent_ = XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" );
   use_svg_ = XmlOptions::get().get<bool>( "USE_SVG" );
-  if( transparent || use_svg_ )
+  if( transparent_ || use_svg_ )
   {
     
     QPalette palette( this->palette() );
@@ -73,8 +74,11 @@ SplashScreen::SplashScreen( QWidget* parent ):
     
   }
   
-  if( transparent ) setWindowOpacity( 0.9 );
-    
+  #ifdef Q_WS_WINDOW
+  if( !CompositeEngine::get().isEnabled() )
+  #endif
+  { if( transparent_ ) setWindowOpacity( 0.9 ); }
+  
   if( use_svg_ && TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
   { 
     setAttribute( Qt::WA_OpaquePaintEvent );
@@ -197,8 +201,25 @@ void SplashScreen::resizeEvent( QResizeEvent* event )
 void SplashScreen::paintEvent( QPaintEvent* event )
 {
 
-  QWidget::paintEvent( event );
-  QPainter painter( this );
+  #ifdef Q_WS_WIN
+  if( CompositeEngine::get().isEnabled() ) 
+  { 
+    QPixmap widget_pixmap = QPixmap( size() );
+    widget_pixmap.fill( Qt::transparent );
+    _paint( widget_pixmap, event->rect() );
+    WinUtil( this ).update( widget_pixmap, transparent_ ? 0.9:1.0  ); 
+  } else
+  #endif
+
+  { _paint( *this, event->rect() ); }
+  
+}
+
+//_____________________________________________________________________
+void SplashScreen::_paint( QPaintDevice& device, const QRect& clip )
+{
+  QPainter painter( &device );
+  painter.setClipRect( clip );
   
   if( use_svg_ && TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
   { 

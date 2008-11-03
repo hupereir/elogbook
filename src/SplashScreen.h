@@ -87,7 +87,7 @@ class SplashScreen: public QWidget, public Counter
   public slots:
   
   //! display new message
-  virtual void displayMessage( const QString& message );
+  virtual void displayMessage( const QString& );
   
   protected:
       
@@ -99,6 +99,9 @@ class SplashScreen: public QWidget, public Counter
        
   //! mouse move event [overloaded]
   virtual void resizeEvent( QResizeEvent *e);
+  
+  //! paint on device
+  virtual void _paint( QPaintDevice&, const QRect& );
   
   private:
   
@@ -116,6 +119,9 @@ class SplashScreen: public QWidget, public Counter
 
   //! fonts
   QFont normal_font_;
+  
+  //! transparency 
+  bool transparent_;
   
   //! icon size
   int icon_size_;
