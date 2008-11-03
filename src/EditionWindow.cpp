@@ -1371,18 +1371,39 @@ void EditionWindow::ColorWidget::setColor( const QColor& color )
 }
 
 //___________________________________________________________________________________
+QSize EditionWindow::ColorWidget::sizeHint( void ) const
+{
+  // this is an ugly hack to keep the size of the toolbutton minimum
+  QMenu* menu( ColorWidget::menu() );
+  const_cast<EditionWindow::ColorWidget*>( this )->setMenu(0);
+  QSize out( QToolButton::sizeHint() );
+  const_cast<EditionWindow::ColorWidget*>( this )->setMenu(menu);
+  return out;
+}
+  
+//___________________________________________________________________________________
+QSize EditionWindow::ColorWidget::minimumSizeHint( void ) const
+{
+  // this is an ugly hack to keep the size of the toolbutton minimum
+  QMenu* menu( ColorWidget::menu() );
+  const_cast<EditionWindow::ColorWidget*>( this )->setMenu(0);
+  QSize out( QToolButton::minimumSizeHint() );
+  const_cast<EditionWindow::ColorWidget*>( this )->setMenu(menu);
+  return out;
+}
+
+//___________________________________________________________________________________
 void EditionWindow::ColorWidget::paintEvent( QPaintEvent* )
 {
-  
   // rotated paint
   QStylePainter painter(this);
   QStyleOptionToolButton option;
   initStyleOption(&option);
   
   // first draw normal frame and not text/icon
-  option.state &= (~QStyle::State_MouseOver );
-  option.state &= (~QStyle::State_Sunken );
-  option.state |= QStyle::State_Raised;
+  // option.state &= (~QStyle::State_MouseOver );
+  // option.state &= (~QStyle::State_Sunken );
+  // option.state |= QStyle::State_Raised;
   option.features &= (~QStyleOptionToolButton::HasMenu);
   painter.drawComplexControl(QStyle::CC_ToolButton, option);
 

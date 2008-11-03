@@ -474,6 +474,12 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
     //! color
     void setColor( const QColor& color );
     
+    //! size hint
+    QSize sizeHint( void ) const;
+    
+    //! size hint
+    QSize minimumSizeHint( void ) const;
+
     protected:
     
     //! paint event
