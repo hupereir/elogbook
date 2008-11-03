@@ -51,7 +51,6 @@
 
 #include "TreeView.h"
 
-// class ColorMenu;
 class CustomToolBar;
 class EditionWindow;
 class Logbook;
@@ -195,6 +194,7 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! delete keyword action
   QAction& deleteKeywordAction( void ) const
   { return *delete_keyword_action_; }
+  
   //! new entry action
   QAction& newEntryAction( void ) const
   { return *new_entry_action_; }
@@ -584,7 +584,10 @@ class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
 
   //@name toolbars
   //@{
+  //! keywords
   CustomToolBar *keyword_toolbar_;
+  
+  //! entries
   CustomToolBar *entry_toolbar_;
   //@}
   

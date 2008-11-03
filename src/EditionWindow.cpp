@@ -76,6 +76,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   Counter( "EditionWindow" ),
   read_only_( read_only ),
   closed_( false ),
+  color_menu_( 0 ),
   color_widget_( 0 ),
   active_editor_( 0 ),
   format_toolbar_( 0 )
@@ -225,7 +226,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   // create menu if requested
   menu_ = new Menu( this, &static_cast<Application*>(qApp)->mainWindow() ); 
   setMenuBar( menu_ );
-  
+
   // changes display according to read_only flag
   setReadOnly( read_only_ );
   
@@ -318,6 +319,14 @@ void EditionWindow::setReadOnly( const bool& value )
 }
   
 //_____________________________________________
+void EditionWindow::setColorMenu( ColorMenu* menu )
+{ 
+  color_menu_ = menu; 
+  if( color_widget_ && !color_widget_->menu() )
+  { color_widget_->setMenu( menu ); }
+}
+
+//_____________________________________________
 string EditionWindow::windowTitle( void ) const
 {
 
@@ -396,7 +405,10 @@ void EditionWindow::displayColor( void )
   if( !color_widget_ ) 
   { 
     color_widget_ = new ColorWidget( title_->parentWidget() );
+    color_widget_->setPopupMode( QToolButton::InstantPopup );
+    if( color_menu_ ) color_widget_->setMenu( color_menu_ );
     title_layout_->addWidget( color_widget_ );
+  
   }
 
   // try load entry color
@@ -1333,6 +1345,7 @@ void EditionWindow::_displayAttachments( void )
 //___________________________________________________________________________________
 EditionWindow::ColorWidget::ColorWidget( QWidget* parent ):
   QToolButton( parent ), 
+  //QPushButton( parent ), 
   Counter( "ColorWidget" )
 { Debug::Throw( "ColorWidget::ColorWidget.\n" ); }
 
@@ -1370,6 +1383,7 @@ void EditionWindow::ColorWidget::paintEvent( QPaintEvent* )
   option.state &= (~QStyle::State_MouseOver );
   option.state &= (~QStyle::State_Sunken );
   option.state |= QStyle::State_Raised;
+  option.features &= (~QStyleOptionToolButton::HasMenu);
   painter.drawComplexControl(QStyle::CC_ToolButton, option);
 
 }

@@ -34,9 +34,10 @@
 
 #include <QBasicTimer>
 #include <QLayout>
-#include <QToolButton>
+#include <QPushButton>
 #include <QSplitter>
 #include <QTimerEvent>
+#include <QToolButton>
 #include <string>
 #include <set>
 #include <map>
@@ -58,6 +59,7 @@
 #include "TextPosition.h"
 
 class Attachment;
+class ColorMenu;
 class CustomToolBar;
 class FormatBar;
 class MainWindow;
@@ -134,8 +136,11 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   { return read_only_; }
 
   //! set read_only state of the EditionWindow
-  void setReadOnly( const bool& value );
+  void setReadOnly( const bool& );
 
+  //! color menu
+  void setColorMenu( ColorMenu* );
+  
   //! closed flag
   const bool& isClosed( void ) const
   { return closed_; }
@@ -453,8 +458,12 @@ class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
   //! LogEntry title Object
   Editor *title_;
 
+  //! color menu
+  ColorMenu* color_menu_;
+
   //! color widget
   class ColorWidget: public QToolButton, public Counter
+  //class ColorWidget: public QPushButton, public Counter
   {
 
     public:

@@ -1770,6 +1770,7 @@ void MainWindow::_newEntry( void )
   {
     // create new EditionWindow
     edit_frame = new EditionWindow( 0, false );
+    edit_frame->setColorMenu( color_menu_ );
     Key::associate( this, edit_frame );
   }
   
@@ -1892,6 +1893,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
   if( !edit_frame )
   {
     edit_frame = new EditionWindow( 0, false );
+    edit_frame->setColorMenu( color_menu_ );
     Key::associate( this, edit_frame );
   }
   
