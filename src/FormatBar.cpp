@@ -355,6 +355,7 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
   {
   
     QPainter painter( this );
+    painter.setClipRect( event->rect() );
     painter.setRenderHint( QPainter::Antialiasing );
     
     QLinearGradient gradient( rect().topLeft(), rect().bottomLeft() );

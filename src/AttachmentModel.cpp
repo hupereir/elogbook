@@ -31,7 +31,6 @@
 
 #include <QApplication>
 #include <QIcon>
-#include <QPainter>
 
 #include "AttachmentModel.h"
 #include "Attachment.h"
