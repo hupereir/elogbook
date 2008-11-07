@@ -12,10 +12,11 @@ win32 {
 VERSION = 1.1
 DEFINES += QT_STATIC VERSION=\"$$VERSION\"
 
-INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../base-svg ../extra-includes
-DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../base-svg ../extra-includes
+INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../base-svg ../base-transparency ../extra-includes
+DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../base-svg ../base-transparency../extra-includes
 
 LIBS += \
+  ../base-transparency/libbase-transparency.a \
   ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
@@ -23,6 +24,7 @@ LIBS += \
   ../base/libbase.a
 
 POST_TARGETDEPS = \
+  ../base-transparency/libbase-transparency.a \
   ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
