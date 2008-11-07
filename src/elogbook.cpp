@@ -84,7 +84,7 @@ int main (int argc, char *argv[])
   // initialize main frame and run loop
   Q_INIT_RESOURCE( basePixmaps );
   Q_INIT_RESOURCE( pixmaps );
-  Q_INIT_RESOURCE( svg );
+  Q_INIT_RESOURCE( baseSvg );
   
   // create Application
   Application* application( 0 );
