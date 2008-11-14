@@ -85,7 +85,7 @@ int main (int argc, char *argv[])
   // set debug level
   int debug_level( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
   Debug::setLevel( debug_level );
-  if( debug_level ) XmlOptions::get().dump();
+  if( debug_level ) cout << XmlOptions::get();
   
   // the core application is needed to have locale, fonts, etc. set properly, notably for QSting
   // not having it might result in lost accents and special characters.

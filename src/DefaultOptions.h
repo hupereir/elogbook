@@ -2,7 +2,7 @@
 
 /******************************************************************************
 *                        
-* Copyright (C) 2002 Hugo PEREIRA XmlOptions::get().add( Option("mailto: hugo.pereira@free.fr>            
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
 *                        
 * This is free software; you can redistribute it and/or modify it under the    
 * terms of the GNU General Public License as published by the Free Software    
@@ -42,10 +42,7 @@ using namespace std;
 void installDefaultOptions( void )
 {
   // set options default values
-  XmlOptions::get().keep( "SVG_BACKGROUND" );
-  XmlOptions::get().add( "SVG_BACKGROUND", Option( ":/svg/background.svg" ).setFlag( Option::RECORDABLE, false ) );
-  XmlOptions::get().add( "USE_SVG", "1" );
-  XmlOptions::get().add( "SVG_OFFSET", "3");
+  XmlOptions::get().setAutoDefault( true );
   
   // COLOR options are special. Keep the full list
   XmlOptions::get().keep( "COLOR" );
@@ -66,58 +63,59 @@ void installDefaultOptions( void )
   XmlOptions::get().add( "TEXT_COLOR", Option( "#993399" , "entry display color"  ) );
   
   // icon
-  XmlOptions::get().add( "ICON_PIXMAP", Option( ":/icon.png" , "application icon"  ) );
+  XmlOptions::get().set( "ICON_PIXMAP", Option( ":/icon.png" , "application icon"  ) );
   
   // normal (overwritten) options
   
   // window sizes
-  XmlOptions::get().add( "ATTACHMENT_WINDOW_HEIGHT", Option( "400" , "requested AttachmentWindow height [pixels]"  ) );
-  XmlOptions::get().add( "ATTACHMENT_WINDOW_WIDTH", Option( "600" , "requested AttachmentWindow width [pixels]"  ) );
-  XmlOptions::get().add( "ATTACHMENT_FRAME_HEIGHT", Option( "150" , "requested height of attachment list in editor [pixels]"  ) );
+  XmlOptions::get().set( "ATTACHMENT_WINDOW_HEIGHT", Option( "400" , "requested AttachmentWindow height [pixels]"  ) );
+  XmlOptions::get().set( "ATTACHMENT_WINDOW_WIDTH", Option( "600" , "requested AttachmentWindow width [pixels]"  ) );
+  XmlOptions::get().set( "ATTACHMENT_FRAME_HEIGHT", Option( "150" , "requested height of attachment list in editor [pixels]"  ) );
   
-  XmlOptions::get().add( "EDITION_WINDOW_HEIGHT", Option( "750" , "requested EditionWindow height [pixels]"  ) );
-  XmlOptions::get().add( "EDITION_WINDOW_WIDTH", Option( "700" , "requested EditionWindow width [pixels]"  ) );
+  XmlOptions::get().set( "EDITION_WINDOW_HEIGHT", Option( "750" , "requested EditionWindow height [pixels]"  ) );
+  XmlOptions::get().set( "EDITION_WINDOW_WIDTH", Option( "700" , "requested EditionWindow width [pixels]"  ) );
 
-  XmlOptions::get().add( "MAIN_WINDOW_HEIGHT", Option( "750" , "requested MainWindow height [pixels]"  ) );
-  XmlOptions::get().add( "MAIN_WINDOW_WIDTH", Option( "700" , "requested MainWindow width [pixels]"  ) );  
-  XmlOptions::get().add( "LIST_ICON_SIZE", Option( "10", "default icon size in lists" ) );
-  XmlOptions::get().add( "ATTACHMENT_LIST_ICON_SIZE", Option( "22", "default icon size in lists" ) );
+  XmlOptions::get().set( "MAIN_WINDOW_HEIGHT", Option( "750" , "requested MainWindow height [pixels]"  ) );
+  XmlOptions::get().set( "MAIN_WINDOW_WIDTH", Option( "700" , "requested MainWindow width [pixels]"  ) );  
+  XmlOptions::get().set( "LIST_ICON_SIZE", Option( "10", "default icon size in lists" ) );
+  XmlOptions::get().set( "ATTACHMENT_LIST_ICON_SIZE", Option( "22", "default icon size in lists" ) );
   
-  XmlOptions::get().add( "AUTO_BACKUP", Option( "1" , "1 to make a backup of logbook file prior to any writting"  ) );
-  XmlOptions::get().add( "AUTO_SAVE", Option( "0" , "1 to save logbook automaticaly every given interval"  ) );
-  XmlOptions::get().add( "AUTO_SAVE_ITV", Option( "60" , "interval between two consecutive automatic save [seconds]"  ) );
-  XmlOptions::get().add( "BACKUP_ITV", Option( "30" , "interval between two consecutive auto backup [days]"  ) );
-  XmlOptions::get().add( "CASE_SENSITIVE", Option( "0" , "1 to distinguish upper and lower case when sorting/selecting text"  ) );
-  XmlOptions::get().add( "DB_SIZE", Option( "10" , "max number of files stored in the open previous menu"  ) );
+  XmlOptions::get().set( "AUTO_BACKUP", Option( "1" , "1 to make a backup of logbook file prior to any writting"  ) );
+  XmlOptions::get().set( "AUTO_SAVE", Option( "0" , "1 to save logbook automaticaly every given interval"  ) );
+  XmlOptions::get().set( "AUTO_SAVE_ITV", Option( "60" , "interval between two consecutive automatic save [seconds]"  ) );
+  XmlOptions::get().set( "BACKUP_ITV", Option( "30" , "interval between two consecutive auto backup [days]"  ) );
+  XmlOptions::get().set( "CASE_SENSITIVE", Option( "0" , "1 to distinguish upper and lower case when sorting/selecting text"  ) );
+  XmlOptions::get().set( "DB_SIZE", Option( "10" , "max number of files stored in the open previous menu"  ) );
 
-  XmlOptions::get().add( "SIDE_EDITOR_TOOLBAR", Option( "1" , "if true, editor toolbar is on the left instead of top"  ) );
-  XmlOptions::get().add( "SPLASH_SCREEN", Option( "1" , "1 to show splash screen"  ) );
-  XmlOptions::get().add( "TRANSPARENT_SPLASH_SCREEN", Option( "0" , "1 to show transparent splash screen" ) );
+  XmlOptions::get().set( "SIDE_EDITOR_TOOLBAR", Option( "1" , "if true, editor toolbar is on the left instead of top"  ) );
+  XmlOptions::get().set( "SPLASH_SCREEN", Option( "1" , "1 to show splash screen"  ) );
+  XmlOptions::get().set( "TRANSPARENT_SPLASH_SCREEN", Option( "0" , "1 to show transparent splash screen" ) );
   
-  XmlOptions::get().add( "SHOW_KEYWORD", Option( "0" , "show keyword in editor"  ) );
-  XmlOptions::get().add( "SHOW_EDITFRAME_MENU", Option( "1", "show menu in EditionWindow windows" ) );
+  XmlOptions::get().set( "SHOW_KEYWORD", Option( "0" , "show keyword in editor"  ) );
+  XmlOptions::get().set( "SHOW_EDITFRAME_MENU", Option( "1", "show menu in EditionWindow windows" ) );
 
-  XmlOptions::get().add( "SEARCH_PANEL", Option( "0" , "toolbar visibility" ) );
-  XmlOptions::get().add( "SEARCH_PANEL_LOCATION", Option( "bottom" , "toolbar location" ) );
+  XmlOptions::get().set( "SEARCH_PANEL", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().set( "SEARCH_PANEL_LOCATION", Option( "bottom" , "toolbar location" ) );
   
-  XmlOptions::get().add( "MAIN_TOOLBAR", Option( "1" , "toolbar visibility" ) );
-  XmlOptions::get().add( "FORMAT_TOOLBAR", Option( "1" , "toolbar visibility" ) );
-  XmlOptions::get().add( "EDITION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
-  XmlOptions::get().add( "EXTRA_TOOLBAR", Option( "0" , "toolbar visibility" ) );
-  XmlOptions::get().add( "NAVIGATION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
-  XmlOptions::get().add( "MULTIPLE_VIEW_TOOLBAR", Option( "1" , "toolbar visibility" ) );
+  XmlOptions::get().set( "MAIN_TOOLBAR", Option( "1" , "toolbar visibility" ) );
+  XmlOptions::get().set( "FORMAT_TOOLBAR", Option( "1" , "toolbar visibility" ) );
+  XmlOptions::get().set( "EDITION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().set( "EXTRA_TOOLBAR", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().set( "NAVIGATION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
+  XmlOptions::get().set( "MULTIPLE_VIEW_TOOLBAR", Option( "1" , "toolbar visibility" ) );
 
-  XmlOptions::get().add( "LOCK_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-  XmlOptions::get().add( "MAIN_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-  XmlOptions::get().add( "FORMAT_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-  XmlOptions::get().add( "EDITION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-  XmlOptions::get().add( "EXTRA_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-  XmlOptions::get().add( "NAVIGATION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-  XmlOptions::get().add( "MULTIPLE_VIEW_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().set( "LOCK_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().set( "MAIN_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().set( "FORMAT_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().set( "EDITION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().set( "EXTRA_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().set( "NAVIGATION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+  XmlOptions::get().set( "MULTIPLE_VIEW_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
   
-  XmlOptions::get().add( "LOCK_TOOLBAR", Option( "0" , "keywords toolbar visibility" ) );
-  XmlOptions::get().add( "ENTRY_TOOLBAR", Option( "1" , "entries toolbar visibility" ) );
-  XmlOptions::get().add( "SHOW_SEARCHPANEL", Option( "1" , "search panel visibility" ) );
+  XmlOptions::get().set( "LOCK_TOOLBAR", Option( "0" , "keywords toolbar visibility" ) );
+  XmlOptions::get().set( "ENTRY_TOOLBAR", Option( "1" , "entries toolbar visibility" ) );
+  XmlOptions::get().set( "KEYWORD_TOOLBAR", Option( "1" , "entries toolbar visibility" ) );
+  XmlOptions::get().set( "SHOW_SEARCHPANEL", Option( "1" , "search panel visibility" ) );
 
   // masks
   XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", 
@@ -136,10 +134,11 @@ void installDefaultOptions( void )
   // add run-time non recordable options
   string user( Util::user( ) );
   string host( Util::host() );
-  XmlOptions::get().add( "USER", Option( user+"@"+host, Option::NONE ) );  
-  XmlOptions::get().add( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::NONE ) );  
-  XmlOptions::get().add( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::NONE ) );
-  XmlOptions::get().add( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::NONE ) );
-  XmlOptions::get().add( "APP_NAME", Option(  "ELOGBOOK", Option::NONE ) );
+  XmlOptions::get().set( "USER", Option( user+"@"+host, Option::NONE ) );  
+  XmlOptions::get().set( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::NONE ) );  
+  XmlOptions::get().set( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::NONE ) );
+  XmlOptions::get().set( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::NONE ) );
+  XmlOptions::get().set( "APP_NAME", Option(  "ELOGBOOK", Option::NONE ) );
+  XmlOptions::get().setAutoDefault( false );
   
 };
