@@ -162,7 +162,6 @@ nodist_elogbook_SOURCES = \
   moc_AttachmentFrame.cpp \
   moc_AttachmentModel.cpp \
   moc_AttachmentWindow.cpp \
-  moc_ConfigurationDialog.cpp \
   moc_EditionWindow.cpp \
   moc_FormatBar.cpp \
   moc_KeywordModel.cpp \

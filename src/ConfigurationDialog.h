@@ -36,18 +36,11 @@
 //! configuration dialog
 class ConfigurationDialog: public BaseConfigurationDialog
 {
-  
-  Q_OBJECT
-  
+    
   public:
    
   //! creator
   ConfigurationDialog( QWidget *parent );
-
-  protected slots:
-
-  //! restore default options
-  virtual void _restoreDefaults( void );  
   
 };
 

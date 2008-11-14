@@ -53,10 +53,6 @@
 #include "SpellCheckConfiguration.h"
 #endif
 
-// forward declaration
-void installDefaultOptions( void );
-void installSystemOptions( void );
-
 using namespace std;
 
 //_________________________________________________________
@@ -334,24 +330,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   new QWidget( box );
         
   // load initial configuration
-  _read();
-  
-}
-
-//________________________________________________________________________________
-void ConfigurationDialog::_restoreDefaults( void )
-{
-  
-  Debug::Throw( "ConfigurationDialog::restoreDefaults.\n" );
-  
-  // reset options
-  XmlOptions::get() = Options();
-  
-  // reinstall default options
-  installDefaultOptions();
-  installSystemOptions();
-  
-  // read everything in dialog
   _read();
   
 }
