@@ -771,7 +771,7 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
   // retrieve selection source
   if( mode == SearchPanel::NONE ) 
   {
-    InformationDialog( this, "At least on field must be selected" , BaseDialog::CENTER_ON_PARENT ).exec();
+    InformationDialog( this, "At least on field must be selected"  ).centerOnParent().exec();
     return;
   }
 
@@ -1652,11 +1652,10 @@ void MainWindow::_showDuplicatedEntries( void )
 
   }
 
-  if( !found ) {
-    InformationDialog(
-      this,
-      "No matching entry found.\n"
-      "Request canceled.", BaseDialog::CENTER_ON_PARENT ).exec();
+  if( !found ) 
+  {
+    
+    InformationDialog( this, "No matching entry found.\nRequest canceled." ).centerOnParent().exec();
 
     // reset flag for the turned off entries to true
     for( BASE::KeySet<LogEntry>::iterator it=turned_off_entries.begin(); it!= turned_off_entries.end(); it++ )

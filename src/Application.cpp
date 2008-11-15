@@ -254,7 +254,7 @@ void Application::_processRequest( const ArgList& args )
   {
     ostringstream what;
     what << "Accept request for file \"" << filename << "\" ?";
-    if( QuestionDialog( &mainWindow(), what.str().c_str(), BaseDialog::CENTER_ON_PARENT ).exec() )
+    if( QuestionDialog( &mainWindow(), what.str().c_str() ).centerOnParent().exec() )
     { mainWindow().setLogbook( recentFiles().add( filename ).file() ); }
     
   }
