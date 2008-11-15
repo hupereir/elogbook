@@ -77,7 +77,7 @@ MainWindow::MainWindow( QWidget *parent ):
   confirm_entries_( true )
 {
   Debug::Throw( "MainWindow::MainWindow.\n" );
-  _setSizeOptionName( "MAIN_WINDOW" );
+  setSizeOptionName( "MAIN_WINDOW" );
   setWindowTitle( Application::MAIN_TITLE );
   
   // main widget
