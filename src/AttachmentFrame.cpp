@@ -538,6 +538,7 @@ void AttachmentFrame::_open( void )
       // create and configure SaveAs dialog
       CustomFileDialog dialog( this );
       dialog.setFileMode( QFileDialog::AnyFile );
+      dialog.setWindowTitle( "Open" );
       
       File destname( fullname.localName().addPath( dialog.workingDirectory() ) );
       dialog.selectFile( destname.c_str() );

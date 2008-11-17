@@ -40,7 +40,6 @@
 #include "ConfigurationDialog.h"
 #include "Debug.h"
 #include "EditionWindow.h"
-#include "ErrorHandler.h"
 #include "File.h"
 #include "FlatStyle.h"
 #include "IconEngine.h"
