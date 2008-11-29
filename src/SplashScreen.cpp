@@ -75,7 +75,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   }
   
   #ifdef Q_WS_WINDOW
-  if( !CompositeEngine::get().isEnabled() )
+  if( !TRANSPARENCY::CompositeEngine::get().isEnabled() )
   #endif
   { if( transparent_ ) setWindowOpacity( 0.9 ); }
   
@@ -202,7 +202,7 @@ void SplashScreen::paintEvent( QPaintEvent* event )
 {
 
   #ifdef Q_WS_WIN
-  if( CompositeEngine::get().isEnabled() ) 
+  if( TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
   { 
     QPixmap widget_pixmap = QPixmap( size() );
     widget_pixmap.fill( Qt::transparent );
