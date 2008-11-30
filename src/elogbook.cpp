@@ -87,8 +87,8 @@ int main (int argc, char *argv[])
   // create Application
   Application* application( 0 );
   
-  #ifdef Q_WS_X11
   TRANSPARENCY::CompositeEngine::get().initialize();
+  #ifdef Q_WS_X11
   if( TRANSPARENCY::CompositeEngine::get().isAvailable() )
   { 
     application = new Application( 
