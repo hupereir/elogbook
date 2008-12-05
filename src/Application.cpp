@@ -41,7 +41,6 @@
 #include "Debug.h"
 #include "EditionWindow.h"
 #include "File.h"
-#include "FlatStyle.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
