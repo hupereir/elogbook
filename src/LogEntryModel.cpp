@@ -29,7 +29,6 @@
   \date    $Date$
 */
 
-#include <QApplication>
 #include <QIcon>
 #include <QPainter>
 
@@ -37,6 +36,7 @@
 #include "CustomPixmap.h"
 #include "LogEntryModel.h"
 #include "LogEntry.h"
+#include "Singleton.h"
 #include "TimeStamp.h"
 #include "XmlOptions.h"
 
@@ -65,7 +65,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 { 
   Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
   
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   connect( this, SIGNAL( layoutChanged() ), SLOT( _disableEdition() ) ); 
   _updateConfiguration();
   

@@ -74,24 +74,13 @@ void Application::usage( void )
 }
 
 //____________________________________________
-Application::Application( int argc, char*argv[] ) :
-  BaseApplication( argc, argv ),
+Application::Application( ArgList arguments ) :
+  BaseApplication( 0, arguments ),
   Counter( "Application" ),
   recent_files_( 0 ),
   attachment_window_( 0 ),
   main_window_( 0 )
 {} 
-
-//____________________________________________
-#ifdef Q_WS_X11
-Application::Application( Display* display, int argc, char*argv[], Qt::HANDLE visual, Qt::HANDLE colormap ) :
-  BaseApplication( display, argc, argv, visual, colormap ),
-  Counter( "Application" ),
-  recent_files_( 0 ),
-  attachment_window_( 0 ),
-  main_window_( 0 )
-{} 
-#endif
 
 //____________________________________________
 Application::~Application( void ) 
@@ -162,7 +151,7 @@ bool Application::realizeWidget( void )
   mainWindow().show();
     
   // update
-  processEvents();
+  qApp->processEvents();
     
   // try open file from argument
   File file( _arguments().last() );
@@ -190,7 +179,7 @@ void Application::showSplashScreen( void )
   splash_screen->show();
   splash_screen->displayMessage( "click on the window to close" );
 
-  processEvents();
+  qApp->processEvents();
 
 }
 
@@ -202,7 +191,7 @@ void Application::_configuration( void )
   emit saveConfiguration();
   ConfigurationDialog dialog(0);
   connect( &dialog, SIGNAL( configurationChanged() ), SIGNAL( configurationChanged() ) );
-  dialog.centerOnWidget( activeWindow() );
+  dialog.centerOnWidget( qApp->activeWindow() );
   dialog.exec();
 
 }
@@ -234,7 +223,7 @@ void Application::_exit( void )
     return;
   }
   
-  quit();
+  qApp->quit();
   
 }
 

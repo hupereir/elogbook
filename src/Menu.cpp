@@ -29,7 +29,7 @@
   \date $Date$
 */
 
-#include <qmessagebox.h>
+#include <QMessageBox>
 #include <sstream>
 
 #include "Application.h"
@@ -49,6 +49,7 @@
 #include "RecentFilesMenu.h"
 #include "QtUtil.h"
 #include "SearchPanel.h"
+#include "Singleton.h"
 #include "Str.h"
 #include "SvgHelpText.h"
 #include "Util.h"
@@ -84,7 +85,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addAction( &mainwindow->openAction() );
 
   // file menu
-  recent_files_menu_ = new RecentFilesMenu( this, static_cast<Application*>(qApp)->recentFiles() );
+  recent_files_menu_ = new RecentFilesMenu( this, Singleton::get().application<Application>()->recentFiles() );
   connect( recent_files_menu_, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );  
   menu->addMenu( recent_files_menu_ );
   
@@ -105,7 +106,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   
   if( editionwindow ) menu->addAction( &editionwindow->closeAction() );
  
-  Application& application( *static_cast<Application*>(qApp) );
+  Application& application( *Singleton::get().application<Application>() );
   menu->addAction( &application.closeAction() );
 
   // edition menu
@@ -154,7 +155,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addMenu( debug_menu );
   debug_menu->addAction( &mainwindow->saveForcedAction() );
   debug_menu->addAction( &mainwindow->showDuplicatesAction() );
-  debug_menu->addAction( "&Show splash screen", qApp, SLOT( showSplashScreen() ) );
+  debug_menu->addAction( "&Show splash screen", Singleton::get().application(), SLOT( showSplashScreen() ) );
   debug_menu->addAction( &help->dumpAction() );
 
 }
@@ -166,8 +167,8 @@ void Menu::_updateEditorMenu( void )
   
   editor_menu_->clear();
 
-  MainWindow &mainwindow( static_cast<Application*>(qApp)->mainWindow() );
-  AttachmentWindow &attachment_window( static_cast<Application*>(qApp)->attachmentWindow() );
+  MainWindow &mainwindow( Singleton::get().application<Application>()->mainWindow() );
+  AttachmentWindow &attachment_window( Singleton::get().application<Application>()->attachmentWindow() );
   
   // retrieve parent editFream if any
   EditionWindow* editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );
@@ -216,7 +217,7 @@ void Menu::_updatePreferenceMenu( void )
   Debug::Throw( "Menu::_updatePreferenceMenu.\n" );
   
   // preferences menu
-  Application& application( *static_cast<Application*>(qApp) );
+  Application& application( *Singleton::get().application<Application>() );
   preference_menu_->addAction( &application.configurationAction() );
   
   // additional preferences in case parent is a selection frame

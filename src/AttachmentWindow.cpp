@@ -29,20 +29,21 @@
   \date    $Date$
 */
 
+#include <QApplication>
 #include <QShortcut>
 #include <QLayout>
 #include <QPushButton>
 #include <list>
 
+#include "Application.h"
 #include "AttachmentWindow.h"
 #include "EditionWindow.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "Logbook.h"
 #include "LogEntry.h"
-#include "Application.h"
-#include "Options.h"
 #include "MainWindow.h"
+#include "Singleton.h"
 
 using namespace std;
 using namespace Qt;
@@ -104,7 +105,7 @@ void AttachmentWindow::enterEvent( QEvent *event )
   
   // base class enterEvent
   QWidget::enterEvent( event );
-  static_cast<Application*>(qApp)->mainWindow().checkLogbookModified();
+  Singleton::get().application<Application>()->mainWindow().checkLogbookModified();
     
   return;
 }
@@ -120,6 +121,6 @@ void AttachmentWindow::_displayEntry( Attachment& attachment )
   
   // check if entry is visible
   if( entry && !entry->isSelected() ) entry->setFindSelected( true );  
-  static_cast<Application*>(qApp)->mainWindow().selectEntry( entry );
+  Singleton::get().application<Application>()->mainWindow().selectEntry( entry );
   
 }

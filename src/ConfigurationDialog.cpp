@@ -45,8 +45,9 @@
 #include "OptionSpinBox.h"
 #include "OptionListBox.h"
 #include "Options.h"
-#include "TreeViewConfiguration.h"
+#include "Singleton.h"
 #include "SvgConfiguration.h"
+#include "TreeViewConfiguration.h"
 
 #include "Config.h"
 #if WITH_ASPELL
@@ -119,8 +120,8 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   page = &addPage( "List configuration" );  
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
     page, 
-    &static_cast<Application*>(qApp)->mainWindow().logEntryList(), 
-    static_cast<Application*>(qApp)->mainWindow().logEntryList().maskOptionName() );
+    &Singleton::get().application<Application>()->mainWindow().logEntryList(), 
+    Singleton::get().application<Application>()->mainWindow().logEntryList().maskOptionName() );
   
   listview_config->setTitle( "Logbook entries list" );
   addOptionWidget( listview_config );
@@ -129,8 +130,8 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   // attachment configuration
   listview_config = new TreeViewConfiguration( 
     page, 
-    &static_cast<Application*>(qApp)->attachmentWindow().frame().list(), 
-    static_cast<Application*>(qApp)->attachmentWindow().frame().list().maskOptionName() );
+    &Singleton::get().application<Application>()->attachmentWindow().frame().list(), 
+    Singleton::get().application<Application>()->attachmentWindow().frame().list().maskOptionName() );
   listview_config->setTitle( "Attachments list" );
   addOptionWidget( listview_config );
   page->layout()->addWidget( listview_config );

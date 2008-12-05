@@ -58,12 +58,7 @@ class Application: public BaseApplication, public Counter
   static void usage( void );
   
   //! constructor
-  Application( int argc, char*argv[] ); 
-  
-  #ifdef Q_WS_X11
-  //! constructor
-  Application( Display*, int argc, char*argv[], Qt::HANDLE, Qt::HANDLE ); 
-  #endif
+  Application( ArgList ); 
   
   //! destructor
   ~Application( void );

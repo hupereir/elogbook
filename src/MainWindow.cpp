@@ -59,6 +59,7 @@
 #include "RecentFilesMenu.h"
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
+#include "Singleton.h"
 #include "Util.h"
 #include "ViewHtmlLogbookDialog.h"
 #include "XmlOptions.h"
@@ -259,7 +260,7 @@ MainWindow::MainWindow( QWidget *parent ):
   setMenuBar( menu_ );
     
   // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
   
 }
@@ -382,7 +383,7 @@ bool MainWindow::setLogbook( File file )
   }
   
   // add opened file to OpenPrevious mennu.
-  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() );
+  Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
   
   ignore_warnings_ = false;
   return true;
@@ -458,7 +459,7 @@ void MainWindow::reset( void )
   _logEntryModel().clear();
     
   // clear the AttachmentWindow
-  static_cast<Application*>(qApp)->attachmentWindow().frame().clear();
+  Singleton::get().application<Application>()->attachmentWindow().frame().clear();
   
   // make all EditionWindows for deletion
   BASE::KeySet<EditionWindow> frames( this ); 
@@ -657,7 +658,7 @@ void MainWindow::resetAttachmentWindow( void ) const
   Debug::Throw( "MainWindow::resetAttachmentWindow.\n" );
 
   // clear the AttachmentWindow
-  AttachmentWindow &attachment_window( static_cast<Application*>(qApp)->attachmentWindow() );
+  AttachmentWindow &attachment_window( Singleton::get().application<Application>()->attachmentWindow() );
   attachment_window.frame().clear();
 
   // check current logbook
@@ -732,9 +733,9 @@ void MainWindow::save( const bool& confirm_entries )
   }
   
   // write logbook to file, retrieve result
-  static_cast<Application*>(qApp)->busy();
+  Singleton::get().application<Application>()->busy();
   bool written( logbook()->write() );
-  static_cast<Application*>(qApp)->idle();
+  Singleton::get().application<Application>()->idle();
 
   if( written ) { setWindowTitle( Application::MAIN_TITLE );}
   
@@ -743,7 +744,7 @@ void MainWindow::save( const bool& confirm_entries )
   statusBar().showLabel();
   
   // add new file to openPreviousMenu
-  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() );
+  Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -906,7 +907,7 @@ void MainWindow::closeEvent( QCloseEvent *event )
 {
   Debug::Throw( "MainWindow::closeEvent.\n" );
   event->accept();    
-  static_cast<Application*>(qApp)->closeAction().trigger();
+  Singleton::get().application<Application>()->closeAction().trigger();
 }
 
 
@@ -1252,7 +1253,7 @@ void MainWindow::_newLogbook( void )
 
   // add new file to openPreviousMenu
   if( !logbook()->file().empty() )
-  { static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() ); }
+  { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
 
 }
 
@@ -1285,9 +1286,9 @@ void MainWindow::open( FileRecord record )
   }
 
   // create logbook from file
-  static_cast<Application*>(qApp)->busy();
+  Singleton::get().application<Application>()->busy();
   setLogbook( record.file() );
-  static_cast<Application*>(qApp)->idle();
+  Singleton::get().application<Application>()->idle();
 
   // check if backup is needed
   checkLogbookBackup();
@@ -1349,7 +1350,7 @@ bool MainWindow::_saveAs( File default_file )
   logbook()->setModifiedRecursive( false );
 
   // add new file to openPreviousMenu
-  static_cast<Application*>(qApp)->recentFiles().add( logbook()->file().expand() );
+  Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -1403,7 +1404,7 @@ void MainWindow::_saveBackup( void )
 
   // remove the "backup" filename from the openPrevious list
   // to avoid confusion
-  static_cast<Application*>(qApp)->recentFiles().remove( File(filename).expand() );
+  Singleton::get().application<Application>()->recentFiles().remove( File(filename).expand() );
 
   // restore initial filename
   logbook()->setFile( current_filename );
@@ -1436,10 +1437,10 @@ void MainWindow::_revertToSaved( void )
   { return; }
 
   // reinit MainWindow
-  static_cast<Application*>(qApp)->busy();
+  Singleton::get().application<Application>()->busy();
   string file( logbook()->file() );
   setLogbook( logbook()->file() );
-  static_cast<Application*>(qApp)->idle();
+  Singleton::get().application<Application>()->idle();
 
   checkLogbookBackup();
   ignore_warnings_ = false;
@@ -1478,7 +1479,7 @@ void MainWindow::_synchronize( void )
   Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << MainWindow::logbook()->entries().size() << endl;
   
   // set busy flag
-  static_cast<Application*>(qApp)->busy();
+  Singleton::get().application<Application>()->busy();
   statusBar().label().setText( "reading remote logbook ... " );
   
   // opens file in remote logbook
@@ -1501,7 +1502,7 @@ void MainWindow::_synchronize( void )
     what << errors;
     InformationDialog( 0, what.str().c_str() ).exec();
 
-    static_cast<Application*>(qApp)->idle();
+    Singleton::get().application<Application>()->idle();
     return;
 
   }
@@ -1554,7 +1555,7 @@ void MainWindow::_synchronize( void )
   remote_logbook.write();
 
   // idle
-  static_cast<Application*>(qApp)->idle();
+  Singleton::get().application<Application>()->idle();
   statusBar().label().setText( "" );
 
   return;

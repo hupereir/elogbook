@@ -29,12 +29,12 @@
   \date    $Date$
 */
 
-#include <QApplication>
 #include <QIcon>
 
 #include "AttachmentModel.h"
 #include "Attachment.h"
 #include "CustomPixmap.h"
+#include "Singleton.h"
 #include "TimeStamp.h"
 #include "XmlOptions.h"
 
@@ -59,7 +59,7 @@ AttachmentModel::AttachmentModel( QObject* parent ):
   Counter( "AttachmentModel" )
 { 
   Debug::Throw( "AttachmentModel::AttachmentModel.\n" ); 
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
 }
   
 //__________________________________________________________________

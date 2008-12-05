@@ -29,17 +29,19 @@
   \date    $Date$
 */
 
+#include <QApplication>
 #include <iostream>
 #include <signal.h>
 #include <string>
 #include <unistd.h>
 
+#include "Application.h"
 #include "ArgList.h"
 #include "Debug.h"
 #include "DefaultOptions.h"
 #include "SystemOptions.h"
 #include "ErrorHandler.h"
-#include "Application.h"
+#include "Singleton.h"
 #include "XmlOptions.h"
 
 #include "CompositeEngine.h"
@@ -85,24 +87,32 @@ int main (int argc, char *argv[])
   Q_INIT_RESOURCE( baseSvg );
   
   // create Application
-  Application* application( 0 );
+  QApplication* application( 0 );
   
   TRANSPARENCY::CompositeEngine::get().initialize();
   #ifdef Q_WS_X11
   if( TRANSPARENCY::CompositeEngine::get().isAvailable() )
   { 
-    application = new Application( 
+    application = new QApplication( 
       TRANSPARENCY::CompositeEngine::get().display(), 
       argc, argv, 
       TRANSPARENCY::CompositeEngine::get().visual(), 
       TRANSPARENCY::CompositeEngine::get().colormap() );
-  } else application = new Application( argc, argv );
+  } else application = new QApplication( argc, argv );
   #else
-  application = new Application( argc, argv );
+  application = new QApplication( argc, argv );
   #endif
-
-  application->initApplicationManager();
-  application->exec();
+  
+  // the curly brackets here are to make sure the 
+  // singleton application is deleted before QApplication
+  {
+    Application singleton( ArgList( argc, argv ) );
+    Singleton::get().setApplication( &singleton );
+    singleton.initApplicationManager();
+    
+    application->exec();
+  }
+  
   delete application;
   
   return 0;

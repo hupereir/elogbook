@@ -40,6 +40,7 @@
 #include "IconEngine.h"
 #include "LineEditor.h"
 #include "SearchPanel.h"
+#include "Singleton.h"
 #include "XmlOptions.h"
 
 using namespace std;
@@ -80,8 +81,8 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const std::stri
   button->setToolTip( "Show all logbook entries" );
     
   // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
   connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
   

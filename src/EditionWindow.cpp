@@ -29,6 +29,7 @@
   \date $Date$
 */
 
+#include <QApplication>
 #include <QLabel>
 #include <QLayout>
 #include <QStylePainter>
@@ -57,6 +58,7 @@
 #include "QuestionDialog.h"
 #include "InformationDialog.h"
 #include "RecentFilesMenu.h"
+#include "Singleton.h"
 #include "StatusBar.h"
 #include "Str.h"
 #include "Util.h"
@@ -219,19 +221,19 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   
   // extra toolbar
   toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" );
-  toolbar->addAction( &static_cast<Application*>(qApp)->mainWindow().uniconifyAction() );
+  toolbar->addAction( &Singleton::get().application<Application>()->mainWindow().uniconifyAction() );
   toolbar->addAction( &previousEntryAction() );
   toolbar->addAction( &nextEntryAction() );
 
   // create menu if requested
-  menu_ = new Menu( this, &static_cast<Application*>(qApp)->mainWindow() ); 
+  menu_ = new Menu( this, &Singleton::get().application<Application>()->mainWindow() ); 
   setMenuBar( menu_ );
 
   // changes display according to read_only flag
   setReadOnly( read_only_ );
   
   // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
   Debug::Throw("EditionWindow::EditionWindow - done.\n" );
 

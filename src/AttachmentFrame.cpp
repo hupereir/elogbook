@@ -53,6 +53,7 @@
 #include "NewAttachmentDialog.h"
 #include "OpenAttachmentDialog.h"
 #include "QuestionDialog.h"
+#include "Singleton.h"
 #include "TreeView.h"
 #include "InformationDialog.h"
 #include "Util.h"
@@ -102,7 +103,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   connect( list().selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
   connect( &list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
 
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
   _updateActions();
 }
@@ -187,7 +188,7 @@ void AttachmentFrame::_new( void )
   // update destination directory
   if( logbooks.size() && !(*logbooks.begin())->directory().empty() ) { dialog.setDestinationDirectory( (*logbooks.begin())->directory() ); }
   else { 
-    MainWindow& mainwindow( static_cast<Application*>(qApp)->mainWindow() );
+    MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
     if( mainwindow.logbook() && !mainwindow.logbook()->directory().empty() )
     { dialog.setDestinationDirectory( mainwindow.logbook()->directory() ); }
   }
@@ -295,7 +296,7 @@ void AttachmentFrame::_new( void )
     }
     
     // update attachment frame
-    static_cast<Application*>(qApp)->attachmentWindow().frame().add( *attachment );
+    Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
    
     // update logbooks destination directory
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ ) 
@@ -305,7 +306,7 @@ void AttachmentFrame::_new( void )
     }
     
     // change Application window title
-    static_cast<Application*>(qApp)->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    Singleton::get().application<Application>()->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
 
     // save EditionWindow entry
     window.saveAction().trigger();
@@ -443,7 +444,7 @@ void AttachmentFrame::customEvent( QEvent* event )
   {
         
     // set main window title
-    MainWindow& mainwindow( static_cast<Application*>(qApp)->mainWindow() );
+    MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
     mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
     if( mainwindow.logbook()->file().size() ) mainwindow.save();
     
@@ -614,7 +615,7 @@ void AttachmentFrame::_edit( void )
   }
   
   // set main window title
-  static_cast<Application*>(qApp)->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+  Singleton::get().application<Application>()->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
   
   // save EditionWindow entry
   window.saveAction().trigger();
@@ -697,7 +698,7 @@ void AttachmentFrame::_delete( void )
   }
   
   // set main window title
-  static_cast<Application*>(qApp)->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+  Singleton::get().application<Application>()->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
   
   // save EditionWindow entry
   window.saveAction().trigger();
@@ -754,7 +755,7 @@ void AttachmentFrame::_clean( void )
   {
    
     // set main window title
-    MainWindow& mainwindow( static_cast<Application*>(qApp)->mainWindow() );
+    MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
     mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
     if( mainwindow.logbook()->file().size() ) mainwindow.save();
     

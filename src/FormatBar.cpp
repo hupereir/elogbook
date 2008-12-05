@@ -29,7 +29,6 @@
   \date $Date$
 */
 
-#include <QApplication>
 #include <QPainter>
 #include <QStylePainter>
 #include <QTextBlock>
@@ -46,6 +45,7 @@
 #include "IconEngine.h"
 #include "PixmapEngine.h"
 #include "RoundedPath.h"
+#include "Singleton.h"
 #include "TextEditor.h"
 #include "TextPosition.h"
 
@@ -110,8 +110,8 @@ FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
   connect( color_menu_, SIGNAL( selected( QColor ) ), button, SLOT( setColor( QColor ) ) );
   
   // configuration
-  connect( qApp, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  connect( qApp, SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( Singleton::get().application(), SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
   
 }
