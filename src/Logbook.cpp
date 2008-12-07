@@ -176,7 +176,6 @@ bool Logbook::read( void )
   // parse children
   static unsigned int progress( 10 );
   unsigned int entry_count( 0 );
-  QDomNode node = doc_element.firstChild();
   for(QDomNode node = doc_element.firstChild(); !node.isNull(); node = node.nextSibling() )
   {
     QDomElement element = node.toElement();
