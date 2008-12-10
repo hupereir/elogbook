@@ -73,12 +73,12 @@ void ProgressBar::addToProgress( unsigned int value )
 //___________________________________________________________ 
 void ProgressBar::paintEvent( QPaintEvent* event )
 {
-  QStylePainter paint(this);
+  QStylePainter painter(this);
   QStyleOptionProgressBarV2 opt;
   initStyleOption(&opt);
 
   opt.text = "";
-  paint.drawControl(QStyle::CE_ProgressBar, opt);
+  painter.drawControl(QStyle::CE_ProgressBar, opt);
 
   // need to draw the label separately 
   // because the "BASE" color is used by default, which might be too light,
@@ -88,6 +88,6 @@ void ProgressBar::paintEvent( QPaintEvent* event )
   
   // ope should use a different color whether the bar is enabled or disabled
   opt.palette.setColor( QPalette::Base, palette().color( QPalette::HighlightedText ) );
-  paint.drawControl(QStyle::CE_ProgressBarLabel, opt);
+  painter.drawControl(QStyle::CE_ProgressBarLabel, opt);
 
 }

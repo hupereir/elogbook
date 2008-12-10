@@ -63,6 +63,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   
   // colors and transparency
   transparent_ = XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" );
+  round_corners_ = XmlOptions::get().get<bool>( "ROUND_SPLASH_SCREEN" );
   use_svg_ = XmlOptions::get().get<bool>( "USE_SVG" );
   if( transparent_ || use_svg_ )
   {
@@ -194,7 +195,7 @@ void SplashScreen::mousePressEvent( QMouseEvent* event )
 void SplashScreen::resizeEvent( QResizeEvent* event )
 {
   QWidget::resizeEvent( event );
-  setMask( RoundedRegion( rect() ) );
+  if( round_corners_ ) setMask( RoundedRegion( rect() ) );
 }
 
 //_____________________________________________________________________

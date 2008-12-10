@@ -123,6 +123,9 @@ class SplashScreen: public QWidget, public Counter
   //! transparency 
   bool transparent_;
   
+  //! round corners
+  bool round_corners_;
+  
   //! icon size
   int icon_size_;
   

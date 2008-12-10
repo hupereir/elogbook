@@ -65,13 +65,14 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog.\n" );
 
   baseConfiguration();
-
+  
   // generic objects
   QGroupBox *box;
   OptionCheckBox *checkbox;
   OptionSpinBox* spinbox;
 
   // attachment editors
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - attachments.\n" );
   QWidget* page = &addPage( "Attachments" );
   page->layout()->addWidget( box = new QGroupBox( "Editors", page ));
 
@@ -117,6 +118,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( spinbox );  
 
   // listview configuration
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - lists.\n" );
   page = &addPage( "List configuration" );  
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
     page, 
@@ -137,6 +139,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   page->layout()->addWidget( listview_config );
 
   // toolbars
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - toolbars.\n" );
   page = &addPage( "Toolbars" );
   box = new QGroupBox( "Toolbars", page );
   page->layout()->addWidget( box );
@@ -194,6 +197,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( combobox );
 
   // colors
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - colors.\n" );
   page = &addPage( "Colors" ); 
   box = new QGroupBox( "Logbook entry colors", page );
   box->setLayout( new QVBoxLayout() );
@@ -217,6 +221,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( listbox );
 
   // auto save
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - backup.\n" );
   page = &addPage( "Backup" );
   box = new QGroupBox( "Auto save", page );
   page->layout()->addWidget( box );
@@ -268,6 +273,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // spelling
   #if WITH_ASPELL
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - spellcheck.\n" );
   page = &addPage( "Spell checking" );
   SpellCheckConfiguration* spell_config = new SpellCheckConfiguration( page );
   page->layout()->addWidget( spell_config );
@@ -277,7 +283,35 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   // edition
   textEditConfiguration();
 
+  // splash screen
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - splash screen.\n" );
+  page = &addPage( "Splash screen" );
+  
+  box = new QGroupBox( "", page );
+  box->setLayout( new QVBoxLayout() );
+  box->layout()->setSpacing(5);
+  box->layout()->setMargin(5);
+  page->layout()->addWidget( box );
+
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Enable splash screen", box, "SPLASH_SCREEN" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "Show splash screen at startup" );
+
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Enable transparency", box, "TRANSPARENT_SPLASH_SCREEN" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "Enable startup splash screen transparency" );
+
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Round corners", box, "ROUND_SPLASH_SCREEN" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "Round startup splash screen corners (using mask)" );
+
+  // svg background
+  SVG::SvgConfiguration* svg_configuration( new SVG::SvgConfiguration( page ) );
+  page->layout()->addWidget( svg_configuration);
+  addOptionWidget( svg_configuration );
+  
   // misc
+  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
   page = &addPage( "Misc" );
   
   box = new QGroupBox( "Misc", page );
@@ -293,21 +327,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   box->layout()->addWidget( checkbox = new OptionCheckBox( "Case sensitive", box, "CASE_SENSITIVE" ) );
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Toggle case sensitive text search" );
-
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Splash screen", box, "SPLASH_SCREEN" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Show splash screen at startup" );
-
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Transparent splash screen", box, "TRANSPARENT_SPLASH_SCREEN" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Show transparent splash screen at startup" );
-
-  // svg background
-  SVG::SvgConfiguration* svg_configuration( new SVG::SvgConfiguration( page ) );
-  page->layout()->addWidget( svg_configuration);
-  addOptionWidget( svg_configuration );
   
-  // misc
   page->layout()->addWidget( box = new QGroupBox( "Recent files", page ) );  
    
   grid_layout = new GridLayout();

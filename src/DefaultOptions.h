@@ -90,6 +90,7 @@ void installDefaultOptions( void )
   XmlOptions::get().set( "SIDE_EDITOR_TOOLBAR", Option( "1" , "if true, editor toolbar is on the left instead of top"  ) );
   XmlOptions::get().set( "SPLASH_SCREEN", Option( "1" , "1 to show splash screen"  ) );
   XmlOptions::get().set( "TRANSPARENT_SPLASH_SCREEN", Option( "0" , "1 to show transparent splash screen" ) );
+  XmlOptions::get().set( "ROUND_SPLASH_SCREEN", Option( "0", "1 to round splash screen corners" ) );
   
   XmlOptions::get().set( "SHOW_KEYWORD", Option( "0" , "show keyword in editor"  ) );
   XmlOptions::get().set( "SHOW_EDITFRAME_MENU", Option( "1", "show menu in EditionWindow windows" ) );
