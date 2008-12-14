@@ -76,8 +76,12 @@ int main (int argc, char *argv[])
   // install default options
   installDefaultOptions();
   installSystemOptions();
+
+  // these are needed to set default values to relevant options
   SVG::SvgEngine::get();
   TRANSPARENCY::CompositeEngine::get();
+  
+  // customize options
   XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
   
   // set debug level
