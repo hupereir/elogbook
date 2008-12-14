@@ -143,7 +143,7 @@ QVariant LogbookStatisticsDialog::Model::data( const QModelIndex& index, int rol
     {
       
       case FILE: return logbook.file().localName().c_str();
-      case ENTRIES: return BASE::KeySet<LogEntry>(&logbook).size();
+      case ENTRIES: return int(BASE::KeySet<LogEntry>(&logbook).size());
       case CREATED: return logbook.creation().string().c_str();
       case MODIFIED: return logbook.modification().string().c_str();
       default: return QVariant();
