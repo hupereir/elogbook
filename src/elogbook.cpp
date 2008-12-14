@@ -77,6 +77,7 @@ int main (int argc, char *argv[])
   installDefaultOptions();
   installSystemOptions();
   SVG::SvgEngine::get();
+  TRANSPARENCY::CompositeEngine::get();
   XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
   
   // set debug level
