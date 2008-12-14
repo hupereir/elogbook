@@ -51,7 +51,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 
   setWindowTitle( "eLogbook - logbook statistics" );
   setSizeOptionName( "LOGBOOK_STATISTICS_DIALOG" );
-  
+    
   QGridLayout* grid_layout = new QGridLayout();
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);
@@ -111,7 +111,8 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   model_.add( Model::List( all.begin(), all.end() ) );
   
   list_view->resizeColumns();
-  
+  okButton().setText( "&Close" );
+
 }
 
 
