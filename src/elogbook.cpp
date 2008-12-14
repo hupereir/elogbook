@@ -42,6 +42,7 @@
 #include "SystemOptions.h"
 #include "ErrorHandler.h"
 #include "Singleton.h"
+#include "SvgEngine.h"
 #include "XmlOptions.h"
 
 #include "CompositeEngine.h"
@@ -75,6 +76,7 @@ int main (int argc, char *argv[])
   // install default options
   installDefaultOptions();
   installSystemOptions();
+  SVG::SvgEngine::get();
   XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
   
   // set debug level
@@ -109,7 +111,6 @@ int main (int argc, char *argv[])
     Application singleton( ArgList( argc, argv ) );
     Singleton::get().setApplication( &singleton );
     singleton.initApplicationManager();
-    
     application->exec();
   }
   
