@@ -7,7 +7,7 @@ win32 {
   DESTDIR = "C:/Program Files" 
 }
 
-VERSION = 1.1
+VERSION = 1.4
 DEFINES += QT_STATIC VERSION=\"$$VERSION\"
 
 INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../base-svg ../base-transparency ../extra-includes
