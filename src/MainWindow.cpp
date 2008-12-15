@@ -1253,8 +1253,12 @@ void MainWindow::_newLogbook( void )
 
   // add new file to openPreviousMenu
   if( !logbook()->file().empty() )
-  { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
-
+  { 
+    Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); 
+    logbook()->setModified( true );
+    save();
+  }  
+  
 }
 
 //_______________________________________________

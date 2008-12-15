@@ -33,7 +33,7 @@
 */
 
 //! eLogbook help text
-static const char* HelpText[] = 
+static const QString HelpText[] = 
 {
   
   //_________________________________________________

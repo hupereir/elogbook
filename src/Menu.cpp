@@ -133,12 +133,12 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   // help manager
   BASE::HelpManager* help( new BASE::HelpManager( this ) );
   File help_file( XmlOptions::get().raw( "HELP_FILE" ) );
-  if( help_file.exists() ) BASE::HelpManager::install( help_file );
+  if( help_file.exists() ) help->install( help_file.c_str() );
   else {
-    BASE::HelpManager::setFile( help_file );
-    BASE::HelpManager::install( HelpText );
-    BASE::HelpManager::install( SVG::HelpText, false );
-    BASE::HelpManager::install( BASE::HelpText, false );
+    help->setFile( help_file.c_str() );
+    help->install( HelpText );
+    help->install( SVG::HelpText, false );
+    help->install( BASE::HelpText, false );
   }
   
   // help menu
@@ -215,6 +215,8 @@ void Menu::_updatePreferenceMenu( void )
 {
   
   Debug::Throw( "Menu::_updatePreferenceMenu.\n" );
+
+  preference_menu_->clear();
   
   // preferences menu
   Application& application( *Singleton::get().application<Application>() );

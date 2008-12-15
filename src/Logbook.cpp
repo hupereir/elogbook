@@ -129,7 +129,7 @@ bool Logbook::read( void )
 
   // create document
   QDomDocument document;
-  error_ = XmlError( Logbook::file() );
+  error_ = XmlError( Logbook::file().c_str() );
   if ( !document.setContent( &file, &error_.error(), &error_.line(), &error_.column() ) )
   {
     file.close();
