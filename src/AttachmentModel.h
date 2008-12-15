@@ -112,7 +112,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
   };
   
   //! list column names
-  static const char* column_titles_[n_columns];
+  static const QString column_titles_[n_columns];
 
   //! icon
   static QIcon _icon( std::string );
@@ -121,7 +121,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
   typedef std::map<std::string, QIcon> IconCache;
    
   //! type icon cache
-  static IconCache icons_; 
+  static IconCache& _icons(); 
 
 };
 

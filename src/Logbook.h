@@ -78,7 +78,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
   static const std::string LOGBOOK_NO_DIRECTORY;   
   
   //! max number of entries in logbook (make child logbook if larger)
-  static const unsigned int MAX_ENTRIES = 50;         
+  enum { MAX_ENTRIES = 50 };         
   
   //! HTML flags
   enum HtmlTag 

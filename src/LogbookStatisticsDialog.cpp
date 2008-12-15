@@ -117,7 +117,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 
 
 //_______________________________________________
-const char* LogbookStatisticsDialog::Model::column_titles_[ LogbookStatisticsDialog::Model::n_columns ] =
+const QString LogbookStatisticsDialog::Model::column_titles_[ LogbookStatisticsDialog::Model::n_columns ] =
 { 
   "file",
   "entries",

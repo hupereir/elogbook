@@ -90,20 +90,16 @@ class AttachmentType: public Counter{
   //! retrieves command used to edit the attachment
   std::string editCommand( void ) const;
    
+  //! attachment types map
+  typedef std::map< std::string, AttachmentType > Map;
+
   //! returns predefined attachment types
-  static const std::map< std::string, AttachmentType >& types( void )
-  { 
-    static bool first __attribute__ ((unused)) = _install();
-    return types_; 
-  }  
+  static const Map& types( void );
   
   private:
-  
-  //! sets predefine attachment types
-  static bool _install( void );
-  
-  //! predefined attachment types
-  static std::map< std::string, AttachmentType > types_; 
+    
+  //! install static type map
+  static Map _install( void );
   
   //! used to identify the file type
   std::string key_;           

@@ -84,7 +84,7 @@ class LogbookStatisticsDialog: public CustomDialog
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
     {   
       if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < n_columns )
-      { return QString( column_titles_[section] ); }
+      { return column_titles_[section]; }
       
       // return empty
       return QVariant(); 
@@ -104,7 +104,7 @@ class LogbookStatisticsDialog: public CustomDialog
     {}
   
     //! list column names
-    static const char* column_titles_[n_columns];    
+    static const QString column_titles_[n_columns];    
     
   };
   

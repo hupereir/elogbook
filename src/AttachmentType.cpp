@@ -42,7 +42,12 @@ AttachmentType AttachmentType::PLAIN_TEXT( "PLAIN_TEXT", "Plain Text", "text-pla
 AttachmentType AttachmentType::HTML( "HTML", "HTML", "text-html.png", "EDIT_HTML_ATC" );
 AttachmentType AttachmentType::URL( "URL",  "URL", "text-html.png", "EDIT_URL_ATC" );
 
-std::map< string, AttachmentType > AttachmentType::types_;
+//___________________________________________________________________________________
+const AttachmentType::Map& AttachmentType::types()
+{
+  static Map map = _install();
+  return map;
+};
 
 //___________________________________________________________________________________
 AttachmentType::AttachmentType( const std::string& key, const std::string& name, const std::string& icon, const std::string& option ):
@@ -70,13 +75,14 @@ string AttachmentType::editCommand( void ) const
 }
 
 //______________________________________
-bool AttachmentType::_install( void )
+AttachmentType::Map AttachmentType::_install( void )
 {
-  types_.insert( make_pair( "UNKNOWN", UNKNOWN ) );
-  types_.insert( make_pair( "POSTSCRIPT", POSTSCRIPT ) );
-  types_.insert( make_pair( "IMAGE", IMAGE ) );
-  types_.insert( make_pair( "PLAIN_TEXT", PLAIN_TEXT ) );
-  types_.insert( make_pair( "HTML", HTML ) );
-  types_.insert( make_pair( "URL", URL ) );
-  return true;
+  Map out;
+  out.insert( make_pair( "UNKNOWN", UNKNOWN ) );
+  out.insert( make_pair( "POSTSCRIPT", POSTSCRIPT ) );
+  out.insert( make_pair( "IMAGE", IMAGE ) );
+  out.insert( make_pair( "PLAIN_TEXT", PLAIN_TEXT ) );
+  out.insert( make_pair( "HTML", HTML ) );
+  out.insert( make_pair( "URL", URL ) );
+  return out;
 }

@@ -41,10 +41,14 @@
 using namespace std;
 
 //__________________________________________________________________
-AttachmentModel::IconCache AttachmentModel::icons_;
+AttachmentModel::IconCache& AttachmentModel::_icons()
+{
+  static IconCache cache;
+  return cache;
+}
 
 //_______________________________________________
-const char* AttachmentModel::column_titles_[ AttachmentModel::n_columns ] =
+const QString AttachmentModel::column_titles_[ AttachmentModel::n_columns ] =
 { 
   "",
   "file",
@@ -137,7 +141,7 @@ QVariant AttachmentModel::headerData(int section, Qt::Orientation orientation, i
 void AttachmentModel::_updateConfiguration( void )
 {
   Debug::Throw( "AttachmentModel::_updateConfiguration.\n" );
-  icons_.clear();
+  _icons().clear();
 }
 
 //____________________________________________________________
@@ -173,8 +177,8 @@ QIcon AttachmentModel::_icon( string type )
 
   //Debug::Throw( "SessionFilesModel::_icon.\n" );
    
-  IconCache::const_iterator iter( icons_.find( type ) );
-  if( iter != icons_.end() ) return iter->second;
+  IconCache::const_iterator iter( _icons().find( type ) );
+  if( iter != _icons().end() ) return iter->second;
 
   // pixmap size
   unsigned int pixmap_size = XmlOptions::get().get<unsigned int>( "ATTACHMENT_LIST_ICON_SIZE" );
@@ -191,7 +195,7 @@ QIcon AttachmentModel::_icon( string type )
   }
   
   // store in map and return
-  icons_.insert( make_pair( type, icon ) );
+  _icons().insert( make_pair( type, icon ) );
   return icon;
    
 }

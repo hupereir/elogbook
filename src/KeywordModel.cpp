@@ -37,7 +37,7 @@
 using namespace std;
 
 //______________________________________________________________
-const char* KeywordModel::column_titles_[ KeywordModel::n_columns ] = { "keywords" };
+const QString KeywordModel::column_titles_[ KeywordModel::n_columns ] = { "keywords" };
 const QString KeywordModel::DRAG = "elogbook/keywordmodel/drag";
 
 //______________________________________________________________
@@ -94,7 +94,7 @@ QVariant KeywordModel::headerData(int section, Qt::Orientation orientation, int 
 {
 
   if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < n_columns )
-  { return QString( column_titles_[section] ); }
+  { return column_titles_[section]; }
   
   // return empty
   return QVariant(); 

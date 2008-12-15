@@ -144,12 +144,18 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
   { setEditionEnabled( false ); }
   
   private:
+
+  //! color icon cache
+  typedef std::map<QColor, QIcon, ColorMenu::ColorLessFTor> IconCache;
+   
+  //! color icon cache
+  static IconCache& _icons( void ); 
   
   //! reset icons
   void _resetIcons( void );
   
   //! create icon for a given color
-  QIcon _createIcon( const QColor& ) const;
+  static QIcon _icon( const QColor& );
   
   
   //! used to sort IconCaches
@@ -179,14 +185,8 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
   QModelIndex edition_index_;
   
   //! list column names
-  static const char* column_titles_[n_columns];
+  static const QString column_titles_[n_columns];
    
-  //! color icon cache
-  typedef std::map<QColor, QIcon, ColorMenu::ColorLessFTor> IconCache;
-   
-  //! color icon cache
-  static IconCache icons_; 
-
 };
 
 #endif

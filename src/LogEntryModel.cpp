@@ -43,11 +43,15 @@
 using namespace std;
 
 //_______________________________________________
-LogEntryModel::IconCache LogEntryModel::icons_;
+LogEntryModel::IconCache& LogEntryModel::_icons()
+{
+  static IconCache cache;
+  return cache;
+}
 
 //_______________________________________________
 const QString LogEntryModel::DRAG = "elogbook/logentrymodel/drag";
-const char* LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
+const QString LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
 { 
   "",
   "title",
@@ -122,10 +126,8 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
   { 
     
     QColor color( entry->color() != ColorMenu::NONE ? entry->color().c_str():QColor() );
-    IconCache::iterator iter( icons_.find( color ) );
-    if( iter == icons_.end() ) iter = icons_.insert( make_pair( color, _createIcon( color ) ) ).first;
-    return iter->second;
-    
+    return _icon( color );
+   
   }
  
   // alignment
@@ -179,7 +181,7 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
     role == Qt::DisplayRole && 
     section >= 0 && 
     section < n_columns )
-  { return QString( column_titles_[section] ); }
+  { return column_titles_[section]; }
   
   // return empty
   return QVariant(); 
@@ -243,17 +245,19 @@ void LogEntryModel::_resetIcons( void )
 {
 
   Debug::Throw( "LogEntryModel::_resetIcons" );
-  for( IconCache::iterator iter = icons_.begin(); iter != icons_.end(); iter++ )
-  { icons_[iter->first] = _createIcon( iter->first ); }
+  _icons().clear();
   
 }
 
 //________________________________________________________
-QIcon LogEntryModel::_createIcon( const QColor& color ) const
+QIcon LogEntryModel::_icon( const QColor& color )
 {
  
-  Debug::Throw( "LogEntryModel::_createIcon" );
+  Debug::Throw( "LogEntryModel::_icon" );
     
+  IconCache::iterator iter( _icons().find( color ) );
+  if( iter != _icons().end() ) return iter->second;
+  
   unsigned int icon_size = max<unsigned int>( XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" ), 16 );
   double pixmap_size = 0.75* XmlOptions::get().get<double>( "LIST_ICON_SIZE" );
   double offset = 0.5*( icon_size - pixmap_size );
@@ -274,7 +278,9 @@ QIcon LogEntryModel::_createIcon( const QColor& color ) const
  
   }
   
-  return QIcon( pixmap );
+  QIcon out( pixmap );
+  _icons()[color] = out;
+  return out;
   
 }
 
