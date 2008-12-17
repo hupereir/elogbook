@@ -50,21 +50,14 @@ using namespace Qt;
 
 //________________________________________
 AttachmentWindow::AttachmentWindow( QWidget* parent ):
-  BaseDialog( parent ),
-  Counter( "AttachmentWindow" )
+  CustomDialog( parent, CustomDialog::OK_BUTTON )
 {
   
   Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
   setWindowTitle( Application::ATTACHMENT_TITLE );
   setSizeOptionName( "ATTACHMENT_WINDOW" );
-  
-  // create vbox layout
-  QVBoxLayout* layout=new QVBoxLayout(this);
-  layout->setMargin(10);
-  layout->setSpacing(10);
-  setLayout( layout );
-  
-  layout->addWidget( frame_ = new AttachmentFrame( this, true ) );
+    
+  mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
   connect( frame_, SIGNAL( attachmentSelected( Attachment& ) ), SLOT( _displayEntry( Attachment& ) ) );
   
   // shortcuts
@@ -74,19 +67,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( uniconify() ) );
-  
-  // button layout
-  QHBoxLayout *button_layout( new QHBoxLayout() );
-  button_layout->setSpacing(10);
-  button_layout->setMargin(0);
-  layout->addLayout( button_layout );
-  
-  // close button
-  QPushButton* button;
-  button_layout->addWidget( button = new QPushButton( "&Close", this ) );
-  button->setAutoDefault( false );
-  connect( button, SIGNAL( clicked() ), SLOT( close() ) );
-  
+    
 };
 
 //________________________________________

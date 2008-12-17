@@ -36,7 +36,7 @@
 #include <QEvent>
 #include <string>
 
-#include "BaseDialog.h"
+#include "CustomDialog.h"
 #include "Counter.h"
 #include "AttachmentFrame.h"
 #include "Debug.h"
@@ -48,7 +48,7 @@ class Attachment;
    \brief popup window to list/edit all attachments independantly from entries
 */ 
 
-class AttachmentWindow: public BaseDialog, public Counter
+class AttachmentWindow: public CustomDialog
 {
 
   //! Qt meta object declaration

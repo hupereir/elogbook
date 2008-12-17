@@ -111,7 +111,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   model_.add( Model::List( all.begin(), all.end() ) );
   
   list_view->resizeColumns();
-  okButton().setText( "&Close" );
+  
 }
 
 
