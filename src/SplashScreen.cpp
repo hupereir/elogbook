@@ -69,8 +69,13 @@ SplashScreen::SplashScreen( QWidget* parent ):
   {
     
     QPalette palette( this->palette() );
+    
     palette.setColor( QPalette::Window, Qt::black );
+    palette.setColor( QPalette::Base, Qt::black );
+
     palette.setColor( QPalette::WindowText, Qt::white );
+    palette.setColor( QPalette::Text, Qt::white );
+    
     setPalette( palette );
     
   }
@@ -240,7 +245,9 @@ void SplashScreen::_paint( QPaintDevice& device, const QRect& clip )
   QRect message_rect( rect() );
   QRect bounding_rect;
   
-  if( !icon_.isNull() ) { 
+  if( !icon_.isNull() ) 
+  {
+    
     pixmap_rect = QRect( 0, 0, icon_.width()+margin_, height() ); 
     painter.drawPixmap( 
       pixmap_rect.left()+(pixmap_rect.width() - icon_.width() )/2, 
@@ -258,6 +265,7 @@ void SplashScreen::_paint( QPaintDevice& device, const QRect& clip )
   // title
   title_rect.setTop( margin_ );
   title_rect.setBottom( height() - 3*margin_/2 - normal_metrics.lineSpacing() );
+  painter.setPen( palette().color( QPalette::Text ) );
   painter.setFont( large_font_ );
   painter.drawText( title_rect, Qt::AlignCenter, title_, &bounding_rect );
   

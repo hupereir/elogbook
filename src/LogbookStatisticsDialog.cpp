@@ -112,7 +112,6 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   
   list_view->resizeColumns();
   okButton().setText( "&Close" );
-
 }
 
 
