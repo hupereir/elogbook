@@ -193,23 +193,32 @@ void SplashScreen::resizeEvent( QResizeEvent* event )
   if( round_corners_ ) setMask( RoundedRegion( rect() ) );
 }
 
+//________________________________________________
+void SplashScreen::_updateBackgroundPixmap( void )
+{
+
+  Debug::Throw( "SplashScreen::_updateBackgroundPixmap.\n" );
+  TransparentWidget::_updateBackgroundPixmap();
+  
+  // check if svg is selected
+  if( use_svg_ && SVG::SvgEngine::get().isValid() )
+  {  
+    // top svg
+    QPainter painter( &_backgroundPixmap() );
+    painter.setRenderHints(QPainter::SmoothPixmapTransform);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceOver );
+    painter.drawPixmap( QPoint( 0, 0 ), SVG::SvgEngine::get().get( size() ) );
+    painter.end();
+  }
+  
+}
+
 //_____________________________________________________________________
 void SplashScreen::_paint( QPaintDevice& device, const QRect& clip )
 {
   QPainter painter( &device );
   painter.setClipRect( clip );
-  
-  if( use_svg_ && TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
-  { 
-    painter.setRenderHints(QPainter::SmoothPixmapTransform);
-    painter.setCompositionMode(QPainter::CompositionMode_Source );
-    painter.fillRect( rect(), Qt::transparent );
-  }
-
-  // draw background
-  if( use_svg_ ) painter.drawPixmap( QPoint(0,0), SVG::SvgEngine::get().get( size() ) );
-
-  painter.setCompositionMode(QPainter::CompositionMode_SourceOver );
+  painter.setRenderHints(QPainter::Antialiasing );
     
   // prepare rect for drawing
   QRect pixmap_rect;

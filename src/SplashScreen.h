@@ -100,6 +100,11 @@ class SplashScreen: public TRANSPARENCY::TransparentWidget
   //! paint on device
   virtual void _paint( QPaintDevice&, const QRect& );
   
+  protected slots:
+  
+  //! background pixmap
+  virtual void _updateBackgroundPixmap( void );
+
   private:
   
   //! title
@@ -132,12 +137,6 @@ class SplashScreen: public TRANSPARENCY::TransparentWidget
   //! svg
   bool use_svg_;
   
-  #ifdef Q_WS_WIN
-  //! widget pixmap
-  /*! it is used as widget storage when using full translucency */
-  QPixmap widget_pixmap_;
-  #endif
-
 };
 
 #endif

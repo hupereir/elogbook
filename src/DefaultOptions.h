@@ -92,6 +92,8 @@ void installDefaultOptions( void )
 
   XmlOptions::get().set( "TRANSPARENT", Option( "1", "1 use transparent background" ) );
   XmlOptions::get().set( "TRANSPARENCY_OPACITY", Option( "204", "widget Composite opacity (in [0,255])" ) );
+  XmlOptions::get().set( "TRANSPARENCY_HIGHLIGHT_COLOR", Option( "#000000", "highlight color") );
+  XmlOptions::get().set( "TRANSPARENCY_HIGHLIGHT_INTENSITY", Option( "0", "highlight intensity (in [0,255])" ) );
   XmlOptions::get().set( "TRANSPARENCY_SHADOW_COLOR", Option( "black", "text shadow color" ) );
   XmlOptions::get().set( "TRANSPARENCY_SHADOW_OFFSET", Option( "1", "offset between text shadow and text" ) );
   XmlOptions::get().set( "TRANSPARENCY_TINT_COLOR", Option( "#000000", "tint color") );
