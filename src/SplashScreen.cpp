@@ -59,6 +59,7 @@ SplashScreen::SplashScreen( QWidget* parent ):
   
   Debug::Throw( "SplashScreen::SplashScreen.\n" );
   setAttribute( Qt::WA_DeleteOnClose );
+  setWindowTitle( "elogbook - initialization" );
   
   round_corners_ = XmlOptions::get().get<bool>( "ROUND_SPLASH_SCREEN" );
   use_svg_ = XmlOptions::get().get<bool>( "USE_SVG" );
