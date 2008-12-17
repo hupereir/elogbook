@@ -51,8 +51,7 @@ using namespace Qt;
 
 //_______________________________________________________________________
 SplashScreen::SplashScreen( QWidget* parent ):
-  QWidget( parent, Qt::Window|Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint ),
-  Counter( "SplashScreen" ),
+  TRANSPARENCY::TransparentWidget( parent, Qt::Window|Qt::WindowStaysOnTopHint|Qt::FramelessWindowHint ),
   icon_size_(0),
   margin_(0),
   minimum_width_(0)
@@ -61,11 +60,9 @@ SplashScreen::SplashScreen( QWidget* parent ):
   Debug::Throw( "SplashScreen::SplashScreen.\n" );
   setAttribute( Qt::WA_DeleteOnClose );
   
-  // colors and transparency
-  transparent_ = XmlOptions::get().get<bool>( "TRANSPARENT_SPLASH_SCREEN" );
   round_corners_ = XmlOptions::get().get<bool>( "ROUND_SPLASH_SCREEN" );
   use_svg_ = XmlOptions::get().get<bool>( "USE_SVG" );
-  if( transparent_ || use_svg_ )
+  if( _transparent() || use_svg_ )
   {
     
     QPalette palette( this->palette() );
@@ -83,18 +80,10 @@ SplashScreen::SplashScreen( QWidget* parent ):
   #ifdef Q_WS_WINDOW
   if( !TRANSPARENCY::CompositeEngine::get().isEnabled() )
   #endif
-  { if( transparent_ ) setWindowOpacity( 0.9 ); }
-  
-  if( use_svg_ && TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
-  { 
-    setAttribute( Qt::WA_OpaquePaintEvent );
-    setAttribute( Qt::WA_NoSystemBackground ); 
-  }
-  
+  { if( _transparent() ) setWindowOpacity( 0.9 ); }
+    
   // title
-  ostringstream what;
-  what << "eLogbook";
-  setTitle( what.str().c_str() );
+  setTitle( "elogbook" );
 
   // icon size
   setIconSize( 64 );
@@ -123,7 +112,7 @@ void SplashScreen::setSplash( QPixmap pixmap )
 {
   if( pixmap.isNull() ) return;
 
-  QPalette palette( QWidget::palette() );
+  QPalette palette( TRANSPARENCY::TransparentWidget::palette() );
   palette.setBrush( QPalette::Background, pixmap );
   setPalette( palette );
   setMinimumWidth( pixmap.width() );
@@ -134,7 +123,7 @@ void SplashScreen::setSplash( QPixmap pixmap )
 void SplashScreen::setIcon( QPixmap pixmap )
 {
   icon_ = CustomPixmap( pixmap ).scaled( QSize( icon_size_, icon_size_ ), Qt::KeepAspectRatio, Qt::SmoothTransformation );
-  QWidget::setWindowIcon( QIcon(pixmap) );
+  TRANSPARENCY::TransparentWidget::setWindowIcon( QIcon(pixmap) );
 }
 
 //_______________________________________________________________________
@@ -181,7 +170,7 @@ void SplashScreen::setMinimumWidth( int value )
     QFontMetrics( large_font_ ).lineSpacing() )
     );
   
-  QWidget::setMinimumSize( size ); 
+  TRANSPARENCY::TransparentWidget::setMinimumSize( size ); 
   resize( size );
 }
 
@@ -199,26 +188,9 @@ void SplashScreen::mousePressEvent( QMouseEvent* event )
 //_____________________________________________________________________
 void SplashScreen::resizeEvent( QResizeEvent* event )
 {
-  QWidget::resizeEvent( event );
-  if( round_corners_ ) setMask( RoundedRegion( rect() ) );
-}
-
-//_____________________________________________________________________
-void SplashScreen::paintEvent( QPaintEvent* event )
-{
-
-  #ifdef Q_WS_WIN
-  if( TRANSPARENCY::CompositeEngine::get().isEnabled() ) 
-  { 
-    QPixmap widget_pixmap = QPixmap( size() );
-    widget_pixmap.fill( Qt::transparent );
-    _paint( widget_pixmap, event->rect() );
-    WinUtil( this ).update( widget_pixmap, transparent_ ? 0.9:1.0  ); 
-  } else
-  #endif
-
-  { _paint( *this, event->rect() ); }
   
+  TRANSPARENCY::TransparentWidget::resizeEvent( event );
+  if( round_corners_ ) setMask( RoundedRegion( rect() ) );
 }
 
 //_____________________________________________________________________

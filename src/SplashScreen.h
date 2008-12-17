@@ -39,15 +39,15 @@
 #include <QPaintEvent>
 #include <QPixmap>
 #include <QResizeEvent>
-#include <QWidget>
 #include <string>
 
+#include "TransparentWidget.h"
 #include "Counter.h"
 #include "Debug.h"
 #include "QtUtil.h"
 
 //! application splash screen
-class SplashScreen: public QWidget, public Counter
+class SplashScreen: public TRANSPARENCY::TransparentWidget
 {
 
   //! Qt meta object declaration
@@ -93,11 +93,8 @@ class SplashScreen: public QWidget, public Counter
       
   //! mouse press event [overloaded]
   virtual void mousePressEvent( QMouseEvent* );
- 
-  //! paint event [overloaded]
-  virtual void paintEvent( QPaintEvent* );
        
-  //! mouse move event [overloaded]
+  //! resize event [overloaded]
   virtual void resizeEvent( QResizeEvent *e);
   
   //! paint on device
@@ -119,10 +116,7 @@ class SplashScreen: public QWidget, public Counter
 
   //! fonts
   QFont normal_font_;
-  
-  //! transparency 
-  bool transparent_;
-  
+    
   //! round corners
   bool round_corners_;
   
@@ -138,6 +132,12 @@ class SplashScreen: public QWidget, public Counter
   //! svg
   bool use_svg_;
   
+  #ifdef Q_WS_WIN
+  //! widget pixmap
+  /*! it is used as widget storage when using full translucency */
+  QPixmap widget_pixmap_;
+  #endif
+
 };
 
 #endif

@@ -297,7 +297,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Show splash screen at startup" );
 
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Enable transparency", box, "TRANSPARENT_SPLASH_SCREEN" ) );
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Enable transparency", box, "TRANSPARENT" ) );
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Enable startup splash screen transparency" );
 
