@@ -45,6 +45,7 @@
 #include "OptionSpinBox.h"
 #include "OptionListBox.h"
 #include "Options.h"
+#include "ServerConfiguration.h"
 #include "Singleton.h"
 #include "SvgConfiguration.h"
 #include "TreeViewConfiguration.h"
@@ -310,6 +311,13 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   page->layout()->addWidget( svg_configuration);
   addOptionWidget( svg_configuration );
   
+  // server configuration
+  SERVER::ServerConfiguration* server_configuration;
+
+  page = &addPage( "Server" );
+  page->layout()->addWidget( server_configuration = new SERVER::ServerConfiguration( page ));
+  addOptionWidget( server_configuration );
+
   // misc
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
   page = &addPage( "Misc" );
