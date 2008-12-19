@@ -64,10 +64,10 @@ const QString Application::ATTACHMENT_TITLE = "elogbook - attachments";
 //____________________________________________
 void Application::usage( void )
 {
-  std::cout << "usage : eLogbook [options] [file]" << std::endl;
-  std::cout << std::endl;
-  std::cout << "Options : " << std::endl;
-  std::cout << "  --help\t\tdisplays this help and exit" << std::endl;
+  cout << "usage : eLogbook [options] [file]" << endl;
+  cout << endl;
+  cout << "Options : " << endl;
+  cout << "  --help\t\tdisplays this help and exit" << endl;
   SERVER::ApplicationManager::usage();
   return;
 }

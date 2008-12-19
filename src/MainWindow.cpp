@@ -68,7 +68,7 @@ using namespace std;
 
 //_____________________________________________
 MainWindow::MainWindow( QWidget *parent ):
-  CustomMainWindow( parent ),
+  BaseMainWindow( parent ),
   Counter( "MainWindow" ),
   autosave_delay_( 60000 ),
   edition_delay_( 200 ),
@@ -937,7 +937,7 @@ void MainWindow::timerEvent( QTimerEvent* event )
     
     _autoSave();
     
-  } else return CustomMainWindow::timerEvent( event );
+  } else return BaseMainWindow::timerEvent( event );
   
 }
 
@@ -946,7 +946,7 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 {
 
   Debug::Throw( "MainWindow::contextMenuEvent.\n" );
-  CustomMainWindow::contextMenuEvent( event );
+  BaseMainWindow::contextMenuEvent( event );
   if( event->isAccepted() ) return;
 
   // if event was rejected it means it is outer of one of the 

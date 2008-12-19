@@ -49,7 +49,7 @@
 #include "LineEditor.h"
 
 #include "TextEditor.h"
-#include "CustomMainWindow.h"
+#include "BaseMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
 
@@ -76,7 +76,7 @@ class StatusBar;
   garbage collector
 */
 
-class EditionWindow: public CustomMainWindow, public Counter, public BASE::Key
+class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 {
 
   //! Qt meta object declaration

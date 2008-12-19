@@ -74,7 +74,7 @@ using namespace Qt;
 
 //_______________________________________________
 EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
-  CustomMainWindow( parent ),
+  BaseMainWindow( parent ),
   Counter( "EditionWindow" ),
   read_only_( read_only ),
   closed_( false ),
@@ -584,7 +584,7 @@ void EditionWindow::timerEvent( QTimerEvent* event )
     if( attachmentFrame().visibilityAction().isChecked() )
     { XmlOptions::get().set<int>( "ATTACHMENT_FRAME_HEIGHT", attachmentFrame().height() ); }
   
-  } else return CustomMainWindow::timerEvent( event );
+  } else return BaseMainWindow::timerEvent( event );
   
 }
 

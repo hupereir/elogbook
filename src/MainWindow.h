@@ -39,7 +39,7 @@
 
 #include "AskForSaveDialog.h"
 #include "Counter.h"
-#include "CustomMainWindow.h"
+#include "BaseMainWindow.h"
 #include "Debug.h"
 
 
@@ -60,7 +60,7 @@ class SelectionStatusBar;
 class ColorMenu;
 
 //! display a set of log entries, allows selection of one
-class MainWindow: public CustomMainWindow, public Counter, public BASE::Key
+class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 {
 
   //! Qt meta object declaration
