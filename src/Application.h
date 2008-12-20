@@ -33,6 +33,8 @@
 */
 
 #include "BaseApplication.h"
+#include "CommandLineArguments.h"
+#include "CommandLineParser.h"
 #include "Config.h"
 #include "Counter.h"
 
@@ -53,12 +55,12 @@ class Application: public BaseApplication, public Counter
   Q_OBJECT
 
   public:
-  
+    
   //! command line help
   static void usage( void );
   
   //! constructor
-  Application( ArgList ); 
+  Application( CommandLineArguments ); 
   
   //! destructor
   ~Application( void );
@@ -117,7 +119,7 @@ class Application: public BaseApplication, public Counter
   void _exit( void );
   
   //! process request from application manager
-  void _processRequest( const ArgList&);
+  void _processRequest( const CommandLineArguments&);
   
   private:
  

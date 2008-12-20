@@ -36,7 +36,6 @@
 #include <unistd.h>
 
 #include "Application.h"
-#include "ArgList.h"
 #include "Debug.h"
 #include "DefaultOptions.h"
 #include "SystemOptions.h"
@@ -66,8 +65,9 @@ int main (int argc, char *argv[])
   qInstallMsgHandler( ErrorHandler::Throw );
   
   // load possible command file
-  ArgList args( argc, argv );
-  if( args.find( "--help" ) )
+  // load possible command file (supposibly last argument, not starting with a "-"=
+  CommandLineArguments arguments( argc, argv );
+  if( SERVER::ApplicationManager::commandLineParser( arguments, false ).hasFlag( "--help" ) )
   {
     Application::usage();
     return 0;
@@ -113,7 +113,7 @@ int main (int argc, char *argv[])
   // the curly brackets here are to make sure the 
   // singleton application is deleted before QApplication
   {
-    Application singleton( ArgList( argc, argv ) );
+    Application singleton( arguments );
     Singleton::get().setApplication( &singleton );
     singleton.initApplicationManager();
     application->exec();

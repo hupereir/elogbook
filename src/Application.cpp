@@ -64,16 +64,13 @@ const QString Application::ATTACHMENT_TITLE = "elogbook - attachments";
 //____________________________________________
 void Application::usage( void )
 {
-  cout << "usage : eLogbook [options] [file]" << endl;
-  cout << endl;
-  cout << "Options : " << endl;
-  cout << "  --help\t\tdisplays this help and exit" << endl;
-  SERVER::ApplicationManager::usage();
+  cout << "usage : elogbook [options] [file]" << endl;
+  SERVER::ApplicationManager::commandLineParser().usage();
   return;
 }
 
 //____________________________________________
-Application::Application( ArgList arguments ) :
+Application::Application( CommandLineArguments arguments ) :
   BaseApplication( 0, arguments ),
   Counter( "Application" ),
   recent_files_( 0 ),
@@ -96,9 +93,13 @@ void Application::initApplicationManager( void )
   Debug::Throw( "Application::initApplicationManager.\n" );
 
   // retrieve files from arguments and expand if needed
-  ArgList::Arg& last( _arguments().get().back() );
-  for( list< string >::iterator iter = last.options().begin(); iter != last.options().end(); iter++ )
-  { if( File( *iter ).size() ) (*iter) = File( *iter ).expand(); }
+  CommandLineParser parser( SERVER::ApplicationManager::commandLineParser( _arguments() ) );
+  QStringList& orphans( parser.orphans() );
+  for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); iter++ )
+  { if( !iter->isEmpty() ) (*iter) = File( qPrintable( *iter ) ).expand().c_str(); }
+
+  // replace arguments
+  _setArguments( parser.arguments() );
 
   // base class initialization
   BaseApplication::initApplicationManager();
@@ -151,10 +152,10 @@ bool Application::realizeWidget( void )
     
   // update
   qApp->processEvents();
-    
-  // try open file from argument
-  File file( _arguments().last() );
-  if( file.size() ) mainWindow().setLogbook( file );
+
+  // load file from arguments or recent files
+  QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
+  if( !filenames.isEmpty() ) mainWindow().setLogbook( File( qPrintable( filenames.front() ) ).expand() ); 
   else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) )
   { 
     splash_screen->close();
@@ -227,23 +228,18 @@ void Application::_exit( void )
 }
 
 //________________________________________________
-void Application::_processRequest( const ArgList& args )
+void Application::_processRequest( const CommandLineArguments& arguments )
 {
 
-  Debug::Throw() << "Application::_processRequest - " << args << endl;
-  
+  Debug::Throw(0) << "Application::_processRequest - arguments = " << qPrintable( arguments.join( " " ) ) << endl;
   if( main_window_ ) mainWindow().uniconifyAction().trigger();
 
-  // check argument. Last argument, if starting with a "-" is possibly a filename
-  string filename( args.last() );
-  
-  if( !filename.empty() ) 
-  {
-    ostringstream what;
-    what << "Accept request for file \"" << filename << "\" ?";
-    if( QuestionDialog( &mainWindow(), what.str().c_str() ).centerOnParent().exec() )
-    { mainWindow().setLogbook( recentFiles().add( filename ).file() ); }
-    
-  }
+  QStringList filenames( SERVER::ApplicationManager::commandLineParser( arguments ).orphans() );
+  if( filenames.isEmpty() ) return;
 
+  QString buffer;
+  QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
+  if( QuestionDialog( main_window_, buffer ).centerOnParent().exec() )
+  { mainWindow().setLogbook( File( qPrintable( filenames.front() ) ) ); }
+  
 }
