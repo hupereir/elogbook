@@ -71,7 +71,7 @@ int main (int argc, char *argv[])
   // load options
   string user( Util::user( ) );
   string host( Util::host() );
-  XmlOptions::get().add( "USER", Option( user+"@"+host, Option::NONE ) );
+  XmlOptions::get().set( "USER", Option( user+"@"+host, Option::NONE ) );
   
   // install default options
   installDefaultOptions();
