@@ -34,7 +34,6 @@
 #include <QBasicTimer>
 #include <QContextMenuEvent>
 #include <QSplitter>
-#include <QTimer>
 #include <QTimerEvent>
 
 #include "AskForSaveDialog.h"
