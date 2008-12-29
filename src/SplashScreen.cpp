@@ -191,7 +191,7 @@ void SplashScreen::resizeEvent( QResizeEvent* event )
 {
   
   TRANSPARENCY::TransparentWidget::resizeEvent( event );
-  if( round_corners_ ) setMask( RoundedRegion( rect() ) );
+  if( round_corners_ ) setMask( RoundedRegion( rect(), RoundedRegion::ALL ) );
 }
 
 //________________________________________________
