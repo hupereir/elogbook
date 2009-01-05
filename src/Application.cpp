@@ -231,7 +231,7 @@ void Application::_exit( void )
 void Application::_processRequest( const CommandLineArguments& arguments )
 {
 
-  Debug::Throw(0) << "Application::_processRequest - arguments = " << qPrintable( arguments.join( " " ) ) << endl;
+  Debug::Throw() << "Application::_processRequest - arguments = " << qPrintable( arguments.join( " " ) ) << endl;
   if( main_window_ ) mainWindow().uniconifyAction().trigger();
 
   QStringList filenames( SERVER::ApplicationManager::commandLineParser( arguments ).orphans() );
