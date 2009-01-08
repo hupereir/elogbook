@@ -30,12 +30,12 @@
 */
 
 #include "Attachment.h"
+#include "Command.h"
 #include "Debug.h"
 #include "File.h"
 #include "HtmlTextNode.h"
 #include "LogEntry.h"
 #include "Str.h"
-#include "Util.h"
 #include "XmlDef.h"
 #include "XmlOptions.h"
 #include "XmlString.h"
@@ -197,7 +197,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   source_file_ = fullname;
 
   // for other process command
-  QStringList command_string;
+  ::Command command_string;
   switch (command) {
     
     case COPY:
@@ -249,7 +249,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   }
   
   // process copy
-  Util::run( command_string );  
+  command_string.run();  
   
   // update long/short filenames.
   _setFile( destname );

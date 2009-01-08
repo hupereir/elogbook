@@ -38,6 +38,7 @@
 #include "Attachment.h"
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
+#include "Command.h"
 #include "CustomFileDialog.h"
 #include "Debug.h"
 #include "DeleteAttachmentDialog.h"
@@ -56,7 +57,6 @@
 #include "Singleton.h"
 #include "TreeView.h"
 #include "InformationDialog.h"
-#include "Util.h"
 
 using namespace std;
 
@@ -228,7 +228,7 @@ void AttachmentFrame::_new( void )
         ostringstream o; 
         o << "Directory \"" << full_directory << "\" does not exists. Create ?";
         if( QuestionDialog( this, o.str().c_str() ).exec() ) 
-        { Util::run( QStringList() << "mkdir" << full_directory.c_str() ); }
+        { ( Command( "mkdir" ) << full_directory.c_str() ).run(); }
       }
     }
   }
@@ -532,7 +532,7 @@ void AttachmentFrame::_open( void )
     
     if( dialog.exec() == QDialog::Rejected ) return;
     if( dialog.action() == OpenAttachmentDialog::OPEN )
-    { Util::run( QStringList() << dialog.command().c_str() << fullname.c_str() ); } 
+    { ( Command( dialog.command().c_str() ) << fullname.c_str() ).run(); } 
     else 
     {
   
@@ -554,7 +554,7 @@ void AttachmentFrame::_open( void )
       if( destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) return;
       
       // make the copy
-      Util::run( QStringList() << "cp" << fullname.c_str() << destname.c_str() );
+      ( Command("cp") << fullname.c_str() << destname.c_str() ).run();
       
     }
   

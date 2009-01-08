@@ -40,6 +40,7 @@
 #include "AttachmentFrame.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
+#include "Command.h"
 #include "TextEditor.h"
 #include "CustomToolBar.h"
 #include "EditionWindow.h"
@@ -932,7 +933,7 @@ void EditionWindow::_viewHtml( void )
   if( command.empty() ) return;
 
   // execute command
-  Util::run( QStringList() << command.c_str() << file.c_str() );
+  ( Command( command.c_str() ) << file.c_str() ).run();
 
   return;
 }

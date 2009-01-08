@@ -124,8 +124,8 @@ class ViewHtmlLogbookDialog: public CustomDialog
   { command_->setFile( file ); } 
   
   //! command
-  std::string command( void ) const
-  { return qPrintable( command_->editor().text() ); }
+  QString command( void ) const
+  { return command_->editor().text(); }
   
   //! file
   void setFile( const File& file )

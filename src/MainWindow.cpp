@@ -35,6 +35,7 @@
 #include "AttachmentWindow.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
+#include "Command.h"
 #include "LineEditor.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
@@ -2543,11 +2544,7 @@ void MainWindow::_viewHtml( void )
   out.close();
 
   // retrieve command
-  string command( dialog.command() );
-  if( command.empty() ) return;
-
-  // execute command
-  Util::run( QStringList() << command.c_str() << file.c_str() );
+  if( !dialog.command().isEmpty() ) ( Command( dialog.command() ) << file.c_str() ).run();
   return;
 }
 
