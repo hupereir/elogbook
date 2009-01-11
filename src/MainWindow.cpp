@@ -356,7 +356,6 @@ bool MainWindow::setLogbook( File file )
   logEntryList().setFocus();
   
   Debug::Throw( "MainWindow::setLogbook - entry selected.\n" );
-
   
   // see if logbook has parent file
   if( logbook()->parentFile().size() ) {
@@ -384,7 +383,8 @@ bool MainWindow::setLogbook( File file )
   }
   
   // add opened file to OpenPrevious mennu.
-  Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+  if( !logbook()->file().empty() ) 
+  { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
   
   ignore_warnings_ = false;
   return true;
@@ -745,7 +745,7 @@ void MainWindow::save( const bool& confirm_entries )
   statusBar().showLabel();
   
   // add new file to openPreviousMenu
-  Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+  if( !logbook()->file().empty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -1355,7 +1355,7 @@ bool MainWindow::_saveAs( File default_file )
   logbook()->setModifiedRecursive( false );
 
   // add new file to openPreviousMenu
-  Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+  if( !logbook()->file().empty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
