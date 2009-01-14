@@ -2664,6 +2664,7 @@ void MainWindow::_startEntryEdition( void )
   index = _logEntryModel().index( index.row(), LogEntryModel::TITLE );
   
   // enable model edition
+  _logEntryModel().setEditionIndex( index );
   _logEntryModel().setEditionEnabled( true );
   
   // edit item
