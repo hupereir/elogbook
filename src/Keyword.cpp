@@ -61,8 +61,7 @@ std::string Keyword::current( void ) const
 {
   
   size_t pos = value_.rfind( "/" );
-  assert( pos != string::npos );
-  return value_.substr( pos+1, value_.length() - pos - 1 );
+  return( pos == string::npos ) ? value_:value_.substr( pos+1, value_.length() - pos - 1 );
   
 }
 

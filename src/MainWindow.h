@@ -202,6 +202,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   QAction& editEntryAction( void ) const
   { return *edit_entry_action_; }
 
+  //! edit entry action
+  QAction& editEntryTitleAction( void ) const
+  { return *edit_entry_title_action_; }
+
   //! delete entry action
   QAction& deleteEntryAction( void ) const
   { return *delete_entry_action_; }
@@ -610,6 +614,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   
   //! edit entry
   QAction* edit_entry_action_;
+
+  //! edit entry title
+  QAction* edit_entry_title_action_;
   
   //! delete entry
   QAction* delete_entry_action_;

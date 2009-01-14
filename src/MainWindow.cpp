@@ -181,6 +181,7 @@ MainWindow::MainWindow( QWidget *parent ):
   while the list has focus
   */
   keywordList().addAction( &deleteKeywordAction() );
+  keywordList().addAction( &editKeywordAction() );
   
   // right box for entries and buttons
   QWidget* right = new QWidget();
@@ -237,10 +238,12 @@ MainWindow::MainWindow( QWidget *parent ):
   while the list has focus
   */
   logEntryList().addAction( &deleteEntryAction() );
+  logEntryList().addAction( &editEntryTitleAction() );
   
   // create popup menu for list
   logEntryList().menu().addAction( &newEntryAction() );
   logEntryList().menu().addAction( &editEntryAction() ); 
+  logEntryList().menu().addAction( &editEntryTitleAction() ); 
   logEntryList().menu().addAction( &entryKeywordAction() );
   logEntryList().menu().addAction( &deleteEntryAction() ); 
   logEntryList().menu().addAction( &entryColorAction() );
@@ -263,7 +266,8 @@ MainWindow::MainWindow( QWidget *parent ):
   // configuration
   connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
-  
+  _updateKeywordActions();
+  _updateEntryActions();
 }
 
 //___________________________________________________________
@@ -387,8 +391,11 @@ bool MainWindow::setLogbook( File file )
   { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
   
   ignore_warnings_ = false;
-  return true;
+
+  _updateKeywordActions();
+  _updateEntryActions();
   
+  return true;  
 }
 
 //_____________________________________________
@@ -932,7 +939,11 @@ void MainWindow::timerEvent( QTimerEvent* event )
   } else if(event->timerId() == edition_timer_.timerId() ) {
   
     edition_timer_.stop();
-    _startEntryEdition();
+    
+    // check if current index is valid and was 'double-clicked'
+    QModelIndex index( logEntryList().currentIndex() );
+    if( index.isValid() && index == _logEntryModel().editionIndex() ) 
+    { _startEntryEdition(); }
 
   } else if(event->timerId() == autosave_timer_.timerId() ) {
     
@@ -994,7 +1005,8 @@ void MainWindow::_installActions( void )
 
   addAction( edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename keyword", this ) );
   edit_keyword_action_->setToolTip( "Rename selected keyword" );
-  edit_keyword_action_->setShortcut( Qt::CTRL+Qt::Key_K );
+  edit_keyword_action_->setShortcut( Qt::Key_F2 );
+  edit_keyword_action_->setShortcutContext( Qt::WidgetShortcut );  
   connect( edit_keyword_action_, SIGNAL( triggered() ), SLOT( _renameKeyword() ) );
   
   /*
@@ -1013,16 +1025,22 @@ void MainWindow::_installActions( void )
   new_entry_action_->setShortcut( Qt::CTRL+Qt::Key_N );
   connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
-  edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit selected entries", this );
+  edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit entries", this );
   edit_entry_action_->setToolTip( "Edit selected entries" );
   connect( edit_entry_action_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
+
+  edit_entry_title_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename entry", this );
+  edit_entry_title_action_->setToolTip( "Edit selected entry title" );
+  edit_entry_title_action_->setShortcut( Qt::Key_F2 );
+  edit_entry_title_action_->setShortcutContext( Qt::WidgetShortcut );  
+  connect( edit_entry_title_action_, SIGNAL( triggered() ), SLOT( _startEntryEdition() ) );
 
   /*
   delete entry action
   it is associated to the Qt::Key_Delete shortcut
   but the later is enabled only if the KeywordList has focus.
   */
-  delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete selected entries", this );
+  delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete entries", this );
   delete_entry_action_->setToolTip( "Delete selected entries" );
   delete_entry_action_->setShortcut( Qt::Key_Delete );
   delete_entry_action_->setShortcutContext( Qt::WidgetShortcut );  
@@ -2108,30 +2126,16 @@ void MainWindow::_renameKeyword( void )
   Debug::Throw("MainWindow::_renameKeyword.\n" );
   
   //! check that keywordlist has selected item
-  if( !keywordList().selectionModel()->currentIndex().isValid() )
+  QModelIndex current( keywordList().selectionModel()->currentIndex() );
+  if( !current.isValid() )
   {
     InformationDialog( this, "no keyword selected. Request canceled" ).exec();
     return;
   }
 
-  // get current selected keyword
-  Keyword keyword( _keywordModel().get( keywordList().selectionModel()->currentIndex() ) );
-      
-  //! create dialog
-  EditKeywordDialog dialog( this );
-  dialog.setWindowTitle( "Edit keyword" );
-
-  const KeywordModel::List& keywords( _keywordModel().children() );
-  for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
-  { dialog.add( *iter ); }
-  dialog.setKeyword( keyword );
-  
-  // map dialog
-  if( !dialog.centerOnParent().exec() ) return;
-
-  // change keyword for all entries that match the old one
-  _renameKeyword( keyword, dialog.keyword() );
-  
+  keywordList().edit( current );
+  return;
+    
 }
 
 //____________________________________________
@@ -2382,9 +2386,10 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
 void MainWindow::_updateKeywordActions( void )
 {
   Debug::Throw( "MainWindow::_updateKeywordActions.\n" );
-  bool has_selection( !keywordList().selectionModel()->selectedRows().empty() );  
-  editKeywordAction().setEnabled( has_selection );
-  deleteKeywordAction().setEnabled( has_selection );
+  
+  deleteKeywordAction().setEnabled( !keywordList().selectionModel()->selectedRows().empty() );
+  editKeywordAction().setEnabled( keywordList().selectionModel()->currentIndex().isValid() );
+  
   return;
 }
 
@@ -2397,6 +2402,9 @@ void MainWindow::_updateEntryActions( void )
   deleteEntryAction().setEnabled( has_selection );
   entryColorAction().setEnabled( has_selection );
   entryKeywordAction().setEnabled( has_selection );
+  
+  editEntryTitleAction().setEnabled( logEntryList().selectionModel()->currentIndex().isValid() );
+  
   return;
 }
 
@@ -2644,9 +2652,17 @@ void MainWindow::_startEntryEdition( void )
 {   
 
   Debug::Throw( "MainWindow::_startEntryEdition\n" );
-  QModelIndex index( logEntryList().currentIndex() );
-  if( !( index.isValid() && index == _logEntryModel().editionIndex() ) ) return;
 
+  // make sure title column is visible
+  if( logEntryList().isColumnHidden( LogEntryModel::TITLE ) ) return;
+  
+  // get current index and check validity
+  QModelIndex index( logEntryList().currentIndex() );
+  if( !index.isValid() ) return;
+
+  // make sure 'title' index is selected
+  index = _logEntryModel().index( index.row(), LogEntryModel::TITLE );
+  
   // enable model edition
   _logEntryModel().setEditionEnabled( true );
   
