@@ -74,7 +74,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // attachment editors
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - attachments.\n" );
-  QWidget* page = &addPage( "Attachments" );
+  QWidget* page = &addPage( "Attachments", "System dependent commands used to edit attachments" );
   page->layout()->addWidget( box = new QGroupBox( "Editors", page ));
 
   GridLayout* grid_layout = new GridLayout();
@@ -120,7 +120,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // listview configuration
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - lists.\n" );
-  page = &addPage( "List configuration" );  
+  page = &addPage( "List configuration", "Visible columns in logbook keywords and entries lists" );  
   TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
     page, 
     &Singleton::get().application<Application>()->mainWindow().logEntryList(), 
@@ -141,7 +141,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // toolbars
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - toolbars.\n" );
-  page = &addPage( "Toolbars" );
+  page = &addPage( "Toolbars", "Toolbars visibility and location" );
   box = new QGroupBox( "Toolbars", page );
   page->layout()->addWidget( box );
 
@@ -199,7 +199,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // colors
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - colors.\n" );
-  page = &addPage( "Colors" ); 
+  page = &addPage( "Colors", "Color settings for entry tagging and text highlighting" ); 
   box = new QGroupBox( "Logbook entry colors", page );
   box->setLayout( new QVBoxLayout() );
   box->layout()->setMargin(5);
@@ -223,7 +223,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // auto save
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - backup.\n" );
-  page = &addPage( "Backup" );
+  page = &addPage( "Backup", "Logbook backup configuration" );
   box = new QGroupBox( "Auto save", page );
   page->layout()->addWidget( box );
 
@@ -275,7 +275,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   // spelling
   #if WITH_ASPELL
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - spellcheck.\n" );
-  page = &addPage( "Spell checking" );
+  page = &addPage( "Spell checking", "Spell checking configuration" );
   SpellCheckConfiguration* spell_config = new SpellCheckConfiguration( page );
   page->layout()->addWidget( spell_config );
   addOptionWidget( spell_config );
@@ -286,7 +286,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // splash screen
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - splash screen.\n" );
-  page = &addPage( "Splash screen" );
+  page = &addPage( "Splash screen", "Splash screen appearance" );
   
   box = new QGroupBox( "", page );
   box->setLayout( new QVBoxLayout() );
@@ -313,7 +313,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // misc
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
-  page = &addPage( "Misc" );
+  page = &addPage( "Misc", "Additional unsorted settings" );
 
   // server configuration
   SERVER::ServerConfiguration* server_configuration;
