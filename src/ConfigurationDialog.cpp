@@ -310,31 +310,15 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   SVG::SvgConfiguration* svg_configuration( new SVG::SvgConfiguration( page ) );
   page->layout()->addWidget( svg_configuration);
   addOptionWidget( svg_configuration );
-  
-  // server configuration
-  SERVER::ServerConfiguration* server_configuration;
-
-  page = &addPage( "Server" );
-  page->layout()->addWidget( server_configuration = new SERVER::ServerConfiguration( page ));
-  addOptionWidget( server_configuration );
 
   // misc
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
   page = &addPage( "Misc" );
-  
-  box = new QGroupBox( "Misc", page );
-  box->setLayout( new QVBoxLayout() );
-  box->layout()->setSpacing(5);
-  box->layout()->setMargin(5);
-  page->layout()->addWidget( box );
-  
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show menu", box, "SHOW_EDITFRAME_MENU" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Show/hide menu in editor window" );
-  
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Case sensitive", box, "CASE_SENSITIVE" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Toggle case sensitive text search" );
+
+  // server configuration
+  SERVER::ServerConfiguration* server_configuration;
+  page->layout()->addWidget( server_configuration = new SERVER::ServerConfiguration( page, "Server configuration" ));
+  addOptionWidget( server_configuration );
   
   page->layout()->addWidget( box = new QGroupBox( "Recent files", page ) );  
    
@@ -357,7 +341,21 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   checkbox->setToolTip( "Sort files by date rather than name in Open Previous menu." );
   addOptionWidget( checkbox );
   new QWidget( box );
-        
+  
+  box = new QGroupBox( "Misc", page );
+  box->setLayout( new QVBoxLayout() );
+  box->layout()->setSpacing(5);
+  box->layout()->setMargin(5);
+  page->layout()->addWidget( box );
+  
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Show menu", box, "SHOW_EDITFRAME_MENU" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "Show/hide menu in editor window" );
+  
+  box->layout()->addWidget( checkbox = new OptionCheckBox( "Case sensitive", box, "CASE_SENSITIVE" ) );
+  addOptionWidget( checkbox );
+  checkbox->setToolTip( "Toggle case sensitive text search" );
+
   // load initial configuration
   _read();
   
