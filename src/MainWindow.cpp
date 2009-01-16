@@ -2402,8 +2402,9 @@ void MainWindow::_updateEntryActions( void )
   deleteEntryAction().setEnabled( has_selection );
   entryColorAction().setEnabled( has_selection );
   entryKeywordAction().setEnabled( has_selection );
+  editEntryTitleAction().setEnabled( has_selection );
   
-  editEntryTitleAction().setEnabled( logEntryList().selectionModel()->currentIndex().isValid() );
+  //editEntryTitleAction().setEnabled( logEntryList().selectionModel()->currentIndex().isValid() );
   
   return;
 }
