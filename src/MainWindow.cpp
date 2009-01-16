@@ -128,8 +128,8 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // keyword actions
   keyword_toolbar_->addAction( &newKeywordAction() );
-  keyword_toolbar_->addAction( &editKeywordAction() );
   keyword_toolbar_->addAction( &deleteKeywordAction() );
+  keyword_toolbar_->addAction( &editKeywordAction() );
   Debug::Throw() << "MainWindow::MainWindow - keyword toolbar created." << endl;
   
   // create keyword list
@@ -166,8 +166,8 @@ MainWindow::MainWindow( QWidget *parent ):
   // popup menu for keyword list
   keywordList().menu().addAction( &newEntryAction() );
   keywordList().menu().addAction( &newKeywordAction() ); 
-  keywordList().menu().addAction( &editKeywordAction() );
   keywordList().menu().addAction( &deleteKeywordAction() );
+  keywordList().menu().addAction( &editKeywordAction() );
 
   connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedKeywords() ) );
   connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeExpandedKeywords() ) );
@@ -242,8 +242,8 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // create popup menu for list
   logEntryList().menu().addAction( &newEntryAction() );
-  logEntryList().menu().addAction( &editEntryAction() ); 
   logEntryList().menu().addAction( &editEntryTitleAction() ); 
+  logEntryList().menu().addAction( &editEntryAction() ); 
   logEntryList().menu().addAction( &entryKeywordAction() );
   logEntryList().menu().addAction( &deleteEntryAction() ); 
   logEntryList().menu().addAction( &entryColorAction() );
@@ -1003,7 +1003,7 @@ void MainWindow::_installActions( void )
   new_keyword_action_->setToolTip( "Create a new keyword" );
   connect( new_keyword_action_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
 
-  addAction( edit_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename keyword", this ) );
+  addAction( edit_keyword_action_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename keyword", this ) );
   edit_keyword_action_->setToolTip( "Rename selected keyword" );
   edit_keyword_action_->setShortcut( Qt::Key_F2 );
   edit_keyword_action_->setShortcutContext( Qt::WidgetShortcut );  
@@ -1029,7 +1029,7 @@ void MainWindow::_installActions( void )
   edit_entry_action_->setToolTip( "Edit selected entries" );
   connect( edit_entry_action_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
 
-  edit_entry_title_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Rename entry", this );
+  edit_entry_title_action_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename entry", this );
   edit_entry_title_action_->setToolTip( "Edit selected entry title" );
   edit_entry_title_action_->setShortcut( Qt::Key_F2 );
   edit_entry_title_action_->setShortcutContext( Qt::WidgetShortcut );  
