@@ -94,8 +94,6 @@ void installDefaultOptions( void )
   XmlOptions::get().set( "TRANSPARENCY_OPACITY", Option( "204", "widget Composite opacity (in [0,255])" ) );
   XmlOptions::get().set( "TRANSPARENCY_HIGHLIGHT_COLOR", Option( "#000000", "highlight color") );
   XmlOptions::get().set( "TRANSPARENCY_HIGHLIGHT_INTENSITY", Option( "0", "highlight intensity (in [0,255])" ) );
-  //XmlOptions::get().set( "TRANSPARENCY_SHADOW_COLOR", Option( "black", "text shadow color" ) );
-  //XmlOptions::get().set( "TRANSPARENCY_SHADOW_OFFSET", Option( "1", "offset between text shadow and text" ) );
   XmlOptions::get().set( "TRANSPARENCY_TINT_COLOR", Option( "#000000", "tint color") );
   XmlOptions::get().set( "TRANSPARENCY_TINT_INTENSITY", Option( "0", "tint intensity (in [0,255])" ) );
 
@@ -108,7 +106,7 @@ void installDefaultOptions( void )
   XmlOptions::get().set( "SEARCH_PANEL_LOCATION", Option( "bottom" , "toolbar location" ) );
 
   XmlOptions::get().set( "SEARCH_PANEL_ICON_SIZE", "16" , "text label in tool buttons" ); 
-  XmlOptions::get().set( "SEARCH_PANEL_TEXT_POSITION", "2" , "text label in tool buttons" ); 
+  XmlOptions::get().set( "SEARCH_PANEL_TEXT_POSITION", "0" , "text label in tool buttons" ); 
   
   XmlOptions::get().set( "MAIN_TOOLBAR", Option( "1" , "toolbar visibility" ) );
   XmlOptions::get().set( "FORMAT_TOOLBAR", Option( "1" , "toolbar visibility" ) );
