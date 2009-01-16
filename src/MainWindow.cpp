@@ -100,9 +100,7 @@ MainWindow::MainWindow( QWidget *parent ):
   // search panel
   search_panel_ = new SearchPanel( "Search panel", this, "SEARCH_PANEL" );
   connect( &searchPanel(), SIGNAL( selectEntries( QString, unsigned int ) ), SLOT( selectEntries( QString, unsigned int ) ) );
-  connect( &searchPanel(), SIGNAL( showAllEntries() ), SLOT( showAllEntries() ) );
-  // layout->addWidget( search_panel_ );  
-  
+  connect( &searchPanel(), SIGNAL( showAllEntries() ), SLOT( showAllEntries() ) );  
   searchPanel().visibilityAction().setShortcut( Qt::CTRL+Qt::Key_F );
   addAction( &searchPanel().visibilityAction() );
   

@@ -106,6 +106,9 @@ void installDefaultOptions( void )
 
   XmlOptions::get().set( "SEARCH_PANEL", Option( "0" , "toolbar visibility" ) );
   XmlOptions::get().set( "SEARCH_PANEL_LOCATION", Option( "bottom" , "toolbar location" ) );
+
+  XmlOptions::get().set( "SEARCH_PANEL_ICON_SIZE", "16" , "text label in tool buttons" ); 
+  XmlOptions::get().set( "SEARCH_PANEL_TEXT_POSITION", "2" , "text label in tool buttons" ); 
   
   XmlOptions::get().set( "MAIN_TOOLBAR", Option( "1" , "toolbar visibility" ) );
   XmlOptions::get().set( "FORMAT_TOOLBAR", Option( "1" , "toolbar visibility" ) );

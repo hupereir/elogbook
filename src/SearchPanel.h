@@ -36,6 +36,7 @@
 #include <map>
 
 #include "CustomToolBar.h"
+#include "IconSize.h"
 
 class CustomComboBox;
 
@@ -79,12 +80,22 @@ class SearchPanel: public CustomToolBar
  
   //! configuration
   void _updateConfiguration( void );
+ 
+  //! toolbar text position
+  void _updateToolButtonStyle( Qt::ToolButtonStyle );
+ 
+  //! toolbar text position
+  void _updateToolButtonIconSize( IconSize::Size );
 
   //! save configuration
-  void _saveConfiguration( void );
+  void _saveMask( void );
   
   //! send SelectEntries request
   void _selectionRequest( void );
+
+  //! raise menu
+  /*! it is a clone of the main window menu, but connected to different slots */
+  void _raiseMenu( const QPoint& point );
   
   private:
   

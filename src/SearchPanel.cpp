@@ -38,9 +38,14 @@
 #include "Debug.h"
 #include "Icons.h"
 #include "IconEngine.h"
+#include "IconSizeMenu.h"
 #include "LineEditor.h"
+#include "MainWindow.h"
+#include "QtUtil.h"
 #include "SearchPanel.h"
 #include "Singleton.h"
+#include "ToolBarMenu.h"
+#include "ToolButtonStyleMenu.h"
 #include "XmlOptions.h"
 
 using namespace std;
@@ -50,7 +55,10 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const std::stri
   CustomToolBar( title, parent, option_name )
 {
   Debug::Throw( "SearchPanel::SearchPanel.\n" );
-    
+
+  setContextMenuPolicy( Qt::CustomContextMenu );  
+  connect( this, SIGNAL( customContextMenuRequested( const QPoint& ) ), SLOT( _raiseMenu( const QPoint& ) ) );  
+
   // find selection button
   QPushButton* button;
   addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), "&Find", this ) );
@@ -75,17 +83,26 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const std::stri
   addWidget( checkboxes_[COLOR] = new QCheckBox( "&Color", this ) );
   checkboxes_[TEXT]->setChecked( true );
 
+  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); iter++ )
+  { connect( iter->second, SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
+  
   // show_all button
   addWidget( button = new QPushButton( "&Show All", this ) );
   connect( button, SIGNAL( clicked() ), this, SIGNAL( showAllEntries() ) ); 
   button->setToolTip( "Show all logbook entries" );
     
+    
+  // close button
+  QAction* hide_action;
+  addAction( hide_action = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), "&Close", this ) );
+  connect( hide_action, SIGNAL( triggered() ), SLOT( hide() ) );
+  connect( hide_action, SIGNAL( triggered() ), this, SIGNAL( showAllEntries() ) ); 
+  hide_action->setToolTip( "Show all entries and hide search bar." );
+
   // configuration
   connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  connect( Singleton::get().application(), SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
-  connect( qApp, SIGNAL( aboutToQuit() ), SLOT( _saveConfiguration() ) );
   _updateConfiguration();
-  
+
 }
 
 //_______________________________________________________________
@@ -104,29 +121,57 @@ void SearchPanel::_updateConfiguration( void )
 
   Debug::Throw( "SearchPanel::_updateConfiguration.\n" );
   
+  // icon size
+  IconSize icon_size( IconSize( this, (IconSize::Size)XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) ) );
+  setIconSize( icon_size );
+  
+  // text label for toolbars
+  Qt::ToolButtonStyle style( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
+  setToolButtonStyle( style );
+  
   // load mask
-  if( XmlOptions::get().find( "SEARCHPANEL_MASK" ) )
+  if( XmlOptions::get().find( "SEARCH_PANEL_MASK" ) )
   {
-    unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCHPANEL_MASK" ) );
+    unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
     { iter->second->setChecked( mask & iter->first ); }
   }
   
 }
   
+
+//____________________________________________________________
+void SearchPanel::_updateToolButtonStyle( Qt::ToolButtonStyle style )
+{
+  
+  Debug::Throw( "SearchPanel::_updateToolButtonStyle.\n" );
+  XmlOptions::get().set<int>( "SEARCH_PANEL_TEXT_POSITION", (int)style );
+  _updateConfiguration();
+  
+}
+
+//____________________________________________________________
+void SearchPanel::_updateToolButtonIconSize( IconSize::Size size )
+{
+  
+  Debug::Throw( "SearchPanel::_updateToolButtonIconSize.\n" );
+  XmlOptions::get().set<int>( "SEARCH_PANEL_ICON_SIZE", size );
+  _updateConfiguration();
+
+}
+
 //___________________________________________________________
-void SearchPanel::_saveConfiguration( void )
+void SearchPanel::_saveMask( void )
 {
 
-  Debug::Throw( "SearchPanel::_saveConfiguration.\n" );
-  // XmlOptions::get().set<bool>( "SHOW_SEARCHPANEL", visibilityAction().isChecked() );
+  Debug::Throw( "SearchPanel::_saveMask.\n" );
 
   // store mask
   unsigned int mask(0);
   for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
   { if( iter->second->isChecked() ) mask |= iter->first; }
   
-  XmlOptions::get().set<unsigned int>( "SEARCHPANEL_MASK", mask );
+  XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
 
 }
 
@@ -142,5 +187,28 @@ void SearchPanel::_selectionRequest( void )
   
   // text selection
   emit selectEntries( _editor().currentText(), mode );
+
+}
+
+
+//______________________________________________________________________
+void SearchPanel::_raiseMenu( const QPoint& point )
+{  
+  Debug::Throw( "SearchPanel::_raiseMenu.\n" );
+  
+  MainWindow* mainwindow( dynamic_cast<MainWindow*>( window() ) );
+  if( !mainwindow ) return;
+  ToolBarMenu& menu( mainwindow->toolBarMenu( this ) );
+
+  menu.toolButtonStyleMenu().select( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
+  menu.iconSizeMenu().select( (IconSize::Size) XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) );
+  
+  CustomToolBar::connect( &menu.toolButtonStyleMenu(), SIGNAL( styleSelected( Qt::ToolButtonStyle ) ), SLOT( _updateToolButtonStyle( Qt::ToolButtonStyle ) ) );
+  CustomToolBar::connect( &menu.iconSizeMenu(), SIGNAL( iconSizeSelected( IconSize::Size ) ), SLOT( _updateToolButtonIconSize( IconSize::Size ) ) );  
+
+  // move and show menu
+  menu.adjustSize();
+  QtUtil::moveWidget( &menu, mapToGlobal( point ) );
+  menu.show();
 
 }
