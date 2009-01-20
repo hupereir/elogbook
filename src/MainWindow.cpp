@@ -61,6 +61,7 @@
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
 #include "Singleton.h"
+#include "TransitionWidget.h"
 #include "Util.h"
 #include "ViewHtmlLogbookDialog.h"
 #include "XmlOptions.h"
@@ -215,6 +216,12 @@ MainWindow::MainWindow( QWidget *parent ):
   logEntryList().setDragEnabled(true); 
   logEntryList().setMaskOptionName( "ENTRY_LIST_MASK" );
   
+  // transition widget
+  transition_widget_ = new TransitionWidget( &logEntryList() );
+  _transitionWidget().setMode( TransitionWidget::FADE_FIRST );
+  _transitionWidget().hide();
+  connect( &_transitionWidget().timeLine(), SIGNAL( finished() ), &_transitionWidget(), SLOT( hide() ) );
+    
   // the use of a custom delegate unfortunately disable the 
   // nice selection appearance of the oxygen style.
   logEntryList().setItemDelegate( new TextEditionDelegate( this ) );
@@ -1122,9 +1129,17 @@ void MainWindow::_resetLogEntryList( void )
   
   Debug::Throw( "MainWindow::_resetLogEntryList.\n" );
 
+  // here one should record the current logEntry appearance to a transition widget, and draw it
+  if( _transitionWidget().enabled() )
+  {
+    _transitionWidget().resize( logEntryList().size() );
+    _transitionWidget().setStartWidget( &logEntryList() );
+    _transitionWidget().show();
+  }
+  
   // clear list of entries
   _logEntryModel().clear();
-  
+    
   if( logbook_ )
   {
      
@@ -1135,7 +1150,7 @@ void MainWindow::_resetLogEntryList( void )
     
     _logEntryModel().add( model_entries );
     
-  } 
+  }
   
   // loop over associated editionwindows
   // update navigation buttons
@@ -1153,6 +1168,9 @@ void MainWindow::_resetLogEntryList( void )
     
   }
 
+  // here one should start fading the transition widget
+  if( _transitionWidget().enabled() ) _transitionWidget().start();
+  
   return;
   
 }

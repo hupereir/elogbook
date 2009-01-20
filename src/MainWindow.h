@@ -50,13 +50,14 @@
 
 #include "TreeView.h"
 
+class ColorMenu;
 class CustomToolBar;
 class EditionWindow;
 class Logbook;
 class Menu;
 class SearchPanel;
 class SelectionStatusBar;
-class ColorMenu;
+class TransitionWidget;
 
 //! display a set of log entries, allows selection of one
 class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
@@ -328,6 +329,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   LogEntryModel& _logEntryModel( void )
   { return entry_model_; }
     
+  //! transition widget
+  TransitionWidget& _transitionWidget( void ) 
+  { return *transition_widget_; }
+  
   //! clear list and reinitialize from logbook entries
   virtual void _resetLogEntryList( void );
 
@@ -520,6 +525,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! logEntry list
   TreeView* entry_list_;
 
+  //! transition widget
+  TransitionWidget* transition_widget_;
+  
   //! local TreeView to store size hint
   class KeywordList: public TreeView
   {
