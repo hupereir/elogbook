@@ -32,8 +32,7 @@
    \date $Date$
 */
 
-#include <QStackedWidget>
-
+#include "AnimatedStackedWidget.h"
 #include "ProgressBar.h"
 #include "StatusBar.h"
 
@@ -70,7 +69,7 @@ class SelectionStatusBar: public StatusBar
   protected:
   
   //! stack widget
-  QStackedWidget& _stack( void ) const
+  AnimatedStackedWidget& _stack( void ) const
   {
     assert( stack_ );
     return *stack_;
@@ -86,7 +85,7 @@ class SelectionStatusBar: public StatusBar
   private:
   
   //! stack widget
-  QStackedWidget* stack_;
+  AnimatedStackedWidget* stack_;
   
   //! progress bar
   ProgressBar* progress_;

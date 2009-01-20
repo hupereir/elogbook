@@ -40,7 +40,7 @@ SelectionStatusBar::SelectionStatusBar( QWidget* parent ):
 {
   Debug::Throw( "SelectionStatusBar::SelectionStatusBar.\n" );
   
-  addPermanentWidget( stack_ = new QStackedWidget( this ), 1 );
+  addPermanentWidget( stack_ = new AnimatedStackedWidget( this ), 1 );
   _stack().addWidget( label_ = new StatusBarLabel() );
   _stack().addWidget( progress_ = new ProgressBar() );
   addClock();
