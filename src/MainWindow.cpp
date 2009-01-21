@@ -218,7 +218,8 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // transition widget
   transition_widget_ = new TransitionWidget( &logEntryList() );
-  _transitionWidget().setMode( TransitionWidget::FADE_FIRST );
+  _transitionWidget().setFadingMode( TransitionWidget::FADE_FIRST );
+  _transitionWidget().setCopyMode( TransitionWidget::GRAB );
   _transitionWidget().hide();
   connect( &_transitionWidget().timeLine(), SIGNAL( finished() ), &_transitionWidget(), SLOT( hide() ) );
     
