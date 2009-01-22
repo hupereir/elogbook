@@ -61,7 +61,6 @@
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
 #include "Singleton.h"
-#include "TransitionWidget.h"
 #include "Util.h"
 #include "ViewHtmlLogbookDialog.h"
 #include "XmlOptions.h"
@@ -210,17 +209,12 @@ MainWindow::MainWindow( QWidget *parent ):
   entry_toolbar_->addAction( &viewHtmlAction() );
    
   // create logEntry list
-  v_layout->addWidget( entry_list_ = new TreeView( right ), 1 );
+  v_layout->addWidget( entry_list_ = new AnimatedTreeView( right ), 1 );
   logEntryList().setModel( &_logEntryModel() );
   logEntryList().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   logEntryList().setDragEnabled(true); 
   logEntryList().setMaskOptionName( "ENTRY_LIST_MASK" );
   
-  // transition widget
-  transition_widget_ = new TransitionWidget( &logEntryList() );
-  _transitionWidget().hide();
-  connect( &_transitionWidget().timeLine(), SIGNAL( finished() ), &_transitionWidget(), SLOT( hide() ) );
-    
   // the use of a custom delegate unfortunately disable the 
   // nice selection appearance of the oxygen style.
   logEntryList().setItemDelegate( new TextEditionDelegate( this ) );
@@ -1127,14 +1121,9 @@ void MainWindow::_resetLogEntryList( void )
 {
   
   Debug::Throw( "MainWindow::_resetLogEntryList.\n" );
-
-  // here one should record the current logEntry appearance to a transition widget, and draw it
-  if( _transitionWidget().enabled() )
-  {
-    _transitionWidget().resize( logEntryList().size() );
-    _transitionWidget().setStartWidget( &logEntryList() );
-    _transitionWidget().show();
-  }
+  
+  // animation
+  logEntryList().initializeAnimation();
   
   // clear list of entries
   _logEntryModel().clear();
@@ -1167,8 +1156,8 @@ void MainWindow::_resetLogEntryList( void )
     
   }
 
-  // here one should start fading the transition widget
-  if( _transitionWidget().enabled() ) _transitionWidget().start();
+  // animation
+  logEntryList().startAnimation();
   
   return;
   

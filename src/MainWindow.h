@@ -41,14 +41,13 @@
 #include "BaseMainWindow.h"
 #include "Debug.h"
 
-
 #include "FileRecord.h"
 #include "Key.h"
 #include "KeywordModel.h"
 #include "LogEntry.h"
 #include "LogEntryModel.h"
 
-#include "TreeView.h"
+#include "AnimatedTreeView.h"
 
 class ColorMenu;
 class CustomToolBar;
@@ -57,7 +56,6 @@ class Logbook;
 class Menu;
 class SearchPanel;
 class SelectionStatusBar;
-class TransitionWidget;
 
 //! display a set of log entries, allows selection of one
 class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
@@ -152,7 +150,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   { return *keyword_list_; }
    
   //! log entry list
-  virtual TreeView& logEntryList( void ) const
+  virtual AnimatedTreeView& logEntryList( void ) const
   { return *entry_list_; }
   
   //! current keyword
@@ -329,10 +327,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   LogEntryModel& _logEntryModel( void )
   { return entry_model_; }
     
-  //! transition widget
-  TransitionWidget& _transitionWidget( void ) 
-  { return *transition_widget_; }
-  
   //! clear list and reinitialize from logbook entries
   virtual void _resetLogEntryList( void );
 
@@ -523,11 +517,8 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   LogEntryModel entry_model_;
   
   //! logEntry list
-  TreeView* entry_list_;
+  AnimatedTreeView* entry_list_;
 
-  //! transition widget
-  TransitionWidget* transition_widget_;
-  
   //! local TreeView to store size hint
   class KeywordList: public TreeView
   {
