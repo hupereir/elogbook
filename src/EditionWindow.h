@@ -44,11 +44,9 @@
 #include <list>
 
 #include "AskForSaveDialog.h"
+#include "AnimatedLineEditor.h"
+#include "AnimatedTextEditor.h"
 #include "AttachmentFrame.h"
-
-#include "LineEditor.h"
-
-#include "TextEditor.h"
 #include "BaseMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
@@ -84,7 +82,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   public:
 
-  typedef LineEditor Editor;
+  typedef AnimatedLineEditor Editor;
     
   //! creator
   EditionWindow( QWidget* parent, bool read_only = true );
@@ -122,11 +120,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //@{
   
   //! retrieve active display
-  TextEditor& activeEditor( void )
+  AnimatedTextEditor& activeEditor( void )
   { return *active_editor_; }
   
   //! retrieve active display
-  const TextEditor& activeEditor( void ) const
+  const AnimatedTextEditor& activeEditor( void ) const
   { return *active_editor_; }
 
   //@}
@@ -337,7 +335,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   void _close( void )
   {
     Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
-    BASE::KeySet< TextEditor > editors( this );
+    BASE::KeySet< AnimatedTextEditor > editors( this );
     if( editors.size() > 1 ) _closeEditor( activeEditor() );
     else close();    
   }
@@ -369,20 +367,20 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //@{
 
   //! change active display manualy
-  void _setActiveEditor( TextEditor& ); 
+  void _setActiveEditor( AnimatedTextEditor& ); 
 
   //! close view
   /*! Ask for save if view is modified */
-  void _closeEditor( TextEditor& );
+  void _closeEditor( AnimatedTextEditor& );
 
   //! split view
-  TextEditor& _splitView( const Qt::Orientation& );
+  AnimatedTextEditor& _splitView( const Qt::Orientation& );
   
   //! create new splitter
   QSplitter& _newSplitter( const Qt::Orientation&  );
   
   //! create new TextEditor
-  TextEditor& _newTextEditor( QWidget* parent );
+  AnimatedTextEditor& _newTextEditor( QWidget* parent );
 
   //@}
   
@@ -491,7 +489,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   ColorWidget* color_widget_;
 
   //! LogEntry text Object
-  TextEditor *active_editor_;
+  AnimatedTextEditor *active_editor_;
 
   //! text format bar
   FormatBar* format_toolbar_;

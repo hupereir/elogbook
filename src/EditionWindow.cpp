@@ -41,7 +41,6 @@
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "Command.h"
-#include "TextEditor.h"
 #include "CustomToolBar.h"
 #include "EditionWindow.h"
 #include "File.h"
@@ -124,7 +123,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( _splitterMoved( void ) ) );
 
   // create editor
-  TextEditor& editor( _newTextEditor( main_ ) );
+  AnimatedTextEditor& editor( _newTextEditor( main_ ) );
   main_->layout()->addWidget( &editor );
   
   connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );
@@ -308,8 +307,8 @@ void EditionWindow::setReadOnly( const bool& value )
   title_->setReadOnly( isReadOnly() );
   
   // update editors
-  BASE::KeySet<TextEditor> editors( this );
-  for( BASE::KeySet<TextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+  BASE::KeySet<AnimatedTextEditor> editors( this );
+  for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
   { (*iter)->setReadOnly( isReadOnly() ); }
 
   // changes attachment list status
@@ -988,7 +987,7 @@ void EditionWindow::_displayFocusChanged( TextEditor* editor )
 {
   
   Debug::Throw() << "EditionWindow::_DisplayFocusChanged - " << editor->key() << endl;
-  _setActiveEditor( *editor );  
+  _setActiveEditor( *static_cast<AnimatedTextEditor*>(editor) );  
 
 }  
 
@@ -1000,7 +999,7 @@ void EditionWindow::_overwriteModeChanged( void )
 }
 
 //________________________________________________________________
-void EditionWindow::_setActiveEditor( TextEditor& editor )
+void EditionWindow::_setActiveEditor( AnimatedTextEditor& editor )
 { 
   Debug::Throw() << "EditionWindow::_setActiveEditor - key: " << editor.key() << std::endl;
   assert( editor.isAssociated( this ) );
@@ -1009,8 +1008,8 @@ void EditionWindow::_setActiveEditor( TextEditor& editor )
   if( !activeEditor().isActive() )
   {
 
-    BASE::KeySet<TextEditor> editors( this );
-    for( BASE::KeySet<TextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+    BASE::KeySet<AnimatedTextEditor> editors( this );
+    for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
     { (*iter)->setActive( false ); }
     
     activeEditor().setActive( true );
@@ -1025,13 +1024,13 @@ void EditionWindow::_setActiveEditor( TextEditor& editor )
 }
 
 //___________________________________________________________
-void EditionWindow::_closeEditor( TextEditor& editor )
+void EditionWindow::_closeEditor( AnimatedTextEditor& editor )
 {
   Debug::Throw( "EditionWindow::_closeEditor.\n" );
  
   // retrieve number of editors
   // if only one display, close the entire window
-  BASE::KeySet<TextEditor> editors( this );
+  BASE::KeySet<AnimatedTextEditor> editors( this );
   if( editors.size() < 2 )
   {
     Debug::Throw() << "EditionWindow::_closeEditor - full close." << endl;
@@ -1044,7 +1043,7 @@ void EditionWindow::_closeEditor( TextEditor& editor )
   QSplitter* parent_splitter( dynamic_cast<QSplitter*>( parent ) );
   
   // retrieve editors associated to current
-  editors = BASE::KeySet<TextEditor>( &editor );
+  editors = BASE::KeySet<AnimatedTextEditor>( &editor );
     
   // check how many children remain in parent_splitter if any
   // take action if it is less than 2 (the current one to be deleted, and another one)
@@ -1095,7 +1094,7 @@ void EditionWindow::_closeEditor( TextEditor& editor )
       
   // update activeEditor
   bool active_found( false );
-  for( BASE::KeySet<TextEditor>::reverse_iterator iter = editors.rbegin(); iter != editors.rend(); iter++ )
+  for( BASE::KeySet<AnimatedTextEditor>::reverse_iterator iter = editors.rbegin(); iter != editors.rend(); iter++ )
   { 
     if( (*iter) != &editor ) {
       _setActiveEditor( **iter ); 
@@ -1112,12 +1111,12 @@ void EditionWindow::_closeEditor( TextEditor& editor )
 }
 
 //___________________________________________________________
-TextEditor& EditionWindow::_splitView( const Orientation& orientation )
+AnimatedTextEditor& EditionWindow::_splitView( const Orientation& orientation )
 {
   Debug::Throw( "EditionWindow::_splitView.\n" );
 
   // keep local pointer to current active display
-  TextEditor& active_editor_local( activeEditor() );  
+  AnimatedTextEditor& active_editor_local( activeEditor() );  
   
   // compute desired dimension of the new splitter
   // along its splitting direction
@@ -1127,7 +1126,7 @@ TextEditor& EditionWindow::_splitView( const Orientation& orientation )
   QSplitter& splitter( _newSplitter( orientation ) );
   
   // create new display
-  TextEditor& editor( _newTextEditor(0) );
+  AnimatedTextEditor& editor( _newTextEditor(0) );
   
   // insert in splitter, at correct position
   splitter.insertWidget( splitter.indexOf( &active_editor_local )+1, &editor );
@@ -1148,14 +1147,14 @@ TextEditor& EditionWindow::_splitView( const Orientation& orientation )
   if there exists no clone of active display,
   backup text and register a new Sync object
   */
-  BASE::KeySet<TextEditor> editors( &active_editor_local );
+  BASE::KeySet<AnimatedTextEditor> editors( &active_editor_local );
 
   // clone new display
   editor.synchronize( &active_editor_local );
     
   // perform associations
   // check if active editors has associates and propagate to new
-  for( BASE::KeySet<TextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+  for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
   { BASE::Key::associate( &editor, *iter ); }
   
   // associate new display to active
@@ -1233,12 +1232,12 @@ QSplitter& EditionWindow::_newSplitter( const Orientation& orientation )
 }
 
 //_____________________________________________________________
-TextEditor& EditionWindow::_newTextEditor( QWidget* parent )
+AnimatedTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 {
   Debug::Throw( "EditionWindow::_newTextEditor.\n" );
 
   // create textDisplay
-  TextEditor* editor = new TextEditor( parent );  
+  AnimatedTextEditor* editor = new AnimatedTextEditor( parent );  
 
   // connections
   connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
