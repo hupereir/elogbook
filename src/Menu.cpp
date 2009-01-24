@@ -51,7 +51,6 @@
 #include "SearchPanel.h"
 #include "Singleton.h"
 #include "Str.h"
-#include "SvgHelpText.h"
 #include "Util.h"
 #include "XmlOptions.h"
 
@@ -137,7 +136,6 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   else {
     help->setFile( help_file.c_str() );
     help->install( HelpText );
-    help->install( SVG::HelpText, false );
     help->install( BASE::HelpText, false );
   }
   
@@ -155,7 +153,6 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addMenu( debug_menu );
   debug_menu->addAction( &mainwindow->saveForcedAction() );
   debug_menu->addAction( &mainwindow->showDuplicatesAction() );
-  debug_menu->addAction( "&Show splash screen", Singleton::get().application(), SLOT( showSplashScreen() ) );
   debug_menu->addAction( &help->dumpAction() );
 
 }

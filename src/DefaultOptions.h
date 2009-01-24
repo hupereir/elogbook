@@ -88,16 +88,6 @@ void installDefaultOptions( void )
   XmlOptions::get().set( "DB_SIZE", Option( "10" , "max number of files stored in the open previous menu"  ) );
 
   XmlOptions::get().set( "SIDE_EDITOR_TOOLBAR", Option( "1" , "if true, editor toolbar is on the left instead of top"  ) );
-  XmlOptions::get().set( "SPLASH_SCREEN", Option( "1" , "1 to show splash screen"  ) );
-
-  XmlOptions::get().set( "TRANSPARENT", Option( "1", "1 use transparent background" ) );
-  XmlOptions::get().set( "TRANSPARENCY_OPACITY", Option( "204", "widget Composite opacity (in [0,255])" ) );
-  XmlOptions::get().set( "TRANSPARENCY_HIGHLIGHT_COLOR", Option( "#000000", "highlight color") );
-  XmlOptions::get().set( "TRANSPARENCY_HIGHLIGHT_INTENSITY", Option( "0", "highlight intensity (in [0,255])" ) );
-  XmlOptions::get().set( "TRANSPARENCY_TINT_COLOR", Option( "#000000", "tint color") );
-  XmlOptions::get().set( "TRANSPARENCY_TINT_INTENSITY", Option( "0", "tint intensity (in [0,255])" ) );
-
-  XmlOptions::get().set( "ROUND_SPLASH_SCREEN", Option( "0", "1 to round splash screen corners" ) );
   
   XmlOptions::get().set( "SHOW_KEYWORD", Option( "0" , "show keyword in editor"  ) );
   XmlOptions::get().set( "SHOW_EDITFRAME_MENU", Option( "1", "show menu in EditionWindow windows" ) );

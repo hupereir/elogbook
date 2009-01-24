@@ -101,11 +101,6 @@ class Application: public BaseApplication, public Counter
     return *main_window_; 
   }
 
-  public slots:
-  
-  //! show splash screen
-  void showSplashScreen( void );
-  
   protected slots:
       
   //! about eLogbook

@@ -47,7 +47,6 @@
 #include "Options.h"
 #include "ServerConfiguration.h"
 #include "Singleton.h"
-#include "SvgConfiguration.h"
 #include "TreeViewConfiguration.h"
 
 #include "Config.h"
@@ -283,33 +282,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // edition
   textEditConfiguration();
-
-  // splash screen
-  Debug::Throw( "ConfigurationDialog::ConfigurationDialog - splash screen.\n" );
-  page = &addPage( "Splash screen", "Splash screen appearance" );
-  
-  box = new QGroupBox( "", page );
-  box->setLayout( new QVBoxLayout() );
-  box->layout()->setSpacing(5);
-  box->layout()->setMargin(5);
-  page->layout()->addWidget( box );
-
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Enable splash screen", box, "SPLASH_SCREEN" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Show splash screen at startup" );
-
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Enable transparency", box, "TRANSPARENT" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Enable startup splash screen transparency" );
-
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Round corners", box, "ROUND_SPLASH_SCREEN" ) );
-  addOptionWidget( checkbox );
-  checkbox->setToolTip( "Round startup splash screen corners (using mask)" );
-
-  // svg background
-  SVG::SvgConfiguration* svg_configuration( new SVG::SvgConfiguration( page ) );
-  page->layout()->addWidget( svg_configuration);
-  addOptionWidget( svg_configuration );
 
   // misc
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );

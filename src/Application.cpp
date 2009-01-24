@@ -50,7 +50,6 @@
 #include "RecentFilesMenu.h"
 #include "QtUtil.h"
 #include "QuestionDialog.h"
-#include "SplashScreen.h"
 #include "XmlFileList.h"
 
 using namespace std;
@@ -134,18 +133,6 @@ bool Application::realizeWidget( void )
 
   // update configuration
   emit configurationChanged();
-
-  // splashscreen
-  ::SplashScreen *splash_screen = new ::SplashScreen( main_window_ );
-  splash_screen->displayMessage( "initializing" );
-  
-  // connections
-  connect( main_window_, SIGNAL( messageAvailable( const QString& ) ), splash_screen, SLOT( displayMessage( const QString& ) ) );
-  connect( main_window_, SIGNAL( ready() ), splash_screen, SLOT( close() ) );
-
-  QtUtil::centerOnDesktop( splash_screen );
-  if( XmlOptions::get().get<bool>("SPLASH_SCREEN") )
-  { splash_screen->show(); }
   
   mainWindow().centerOnDesktop();
   mainWindow().show();
@@ -156,31 +143,10 @@ bool Application::realizeWidget( void )
   // load file from arguments or recent files
   QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
   if( !filenames.isEmpty() ) mainWindow().setLogbook( File( qPrintable( filenames.front() ) ).expand() ); 
-  else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) )
-  { 
-    splash_screen->close();
-    mainWindow().newLogbookAction().trigger();
-  }
+  else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) ) mainWindow().newLogbookAction().trigger();
   
   return true;
   
-}
-
-//_______________________________________________
-void Application::showSplashScreen( void )
-{
-
-  QPixmap pixmap( (File( XmlOptions::get().raw( "ICON_PIXMAP" ) )).expand().c_str() );
-
-  ostringstream what;
-  what << "<B>eLogbook</B><BR> version " << VERSION;
-  ::SplashScreen *splash_screen = new ::SplashScreen();
-  QtUtil::centerOnDesktop( splash_screen );
-  splash_screen->show();
-  splash_screen->displayMessage( "click on the window to close" );
-
-  qApp->processEvents();
-
 }
 
 //_________________________________________________

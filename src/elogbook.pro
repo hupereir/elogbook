@@ -1,7 +1,7 @@
 TEMPLATE = app
 
 CONFIG += qt release
-QT += xml network svg
+QT += xml network
 
 win32 {
   DESTDIR = "C:/Program Files" 
@@ -10,13 +10,11 @@ win32 {
 VERSION = 1.4
 DEFINES += QT_STATIC VERSION=\"$$VERSION\"
 
-INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../base-svg ../base-transparency ../extra-includes
-DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../base-svg ../base-transparency../extra-includes
+INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../extra-includes
+DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../extra-includes
 
 LIBS += \
   ./libelogbook-common.a \
-  ../base-transparency/libbase-transparency.a \
-  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
@@ -24,14 +22,12 @@ LIBS += \
 
 POST_TARGETDEPS = \
   ./libelogbook-common.a \
-  ../base-transparency/libbase-transparency.a \
-  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
   ../base/libbase.a
 
-RESOURCES = pixmaps.qrc ../base-svg/baseSvg.qrc ../base-qt/basePixmaps.qrc
+RESOURCES = pixmaps.qrc ../base-qt/basePixmaps.qrc
 RC_FILE = elogbook.rc
 
 HEADERS = \
@@ -61,7 +57,6 @@ HEADERS = \
   ProgressBar.h \
   SearchPanel.h \
   SelectionStatusBar.h \
-  SplashScreen.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
   elogbook.h
@@ -93,7 +88,6 @@ SOURCES = \
   ProgressBar.cpp \
   SearchPanel.cpp \
   SelectionStatusBar.cpp \
-  SplashScreen.cpp \
   ViewHtmlEntryDialog.cpp \
   ViewHtmlLogbookDialog.cpp \
   elogbook.cpp

@@ -41,10 +41,7 @@
 #include "SystemOptions.h"
 #include "ErrorHandler.h"
 #include "Singleton.h"
-#include "SvgEngine.h"
 #include "XmlOptions.h"
-
-#include "CompositeEngine.h"
 
 using namespace std;
 
@@ -77,10 +74,6 @@ int main (int argc, char *argv[])
   installDefaultOptions();
   installSystemOptions();
 
-  // these are needed to set default values to relevant options
-  SVG::SvgEngine::get();
-  TRANSPARENCY::CompositeEngine::get();
-  
   // customize options
   XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
   
@@ -91,35 +84,16 @@ int main (int argc, char *argv[])
   // initialize main frame and run loop
   Q_INIT_RESOURCE( basePixmaps );
   Q_INIT_RESOURCE( pixmaps );
-  Q_INIT_RESOURCE( baseSvg );
   
   // create Application
-  QApplication* application( 0 );
-  
-  TRANSPARENCY::CompositeEngine::get().initialize();
-  #ifdef Q_WS_X11
-  if( TRANSPARENCY::CompositeEngine::get().isAvailable() )
-  { 
-    application = new QApplication( 
-      TRANSPARENCY::CompositeEngine::get().display(), 
-      argc, argv, 
-      TRANSPARENCY::CompositeEngine::get().visual(), 
-      TRANSPARENCY::CompositeEngine::get().colormap() );
-  } else application = new QApplication( argc, argv );
-  #else
-  application = new QApplication( argc, argv );
-  #endif
-  
+  QApplication application( argc, argv );
+    
   // the curly brackets here are to make sure the 
   // singleton application is deleted before QApplication
-  {
-    Application singleton( arguments );
-    Singleton::get().setApplication( &singleton );
-    singleton.initApplicationManager();
-    application->exec();
-  }
-  
-  delete application;
+  Application singleton( arguments );
+  Singleton::get().setApplication( &singleton );
+  singleton.initApplicationManager();
+  application.exec();
   
   return 0;
 

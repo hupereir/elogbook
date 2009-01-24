@@ -10,14 +10,11 @@ INCLUDES = \
   -I$(qt_includes)/QtNetwork  \
   -I$(qt_includes)/QtXml \
   -I$(qt_includes)/QtGui \
-  -I$(qt_includes)/QtSvg \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-help \
   -I$(top_srcdir)/base-server \
-  -I$(top_srcdir)/base-spellcheck \
-  -I$(top_srcdir)/base-transparency \
-  -I$(top_srcdir)/base-svg
+  -I$(top_srcdir)/base-spellcheck
 else
 INCLUDES = \
   -I$(qt_includes) \
@@ -26,13 +23,10 @@ INCLUDES = \
   -I$(qt_includes)/QtNetwork  \
   -I$(qt_includes)/QtXml \
   -I$(qt_includes)/QtGui \
-  -I$(qt_includes)/QtSvg \
   -I$(top_srcdir)/base  \
   -I$(top_srcdir)/base-qt \
   -I$(top_srcdir)/base-help \
-  -I$(top_srcdir)/base-server \
-  -I$(top_srcdir)/base-transparency \
-  -I$(top_srcdir)/base-svg
+  -I$(top_srcdir)/base-server
 endif
 
 CXXFLAGS = @CXXFLAGS@
@@ -42,12 +36,10 @@ bin_PROGRAMS = elogbook copy_logbook synchronize_logbook
 
 if WITH_ASPELL 
 libraries = \
-  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtSvg\
+  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork \
   -L$(aspell_libraries) -laspell  \
   libelogbook.a \
   ../base-spellcheck/libbase-spellcheck.a \
-  ../base-transparency/libbase-transparency.a \
-  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
@@ -56,10 +48,8 @@ libraries = \
 else
 
 libraries =  \
-  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtSvg\
+  -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork \
   libelogbook.a \
-  ../base-transparency/libbase-transparency.a \
-  ../base-svg/libbase-svg.a \
   ../base-server/libbase-server.a \
   ../base-help/libbase-help.a \
   ../base-qt/libbase-qt.a \
@@ -118,7 +108,6 @@ noinst_HEADERS = \
   ProgressBar.h \
   SearchPanel.h \
   SelectionStatusBar.h \
-  SplashScreen.h \
   ViewHtmlEntryDialog.h \
   ViewHtmlLogbookDialog.h \
   XmlDef.h
@@ -150,7 +139,6 @@ elogbook_SOURCES = \
   ProgressBar.cpp \
   SearchPanel.cpp \
   SelectionStatusBar.cpp \
-  SplashScreen.cpp \
   ViewHtmlEntryDialog.cpp \
   ViewHtmlLogbookDialog.cpp \
   elogbook.cpp
@@ -172,8 +160,7 @@ nodist_elogbook_SOURCES = \
   moc_NewAttachmentDialog.cpp \
   moc_ProgressBar.cpp \
   moc_SearchPanel.cpp \
-  moc_SelectionStatusBar.cpp \
-  moc_SplashScreen.cpp
+  moc_SelectionStatusBar.cpp
 
 copy_logbook_SOURCES = copy_logbook.cpp
 synchronize_logbook_SOURCES = synchronize_logbook.cpp
