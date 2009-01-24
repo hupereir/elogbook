@@ -189,7 +189,7 @@ void Application::_configuration( void )
   
   Debug::Throw( "Application::_configuration" );
   emit saveConfiguration();
-  ConfigurationDialog dialog(0);
+  ConfigurationDialog dialog;
   connect( &dialog, SIGNAL( configurationChanged() ), SIGNAL( configurationChanged() ) );
   dialog.centerOnWidget( qApp->activeWindow() );
   dialog.exec();
