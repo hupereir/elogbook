@@ -146,7 +146,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   virtual void resetAttachmentWindow( void ) const;
 
   //! return keyword list
-  TreeView& keywordList( void ) const
+  AnimatedTreeView& keywordList( void ) const
   { return *keyword_list_; }
    
   //! log entry list
@@ -520,14 +520,14 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   AnimatedTreeView* entry_list_;
 
   //! local TreeView to store size hint
-  class KeywordList: public TreeView
+  class KeywordList: public AnimatedTreeView
   {
     
     public:
         
     //! constructor
     KeywordList( QWidget* parent = 0 ):
-      TreeView( parent ),
+      AnimatedTreeView( parent ),
       default_width_( -1 )
     {} 
    

@@ -1169,7 +1169,10 @@ void MainWindow::_resetKeywordList( void )
   
   Debug::Throw( "MainWindow::_resetKeywordList.\n" );
   assert( logbook() );
-      
+        
+  // animation
+  keywordList().initializeAnimation();
+  
   // retrieve new list of keywords (from logbook)
   set<Keyword> new_keywords;
   BASE::KeySet<LogEntry> entries( logbook()->entries() );
@@ -1188,6 +1191,9 @@ void MainWindow::_resetKeywordList( void )
   }
   
   _keywordModel().set( new_keywords );
+
+  // animation
+  keywordList().startAnimation();
 
 }
 
