@@ -155,17 +155,17 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   OptionComboBox* combobox;
  
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Main toolbar", box, "MAIN_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) ); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
   
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Undo history toolbar", box, "EDITION_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Format toolbar", box, "FORMAT_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
@@ -175,12 +175,12 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation toolbar", box, "NAVIGATION_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation toolbar", box, "MULTIPLE_VIEW_TOOLBAR" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" )); 
   grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" )); 
   addOptionWidget( checkbox );
   addOptionWidget( combobox );

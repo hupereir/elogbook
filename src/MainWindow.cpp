@@ -126,7 +126,7 @@ MainWindow::MainWindow( QWidget *parent ):
   v_layout->setSpacing( 5 );
   left->setLayout( v_layout );
   
-  keyword_toolbar_ = new CustomToolBar( "keywords toolbar", left, "KEYWORD_TOOLBAR" );
+  keyword_toolbar_ = new CustomToolBar( "Keywords Toolbar", left, "KEYWORD_TOOLBAR" );
   v_layout->addWidget( keyword_toolbar_ );
   
   // keyword actions
@@ -194,7 +194,7 @@ MainWindow::MainWindow( QWidget *parent ):
   v_layout->setSpacing( 5 );
   right->setLayout( v_layout );
     
-  entry_toolbar_ = new CustomToolBar( "entries toolbar", right, "ENTRY_TOOLBAR" );
+  entry_toolbar_ = new CustomToolBar( "Entries Toolbar", right, "ENTRY_TOOLBAR" );
   v_layout->addWidget( entry_toolbar_ );
 
   // entry actions

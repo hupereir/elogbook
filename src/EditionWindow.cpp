@@ -215,7 +215,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   toolbar->addAction( &entryInfoAction() );
   
   // extra toolbar
-  toolbar = new CustomToolBar( "Multiple views", this, "MULTIPLE_VIEW_TOOLBAR" );
+  toolbar = new CustomToolBar( "Multiple Views", this, "MULTIPLE_VIEW_TOOLBAR" );
   toolbar->addAction( &splitViewHorizontalAction() );
   toolbar->addAction( &splitViewVerticalAction() );
   toolbar->addAction( &cloneWindowAction() );
