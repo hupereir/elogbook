@@ -97,7 +97,6 @@ Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
 //__________________________________________________________________
 QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 {
-  Debug::Throw( "LogEntryModel::data.\n" );
   
   // check index, role and column
   if( !index.isValid() ) return QVariant();
