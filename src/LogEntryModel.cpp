@@ -54,10 +54,10 @@ const QString LogEntryModel::DRAG = "elogbook/logentrymodel/drag";
 const QString LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
 { 
   "",
-  "title",
-  "creation",
-  "modification",
-  "author"
+  "Title",
+  "Creation",
+  "Modification",
+  "Author"
 };
 
 //_______________________________________________________________
