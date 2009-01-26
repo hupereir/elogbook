@@ -112,6 +112,11 @@ MainWindow::MainWindow( QWidget *parent ):
   // global scope actions
   _installActions();
 
+  // aditional actions from application
+  Application& application( *Singleton::get().application<Application>() );
+  addAction( &application.closeAction() );
+
+  
   // left box for Keywords and buttons
   QWidget* left = new QWidget();
   
@@ -262,7 +267,7 @@ MainWindow::MainWindow( QWidget *parent ):
   setMenuBar( menu_ );
     
   // configuration
-  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+  connect( &application, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
   _updateKeywordActions();
   _updateEntryActions();

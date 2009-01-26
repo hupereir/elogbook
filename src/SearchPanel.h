@@ -32,6 +32,7 @@
 */
 
 #include <QCheckBox>
+#include <QContextMenuEvent>
 #include <string>
 #include <map>
 
@@ -71,6 +72,11 @@ class SearchPanel: public CustomToolBar
   //! emitted when the Show All button is pressed
   void showAllEntries( void );
 
+  protected:
+  
+  //! context menu
+  virtual void contextMenuEvent( QContextMenuEvent* );
+  
   protected slots:
   
   //! toggle visibility [overloaded]
@@ -93,10 +99,6 @@ class SearchPanel: public CustomToolBar
   //! send SelectEntries request
   void _selectionRequest( void );
 
-  //! raise menu
-  /*! it is a clone of the main window menu, but connected to different slots */
-  void _raiseMenu( const QPoint& point );
-  
   private:
   
   //! editor

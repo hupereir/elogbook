@@ -61,9 +61,9 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   BaseConfigurationDialog( parent )
 {
 
-
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog.\n" );
-
+  setWindowTitle( "Configuration - elogbook" );
+  
   baseConfiguration();
   
   // generic objects

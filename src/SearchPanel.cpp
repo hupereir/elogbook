@@ -56,9 +56,6 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const std::stri
 {
   Debug::Throw( "SearchPanel::SearchPanel.\n" );
 
-  setContextMenuPolicy( Qt::CustomContextMenu );  
-  connect( this, SIGNAL( customContextMenuRequested( const QPoint& ) ), SLOT( _raiseMenu( const QPoint& ) ) );  
-
   // find selection button
   QPushButton* button;
   addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), "&Find", this ) );
@@ -192,13 +189,13 @@ void SearchPanel::_selectionRequest( void )
 
 
 //______________________________________________________________________
-void SearchPanel::_raiseMenu( const QPoint& point )
+void SearchPanel::contextMenuEvent( QContextMenuEvent* event )
 {  
   Debug::Throw( "SearchPanel::_raiseMenu.\n" );
   
   MainWindow* mainwindow( dynamic_cast<MainWindow*>( window() ) );
   if( !mainwindow ) return;
-  ToolBarMenu& menu( mainwindow->toolBarMenu( this ) );
+  ToolBarMenu& menu( mainwindow->toolBarMenu() );
 
   menu.toolButtonStyleMenu().select( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
   menu.iconSizeMenu().select( (IconSize::Size) XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) );
@@ -208,7 +205,7 @@ void SearchPanel::_raiseMenu( const QPoint& point )
 
   // move and show menu
   menu.adjustSize();
-  QtUtil::moveWidget( &menu, mapToGlobal( point ) );
-  menu.show();
+  menu.exec( event->globalPos() );
+  menu.deleteLater();
 
 }
