@@ -37,7 +37,7 @@
 using namespace std;
 
 //______________________________________________________________
-const QString KeywordModel::column_titles_[ KeywordModel::n_columns ] = { "keywords" };
+const QString KeywordModel::column_titles_[ KeywordModel::n_columns ] = { "Keywords" };
 const QString KeywordModel::DRAG = "elogbook/keywordmodel/drag";
 
 //______________________________________________________________
