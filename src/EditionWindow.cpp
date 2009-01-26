@@ -1276,11 +1276,11 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
   if( !_hasStatusBar() ) return;
   
   ostringstream what;
-  what << "line : " << position.paragraph()+1;
+  what << "Line : " << position.paragraph()+1;
   statusBar().label(2).setText( what.str().c_str(), false );
 
   what.str("");
-  what << "column : " << position.index()+1;
+  what << "Column : " << position.index()+1;
   statusBar().label(3).setText( what.str().c_str(), true );
   
   return;
