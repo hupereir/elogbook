@@ -30,6 +30,7 @@
 */
 
 #include <QFile>
+#include <QTextStream>
 #include <fstream>
 
 #include "Attachment.h"
@@ -103,10 +104,9 @@ bool Logbook::read( void )
   if( file().empty() ) return false;
 
   // update StateFrame
-  ostringstream what;
-
-  what << "reading \"" << file().localName() << "\"";
-  emit messageAvailable( what.str().c_str() );
+  QString buffer;
+  QTextStream( &buffer ) << "Reading \"" << file().localName().c_str() << "\"";
+  emit messageAvailable( buffer );
 
   // check input file
   if( !file().exists() ) {
@@ -214,9 +214,9 @@ bool Logbook::read( void )
       // propagate progressAvailable signal.
       connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
 
-      ostringstream what;
-      what << "reading \"" << child->file().localName() << "\"";
-      emit messageAvailable( what.str().c_str() );
+      QString buffer;
+      QTextStream( &buffer ) << "Reading \"" << child->file().localName().c_str() << "\"";
+      emit messageAvailable( buffer );
 
       child->read();
       children_.push_back( child );
@@ -264,9 +264,9 @@ bool Logbook::write( File file )
     file.backup();
 
     // update stateFrame
-    ostringstream what;
-    what << "writing \"" << file.localName() << "\"";
-    emit messageAvailable( what.str().c_str() );
+    QString buffer;
+    QTextStream( &buffer ) << "Writing \"" << file.localName().c_str() << "\"";
+    emit messageAvailable( buffer );
 
     QFile out( file.c_str() );
     if( !out.open( QIODevice::WriteOnly ) )
@@ -361,9 +361,9 @@ bool Logbook::write( File file )
     File child_filename( _childFilename( file, child_number ).addPath( file.path() ) );
 
     // update stateFrame
-    ostringstream what;
-    what << "writing \"" << child_filename.localName() << "\"";
-    emit messageAvailable( what.str().c_str() );
+    QString buffer;
+    QTextStream( &buffer ) << "Writing \"" << child_filename.localName().c_str() << "\"";
+    emit messageAvailable( buffer );
 
     (*it)->setParentFile( file );
     completed &= (*it)->write( child_filename );
