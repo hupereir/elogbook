@@ -59,12 +59,12 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
   group_box->layout()->setMargin(5);
   group_box->layout()->setSpacing(5);
   
-  group_box->layout()->addWidget( from_disk_radio_button_ = new QRadioButton( "from disk", group_box ) );
+  group_box->layout()->addWidget( from_disk_radio_button_ = new QRadioButton( "From disk", group_box ) );
   from_disk_radio_button_->setChecked( true );
   from_disk_radio_button_->setToolTip( "Select this button to remove attachment file from disk and logbook." );
   group->addButton( from_disk_radio_button_ );
   
-  group_box->layout()->addWidget( from_logbook_radio_button_ = new QRadioButton( "from frame", group_box ) );
+  group_box->layout()->addWidget( from_logbook_radio_button_ = new QRadioButton( "From frame", group_box ) );
   from_logbook_radio_button_->setToolTip( "Select this button to remove attachment file from logbook only (attachment is kept on disk)." );
   group->addButton( from_logbook_radio_button_ );
 

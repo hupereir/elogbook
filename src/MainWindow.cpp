@@ -203,7 +203,7 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // need to use a button to be able to set the popup mode
   QToolButton *button = new QToolButton(0);
-  button->setText( "&Entry color" );
+  button->setText( "&Entry Color" );
   button->setIcon( IconEngine::get( ICONS::COLOR ) );
   button->setPopupMode( QToolButton::InstantPopup );
   button->setMenu( color_menu_ );
@@ -1097,6 +1097,7 @@ void MainWindow::_installActions( void )
 
   revert_to_save_action_ = new QAction( IconEngine::get( ICONS::RELOAD ), "&Reload", this );
   revert_to_save_action_->setToolTip( "Restore saved logbook" );
+  revert_to_save_action_->setShortcut( Qt::Key_F5 );
   connect( revert_to_save_action_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
   view_html_action_ = new QAction( IconEngine::get( ICONS::HTML ), "&Html", this );
@@ -1466,7 +1467,7 @@ void MainWindow::_revertToSaved( void )
 
   // check logbook
   if( !logbook_ ){
-    InformationDialog( this, "No logbook opened. <Revert to save> canceled." ).exec();
+    InformationDialog( this, "No logbook opened. <Reload> canceled." ).exec();
     return;
   }
 

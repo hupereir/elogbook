@@ -90,7 +90,7 @@ ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_TABLE] = new QCheckBox( "&Table of content", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_CONTENT] = new QCheckBox( "&Content", group_box ) );
 
-  QPushButton* button = new QPushButton( "more ... ", group_box );
+  QPushButton* button = new QPushButton( "More ... ", group_box );
   button->setCheckable( true );
   group_box->layout()->addWidget( button );
   connect( button, SIGNAL( toggled( bool ) ), SLOT( showExtension( bool ) ) );

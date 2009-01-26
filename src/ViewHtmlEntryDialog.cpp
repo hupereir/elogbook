@@ -61,7 +61,7 @@ ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
   mainLayout().addWidget( file_ = new BrowsedLineEditor( this ) );
   file_->setFileMode( QFileDialog::AnyFile );
 
-  QPushButton* button = new QPushButton( "more ... ", this );
+  QPushButton* button = new QPushButton( "More ... ", this );
   button->setCheckable( true );
   mainLayout().addWidget( button );
   connect( button, SIGNAL( toggled( bool ) ), SLOT( showExtension( bool ) ) );

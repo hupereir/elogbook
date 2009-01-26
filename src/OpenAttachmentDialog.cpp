@@ -85,7 +85,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   grid_layout->setSpacing(5);
   grid_layout->setMaxCount(2);
 
-  grid_layout->addWidget( open_radio_button_ = new QRadioButton( "open using: ", group_box ) );
+  grid_layout->addWidget( open_radio_button_ = new QRadioButton( "Open using: ", group_box ) );
   open_radio_button_->setToolTip( "Select this button to open attachment using the selected application." );
   group->addButton( open_radio_button_ );
   

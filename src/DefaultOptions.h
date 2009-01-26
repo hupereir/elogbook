@@ -89,9 +89,6 @@ void installDefaultOptions( void )
 
   XmlOptions::get().set( "SIDE_EDITOR_TOOLBAR", Option( "1" , "if true, editor toolbar is on the left instead of top"  ) );
   
-  XmlOptions::get().set( "SHOW_KEYWORD", Option( "0" , "show keyword in editor"  ) );
-  XmlOptions::get().set( "SHOW_EDITFRAME_MENU", Option( "1", "show menu in EditionWindow windows" ) );
-
   XmlOptions::get().set( "SEARCH_PANEL", Option( "0" , "toolbar visibility" ) );
   XmlOptions::get().set( "SEARCH_PANEL_LOCATION", Option( "bottom" , "toolbar location" ) );
 
