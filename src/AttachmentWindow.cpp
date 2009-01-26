@@ -55,7 +55,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   
   Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
   setWindowTitle( Application::ATTACHMENT_TITLE );
-  setSizeOptionName( "ATTACHMENT_WINDOW" );
+  setOptionName( "ATTACHMENT_WINDOW" );
     
   mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
   connect( frame_, SIGNAL( attachmentSelected( Attachment& ) ), SLOT( _displayEntry( Attachment& ) ) );
