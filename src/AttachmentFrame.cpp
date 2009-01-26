@@ -820,7 +820,7 @@ void AttachmentFrame::_installActions( void )
 {
   Debug::Throw( "AttachmentFrame::_installActions.\n" );
 
-  addAction( visibility_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "Show &Attachment list", this ) );
+  addAction( visibility_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "Show &Attachment List", this ) );
   visibilityAction().setToolTip( "Show/hide attachment list" );
   visibilityAction().setCheckable( true );
   visibilityAction().setChecked( true );

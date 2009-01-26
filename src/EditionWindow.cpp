@@ -145,8 +145,6 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
 
   // actions
   _installActions();
-  
-  // aditional actions from application
   Application& application( *Singleton::get().application<Application>() );
   addAction( &application.closeAction() );
   
@@ -172,7 +170,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   toolbar->addAction( &saveAction() );
 
   // delete_entry button
-  toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete entry", this ) );
+  toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete Entry", this ) );
   connect( action, SIGNAL( triggered() ), SLOT( _deleteEntry() ) );
   read_only_actions_.push_back( action );
 
@@ -630,7 +628,7 @@ void EditionWindow::_installActions( void )
   save_action_->setShortcut( CTRL+Key_S );
 
   #if WITH_ASPELL
-  addAction( spellcheck_action_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spell", this ) );
+  addAction( spellcheck_action_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck", this ) );
   spellcheck_action_->setToolTip( "Check spelling of current entry" );
   connect( spellcheck_action_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
   #endif
@@ -646,26 +644,26 @@ void EditionWindow::_installActions( void )
   connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
     
   // split action
-  addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split view top/bottom", this ) );
+  addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
   split_view_horizontal_action_->setToolTip( "Split current text editor vertically" );
   connect( split_view_horizontal_action_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
 
-  addAction( split_view_vertical_action_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), "Split view left/right", this ) );
+  addAction( split_view_vertical_action_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), "Split View Left/Right", this ) );
   split_view_vertical_action_->setToolTip( "Split current text editor horizontally" );
   connect( split_view_vertical_action_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
 
   // clone window action
-  addAction( clone_window_action_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), "Clone window", this ) );
+  addAction( clone_window_action_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), "Clone Window", this ) );
   clone_window_action_->setToolTip( "Create a new edition window displaying the same entry" );
   connect( clone_window_action_, SIGNAL( triggered() ), SLOT( _cloneWindow() ) );
 
   // close window action
-  addAction( close_action_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), "&Close view", this ) );
+  addAction( close_action_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), "&Close View", this ) );
   close_action_->setShortcut( CTRL+Key_W );
   close_action_->setToolTip( "Close current view" );
   connect( close_action_, SIGNAL( triggered() ), SLOT( _close() ) );
  
-  addAction( uniconify_action_ = new QAction( "&uniconify", this ) );
+  addAction( uniconify_action_ = new QAction( "&Uniconify", this ) );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
 }

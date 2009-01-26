@@ -998,15 +998,15 @@ void MainWindow::_installActions( void )
 {
   
   Debug::Throw( "MainWindow::_installActions.\n" );
-  uniconify_action_ = new QAction( IconEngine::get( ICONS::HOME ), "&Main window", this );
+  uniconify_action_ = new QAction( IconEngine::get( ICONS::HOME ), "&Main Window", this );
   uniconify_action_->setToolTip( "Raise application main window" );
   connect( uniconify_action_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
-  new_keyword_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New keyword", this );
+  new_keyword_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Keyword", this );
   new_keyword_action_->setToolTip( "Create a new keyword" );
   connect( new_keyword_action_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
 
-  addAction( edit_keyword_action_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename keyword", this ) );
+  addAction( edit_keyword_action_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename Keyword", this ) );
   edit_keyword_action_->setToolTip( "Rename selected keyword" );
   edit_keyword_action_->setShortcut( Qt::Key_F2 );
   edit_keyword_action_->setShortcutContext( Qt::WidgetShortcut );  
@@ -1017,22 +1017,22 @@ void MainWindow::_installActions( void )
   it is associated to the Qt::Key_Delete shortcut
   but the later is enabled only if the KeywordList has focus.
   */
-  delete_keyword_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete keyword", this );
+  delete_keyword_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete Keyword", this );
   delete_keyword_action_->setToolTip( "Delete selected keyword" );
   delete_keyword_action_->setShortcut( Qt::Key_Delete );
   delete_keyword_action_->setShortcutContext( Qt::WidgetShortcut );  
   connect( delete_keyword_action_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
 
-  new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New entry", this );
+  new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Entry", this );
   new_entry_action_->setToolTip( "Create a new entry" );
   new_entry_action_->setShortcut( Qt::CTRL+Qt::Key_N );
   connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
-  edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit entries", this );
+  edit_entry_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit Entries", this );
   edit_entry_action_->setToolTip( "Edit selected entries" );
   connect( edit_entry_action_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
 
-  edit_entry_title_action_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename entry", this );
+  edit_entry_title_action_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename Entry", this );
   edit_entry_title_action_->setToolTip( "Edit selected entry title" );
   edit_entry_title_action_->setShortcut( Qt::Key_F2 );
   edit_entry_title_action_->setShortcutContext( Qt::WidgetShortcut );  
@@ -1043,7 +1043,7 @@ void MainWindow::_installActions( void )
   it is associated to the Qt::Key_Delete shortcut
   but the later is enabled only if the KeywordList has focus.
   */
-  delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete entries", this );
+  delete_entry_action_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete Entries", this );
   delete_entry_action_->setToolTip( "Delete selected entries" );
   delete_entry_action_->setShortcut( Qt::Key_Delete );
   delete_entry_action_->setShortcutContext( Qt::WidgetShortcut );  
@@ -1054,11 +1054,11 @@ void MainWindow::_installActions( void )
   color_menu_->setTitle( "&Change entry color" );
   connect( color_menu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
 
-  entry_color_action_ = new QAction( IconEngine::get( ICONS::COLOR ), "&Entry color", this );
+  entry_color_action_ = new QAction( IconEngine::get( ICONS::COLOR ), "&Entry Color", this );
   entry_color_action_->setToolTip( "Change selected entries color" );
   entry_color_action_->setMenu( color_menu_ );
   
-  entry_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Change keyword", this );
+  entry_keyword_action_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Change Keyword", this );
   entry_keyword_action_->setToolTip( "Edit selected entries keyword" );
   connect( entry_keyword_action_, SIGNAL( triggered() ), SLOT( _renameEntryKeyword() ) );
 
@@ -1095,7 +1095,7 @@ void MainWindow::_installActions( void )
   save_backup_action_->setToolTip( "Save logbook backup" );
   connect( save_backup_action_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
 
-  revert_to_save_action_ = new QAction( IconEngine::get( ICONS::RELOAD ), "&Revert to Saved", this );
+  revert_to_save_action_ = new QAction( IconEngine::get( ICONS::RELOAD ), "&Reload", this );
   revert_to_save_action_->setToolTip( "Restore saved logbook" );
   connect( revert_to_save_action_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
@@ -1103,19 +1103,19 @@ void MainWindow::_installActions( void )
   view_html_action_->setToolTip( "Convert logbook to html" );
   connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
 
-  logbook_statistics_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook statistics", this );
+  logbook_statistics_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics", this );
   logbook_statistics_action_->setToolTip( "View logbook statistics" );
   connect( logbook_statistics_action_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
   
-  logbook_informations_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook informations", this );
+  logbook_informations_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Informations", this );
   logbook_informations_action_->setToolTip( "Edit logbook informations" );
   connect( logbook_informations_action_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 
-  close_frames_action_ = new QAction( IconEngine::get( ICONS::CLOSE ), "&Close editors", this );
+  close_frames_action_ = new QAction( IconEngine::get( ICONS::CLOSE ), "&Close Editors", this );
   close_frames_action_->setToolTip( "Close all entry editors" );
   connect( close_frames_action_, SIGNAL( triggered() ), SLOT( _closeEditionWindows() ) );
 
-  show_duplicates_action_ = new QAction( "Show duplicated entries", this );
+  show_duplicates_action_ = new QAction( "Show Duplicated Entries", this );
   show_duplicates_action_->setToolTip( "Show duplicated entries in logbook" );
   connect( show_duplicates_action_, SIGNAL( triggered() ), SLOT( _showDuplicatedEntries() ) );
 
