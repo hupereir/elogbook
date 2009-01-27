@@ -54,6 +54,7 @@ HEADERS = \
   NewAttachmentDialog.h \
   NewLogbookDialog.h \
   OpenAttachmentDialog.h \
+  PrintDialog.h \
   PrintLogEntryDialog.h \
   PrintLogbookDialog.h \
   ProgressBar.h \
@@ -85,6 +86,7 @@ SOURCES = \
   NewAttachmentDialog.cpp \
   NewLogbookDialog.cpp \
   OpenAttachmentDialog.cpp \
+  PrintDialog.cpp \
   PrintLogEntryDialog.cpp \
   PrintLogbookDialog.cpp \
   ProgressBar.cpp \
