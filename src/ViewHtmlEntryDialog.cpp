@@ -44,22 +44,9 @@ using namespace std;
 
 //___________________________________________________
 ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
-    CustomDialog( parent )
+  ViewHtmlDialog( parent )
 {
   Debug::Throw( "ViewHtmlEntryDialog::ViewHtmlEntryDialog.\n" );
-
-  setWindowTitle( "eLogbook - HTML" );
-  mainLayout().setSpacing(2);
-
-  // command
-  mainLayout().addWidget( new QLabel( "Command:", this ) );
-  mainLayout().addWidget( command_ = new BrowsedLineEditor( this ) );
-  command_->setFileMode( QFileDialog::ExistingFile );
-  
-  // file
-  mainLayout().addWidget( new QLabel( "File:", this ) );
-  mainLayout().addWidget( file_ = new BrowsedLineEditor( this ) );
-  file_->setFileMode( QFileDialog::AnyFile );
 
   QPushButton* button = new QPushButton( "More ... ", this );
   button->setCheckable( true );

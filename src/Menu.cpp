@@ -100,8 +100,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addAction( &mainwindow->revertToSaveAction() );
   menu->addSeparator();
   
-  if( editionwindow ) menu->addAction( &editionwindow->viewHtmlAction() );
-  else menu->addAction( &mainwindow->viewHtmlAction() );
+  if( editionwindow ) menu->addAction( &editionwindow->printAction() );
+  else menu->addAction( &mainwindow->printAction() );
   
   if( editionwindow ) menu->addAction( &editionwindow->closeAction() );
  

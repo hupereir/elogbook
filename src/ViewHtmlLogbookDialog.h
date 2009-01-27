@@ -38,12 +38,12 @@
 #include <string>
 
 #include "BrowsedLineEditor.h"
-#include "CustomDialog.h"
+#include "ViewHtmlDialog.h"
 #include "LineEditor.h"
 #include "File.h"
 
 //! new attachment popup dialog
-class ViewHtmlLogbookDialog: public CustomDialog
+class ViewHtmlLogbookDialog: public ViewHtmlDialog
 {
   
   public:
@@ -118,22 +118,6 @@ class ViewHtmlLogbookDialog: public CustomDialog
     if( iter->second->isChecked() ) out |= iter->first;
     return out;
   }
-    
-  //! command
-  void setCommand( const std::string& file )
-  { command_->setFile( file ); } 
-  
-  //! command
-  QString command( void ) const
-  { return command_->editor().text(); }
-  
-  //! file
-  void setFile( const File& file )
-  { file_->setFile( file ); }
-  
-  //! file
-  File file( void ) const
-  { return File( qPrintable( file_->editor().text() ) ); }
   
   private:
   
@@ -151,12 +135,6 @@ class ViewHtmlLogbookDialog: public CustomDialog
   
   //! checkboxes
   CheckBoxMap entry_check_boxes_;
-  
-  //! command
-  BrowsedLineEditor *command_;
-  
-  //! file
-  BrowsedLineEditor *file_;  
       
 };
 

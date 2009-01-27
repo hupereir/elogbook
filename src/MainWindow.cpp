@@ -211,7 +211,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
   entry_toolbar_->addAction( &deleteEntryAction() );
   entry_toolbar_->addAction( &saveAction() );
-  entry_toolbar_->addAction( &viewHtmlAction() );
+  entry_toolbar_->addAction( &printAction() );
    
   // create logEntry list
   v_layout->addWidget( entry_list_ = new AnimatedTreeView( right ), 1 );
@@ -1100,9 +1100,10 @@ void MainWindow::_installActions( void )
   revert_to_save_action_->setShortcut( Qt::Key_F5 );
   connect( revert_to_save_action_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
-  view_html_action_ = new QAction( IconEngine::get( ICONS::HTML ), "&Html", this );
-  view_html_action_->setToolTip( "Convert logbook to html" );
-  connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
+  print_action_ = new QAction( IconEngine::get( ICONS::PRINT ), "&Print", this );
+  print_action_->setShortcut( Qt::CTRL + Qt::Key_P );
+  print_action_->setToolTip( "Convert logbook to html and print" );
+  connect( print_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
 
   logbook_statistics_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics", this );
   logbook_statistics_action_->setToolTip( "View logbook statistics" );
@@ -2418,10 +2419,7 @@ void MainWindow::_updateEntryActions( void )
   deleteEntryAction().setEnabled( has_selection );
   entryColorAction().setEnabled( has_selection );
   entryKeywordAction().setEnabled( has_selection );
-  editEntryTitleAction().setEnabled( has_selection );
-  
-  //editEntryTitleAction().setEnabled( logEntryList().selectionModel()->currentIndex().isValid() );
-  
+  editEntryTitleAction().setEnabled( has_selection );  
   return;
 }
 
@@ -2437,21 +2435,32 @@ void MainWindow::_viewHtml( void )
     return;
   }
 
+  // check if logbook is modified
+  if( logbook()->modified() ) askForSave();
+  
   // create custom dialog, retrieve check vbox child
   ViewHtmlLogbookDialog dialog( this );
   dialog.setSelection( ViewHtmlLogbookDialog::ALL );
   dialog.setLogbookMask( Logbook::HTML_ALL_MASK );
   dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
-  dialog.setCommand(
-    ( AttachmentType::HTML.editCommand().size() ) ?
-    AttachmentType::HTML.editCommand():"" );
 
+  // add commands
+  /* command list contains the HTML editor, PDF editor and any additional user specified command */
+  list<string> commands( XmlOptions::get().specialOptions<string>( "PRINT_COMMAND" ) );
+  if( !AttachmentType::HTML.editCommand().empty() ) commands.push_back( AttachmentType::HTML.editCommand() );
+  for( list<string>::iterator iter = commands.begin(); iter != commands.end(); iter++ )
+  { dialog.addCommand( iter->c_str() ); }
+  
   ostringstream what;
   what << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
   dialog.setFile( File( what.str() ).addPath( Util::tmp() ) );
 
   // map dialog
   if( !dialog.centerOnParent().exec() ) return;
+
+  // save command
+  QString command( dialog.command() );
+  XmlOptions::get().add( "PRINT_COMMAND", Option( qPrintable( command ), Option::RECORDABLE|Option::CURRENT ) );  
 
   // retrieve/check file
   File file( dialog.file() );

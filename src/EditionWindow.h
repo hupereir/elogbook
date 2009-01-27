@@ -222,8 +222,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   { return *entry_info_action_; }
   
   //! view html
-  QAction& viewHtmlAction( void ) const
-  { return *view_html_action_; }
+  QAction& printAction( void ) const
+  { return *print_action_; }
   
   //! split view horizontal
   QAction& splitViewHorizontalAction( void ) const
@@ -529,7 +529,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   QAction* entry_info_action_;
   
   //! view html
-  QAction* view_html_action_;
+  QAction* print_action_;
   
   //! split view horizontal
   QAction* split_view_horizontal_action_;

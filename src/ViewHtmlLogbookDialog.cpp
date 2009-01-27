@@ -44,24 +44,11 @@ using namespace std;
 
 //___________________________________________________
 ViewHtmlLogbookDialog::ViewHtmlLogbookDialog( QWidget* parent ):
-  CustomDialog( parent )
+  ViewHtmlDialog( parent )
 {
   
   Debug::Throw( "ViewHtmlLogbookDialog::ViewHtmlLogbookDialog.\n" );
   
-  setWindowTitle( "eLogbook - HTML" );
-  mainLayout().setSpacing(2);
-
-  // command
-  mainLayout().addWidget( new QLabel( "Command:", this ) );
-  mainLayout().addWidget( command_ = new BrowsedLineEditor( this ) );
-  command_->setFileMode( QFileDialog::ExistingFile );
-  
-  // file
-  mainLayout().addWidget( new QLabel( "File:", this ) );
-  mainLayout().addWidget( file_ = new BrowsedLineEditor( this ) );
-  file_->setFileMode( QFileDialog::AnyFile );
-
   // entries
   QButtonGroup* group( new QButtonGroup( this ) );
   group->setExclusive( true );  

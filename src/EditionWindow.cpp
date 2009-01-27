@@ -211,7 +211,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   toolbar->addAction( &spellCheckAction() );
   #endif
 
-  toolbar->addAction( &viewHtmlAction() );
+  toolbar->addAction( &printAction() );
   toolbar->addAction( &entryInfoAction() );
   
   // extra toolbar
@@ -639,9 +639,10 @@ void EditionWindow::_installActions( void )
   connect( entry_info_action_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
   
   // html
-  addAction( view_html_action_ = new QAction( IconEngine::get( ICONS::HTML ), "&View HTML", this ) );
-  view_html_action_->setToolTip( "Convert current entry to HTML file" );
-  connect( view_html_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
+  addAction( print_action_ = new QAction( IconEngine::get( ICONS::PRINT ), "&Print", this ) );
+  print_action_->setToolTip( "Convert current entry to html and print" );
+  print_action_->setShortcut( Qt::CTRL + Qt::Key_P );
+  connect( print_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
     
   // split action
   addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
@@ -869,11 +870,20 @@ void EditionWindow::_viewHtml( void )
     return;
   }
 
+  // check if entry is modified
+  if( modified() ) askForSave();
+
   // create custom dialog, retrieve check vbox child
   ViewHtmlEntryDialog dialog( this );
   dialog.setLogbookMask( 0 );
   dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
-  dialog.setCommand( (AttachmentType::HTML.editCommand().size() ) ? AttachmentType::HTML.editCommand():"" );
+
+  // add commands
+  /* command list contains the HTML editor, PDF editor and any additional user specified command */
+  list<string> commands( XmlOptions::get().specialOptions<string>( "PRINT_COMMAND" ) );
+  if( !AttachmentType::HTML.editCommand().empty() ) commands.push_back( AttachmentType::HTML.editCommand() );
+  for( list<string>::iterator iter = commands.begin(); iter != commands.end(); iter++ )
+  { dialog.addCommand( iter->c_str() ); }
 
   // generate default filename
   ostringstream what;
@@ -883,6 +893,10 @@ void EditionWindow::_viewHtml( void )
   // map dialog
   if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
 
+  // save command
+  QString command( dialog.command() );
+  XmlOptions::get().add( "PRINT_COMMAND", Option( qPrintable( command ), Option::RECORDABLE|Option::CURRENT ) );  
+  
   // retrieve/check file
   File file( dialog.file() );
   if( file.empty() ) {
@@ -930,11 +944,10 @@ void EditionWindow::_viewHtml( void )
   out.close();
 
   // retrieve command
-  string command( dialog.command() );
-  if( command.empty() ) return;
+  if( command.isEmpty() ) return;
 
   // execute command
-  ( Command( command.c_str() ) << file.c_str() ).run();
+  ( Command( command ) << file.c_str() ).run();
 
   return;
 }

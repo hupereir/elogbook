@@ -73,8 +73,8 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // attachment editors
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - attachments.\n" );
-  QWidget* page = &addPage( "Attachments", "System dependent commands used to edit attachments" );
-  page->layout()->addWidget( box = new QGroupBox( "Editors", page ));
+  QWidget* page = &addPage( "Commands", "System dependent commands used to edit attachments" );
+  page->layout()->addWidget( box = new QGroupBox( "Attachment Editors", page ));
 
   GridLayout* grid_layout = new GridLayout();
   grid_layout->setSpacing(5);
@@ -116,6 +116,19 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   spinbox->setMaximum( 96 );
   spinbox->setToolTip( "Icon size in attachment lists" );
   addOptionWidget( spinbox );  
+
+  page->layout()->addWidget( box = new QGroupBox( "Print Commands", page ) );  
+
+  box->setLayout( new QVBoxLayout() );
+  box->layout()->setMargin(5);
+  box->layout()->setSpacing(5);
+
+  OptionListBox* listbox;
+  listbox = new OptionListBox( box, "PRINT_COMMAND" );
+  listbox->setBrowsable( true );
+  addOptionWidget( listbox );
+  listbox->setToolTip( "Available command for printing/editing converted files" );
+  box->layout()->addWidget( listbox );
 
   // listview configuration
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - lists.\n" );
@@ -205,7 +218,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   box->layout()->setSpacing(5);
   page->layout()->addWidget( box );
  
-  OptionListBox* listbox;
   box->layout()->addWidget( listbox = new OptionListBox( box, "COLOR" ) );
   listbox->setToolTip( "Colors used for logbook entry display" );
   addOptionWidget( listbox );

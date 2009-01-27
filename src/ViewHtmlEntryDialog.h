@@ -37,12 +37,12 @@
 #include <string>
 
 #include "BrowsedLineEditor.h"
-#include "CustomDialog.h"
 #include "LineEditor.h"
 #include "File.h"
+#include "ViewHtmlDialog.h"
 
 //! new attachment popup dialog
-class ViewHtmlEntryDialog: public CustomDialog
+class ViewHtmlEntryDialog: public ViewHtmlDialog
 {
   
   public:
@@ -85,34 +85,7 @@ class ViewHtmlEntryDialog: public CustomDialog
     if( iter->second->isChecked() ) out |= iter->first;
     return out;
   }
-    
-  //! set command manually
-  void setCommand( const std::string& command )
-  { command_->setEditText( command.c_str() ); }
-  
-  //! add commands to the combo-box list
-  void addCommand( const std::string& command )
-  { command_->addItem( command.c_str() ); }
-  
-  //! commands
-  std::list< std::string > commands( void ) const
-  { 
-    Debug::Throw() << "PrintDialog::commands - maxCount: " << command_->QComboBox::count() << std::endl;
-    std::list< std::string > out;
-    for( int row = 0; row < command_->QComboBox::count(); row++ )
-    { out.push_back( qPrintable( command_->itemText( row ) ) ); }
-    
-    return out;
-  }
-  
-  //! file
-  void setFile( const File& file )
-  { file_->setFile( file ); }
-  
-  //! file
-  File file( void ) const
-  { return File( qPrintable( file_->editor().text() ) ); }
-  
+        
   private:
   
   //! map mask bits to checkboxes
@@ -123,13 +96,7 @@ class ViewHtmlEntryDialog: public CustomDialog
   
   //! checkboxes
   CheckBoxMap entry_check_boxes_;
-  
-  //! print command
-  CustomComboBox* command_;
-  
-  //! file
-  BrowsedLineEditor *file_;  
-      
+        
 };
 
 #endif

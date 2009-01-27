@@ -33,16 +33,18 @@
 */
 
 #include <QString>
-#include <QStringList>
 
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
+#include "CustomComboBox.h"
 #include "LineEditor.h"
 #include "File.h"
 
 //! new attachment popup dialog
 class ViewHtmlDialog: public CustomDialog
 {
+  
+  Q_OBJECT
   
   public:
       
@@ -58,20 +60,9 @@ class ViewHtmlDialog: public CustomDialog
   { _commandEditor().setEditText( command ); }
   
   //! add commands to the combo-box list
-  void addCommand( const std::string& command )
+  void addCommand( QString command )
   { _commandEditor().addItem( command ); }
-  
-  //! commands
-  QStringList commands( void ) const
-  { 
-    Debug::Throw() << "PrintDialog::commands - maxCount: " << _commandEditor().QComboBox::count() << std::endl;
-    QStringList out;
-    for( int row = 0; row < _commandEditor().QComboBox::count(); row++ )
-    { out.push_back( _commandEditor().itemText( row ) ); }
     
-    return out;
-  }
-  
   //! command
   QString command( void ) const
   { return _commandEditor().currentText(); }
@@ -94,6 +85,11 @@ class ViewHtmlDialog: public CustomDialog
   CustomComboBox& _commandEditor( void ) const
   { return *command_editor_; }  
   
+  protected slots:
+  
+  //! browse print command
+  void _browseCommand( void );
+
   private:
   
   //! print command
