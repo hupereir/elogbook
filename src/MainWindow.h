@@ -448,7 +448,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   void _updateEntryActions( void );
   
   //! create HTML file from logbook
-  virtual void _viewHtml( void );
+  virtual void _print( void );
   
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )

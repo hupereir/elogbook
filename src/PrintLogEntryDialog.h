@@ -1,5 +1,5 @@
-#ifndef ViewHtmlLogbookDialog_h
-#define ViewHtmlLogbookDialog_h
+#ifndef PrintLogEntryDialog_h
+#define PrintLogEntryDialog_h
 
 // $Id$
 
@@ -25,7 +25,7 @@
  *******************************************************************************/
 
 /*!
-   \file ViewHtmlLogbookDialog.h
+   \file PrintLogEntryDialog.h
    \brief new logbook popup dialog
    \author Hugo Pereira
    \version $Revision$
@@ -33,60 +33,27 @@
 */
 
 #include <QCheckBox>
-#include <QRadioButton>
 #include <map>
 #include <string>
 
 #include "BrowsedLineEditor.h"
-#include "ViewHtmlDialog.h"
 #include "LineEditor.h"
 #include "File.h"
+#include "PrintDialog.h"
 
 //! new attachment popup dialog
-class ViewHtmlLogbookDialog: public ViewHtmlDialog
+class PrintLogEntryDialog: public PrintDialog
 {
   
   public:
-
-  //! selection mode
-  enum Selection
-  {
-    ALL,
-    VISIBLE,
-    SELECTED
-  };
-          
+      
   //! constructor
-  ViewHtmlLogbookDialog( QWidget* parent );
+  PrintLogEntryDialog( QWidget* parent );
   
   //! destructor
-  virtual ~ViewHtmlLogbookDialog( void )
+  virtual ~PrintLogEntryDialog( void )
   {}
 
-  //! selection
-  void setSelection( const Selection& selection )
-  { radio_buttons_[selection]->setChecked( true ); }
-  
-  //! selection
-  Selection selection( void ) const
-  {
-    for( RadioButtonMap::const_iterator iter = radio_buttons_.begin(); iter != radio_buttons_.end(); iter++ )
-    if( iter->second->isChecked() ) return iter->first;
-    return ALL;
-  }  
-
-  //! true if selection is ALL
-  bool allEntries( void ) const
-  { return selection() == ALL; }
-  
-  //! true if selection is VISIBLE
-  bool visibleEntries( void ) const
-  { return selection() == VISIBLE; }
-
-  //! true if selection is VISIBLE
-  bool selectedEntries( void ) const
-  { return selection() == SELECTED; }
-  
   //! mask
   void setLogbookMask( const unsigned int& mask )
   {
@@ -118,24 +85,18 @@ class ViewHtmlLogbookDialog: public ViewHtmlDialog
     if( iter->second->isChecked() ) out |= iter->first;
     return out;
   }
-  
+        
   private:
   
-  //! shortcut to map of Radio buttons
-  typedef std::map<Selection, QRadioButton*> RadioButtonMap;
-
-  //! shortcut to map of check boxes    
+  //! map mask bits to checkboxes
   typedef std::map<unsigned int, QCheckBox*> CheckBoxMap;
-        
-  //! selection radio button
-  RadioButtonMap radio_buttons_;    
       
   //! checkboxes
   CheckBoxMap logbook_check_boxes_;
   
   //! checkboxes
   CheckBoxMap entry_check_boxes_;
-      
+        
 };
 
 #endif

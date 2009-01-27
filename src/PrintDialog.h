@@ -1,5 +1,5 @@
-#ifndef ViewHtmlDialog_h
-#define ViewHtmlDialog_h
+#ifndef PrintDialog_h
+#define PrintDialog_h
 
 // $Id$
 
@@ -25,7 +25,7 @@
  *******************************************************************************/
 
 /*!
-   \file ViewHtmlDialog.h
+   \file PrintDialog.h
    \brief convert logbook/logEntry to HTML
    \author Hugo Pereira
    \version $Revision$
@@ -41,7 +41,7 @@
 #include "File.h"
 
 //! new attachment popup dialog
-class ViewHtmlDialog: public CustomDialog
+class PrintDialog: public CustomDialog
 {
   
   Q_OBJECT
@@ -49,10 +49,10 @@ class ViewHtmlDialog: public CustomDialog
   public:
       
   //! constructor
-  ViewHtmlDialog( QWidget* parent );
+  PrintDialog( QWidget* parent );
   
   //! destructor
-  virtual ~ViewHtmlDialog( void )
+  virtual ~PrintDialog( void )
   {}
 
   //! set command manually

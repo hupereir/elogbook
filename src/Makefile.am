@@ -105,12 +105,12 @@ noinst_HEADERS = \
   NewAttachmentDialog.h \
   NewLogbookDialog.h \
   OpenAttachmentDialog.h \
+  PrintDialog.h \
+  PrintLogEntryDialog.h \
+  PrintLogbookDialog.h \
   ProgressBar.h \
   SearchPanel.h \
   SelectionStatusBar.h \
-  ViewHtmlDialog.h \
-  ViewHtmlEntryDialog.h \
-  ViewHtmlLogbookDialog.h \
   XmlDef.h
 
 elogbook_SOURCES = \
@@ -137,12 +137,12 @@ elogbook_SOURCES = \
   NewAttachmentDialog.cpp \
   NewLogbookDialog.cpp \
   OpenAttachmentDialog.cpp \
+  PrintDialog.cpp \
+  PrintLogEntryDialog.cpp \
+  PrintLogbookDialog.cpp \
   ProgressBar.cpp \
   SearchPanel.cpp \
   SelectionStatusBar.cpp \
-  ViewHtmlDialog.cpp \
-  ViewHtmlEntryDialog.cpp \
-  ViewHtmlLogbookDialog.cpp \
   elogbook.cpp
 
 nodist_elogbook_SOURCES = \
@@ -160,10 +160,10 @@ nodist_elogbook_SOURCES = \
   moc_MainWindow.cpp \
   moc_Menu.cpp \
   moc_NewAttachmentDialog.cpp \
+  moc_PrintDialog.cpp \
   moc_ProgressBar.cpp \
   moc_SearchPanel.cpp \
-  moc_SelectionStatusBar.cpp \
-  moc_ViewHtmlDialog.cpp
+  moc_SelectionStatusBar.cpp
 
 copy_logbook_SOURCES = copy_logbook.cpp
 synchronize_logbook_SOURCES = synchronize_logbook.cpp

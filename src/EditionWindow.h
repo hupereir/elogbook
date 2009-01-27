@@ -297,7 +297,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   void _cloneWindow( void );
   
   //! view current entry as HTML
-  void _viewHtml( void );
+  void _print( void );
 
   //! unlock read-only editors
   void _unlock( void );

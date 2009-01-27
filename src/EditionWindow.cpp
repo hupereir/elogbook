@@ -62,7 +62,7 @@
 #include "StatusBar.h"
 #include "Str.h"
 #include "Util.h"
-#include "ViewHtmlEntryDialog.h"
+#include "PrintLogEntryDialog.h"
 
 #include "Config.h"
 #if WITH_ASPELL
@@ -642,7 +642,7 @@ void EditionWindow::_installActions( void )
   addAction( print_action_ = new QAction( IconEngine::get( ICONS::PRINT ), "&Print", this ) );
   print_action_->setToolTip( "Convert current entry to html and print" );
   print_action_->setShortcut( Qt::CTRL + Qt::Key_P );
-  connect( print_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
+  connect( print_action_, SIGNAL( triggered() ), SLOT( _print() ) );
     
   // split action
   addAction( split_view_horizontal_action_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
@@ -859,9 +859,9 @@ void EditionWindow::_cloneWindow( void )
 }
 
 //_____________________________________________
-void EditionWindow::_viewHtml( void )
+void EditionWindow::_print( void )
 {
-  Debug::Throw( "EditionWindow::_viewHtml.\n" );
+  Debug::Throw( "EditionWindow::_print.\n" );
 
   // check logbook entry
   LogEntry *entry( EditionWindow::entry() );
@@ -874,7 +874,7 @@ void EditionWindow::_viewHtml( void )
   if( modified() ) askForSave();
 
   // create custom dialog, retrieve check vbox child
-  ViewHtmlEntryDialog dialog( this );
+  PrintLogEntryDialog dialog( this );
   dialog.setLogbookMask( 0 );
   dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
 
@@ -938,7 +938,7 @@ void EditionWindow::_viewHtml( void )
   // dump entry
   body.appendChild( entry->htmlElement( document, html_entry_mask ) );
 
-  // Debug::Throw(0) << "EditionWindow::_viewHtml - " << qPrintable( document.toString() ) << endl;
+  // Debug::Throw(0) << "EditionWindow::_print - " << qPrintable( document.toString() ) << endl;
   
   out.write( document.toString().toAscii() );
   out.close();

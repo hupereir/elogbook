@@ -62,7 +62,7 @@
 #include "SelectionStatusBar.h"
 #include "Singleton.h"
 #include "Util.h"
-#include "ViewHtmlLogbookDialog.h"
+#include "PrintLogbookDialog.h"
 #include "XmlOptions.h"
 
 using namespace std;
@@ -1103,7 +1103,7 @@ void MainWindow::_installActions( void )
   print_action_ = new QAction( IconEngine::get( ICONS::PRINT ), "&Print", this );
   print_action_->setShortcut( Qt::CTRL + Qt::Key_P );
   print_action_->setToolTip( "Convert logbook to html and print" );
-  connect( print_action_, SIGNAL( triggered() ), SLOT( _viewHtml() ) );
+  connect( print_action_, SIGNAL( triggered() ), SLOT( _print() ) );
 
   logbook_statistics_action_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics", this );
   logbook_statistics_action_->setToolTip( "View logbook statistics" );
@@ -2424,9 +2424,9 @@ void MainWindow::_updateEntryActions( void )
 }
 
 //_____________________________________________
-void MainWindow::_viewHtml( void )
+void MainWindow::_print( void )
 {
-  Debug::Throw( "MainWindow::_viewHtml.\n" );
+  Debug::Throw( "MainWindow::_print.\n" );
 
   // check logbook
   if( !logbook_ )
@@ -2439,8 +2439,8 @@ void MainWindow::_viewHtml( void )
   if( logbook()->modified() ) askForSave();
   
   // create custom dialog, retrieve check vbox child
-  ViewHtmlLogbookDialog dialog( this );
-  dialog.setSelection( ViewHtmlLogbookDialog::ALL );
+  PrintLogbookDialog dialog( this );
+  dialog.setSelection( PrintLogbookDialog::ALL );
   dialog.setLogbookMask( Logbook::HTML_ALL_MASK );
   dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
 

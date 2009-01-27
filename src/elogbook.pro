@@ -54,11 +54,11 @@ HEADERS = \
   NewAttachmentDialog.h \
   NewLogbookDialog.h \
   OpenAttachmentDialog.h \
+  PrintLogEntryDialog.h \
+  PrintLogbookDialog.h \
   ProgressBar.h \
   SearchPanel.h \
   SelectionStatusBar.h \
-  ViewHtmlEntryDialog.h \
-  ViewHtmlLogbookDialog.h \
   elogbook.h
 
 SOURCES = \
@@ -85,9 +85,9 @@ SOURCES = \
   NewAttachmentDialog.cpp \
   NewLogbookDialog.cpp \
   OpenAttachmentDialog.cpp \
+  PrintLogEntryDialog.cpp \
+  PrintLogbookDialog.cpp \
   ProgressBar.cpp \
   SearchPanel.cpp \
   SelectionStatusBar.cpp \
-  ViewHtmlEntryDialog.cpp \
-  ViewHtmlLogbookDialog.cpp \
   elogbook.cpp

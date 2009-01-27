@@ -23,7 +23,7 @@
  *******************************************************************************/
 
 /*!
-   \file ViewHtmlEntryDialog.cpp
+   \file PrintLogbookDialog.cpp
    \brief new logbook popup dialog
    \author Hugo Pereira
    \version $Revision$
@@ -33,26 +33,55 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QGroupBox>
-#include <QLayout>
 #include <QLabel>
+#include <QLayout>
 
-#include "ViewHtmlEntryDialog.h"
+#include "PrintLogbookDialog.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 
 using namespace std;
 
 //___________________________________________________
-ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
-  ViewHtmlDialog( parent )
+PrintLogbookDialog::PrintLogbookDialog( QWidget* parent ):
+  PrintDialog( parent )
 {
-  Debug::Throw( "ViewHtmlEntryDialog::ViewHtmlEntryDialog.\n" );
+  
+  Debug::Throw( "PrintLogbookDialog::PrintLogbookDialog.\n" );
+  
+  // entries
+  QButtonGroup* group( new QButtonGroup( this ) );
+  group->setExclusive( true );  
 
-  QPushButton* button = new QPushButton( "More ... ", this );
+  QGroupBox* group_box = new QGroupBox( "Entries", this );
+  group_box->setLayout( new QHBoxLayout() );
+  group_box->layout()->setSpacing( 5 );
+  group_box->layout()->setMargin( 5 );
+  mainLayout().addWidget( group_box, 0 );
+  
+  group_box->layout()->addWidget( radio_buttons_[ALL] = new QRadioButton( "&All", group_box ) );
+  group_box->layout()->addWidget( radio_buttons_[VISIBLE] = new QRadioButton( "&Visible", group_box ) );
+  group_box->layout()->addWidget( radio_buttons_[SELECTED] = new QRadioButton("&Selected", group_box ) );
+  
+  group->addButton( radio_buttons_[ALL] );
+  group->addButton( radio_buttons_[VISIBLE] );
+  group->addButton( radio_buttons_[SELECTED] );
+  
+  // configuration  
+  group_box = new QGroupBox( "Configuration", this );
+  group_box->setLayout( new QHBoxLayout() );
+  group_box->layout()->setSpacing( 5 );
+  group_box->layout()->setMargin( 5 );
+  mainLayout().addWidget( group_box, 0 );
+  
+  group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_TABLE] = new QCheckBox( "&Table of content", group_box ) );
+  group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_CONTENT] = new QCheckBox( "&Content", group_box ) );
+
+  QPushButton* button = new QPushButton( "More ... ", group_box );
   button->setCheckable( true );
-  mainLayout().addWidget( button );
+  group_box->layout()->addWidget( button );
   connect( button, SIGNAL( toggled( bool ) ), SLOT( showExtension( bool ) ) );
-
+  
   // extension widget
   QWidget *extension = new QWidget( this );
   extension->setLayout( new QHBoxLayout() );
@@ -61,7 +90,7 @@ ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
   setExtension( extension );
   setOrientation( Qt::Vertical );
   
-  QGroupBox* group_box = new QGroupBox( "logbook configuration", extension );
+  group_box = new QGroupBox( "Logbook configuration", extension );
   group_box->setLayout( new QVBoxLayout() );
   group_box->layout()->setSpacing( 5 );
   group_box->layout()->setMargin( 5 );
@@ -75,7 +104,6 @@ ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_FILE] = new QCheckBox( "File", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_DIRECTORY] = new QCheckBox( "Attachment directory", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_COMMENTS] = new QCheckBox( "Comments", group_box ) );
-      
   
   group_box = new QGroupBox( "Entry configuration", extension );
   group_box->setLayout( new QVBoxLayout() );
@@ -92,5 +120,5 @@ ViewHtmlEntryDialog::ViewHtmlEntryDialog( QWidget* parent ):
   group_box->layout()->addWidget( entry_check_boxes_[LogEntry::HTML_TEXT] = new QCheckBox( "Text", group_box ) );
 
   adjustSize();
-
+  
 }
