@@ -86,13 +86,24 @@ class ViewHtmlEntryDialog: public CustomDialog
     return out;
   }
     
-  //! command
-  void setCommand( const std::string& file )
-  { command_->setFile( file ); } 
+  //! set command manually
+  void setCommand( const std::string& command )
+  { command_->setEditText( command.c_str() ); }
   
-  //! command
-  std::string command( void ) const
-  { return qPrintable( command_->editor().text() ); }
+  //! add commands to the combo-box list
+  void addCommand( const std::string& command )
+  { command_->addItem( command.c_str() ); }
+  
+  //! commands
+  std::list< std::string > commands( void ) const
+  { 
+    Debug::Throw() << "PrintDialog::commands - maxCount: " << command_->QComboBox::count() << std::endl;
+    std::list< std::string > out;
+    for( int row = 0; row < command_->QComboBox::count(); row++ )
+    { out.push_back( qPrintable( command_->itemText( row ) ) ); }
+    
+    return out;
+  }
   
   //! file
   void setFile( const File& file )
@@ -113,8 +124,8 @@ class ViewHtmlEntryDialog: public CustomDialog
   //! checkboxes
   CheckBoxMap entry_check_boxes_;
   
-  //! command
-  BrowsedLineEditor *command_;
+  //! print command
+  CustomComboBox* command_;
   
   //! file
   BrowsedLineEditor *file_;  
