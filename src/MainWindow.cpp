@@ -2446,10 +2446,10 @@ void MainWindow::_print( void )
 
   // add commands
   /* command list contains the HTML editor, PDF editor and any additional user specified command */
-  list<string> commands( XmlOptions::get().specialOptions<string>( "PRINT_COMMAND" ) );
+  Options::List commands( XmlOptions::get().specialOptions( "PRINT_COMMAND" ) );
   if( !AttachmentType::HTML.editCommand().empty() ) commands.push_back( AttachmentType::HTML.editCommand() );
-  for( list<string>::iterator iter = commands.begin(); iter != commands.end(); iter++ )
-  { dialog.addCommand( iter->c_str() ); }
+  for( Options::List::iterator iter = commands.begin(); iter != commands.end(); iter++ )
+  { dialog.addCommand( iter->raw().c_str() ); }  
   
   ostringstream what;
   what << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
