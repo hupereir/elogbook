@@ -409,6 +409,8 @@ void EditionWindow::displayColor( void )
   if( !color_widget_ ) 
   { 
     color_widget_ = new ColorWidget( title_->parentWidget() );
+    color_widget_->setToolTip( "Change entry color.\nThis is used to tag entries in the main window list." );
+    color_widget_->setAutoRaise( true );
     color_widget_->setPopupMode( QToolButton::InstantPopup );
     if( color_menu_ ) color_widget_->setMenu( color_menu_ );
     title_layout_->addWidget( color_widget_ );
@@ -1418,9 +1420,6 @@ void EditionWindow::ColorWidget::paintEvent( QPaintEvent* )
   initStyleOption(&option);
   
   // first draw normal frame and not text/icon
-  // option.state &= (~QStyle::State_MouseOver );
-  // option.state &= (~QStyle::State_Sunken );
-  // option.state |= QStyle::State_Raised;
   option.features &= (~QStyleOptionToolButton::HasMenu);
   painter.drawComplexControl(QStyle::CC_ToolButton, option);
 
