@@ -357,32 +357,15 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
     QPainter painter( this );
     painter.setClipRect( event->rect() );
     painter.setRenderHint( QPainter::Antialiasing );
-    
-    QLinearGradient gradient( rect().topLeft(), rect().bottomLeft() );
-    
-    QColor first( color_ );
-    first.setAlpha( 50 );
-    gradient.setColorAt(1, first );
-    
-    QColor second( color_ );
-    gradient.setColorAt(0, second );
-
-    if( 1 )
-    {
-      QPen pen;
-      pen.setWidth( 2 );
-      pen.setBrush( gradient );
-      pen.setJoinStyle( Qt::RoundJoin );
-      painter.setPen( pen );
-      painter.setBrush( Qt::transparent );
-    } else {
-      painter.setPen( Qt::NoPen );
-      painter.setBrush( gradient );
-    }
-    
-    painter.drawPath( RoundedPath( QRectF( rect().adjusted( 1, 1, -1, -1 ) ) ) );
-    
+    painter.setBrush( color_ );
+    painter.setPen( Qt::NoPen );
+    QRectF tmp_rect( FormatColorButton::rect() );
+    tmp_rect.setWidth( 0.5*min( rect().width(), rect().height() ) );
+    tmp_rect.setHeight( 0.5*min( rect().width(), rect().height() ) );
+    tmp_rect.translate( rect().width() - tmp_rect.width(), rect().height() - tmp_rect.height() );
+    painter.drawEllipse( tmp_rect );
     painter.end();
+
   }
   
   // default handling if color is invalid

@@ -1813,12 +1813,13 @@ void MainWindow::_newEntry( void )
     edit_frame->setColorMenu( color_menu_ );
     Key::associate( this, edit_frame );
   }
-  
-  edit_frame->centerOnWidget( this );
-  edit_frame->show();
 
   // call NewEntry for the selected frame
   edit_frame->newEntryAction().trigger();
+
+  // show frame
+  edit_frame->centerOnWidget( this );
+  edit_frame->show();
 
 }
 
@@ -1940,11 +1941,6 @@ void MainWindow::_displayEntry( LogEntry* entry )
   edit_frame->centerOnWidget( this );
   edit_frame->displayEntry( entry );
   edit_frame->show();
-  
-  // finaly, delete closed editors 
-  /* one might skip that step to be more memory aggressive */
-  // for( BASE::KeySet<EditionWindow>::iterator iter=frames.begin(); iter != frames.end(); iter++ )
-  // { if( (*iter)->isClosed() ) (*iter)->deleteLater(); }
   
   Debug::Throw( "MainWindow::_displayEntry - done.\n" );
 
