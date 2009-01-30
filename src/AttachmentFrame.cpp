@@ -82,7 +82,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   layout()->addWidget( list_ = new TreeView( this ) );
   list().setModel( &_model() );
   list().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
-  list().setMaskOptionName( "ATTACHMENTLIST_MASK" );
+  list().setOptionName( "ATTACHMENTLIST" );
   list().setTextElideMode ( Qt::ElideMiddle );
   
   // install actions
@@ -98,7 +98,6 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):
   // connections
   connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );
   connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
-  connect( list().header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
   connect( list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
   connect( list().selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
   connect( &list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
@@ -462,25 +461,6 @@ void AttachmentFrame::_updateConfiguration( void )
   Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
   int icon_size( XmlOptions::get().get<int>( "ATTACHMENT_LIST_ICON_SIZE" ) );
   list().setIconSize( QSize( icon_size, icon_size ) );
-  
-  // session files list sorting
-  if( XmlOptions::get().find( "ATTACHMENT_LIST_SORT_COLUMN" ) && XmlOptions::get().find( "ATTACHMENT_LIST_SORT_ORDER" ) )
-  { 
-    
-    list().sortByColumn( 
-      XmlOptions::get().get<int>( "ATTACHMENT_LIST_SORT_COLUMN" ), 
-      (Qt::SortOrder) XmlOptions::get().get<int>( "ATTACHMENT_LIST_SORT_ORDER" ) ); 
-  }
-  
-}
-
-//______________________________________________________________________
-void AttachmentFrame::_storeSortMethod( int column, Qt::SortOrder order )
-{
-  
-  Debug::Throw( "AttachmentFrame::_storeSortMethod.\n" );
-  XmlOptions::get().set<int>( "ATTACHMENT_LIST_SORT_COLUMN", column );
-  XmlOptions::get().set<int>( "ATTACHMENT_LIST_SORT_ORDER", order );
   
 }
 

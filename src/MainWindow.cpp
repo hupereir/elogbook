@@ -218,7 +218,7 @@ MainWindow::MainWindow( QWidget *parent ):
   logEntryList().setModel( &_logEntryModel() );
   logEntryList().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   logEntryList().setDragEnabled(true); 
-  logEntryList().setMaskOptionName( "ENTRY_LIST_MASK" );
+  logEntryList().setOptionName( "ENTRY_LIST" );
   
   // the use of a custom delegate unfortunately disable the 
   // nice selection appearance of the oxygen style.
