@@ -88,7 +88,7 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // local layout
   QVBoxLayout *layout = new QVBoxLayout();
-  layout->setMargin(2);
+  layout->setMargin(0);
   layout->setSpacing(2);
   main->setLayout( layout );
     

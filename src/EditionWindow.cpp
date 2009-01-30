@@ -91,14 +91,14 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   setCentralWidget( main );
 
   QVBoxLayout *layout = new QVBoxLayout();
-  layout->setMargin(2);
+  layout->setMargin(0);
   layout->setSpacing(2);
   main->setLayout( layout );
   
   // title layout (for editor and button)
   title_layout_ = new QHBoxLayout();
   title_layout_->setMargin(0);
-  title_layout_->setSpacing(2);
+  title_layout_->setSpacing(0);
   layout->addLayout( title_layout_ );
   
   // title label and line
