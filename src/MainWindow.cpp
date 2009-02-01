@@ -137,7 +137,7 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // create keyword list
   v_layout->addWidget( keyword_list_ = new KeywordList( left ), 1 );
-    
+  keywordList().setFindEnabled( false );
   keywordList().setModel( &_keywordModel() );
   keywordList().setRootIsDecorated( true );
   keywordList().setSortingEnabled( true );
@@ -215,6 +215,7 @@ MainWindow::MainWindow( QWidget *parent ):
    
   // create logEntry list
   v_layout->addWidget( entry_list_ = new AnimatedTreeView( right ), 1 );
+  logEntryList().setFindEnabled( false );
   logEntryList().setModel( &_logEntryModel() );
   logEntryList().setSelectionMode( QAbstractItemView::ContiguousSelection ); 
   logEntryList().setDragEnabled(true); 
@@ -745,8 +746,10 @@ void MainWindow::save( const bool& confirm_entries )
   
   // write logbook to file, retrieve result
   Singleton::get().application<Application>()->busy();
+  setEnabled( false );
   bool written( logbook()->write() );
   Singleton::get().application<Application>()->idle();
+  setEnabled( true );
 
   if( written ) { setWindowTitle( Application::MAIN_TITLE );}
   

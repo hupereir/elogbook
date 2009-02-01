@@ -200,7 +200,7 @@ void AttachmentFrame::_new( void )
   dialog.setType( AttachmentType::UNKNOWN );
   dialog.setAction( Attachment::COPY_VERSION );
   dialog.resize( 400, 350 );
-  if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
+  if( dialog.centerOnWidget( AttachmentFrame::window() ).exec() == QDialog::Rejected ) return;
  
   // retrieve Attachment type
   AttachmentType type( dialog.type() );
@@ -495,10 +495,13 @@ void AttachmentFrame::_open( void )
   }
  
   // loop over attachments
+  AttachmentModel::List modified_attachments;
   for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
   {
     
-    Attachment& attachment( **iter );     
+    Attachment& attachment( **iter );  
+    if( attachment.updateTimeStamps() ) modified_attachments.push_back( &attachment );
+    
     AttachmentType type = attachment.type();
     File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
     if( !( type == AttachmentType::URL || fullname.exists() ) )
@@ -510,9 +513,7 @@ void AttachmentFrame::_open( void )
     }
     
     OpenAttachmentDialog dialog( this, attachment );  
-    dialog.centerOnParent();
-    
-    if( dialog.exec() == QDialog::Accepted ) 
+    if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted ) 
     {
       if( dialog.action() == OpenAttachmentDialog::OPEN ) ( Command( dialog.command().c_str() ) << fullname.c_str() ).run();
       else  {
@@ -543,6 +544,9 @@ void AttachmentFrame::_open( void )
     }
   
   }
+  
+  // need to save attachments because timeStamps might have been updated
+  _saveAttachments( modified_attachments );
   
   return;
   
@@ -578,7 +582,7 @@ void AttachmentFrame::_edit( void )
     EditAttachmentDialog dialog( this, attachment );
   
     // map dialog
-    if( dialog.centerOnParent().exec() == QDialog::Accepted )
+    if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted )
     {
       
       // change attachment type
@@ -632,9 +636,7 @@ void AttachmentFrame::_delete( void )
   
     // dialog
     DeleteAttachmentDialog dialog( this, *attachment );
-    dialog.centerOnParent();
-
-    if( dialog.exec() == QDialog::Accepted ) 
+    if( dialog.centerOnWidget( AttachmentFrame::window() ).exec() == QDialog::Accepted ) 
     {
     
       logbook_changed = true;
@@ -944,7 +946,7 @@ void AttachmentFrame::_installActions( void )
 //_______________________________________________________________________
 void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments )
 {
-  Debug::Throw( 0, "AttachmentFrame::_saveAttachments.\n" );
+  Debug::Throw( "AttachmentFrame::_saveAttachments.\n" );
   if( attachments.empty() ) return;
   
   // associated lists

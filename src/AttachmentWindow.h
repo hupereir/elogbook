@@ -73,6 +73,11 @@ class AttachmentWindow: public CustomDialog
   QAction& uniconifyAction( void )
   { return *uniconify_action_; }
 
+  public slots:
+  
+  //! uniconify
+  void uniconify( void );
+  
   protected:
   
   //! overloaded enter event handler

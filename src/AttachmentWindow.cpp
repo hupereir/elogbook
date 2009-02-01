@@ -79,6 +79,13 @@ void AttachmentWindow::show( void )
   QWidget::raise();
 }
   
+//________________________________________
+void AttachmentWindow::uniconify( void )
+{ 
+  CustomDialog::uniconify();
+  frame().list().setFocus();
+}
+
 //____________________________________________
 void AttachmentWindow::enterEvent( QEvent *event )
 {
