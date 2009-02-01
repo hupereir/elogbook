@@ -54,6 +54,7 @@ const QString AttachmentModel::column_titles_[ AttachmentModel::n_columns ] =
   "File",
   "Type",
   "Size",
+  "Creation", 
   "Modification"
 };
 
@@ -108,6 +109,9 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
       
       case SIZE: return attachment->sizeString().c_str();
       
+      case CREATION: 
+      return (attachment->creation().isValid() ) ? attachment->creation().string().c_str(): QVariant();
+     
       case MODIFICATION: 
       return (attachment->modification().isValid() ) ? attachment->modification().string().c_str(): QVariant();
       
@@ -161,12 +165,13 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
   {
 
     // check if column is a TimeStamp
-    case FILE: return first->file() < second->file();
+    case FILE: return first->shortFile() < second->shortFile();
     case ICON: return first->type().name() < second->type().name();
     case TYPE: return first->type().name() < second->type().name();
     case SIZE: return  first->size() < second->size();
+    case CREATION: return first->creation() < second->creation();
     case MODIFICATION: return first->modification() < second->modification();
-    default: return true;
+    default: assert(0);
     
   }
  

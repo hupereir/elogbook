@@ -140,6 +140,14 @@ class AttachmentFrame: public QWidget, public BASE::Key
   QAction& editAction( void ) const
   { return *edit_action_; }
   
+  //! update attachment action
+  QAction& reloadAction( void ) const
+  { return *reload_action_; }
+  
+  //! update attachment action
+  QAction& saveAsAction( void ) const
+  { return *save_as_action_; }
+
   //! delete attachment action
   QAction& deleteAction( void ) const
   { return *delete_action_; }
@@ -182,6 +190,12 @@ class AttachmentFrame: public QWidget, public BASE::Key
  
   //! delete current attachment
   void _delete( void );
+ 
+  //! reload attachment time stamps
+  void _reload( void );
+ 
+  //! save current attachment
+  void _saveAs( void );
 
   //! clean 
   void _clean( void );
@@ -209,6 +223,10 @@ class AttachmentFrame: public QWidget, public BASE::Key
   AttachmentModel& _model( void )
   { return model_; }
   
+  //! save attachment
+  /*! this requires carefull handling of associate entries and Edition windows */
+  void _saveAttachments( const AttachmentModel::List& );
+  
   //! if true, listbox is read only
   bool read_only_;
 
@@ -229,6 +247,12 @@ class AttachmentFrame: public QWidget, public BASE::Key
     
   //! edit attachment
   QAction* edit_action_;
+  
+  //! update actions
+  QAction* reload_action_;
+  
+  //! save as action
+  QAction* save_as_action_;
   
   //! delete attachment
   QAction* delete_action_;

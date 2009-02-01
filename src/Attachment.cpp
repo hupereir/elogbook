@@ -39,6 +39,7 @@
 #include "XmlDef.h"
 #include "XmlOptions.h"
 #include "XmlString.h"
+#include "XmlTimeStamp.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -61,7 +62,10 @@ Attachment::Attachment( const std::string orig, const AttachmentType& type ):
   size_str_( NO_SIZE ),
   is_link_( UNKNOWN ),
   is_valid_( false )
-{ setType( type ); }
+{ 
+  Debug::Throw( "Attachment::Attachment.\n" );
+  setType( type ); 
+}
   
 //_______________________________________
 Attachment::Attachment( const QDomElement& element):
@@ -99,8 +103,10 @@ Attachment::Attachment( const QDomElement& element):
   for(QDomNode child_node = element.firstChild(); !child_node.isNull(); child_node = child_node.nextSibling() ) 
   {
     QDomElement child_element = child_node.toElement(); 
-    if( child_element.tagName() == XML::COMMENTS )
-    setComments( qPrintable( XmlString( child_element.text() ).toText() ) );
+    QString tag_name( child_element.tagName() );
+    if( tag_name == XML::COMMENTS ) setComments( qPrintable( XmlString( child_element.text() ).toText() ) );
+    else if( tag_name == XML::CREATION ) _setCreation( XmlTimeStamp( child_element ) );
+    else if( tag_name == XML::MODIFICATION ) _setModification( XmlTimeStamp( child_element ) );      
     else cout << "Attachment::Attachment - unrecognized child " << qPrintable( child_element.tagName() ) << ".\n";
   }
   
@@ -123,22 +129,27 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
       appendChild( parent.createElement(  XML::COMMENTS ) ).
       appendChild( parent.createTextNode( XmlString( comments().c_str() ).toXml() ) );
   }
+
+  // dump timeStamp
+  if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, parent ) );
+  if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, parent ) );
   
   return out;
     
 }
 
 //_______________________________________
-void Attachment::setType( const AttachmentType& type )
+bool Attachment::setType( const AttachmentType& type )
 {
   
   Debug::Throw() << "Attachment::setType.\n";
+  if( type_ == type ) return false;
   type_  = type;
   
   if( Attachment::type() == AttachmentType::URL ) 
   { setIsLink( YES ); }
   
-  return;
+  return true;
 } 
 
 //___________________________________
@@ -149,12 +160,42 @@ bool Attachment::operator < ( const Attachment &attachment ) const
 void Attachment::updateSize( void )
 {
   
+  Debug::Throw( "Attachment::updateSize.\n" );
+  
   // check type
   if( type() == AttachmentType::URL || size() != 0 || !isValid() ) return;
   size_ = file().fileSize();
   size_str_ = file().sizeString();
    
 }
+
+
+//__________________________________
+bool Attachment::updateTimeStamps( void )
+{
+  
+  Debug::Throw( "Attachment::updateTimeStamps.\n" );
+  bool changed( false );
+  if( type() == AttachmentType::URL ) { 
+    if( !creation().isValid() ) changed |= _setCreation( TimeStamp::now() );
+    changed |= _setModification( TimeStamp() );
+  } else {
+    
+    if( file().exists() )
+    {
+      if( !creation().isValid() ) changed |= _setCreation( file().created() );
+      changed |= _setModification( file().lastModified() );
+    } else {
+      changed |= _setCreation( TimeStamp() );
+      changed |= _setModification( TimeStamp() );
+    }
+    
+  }
+  
+  return changed;
+  
+}
+    
 
 //__________________________________
 LogEntry* Attachment::entry( void ) const
@@ -178,6 +219,8 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   // for URL attachments, just copy origin to file, whatever the command
   if( type() == AttachmentType::URL ) {
     _setFile( source_file_ );
+    _setCreation( TimeStamp::now() );
+    _setModification( TimeStamp() );
     return SUCCESS;
   }
   
@@ -253,6 +296,12 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   
   // update long/short filenames.
   _setFile( destname );
+  if( file().exists() )
+  {
+    _setCreation( file().created() );
+    _setModification( file().lastModified() );
+  }
+  
   setIsValid( true );
   return SUCCESS;
 }

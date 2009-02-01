@@ -64,6 +64,15 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   grid_layout->setMaxCount(2);
   mainLayout().addLayout( grid_layout );
 
+  // creation
+  grid_layout->addWidget( new QLabel( "Created: ", this ) );
+  grid_layout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().string().c_str():"-", this ) );
+
+  // modification
+  grid_layout->addWidget( new QLabel( "Last Modified: ", this ) );
+  grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().string().c_str():"-", this ) );
+
+  // type
   grid_layout->addWidget( new QLabel( "Type:", this ) );
   grid_layout->addWidget( file_type_combo_box_ = new QComboBox( this ) );
   for( 

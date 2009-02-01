@@ -156,6 +156,13 @@ class Attachment: public Counter, public BASE::Key
   //! retrieves associated entry
   LogEntry* entry() const;
   
+  //! update time stamps
+  bool updateTimeStamps( void );
+  
+  //! file creation
+  TimeStamp creation( void ) const
+  { return creation_; }  
+  
   //! retrieves file last modification
   TimeStamp modification( void ) const
   { return modification_; }
@@ -176,15 +183,19 @@ class Attachment: public Counter, public BASE::Key
   { return comments_; }        
   
   //! appends string to attachment comments
-  void setComments( const std::string& buf ) 
-  { comments_ = buf ;}  
+  bool setComments( const std::string& buf ) 
+  { 
+    if( comments_ == buf ) return false;
+    comments_ = buf;
+    return true;
+  }  
   
   //! retrieves attachment type
   const AttachmentType& type( void ) const 
   { return type_; }              
   
   //! changes attachment type
-  void setType( const AttachmentType& type );
+  bool setType( const AttachmentType& type );
   
   //! write html formated to stream 
   void htmlElement( QDomElement& parent, QDomDocument& document ) const;  
@@ -229,6 +240,22 @@ class Attachment: public Counter, public BASE::Key
   //! set attachment file name
   void _setFile( const File& file ); 
   
+  //! file creation
+  bool _setCreation( TimeStamp stamp )
+  { 
+    if( creation_ == stamp ) return false;
+    creation_ = stamp; 
+    return true;
+  }
+
+  //! modification
+  bool _setModification( TimeStamp stamp )
+  { 
+    if( modification_ == stamp ) return false;
+    modification_ = stamp; 
+    return true;
+  }
+
   //! attached file type
   AttachmentType type_;  
   
@@ -246,6 +273,9 @@ class Attachment: public Counter, public BASE::Key
   
   //! corresponding size_string
   std::string size_str_;    
+  
+  //! creation
+  TimeStamp creation_;
   
   //! file last modification timestamp 
   TimeStamp modification_;  

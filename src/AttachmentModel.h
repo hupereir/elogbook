@@ -53,7 +53,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
   {}
   
   //! number of columns
-  enum { n_columns = 5 };
+  enum { n_columns = 6 };
 
  //! column type enumeration
   enum ColumnType {
@@ -61,6 +61,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     FILE,
     TYPE, 
     SIZE,
+    CREATION,
     MODIFICATION
   };
 

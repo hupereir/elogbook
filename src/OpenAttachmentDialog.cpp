@@ -33,6 +33,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
+#include <QTextStream>
 
 #include "GridLayout.h"
 #include "LineEditor.h"
@@ -68,10 +69,16 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 
   // attachment type
   grid_layout->addWidget(new QLabel( "Type: ", this ) );
-  ostringstream what;
-  what << "<B>" << attachment.type().name() << "</B>";
-  grid_layout->addWidget( new QLabel( what.str().c_str(), this ) );
-    
+  grid_layout->addWidget( new QLabel( attachment.type().name().c_str(), this ) );
+
+  // creation
+  grid_layout->addWidget( new QLabel( "Created: ", this ) );
+  grid_layout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().string().c_str():"-", this ) );
+
+  // modification
+  grid_layout->addWidget( new QLabel( "Last Modified: ", this ) );
+  grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().string().c_str():"-", this ) );
+  
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
   group->setExclusive( true );
