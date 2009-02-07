@@ -132,9 +132,9 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   // help manager
   BASE::HelpManager* help( new BASE::HelpManager( this ) );
   File help_file( XmlOptions::get().raw( "HELP_FILE" ) );
-  if( help_file.exists() ) help->install( help_file.c_str() );
+  if( help_file.exists() ) help->install( help_file );
   else {
-    help->setFile( help_file.c_str() );
+    help->setFile( help_file );
     help->install( HelpText );
     help->install( BASE::HelpText, false );
   }
@@ -192,8 +192,8 @@ void Menu::_updateEditorMenu( void )
       if( (*iter)->isClosed() ) continue;
 
       // add menu entry for this frame
-      string title( (*iter)->windowTitle() );
-      QAction* action = editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title.c_str(), &(*iter)->uniconifyAction(), SLOT( trigger() ) );
+      QString title( (*iter)->windowTitle() );
+      QAction* action = editor_menu_->addAction( IconEngine::get( ICONS::EDIT ), title, &(*iter)->uniconifyAction(), SLOT( trigger() ) );
       action->setCheckable( true );
       action->setChecked( editionwindow && ( editionwindow == (*iter) ) );
       

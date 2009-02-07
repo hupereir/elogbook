@@ -40,14 +40,14 @@ using namespace std;
 const Keyword Keyword::NO_KEYWORD( "/" );
 
 //_________________________________________________________________
-Keyword& Keyword::append( const string& value )
+Keyword& Keyword::append( const QString& value )
 {
   // check string to append
-  if( value.empty() || ( value.size() == 1 && value[0] == '/' ) ) return *this;
+  if( value.isEmpty() || ( value.size() == 1 && value[0] == '/' ) ) return *this;
   
   // make sure leading "/" is added
   if( value[0] == '/' || *this == NO_KEYWORD ) value_ += value;
-  else value_ += string( "/" ) + value;
+  else value_ += QString( "/" ) + value;
   
   // reformat
   value_ = _format( value_ );
@@ -57,11 +57,11 @@ Keyword& Keyword::append( const string& value )
 }
 
 //_________________________________________________________________
-std::string Keyword::current( void ) const
+QString Keyword::current( void ) const
 {
   
-  size_t pos = value_.rfind( "/" );
-  return( pos == string::npos ) ? value_:value_.substr( pos+1, value_.length() - pos - 1 );
+  int pos = value_.lastIndexOf( "/" );
+  return ( pos < 0 ) ? value_:value_.mid( pos+1 );
   
 }
 
@@ -69,9 +69,9 @@ std::string Keyword::current( void ) const
 Keyword Keyword::parent( void ) const
 {
   
-  size_t pos = value_.rfind( "/" );
-  assert( pos != string::npos );
-  return Keyword( value_.substr( 0, pos ) );
+  int pos = value_.lastIndexOf( "/" );
+  assert( pos >= 0 );
+  return Keyword( value_.left( pos ) );
   
 }
 
@@ -85,40 +85,40 @@ bool Keyword::inherits( const Keyword& keyword ) const
   
   if( *this == keyword ) return true;
   if( get().size() < keyword.get().size() ) return false;
-  size_t pos( get().find( keyword.get() ) );
+  int pos( get().indexOf( keyword.get() ) );
   return pos == 0 && get()[keyword.get().size()]=='/';
   
 }
  
  
 //_________________________________________________________________
-string Keyword::_format( const string& value )
+QString Keyword::_format( const QString& value )
 {  
   
   // make sure value is not empty
-  if( value.empty() ) 
+  if( value.isEmpty() ) 
   { return NO_KEYWORD.get(); }
   
-  string out( value );
+  QString out( value );
   
   // add leading "/"
-  if( out[0] != '/' ) out = string( "/" ) + out;
+  if( out[0] != '/' ) out = QString( "/" ) + out;
   
   // look for "/"
   // replace next character by uppercase
-  size_t pos(0);
-  while( ( pos = out.find( "/", pos ) ) != string::npos )
+  int pos(0);
+  while( ( pos = out.indexOf( "/", pos ) ) >= 0 )
   {
     if( pos+1 < out.length() )
     {
-      out[pos+1] = toupper( out[pos+1] );
+      out[pos+1] = out[pos+1].toUpper();
       pos++;
     } else break;
   }
   
   // remove trailing "/" if any
   if( out.length() && out[out.length()-1] == '/' )
-  { out = out.substr(0, out.length()-1); }
+  { out = out.left(out.length()-1); }
   
   return out;
 }

@@ -47,12 +47,12 @@
 using namespace std;
 
 //_______________________________________
-const string Attachment::NO_FILE( "" );
-const string Attachment::NO_COMMENTS( "no comments" );
-const string Attachment::NO_SIZE( " - " );
+const QString Attachment::NO_FILE( "" );
+const QString Attachment::NO_COMMENTS( "no comments" );
+const QString Attachment::NO_SIZE( " - " );
 
 //_______________________________________
-Attachment::Attachment( const std::string orig, const AttachmentType& type ):
+Attachment::Attachment( const QString orig, const AttachmentType& type ):
   Counter( "Attachment" ),
   type_( AttachmentType::UNKNOWN ),
   source_file_( orig ),
@@ -118,16 +118,16 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
   
   Debug::Throw( "Attachment::DomElement.\n" );
   QDomElement out( parent.createElement( XML::ATTACHMENT ) );
-  if( file().size() ) out.setAttribute( XML::FILE, XmlString( file().c_str() ).toXml() );
-  if( sourceFile().size() ) out.setAttribute( XML::SOURCE_FILE, XmlString( sourceFile().c_str() ).toXml() );
-  out.setAttribute( XML::TYPE, type().key().c_str() );
+  if( file().size() ) out.setAttribute( XML::FILE, XmlString( file() ).toXml() );
+  if( sourceFile().size() ) out.setAttribute( XML::SOURCE_FILE, XmlString( sourceFile() ).toXml() );
+  out.setAttribute( XML::TYPE, type().key() );
   out.setAttribute( XML::VALID, QString().setNum( (int) isValid() ) );
   out.setAttribute( XML::IS_LINK, QString().setNum( (int) isLink() ) );
   if( comments().size())
   {
     out.
       appendChild( parent.createElement(  XML::COMMENTS ) ).
-      appendChild( parent.createTextNode( XmlString( comments().c_str() ).toXml() ) );
+      appendChild( parent.createTextNode( XmlString( comments() ).toXml() ) );
   }
 
   // dump timeStamp
@@ -154,7 +154,7 @@ bool Attachment::setType( const AttachmentType& type )
 
 //___________________________________
 bool Attachment::operator < ( const Attachment &attachment ) const 
-{ return Str( shortFile() ).isLower( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ); }  
+{ return shortFile().compare( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }  
 
 //__________________________________
 void Attachment::updateSize( void )
@@ -206,12 +206,12 @@ LogEntry* Attachment::entry( void ) const
 }
 
 //__________________________________
-Attachment::ErrorCode Attachment::copy( const Command& command, const string& destdir )
+Attachment::ErrorCode Attachment::copy( const Command& command, const QString& destdir )
 {
   Debug::Throw() << "Attachment::ProcessCopy.\n";
   
   // check original file
-  if( source_file_.empty() ) {
+  if( source_file_.isEmpty() ) {
     cout << "Attachment::ProcessCopy - orig not set. Canceled.\n";
     return SOURCE_NOT_FOUND; // returns true to cancel version processing
   }
@@ -225,7 +225,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
   }
   
   // check destination directory
-  if( destdir.empty() ) {
+  if( destdir.isEmpty() ) {
     cerr << "Attachment::ProcessCopy - destdir not set. Canceled.\n";
     return DEST_NOT_FOUND;  // returns true to cancel version processing
   }  
@@ -246,7 +246,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     case COPY:
     if( destname.exists() ) return DEST_EXIST;
     else {
-      command_string << "cp" << source_file_.c_str() << destname.c_str();
+      command_string << "cp" << source_file_ << destname;
       setIsLink( NO );
       break;
     }
@@ -254,34 +254,34 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const string& de
     case LINK:
     if( destname.exists() ) return DEST_EXIST;
     else {
-      command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
+      command_string << "ln" << "-s" << source_file_ << destname;
       setIsLink( YES );
       break;
     }
     
     case COPY_FORCED:
     destname.remove();
-    command_string << "cp" << source_file_.c_str() << destname.c_str();
+    command_string << "cp" << source_file_ << destname;
     setIsLink( NO );
     break;
   
     case LINK_FORCED:
     destname.remove();
-    command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
+    command_string << "ln" << "-s" << source_file_ << destname;
     setIsLink( YES );
     break;
     
     case COPY_VERSION:
     if( destname.exists() && destname.diff( source_file_ ) ) 
     { destname = destname.version(); }
-    command_string << "cp" << source_file_.c_str() << destname.c_str();
+    command_string << "cp" << source_file_ << destname;
     setIsLink( NO );
     break;
     
     case LINK_VERSION:
     if( destname.exists() && destname.diff( source_file_ ) ) 
     { destname = destname.version(); }
-    command_string << "ln" << "-s" << source_file_.c_str() << destname.c_str();
+    command_string << "ln" << "-s" << source_file_ << destname;
     setIsLink( YES );
     break;
     
@@ -314,7 +314,7 @@ File Attachment::shortFile( void ) const
   File file( file_ );
   
   // remove trailing slash
-  if( file.size() && file[file.size()-1] == '/' ) { file = File( file.substr( 0, file.size()-1 ) ); }
+  if( file.size() && file[file.size()-1] == '/' ) { file = File( file.left( file.size()-1 ) ); }
    
   return file.localName();
 }
@@ -329,17 +329,17 @@ void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) cons
   QDomElement ref = par.
       appendChild( document.createElement( "b" ) ).
       appendChild( document.createElement( "a" ) ).toElement();
-  if( type() == AttachmentType::URL ) ref.setAttribute( "href", file().c_str() );
-  else ref.setAttribute( "href", (string("file:")+file()).c_str() );
-  ref.appendChild( document.createTextNode( shortFile().c_str() ) );
+  if( type() == AttachmentType::URL ) ref.setAttribute( "href", file() );
+  else ref.setAttribute( "href", QString("file:") + file() );
+  ref.appendChild( document.createTextNode( shortFile() ) );
   
-  ostringstream what;
-  what << "(" << type().name() << ")";
-  par.appendChild( document.createTextNode( what.str().c_str() ) );
+  QString buffer;
+  QTextStream( &buffer ) << "(" << type().name() << ")";
+  par.appendChild( document.createTextNode( buffer ) );
   
   // comments
-  if( comments().size() )
-  HtmlTextNode( comments().c_str(), par, document );
+  if( !comments().isEmpty() )
+  HtmlTextNode( comments(), par, document );
   return;
 }  
   
@@ -353,8 +353,8 @@ void Attachment::_setFile( const File& file )
  
   // remove trailing spaces
   static QRegExp regexp( "\\s+$" );
-  if( regexp.indexIn( file_.c_str() ) >= 0 )
-  { file_ = File( file_.substr( 0, file_.size() - regexp.matchedLength() ) ); }
+  if( regexp.indexIn( file_ ) >= 0 )
+  { file_ = file_.left( file_.size() - regexp.matchedLength() ); }
 
   return;
 } 

@@ -65,19 +65,19 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );
 
   File fullname( ( attachment.type() == AttachmentType::URL ) ? attachment.file() : attachment.file().expand() );
-  file_line_edit->setText( fullname.c_str() );
+  file_line_edit->setText( fullname );
 
   // attachment type
   grid_layout->addWidget(new QLabel( "Type: ", this ) );
-  grid_layout->addWidget( new QLabel( attachment.type().name().c_str(), this ) );
+  grid_layout->addWidget( new QLabel( attachment.type().name(), this ) );
 
   // creation
   grid_layout->addWidget( new QLabel( "Created: ", this ) );
-  grid_layout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().string().c_str():"-", this ) );
+  grid_layout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():"-", this ) );
 
   // modification
   grid_layout->addWidget( new QLabel( "Last Modified: ", this ) );
-  grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().string().c_str():"-", this ) );
+  grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().toString():"-", this ) );
   
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
@@ -119,13 +119,13 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   }    
       
   // comments
-  if( !( attachment.comments().empty() || attachment.comments()== Attachment::NO_COMMENTS ) )
+  if( !( attachment.comments().isEmpty() || attachment.comments()== Attachment::NO_COMMENTS ) )
   {
     mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );  
     TextEditor* comments_text_edit = new TextEditor( this );
     mainLayout().addWidget( comments_text_edit, 1 );  
     comments_text_edit->setReadOnly( true );
-    comments_text_edit->setPlainText( attachment.comments().c_str() );
+    comments_text_edit->setPlainText( attachment.comments() );
     comments_text_edit->setToolTip( "Attachment comments. (read-only)" );
   }
   
@@ -134,8 +134,8 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 } 
 
 //______________________________________________________
-string OpenAttachmentDialog::command( void ) const
-{ return qPrintable( command_line_edit_->editor().text() ); }
+QString OpenAttachmentDialog::command( void ) const
+{ return command_line_edit_->editor().text(); }
 
 //______________________________________________________
 OpenAttachmentDialog::Action OpenAttachmentDialog::action( void ) const

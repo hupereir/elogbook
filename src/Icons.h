@@ -32,7 +32,7 @@
   \date    $Date$
 */
 
-#include <string>
+#include <QString>
 
 /*
   BaseIcons is not necessary here
@@ -45,21 +45,21 @@
 namespace ICONS
 {
   
-  static const std::string ATTACH = "attach.png";
-  static const std::string CLOSE = "fileclose.png"; 
-  static const std::string HOME = "homeB.png";
-  static const std::string HTML = "html.png";
-  static const std::string INFO = "info.png";
-  static const std::string PREV = "1leftarrow.png";
-  static const std::string NEXT = "1rightarrow.png";
-  static const std::string NEW = "filenew.png";
-  static const std::string SAVE = "filesave.png";
-  static const std::string SAVE_AS = "filesaveas.png";
-  static const std::string SPELLCHECK = "fonts.png";
-  static const std::string VIEW_LEFTRIGHT = "view_left_right.png";
-  static const std::string VIEW_TOPBOTTOM = "view_top_bottom.png";
-  static const std::string VIEW_REMOVE = "view_remove.png";
-  static const std::string VIEW_CLONE = "window_fullscreen.png";
+  static const QString ATTACH = "attach.png";
+  static const QString CLOSE = "fileclose.png"; 
+  static const QString HOME = "homeB.png";
+  static const QString HTML = "html.png";
+  static const QString INFO = "info.png";
+  static const QString PREV = "1leftarrow.png";
+  static const QString NEXT = "1rightarrow.png";
+  static const QString NEW = "filenew.png";
+  static const QString SAVE = "filesave.png";
+  static const QString SAVE_AS = "filesaveas.png";
+  static const QString SPELLCHECK = "fonts.png";
+  static const QString VIEW_LEFTRIGHT = "view_left_right.png";
+  static const QString VIEW_TOPBOTTOM = "view_top_bottom.png";
+  static const QString VIEW_REMOVE = "view_remove.png";
+  static const QString VIEW_CLONE = "window_fullscreen.png";
     
 };
 

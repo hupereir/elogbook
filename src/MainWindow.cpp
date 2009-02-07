@@ -297,7 +297,7 @@ bool MainWindow::setLogbook( File file )
   menu().recentFilesMenu().setCurrentFile( file );
   
   // if filename is empty, return
-  if( file.empty() )
+  if( file.isEmpty() )
   {
     // update listView with new entries
     _resetKeywordList();
@@ -367,9 +367,9 @@ bool MainWindow::setLogbook( File file )
   
   // see if logbook has parent file
   if( logbook()->parentFile().size() ) {
-    ostringstream o; 
-    o << "Warning: this logbook should be oppened via \"" << logbook()->parentFile() << "\" only.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QString buffer;
+    QTextStream(&buffer ) << "Warning: this logbook should be oppened via \"" << logbook()->parentFile() << "\" only.";
+    InformationDialog( this, buffer ).exec();
   }
 
   // store logbook directory for next open, save comment
@@ -383,15 +383,16 @@ bool MainWindow::setLogbook( File file )
   XmlError::List errors( logbook()->xmlErrors() );
   if( errors.size() )
   {
-    ostringstream what;
+    QString buffer;
+    QTextStream what( &buffer );
     if( errors.size() > 1 ) what << "Errors occured while parsing files." << endl;
     else what << "An error occured while parsing files." << endl;
     what << errors;
-    InformationDialog( 0, what.str().c_str() ).exec();
+    InformationDialog( 0, buffer ).exec();
   }
   
   // add opened file to OpenPrevious mennu.
-  if( !logbook()->file().empty() ) 
+  if( !logbook()->file().isEmpty() ) 
   { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
   
   ignore_warnings_ = false;
@@ -413,7 +414,7 @@ void MainWindow::checkLogbookBackup( void )
   // check if oppened logbook needs backup
   if(
     XmlOptions::get().get<bool>( "AUTO_BACKUP" ) &&
-    !logbook()->file().empty() &&
+    !logbook()->file().isEmpty() &&
     logbook()->needsBackup() ) 
   {
 
@@ -602,7 +603,7 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
   delete entry;
 
   //! save
-  if( save && !logbook()->file().empty() )
+  if( save && !logbook()->file().isEmpty() )
   MainWindow::save();
 
   return;
@@ -710,7 +711,7 @@ void MainWindow::save( const bool& confirm_entries )
   if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), confirm_entries_ ) == AskForSaveDialog::CANCEL ) return;
   
   // check logbook filename, go to Save As if no file is given and redirect is true
-  if( logbook()->file().empty() ) {
+  if( logbook()->file().isEmpty() ) {
     _saveAs();
     return;
   }
@@ -758,7 +759,7 @@ void MainWindow::save( const bool& confirm_entries )
   statusBar().showLabel();
   
   // add new file to openPreviousMenu
-  if( !logbook()->file().empty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+  if( !logbook()->file().isEmpty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -800,14 +801,9 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
   // keep track of the current selected entry
   QModelIndex current_index( logEntryList().selectionModel()->currentIndex() );
   LogEntry *selected_entry( current_index.isValid() ? _logEntryModel().get( current_index ):0 );
-
-  string selection_string( qPrintable( selection ) );
   
-  // check is selection_string is a valid color when Color search is requested.
-  bool color_valid = ( 
-    mode&SearchPanel::COLOR && ( 
-    selection_string == ColorMenu::NONE ||
-    QColor( selection_string.c_str() ).isValid() ) );
+  // check is selection is a valid color when Color search is requested.
+  bool color_valid = ( mode&SearchPanel::COLOR && ( selection.compare( ColorMenu::NONE, Qt::CaseInsensitive ) == 0 || QColor( selection ).isValid() ) );
   
   // retrieve all logbook entries
   BASE::KeySet<LogEntry> entries( logbook()->entries() );
@@ -824,11 +820,11 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
 
     // check entry
     bool accept( false );
-    if( (mode&SearchPanel::TITLE ) && entry->matchTitle( selection_string ) ) accept = true;
-    if( (mode&SearchPanel::KEYWORD ) && entry->matchKeyword( selection_string ) ) accept = true;
-    if( (mode&SearchPanel::TEXT ) && entry->matchText( selection_string ) ) accept = true;
-    if( (mode&SearchPanel::ATTACHMENT ) && entry->matchAttachment( selection_string ) ) accept = true;
-    if( color_valid && entry->matchColor( selection_string ) ) accept = true;
+    if( (mode&SearchPanel::TITLE ) && entry->matchTitle( selection ) ) accept = true;
+    if( (mode&SearchPanel::KEYWORD ) && entry->matchKeyword( selection ) ) accept = true;
+    if( (mode&SearchPanel::TEXT ) && entry->matchText( selection ) ) accept = true;
+    if( (mode&SearchPanel::ATTACHMENT ) && entry->matchAttachment( selection ) ) accept = true;
+    if( color_valid && entry->matchColor( selection ) ) accept = true;
 
     if( accept ) 
     {
@@ -868,12 +864,13 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
   if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
   else if( last_visible_entry ) selectEntry( last_visible_entry );
 
-  ostringstream out;
+  QString buffer;
+  QTextStream out( &buffer );
   out << found << " out of " << total;
   if( found > 1 ) out << " entries selected";
   else out << " entry selected";
   
-  statusBar().label().setText( out.str().c_str() );
+  statusBar().label().setText( buffer );
 
   return;
 }
@@ -1238,9 +1235,9 @@ void MainWindow::_updateConfiguration( void )
   else autosave_timer_.stop();
   
   // colors
-  list<string> color_list( XmlOptions::get().specialOptions<string>( "COLOR" ) );
-  for( list<string>::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
-  { color_menu_->add( *iter ); }
+  Options::List color_list( XmlOptions::get().specialOptions( "COLOR" ) );
+  for( Options::List::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
+  { color_menu_->add( iter->raw() ); }
   
 }
 
@@ -1284,14 +1281,14 @@ void MainWindow::_newLogbook( void )
   if( directory.exists() && !directory.isDirectory() )
   {
 
-    ostringstream o;
-    o << "File \"" << directory << "\" is not a directory.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QString buffer;
+    QTextStream(&buffer ) << "File \"" << directory << "\" is not a directory.";
+    InformationDialog( this, buffer ).exec();
 
   } else logbook()->setDirectory( directory );
 
   // add new file to openPreviousMenu
-  if( !logbook()->file().empty() )
+  if( !logbook()->file().isEmpty() )
   { 
     Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); 
     logbook()->setModified( true );
@@ -1311,13 +1308,13 @@ void MainWindow::open( FileRecord record )
   if( logbook_ && logbook()->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // open file from dialog if not set as argument
-  if( record.file().empty() )
+  if( record.file().isEmpty() )
   {
     
     // create file dialog
     CustomFileDialog dialog( this );
     dialog.setFileMode( QFileDialog::ExistingFile );
-    dialog.setDirectory( workingDirectory().c_str() );
+    dialog.setDirectory( workingDirectory() );
 
     QtUtil::centerOnParent( &dialog );
     if( !dialog.exec() ) return;
@@ -1351,14 +1348,14 @@ bool MainWindow::_saveAs( File default_file )
   }
 
   // check default filename
-  if( default_file.empty() ) default_file = logbook()->file();
-  if( default_file.empty() ) default_file = File( "log.xml" ).addPath( workingDirectory() );
+  if( default_file.isEmpty() ) default_file = logbook()->file();
+  if( default_file.isEmpty() ) default_file = File( "log.xml" ).addPath( workingDirectory() );
 
   // create file dialog
   CustomFileDialog dialog( this );
   dialog.setFileMode( QFileDialog::AnyFile );
-  dialog.setDirectory( QDir( default_file.path().c_str() ) );
-  dialog.selectFile( default_file.localName().c_str() );
+  dialog.setDirectory( QDir( default_file.path() ) );
+  dialog.selectFile( default_file.localName() );
   QtUtil::centerOnParent( &dialog );
   if( !dialog.exec() ) return false;
 
@@ -1393,7 +1390,7 @@ bool MainWindow::_saveAs( File default_file )
   logbook()->setModifiedRecursive( false );
 
   // add new file to openPreviousMenu
-  if( !logbook()->file().empty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+  if( !logbook()->file().isEmpty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
 
   // reset ignore_warning flag
   ignore_warnings_ = false;
@@ -1430,8 +1427,8 @@ void MainWindow::_saveBackup( void )
     return;
   }
 
-  string filename( logbook()->backupFilename( ) );
-  if( filename.empty() ) {
+  QString filename( logbook()->backupFilename( ) );
+  if( filename.isEmpty() ) {
     InformationDialog( this, "no valid filename. Use <Save As> first." ).exec();
     return;
   }
@@ -1440,7 +1437,7 @@ void MainWindow::_saveBackup( void )
   TimeStamp last_backup( logbook()->backup() );
 
   // stores current logbook filename
-  string current_filename( logbook()->file() );
+  QString current_filename( logbook()->file() );
 
   // save logbook as backup
   bool saved( _saveAs( filename ) );
@@ -1459,7 +1456,7 @@ void MainWindow::_saveBackup( void )
     setWindowTitle( Application::MAIN_TITLE_MODIFIED );
 
     // Save logbook if needed (to make sure the backup stamp is updated)
-    if( !logbook()->file().empty() ) save();
+    if( !logbook()->file().isEmpty() ) save();
   }
 
 }
@@ -1481,7 +1478,6 @@ void MainWindow::_revertToSaved( void )
 
   // reinit MainWindow
   Singleton::get().application<Application>()->busy();
-  string file( logbook()->file() );
   setLogbook( logbook()->file() );
   Singleton::get().application<Application>()->idle();
 
@@ -1539,11 +1535,12 @@ void MainWindow::_synchronize( void )
   if( errors.size() ) 
   {
 
-    ostringstream what;
+    QString buffer;
+    QTextStream what( &buffer );
     if( errors.size() > 1 ) what << "Errors occured while parsing files." << endl;
     else what << "An error occured while parsing files." << endl;
     what << errors;
-    InformationDialog( 0, what.str().c_str() ).exec();
+    InformationDialog( 0, buffer ).exec();
 
     Singleton::get().application<Application>()->idle();
     return;
@@ -1586,7 +1583,7 @@ void MainWindow::_synchronize( void )
   logEntryList().setFocus();
 
   // write local logbook
-  if( !MainWindow::logbook()->file().empty() ) save();
+  if( !MainWindow::logbook()->file().isEmpty() ) save();
   
   // synchronize remove with local
   Debug::Throw() << "MainWindow::_synchronize - updating remote from local" << endl;
@@ -1649,7 +1646,7 @@ void MainWindow::_reorganize( void )
   
   // save
   logbook()->setModified( true );
-  if( !logbook()->file().empty() ) save();
+  if( !logbook()->file().isEmpty() ) save();
 
 }
 
@@ -1763,16 +1760,16 @@ void MainWindow::_editLogbookInformations( void )
   if( directory.exists() &&  !directory.isDirectory() )
   {
 
-    ostringstream o;
-    o << "File \"" << directory << "\" is not a directory.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QString buffer;
+    QTextStream(&buffer ) << "File \"" << directory << "\" is not a directory.";
+    InformationDialog( this, buffer ).exec();
 
   } else modified |= logbook()->setDirectory( directory );
 
 
   // save Logbook, if needed
   if( modified ) logbook()->setModified( true );
-  if( !logbook()->file().empty() ) save();
+  if( !logbook()->file().isEmpty() ) save();
 
 }
 
@@ -1875,16 +1872,16 @@ void MainWindow::_deleteEntries( void )
   }
 
   // ask confirmation
-  ostringstream what;
-  what << "Delete selected entr" << ( selection.size() == 1 ? "y":"ies" );
-  if( !QuestionDialog( this, what.str().c_str() ).exec() ) return;
+  QString buffer;
+  QTextStream( &buffer ) << "Delete selected entr" << ( selection.size() == 1 ? "y":"ies" );
+  if( !QuestionDialog( this, buffer ).exec() ) return;
 
   // retrieve associated entry
   for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); iter++ )
   { deleteEntry( *iter, false ); }
 
   // Save logbook if needed
-  if( !logbook()->file().empty() ) save();
+  if( !logbook()->file().isEmpty() ) save();
 
   return;
 
@@ -1950,7 +1947,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
 }
 
 //_______________________________________________
-void MainWindow::_changeEntryTitle( LogEntry* entry, string new_title )
+void MainWindow::_changeEntryTitle( LogEntry* entry, QString new_title )
 {
   Debug::Throw( "MainWindow::_changeEntryTitle.\n" );
   
@@ -1983,7 +1980,7 @@ void MainWindow::_changeEntryTitle( LogEntry* entry, string new_title )
   (*iter)->setModified( true );
   
   // save Logbook
-  if( logbook() && !logbook()->file().empty() ) save();
+  if( logbook() && !logbook()->file().isEmpty() ) save();
  
 }
 
@@ -2026,7 +2023,7 @@ void MainWindow::_changeEntryColor( QColor color )
   _logEntryModel().add( selection );
   
   // save Logbook
-  if( !logbook()->file().empty() ) save();
+  if( !logbook()->file().isEmpty() ) save();
 
 }
 
@@ -2130,7 +2127,7 @@ void MainWindow::_deleteKeyword( void )
   }
       
   // Save logbook
-  if( !logbook()->file().empty() ) save();  
+  if( !logbook()->file().isEmpty() ) save();  
   
   return;
   
@@ -2211,7 +2208,7 @@ void MainWindow::_renameKeyword( Keyword keyword, Keyword new_keyword, bool upda
   _resetLogEntryList();
 
   // Save logbook if needed
-  if( !logbook()->file().empty() ) save();     
+  if( !logbook()->file().isEmpty() ) save();     
   
 }
  
@@ -2347,7 +2344,7 @@ void MainWindow::_renameEntryKeyword( Keyword new_keyword, bool update_selection
   }
   
   // Save logbook if needed
-  if( !logbook()->file().empty() ) save();
+  if( !logbook()->file().isEmpty() ) save();
   
   return;    
   
@@ -2446,13 +2443,13 @@ void MainWindow::_print( void )
   // add commands
   /* command list contains the HTML editor, PDF editor and any additional user specified command */
   Options::List commands( XmlOptions::get().specialOptions( "PRINT_COMMAND" ) );
-  if( !AttachmentType::HTML.editCommand().empty() ) commands.push_back( AttachmentType::HTML.editCommand() );
+  if( !AttachmentType::HTML.editCommand().isEmpty() ) commands.push_back( AttachmentType::HTML.editCommand() );
   for( Options::List::iterator iter = commands.begin(); iter != commands.end(); iter++ )
-  { dialog.addCommand( iter->raw().c_str() ); }  
+  { dialog.addCommand( iter->raw() ); }  
   
-  ostringstream what;
-  what << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
-  dialog.setFile( File( what.str() ).addPath( Util::tmp() ) );
+  QString buffer;
+  QTextStream( &buffer ) << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+  dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
 
   // map dialog
   if( !dialog.centerOnParent().exec() ) return;
@@ -2463,18 +2460,19 @@ void MainWindow::_print( void )
 
   // retrieve/check file
   File file( dialog.file() );
-  if( file.empty() ) 
+  if( file.isEmpty() ) 
   {
     InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
     return;
   }
 
   // open/check temp file
-  QFile out( file.c_str() );
-  if( !out.open( QIODevice::WriteOnly ) ) {
-    ostringstream o;
-    o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-    InformationDialog( this, o.str().c_str() ).exec();
+  QFile out( file );
+  if( !out.open( QIODevice::WriteOnly ) ) 
+  {
+    QString buffer;
+    QTextStream(&buffer ) << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
+    InformationDialog( this, buffer ).exec();
     return;
   }
 
@@ -2577,7 +2575,7 @@ void MainWindow::_print( void )
   out.close();
 
   // retrieve command
-  if( !dialog.command().isEmpty() ) ( Command( dialog.command() ) << file.c_str() ).run();
+  if( !dialog.command().isEmpty() ) ( Command( dialog.command() ) << file ).run();
   return;
 }
 
@@ -2607,7 +2605,7 @@ void MainWindow::_storeSortMethod( int column, Qt::SortOrder order  )
 
   // Save logbook if needed
   changed |= logbook()->setSortOrder( int( order ) );
-  if( changed && !logbook()->file().empty() ) save();
+  if( changed && !logbook()->file().isEmpty() ) save();
 
 }
 
@@ -2668,7 +2666,7 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
   (*iter)->setModified( true );
   
   // save Logbook
-  if( logbook() && !logbook()->file().empty() ) save();
+  if( logbook() && !logbook()->file().isEmpty() ) save();
  
 }
 
@@ -2800,7 +2798,7 @@ void MainWindow::_restoreExpandedKeywords( void )
 void MainWindow::_autoSave( void )
 {
 
-  if( logbook_ && !logbook()->file().empty() ) 
+  if( logbook_ && !logbook()->file().isEmpty() ) 
   {
   
     statusBar().label().setText( "performing autoSave" );

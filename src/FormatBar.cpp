@@ -52,13 +52,13 @@
 using namespace std;
 
 //________________________________________
-const std::string FormatBar::BOLD_ICON = "text_bold.png";
-const std::string FormatBar::ITALIC_ICON = "text_italic.png";
-const std::string FormatBar::STRIKE_ICON = "text_strike.png";
-const std::string FormatBar::UNDERLINE_ICON = "text_under.png";
+const QString FormatBar::BOLD_ICON = "text_bold.png";
+const QString FormatBar::ITALIC_ICON = "text_italic.png";
+const QString FormatBar::STRIKE_ICON = "text_strike.png";
+const QString FormatBar::UNDERLINE_ICON = "text_under.png";
 
 //________________________________________
-FormatBar::FormatBar( QWidget* parent, const std::string& option_name ):
+FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
   CustomToolBar( "Text format", parent, option_name ),
   editor_(0),
   enabled_( true )
@@ -161,7 +161,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
     
     // load color
     if( iter->color() != ColorMenu::NONE )
-    { text_format.setForeground( QColor( iter->color().c_str() ) ); }
+    { text_format.setForeground( QColor( iter->color() ) ); }
     
     cursor.setCharFormat( text_format );
     
@@ -204,7 +204,7 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
         
         // retrieve text color
         QColor color( text_format.foreground().color() );
-        string colorname = (color == editor_->palette().color( QPalette::Text ) ) ? ColorMenu::NONE:qPrintable( color.name() );
+        QString colorname = (color == editor_->palette().color( QPalette::Text ) ) ? ColorMenu::NONE : color.name();
         
         // skip format if corresponds to default
         if( format == FORMAT::DEFAULT && color == editor_->palette().color( QPalette::Text ) ) continue;
@@ -223,13 +223,14 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
 void FormatBar::_updateConfiguration( void )
 {
   Debug::Throw( "FormatBar::_updateConfiguration.\n" );
+  
   // retrieve colors from options
-  list<string> text_colors( XmlOptions::get().specialOptions<string>( "TEXT_COLOR" ) );
+  Options::List text_colors( XmlOptions::get().specialOptions( "TEXT_COLOR" ) );
   if( text_colors.empty() ) 
   {
     
     // add default colors
-    string default_colors[] = 
+    QString default_colors[] = 
     { 
       "None",
       "#aa0000",
@@ -249,8 +250,8 @@ void FormatBar::_updateConfiguration( void )
         
   } else {
     
-    for( list<string>::iterator iter = text_colors.begin(); iter != text_colors.end(); iter++ )
-    { color_menu_->add( *iter ); }
+    for( Options::List::iterator iter = text_colors.begin(); iter != text_colors.end(); iter++ )
+    { color_menu_->add( iter->raw() ); }
 
   }
 }
@@ -264,7 +265,7 @@ void FormatBar::_saveConfiguration( void )
   
   const ColorMenu::ColorSet colors( color_menu_->colors() );
   for( ColorMenu::ColorSet::const_iterator iter = colors.begin(); iter != colors.end(); iter++ )
-  { XmlOptions::get().add( "TEXT_COLOR", Option( qPrintable( iter->name() ) , "text color"  )); }
+  { XmlOptions::get().add( "TEXT_COLOR", Option( iter->name(), "text color"  ) ); }
 
   return;
 }

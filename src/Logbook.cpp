@@ -31,7 +31,6 @@
 
 #include <QFile>
 #include <QTextStream>
-#include <fstream>
 
 #include "Attachment.h"
 #include "Debug.h"
@@ -50,10 +49,10 @@ using namespace std;
 //________________________________
 // public methods
 
-const string Logbook::LOGBOOK_NO_TITLE = "untitled";
-const string Logbook::LOGBOOK_NO_AUTHOR = "anonymous";
-const string Logbook::LOGBOOK_NO_FILE = "";
-const string Logbook::LOGBOOK_NO_DIRECTORY = "";
+const QString Logbook::LOGBOOK_NO_TITLE = "untitled";
+const QString Logbook::LOGBOOK_NO_AUTHOR = "anonymous";
+const QString Logbook::LOGBOOK_NO_FILE = "";
+const QString Logbook::LOGBOOK_NO_DIRECTORY = "";
 
 //________________________________
 Logbook::Logbook( const File& file ):
@@ -101,11 +100,11 @@ bool Logbook::read( void )
 
   Debug::Throw( "Logbook::read.\n" );
 
-  if( file().empty() ) return false;
+  if( file().isEmpty() ) return false;
 
   // update StateFrame
   QString buffer;
-  QTextStream( &buffer ) << "Reading \"" << file().localName().c_str() << "\"";
+  QTextStream( &buffer ) << "Reading \"" << file().localName() << "\"";
   emit messageAvailable( buffer );
 
   // check input file
@@ -120,7 +119,7 @@ bool Logbook::read( void )
   delete *iter;
 
   // parse the file
-  QFile file( Logbook::file().c_str() );
+  QFile file( Logbook::file() );
   if ( !file.open( QIODevice::ReadOnly ) )
   {
     Debug::Throw(0, "Logbook::read - cannot open file.\n" );
@@ -129,7 +128,7 @@ bool Logbook::read( void )
 
   // create document
   QDomDocument document;
-  error_ = XmlError( Logbook::file().c_str() );
+  error_ = XmlError( Logbook::file() );
   if ( !document.setContent( &file, &error_.error(), &error_.line(), &error_.column() ) )
   {
     file.close();
@@ -142,7 +141,7 @@ bool Logbook::read( void )
   QString tag_name( doc_element.tagName() );
   if( tag_name != XML::LOGBOOK )
   {
-    Debug::Throw(0) << "Logbook::read - invalid tag name: " << qPrintable( tag_name ) << endl;
+    Debug::Throw(0) << "Logbook::read - invalid tag name: " << tag_name << endl;
     return false;
   }
 
@@ -156,11 +155,11 @@ bool Logbook::read( void )
     QString name( attribute.name() );
     QString value( attribute.value() );
 
-    if( name == XML::TITLE ) setTitle( qPrintable( XmlString( value ).toText() ) );
-    else if( name == XML::FILE ) setFile( File( qPrintable( XmlString( value ).toText() ) ) );
-    else if( name == XML::PARENT_FILE ) setParentFile( qPrintable( XmlString( value ).toText() ) );
-    else if( name == XML::DIRECTORY ) setDirectory( File( qPrintable( XmlString( value ).toText() ) ) );
-    else if( name == XML::AUTHOR ) setAuthor( qPrintable( XmlString( value ).toText() ) );
+    if( name == XML::TITLE ) setTitle( XmlString( value ).toText() );
+    else if( name == XML::FILE ) setFile( File( XmlString( value ).toText() ) );
+    else if( name == XML::PARENT_FILE ) setParentFile( XmlString( value ).toText() );
+    else if( name == XML::DIRECTORY ) setDirectory( File( XmlString( value ).toText() ) );
+    else if( name == XML::AUTHOR ) setAuthor( XmlString( value ).toText() );
     else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
     else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
     else if( name == XML::ENTRIES ) {
@@ -169,7 +168,7 @@ bool Logbook::read( void )
       emit maximumProgressAvailable( value.toInt() );
       
     } else if( name == XML::CHILDREN ) setXmlChildren( value.toInt() );
-    else cout << "Logbook::read - unrecognized logbook attribute: \"" << qPrintable( name ) << "\"\n";
+    else Debug::Throw(0) << "Logbook::read - unrecognized logbook attribute: \"" << name << "\"\n";
 
   }
 
@@ -184,7 +183,7 @@ bool Logbook::read( void )
     QString tag_name( element.tagName() );
 
     // children
-    if( tag_name == XML::COMMENTS ) setComments( qPrintable( XmlString( element.text() ).toText() ) );
+    if( tag_name == XML::COMMENTS ) setComments( XmlString( element.text() ).toText() );
     else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
     else if( tag_name == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
@@ -206,7 +205,7 @@ bool Logbook::read( void )
         continue;
       }
 
-      File file( qPrintable( file_attribute ) );
+      File file( file_attribute );
       if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
       Logbook* child = new Logbook();
       child->setFile( file );
@@ -215,13 +214,13 @@ bool Logbook::read( void )
       connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
 
       QString buffer;
-      QTextStream( &buffer ) << "Reading \"" << child->file().localName().c_str() << "\"";
+      QTextStream( &buffer ) << "Reading \"" << child->file().localName() << "\"";
       emit messageAvailable( buffer );
 
       child->read();
       children_.push_back( child );
 
-    } else cout << "Logbook::read - unrecognized tag_name: " << qPrintable( tag_name ) << endl;
+    } else Debug::Throw(0) << "Logbook::read - unrecognized tag_name: " << tag_name << endl;
 
   }
   
@@ -241,8 +240,8 @@ bool Logbook::write( File file )
   Debug::Throw( "Logbook::write.\n" );
   
   // check filename
-  if( file.empty() ) file = Logbook::file();
-  if( file.empty() ) return false;
+  if( file.isEmpty() ) file = Logbook::file();
+  if( file.isEmpty() ) return false;
 
   Debug::Throw( ) << "Logbook::write - \"" << file << "\".\n";
   bool completed = true;
@@ -265,10 +264,10 @@ bool Logbook::write( File file )
 
     // update stateFrame
     QString buffer;
-    QTextStream( &buffer ) << "Writing \"" << file.localName().c_str() << "\"";
+    QTextStream( &buffer ) << "Writing \"" << file.localName() << "\"";
     emit messageAvailable( buffer );
 
-    QFile out( file.c_str() );
+    QFile out( file );
     if( !out.open( QIODevice::WriteOnly ) )
     {
       Debug::Throw(0) << "Logbook::write - unable to write to file " << file << endl;
@@ -280,16 +279,16 @@ bool Logbook::write( File file )
 
     // create main element
     QDomElement top = document.createElement( XML::LOGBOOK );
-    if( !title().empty() ) top.setAttribute( XML::TITLE, XmlString( title().c_str() ).toXml() );
-    if( !directory().empty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory().c_str()) );
-    if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlString( author().c_str() ).toXml() ) ;
+    if( !title().isEmpty() ) top.setAttribute( XML::TITLE, XmlString( title() ).toXml() );
+    if( !directory().isEmpty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory()) );
+    if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlString( author() ).toXml() ) ;
 
-    top.setAttribute( XML::SORT_METHOD, Str().assign<unsigned int>(sort_method_).c_str() );
-    top.setAttribute( XML::SORT_ORDER, Str().assign<int>(sort_order_).c_str() );
+    top.setAttribute( XML::SORT_METHOD, Str().assign<unsigned int>(sort_method_) );
+    top.setAttribute( XML::SORT_ORDER, Str().assign<int>(sort_order_) );
 
     // update number of entries and children
-    top.setAttribute( XML::ENTRIES, Str().assign<int>(xmlEntries()).c_str() );
-    top.setAttribute( XML::CHILDREN, Str().assign<int>(xmlChildren()).c_str() );
+    top.setAttribute( XML::ENTRIES, Str().assign<int>(xmlEntries()) );
+    top.setAttribute( XML::CHILDREN, Str().assign<int>(xmlChildren()) );
 
     // append node
     document.appendChild( top );
@@ -298,7 +297,7 @@ bool Logbook::write( File file )
     if( comments().size() )
     {
       QDomElement comments_element = document.createElement( XML::COMMENTS );
-      QDomText comments_text = document.createTextNode( XmlString( comments().c_str() ).toXml() );
+      QDomText comments_text = document.createTextNode( XmlString( comments() ).toXml() );
       comments_element.appendChild( comments_text );
       top.appendChild( comments_element );
     }
@@ -329,7 +328,7 @@ bool Logbook::write( File file )
     {
       File child_filename = _childFilename( file, child_number );
       QDomElement child_element = document.createElement( XML::CHILD );
-      child_element.setAttribute( XML::FILE, XmlString( child_filename.c_str() ).toXml() );
+      child_element.setAttribute( XML::FILE, XmlString( child_filename ).toXml() );
       top.appendChild( child_element );
     }
 
@@ -362,7 +361,7 @@ bool Logbook::write( File file )
 
     // update stateFrame
     QString buffer;
-    QTextStream( &buffer ) << "Writing \"" << child_filename.localName().c_str() << "\"";
+    QTextStream( &buffer ) << "Writing \"" << child_filename.localName() << "\"";
     emit messageAvailable( buffer );
 
     (*it)->setParentFile( file );
@@ -551,7 +550,7 @@ void Logbook::removeEmptyChildren( void )
     {
 
       // remove file
-      if( !(*iter)->file().empty() ) (*iter)->file().remove();
+      if( !(*iter)->file().isEmpty() ) (*iter)->file().remove();
 
       // delete logbook
       delete *iter;
@@ -572,15 +571,16 @@ bool Logbook::needsBackup( void ) const
 }
 
 //_________________________________
-string Logbook::backupFilename( void ) const
+QString Logbook::backupFilename( void ) const
 {
   Debug::Throw( "Logbook::MakeBackupFilename.\n" );
-  string head( File( file_ ).truncatedName() );
-  string foot( File( file_ ).extension() );
-  if( !foot.empty() ) foot = string(".") + foot;
-  string tag( TimeStamp::now().string( TimeStamp::DATE_TAG ) );
-  ostringstream o; o << head << "_backup_" << tag << foot;
-  return o.str();
+  QString head( File( file_ ).truncatedName() );
+  QString foot( File( file_ ).extension() );
+  if( !foot.isEmpty() ) foot = QString(".") + foot;
+  QString tag( TimeStamp::now().toString( TimeStamp::DATE_TAG ) );
+  QString out;
+  QTextStream( &out ) << head << "_backup_" << tag << foot;
+  return out;
 }
 
 //__________________________________
@@ -613,7 +613,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
     column.setAttribute( "colspan", "2" );
     column.
       appendChild( document.createElement( "h1" ) ).
-      appendChild( document.createTextNode( title().c_str() ) );
+      appendChild( document.createTextNode( title() ) );
   }
 
   if( author().size() && (mask&HTML_AUTHOR ) )
@@ -626,7 +626,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
     row.
       appendChild( document.createElement( "td" ) ).
       appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( author().c_str() ) );
+      appendChild( document.createTextNode( author() ) );
 
   }
 
@@ -639,7 +639,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
     row.
       appendChild( document.createElement( "td" ) ).
       appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( file().c_str() ) );
+      appendChild( document.createTextNode( file() ) );
 
   }
 
@@ -652,7 +652,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
     column = row.appendChild( document.createElement( "td" ) ).toElement();
     column.
       appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( directory().c_str() ) );
+      appendChild( document.createTextNode( directory() ) );
     if( !checkDirectory() ) column.appendChild( document.createTextNode( " (not found)" ) );
 
   }
@@ -666,7 +666,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
     row.
       appendChild( document.createElement( "td" ) ).
       appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( creation().string().c_str() ) );
+      appendChild( document.createTextNode( creation().toString() ) );
 
   }
 
@@ -679,7 +679,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
     row.
       appendChild( document.createElement( "td" ) ).
       appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( modification().string().c_str() ) );
+      appendChild( document.createTextNode( modification().toString() ) );
 
   }
 
@@ -692,7 +692,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
     row.
       appendChild( document.createElement( "td" ) ).
       appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( backup().string().c_str() ) );
+      appendChild( document.createTextNode( backup().toString() ) );
 
   }
 
@@ -706,7 +706,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
       appendChild( document.createElement( "tr" ) ).
       appendChild( document.createElement( "td" ) ).toElement();
     column.setAttribute( "colspan", "2" );
-    HtmlTextNode( comments().c_str(), column, document );
+    HtmlTextNode( comments(), column, document );
   }
 
   return out;
@@ -841,12 +841,12 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 File Logbook::_childFilename( const File& file, const int& child_number ) const
 {
   File head( file.localName().truncatedName() );
-  string foot( file.extension() );
-  if( !foot.empty() ) foot = string(".") + foot;
-  ostringstream o; o << head << "_include_" << child_number << foot;
-
-  Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << o.str() << "\".\n";
-
-  return File( o.str() );
+  QString foot( file.extension() );
+  if( !foot.isEmpty() ) foot = QString(".") + foot;
+  
+  QString out; 
+  QTextStream(&out) << head << "_include_" << child_number << foot;
+  Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
+  return out;
 
 }

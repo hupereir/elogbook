@@ -66,32 +66,32 @@ class AttachmentType: public Counter{
     retrieves predefined attachment type from key
     returns atcUNKNOWN if key is not found
   */
-  static AttachmentType get( const std::string& key );
+  static AttachmentType get( const QString& key );
     
   //! equal to operator
   bool operator == (const AttachmentType& type ) const
   { return key_ == type.key_; }
 
   //! creator
-  AttachmentType( const std::string& key, const std::string& name, const std::string& icon, const std::string& option = ""  );
+  AttachmentType( const QString& key, const QString& name, const QString& icon, const QString& option = ""  );
     
   //! retrieves attachment key
-  const std::string& key( void ) const 
+  const QString& key( void ) const 
   { return key_; }
   
   //! retrieves attachment name
-  const std::string& name( void ) const 
+  const QString& name( void ) const 
   { return name_; }
   
   //! icon
-  const std::string& icon( void ) const
+  const QString& icon( void ) const
   { return icon_; }
   
   //! retrieves command used to edit the attachment
-  std::string editCommand( void ) const;
+  QString editCommand( void ) const;
    
   //! attachment types map
-  typedef std::map< std::string, AttachmentType > Map;
+  typedef std::map< QString, AttachmentType > Map;
 
   //! returns predefined attachment types
   static const Map& types( void );
@@ -102,16 +102,16 @@ class AttachmentType: public Counter{
   static Map _install( void );
   
   //! used to identify the file type
-  std::string key_;           
+  QString key_;           
   
   //! used to display the file type in readable format
-  std::string name_;          
+  QString name_;          
   
   //! icon
-  std::string icon_;
+  QString icon_;
   
   //! option name for looking up command
-  std::string option_;   
+  QString option_;   
   
 };
 

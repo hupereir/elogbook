@@ -189,10 +189,10 @@ void AttachmentFrame::_new( void )
   NewAttachmentDialog dialog( this );
     
   // update destination directory
-  if( logbooks.size() && !(*logbooks.begin())->directory().empty() ) { dialog.setDestinationDirectory( (*logbooks.begin())->directory() ); }
+  if( logbooks.size() && !(*logbooks.begin())->directory().isEmpty() ) { dialog.setDestinationDirectory( (*logbooks.begin())->directory() ); }
   else { 
     MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
-    if( mainwindow.logbook() && !mainwindow.logbook()->directory().empty() )
+    if( mainwindow.logbook() && !mainwindow.logbook()->directory().isEmpty() )
     { dialog.setDestinationDirectory( mainwindow.logbook()->directory() ); }
   }
   
@@ -215,26 +215,26 @@ void AttachmentFrame::_new( void )
     if( full_directory.exists() && !full_directory.isDirectory() ) 
     { 
     
-      ostringstream o;
-      o << "File \"" << full_directory << "\" is not a directory.";
-      InformationDialog( this, o.str().c_str() ).exec();
+      QString buffer;
+      QTextStream( &buffer ) << "File \"" << full_directory << "\" is not a directory.";
+      InformationDialog( this, buffer ).exec();
     
     } else {
   
       // check destination directory
       if( !full_directory.exists() ) 
       {
-        ostringstream o; 
-        o << "Directory \"" << full_directory << "\" does not exists. Create ?";
-        if( QuestionDialog( this, o.str().c_str() ).exec() ) 
-        { ( Command( "mkdir" ) << full_directory.c_str() ).run(); }
+        QString buffer;
+        QTextStream( &buffer ) << "Directory \"" << full_directory << "\" does not exists. Create ?";
+        if( QuestionDialog( this, buffer ).exec() ) 
+        { ( Command( "mkdir" ) << full_directory ).run(); }
       }
     }
   }
   
   // retrieve check attachment filename
   File file( dialog.file() );
-  if( file.empty() ) 
+  if( file.isEmpty() ) 
   {
     InformationDialog( this, "Invalid name. <New Attachment> canceled." ).exec();
     return;
@@ -251,31 +251,31 @@ void AttachmentFrame::_new( void )
   
   // process attachment command
   Attachment::ErrorCode error = attachment->copy( command, full_directory );
-  ostringstream o;
+  QString buffer;
   switch (error) 
   {
   
     case Attachment::SOURCE_NOT_FOUND:
-    o << "Cannot find file \"" << file << "\" - <Add Attachment> canceled.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QTextStream( &buffer ) << "Cannot find file \"" << file << "\" - <Add Attachment> canceled.";
+    InformationDialog( this, buffer ).exec();
     delete attachment;
     break;
     
     case Attachment::DEST_NOT_FOUND:
-    o << "Cannot find directory \"" << full_directory << "\" - <Add Attachment> canceled.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QTextStream( &buffer ) << "Cannot find directory \"" << full_directory << "\" - <Add Attachment> canceled.";
+    InformationDialog( this, buffer ).exec();
     delete attachment;
     break;
     
     case Attachment::SOURCE_IS_DIR:
-    o << "File \"" << file << "\" is a directory - <Add Attachment> canceled.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QTextStream( &buffer ) << "File \"" << file << "\" is a directory - <Add Attachment> canceled.";
+    InformationDialog( this, buffer ).exec();
     delete attachment;
     break;
     
     case Attachment::DEST_EXIST:
-    o << "File \"" << file << "\" is allready in list.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QTextStream( &buffer ) << "File \"" << file << "\" is allready in list.";
+    InformationDialog( this, buffer ).exec();
     delete attachment;
     break;
     
@@ -337,7 +337,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
     Attachment &attachment( **iter );
     
     if( attachment.type() == AttachmentType::URL ) continue;
-    if( attachment.file().empty() ) continue;
+    if( attachment.file().isEmpty() ) continue;
     
     records.push_back( FileRecord( attachment.file() ) );
     
@@ -379,7 +379,7 @@ void AttachmentFrame::customEvent( QEvent* event )
     Attachment &attachment( **iter );
         
     if( attachment.type() == AttachmentType::URL ) continue;
-    if( attachment.file().empty() ) continue;
+    if( attachment.file().isEmpty() ) continue;
     
     Debug::Throw() << "AttachmentFrame::customEvent - checking: " << attachment.file() << endl;
     
@@ -398,7 +398,7 @@ void AttachmentFrame::customEvent( QEvent* event )
     if( is_valid && is_link == Attachment::UNKNOWN )
     {
       // check if destination is a link
-      QFileInfo file_info( attachment.file().c_str() );
+      QFileInfo file_info( attachment.file() );
       is_link = file_info.isSymLink() ? Attachment::YES : Attachment::NO;
     }
     
@@ -507,7 +507,7 @@ void AttachmentFrame::_open( void )
     if( !( type == AttachmentType::URL || fullname.exists() ) )
     {
       QString buffer;
-      QTextStream( &buffer ) << "Cannot find file \"" << fullname.c_str() << "\". <Open> canceled.";
+      QTextStream( &buffer ) << "Cannot find file \"" << fullname << "\". <Open> canceled.";
       InformationDialog( this, buffer ).exec();
       continue;
     }
@@ -515,7 +515,7 @@ void AttachmentFrame::_open( void )
     OpenAttachmentDialog dialog( this, attachment );  
     if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted ) 
     {
-      if( dialog.action() == OpenAttachmentDialog::OPEN ) ( Command( dialog.command().c_str() ) << fullname.c_str() ).run();
+      if( dialog.action() == OpenAttachmentDialog::OPEN ) ( Command( dialog.command() ) << fullname ).run();
       else  {
   
         // create and configure SaveAs dialog
@@ -524,7 +524,7 @@ void AttachmentFrame::_open( void )
         dialog.setWindowTitle( "Open" );
         
         File destname( fullname.localName().addPath( dialog.workingDirectory() ) );
-        dialog.selectFile( destname.c_str() );
+        dialog.selectFile( destname );
         
         if( dialog.exec() == QDialog::Accepted ) 
         {
@@ -532,11 +532,11 @@ void AttachmentFrame::_open( void )
           QStringList files( dialog.selectedFiles() );
           if( files.empty() ) continue;
           
-          destname = File( qPrintable( files.front() ) ).expand();
+          destname = File( files.front() ).expand();
           if( destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) return;
           
           // make the copy
-          ( Command("cp") << fullname.c_str() << destname.c_str() ).run();
+          ( Command("cp") << fullname << destname ).run();
         }
         
       }
@@ -755,7 +755,7 @@ void AttachmentFrame::_saveAs( void )
     } else if( !fullname.exists() ) {
       
       QString buffer;
-      QTextStream( &buffer ) << "Cannot find file \"" << fullname.c_str() << "\". <Save As> canceled.";
+      QTextStream( &buffer ) << "Cannot find file \"" << fullname << "\". <Save As> canceled.";
       InformationDialog( this, buffer ).exec();
       continue;
       
@@ -767,7 +767,7 @@ void AttachmentFrame::_saveAs( void )
       dialog.setWindowTitle( "Open" );
       
       File destname( fullname.localName().addPath( dialog.workingDirectory() ) );
-      dialog.selectFile( destname.c_str() );
+      dialog.selectFile( destname );
         
       if( dialog.exec() == QDialog::Accepted ) 
       {
@@ -775,11 +775,11 @@ void AttachmentFrame::_saveAs( void )
         QStringList files( dialog.selectedFiles() );
         if( files.empty() ) continue;
         
-        destname = File( qPrintable( files.front() ) ).expand();
+        destname = File( files.front() ).expand();
         if( destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) return;
         
         // make the copy
-        ( Command("cp") << fullname.c_str() << destname.c_str() ).run();
+        ( Command("cp") << fullname << destname ).run();
       
       }
     

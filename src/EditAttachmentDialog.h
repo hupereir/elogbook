@@ -33,7 +33,7 @@
 */
 
 #include <QComboBox>
-#include <string>
+#include <QString>
 
 #include "Attachment.h"
 #include "AttachmentType.h"
@@ -57,7 +57,7 @@ class EditAttachmentDialog: public CustomDialog
   AttachmentType type( void ) const;
   
   //! get comments
-  std::string comments( void ) const;    
+  QString comments( void ) const;    
         
   private:
         

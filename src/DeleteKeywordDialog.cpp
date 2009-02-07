@@ -53,7 +53,8 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const vector<Keyword>
   assert( !keywords.empty() );
   
   setWindowTitle( "delete keyword" );
-  ostringstream what;
+  QString buffer;
+  QTextStream what( &buffer );
   if( keywords.size() == 1 ) what << "Delete keyword " << keywords.front() << " ?";
   else {
     
@@ -75,7 +76,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const vector<Keyword>
     
   }
   
-  mainLayout().addWidget( new QLabel( what.str().c_str(), this ) );
+  mainLayout().addWidget( new QLabel( buffer, this ) );
   
   QGroupBox *box = new QGroupBox( this );
   mainLayout().addWidget( box );

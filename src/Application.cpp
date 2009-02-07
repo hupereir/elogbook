@@ -95,7 +95,7 @@ void Application::initApplicationManager( void )
   CommandLineParser parser( SERVER::ApplicationManager::commandLineParser( _arguments() ) );
   QStringList& orphans( parser.orphans() );
   for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); iter++ )
-  { if( !iter->isEmpty() ) (*iter) = File( qPrintable( *iter ) ).expand().c_str(); }
+  { if( !iter->isEmpty() ) (*iter) = File( *iter ).expand(); }
 
   // replace arguments
   _setArguments( parser.arguments() );

@@ -47,20 +47,20 @@ class LogbookInformationDialog: public CustomDialog
   LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
   
   //! title
-  std::string title( void ) const
-  { return qPrintable( title_->text() ); }
+  QString title( void ) const
+  { return title_->text(); }
   
   //! author
-  std::string author( void ) const
-  { return qPrintable( author_->text() ); }
+  QString author( void ) const
+  { return author_->text(); }
   
   //! attachment directory
   File AttachmentDirectory( void ) const
-  { return File( qPrintable( attachment_directory_->editor().text() ) ); }
+  { return attachment_directory_->editor().text(); }
   
   //! comments
-  std::string comments( void ) const
-  { return qPrintable( comments_->toPlainText() ); }
+  QString comments( void ) const
+  { return comments_->toPlainText(); }
   
   private:
   

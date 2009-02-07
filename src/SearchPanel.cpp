@@ -51,7 +51,7 @@
 using namespace std;
 
 //___________________________________________________________
-SearchPanel::SearchPanel( const QString& title, QWidget* parent, const std::string& option_name ):
+SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):
   CustomToolBar( title, parent, option_name )
 {
   Debug::Throw( "SearchPanel::SearchPanel.\n" );

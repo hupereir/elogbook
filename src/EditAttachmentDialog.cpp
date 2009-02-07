@@ -56,7 +56,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   
   AttachmentType type( attachment.type() );
   File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );  
-  file_line_edit->setText( fullname.c_str() );
+  file_line_edit->setText( fullname );
 
   GridLayout* grid_layout = new GridLayout();
   grid_layout->setMargin(0);
@@ -66,27 +66,27 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 
   // creation
   grid_layout->addWidget( new QLabel( "Created: ", this ) );
-  grid_layout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().string().c_str():"-", this ) );
+  grid_layout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():"-", this ) );
 
   // modification
   grid_layout->addWidget( new QLabel( "Last Modified: ", this ) );
-  grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().string().c_str():"-", this ) );
+  grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().toString():"-", this ) );
 
   // type
   grid_layout->addWidget( new QLabel( "Type:", this ) );
   grid_layout->addWidget( file_type_combo_box_ = new QComboBox( this ) );
   for( 
-    std::map<string, AttachmentType>::const_iterator iter = AttachmentType::types().begin(); 
+    AttachmentType::Map::const_iterator iter = AttachmentType::types().begin(); 
     iter != AttachmentType::types().end();
     iter ++ )
   {
     
     if( type == AttachmentType::URL && !( iter->second == AttachmentType::URL ) ) continue;
     if( !( type == AttachmentType::URL ) && iter->second == AttachmentType::URL ) continue;
-    file_type_combo_box_->addItem( iter->second.name().c_str() );
+    file_type_combo_box_->addItem( iter->second.name() );
     
   }
-  file_type_combo_box_->setCurrentIndex( file_type_combo_box_->findText( type.name().c_str() ) );
+  file_type_combo_box_->setCurrentIndex( file_type_combo_box_->findText( type.name() ) );
   file_type_combo_box_->setToolTip( "Attachment type. Defines the default application used to display the attachment." );
 
   grid_layout->setColumnStretch( 1, 1 );
@@ -98,11 +98,9 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
   
   box_layout->addWidget( new QLabel( "Comments:", this ), 0 );  
   box_layout->addWidget( comments_text_edit_ = new TextEditor( this ), 1 );
-  comments_text_edit_->setPlainText( attachment.comments().c_str() );
+  comments_text_edit_->setPlainText( attachment.comments() );
   comments_text_edit_->setToolTip( "Attachment comments." );
-  
-  //adjustSize();
-  
+    
 }
   
 //____________________________________________
@@ -110,9 +108,9 @@ AttachmentType EditAttachmentDialog::type( void ) const
 {
 
   Debug::Throw( "EditAttachmentDialog::GetType.\n" );
-  string type_string( qPrintable( file_type_combo_box_->currentText() ) );
+  QString type_string( file_type_combo_box_->currentText() );
   for( 
-    std::map<string, AttachmentType>::const_iterator iter = AttachmentType::types().begin(); 
+    AttachmentType::Map::const_iterator iter = AttachmentType::types().begin(); 
     iter != AttachmentType::types().end();
     iter++ ) 
   { if( iter->second.name() == type_string ) return iter->second; }
@@ -122,8 +120,8 @@ AttachmentType EditAttachmentDialog::type( void ) const
   
 
 //____________________________________________________
-string EditAttachmentDialog::comments( void ) const
+QString EditAttachmentDialog::comments( void ) const
 {
   Debug::Throw( "EditAttachmentDialog::comments.\n" );
-  return qPrintable( comments_text_edit_->toPlainText() );
+  return comments_text_edit_->toPlainText();
 }

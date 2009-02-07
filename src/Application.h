@@ -105,7 +105,7 @@ class Application: public BaseApplication, public Counter
       
   //! about eLogbook
   virtual void _about( void )
-  { BaseApplication::_about( qPrintable( MAIN_TITLE ), VERSION, BUILD_TIMESTAMP ); }
+  { BaseApplication::_about( MAIN_TITLE, VERSION, BUILD_TIMESTAMP ); }
   
   //! configuration
   virtual void _configuration( void );

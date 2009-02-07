@@ -33,7 +33,6 @@
 */
 
 #include <QComboBox>
-#include <string>
 
 #include "Attachment.h"
 #include "AttachmentType.h"
@@ -83,10 +82,10 @@ class NewAttachmentDialog: public CustomDialog
   Attachment::Command action( void ) const;
 
   //! comments
-  void setComments( const std::string& comments );
+  void setComments( const QString& comments );
   
   //! comments
-  std::string comments( void ) const;
+  QString comments( void ) const;
   
   private slots:
       

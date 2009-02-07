@@ -93,16 +93,16 @@ class FormatBar: public CustomToolBar
   public:
   
   //! bold icon name
-  static const std::string BOLD_ICON;
+  static const QString BOLD_ICON;
 
   //! italic icon name
-  static const std::string ITALIC_ICON;
+  static const QString ITALIC_ICON;
 
   //! strike icon name
-  static const std::string STRIKE_ICON;
+  static const QString STRIKE_ICON;
 
   //! underline icon name
-  static const std::string UNDERLINE_ICON;
+  static const QString UNDERLINE_ICON;
   
   //! action id enumeration
   enum ActionId
@@ -115,7 +115,7 @@ class FormatBar: public CustomToolBar
   };
       
   //! constructor
-  FormatBar( QWidget* parent, const std::string& option_name );
+  FormatBar( QWidget* parent, const QString& option_name );
 
   //! destructor
   virtual ~FormatBar( void )

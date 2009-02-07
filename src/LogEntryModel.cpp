@@ -110,10 +110,10 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
     switch( index.column() )
     {
 
-      case TITLE: return entry->title().c_str();
-      case CREATION: return entry->creation().string().c_str();
-      case MODIFICATION: return entry->modification().string().c_str();
-      case AUTHOR: return entry->author().c_str();
+      case TITLE: return entry->title();
+      case CREATION: return entry->creation().toString();
+      case MODIFICATION: return entry->modification().toString();
+      case AUTHOR: return entry->author();
       
       default:
       return QVariant();
@@ -124,7 +124,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
   if( role == Qt::DecorationRole && index.column() == COLOR ) 
   { 
     
-    QColor color( entry->color() != ColorMenu::NONE ? entry->color().c_str():QColor() );
+    QColor color( entry->color() != ColorMenu::NONE ? entry->color():QColor() );
     return _icon( color );
    
   }
@@ -160,7 +160,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
     return false;
   }
   
-  if( value != entry->title().c_str() )
+  if( value != entry->title() )
   {
     entry->setTitle( qPrintable( value.toString() ) );
     emit dataChanged( index, index );
@@ -208,7 +208,8 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
   mime->setData( DRAG, 0 );
   
   // retrieve associated entry
-  ostringstream what;
+  QString buffer;
+  QTextStream what( &buffer );
   for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); iter++ )
   {
     if( !( iter->isValid() && iter->column() == TITLE ) ) continue;
@@ -217,7 +218,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
   }
   
   // set plain text data
-  mime->setData( "text/plain", what.str().c_str() );
+  mime->setData( "text/plain", buffer.toAscii() );
   
   return mime;
   

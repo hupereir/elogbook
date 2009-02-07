@@ -66,16 +66,16 @@ class Logbook:public QObject, public Counter, public BASE::Key
   public:   
     
   //! default string when no title given
-  static const std::string LOGBOOK_NO_TITLE;       
+  static const QString LOGBOOK_NO_TITLE;       
   
   //! default string when no author given
-  static const std::string LOGBOOK_NO_AUTHOR;     
+  static const QString LOGBOOK_NO_AUTHOR;     
   
   //! default string when no file given
-  static const std::string LOGBOOK_NO_FILE;       
+  static const QString LOGBOOK_NO_FILE;       
   
   //! default string when no directory given
-  static const std::string LOGBOOK_NO_DIRECTORY;   
+  static const QString LOGBOOK_NO_DIRECTORY;   
   
   //! max number of entries in logbook (make child logbook if larger)
   enum { MAX_ENTRIES = 50 };         
@@ -200,15 +200,15 @@ class Logbook:public QObject, public Counter, public BASE::Key
   { return parent_file_; }         
   
   //! parent logbook filename
-  void setParentFile( const std::string& file )
+  void setParentFile( const QString& file )
   { parent_file_ = file; }     
   
   //! logbook title
-  std::string title( void ) const 
+  QString title( void ) const 
   { return title_; }         
   
   //! logbook title. Returns true if changed.
-  bool setTitle( const std::string& title )     
+  bool setTitle( const QString& title )     
   { 
     if( title_ == title ) return false;
     title_ = title; 
@@ -216,11 +216,11 @@ class Logbook:public QObject, public Counter, public BASE::Key
   }
   
   //! logbook last author
-  std::string author( void ) const 
+  QString author( void ) const 
   { return author_; }       
   
   //! logbook author. Returns true if changed.
-  bool setAuthor( const std::string& author )   
+  bool setAuthor( const QString& author )   
   { 
     if( author_ == author ) return false;
     author_ = author; 
@@ -228,11 +228,11 @@ class Logbook:public QObject, public Counter, public BASE::Key
   } 
   
   //! retrieves attachment comments
-  const std::string& comments( void ) const 
+  const QString& comments( void ) const 
   { return comments_; }        
   
   //! appends string to attachment comments. Returns true if changed.
-  bool setComments( const std::string& comments ) 
+  bool setComments( const QString& comments ) 
   {   
     if( comments == comments_ ) return false;
     comments_ = comments ;
@@ -299,7 +299,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
   bool needsBackup( void ) const;     
   
   //! generate tagged backup filename
-  std::string backupFilename( void ) const;   
+  QString backupFilename( void ) const;   
   
   //! html
   QDomElement htmlElement( QDomDocument& parent, const unsigned int& mask = HTML_ALL_MASK ) const;
@@ -423,13 +423,13 @@ class Logbook:public QObject, public Counter, public BASE::Key
   File directory_;   
   
   //! title of the log book
-  std::string title_;       
+  QString title_;       
   
   //! last user name who had access to the logbook
-  std::string author_;     
+  QString author_;     
   
   //! comments
-  std::string comments_;
+  QString comments_;
   
   //! logbook creation time
   TimeStamp creation_;     

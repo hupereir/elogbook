@@ -53,7 +53,7 @@ class OpenAttachmentDialog: public CustomDialog
   {}
   
   //! get command
-  std::string command( void ) const;
+  QString command( void ) const;
   
   //! action
   enum Action

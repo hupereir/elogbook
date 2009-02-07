@@ -79,7 +79,7 @@ int main (int argc, char *argv[])
   
   // set debug level
   Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
-  if( Debug::level() ) cout << XmlOptions::get() << endl;
+  if( Debug::level() ) XmlOptions::get().print();
   
   // initialize main frame and run loop
   Q_INIT_RESOURCE( basePixmaps );

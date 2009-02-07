@@ -64,38 +64,38 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   LineEditor* edit = new LineEditor( this );
   grid_layout->addWidget( edit, 0, 1 );
   edit->setReadOnly( true );
-  edit->setText( logbook->file().expand().c_str() );
+  edit->setText( logbook->file().expand() );
   
   // creation time
   if( logbook->creation().isValid() ) 
   {
     grid_layout->addWidget( new QLabel( "Created: ", this ), 1, 0 );
-    grid_layout->addWidget( new QLabel( logbook->creation().string().c_str(), this ), 1, 1 );
+    grid_layout->addWidget( new QLabel( logbook->creation().toString(), this ), 1, 1 );
   }
   
   // modification time
   if( logbook->modification().isValid() ) 
   {
     grid_layout->addWidget( new QLabel( "Last modified: ", this ), 2, 0 );
-    grid_layout->addWidget( new QLabel( logbook->modification().string().c_str(), this ), 2, 1 );
+    grid_layout->addWidget( new QLabel( logbook->modification().toString(), this ), 2, 1 );
   }
    
   // backup time
   if( logbook->backup().isValid() ) 
   {
     grid_layout->addWidget( new QLabel( "Last backup: ", this ), 3, 0 );
-    grid_layout->addWidget( new QLabel( logbook->backup().string().c_str(), this ), 3, 1 );
+    grid_layout->addWidget( new QLabel( logbook->backup().toString(), this ), 3, 1 );
   }
   
   // stores all children
     
   // total number of entries
   grid_layout->addWidget( new QLabel( "Entries: ", this ), 4, 0 );
-  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()).c_str(), this ), 4, 1 );
+  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()), this ), 4, 1 );
   
   // total number of attachments
   grid_layout->addWidget( new QLabel( "Attachments: ", this ), 5, 0 );
-  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>( logbook->attachments().size() ).c_str(), this ), 5, 1 );
+  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>( logbook->attachments().size() ), this ), 5, 1 );
 
   grid_layout->setColumnStretch( 1, 1 );
   
@@ -141,10 +141,10 @@ QVariant LogbookStatisticsDialog::Model::data( const QModelIndex& index, int rol
     switch( index.column() )
     {
       
-      case FILE: return logbook.file().localName().c_str();
+      case FILE: return logbook.file().localName();
       case ENTRIES: return int(BASE::KeySet<LogEntry>(&logbook).size());
-      case CREATED: return logbook.creation().string().c_str();
-      case MODIFIED: return logbook.modification().string().c_str();
+      case CREATED: return logbook.creation().toString();
+      case MODIFIED: return logbook.modification().toString();
       default: return QVariant();
     }
   }

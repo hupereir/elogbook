@@ -33,6 +33,7 @@
 #include "AttachmentModel.h"
 #include "XmlOptions.h"
 #include "Config.h"
+#include "File.h"
 #include "Util.h"
 
 using namespace std;
@@ -130,8 +131,8 @@ void installDefaultOptions( void )
     (1<< AttachmentModel::MODIFICATION) );
   
   // add run-time non recordable options
-  string user( Util::user( ) );
-  string host( Util::host() );
+  QString user( Util::user( ) );
+  QString host( Util::host() );
   XmlOptions::get().set( "USER", Option( user+"@"+host, Option::NONE ) );  
   XmlOptions::get().set( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::NONE ) );  
   XmlOptions::get().set( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::NONE ) );

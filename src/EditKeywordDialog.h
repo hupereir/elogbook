@@ -53,15 +53,15 @@ class EditKeywordDialog: public CustomDialog
   
   //! keyword
   void add( const Keyword& keyword )
-  { combo_box_->addItem( keyword.get().c_str() ); }
+  { combo_box_->addItem( keyword.get() ); }
   
   //! keyword
   void setKeyword( const Keyword& keyword )
-  { combo_box_->setEditText( keyword.get().c_str() ); }
+  { combo_box_->setEditText( keyword.get() ); }
   
   //! keyword
   Keyword keyword( void ) const
-  { return Keyword( qPrintable( combo_box_->currentText() ) ); }
+  { return Keyword( combo_box_->currentText() ); }
         
   private:
         

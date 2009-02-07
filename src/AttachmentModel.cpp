@@ -103,21 +103,21 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
     switch( index.column() )
     {
 
-      case FILE: return attachment->shortFile().c_str();
+      case FILE: return attachment->shortFile();
       
-      case TYPE: return attachment->type().name().c_str();
+      case TYPE: return attachment->type().name();
       
-      case SIZE: return attachment->sizeString().c_str();
+      case SIZE: return attachment->sizeString();
       
       case CREATION: 
-      return (attachment->creation().isValid() ) ? attachment->creation().string().c_str(): QVariant();
+      return (attachment->creation().isValid() ) ? attachment->creation().toString(): QVariant();
      
       case MODIFICATION: 
-      return (attachment->modification().isValid() ) ? attachment->modification().string().c_str(): QVariant();
+      return (attachment->modification().isValid() ) ? attachment->modification().toString(): QVariant();
       
       default: return QVariant();
     }
-  } else if( role == Qt::ToolTipRole ) return QString( attachment->file().c_str() );
+  } else if( role == Qt::ToolTipRole ) return attachment->file();
   else if( role == Qt::DecorationRole && index.column() == ICON ) return _icon( attachment->type().icon() );
   else if( role == Qt::TextAlignmentRole && index.column() == ICON ) return Qt::AlignCenter;
 
@@ -177,7 +177,7 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
  
 }
 //________________________________________________________
-QIcon AttachmentModel::_icon( string type )
+QIcon AttachmentModel::_icon( QString type )
 {
 
   //Debug::Throw( "SessionFilesModel::_icon.\n" );

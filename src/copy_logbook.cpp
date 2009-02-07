@@ -31,9 +31,10 @@
 
 
 #include <QCoreApplication>
+#include <QString>
+
 #include <iostream>
 #include <signal.h>
-#include <string>
 #include <unistd.h>
 
 #include "Debug.h"
@@ -65,19 +66,19 @@ int main (int argc, char *argv[])
   }
   
   // load argument
-  string input( argv[1] );
-  string output( argv[2] );
+  QString input( argv[1] );
+  QString output( argv[2] );
   
   // load options
-  string user( Util::user( ) );
-  string host( Util::host() );
+  QString user( Util::user( ) );
+  QString host( Util::host() );
   XmlOptions::get().set( "USER", Option( user+"@"+host, Option::NONE ) );
   
   // install default options
   installDefaultOptions();
   
   // load user resource file
-  string rcfile = Util::env( "HOME", "." ) + "/.eLogbookrc";
+  QString rcfile = Util::env( "HOME", "." ) + "/.eLogbookrc";
   XmlOptions::read( rcfile ); 
   
   // force debug level to 0
@@ -86,24 +87,24 @@ int main (int argc, char *argv[])
   // set debug level
   int debug_level( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
   Debug::setLevel( debug_level );
-  if( debug_level ) cout << XmlOptions::get();
+  if( debug_level ) XmlOptions::get().print();
   
   // the core application is needed to have locale, fonts, etc. set properly, notably for QSting
   // not having it might result in lost accents and special characters.
   QCoreApplication application( argc, argv );
   
   // try open input logbook   
-  cout << "copy_logbook::main - reading from: " << input << endl;
+  Debug::Throw(0) << "copy_logbook::main - reading from: " << input << endl;
   Logbook logbook;
   logbook.setFile( File(input).expand() );
   logbook.read();
   
   // debug
-  cout << "copy_logbook::main - number of files: " << logbook.children().size() << endl;
-  cout << "copy_logbook::main - number of entries: " << logbook.entries().size() << endl;
+  Debug::Throw(0) << "copy_logbook::main - number of files: " << logbook.children().size() << endl;
+  Debug::Throw(0) << "copy_logbook::main - number of entries: " << logbook.entries().size() << endl;
   
   // perform copy
-  cout << "copy_logbook::main - writing to: " << output << endl;
+  Debug::Throw(0) << "copy_logbook::main - writing to: " << output << endl;
   logbook.setFile( File( output ).expand() );
   logbook.setModifiedRecursive( true );
   
@@ -114,13 +115,13 @@ int main (int argc, char *argv[])
     // check file is not a directory
     if( fullname.isDirectory() ) 
     {
-      cout << "copy_logbook::main - selected file is a directory. <Save Logbook> canceled." << endl;
+      Debug::Throw(0) << "copy_logbook::main - selected file is a directory. <Save Logbook> canceled." << endl;
       return 0;
     }
     
     // check file is writable
     if( !fullname.isWritable() ) {
-      cout << "copy_logbook::main - selected file is not writable. <Save Logbook> canceled." << endl;
+      Debug::Throw(0) << "copy_logbook::main - selected file is not writable. <Save Logbook> canceled." << endl;
       return 0;
     }
     
@@ -128,7 +129,7 @@ int main (int argc, char *argv[])
     
     File path( fullname.path() );
     if( !path.isDirectory() ) {
-      cout << "copy_logbook::main - selected path is not valid. <Save Logbook> canceled." << endl;
+      Debug::Throw(0) << "copy_logbook::main - selected path is not valid. <Save Logbook> canceled." << endl;
       return 0;
     }
     
@@ -136,7 +137,7 @@ int main (int argc, char *argv[])
   
   // copy logbook to ouput
   if( !logbook.write() )
-  { cout << "copy_logbook::main - error writing to file " << output << endl; }
+  { Debug::Throw(0) << "copy_logbook::main - error writing to file " << output << endl; }
   
   return 0;
 }

@@ -51,7 +51,7 @@ class SearchPanel: public CustomToolBar
   public:
       
   //! constructor
-  SearchPanel( const QString&, QWidget*, const std::string& );
+  SearchPanel( const QString&, QWidget*, const QString& );
   
   //! search mode enumeration
   enum SearchMode 

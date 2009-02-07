@@ -32,7 +32,8 @@
   \date $Date$
 */
 
-#include <string>
+#include <QString>
+#include <QTextStream>
 #include <vector>
 
 #include "Counter.h"
@@ -47,7 +48,7 @@ class Keyword: public Counter
   static const Keyword NO_KEYWORD;  
   
   //! constructor
-  Keyword( const std::string& value = std::string("")):
+  Keyword( const QString& value = QString("")):
     Counter( "Keyword" )
   { value_ = _format( value ); }
   
@@ -64,18 +65,18 @@ class Keyword: public Counter
   { return get() < keyword.get(); }
 
   //! set full keyword
-  void set( const std::string& value )
+  void set( const QString& value )
   { value_ = _format( value ); }
   
   //! append
-  Keyword& append( const std::string& value );
+  Keyword& append( const QString& value );
   
   //! full keyword
-  const std::string& get( void ) const
+  const QString& get( void ) const
   { return value_; }
   
   //! current keyword 
-  std::string current( void ) const;
+  QString current( void ) const;
   
   //! parent keyword
   Keyword parent( void ) const;
@@ -89,13 +90,13 @@ class Keyword: public Counter
   private:
 
   //! format keyword
-  static std::string _format( const std::string& );
+  static QString _format( const QString& );
   
   //! full value
-  std::string value_;  
+  QString value_;  
  
   //! streamer
-  friend std::ostream& operator << (std::ostream& out, const Keyword& keyword )
+  friend QTextStream& operator << (QTextStream& out, const Keyword& keyword )
   {
     out << keyword.get();
     return out;

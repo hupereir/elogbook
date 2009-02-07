@@ -397,7 +397,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   virtual void _displayEntry( LogEntry* );
   
   //! rename entry with current title
-  virtual void _changeEntryTitle( LogEntry*, std::string );
+  virtual void _changeEntryTitle( LogEntry*, QString );
 
   //! change selected entries color
   virtual void _changeEntryColor( QColor );

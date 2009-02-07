@@ -152,11 +152,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   { return title_->isModified() || activeEditor().document()->isModified(); }
 
   //! computes window title
-  std::string windowTitle() const;
+  QString windowTitle() const;
 
   //! change window title
   void updateWindowTitle()
-  { setWindowTitle( windowTitle().c_str() ); }
+  { setWindowTitle( windowTitle() ); }
 
   //! creates dialog to ask for LogEntry save.
   AskForSaveDialog::ReturnCode askForSave( const bool & enable_cancel = true );

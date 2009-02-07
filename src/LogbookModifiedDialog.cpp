@@ -61,10 +61,13 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
   setLayout( layout );
   
   // create message
-  ostringstream what;
+  QString buffer;
+  QTextStream what( &buffer );
+  
   what << ((files.size() > 1) ? "files":"file" ) << endl; 
   for( list<File>::const_iterator iter = files.begin(); iter != files.end(); iter++ )
-  what << "  " << *iter << endl;
+  { what << "  " << *iter << endl; }
+  
   what 
       << ((files.size() > 1) ? "have":"has" )
       << " been modified by by another application."
@@ -73,7 +76,7 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
   //! try load Question icon
   QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
   if( question_pixmap.isNull() )
-  { layout->addWidget( new QLabel( what.str().c_str(), this ), 1, Qt::AlignHCenter ); }
+  { layout->addWidget( new QLabel( buffer, this ), 1, Qt::AlignHCenter ); }
   else
   {
     
@@ -82,7 +85,7 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
     QLabel* label = new QLabel( this );
     label->setPixmap( question_pixmap );
     h_layout->addWidget( label, 0, Qt::AlignHCenter );
-    h_layout->addWidget( new QLabel( what.str().c_str(), this ), 1, Qt::AlignHCenter );
+    h_layout->addWidget( new QLabel( buffer, this ), 1, Qt::AlignHCenter );
     
   }
 

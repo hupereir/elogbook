@@ -62,7 +62,7 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
   if( !index.isValid() ) return QVariant();
   if( role != Qt::DisplayRole ) return QVariant();
   if( index.column() != KEYWORD ) return QVariant();
-  return QString( _find( index.internalId() ).get().current().c_str() ); 
+  return _find( index.internalId() ).get().current(); 
   
 }
 
@@ -76,10 +76,10 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
   Keyword parent_keyword( get( parent( index ) ) );
   
   Keyword keyword( get( index ) );
-  if( value.toString() != keyword.current().c_str() )
+  if( value.toString() != keyword.current() )
   { 
     // generate new keyword from value
-    Keyword new_keyword( parent_keyword.append( qPrintable( value.toString() ) ) );
+    Keyword new_keyword( parent_keyword.append( value.toString() ) );
     Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << new_keyword << endl;
     emit keywordChanged( keyword, new_keyword );
     emit dataChanged( index, index ); 
@@ -120,10 +120,11 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
   
   // set DRAG type
   for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); iter++ )
-  { if( iter->isValid() ) mime->setData( DRAG, get( *iter ).get().c_str() ); }
+  { if( iter->isValid() ) mime->setData( DRAG, get( *iter ).get().toAscii() ); }
   
   // retrieve associated entry
-  ostringstream what;
+  QString buffer;
+  QTextStream what( &buffer );
   for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); iter++ )
   {
     if( !iter->isValid() ) continue;
@@ -131,7 +132,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
   }
   
   // set plain text data
-  mime->setData( "text/plain", what.str().c_str() );
+  mime->setData( "text/plain", buffer.toAscii() );
   
   return mime;
 
@@ -155,7 +156,7 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
     if( keyword_string.isNull() || keyword_string.isEmpty() ) return false;
     
     // retrieve old keyword
-    Keyword old_keyword( qPrintable( keyword_string ) );
+    Keyword old_keyword( keyword_string );
     
     // retrieve new location
     QModelIndex index = parent.isValid() ? parent : QModelIndex();

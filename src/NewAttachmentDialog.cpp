@@ -73,10 +73,10 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
   grid_layout->addWidget( new QLabel( "Type:", this ) );
   grid_layout->addWidget( file_type_combo_box_ = new QComboBox( this ) );
   for( 
-    std::map<string, AttachmentType>::const_iterator iter = AttachmentType::types().begin(); 
+    AttachmentType::Map::const_iterator iter = AttachmentType::types().begin(); 
     iter != AttachmentType::types().end();
     iter ++ )
-  { file_type_combo_box_->addItem( iter->second.name().c_str() ); }
+  { file_type_combo_box_->addItem( iter->second.name() ); }
   file_type_combo_box_->setToolTip( "Attachment type. Defines the default application used to display the attachment." );
   connect( file_type_combo_box_, SIGNAL( activated( int ) ), SLOT( _attachmentTypeChanged( int ) ) );
         
@@ -112,7 +112,7 @@ void NewAttachmentDialog::setFile( const File& file )
 //____________________________________________________
 File NewAttachmentDialog::file( void ) const
 { 
-  File out( qPrintable( file_line_edit_->editor().text() ) );
+  File out( file_line_edit_->editor().text() );
   return type() == AttachmentType::URL ? out : out.expand(); 
 }
 
@@ -125,13 +125,13 @@ void NewAttachmentDialog::setDestinationDirectory( const File& file )
 
 //____________________________________________________
 File NewAttachmentDialog::destinationDirectory( void ) const
-{ return File( qPrintable( dest_dir_line_edit_->editor().text() ) ).expand(); }
+{ return File( dest_dir_line_edit_->editor().text() ).expand(); }
 
 //____________________________________________________
 void NewAttachmentDialog::setType( const AttachmentType& type )
 {
   Debug::Throw( "NewAttachmentDialog::setType.\n" );
-  file_type_combo_box_->setCurrentIndex( file_type_combo_box_->findText( type.name().c_str() ) );
+  file_type_combo_box_->setCurrentIndex( file_type_combo_box_->findText( type.name() ) );
 }
 
 //____________________________________________________
@@ -139,12 +139,12 @@ AttachmentType NewAttachmentDialog::type( void ) const
 {
 
   Debug::Throw( "NewAttachmentDialog::GetType.\n" );
-  string type_string( qPrintable( file_type_combo_box_->currentText() ) );
+  QString type( file_type_combo_box_->currentText() );
   for( 
-    std::map<string, AttachmentType>::const_iterator iter = AttachmentType::types().begin(); 
+    AttachmentType::Map::const_iterator iter = AttachmentType::types().begin(); 
     iter != AttachmentType::types().end();
     iter++ ) 
-  { if( iter->second.name() == type_string ) return iter->second; }
+  { if( iter->second.name() == type ) return iter->second; }
   return AttachmentType::UNKNOWN;
   
 }
@@ -159,24 +159,20 @@ void NewAttachmentDialog::setAction( const Attachment::Command& command )
 
 //____________________________________________________
 Attachment::Command NewAttachmentDialog::action( void ) const
-{
-  return action_combo_box_->currentText() == "Copy" ? 
-      Attachment::COPY_VERSION:
-      Attachment::LINK_VERSION;
-}
+{ return action_combo_box_->currentText() == "Copy" ? Attachment::COPY_VERSION: Attachment::LINK_VERSION; }
 
 //____________________________________________________
-void NewAttachmentDialog::setComments( const std::string& comments )
+void NewAttachmentDialog::setComments( const QString& comments )
 { 
   Debug::Throw( "NewAttachmentDialog::SetComments.\n" );
-  comments_text_edit_->setPlainText( comments.c_str() );
+  comments_text_edit_->setPlainText( comments );
 }
 
 //____________________________________________________
-string NewAttachmentDialog::comments( void ) const
+QString NewAttachmentDialog::comments( void ) const
 {
   Debug::Throw( "NewAttachmentDialog::GetComments.\n" );
-  return qPrintable( comments_text_edit_->toPlainText() );
+  return comments_text_edit_->toPlainText();
 }
 
 //____________________________________________________

@@ -45,12 +45,12 @@ AttachmentType AttachmentType::URL( "URL",  "URL", "text-html.png", "EDIT_URL_AT
 //___________________________________________________________________________________
 const AttachmentType::Map& AttachmentType::types()
 {
-  static Map map = _install();
-  return map;
+  static Map type_map = _install();
+  return type_map;
 };
 
 //___________________________________________________________________________________
-AttachmentType::AttachmentType( const std::string& key, const std::string& name, const std::string& icon, const std::string& option ):
+AttachmentType::AttachmentType( const QString& key, const QString& name, const QString& icon, const QString& option ):
   Counter( "AttachmentType" ),
   key_( key ),
   name_( name ),
@@ -59,16 +59,16 @@ AttachmentType::AttachmentType( const std::string& key, const std::string& name,
 {}
   
 //___________________________________________________________________________________
-AttachmentType AttachmentType::get( const string& key )
+AttachmentType AttachmentType::get( const QString& key )
 {
   
-  std::map< string, AttachmentType >::const_iterator iter = types().find( key );
+  Map::const_iterator iter = types().find( key );
   return ( iter == types().end() ) ? UNKNOWN:iter->second;
   
 }
 
 //______________________________________
-string AttachmentType::editCommand( void ) const
+QString AttachmentType::editCommand( void ) const
 {
   if( !option_.size() ) return "";
   return XmlOptions::get().raw( option_ );

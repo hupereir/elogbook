@@ -32,7 +32,7 @@
    \date $Date$
 */
 
-#include <string>
+#include <QString>
 
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
@@ -55,22 +55,22 @@ class NewLogbookDialog: public CustomDialog
   { Debug::Throw( "NewLogbookDialog::~NewLogbookDialog\n" ); }
 
   //! title
-  void setTitle( const std::string& title )
-  { title_->setText( title.c_str() ); }
+  void setTitle( const QString& title )
+  { title_->setText( title ); }
   
   //! title
-  std::string title( void ) const
+  QString title( void ) const
   { 
     Debug::Throw( "NewLogbookDialog::title.\n" ); 
     return qPrintable( title_->text() ); 
   }
 
   //! author
-  void setAuthor( const std::string& author )
-  { author_->setText( author.c_str() ); }
+  void setAuthor( const QString& author )
+  { author_->setText( author ); }
   
   //! filename
-  std::string author( void ) const
+  QString author( void ) const
   { 
     Debug::Throw( "NewLogbookDialog::author.\n" ); 
     return qPrintable( author_->text() ); 
@@ -99,14 +99,14 @@ class NewLogbookDialog: public CustomDialog
   }
   
   //! comments
-  void setComments( const std::string& comments )
+  void setComments( const QString& comments )
   { 
     Debug::Throw( "NewLogbookDialog::setComments.\n" ); 
-    comments_->setPlainText( comments.c_str() ); 
+    comments_->setPlainText( comments ); 
   }
   
   //! comments
-  std::string comments( void ) const
+  QString comments( void ) const
   {
     Debug::Throw( "NewLogbookDialog::comments.\n" ); 
     return qPrintable( comments_->toPlainText() ); 

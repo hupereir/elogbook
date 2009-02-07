@@ -55,16 +55,16 @@ class Attachment: public Counter, public BASE::Key
   public:
 
   //! default string when no file given
-  static const std::string NO_FILE;      
+  static const QString NO_FILE;      
   
   //! default string when no comments given
-  static const std::string NO_COMMENTS;  
+  static const QString NO_COMMENTS;  
 
   //! no size
-  static const std::string NO_SIZE;
+  static const QString NO_SIZE;
   
   //! contructor
-  Attachment( const std::string orig = "", const AttachmentType& type = AttachmentType::UNKNOWN ); 
+  Attachment( const QString orig = "", const AttachmentType& type = AttachmentType::UNKNOWN ); 
 
   //! creator from DomElement
   Attachment( const QDomElement& element );
@@ -150,7 +150,7 @@ class Attachment: public Counter, public BASE::Key
   { return size_; }    
   
   //! retrieves local file size
-  std::string sizeString( void ) const 
+  QString sizeString( void ) const 
   { return size_str_; }    
 
   //! retrieves associated entry
@@ -179,11 +179,11 @@ class Attachment: public Counter, public BASE::Key
   File shortFile( void ) const;    
     
   //! retrieves attachment comments
-  const std::string& comments( void ) const 
+  const QString& comments( void ) const 
   { return comments_; }        
   
   //! appends string to attachment comments
-  bool setComments( const std::string& buf ) 
+  bool setComments( const QString& buf ) 
   { 
     if( comments_ == buf ) return false;
     comments_ = buf;
@@ -218,7 +218,7 @@ class Attachment: public Counter, public BASE::Key
     SOURCE_IS_DIR, 
     DEST_EXIST };
       
-  /*! \fn ErrorCode copy( const Attachment::Command& command, const std::string& destdir ) 
+  /*! \fn ErrorCode copy( const Attachment::Command& command, const QString& destdir ) 
     \brief ErrorCode convert original file into attached file. Returns true in case of success
     \param command tells how the original file is to be converted into attached file. Is one of the following:
       Attachment::COPY use command cp, if the attached file is not present
@@ -229,7 +229,7 @@ class Attachment: public Counter, public BASE::Key
       Attachment::DO_NOTHING, just stores the attached file name, but do nothing
     \param destdir destination directory
   */
-  ErrorCode copy( const Attachment::Command& command, const std::string& destdir );
+  ErrorCode copy( const Attachment::Command& command, const QString& destdir );
   
   private: 
   
@@ -266,13 +266,13 @@ class Attachment: public Counter, public BASE::Key
   File file_;      
   
   //! comments
-  std::string comments_;  
+  QString comments_;  
   
   //! file size (0 if not valid | URL )
   double size_;        
   
   //! corresponding size_string
-  std::string size_str_;    
+  QString size_str_;    
   
   //! creation
   TimeStamp creation_;

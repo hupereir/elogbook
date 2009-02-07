@@ -76,19 +76,19 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
   h_layout->addLayout( grid_layout, 1 );
   
   grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
-  grid_layout->addWidget( new QLabel( entry->title().c_str(), this ), 0, 1 );
+  grid_layout->addWidget( new QLabel( entry->title(), this ), 0, 1 );
 
   grid_layout->addWidget( new QLabel( "Keyword: ", this ), 1, 0 );
-  grid_layout->addWidget( new QLabel( entry->keyword().get().c_str(), this ), 1, 1 );
+  grid_layout->addWidget( new QLabel( entry->keyword().get(), this ), 1, 1 );
 
   grid_layout->addWidget( new QLabel( "Author: ", this ), 2, 0 );
-  grid_layout->addWidget( new QLabel( entry->author().c_str(), this ), 2, 1 );
+  grid_layout->addWidget( new QLabel( entry->author(), this ), 2, 1 );
 
   grid_layout->addWidget( new QLabel( "Creation: ", this ), 3, 0 );
-  grid_layout->addWidget( new QLabel( entry->creation().string().c_str(), this ), 3, 1 );
+  grid_layout->addWidget( new QLabel( entry->creation().toString(), this ), 3, 1 );
 
   grid_layout->addWidget( new QLabel( "Modification: ", this ), 4, 0 );
-  grid_layout->addWidget( new QLabel( entry->modification().string().c_str(), this ), 4, 1 );
+  grid_layout->addWidget( new QLabel( entry->modification().toString(), this ), 4, 1 );
   
   // retrieve associated logbook
   int i=5;
@@ -97,7 +97,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
   {
     
     grid_layout->addWidget( new QLabel( "File: ", this ), i, 0 );
-    grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName().c_str(), this ), i, 1);
+    grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName(), this ), i, 1);
     
   }
   

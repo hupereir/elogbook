@@ -56,19 +56,19 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
  
   grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
   grid_layout->addWidget( title_ = new LineEditor( this ), 0, 1 );
-  title_->setText( logbook->title().empty() ?   Logbook::LOGBOOK_NO_TITLE.c_str():logbook->title().c_str()  );
+  title_->setText( logbook->title().isEmpty() ?   Logbook::LOGBOOK_NO_TITLE:logbook->title()  );
   title_->setToolTip( "Logbook title" );
 
   // logbook author
   grid_layout->addWidget( new QLabel( "Author: ", this ), 1, 0 );
   grid_layout->addWidget( author_ = new LineEditor( this ), 1, 1 );
-  author_->setText( logbook->author().empty() ? Logbook::LOGBOOK_NO_AUTHOR.c_str():logbook->author().c_str() );
+  author_->setText( logbook->author().isEmpty() ? Logbook::LOGBOOK_NO_AUTHOR:logbook->author() );
   author_->setToolTip( "Logbook author." );
   
   // attachment directory
   grid_layout->addWidget( new QLabel( "Directory: ", this ), 2, 0 );
   grid_layout->addWidget( attachment_directory_ = new BrowsedLineEditor( this ), 2, 1 );
-  attachment_directory_->setFile( logbook->directory().empty() ? Util::workingDirectory().c_str() : logbook->directory().c_str() );
+  attachment_directory_->setFile( logbook->directory().isEmpty() ? File(Util::workingDirectory()) : logbook->directory() );
   attachment_directory_->setFileMode( QFileDialog::DirectoryOnly );
   attachment_directory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );
   
@@ -77,7 +77,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
   // comments
   mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );  
   mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
-  comments_->setPlainText( logbook->comments().c_str() );
+  comments_->setPlainText( logbook->comments() );
   comments_->setToolTip( "Logbook comments." );
 
 }

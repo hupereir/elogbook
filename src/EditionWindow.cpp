@@ -331,24 +331,25 @@ void EditionWindow::setColorMenu( ColorMenu* menu )
 }
 
 //_____________________________________________
-string EditionWindow::windowTitle( void ) const
+QString EditionWindow::windowTitle( void ) const
 {
 
   Debug::Throw( "EditionWindow::windowTitle.\n" );
   LogEntry* entry( EditionWindow::entry() );
 
-  ostringstream title;
+  QString buffer;
+  QTextStream what( &buffer );
   if( entry )
   {
   
-    title << entry->title();
-    if( entry->keyword() != Keyword::NO_KEYWORD ) title << " - " << entry->keyword().get();
+    what << entry->title();
+    if( entry->keyword() != Keyword::NO_KEYWORD ) what << " - " << entry->keyword().get();
 
-  } else title << "Electronic Logbook Editor";
+  } else what << "Electronic Logbook Editor";
 
-  if( isReadOnly() ) title << " (read only)";
-  else if( modified()  ) title << " (modified)";
-  return title.str();
+  if( isReadOnly() ) what << " (read only)";
+  else if( modified()  ) what << " (modified)";
+  return buffer;
 
 }
 
@@ -378,7 +379,7 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( const bool& enable_cance
       otherwise one directly save the loogbook, while disabling the confirmation for modified
       entries
     */
-    if( _mainWindow().logbook()->file().empty() )
+    if( _mainWindow().logbook()->file().isEmpty() )
     {
       for( BASE::KeySet<EditionWindow>::iterator iter = editionwindows.begin(); iter!= editionwindows.end(); iter++ )
       { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->_save(enable_cancel); }
@@ -395,7 +396,7 @@ void EditionWindow::displayTitle( void )
   Debug::Throw( "EditionWindow::displayTitle.\n" );
 
   LogEntry* entry( EditionWindow::entry() );
-  title_->setText( ( entry && entry->title().size() ) ? entry->title().c_str(): LogEntry::UNTITLED.c_str()  );
+  title_->setText( ( entry && entry->title().size() ) ? entry->title(): LogEntry::UNTITLED  );
   title_->setCursorPosition( 0 );
   return;
 }
@@ -420,10 +421,16 @@ void EditionWindow::displayColor( void )
   // try load entry color
   QColor color;
   Str colorname( entry()->color() );
-  if( colorname.isEqual( ColorMenu::NONE, false ) || !( color = QColor( colorname.c_str() ) ).isValid() ) { color_widget_->hide(); } 
-  else { 
+  if( colorname.compare( ColorMenu::NONE, Qt::CaseInsensitive ) == 0 || !( color = QColor( colorname ) ).isValid() ) 
+  { 
+    
+    color_widget_->hide(); 
+  
+  } else { 
+   
     color_widget_->setColor( color ); 
     color_widget_->show();
+  
   }
   
   return;
@@ -464,11 +471,11 @@ void EditionWindow::_save( bool update_selection )
   Debug::Throw( "EditionWindow::_save - logbook checked.\n" );
 
   //! update entry text
-  entry->setText( qPrintable( activeEditor().toPlainText() ) );
+  entry->setText( activeEditor().toPlainText() );
   entry->setFormats( format_toolbar_->get() );
 
   //! update entry title
-  entry->setTitle( qPrintable( title_->text() ) );
+  entry->setTitle( title_->text() );
 
   // update author
   entry->setAuthor( XmlOptions::get().raw( "USER" ) );
@@ -883,35 +890,35 @@ void EditionWindow::_print( void )
   // add commands
   /* command list contains the HTML editor, PDF editor and any additional user specified command */
   Options::List commands( XmlOptions::get().specialOptions( "PRINT_COMMAND" ) );
-  if( !AttachmentType::HTML.editCommand().empty() ) commands.push_back( AttachmentType::HTML.editCommand() );
+  if( !AttachmentType::HTML.editCommand().isEmpty() ) commands.push_back( AttachmentType::HTML.editCommand() );
   for( Options::List::iterator iter = commands.begin(); iter != commands.end(); iter++ )
-  { dialog.addCommand( iter->raw().c_str() ); }
+  { dialog.addCommand( iter->raw() ); }
 
   // generate default filename
-  ostringstream what;
-  what << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
-  dialog.setFile( File( what.str() ).addPath( Util::tmp() ) );
+  QString buffer;
+  QTextStream( &buffer )  << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+  dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
 
   // map dialog
   if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
 
   // save command
   QString command( dialog.command() );
-  XmlOptions::get().add( "PRINT_COMMAND", Option( qPrintable( command ), Option::RECORDABLE|Option::CURRENT ) );  
+  XmlOptions::get().add( "PRINT_COMMAND", Option( command, Option::RECORDABLE|Option::CURRENT ) );  
   
   // retrieve/check file
   File file( dialog.file() );
-  if( file.empty() ) {
+  if( file.isEmpty() ) {
     InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
     return;
   }
 
-  QFile out( file.c_str() );
+  QFile out( file );
   if( !out.open( QIODevice::WriteOnly ) )
   {
-    ostringstream o;
-    o << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-    InformationDialog( this, o.str().c_str() ).exec();
+    QString buffer;
+    QTextStream( &buffer ) << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
+    InformationDialog( this, buffer ).exec();
     return;
   }
 
@@ -939,8 +946,6 @@ void EditionWindow::_print( void )
 
   // dump entry
   body.appendChild( entry->htmlElement( document, html_entry_mask ) );
-
-  // Debug::Throw(0) << "EditionWindow::_print - " << qPrintable( document.toString() ) << endl;
   
   out.write( document.toString().toAscii() );
   out.close();
@@ -949,7 +954,7 @@ void EditionWindow::_print( void )
   if( command.isEmpty() ) return;
 
   // execute command
-  ( Command( command ) << file.c_str() ).run();
+  ( Command( command ) << file ).run();
 
   return;
 }
@@ -1018,7 +1023,7 @@ void EditionWindow::_overwriteModeChanged( void )
 //________________________________________________________________
 void EditionWindow::_setActiveEditor( AnimatedTextEditor& editor )
 { 
-  Debug::Throw() << "EditionWindow::_setActiveEditor - key: " << editor.key() << std::endl;
+  Debug::Throw() << "EditionWindow::_setActiveEditor - key: " << editor.key() << endl;
   assert( editor.isAssociated( this ) );
   
   active_editor_ = &editor;
@@ -1290,13 +1295,13 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
   Debug::Throw( "EditionWindow::_DisplayCursorPosition.\n" );
   if( !_hasStatusBar() ) return;
   
-  ostringstream what;
-  what << "Line : " << position.paragraph()+1;
-  statusBar().label(2).setText( what.str().c_str(), false );
+  QString buffer;
+  QTextStream( &buffer ) << "Line : " << position.paragraph()+1;
+  statusBar().label(2).setText( buffer, false );
 
-  what.str("");
-  what << "Column : " << position.index()+1;
-  statusBar().label(3).setText( what.str().c_str(), true );
+  buffer.clear();
+  QTextStream( &buffer )  << "Column : " << position.index()+1;
+  statusBar().label(3).setText( buffer, true );
   
   return;
 }
@@ -1318,7 +1323,7 @@ void EditionWindow::_displayText( void )
 
   LogEntry* entry( EditionWindow::entry() );
   activeEditor().setCurrentCharFormat( QTextCharFormat() );
-  activeEditor().setPlainText( (entry) ? entry->text().c_str() : "" );
+  activeEditor().setPlainText( (entry) ? entry->text() : "" );
   format_toolbar_->load( entry->formats() );
   
   // reset undo/redo stack

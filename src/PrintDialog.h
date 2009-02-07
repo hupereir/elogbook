@@ -73,7 +73,7 @@ class PrintDialog: public CustomDialog
   
   //! file
   File file( void ) const
-  { return File( qPrintable( _destinationEditor().editor().text() ) ); }
+  { return _destinationEditor().editor().text(); }
   
   protected:
   

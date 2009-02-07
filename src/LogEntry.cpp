@@ -47,10 +47,10 @@
 using namespace std;
 
 //__________________________________
-const string LogEntry::DRAG = "logEntry_drag";
-const string LogEntry::UNTITLED = "untitled";
-const string LogEntry::NO_AUTHOR = "anonymous";
-const string LogEntry::NO_TEXT = "";
+const QString LogEntry::DRAG = "logEntry_drag";
+const QString LogEntry::UNTITLED = "untitled";
+const QString LogEntry::NO_AUTHOR = "anonymous";
+const QString LogEntry::NO_TEXT = "";
 
 //__________________________________
 LogEntry::LogEntry( void ):
@@ -75,11 +75,11 @@ LogEntry::LogEntry( const QDomElement& element ):
     if( attribute.isNull() ) continue;
     QString name( attribute.name() );
     QString value( attribute.value() );
-    if( name == XML::TITLE ) setTitle( qPrintable( XmlString( value ).toText() ) );
-    else if( name == XML::KEYWORD ) setKeyword( Keyword( qPrintable( XmlString( value ).toText() ) ) );
-    else if( name == XML::AUTHOR ) setAuthor( qPrintable( XmlString( value ).toText() ) );
-    else if( name == XML::COLOR ) setColor( qPrintable( XmlString( value ).toText() ) );
-    else cerr << "LogEntry::LogEntry - unrecognized entry attribute: \"" << qPrintable( name ) << "\"\n";
+    if( name == XML::TITLE ) setTitle( XmlString( value ).toText() );
+    else if( name == XML::KEYWORD ) setKeyword( Keyword( XmlString( value ).toText() ) );
+    else if( name == XML::AUTHOR ) setAuthor( XmlString( value ).toText() );
+    else if( name == XML::COLOR ) setColor( XmlString( value ).toText() );
+    else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized entry attribute: \"" << name << "\"\n";
   }
 
   // parse children elements
@@ -89,12 +89,12 @@ LogEntry::LogEntry( const QDomElement& element ):
     if( child_element.isNull() ) continue;
 
     QString tag_name( child_element.tagName() );
-    if( tag_name == XML::TEXT ) setText( qPrintable( XmlString( child_element.text() ).toText() ) );
+    if( tag_name == XML::TEXT ) setText( XmlString( child_element.text() ).toText() );
     else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( child_element ) );
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( child_element ) );
     else if( tag_name == FORMAT::XmlTextFormatBlock::XML_TAG ) addFormat( FORMAT::XmlTextFormatBlock( child_element ) );
     else if( tag_name == XML::ATTACHMENT ) Key::associate( this, new Attachment( child_element ) );
-    else cout << "LogEntry::LogEntry - unrecognized child " << qPrintable( child_element.tagName() ) << ".\n";
+    else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized child " << child_element.tagName() << ".\n";
   }
 
 }
@@ -116,27 +116,27 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 {
   Debug::Throw( "LogEntry::domElement.\n" );
   QDomElement out( parent.createElement( XML::ENTRY ) );
-  if( !title().empty() ) out.setAttribute( XML::TITLE, XmlString( title().c_str() ).toXml() );
-  if( !keyword().get().empty() ) out.setAttribute( XML::KEYWORD, XmlString( keyword().get().c_str() ).toXml() );
-  if( !author().empty() ) out.setAttribute( XML::AUTHOR, XmlString( author().c_str() ).toXml() );
+  if( !title().isEmpty() ) out.setAttribute( XML::TITLE, XmlString( title() ).toXml() );
+  if( !keyword().get().isEmpty() ) out.setAttribute( XML::KEYWORD, XmlString( keyword().get() ).toXml() );
+  if( !author().isEmpty() ) out.setAttribute( XML::AUTHOR, XmlString( author() ).toXml() );
 
   // color
-  bool color_valid( !( color().empty() || Str(color()).isEqual( ColorMenu::NONE, false ) ) && QColor( color().c_str() ).isValid() );
-  if( color_valid ) out.setAttribute( XML::COLOR, XmlString( color().c_str() ).toXml() );
+  bool color_valid( (!color().isEmpty()) && color().compare( ColorMenu::NONE, Qt::CaseInsensitive ) != 0 && QColor( color() ).isValid() );
+  if( color_valid ) out.setAttribute( XML::COLOR, XmlString( color() ).toXml() );
 
   // dump timeStamp
   if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, parent ) );
   if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, parent ) );
 
   // dump text
-  if( !text().empty() )
+  if( !text().isEmpty() )
   {
-    string text( LogEntry::text() );
+    QString text( LogEntry::text() );
     if( text[text.size()-1] != '\n' ) text+='\n';
 
     out.
       appendChild( parent.createElement( XML::TEXT ) ).
-      appendChild( parent.createTextNode( XmlString( text.c_str() ).toXml() ) );
+      appendChild( parent.createTextNode( XmlString( text ).toXml() ) );
   }
 
   // dump text format
@@ -178,23 +178,37 @@ LogEntry* LogEntry::clone( void ) const
 }
 
 //__________________________________
-bool LogEntry::matchColor( const string& buf )
+bool LogEntry::matchTitle( const QString& buffer ) const
+{ return title().contains( buffer, _caseSensitive() ); }
+  
+//__________________________________
+bool LogEntry::matchKeyword( const QString& buffer ) const
+{ return keyword().get().contains( buffer, _caseSensitive() ); }
+
+//__________________________________
+bool LogEntry::matchText(  const QString& buffer ) const
+{ return text().contains( buffer, _caseSensitive() ); }
+
+//__________________________________
+bool LogEntry::matchColor( const QString& buffer ) const
 {
-  if( Str( buf ).isIn( color_, false ) ) return true;
+  if( color_.contains( buffer, Qt::CaseInsensitive ) ) return true;
   if( color_ == ColorMenu::NONE ) return false;
-  return QColor( buf.c_str() ) == QColor( color_.c_str() );
+  return QColor( buffer ) == QColor( color_ );
 }
   
 //__________________________________
-bool LogEntry::matchAttachment( const string& buf )
+bool LogEntry::matchAttachment( const QString& buffer ) const
 {
   Debug::Throw( "LogEntry::matchAttachment.\n" );
 
   // retrieve associated attachments
   BASE::KeySet<Attachment> attachments( this );
-  for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
-  if( Str(buf).isIn( (*iter)->file(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ) )
-  return true;
+  for( BASE::KeySet<Attachment>::const_iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
+  {
+    if( (*iter)->file().contains( buffer, _caseSensitive() ) )
+    { return true; }
+  }
 
   return false;
 }
@@ -207,7 +221,7 @@ void LogEntry::modified( void )
 }
 
 //__________________________________
-QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &mask )
+QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &mask ) const
 {
   Debug::Throw( "LogEntry::htmlElement.\n" );
 
@@ -222,9 +236,9 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
     table.setAttribute( "width", "100%" );
     if( color()!="None" )
     {
-      ostringstream what;
-      what << "border: 2px solid" << color();
-      table.setAttribute( "style", what.str().c_str() );
+      QString buffer;
+      QTextStream( &buffer ) << "border: 2px solid" << color();
+      table.setAttribute( "style", buffer );
     }
 
     QDomElement column = table.
@@ -238,7 +252,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
     table.setAttribute( "class", "header_inner_table" );
     table.setAttribute( "width", "100%" );
     QDomElement row;
-    if( !keyword().get().empty() && (mask&HTML_KEYWORD) )
+    if( !keyword().get().isEmpty() && (mask&HTML_KEYWORD) )
     {
       row = table.appendChild( document.createElement( "tr" ) ).toElement();
       column = row.appendChild( document.createElement( "td" ) ).toElement();
@@ -247,11 +261,11 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
       row.
         appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( keyword().get().c_str() ) );
+        appendChild( document.createTextNode( keyword().get() ) );
 
     }
 
-    if( !title().empty() && (mask&HTML_TITLE) )
+    if( !title().isEmpty() && (mask&HTML_TITLE) )
     {
       row = table.appendChild( document.createElement( "tr" ) ).toElement();
       column = row.appendChild( document.createElement( "td" ) ).toElement();
@@ -262,8 +276,8 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
         appendChild( document.createElement( "b" ) ).
         appendChild( document.createElement( "a" ) ).
         toElement();
-      ref.setAttribute( "name", Str().assign<int>( creation() ).c_str() );
-      ref.appendChild( document.createTextNode( title().c_str() ) );
+      ref.setAttribute( "name", QString().setNum( creation() ) );
+      ref.appendChild( document.createTextNode( title() ) );
     }
 
     if( creation().isValid() && (mask&HTML_CREATION) )
@@ -275,7 +289,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
       row.
         appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( creation().string().c_str() ) );
+        appendChild( document.createTextNode( creation().toString() ) );
 
     }
 
@@ -288,11 +302,11 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
       row.
         appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( modification().string().c_str() ) );
+        appendChild( document.createTextNode( modification().toString() ) );
 
     }
 
-    if( !author().empty() && (mask&HTML_AUTHOR) )
+    if( !author().isEmpty() && (mask&HTML_AUTHOR) )
     {
       row = table.appendChild( document.createElement( "tr" ) ).toElement();
       column = row.appendChild( document.createElement( "td" ) ).toElement();
@@ -301,7 +315,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
       row.
         appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( author().c_str() ) );
+        appendChild( document.createTextNode( author() ) );
 
     }
 
@@ -317,7 +331,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
   }
 
   // write text
-  if( !text().empty() && ( mask & HTML_TEXT ) )
+  if( !text().isEmpty() && ( mask & HTML_TEXT ) )
   {
     QDomElement par = out.appendChild( document.createElement("p") ).toElement();
     _htmlTextNode( par, document );
@@ -341,8 +355,8 @@ QDomElement LogEntry::htmlSummary( QDomDocument& document, const unsigned int& m
         appendChild( document.createElement( "td" ) )).
         appendChild( document.createElement( "b" ) )).
         appendChild( document.createElement( "a" ) ).toElement();
-    ref.setAttribute( "href", (string("#")+Str().assign<int>( creation() )).c_str() );
-    ref.appendChild( document.createTextNode( (keyword().get().empty() ) ? Keyword::NO_KEYWORD.get().c_str():keyword().get().c_str() ) );
+    ref.setAttribute( "href", ( QStringList() << "#" << QString().setNum( creation() ) ).join("") );
+    ref.appendChild( document.createTextNode( (keyword().get().isEmpty() ) ? Keyword::NO_KEYWORD.get():keyword().get() ) );
   }
 
   if( mask & HTML_TITLE )
@@ -351,15 +365,15 @@ QDomElement LogEntry::htmlSummary( QDomDocument& document, const unsigned int& m
         appendChild( document.createElement( "td" ) )).
         appendChild( document.createElement( "b" ) )).
         appendChild( document.createElement( "a" ) ).toElement();
-    ref.setAttribute( "href", (string("#")+Str().assign<int>( creation() )).c_str() );
-    ref.appendChild( document.createTextNode( (title().empty()) ? UNTITLED.c_str():title().c_str() ) );
+    ref.setAttribute( "href", (QStringList() << "#" << QString().setNum( creation() ) ).join("") );
+    ref.appendChild( document.createTextNode( (title().isEmpty()) ? UNTITLED:title() ) );
   }
   if( mask & HTML_CREATION ) row.
     appendChild( document.createElement( "td" )).
-    appendChild( document.createTextNode( creation().string().c_str() ) );
+    appendChild( document.createTextNode( creation().toString() ) );
   if( mask & HTML_MODIFICATION ) row.
     appendChild( document.createElement( "td" )).
-    appendChild( document.createTextNode( modification().string().c_str() ) );
+    appendChild( document.createTextNode( modification().toString() ) );
   return row;
 }
 
@@ -391,9 +405,8 @@ void LogEntry::_htmlTextNode(
   FORMAT::TextFormatBlock::List formats( formats_ );
   
   // loop over index position
-  ostringstream what;
-  unsigned int index = 0;
-  while( index < text().size() )
+  QString buffer;
+  for( int index = 0; index < text().size(); )
   {
     Debug::Throw() << "index: " << index << " position: " << index << endl;
     FORMAT::TextFormatBlock::List::iterator iter( find_if(
@@ -402,7 +415,7 @@ void LogEntry::_htmlTextNode(
         FORMAT::TextFormatBlock::ContainsFTor( index ) ) );
     if( iter == formats.end() || iter->isEmpty() )
     {
-      what << text()[index];
+      QTextStream( &buffer ) << text()[index];
       index ++;
       
     } else {
@@ -410,8 +423,8 @@ void LogEntry::_htmlTextNode(
       Debug::Throw() << *iter << endl;
       
       // write previous text
-      HtmlTextNode( what.str().c_str(), parent, document );
-      what.str("");
+      HtmlTextNode( buffer, parent, document );
+      buffer.clear();
       
       // open new element define format
       QDomElement local_node( parent );
@@ -419,15 +432,15 @@ void LogEntry::_htmlTextNode(
       if( iter->format() & FORMAT::ITALIC ) local_node = local_node.appendChild( document.createElement( "i" ) ).toElement();
       if( iter->format() & FORMAT::BOLD ) local_node = local_node.appendChild( document.createElement( "b" ) ).toElement();
       if( iter->format() & FORMAT::STRIKE ) local_node = local_node.appendChild( document.createElement( "s" ) ).toElement();
-      if( !( iter->color().empty() || iter->color() == string("None") ) )
+      if( !( iter->color().isEmpty() || iter->color().compare( ColorMenu::NONE, Qt::CaseInsensitive ) == 0 ) )
       {
         local_node = local_node.appendChild( document.createElement( "font" ) ).toElement();
-        local_node.setAttribute( "color", iter->color().c_str() );
+        local_node.setAttribute( "color", iter->color() );
       }
 
       while( index < text().size() && (int)index < iter->end() )
       {
-        what << text()[index];
+        QTextStream( &buffer ) << text()[index];
         index++;
       }
       
@@ -435,14 +448,16 @@ void LogEntry::_htmlTextNode(
       formats.erase( iter );
       
       // process text
-      HtmlTextNode( what.str().c_str(), local_node, document );
-      
-      // reset stream
-      what.str("");
+      HtmlTextNode( buffer, local_node, document );
+      buffer.clear();
+
     }
   }
 
-  HtmlTextNode( what.str().c_str(), parent, document );
-  what.str("");
-
+  HtmlTextNode( buffer, parent, document );
+  
 }
+
+//________________________________________________________
+Qt::CaseSensitivity LogEntry::_caseSensitive( void ) const
+{ return XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive: Qt::CaseInsensitive; }

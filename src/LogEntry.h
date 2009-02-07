@@ -94,16 +94,16 @@ class LogEntry:public Counter, public BASE::Key
   }; 
 
   //! used to tag LogEntry drag from LogEntryList
-  static const std::string DRAG;
+  static const QString DRAG;
 
   //! used when LogEntry title is not defined 
-  static const std::string UNTITLED;    
+  static const QString UNTITLED;    
   
   //! used when LogEntry keyword is not defined 
-  static const std::string NO_AUTHOR;  
+  static const QString NO_AUTHOR;  
   
   //! used when LogEntry keyword is not defined
-  static const std::string NO_TEXT;      
+  static const QString NO_TEXT;      
   
   //!@name attributes
   //@{
@@ -128,14 +128,14 @@ class LogEntry:public Counter, public BASE::Key
   { return modification_; }    
   
   //! LogEntry title
-  void setTitle( const std::string& title )  
+  void setTitle( const QString& title )  
   { 
     title_ = title; 
     if( !title_.size() ) title_ = UNTITLED; 
   }    
   
   //! LogEntry title
-  std::string title( void ) const 
+  QString title( void ) const 
   { return title_; }        
   
   //! LogEntry keyword
@@ -150,19 +150,19 @@ class LogEntry:public Counter, public BASE::Key
   { return keyword_; }  
   
   //! LogEntry author
-  void setAuthor( const std::string& author ) 
+  void setAuthor( const QString& author ) 
   { author_ = author; } 
   
   //! logbook last author
-  std::string author( void ) const 
+  QString author( void ) const 
   { return author_; }  
   
   //! LogEntry color
-  void setColor(  const std::string& color )  
+  void setColor(  const QString& color )  
   { color_ = color; }  
   
   //! LogEntry color
-  const std::string& color( void ) const 
+  const QString& color( void ) const 
   { return color_; }    
   
   //! add TextFormatBlock
@@ -178,33 +178,30 @@ class LogEntry:public Counter, public BASE::Key
   { return formats_; }
     
   //! clears LogEntry text
-  void setText( const std::string& text ) 
+  void setText( const QString& text ) 
   { text_ = text; }        
   
   //! LogEntry text
-  const std::string& text( void ) const 
+  const QString& text( void ) const 
   { return text_; }    
 
   //! returns true if entry title matches buffer
-  bool matchTitle( const std::string& buf ) 
-  { return Str( buf ).isIn( title_, XmlOptions::get().get<bool>( "CASE_SENSITIVE" )); }
+  bool matchTitle( const QString& buf ) const;
   
   //! returns true if entry keyword matches buffer
-  bool matchKeyword( const std::string& buf ) 
-  { return Str( buf ).isIn( keyword_.get(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" )); }
+  bool matchKeyword( const QString& buf ) const;
 
   //! returns true if entry text matches buffer
-  bool matchText(  const std::string& buf ) 
-  { return Str( buf ).isIn( text_, XmlOptions::get().get<bool>( "CASE_SENSITIVE" )); }
+  bool matchText(  const QString& buf ) const;
 
   //! returns true if entry text matches buffer
-  bool matchColor(  const std::string& buf );
+  bool matchColor(  const QString& buf ) const;
   
   //! returns true if any entry attachment file name matches buffer
-  bool matchAttachment( const std::string& buf ); 
+  bool matchAttachment( const QString& buf ) const; 
   
   //! write text in html format to stream 
-  QDomElement htmlElement( QDomDocument& document, const unsigned int &mask = HTML_ALL_MASK );  
+  QDomElement htmlElement( QDomDocument& document, const unsigned int &mask = HTML_ALL_MASK ) const;  
   
   //! write text in html format to stream 
   QDomElement htmlSummary( QDomDocument& document, const unsigned int& mask = HTML_HEADER_MASK ) const;
@@ -332,6 +329,9 @@ class LogEntry:public Counter, public BASE::Key
     QDomDocument& document
   ) const; 
       
+  //! case sensitivity
+  Qt::CaseSensitivity _caseSensitive( void ) const;
+
   //! log entry creation time
   TimeStamp creation_;                      
   
@@ -339,19 +339,19 @@ class LogEntry:public Counter, public BASE::Key
   TimeStamp modification_;                  
  
   //! log entry title
-  std::string title_;  
+  QString title_;  
   
   //! log entry keywords
   Keyword keyword_;
   
   //! last user name who had access to the entry    
-  std::string author_; 
+  QString author_; 
   
   //! LogEntry text
-  std::string text_;  
+  QString text_;  
   
   //! LogEntry color
-  std::string color_;  
+  QString color_;  
 
   //! set to true if entry is said visible by the selection bar 
   bool find_selected_;
