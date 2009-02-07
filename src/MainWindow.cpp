@@ -772,7 +772,7 @@ void MainWindow::save( const bool& confirm_entries )
 //_______________________________________________
 void MainWindow::selectEntries( QString selection, unsigned int mode )
 {
-  Debug::Throw() << "MainWindow::selectEntries - selection: " << qPrintable( selection ) << " mode:" << mode << endl;
+  Debug::Throw() << "MainWindow::selectEntries - selection: " << selection << " mode:" << mode << endl;
 
   // check logbook
   if( !logbook_ ) return;
@@ -1321,7 +1321,7 @@ void MainWindow::open( FileRecord record )
 
     QStringList files( dialog.selectedFiles() );
     if( files.empty() ) return;
-    record = FileRecord( File( qPrintable( files.front() ) ) );
+    record = FileRecord( files.front() );
     
   }
 
@@ -1364,7 +1364,7 @@ bool MainWindow::_saveAs( File default_file )
   if( files.empty() ) return false;
   
   // retrieve filename
-  File fullname = File( qPrintable( files.back() ) ).expand();
+  File fullname = File( files.back() ).expand();
 
   // update working directory
   working_directory_ = fullname.path();
@@ -1522,7 +1522,7 @@ void MainWindow::_synchronize( void )
   statusBar().label().setText( "reading remote logbook ... " );
   
   // opens file in remote logbook
-  File remote_file( qPrintable( files.front() ) );
+  File remote_file( files.front() );
   Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remote_file << endl;
   
   Logbook remote_logbook;
@@ -2004,7 +2004,7 @@ void MainWindow::_changeEntryColor( QColor color )
     // get associated entry
     LogEntry* entry( *iter );
 
-    entry->setColor( color.isValid() ? qPrintable( color.name() ):ColorMenu::NONE );
+    entry->setColor( color.isValid() ? color.name():ColorMenu::NONE );
     entry->setModification( entry->modification()+1 );
         
     // update EditionWindow color
@@ -2456,7 +2456,7 @@ void MainWindow::_print( void )
 
   // save command
   QString command( dialog.command() );
-  XmlOptions::get().add( "PRINT_COMMAND", Option( qPrintable( command ), Option::RECORDABLE|Option::CURRENT ) );  
+  XmlOptions::get().add( "PRINT_COMMAND", Option( command, Option::RECORDABLE|Option::CURRENT ) );  
 
   // retrieve/check file
   File file( dialog.file() );

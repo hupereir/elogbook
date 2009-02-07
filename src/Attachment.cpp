@@ -90,13 +90,13 @@ Attachment::Attachment( const QDomElement& element):
     QString name( attribute.name() );
     QString value( attribute.value() );
     
-    if( name == XML::SOURCE_FILE ) _setSourceFile( File( qPrintable( XmlString( value ).toText() ) ) );
-    else if( name == XML::TYPE ) setType( AttachmentType::get( qPrintable( value ) ) );
-    else if( name == XML::FILE ) _setFile( File( qPrintable( XmlString( value ).toText() ) ) );
-    else if( name == XML::COMMENTS ) setComments( qPrintable( XmlString( value ).toText() ) );
+    if( name == XML::SOURCE_FILE ) _setSourceFile( XmlString( value ).toText() );
+    else if( name == XML::TYPE ) setType( AttachmentType::get( value ) );
+    else if( name == XML::FILE ) _setFile( XmlString( value ).toText() );
+    else if( name == XML::COMMENTS ) setComments( XmlString( value ).toText() );
     else if( name == XML::VALID ) setIsValid( (bool) value.toInt() );
     else if( name == XML::IS_LINK ) setIsLink( (LinkState) value.toInt() );  
-    else cerr << "unrecognized attachment attribute: \"" << qPrintable( name ) << "\"\n";
+    else Debug::Throw(0) << "unrecognized attachment attribute: \"" << name << "\"\n";
   }
   
   // parse children elements
@@ -104,10 +104,10 @@ Attachment::Attachment( const QDomElement& element):
   {
     QDomElement child_element = child_node.toElement(); 
     QString tag_name( child_element.tagName() );
-    if( tag_name == XML::COMMENTS ) setComments( qPrintable( XmlString( child_element.text() ).toText() ) );
+    if( tag_name == XML::COMMENTS ) setComments( XmlString( child_element.text() ).toText() );
     else if( tag_name == XML::CREATION ) _setCreation( XmlTimeStamp( child_element ) );
     else if( tag_name == XML::MODIFICATION ) _setModification( XmlTimeStamp( child_element ) );      
-    else cout << "Attachment::Attachment - unrecognized child " << qPrintable( child_element.tagName() ) << ".\n";
+    else Debug::Throw(0) << "Attachment::Attachment - unrecognized child " << child_element.tagName() << ".\n";
   }
   
 }

@@ -142,7 +142,7 @@ bool Application::realizeWidget( void )
 
   // load file from arguments or recent files
   QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
-  if( !filenames.isEmpty() ) mainWindow().setLogbook( File( qPrintable( filenames.front() ) ).expand() ); 
+  if( !filenames.isEmpty() ) mainWindow().setLogbook( File( filenames.front() ).expand() ); 
   else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) ) mainWindow().newLogbookAction().trigger();
   
   return true;
@@ -197,7 +197,7 @@ void Application::_exit( void )
 void Application::_processRequest( const CommandLineArguments& arguments )
 {
 
-  Debug::Throw() << "Application::_processRequest - arguments = " << qPrintable( arguments.join( " " ) ) << endl;
+  Debug::Throw() << "Application::_processRequest - arguments = " << arguments.join( " " ) << endl;
   if( main_window_ ) mainWindow().uniconifyAction().trigger();
 
   QStringList filenames( SERVER::ApplicationManager::commandLineParser( arguments ).orphans() );
@@ -206,6 +206,6 @@ void Application::_processRequest( const CommandLineArguments& arguments )
   QString buffer;
   QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
   if( QuestionDialog( main_window_, buffer ).centerOnParent().exec() )
-  { mainWindow().setLogbook( File( qPrintable( filenames.front() ) ) ); }
+  { mainWindow().setLogbook( File( filenames.front() ) ); }
   
 }

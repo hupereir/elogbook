@@ -162,7 +162,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
   
   if( value != entry->title() )
   {
-    entry->setTitle( qPrintable( value.toString() ) );
+    entry->setTitle( value.toString() );
     emit dataChanged( index, index );
   }
 

@@ -60,10 +60,7 @@ class NewLogbookDialog: public CustomDialog
   
   //! title
   QString title( void ) const
-  { 
-    Debug::Throw( "NewLogbookDialog::title.\n" ); 
-    return qPrintable( title_->text() ); 
-  }
+  { return title_->text(); }
 
   //! author
   void setAuthor( const QString& author )
@@ -71,10 +68,7 @@ class NewLogbookDialog: public CustomDialog
   
   //! filename
   QString author( void ) const
-  { 
-    Debug::Throw( "NewLogbookDialog::author.\n" ); 
-    return qPrintable( author_->text() ); 
-  }
+  { return author_->text(); }
   
   //! filename
   void setFile( const File& file )
@@ -82,10 +76,7 @@ class NewLogbookDialog: public CustomDialog
   
   //! filename
   File file( void ) const
-  { 
-    Debug::Throw( "NewLogbookDialog::file.\n" ); 
-    return File( qPrintable( file_->editor().text() ) ).expand(); 
-  }
+  { return File( file_->editor().text() ).expand(); }
   
   //! attachment directory
   void setAttachmentDirectory( const File& file )
@@ -93,10 +84,7 @@ class NewLogbookDialog: public CustomDialog
   
   //! attachment directory
   File attachmentDirectory( void ) const
-  { 
-    Debug::Throw( "NewLogbookDialog::attachmentDirectory.\n" ); 
-    return File( qPrintable( attachment_directory_->editor().text() ) ).expand(); 
-  }
+  { return File( attachment_directory_->editor().text() ).expand(); }
   
   //! comments
   void setComments( const QString& comments )
@@ -107,10 +95,7 @@ class NewLogbookDialog: public CustomDialog
   
   //! comments
   QString comments( void ) const
-  {
-    Debug::Throw( "NewLogbookDialog::comments.\n" ); 
-    return qPrintable( comments_->toPlainText() ); 
-  }
+  { return comments_->toPlainText(); }
       
   private:
   
