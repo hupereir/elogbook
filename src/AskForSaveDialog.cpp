@@ -28,7 +28,7 @@
   \date $Date$
 */
 
-#include <sstream>
+
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
@@ -43,7 +43,7 @@
 using namespace std;
 
 //________________________________________________________
-AskForSaveDialog::AskForSaveDialog( QWidget* parent, const std::string& message, const unsigned int& buttons ):
+AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons ):
   BaseDialog( parent ),
   Counter( "AskForSaveDialog" )
 {

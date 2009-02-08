@@ -34,7 +34,7 @@
 #include <QLayout>
 #include <QPushButton>
 
-#include <sstream>
+
 
 #include "LogbookModifiedDialog.h"
 #include "PixmapEngine.h"

@@ -29,7 +29,7 @@
   \date    $Date$
 */
 
-#include <sstream>
+
 
 #include "KeywordModel.h"
 #include "LogEntryModel.h"

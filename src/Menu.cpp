@@ -30,7 +30,7 @@
 */
 
 #include <QMessageBox>
-#include <sstream>
+
 
 #include "Application.h"
 #include "AttachmentWindow.h"

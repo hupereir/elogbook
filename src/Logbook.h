@@ -38,7 +38,7 @@
 
 #include <list>
 #include <iostream>
-#include <sstream>
+
 #include <string>
 
 #include "Counter.h"

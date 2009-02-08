@@ -30,7 +30,7 @@
 */
 
 #include <list>
-#include <sstream>
+
 #include <QHeaderView>
 #include <QShortcut>
 
