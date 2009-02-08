@@ -33,7 +33,7 @@
 */
 
 #include <QWidget>
-#include <string>
+
 #include <set>
 
 #include "Attachment.h"

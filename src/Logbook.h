@@ -37,9 +37,9 @@
 #include <QObject>
 
 #include <list>
-#include <iostream>
 
-#include <string>
+
+
 
 #include "Counter.h"
 #include "Debug.h"

@@ -33,7 +33,7 @@
 
 #include <QCheckBox>
 #include <QContextMenuEvent>
-#include <string>
+
 #include <map>
 
 #include "CustomToolBar.h"

@@ -33,7 +33,7 @@
 */
 
 #include <QRadioButton>
-#include <string>
+
 
 #include "Attachment.h"
 #include "CustomDialog.h"

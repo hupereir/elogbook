@@ -34,7 +34,7 @@
 
 #include <assert.h>
 #include <QMenuBar>
-#include <string>
+
 
 #include "Debug.h"
 #include "Counter.h"

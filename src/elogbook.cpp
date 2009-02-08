@@ -30,9 +30,9 @@
 */
 
 #include <QApplication>
-#include <iostream>
+
 #include <signal.h>
-#include <string>
+
 #include <unistd.h>
 
 #include "Application.h"

@@ -36,7 +36,7 @@
 #include <QDomDocument>
 
 #include <vector>
-#include <string>
+
 
 #include "Counter.h"
 

@@ -34,7 +34,7 @@
 
 #include <QPaintEvent>
 #include <QProgressBar>
-#include <string>
+
 
 #include "Counter.h"
 

@@ -35,7 +35,7 @@
 #include <QCheckBox>
 #include <QRadioButton>
 #include <map>
-#include <string>
+
 
 #include "BrowsedLineEditor.h"
 #include "PrintDialog.h"

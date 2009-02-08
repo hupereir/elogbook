@@ -34,7 +34,7 @@
 */
 
 #include <QEvent>
-#include <string>
+
 
 #include "CustomDialog.h"
 #include "Counter.h"

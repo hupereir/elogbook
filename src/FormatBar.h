@@ -31,7 +31,7 @@
   \date $Date$
 */
 
-#include <string>
+
 #include <map>
 #include <QAction>
 #include <QFont>   

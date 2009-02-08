@@ -34,7 +34,7 @@
 
 #include <QCheckBox>
 #include <map>
-#include <string>
+
 
 #include "BrowsedLineEditor.h"
 #include "LineEditor.h"

@@ -38,7 +38,7 @@
 #include <QSplitter>
 #include <QTimerEvent>
 #include <QToolButton>
-#include <string>
+
 #include <set>
 #include <map>
 #include <list>

@@ -31,7 +31,7 @@
    \date $Date$
 */
 
-#include <string>
+
 
 //! Some Xml definitions
 namespace XML {

@@ -32,7 +32,7 @@
    \date $Date$
 */
 
-#include <string>
+
 
 #include "CustomComboBox.h"
 #include "CustomDialog.h"

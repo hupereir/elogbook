@@ -24,7 +24,7 @@
 #ifndef AttachmentType_h
 #define AttachmentType_h
 
-#include <string>
+
 #include <map>
 #include "Counter.h"
 

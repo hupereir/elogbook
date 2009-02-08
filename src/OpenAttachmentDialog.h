@@ -33,7 +33,7 @@
 */
 
 #include <qradiobutton.h>
-#include <string>
+
 
 #include "Attachment.h"
 #include "BrowsedLineEditor.h"
