@@ -30,7 +30,7 @@
 */
 
 #include <QMessageBox>
-#include <iostream>
+
 #include <string>
 
 #include "Application.h"
@@ -63,7 +63,7 @@ const QString Application::ATTACHMENT_TITLE = "elogbook - attachments";
 //____________________________________________
 void Application::usage( void )
 {
-  cout << "usage : elogbook [options] [file]" << endl;
+  Debug::Throw(0) << "usage : elogbook [options] [file]" << endl;
   SERVER::ApplicationManager::commandLineParser().usage();
   return;
 }

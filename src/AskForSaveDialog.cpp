@@ -59,7 +59,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
   //! try load Question icon
   QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
   if( question_pixmap.isNull() )
-  { layout->addWidget( new QLabel( message.c_str(), this ), 1, Qt::AlignHCenter ); }
+  { layout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter ); }
   else
   {
     
@@ -70,7 +70,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     QLabel* label = new QLabel( this );
     label->setPixmap( question_pixmap );
     h_layout->addWidget( label, 0, Qt::AlignHCenter );
-    h_layout->addWidget( new QLabel( message.c_str(), this ), 1, Qt::AlignHCenter );
+    h_layout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter );
     
   }
     

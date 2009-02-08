@@ -212,7 +212,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
   
   // check original file
   if( source_file_.isEmpty() ) {
-    cout << "Attachment::ProcessCopy - orig not set. Canceled.\n";
+    Debug::Throw(0) << "Attachment::ProcessCopy - orig not set. Canceled.\n";
     return SOURCE_NOT_FOUND; // returns true to cancel version processing
   }
 

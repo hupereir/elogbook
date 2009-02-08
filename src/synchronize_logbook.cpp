@@ -32,7 +32,7 @@
 #include <QCoreApplication>
 #include <QString>
 
-#include <iostream>
+
 #include <signal.h>
 #include <unistd.h>
 
@@ -59,7 +59,7 @@ int main (int argc, char *argv[])
   // read argument
   if( argc < 3 ) 
   {
-    cout << "usage: synchronize_logbook <local file> <remote file>" << endl;
+    Debug::Throw(0) << "usage: synchronize_logbook <local file> <remote file>" << endl;
     return 0;
   }
   

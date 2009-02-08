@@ -201,7 +201,7 @@ bool Logbook::read( void )
       QString file_attribute( element.attribute( XML::FILE ) );
       if( file_attribute.isNull() )
       {
-        cout << "Logbook::read - no file given for child" << endl;
+        Debug::Throw(0) << "Logbook::read - no file given for child" << endl;
         continue;
       }
 

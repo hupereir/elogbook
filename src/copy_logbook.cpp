@@ -33,7 +33,7 @@
 #include <QCoreApplication>
 #include <QString>
 
-#include <iostream>
+
 #include <signal.h>
 #include <unistd.h>
 
@@ -61,7 +61,7 @@ int main (int argc, char *argv[])
   // read argument
   if( argc < 3 ) 
   {
-    cout << "usage: copy_logbook <input file> <output file>" << endl;
+    Debug::Throw(0) << "usage: copy_logbook <input file> <output file>" << endl;
     return 0;
   }
   
