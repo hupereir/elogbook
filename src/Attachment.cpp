@@ -226,8 +226,8 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
   
   // check destination directory
   if( destdir.isEmpty() ) {
-    cerr << "Attachment::ProcessCopy - destdir not set. Canceled.\n";
-    return DEST_NOT_FOUND;  // returns true to cancel version processing
+    Debug::Throw(0) << "Attachment::ProcessCopy - destdir not set. Canceled.\n";
+    return DEST_NOT_FOUND;  
   }  
   
   // generate expanded source name
