@@ -39,12 +39,12 @@
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
 #include "Command.h"
-#include "CustomFileDialog.h"
 #include "Debug.h"
 #include "DeleteAttachmentDialog.h"
 #include "EditAttachmentDialog.h"
 #include "EditionWindow.h"
 #include "File.h"
+#include "FileDialog.h"
 #include "FileRecord.h"
 #include "Icons.h"
 #include "IconEngine.h"
@@ -519,25 +519,15 @@ void AttachmentFrame::_open( void )
       else  {
   
         // create and configure SaveAs dialog
-        CustomFileDialog dialog( this );
+        FileDialog dialog( this );
         dialog.setFileMode( QFileDialog::AnyFile );
-        dialog.setWindowTitle( "Open" );
+        dialog.setAcceptMode( QFileDialog::AcceptSave );        
+        dialog.selectFile( fullname.localName().addPath( dialog.workingDirectory() ) );
+        File destname( dialog.getFile() );
         
-        File destname( fullname.localName().addPath( dialog.workingDirectory() ) );
-        dialog.selectFile( destname );
-        
-        if( dialog.exec() == QDialog::Accepted ) 
-        {
-          // retrieve selected file
-          QStringList files( dialog.selectedFiles() );
-          if( files.empty() ) continue;
-          
-          destname = File( files.front() ).expand();
-          if( destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) return;
-          
-          // make the copy
-          ( Command("cp") << fullname << destname ).run();
-        }
+        // check filename and copy if accepted
+        if( destname.isNull() || (destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) ) return;
+        else ( Command("cp") << fullname << destname ).run();
         
       }
       
@@ -762,26 +752,15 @@ void AttachmentFrame::_saveAs( void )
     } else {
       
       // create and configure SaveAs dialog
-      CustomFileDialog dialog( this );
+      FileDialog dialog( this );
       dialog.setFileMode( QFileDialog::AnyFile );
-      dialog.setWindowTitle( "Open" );
-      
-      File destname( fullname.localName().addPath( dialog.workingDirectory() ) );
-      dialog.selectFile( destname );
-        
-      if( dialog.exec() == QDialog::Accepted ) 
-      {
-        // retrieve selected file
-        QStringList files( dialog.selectedFiles() );
-        if( files.empty() ) continue;
-        
-        destname = File( files.front() ).expand();
-        if( destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) return;
-        
-        // make the copy
-        ( Command("cp") << fullname << destname ).run();
-      
-      }
+      dialog.setAcceptMode( QFileDialog::AcceptSave );
+      dialog.selectFile( fullname.localName().addPath( dialog.workingDirectory() ) );
+      File destname( dialog.getFile() ); 
+
+      // check filename and copy if accepted
+      if( destname.isNull() || (destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) ) return;
+      else ( Command("cp") << fullname << destname ).run();
     
     }
     

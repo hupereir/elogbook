@@ -36,18 +36,18 @@
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "Command.h"
-#include "LineEditor.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
 #include "DeleteKeywordDialog.h"
 #include "EditionWindow.h"
 #include "EditKeywordDialog.h"
+#include "FileDialog.h"
 #include "FileList.h"
 #include "HtmlHeaderNode.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "InformationDialog.h"
-#include "TextEditionDelegate.h"
+#include "LineEditor.h"
 #include "Logbook.h"
 #include "LogbookInformationDialog.h"
 #include "LogbookModifiedDialog.h"
@@ -61,6 +61,7 @@
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
 #include "Singleton.h"
+#include "TextEditionDelegate.h"
 #include "Util.h"
 #include "PrintLogbookDialog.h"
 #include "XmlOptions.h"
@@ -1311,17 +1312,9 @@ void MainWindow::open( FileRecord record )
   if( record.file().isEmpty() )
   {
     
-    // create file dialog
-    CustomFileDialog dialog( this );
-    dialog.setFileMode( QFileDialog::ExistingFile );
-    dialog.setDirectory( workingDirectory() );
-
-    QtUtil::centerOnParent( &dialog );
-    if( !dialog.exec() ) return;
-
-    QStringList files( dialog.selectedFiles() );
-    if( files.empty() ) return;
-    record = FileRecord( files.front() );
+    QString file( FileDialog(this).selectFile( workingDirectory() ).getFile() );
+    if( file.isNull() ) return;
+    else record = FileRecord( file );
     
   }
 
@@ -1352,19 +1345,15 @@ bool MainWindow::_saveAs( File default_file )
   if( default_file.isEmpty() ) default_file = File( "log.xml" ).addPath( workingDirectory() );
 
   // create file dialog
-  CustomFileDialog dialog( this );
+  FileDialog dialog( this );
+  dialog.setAcceptMode( QFileDialog::AcceptSave );
   dialog.setFileMode( QFileDialog::AnyFile );
-  dialog.setDirectory( QDir( default_file.path() ) );
-  dialog.selectFile( default_file.localName() );
-  QtUtil::centerOnParent( &dialog );
-  if( !dialog.exec() ) return false;
-
-  // retrieve files
-  QStringList files( dialog.selectedFiles() );
-  if( files.empty() ) return false;
+  dialog.selectFile( default_file );
   
-  // retrieve filename
-  File fullname = File( files.back() ).expand();
+  // get file
+  File fullname( dialog.getFile() );
+  if( fullname.isNull() ) return false;
+  else  fullname = fullname.expand();
 
   // update working directory
   working_directory_ = fullname.path();
@@ -1504,15 +1493,9 @@ void MainWindow::_synchronize( void )
   if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
   // create file dialog
-  CustomFileDialog dialog( this );
-  dialog.setFileMode( QFileDialog::ExistingFile );
-
-  QtUtil::centerOnParent( &dialog );
-  if( !dialog.exec() ) return;
-
-  QStringList files( dialog.selectedFiles() );
-  if( files.empty() ) return;
-
+  File remote_file( FileDialog(this).getFile() );
+  if( remote_file.isNull() ) return;
+  
   // debug
   Debug::Throw() << "MainWindow::_synchronize - number of local files: " << MainWindow::logbook()->children().size() << endl;
   Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << MainWindow::logbook()->entries().size() << endl;
@@ -1522,7 +1505,6 @@ void MainWindow::_synchronize( void )
   statusBar().label().setText( "reading remote logbook ... " );
   
   // opens file in remote logbook
-  File remote_file( files.front() );
   Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remote_file << endl;
   
   Logbook remote_logbook;

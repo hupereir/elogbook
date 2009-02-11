@@ -616,6 +616,7 @@ void EditionWindow::_installActions( void )
 
   // new entry
   addAction( new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Entry", this ) );
+  new_entry_action_->setShortcut( Qt::CTRL + Qt::Key_N ); 
   new_entry_action_->setToolTip( "Create new entry in current editor" );
   connect( new_entry_action_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
   
