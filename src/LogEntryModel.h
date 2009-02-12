@@ -58,12 +58,13 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
   {}
   
   //! number of columns
-  enum { n_columns = 5 };
+  enum { n_columns = 6 };
 
  //! column type enumeration
   enum ColumnType {
     COLOR,
     TITLE, 
+    ATTACHMENT,
     CREATION,
     MODIFICATION,
     AUTHOR
@@ -157,6 +158,8 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
   //! create icon for a given color
   static QIcon _icon( const QColor& );
   
+  //! attachment icon
+  static QIcon& _attachmentIcon( void );
   
   //! used to sort IconCaches
   class SortFTor: public ItemModel::SortFTor
