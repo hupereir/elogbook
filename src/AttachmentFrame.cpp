@@ -358,7 +358,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
 void AttachmentFrame::customEvent( QEvent* event )
 {
   
-  if( event->type() != QEvent::User ) return QWidget::customEvent( event ); 
+  if( event->type() != ValidFileEvent::eventType() ) return QWidget::customEvent( event ); 
   
   ValidFileEvent* valid_file_event( dynamic_cast<ValidFileEvent*>(event) );
   if( !valid_file_event ) return QWidget::customEvent( event );
