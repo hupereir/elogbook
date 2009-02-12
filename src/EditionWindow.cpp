@@ -1398,7 +1398,8 @@ void EditionWindow::ColorWidget::setColor( const QColor& color )
 //___________________________________________________________________________________
 QSize EditionWindow::ColorWidget::sizeHint( void ) const
 {
-  // this is an ugly hack to keep the size of the toolbutton minimum
+  // the const_cast is use to temporarily remove the menu 
+  // in order to keep the size of the toolbutton minimum
   QMenu* menu( ColorWidget::menu() );
   const_cast<EditionWindow::ColorWidget*>( this )->setMenu(0);
   QSize out( QToolButton::sizeHint() );
