@@ -87,6 +87,7 @@ noinst_HEADERS = \
   EditAttachmentDialog.h \
   EditionWindow.h \
   EditKeywordDialog.h \
+  FileCheck.h \
   FormatBar.h \
   HelpText.h \
   HtmlHeaderNode.h \
@@ -125,6 +126,7 @@ elogbook_SOURCES = \
   EditAttachmentDialog.cpp \
   EditionWindow.cpp \
   EditKeywordDialog.cpp \
+  FileCheck.cpp \
   FormatBar.cpp \
   KeywordModel.cpp \
   LogbookInformationDialog.cpp \
@@ -153,6 +155,7 @@ nodist_elogbook_SOURCES = \
   moc_AttachmentModel.cpp \
   moc_AttachmentWindow.cpp \
   moc_EditionWindow.cpp \
+  moc_FileCheck.cpp \
   moc_FormatBar.cpp \
   moc_KeywordModel.cpp \
   moc_LogbookModifiedDialog.cpp \

@@ -103,9 +103,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! check if logbook needs a backup, ask for it if needed
   virtual void checkLogbookBackup( void );
-
-  //! check if logbook has been externally modified
-  virtual void checkLogbookModified( void );
   
   //! deletes old logbook, if any
   virtual void reset( void );
@@ -300,9 +297,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     
   protected:
 
-  //! enter event handler
-  virtual void enterEvent( QEvent* );
-  
   //! close event
   virtual void closeEvent( QCloseEvent* );
   

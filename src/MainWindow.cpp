@@ -428,32 +428,32 @@ void MainWindow::checkLogbookBackup( void )
   return;
 }
 
-//_____________________________________________
-void MainWindow::checkLogbookModified( void )
-{
-  
-  Debug::Throw( "MainWindow::checkLogbookModified.\n" );
-
-  if( ignore_warnings_ ) return;
-  
-  // retrieve logbook from MainWindow, ask for revert if needed
-  if( !logbook_ ) return;
-  list<File> files( logbook()->checkFiles() );
-  if( files.empty() ) return;
-
-  int state = LogbookModifiedDialog( this, files ).exec();
-  if( state == LogbookModifiedDialog::RESAVE ) { save(); }
-  else if( state == LogbookModifiedDialog::SAVE_AS ) { _saveAs(); }
-  else if( state == LogbookModifiedDialog::RELOAD ) 
-  { 
-    
-    logbook()->setModifiedRecursive( false ); 
-    _revertToSaved(); 
-  
-  } else if( state == LogbookModifiedDialog::IGNORE ) { ignore_warnings_ = true; }
-  
-  return;
-}
+// //_____________________________________________
+// void MainWindow::checkLogbookModified( void )
+// {
+//   
+//   Debug::Throw( "MainWindow::checkLogbookModified.\n" );
+// 
+//   if( ignore_warnings_ ) return;
+//   
+//   // retrieve logbook from MainWindow, ask for revert if needed
+//   if( !logbook_ ) return;
+//   list<File> files( logbook()->checkFiles() );
+//   if( files.empty() ) return;
+// 
+//   int state = LogbookModifiedDialog( this, files ).exec();
+//   if( state == LogbookModifiedDialog::RESAVE ) { save(); }
+//   else if( state == LogbookModifiedDialog::SAVE_AS ) { _saveAs(); }
+//   else if( state == LogbookModifiedDialog::RELOAD ) 
+//   { 
+//     
+//     logbook()->setModifiedRecursive( false ); 
+//     _revertToSaved(); 
+//   
+//   } else if( state == LogbookModifiedDialog::IGNORE ) { ignore_warnings_ = true; }
+//   
+//   return;
+// }
 
 //_____________________________________________
 void MainWindow::reset( void ) 
@@ -898,19 +898,6 @@ void MainWindow::showAllEntries( void )
   else if( _logEntryModel().rowCount() ) selectEntry( _logEntryModel().get( _logEntryModel().index( _logEntryModel().rowCount()-1, 0 ) ) );
    
   statusBar().label().setText( "" );
-  return;
-}
-
-
-//____________________________________________
-void MainWindow::enterEvent( QEvent *event )
-{
-  Debug::Throw( "MainWindow::enterEvent.\n" );
-
-  // base class enterEvent
-  QWidget::enterEvent( event );
-  checkLogbookModified();
-  
   return;
 }
 

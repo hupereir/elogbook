@@ -570,17 +570,6 @@ void EditionWindow::closeEvent( QCloseEvent *event )
   return;
 }
 
-//____________________________________________
-void EditionWindow::enterEvent( QEvent *event )
-{
-  Debug::Throw( "EditionWindow::enterEvent.\n" );
-
-  // base class enterEvent
-  QMainWindow::enterEvent( event );
-  _mainWindow().checkLogbookModified();
-
-}
-
 //_______________________________________________________
 void EditionWindow::timerEvent( QTimerEvent* event )
 {

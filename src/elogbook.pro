@@ -42,6 +42,7 @@ HEADERS = \
   EditAttachmentDialog.h \
   EditionWindow.h \
   EditKeywordDialog.h \
+  FileCheck.h \
   FormatBar.h \
   KeywordModel.h \
   LogbookInformationDialog.h \
@@ -74,6 +75,7 @@ SOURCES = \
   EditAttachmentDialog.cpp \
   EditionWindow.cpp \
   EditKeywordDialog.cpp \
+  FileCheck.cpp \
   FormatBar.cpp \
   KeywordModel.cpp \
   LogbookInformationDialog.cpp \

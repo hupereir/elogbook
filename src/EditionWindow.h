@@ -252,9 +252,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! close window event handler
   virtual void closeEvent( QCloseEvent *event );
 
-  //! enter event handler
-  virtual void enterEvent( QEvent *event );
-
   //! timer event
   virtual void timerEvent( QTimerEvent* );
 

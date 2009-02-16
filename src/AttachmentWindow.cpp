@@ -88,18 +88,6 @@ void AttachmentWindow::uniconify( void )
   frame().list().setFocus();
 }
 
-//____________________________________________
-void AttachmentWindow::enterEvent( QEvent *event )
-{
-  Debug::Throw( "MainWindow::enterEvent.\n" );
-  
-  // base class enterEvent
-  QWidget::enterEvent( event );
-  Singleton::get().application<Application>()->mainWindow().checkLogbookModified();
-    
-  return;
-}
-
 //________________________________________
 void AttachmentWindow::_displayEntry( Attachment& attachment )
 { 

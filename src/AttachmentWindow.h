@@ -78,11 +78,6 @@ class AttachmentWindow: public CustomDialog
   //! uniconify
   void uniconify( void );
   
-  protected:
-  
-  //! overloaded enter event handler
-  void enterEvent( QEvent *event );
-
   protected slots:
 
   //! display entry associated to selected attachment when selection changes

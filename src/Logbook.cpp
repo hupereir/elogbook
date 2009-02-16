@@ -82,7 +82,7 @@ Logbook::~Logbook( void )
   Debug::Throw( "Logbook::~Logbook.\n" );
 
   // delete log children
-  for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
+  for( List::iterator it = children_.begin(); it != children_.end(); it++ )
   delete *it;
   children_.clear();
 
@@ -324,7 +324,7 @@ bool Logbook::write( File file )
 
     // dump all logbook childrens
     unsigned int child_number=0;
-    for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
+    for( List::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
     {
       File child_filename = _childFilename( file, child_number );
       QDomElement child_element = document.createElement( XML::CHILD );
@@ -354,7 +354,7 @@ bool Logbook::write( File file )
 
   // write children
   unsigned int child_number=0;
-  for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
+  for( List::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
   {
 
     File child_filename( _childFilename( file, child_number ).addPath( file.path() ) );
@@ -441,7 +441,7 @@ XmlError::List Logbook::xmlErrors( void ) const
   Debug::Throw( "Logbook::xmlErrors.\n" );
   XmlError::List out;
   if( error_ ) out.push_back( error_ );
-  for( LogbookList::const_iterator it = children_.begin(); it != children_.end(); it++ )
+  for( List::const_iterator it = children_.begin(); it != children_.end(); it++ )
   {
     XmlError::List tmp( (*it)->xmlErrors() );
     out.merge( tmp );
@@ -450,16 +450,16 @@ XmlError::List Logbook::xmlErrors( void ) const
 }
 
 //_________________________________
-Logbook::LogbookList Logbook::children( void ) const
+Logbook::List Logbook::children( void ) const
 {
-  LogbookList out;
+  List out;
   for(
-    LogbookList::const_iterator it = children_.begin();
+    List::const_iterator it = children_.begin();
     it!= children_.end();
     it++ )
   {
     out.push_back( *it );
-    LogbookList children( (*it)->children() );
+    List children( (*it)->children() );
     out.merge( children );
   }
 
@@ -480,7 +480,7 @@ Logbook* Logbook::latestChild( void )
 
   // check if one existsing child is not complete
   else {
-    for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
+    for( List::iterator it = children_.begin(); it != children_.end(); it++ )
     if( *it && BASE::KeySet<LogEntry>(*it).size() < MAX_ENTRIES ) {
       dest = *it;
       break;
@@ -510,7 +510,7 @@ BASE::KeySet<LogEntry> Logbook::entries( void ) const
 {
 
   BASE::KeySet<LogEntry> out( this );
-  for( LogbookList::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
+  for( List::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
   out.merge( (*iter)->entries() );
 
   return out;
@@ -529,7 +529,7 @@ BASE::KeySet<Attachment> Logbook::attachments( void ) const
   out.merge( BASE::KeySet<Attachment>(*iter) );
 
   // loop over children, add associated attachments
-  for( LogbookList::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
+  for( List::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
   out.merge( (*iter)->attachments() );
 
   return out;
@@ -542,8 +542,8 @@ void Logbook::removeEmptyChildren( void )
   Debug::Throw( "Logbook::removeEmptyChildren.\n" );
 
   // loop over children
-  LogbookList tmp;
-  for( LogbookList::iterator iter = children_.begin(); iter != children_.end(); iter++ )
+  List tmp;
+  for( List::iterator iter = children_.begin(); iter != children_.end(); iter++ )
   {
     (*iter)->removeEmptyChildren();
     if( (*iter)->empty() )
@@ -713,33 +713,6 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
 }
 
 //_________________________________
-list<File> Logbook::checkFiles( void )
-{
-  Debug::Throw( "Logbook::checkFiles.\n" );
-
-  list<File> out;
-
-  TimeStamp file_modified( file().lastModified() );
-  bool modified = file_modified.isValid() && saved().isValid() && file_modified > saved();
-  setSaved( file_modified );
-
-  if( modified ) 
-  {
-    setModified( true );
-    out.push_back( file() );
-  }
-  
-  for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
-  {
-    list<File> tmp = (*it)->checkFiles();
-    out.merge( tmp );
-  }
-
-  return out;
-
-}
-
-//_________________________________
 void Logbook::setModified( const bool& value )
 {
   Debug::Throw( "Logbook::setModified.\n");
@@ -753,7 +726,7 @@ void Logbook::setModifiedRecursive( bool value )
   Debug::Throw( "Logbook::SetModifiedRecursive.\n" );
   modified_ = value;
   if( value ) setModification( TimeStamp::now() );
-  for( LogbookList::iterator it = children_.begin(); it != children_.end(); it++ )
+  for( List::iterator it = children_.begin(); it != children_.end(); it++ )
   (*it)->setModifiedRecursive( value );
 }
 
@@ -769,7 +742,7 @@ bool Logbook::modified( void ) const
 {
   Debug::Throw( "Logbook::modified.\n" );
   if( modified_ ) return true;
-  for( LogbookList::const_iterator it = children_.begin(); it != children_.end(); it++ )
+  for( List::const_iterator it = children_.begin(); it != children_.end(); it++ )
   if ( (*it)->modified() ) return true;
   return false;
 }

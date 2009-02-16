@@ -124,13 +124,13 @@ class Logbook:public QObject, public Counter, public BASE::Key
   XmlError::List xmlErrors( void ) const;
   
   //! shortcut for logbook children list
-  typedef std::list< Logbook* > LogbookList;
+  typedef std::list< Logbook* > List;
   
   //!@name recursive accessors
   //@{
   
   //! retrieves list of all child logbook [recursive]
-  LogbookList children( void ) const;
+  List children( void ) const;
   
   //! retrieves first not full child.
   Logbook* latestChild( void );
@@ -303,12 +303,6 @@ class Logbook:public QObject, public Counter, public BASE::Key
   
   //! html
   QDomElement htmlElement( QDomDocument& parent, const unsigned int& mask = HTML_ALL_MASK ) const;
-    
-  /*! 
-    \brief checks if logbook/children files has been modified
-    by another application. Returns list of modified files. [recursive]
-  */
-  std::list<File> checkFiles( void );
   
   //! sets logbook modified value
   void setModified( const bool& value );
@@ -408,7 +402,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
   File _childFilename( const File& file, const int& child_number ) const;   
   
   //! list of pointers to logbook children
-  LogbookList children_; 
+  List children_; 
   
   //! true if at least one logbook entry have been modified/added/deleted until last save
   bool modified_;       
