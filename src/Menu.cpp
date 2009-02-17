@@ -154,6 +154,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   debug_menu->addAction( &mainwindow->saveForcedAction() );
   debug_menu->addAction( &mainwindow->showDuplicatesAction() );
   debug_menu->addAction( &help->dumpAction() );
+  debug_menu->addAction( "Dump monitored files", &mainwindow->fileCheck(), SLOT( printMonitoredFiles() ) );
 
 }
 

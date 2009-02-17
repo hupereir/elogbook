@@ -83,6 +83,10 @@ MainWindow::MainWindow( QWidget *parent ):
   setOptionName( "MAIN_WINDOW" );
   setWindowTitle( Application::MAIN_TITLE );
   
+  // file checker
+  file_check_ = new FileCheck( this );
+  connect( &fileCheck(), SIGNAL( filesModified( FileCheck::DataMap ) ), SLOT( _filesModified( FileCheck::DataMap ) ) );
+  
   // main widget
   QWidget* main = new QWidget( this );
   setCentralWidget( main ); 
@@ -116,7 +120,6 @@ MainWindow::MainWindow( QWidget *parent ):
   // aditional actions from application
   Application& application( *Singleton::get().application<Application>() );
   addAction( &application.closeAction() );
-
   
   // left box for Keywords and buttons
   QWidget* left = new QWidget();
@@ -291,6 +294,9 @@ bool MainWindow::setLogbook( File file )
   // reset current logbook
   if( logbook_ ) reset();
 
+  // clear file checker
+  fileCheck().clear();
+  
   // create new logbook
   logbook_ = new Logbook();
 
@@ -377,7 +383,10 @@ bool MainWindow::setLogbook( File file )
   working_directory_ = File( logbook()->file() ).path();
   statusBar().label().setText( "" );
   statusBar().showLabel();
-    
+
+  // register logbook to fileCheck
+  fileCheck().registerLogbook( logbook() );
+  
   emit ready();
 
   // check errors
@@ -427,33 +436,6 @@ void MainWindow::checkLogbookBackup( void )
 
   return;
 }
-
-// //_____________________________________________
-// void MainWindow::checkLogbookModified( void )
-// {
-//   
-//   Debug::Throw( "MainWindow::checkLogbookModified.\n" );
-// 
-//   if( ignore_warnings_ ) return;
-//   
-//   // retrieve logbook from MainWindow, ask for revert if needed
-//   if( !logbook_ ) return;
-//   list<File> files( logbook()->checkFiles() );
-//   if( files.empty() ) return;
-// 
-//   int state = LogbookModifiedDialog( this, files ).exec();
-//   if( state == LogbookModifiedDialog::RESAVE ) { save(); }
-//   else if( state == LogbookModifiedDialog::SAVE_AS ) { _saveAs(); }
-//   else if( state == LogbookModifiedDialog::RELOAD ) 
-//   { 
-//     
-//     logbook()->setModifiedRecursive( false ); 
-//     _revertToSaved(); 
-//   
-//   } else if( state == LogbookModifiedDialog::IGNORE ) { ignore_warnings_ = true; }
-//   
-//   return;
-// }
 
 //_____________________________________________
 void MainWindow::reset( void ) 
@@ -1229,6 +1211,35 @@ void MainWindow::_updateConfiguration( void )
   
 }
 
+//_____________________________________________
+void MainWindow::_filesModified( FileCheck::DataMap files )
+{
+  
+  Debug::Throw( "MainWindow::_filesModified.\n" );
+  
+  if( ignore_warnings_ ) return;
+  if( files.empty() ) return;
+
+  // put files into a list
+  list<File> local;
+  for( FileCheck::DataMap::const_iterator iter = files.begin(); iter != files.end(); iter++ )
+  { local.push_back( iter->first ); }
+  
+  // ask dialog and take action accordinly
+  int state = LogbookModifiedDialog( this, local ).exec();
+  if( state == LogbookModifiedDialog::RESAVE ) { save(); }
+  else if( state == LogbookModifiedDialog::SAVE_AS ) { _saveAs(); }
+  else if( state == LogbookModifiedDialog::RELOAD ) 
+  { 
+    
+    logbook()->setModifiedRecursive( false ); 
+    _revertToSaved(); 
+  
+  } else if( state == LogbookModifiedDialog::IGNORE ) { ignore_warnings_ = true; }
+  
+  return;
+}
+
 //________________________________________________________
 void MainWindow::_splitterMoved( void )
 {
@@ -1317,7 +1328,7 @@ void MainWindow::open( FileRecord record )
 }
 
 //_______________________________________________
-bool MainWindow::_saveAs( File default_file )
+bool MainWindow::_saveAs( File default_file, bool register_logbook )
 {
   Debug::Throw( "MainWindow::_saveAs.\n");
 
@@ -1366,8 +1377,16 @@ bool MainWindow::_saveAs( File default_file )
   logbook()->setModifiedRecursive( false );
 
   // add new file to openPreviousMenu
-  if( !logbook()->file().isEmpty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+  if( !logbook()->file().isEmpty() ) 
+  { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
 
+  // redo file check registration
+  if( register_logbook )
+  {
+    fileCheck().clear();
+    fileCheck().registerLogbook( logbook() );
+  }
+  
   // reset ignore_warning flag
   ignore_warnings_ = false;
 
@@ -1416,7 +1435,7 @@ void MainWindow::_saveBackup( void )
   QString current_filename( logbook()->file() );
 
   // save logbook as backup
-  bool saved( _saveAs( filename ) );
+  bool saved( _saveAs( filename, false ) );
 
   // remove the "backup" filename from the openPrevious list
   // to avoid confusion
@@ -1612,6 +1631,10 @@ void MainWindow::_reorganize( void )
   
   // remove empty logbooks
   logbook()->removeEmptyChildren();
+  
+  // redo fileChecker registration
+  fileCheck().clear();
+  fileCheck().registerLogbook( logbook() );
   
   // save
   logbook()->setModified( true );

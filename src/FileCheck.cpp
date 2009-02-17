@@ -31,6 +31,7 @@
 
 #include <algorithm>
 #include <assert.h>
+#include <QStringList>
 
 #include "Debug.h"
 #include "File.h"
@@ -61,7 +62,11 @@ void FileCheck::registerLogbook( Logbook* logbook )
   // associate logbook to this and add corresponding file
   if( !logbook->file().isEmpty() )
   {
-    BASE::Key::associate( this, logbook ); 
+    
+    // associate (make sure association is unique)
+    if( !isAssociated( logbook ) ) 
+    { BASE::Key::associate( this, logbook ); }
+    
     _addFile( logbook->file() );
   }
   
@@ -71,8 +76,13 @@ void FileCheck::registerLogbook( Logbook* logbook )
   {
     if( !(*iter)->file().isEmpty() )
     {
-      BASE::Key::associate( this, *iter ); 
+      
+      // associate (make sure association is unique)
+      if( !isAssociated( *iter ) ) 
+      { BASE::Key::associate( this, *iter ); }
+      
       _addFile( (*iter)->file() );
+      
     }
   }
 }
@@ -82,9 +92,53 @@ void FileCheck::clear( void )
 {
   
   Debug::Throw( "FileCheck::clear.\n" );
+  
+  // clear associated logbooks
+  clearAssociations<Logbook>();
+  
+  // clear internal list of monitored files
   files_.clear();
+  
+  // clear file system watcher
   if( !_fileSystemWatcher().files().isEmpty() )
   { _fileSystemWatcher().removePaths( _fileSystemWatcher().files() ); }
+  
+}
+
+//______________________________________________________
+void FileCheck::printMonitoredFiles( void )
+{
+  
+  Debug::Throw( 0, "FileCheck::printMonitoredFiles.\n" );
+  QStringList files( _fileSystemWatcher().files());  
+  
+  for( QStringList::const_iterator iter = files.begin(); iter != files.end(); iter++ )
+  { Debug::Throw(0) << "FileCheck::printMonitoredFiles - " << *iter << endl; }
+  
+  Debug::Throw(0) << endl;
+
+}
+
+//______________________________________________________
+void FileCheck::timerEvent( QTimerEvent* event )
+{
+  if( event->timerId() == timer_.timerId() )
+  {
+    
+    Debug::Throw(0, "FileCheck::timerEvent.\n" );
+    
+    // stop timer
+    timer_.stop();
+    
+    // emit signal
+    if( !data_.empty() ) 
+    {
+      emit filesModified( data_ );
+      data_.clear();
+    }
+    
+  } else return QObject::timerEvent( event );
+
   
 }
 
@@ -115,45 +169,40 @@ void FileCheck::_removeFile( const QString& file, bool forced )
 //______________________________________________________
 void FileCheck::_fileChanged( const QString& file )
 {
+    
+  // filecheck data
+  Data data;
   
-  Debug::Throw() << "FileCheck::_fileChanged: " << file << endl;  
-//   
-//   // filecheck data
-//   Data data;
-//   
-//   // find associated display with matching file
-//   BASE::KeySet<TextDisplay> displays( this );
-//   BASE::KeySet<TextDisplay>::iterator iter( find_if( displays.begin(), displays.end(), TextDisplay::SameFileFTor( file ) ) );
-//   if( iter != displays.end() )
-//   {
-//     
-//     File local( file );
-//     if( !local.exists() ) {
-// 
-//       Debug::Throw(0) << "FileCheck::_fileChanged - removed" << endl;
-//       data.setFlag( Data::REMOVED );
-// 
-//     } else {
-//     
-//       data.setFlag( Data::MODIFIED );
-//       data.setTimeStamp( local.lastModified() );
-//       
-//     }      
-//   
-//     // assign to this display and others
-//     BASE::KeySet<TextDisplay> associates( *iter );
-//     associates.insert( *iter );
-//     for( BASE::KeySet<TextDisplay>::iterator iter = associates.begin(); iter != associates.end(); iter++ )
-//     { 
-//       if( data.flag() == Data::REMOVED || ((*iter)->lastSaved().isValid() && (*iter)->lastSaved() < data.timeStamp()) )
-//       { (*iter)->setFileCheckData( data ); }
-//     }
-//     
-//   } else { 
-//     
-//     // remove file from list otherwise
-//     removeFile( file, true );
-//     
-//   }
+  // find associated display with matching file
+  BASE::KeySet<Logbook> logbooks( this );
+  BASE::KeySet<Logbook>::iterator iter( find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
+  if( iter != logbooks.end() )
+  {
+    
+    File local( file );
+    if( !local.exists() ) 
+    {
+
+      data.setFlag( Data::REMOVED );
+
+    } else {
+    
+      data.setFlag( Data::MODIFIED );
+      data.setTimeStamp( local.lastModified() );
+      
+    }      
+  
+    if( data.flag() == Data::REMOVED || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
+    { 
+      data_.insert( make_pair( file, data ) ); 
+      timer_.start( 200, this );
+    }
+      
+  } else { 
+    
+    // remove file from list otherwise
+    _removeFile( file, true );
+    
+  }
       
 }

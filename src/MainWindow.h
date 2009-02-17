@@ -40,7 +40,7 @@
 #include "Counter.h"
 #include "BaseMainWindow.h"
 #include "Debug.h"
-
+#include "FileCheck.h"
 #include "FileRecord.h"
 #include "Key.h"
 #include "KeywordModel.h"
@@ -52,6 +52,7 @@
 class ColorMenu;
 class CustomToolBar;
 class EditionWindow;
+class FileCheck;
 class Logbook;
 class Menu;
 class SearchPanel;
@@ -153,6 +154,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! current keyword
   Keyword currentKeyword( void ) const;
    
+  //! file checker
+  FileCheck& fileCheck( void ) const
+  { return *file_check_; }
+  
   //!@name toolbars
   //@{
   
@@ -335,6 +340,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! configuration
   void _updateConfiguration( void );
 
+  //! files modified
+  void _filesModified( FileCheck::DataMap );
+  
   //! splitter moved
   void _splitterMoved( void );
   
@@ -348,7 +356,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     save current logbook with a given filename
     returns true if logbook was saved
   */
-  bool _saveAs( File default_file = File("") );
+  bool _saveAs( File default_file = File(""), bool register_logbook = true );
 
   //! save current logbook with a given filename
   void _saveBackup( void );
@@ -513,6 +521,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! logEntry list
   AnimatedTreeView* entry_list_;
 
+  //! file check
+  FileCheck* file_check_;
+  
   //! local TreeView to store size hint
   class KeywordList: public AnimatedTreeView
   {

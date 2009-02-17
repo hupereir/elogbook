@@ -34,6 +34,7 @@
 
 #include "Attachment.h"
 #include "Debug.h"
+#include "FileCheck.h"
 #include "HtmlTextNode.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -70,7 +71,6 @@ Logbook::Logbook( const File& file ):
   xml_children_( 0 )
 {
   Debug::Throw( "Logbook::Logbook. (file)\n" );
-
   setFile( file );
   read();
 
@@ -499,6 +499,14 @@ Logbook* Logbook::latestChild( void )
 
     children_.push_back( dest );
     setModified( true );
+    
+    // associate to existing FileCheck if any
+    BASE::KeySet<FileCheck> file_checks( this );
+    if( !file_checks.empty() )
+    { 
+      assert( file_checks.size() == 1 );
+      (*file_checks.begin())->registerLogbook( dest );
+    }
 
   }
 

@@ -35,11 +35,7 @@
 #include <QDomElement>
 #include <QDomDocument>
 #include <QObject>
-
 #include <list>
-
-
-
 
 #include "Counter.h"
 #include "Debug.h"
@@ -382,6 +378,29 @@ class Logbook:public QObject, public Counter, public BASE::Key
   { return sort_order_; }
   
   //@}
+  
+  //! used to retrieve logbook associated to given file
+  class SameFileFTor
+  {
+    
+    public:
+    
+    //! constructor
+    SameFileFTor( const QString& file ):
+      file_( file )
+      {}
+      
+      
+    //! predicate
+    bool operator() (const Logbook* logbook) const
+    { return logbook && logbook->file() == file_; }
+    
+    private:
+    
+    //! predicted file
+    QString file_;
+    
+  };
   
   signals:
   

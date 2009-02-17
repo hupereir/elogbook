@@ -64,12 +64,14 @@ synchronize_logbook_LDADD =  $(libraries)
 libelogbook_a_SOURCES = \
   Attachment.cpp \
   AttachmentType.cpp \
+  FileCheck.cpp \
   HtmlHeaderNode.cpp \
   Keyword.cpp \
   Logbook.cpp \
   LogEntry.cpp
 
 nodist_libelogbook_a_SOURCES = \
+  moc_FileCheck.cpp \
   moc_Logbook.cpp
 
 noinst_HEADERS = \
@@ -126,7 +128,6 @@ elogbook_SOURCES = \
   EditAttachmentDialog.cpp \
   EditionWindow.cpp \
   EditKeywordDialog.cpp \
-  FileCheck.cpp \
   FormatBar.cpp \
   KeywordModel.cpp \
   LogbookInformationDialog.cpp \
@@ -155,7 +156,6 @@ nodist_elogbook_SOURCES = \
   moc_AttachmentModel.cpp \
   moc_AttachmentWindow.cpp \
   moc_EditionWindow.cpp \
-  moc_FileCheck.cpp \
   moc_FormatBar.cpp \
   moc_KeywordModel.cpp \
   moc_LogbookModifiedDialog.cpp \

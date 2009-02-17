@@ -32,14 +32,18 @@
   \date $Date$
 */
 
+#include <QBasicTimer>
 #include <QFileSystemWatcher>
 #include <QObject>
+#include <QTimerEvent>
+
+#include <map>
 #include <set>
 
 #include "Key.h"
 #include "TimeStamp.h"
 
-class TextDisplay;
+class Logbook;
 
 //! handles threads for file auto-save
 class FileCheck: public QObject, public BASE::Key, public Counter
@@ -107,8 +111,26 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     
   };
   
+  typedef std::map<QString, Data> DataMap;
+  
+  signals:
+  
+  //! files have been modified
+  void filesModified( FileCheck::DataMap );
+  
+  public slots:
+  
+  //! print list of monitored files
+  void printMonitoredFiles( void );
+  
+  protected:
+  
+  //! timer event, to handle multiple file modification at once
+  virtual void timerEvent( QTimerEvent* event );
+  
   private slots:
   
+  //! one monitored file has been modified
   void _fileChanged( const QString& ); 
   
   private:
@@ -131,6 +153,12 @@ class FileCheck: public QObject, public BASE::Key, public Counter
   
   //! file set
   FileSet files_;
+  
+  //! map files and modification data
+  DataMap data_;
+
+  //! resize timer
+  QBasicTimer timer_;
   
 };
 
