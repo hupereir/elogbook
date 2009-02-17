@@ -31,14 +31,16 @@
   \date $Date$
 */
 
-#include <QDialog>
 #include <list>
 
+#include "BaseDialog.h"
 #include "Counter.h"
-#include "File.h"
+#include "FileCheck.h"
+
+class AnimatedTreeView;
 
 //! QDialog used to ask if a new file should be created
-class LogbookModifiedDialog: public QDialog, public Counter
+class LogbookModifiedDialog: public BaseDialog, public Counter
 {
 
   //! Qt macro
@@ -64,7 +66,7 @@ class LogbookModifiedDialog: public QDialog, public Counter
   };
 
   //! constructor
-  LogbookModifiedDialog( QWidget* parent, const std::list<File>& files );
+  LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files );
 
   private slots:
 
@@ -84,6 +86,14 @@ class LogbookModifiedDialog: public QDialog, public Counter
   void _ignore( void )
   { done( IGNORE ); }
 
+  private:
+  
+  //! model
+  FileCheck::Model model_;
+  
+  //! list
+  AnimatedTreeView* list_;
+  
 };
 
 #endif

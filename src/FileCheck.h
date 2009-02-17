@@ -41,6 +41,7 @@
 #include <set>
 
 #include "Key.h"
+#include "ListModel.h"
 #include "TimeStamp.h"
 
 class Logbook;
@@ -80,11 +81,28 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     };
     
     //! constructor
-    Data( Flag flag = NONE, TimeStamp stamp = TimeStamp() ):
+    Data( QString file = QString(), Flag flag = NONE, TimeStamp stamp = TimeStamp() ):
+      file_( file ),
       flag_( flag ),
       time_stamp_( stamp )
     {}
-
+    
+    //! equal to operator
+    bool operator == ( const Data& data ) const
+    { return file() == data.file(); }
+    
+    //! less than operator 
+    bool operator < ( const Data& data ) const
+    { return file() < data.file(); }
+    
+    //! file
+    void setFile( const QString& file )
+    { file_ = file; }
+    
+    //! file
+    const QString& file( void ) const
+    { return file_; }
+    
     //! flag
     void setFlag( const Flag& flag )
     { flag_ = flag; }
@@ -103,6 +121,9 @@ class FileCheck: public QObject, public BASE::Key, public Counter
       
     private:
     
+    //! file
+    QString file_;
+    
     //! flag
     Flag flag_;
     
@@ -110,13 +131,91 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     TimeStamp time_stamp_;
     
   };
+    
+  //! logbook information model
+  class Model: public ListModel<Data>, public Counter
+  {
+    
+    public:
+      
+    //! number of columns
+    enum { n_columns = 3 };
+    
+    //! column type enumeration
+    enum ColumnType {
+      FILE,
+      FLAG,
+      TIME
+    };
+    
+    //! constructor
+    Model( QObject* parent = 0 ):
+      ListModel<Data>( parent ),
+      Counter( "FileCheck::Model" )
+    {}
+    
+    //!@name methods reimplemented from base class
+    //@{
+    
+    //! flags
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const
+    { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
+    
+    //! return data
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    
+    //! header data
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+    {   
+      if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < n_columns )
+      { return column_titles_[section]; }
+      
+      // return empty
+      return QVariant(); 
+    
+    }
+    
+    //! number of columns for a given index
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+    { return n_columns; }
+    
+    //@}
   
-  typedef std::map<QString, Data> DataMap;
+    protected: 
+    
+      
+    //! used to sort Counters
+    class SortFTor: public ItemModel::SortFTor
+    {
+      
+      public:
+      
+      //! constructor
+      SortFTor( const int& type, Qt::SortOrder order ):
+        ItemModel::SortFTor( type, order )
+      {}
+      
+      //! prediction
+      bool operator() ( Data, Data ) const;
+      
+    };
+
+    //! sort
+    virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder )
+    { std::sort( _get().begin(), _get().end(), SortFTor( column, order ) ); }
   
+    //! list column names
+    static const QString column_titles_[n_columns];    
+    
+  };
+  
+  //! map data to file
+  typedef std::set<Data> DataSet;  
+
   signals:
   
   //! files have been modified
-  void filesModified( FileCheck::DataMap );
+  void filesModified( FileCheck::DataSet );
   
   public slots:
   
@@ -155,7 +254,7 @@ class FileCheck: public QObject, public BASE::Key, public Counter
   FileSet files_;
   
   //! map files and modification data
-  DataMap data_;
+  DataSet data_;
 
   //! resize timer
   QBasicTimer timer_;

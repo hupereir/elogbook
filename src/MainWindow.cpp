@@ -85,7 +85,7 @@ MainWindow::MainWindow( QWidget *parent ):
   
   // file checker
   file_check_ = new FileCheck( this );
-  connect( &fileCheck(), SIGNAL( filesModified( FileCheck::DataMap ) ), SLOT( _filesModified( FileCheck::DataMap ) ) );
+  connect( &fileCheck(), SIGNAL( filesModified( FileCheck::DataSet ) ), SLOT( _filesModified( FileCheck::DataSet ) ) );
   
   // main widget
   QWidget* main = new QWidget( this );
@@ -1212,21 +1212,16 @@ void MainWindow::_updateConfiguration( void )
 }
 
 //_____________________________________________
-void MainWindow::_filesModified( FileCheck::DataMap files )
+void MainWindow::_filesModified( FileCheck::DataSet files )
 {
   
   Debug::Throw( "MainWindow::_filesModified.\n" );
   
   if( ignore_warnings_ ) return;
   if( files.empty() ) return;
-
-  // put files into a list
-  list<File> local;
-  for( FileCheck::DataMap::const_iterator iter = files.begin(); iter != files.end(); iter++ )
-  { local.push_back( iter->first ); }
   
   // ask dialog and take action accordinly
-  int state = LogbookModifiedDialog( this, local ).exec();
+  int state = LogbookModifiedDialog( this, files ).exec();
   if( state == LogbookModifiedDialog::RESAVE ) { save(); }
   else if( state == LogbookModifiedDialog::SAVE_AS ) { _saveAs(); }
   else if( state == LogbookModifiedDialog::RELOAD ) 

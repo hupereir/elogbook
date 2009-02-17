@@ -124,9 +124,7 @@ void FileCheck::timerEvent( QTimerEvent* event )
 {
   if( event->timerId() == timer_.timerId() )
   {
-    
-    Debug::Throw(0, "FileCheck::timerEvent.\n" );
-    
+        
     // stop timer
     timer_.stop();
     
@@ -171,7 +169,7 @@ void FileCheck::_fileChanged( const QString& file )
 {
     
   // filecheck data
-  Data data;
+  Data data( file );
   
   // find associated display with matching file
   BASE::KeySet<Logbook> logbooks( this );
@@ -194,7 +192,7 @@ void FileCheck::_fileChanged( const QString& file )
   
     if( data.flag() == Data::REMOVED || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
     { 
-      data_.insert( make_pair( file, data ) ); 
+      data_.insert( data ); 
       timer_.start( 200, this );
     }
       
@@ -205,4 +203,70 @@ void FileCheck::_fileChanged( const QString& file )
     
   }
       
+}
+
+
+//_______________________________________________
+const QString FileCheck::Model::column_titles_[ FileCheck::Model::n_columns ] =
+{ 
+  "file",
+  "flag",
+  "time stamp"
+};
+
+//_______________________________________________________________________________________
+QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
+{
+  
+  // check index, role and column
+  if( !index.isValid() ) return QVariant();
+  
+  // retrieve associated file info
+  const Data& data( get()[index.row()] );
+  
+  // return text associated to file and column
+  if( role == Qt::DisplayRole ) 
+  {
+    
+    switch( index.column() )
+    {
+      
+      case FILE: return data.file();
+      case FLAG: 
+      {
+        switch( data.flag() )
+        {
+          case Data::MODIFIED: return "Modified"; 
+          case Data::REMOVED: return "Removed";
+          case Data::NONE: 
+          default: return "None";
+        }
+      }
+      
+      case TIME: return data.timeStamp().toString();
+      
+      default: return QVariant();
+    }
+  }
+  
+  return QVariant();
+  
+}
+  
+//________________________________________________________
+bool FileCheck::Model::SortFTor::operator () ( FileCheck::Data first, FileCheck::Data second ) const
+{
+  
+  if( order_ == Qt::AscendingOrder ) swap( first, second );
+  
+  switch( type_ )
+  {
+
+    case FILE: return first.file() < second.file();
+    case FLAG: return first.flag() < second.flag();
+    case TIME: return (first.timeStamp() != second.timeStamp() ) ? (first.timeStamp() < second.timeStamp()):first.file() < second.file();
+    default: assert( false );
+    
+  }
+ 
 }

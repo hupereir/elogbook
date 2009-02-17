@@ -34,24 +34,25 @@
 #include <QLayout>
 #include <QPushButton>
 
-
-
-#include "LogbookModifiedDialog.h"
-#include "PixmapEngine.h"
+#include "AnimatedTreeView.h"
 #include "Icons.h"
 #include "IconEngine.h"
-#include "XmlOptions.h"
+#include "LogbookModifiedDialog.h"
+#include "PixmapEngine.h"
 #include "QtUtil.h"
+#include "XmlOptions.h"
 
 using namespace std;
 
 //________________________________________________________
-LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>& files ):
-  QDialog( parent ),
+LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files ):
+  BaseDialog( parent ),
   Counter( "LogbookModifiedDialog" )
 {
 
   Debug::Throw( "LogbookModifiedDialog::LogbookModifiedDialog.\n" );
+  setOptionName( "LOGBOOK_MODIFIED_DIALOG" );
+  
   assert( !files.empty() );
   
   // create vbox layout
@@ -63,25 +64,20 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
   // create message
   QString buffer;
   QTextStream what( &buffer );
-  
-  what << ((files.size() > 1) ? "files":"file" ) << endl; 
-  for( list<File>::const_iterator iter = files.begin(); iter != files.end(); iter++ )
-  { what << "  " << *iter << endl; }
-  
   what 
-      << ((files.size() > 1) ? "have":"has" )
-      << " been modified by by another application."
+      << "Following files have been modified"
+      << " been modified by by another application: "
       << endl;
   
   //! try load Question icon
   QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
   if( question_pixmap.isNull() )
-  { layout->addWidget( new QLabel( buffer, this ), 1, Qt::AlignHCenter ); }
+  { layout->addWidget( new QLabel( buffer, this ), 0, Qt::AlignHCenter ); }
   else
   {
     
     QHBoxLayout *h_layout( new QHBoxLayout() );
-    layout->addLayout( h_layout, 1 );
+    layout->addLayout( h_layout, 0 );
     QLabel* label = new QLabel( this );
     label->setPixmap( question_pixmap );
     h_layout->addWidget( label, 0, Qt::AlignHCenter );
@@ -89,6 +85,14 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const list<File>&
     
   }
 
+  // list
+  list_ = new AnimatedTreeView( this );
+  list_->setModel( &model_ );
+  layout->addWidget( list_, 1 );
+  
+  model_.add( FileCheck::Model::List( files.begin(), files.end() ) );
+  list_->resizeColumns();
+  
   // button layout
   QHBoxLayout *button_layout = new QHBoxLayout();     
   button_layout->setSpacing(5);

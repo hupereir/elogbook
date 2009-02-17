@@ -341,7 +341,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   void _updateConfiguration( void );
 
   //! files modified
-  void _filesModified( FileCheck::DataMap );
+  void _filesModified( FileCheck::DataSet );
   
   //! splitter moved
   void _splitterMoved( void );
