@@ -266,7 +266,7 @@ void LogEntryModel::_resetIcons( void )
 QIcon LogEntryModel::_icon( const QColor& color )
 {
  
-  Debug::Throw( "LogEntryModel::_icon" );
+  // Debug::Throw( "LogEntryModel::_icon.\n" );
     
   IconCache::iterator iter( _icons().find( color ) );
   if( iter != _icons().end() ) return iter->second;
