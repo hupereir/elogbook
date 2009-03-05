@@ -90,6 +90,7 @@ noinst_HEADERS = \
   EditionWindow.h \
   EditKeywordDialog.h \
   FileCheck.h \
+  FileCheckDialog.h \
   FormatBar.h \
   HelpText.h \
   HtmlHeaderNode.h \
@@ -128,6 +129,7 @@ elogbook_SOURCES = \
   EditAttachmentDialog.cpp \
   EditionWindow.cpp \
   EditKeywordDialog.cpp \
+  FileCheckDialog.cpp \
   FormatBar.cpp \
   KeywordModel.cpp \
   LogbookInformationDialog.cpp \

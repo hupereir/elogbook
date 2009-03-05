@@ -10,6 +10,7 @@ DEPENDPATH += . ../base ../base-qt ../base-server ../base-help ../extra-includes
 HEADERS = \
   Attachment.h \
   AttachmentType.h \
+  FileCheck.h \
   HtmlHeaderNode.h \
   Keyword.h \
   Logbook.h \
@@ -18,6 +19,7 @@ HEADERS = \
 SOURCES = \
   Attachment.cpp \
   AttachmentType.cpp \
+  FileCheck.cpp \
   HtmlHeaderNode.cpp \
   Keyword.cpp \
   Logbook.cpp \

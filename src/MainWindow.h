@@ -275,6 +275,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   QAction& showDuplicatesAction( void ) const
   { return *show_duplicates_action_; }
   
+  //! monitored files 
+  QAction& monitoredFilesAction( void ) const
+  { return *monitored_files_action_; }
+  
   //@}
   
   signals:
@@ -488,6 +492,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! restore expanded jobs from model
   void _restoreExpandedKeywords( void );
+    
+  //! monitored files
+  void _showMonitoredFiles( void );
 
   private:
   
@@ -672,6 +679,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   
   //! show duplicates
   QAction* show_duplicates_action_;
+  
+  //! show monitored files
+  QAction* monitored_files_action_;
     
   //@}
       

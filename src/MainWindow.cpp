@@ -42,6 +42,7 @@
 #include "EditionWindow.h"
 #include "EditKeywordDialog.h"
 #include "FileDialog.h"
+#include "FileCheckDialog.h"
 #include "FileList.h"
 #include "HtmlHeaderNode.h"
 #include "IconEngine.h"
@@ -1090,6 +1091,10 @@ void MainWindow::_installActions( void )
   show_duplicates_action_ = new QAction( "Show Duplicated Entries", this );
   show_duplicates_action_->setToolTip( "Show duplicated entries in logbook" );
   connect( show_duplicates_action_, SIGNAL( triggered() ), SLOT( _showDuplicatedEntries() ) );
+  
+  monitored_files_action_ = new QAction( "Show Monitored Files", this );
+  monitored_files_action_->setToolTip( "Show monitored files" );
+  connect( monitored_files_action_, SIGNAL( triggered() ), SLOT( _showMonitoredFiles() ) );
 
 }
 
@@ -2779,6 +2784,15 @@ void MainWindow::_restoreExpandedKeywords( void )
   { keywordList().setExpanded( *iter, true ); }
   
   return;
+}
+
+//_____________________________________________
+void MainWindow::_showMonitoredFiles( void )
+{ 
+  
+  Debug::Throw( "MainWindow::_showMonitoredFiles.\n" );
+  FileCheckDialog( qApp->activeWindow(), fileCheck().fileSystemWatcher().files() ).exec();
+  
 }
 
 //_______________________________________________

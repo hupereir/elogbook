@@ -211,17 +211,16 @@ class FileCheck: public QObject, public BASE::Key, public Counter
   
   //! map data to file
   typedef std::set<Data> DataSet;  
+ 
+  //! file system watcher
+  const QFileSystemWatcher& fileSystemWatcher( void ) const
+  { return file_system_watcher_; }
 
   signals:
   
   //! files have been modified
   void filesModified( FileCheck::DataSet );
-  
-  public slots:
-  
-  //! print list of monitored files
-  void printMonitoredFiles( void );
-  
+    
   protected:
   
   //! timer event, to handle multiple file modification at once
