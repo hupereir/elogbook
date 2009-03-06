@@ -100,7 +100,11 @@ bool Logbook::read( void )
 
   Debug::Throw( "Logbook::read.\n" );
 
-  if( file().isEmpty() ) return false;
+  if( file().isEmpty() )
+  {
+    Debug::Throw( "Logbook::read - file is empty.\n" );
+    return false;
+  }
 
   // update StateFrame
   QString buffer;
@@ -568,6 +572,14 @@ void Logbook::removeEmptyChildren( void )
 
   children_ = tmp;
   return;
+}
+
+//_________________________________
+void Logbook::setFile( const File& file )
+{
+  Debug::Throw( "Logbook::setFile.\n" );
+  file_ = file; 
+  saved_ = File( file_ ).lastModified();
 }
 
 //_________________________________

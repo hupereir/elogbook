@@ -185,11 +185,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
   { return file_; }         
   
   //! logbook filename
-  void setFile( const File& file )
-  { 
-    file_ = file; 
-    saved_ = File( file_ ).lastModified();
-  }
+  void setFile( const File& );
   
   //! parent logbook filename
   const File& parentFile( void ) const 

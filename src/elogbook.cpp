@@ -76,7 +76,7 @@ int main (int argc, char *argv[])
 
   // customize options
   XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) ); 
-  
+    
   // set debug level
   Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
   if( Debug::level() ) XmlOptions::get().print();

@@ -290,7 +290,7 @@ MainWindow::~MainWindow( void )
 bool MainWindow::setLogbook( File file )
 {
   
-  Debug::Throw("MainWindow::SetLogbook.\n" );
+  Debug::Throw() << "MainWindow::SetLogbook - logbook: \"" << file << "\"" << endl;
 
   // reset current logbook
   if( logbook_ ) reset();
@@ -300,18 +300,22 @@ bool MainWindow::setLogbook( File file )
   
   // create new logbook
   logbook_ = new Logbook();
-
-  // save in menu
-  menu().recentFilesMenu().setCurrentFile( file );
   
   // if filename is empty, return
   if( file.isEmpty() )
   {
+  
     // update listView with new entries
     _resetKeywordList();
     _resetLogEntryList();
     emit ready();
     return false;
+  
+  } else {
+    
+    // save in menu
+    menu().recentFilesMenu().setCurrentFile( file );
+
   }
 
   // set file

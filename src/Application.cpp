@@ -140,10 +140,16 @@ bool Application::realizeWidget( void )
   // update
   qApp->processEvents();
 
+  Debug::Throw() << "Application::realizeWidget - last valid file: " << recentFiles().lastValidFile().file() << endl;
+  
   // load file from arguments or recent files
   QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
   if( !filenames.isEmpty() ) mainWindow().setLogbook( File( filenames.front() ).expand() ); 
-  else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) ) mainWindow().newLogbookAction().trigger();
+  else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) ) 
+  {
+    Debug::Throw() << "Application::realizeWidget - openning last valid logbook failed." << endl;
+    mainWindow().newLogbookAction().trigger();
+  }
   
   return true;
   
