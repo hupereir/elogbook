@@ -1,13 +1,16 @@
 TEMPLATE = app
+TARGET = elogbook
 
 CONFIG += qt release
 QT += xml network
 
 win32 {
+  DEFINES += QT_STATIC
   DESTDIR = "C:/Program Files" 
 }
 
 VERSION = 1.5.0
+DEFINES += VERSION=\\\"$$VERSION\\\"
 
 INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../extra-includes
 DEPENDPATH += . ../base ../base-qt ../base-help ../base-server ../extra-includes
