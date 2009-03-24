@@ -38,6 +38,7 @@
 #include "ConfigurationDialog.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
+#include "FileList.h"
 #include "GridLayout.h"
 #include "MainWindow.h"
 #include "OptionBrowsedLineEditor.h"
@@ -45,6 +46,7 @@
 #include "OptionSpinBox.h"
 #include "OptionListBox.h"
 #include "Options.h"
+#include "RecentFilesConfiguration.h"
 #include "ServerConfiguration.h"
 #include "Singleton.h"
 #include "TreeViewConfiguration.h"
@@ -295,6 +297,12 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   // edition
   textEditConfiguration();
 
+  // recent files
+  page = &addPage( "Recent files", "Recent files list settings", true );
+  RecentFilesConfiguration* recent_files_configuration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
+  page->layout()->addWidget( recent_files_configuration );
+  addOptionWidget( recent_files_configuration );
+  
   // misc
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
   page = &addPage( "Misc", "Additional unsorted settings" );
@@ -303,28 +311,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   SERVER::ServerConfiguration* server_configuration;
   page->layout()->addWidget( server_configuration = new SERVER::ServerConfiguration( page, "Server configuration" ));
   addOptionWidget( server_configuration );
-  
-  page->layout()->addWidget( box = new QGroupBox( "Recent files", page ) );  
-   
-  grid_layout = new GridLayout();
-  grid_layout->setSpacing(5);
-  grid_layout->setMargin(5);
-  grid_layout->setMaxCount(2);
-  box->setLayout( grid_layout );
-
-  // previous file history size
-  grid_layout->addWidget( new QLabel( "Recent files history size", box ) );
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "DB_SIZE" ) );
-  spinbox->setMinimum( 0 );
-  spinbox->setMaximum( 100 );
-  addOptionWidget( spinbox );
-  spinbox->setToolTip( "Number of previously opened files to appear in the Open Previous menu" );
-
-  // sort previous files by date
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Sort recent files by date", box, "SORT_FILES_BY_DATE" ), 3, 0, 1, 2 );
-  checkbox->setToolTip( "Sort files by date rather than name in Open Previous menu." );
-  addOptionWidget( checkbox );
-  new QWidget( box );
   
   box = new QGroupBox( "Misc", page );
   box->setLayout( new QVBoxLayout() );
