@@ -48,20 +48,17 @@ using namespace std;
 
 //_________________________________________________________
 LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):
-    BaseDialog( parent ),
+    CustomDialog( parent, OK_BUTTON | SEPARATOR ),
     Counter( "LogEntryInformationDialog" )
 {
   Debug::Throw( "LogEntryInformationDialog::LogEntryInformationDialog.\n" );
-  
-  QVBoxLayout* layout = new QVBoxLayout();
-  layout->setMargin(10);
-  layout->setSpacing(10);
-  setLayout( layout );
+    
+  setOptionName( "ENTRY_INFORMATION_DIALOG" );
   
   QHBoxLayout* h_layout = new QHBoxLayout();
   h_layout->setSpacing(10);
-  h_layout->setMargin(0);
-  layout->addLayout( h_layout );
+  h_layout->setMargin(5);
+  mainLayout().addLayout( h_layout );
   
   //! try load Question icon
   QPixmap pixmap( PixmapEngine::get( ICONS::INFORMATION ) );
@@ -100,11 +97,5 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName(), this ), i, 1);
     
   }
-  
-  QPushButton* button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "&Ok", this );
-  layout->addWidget( button );
-  connect( button, SIGNAL( clicked() ), SLOT( close() ) );
-
-  adjustSize();
-  
+    
 }

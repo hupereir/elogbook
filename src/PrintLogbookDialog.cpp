@@ -79,7 +79,7 @@ PrintLogbookDialog::PrintLogbookDialog( QWidget* parent ):
 
   QPushButton* button = new QPushButton( "More ... ", group_box );
   button->setCheckable( true );
-  group_box->layout()->addWidget( button );
+  buttonLayout().insertWidget( 0, button );
   connect( button, SIGNAL( toggled( bool ) ), SLOT( showExtension( bool ) ) );
   
   // extension widget

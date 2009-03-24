@@ -31,13 +31,13 @@
   \date $Date$
 */
 
-#include "BaseDialog.h"
+#include "CustomDialog.h"
 #include "Counter.h"
 
 class LogEntry;
 
 //! logbook entry informations
-class LogEntryInformationDialog: public BaseDialog, public Counter
+class LogEntryInformationDialog: public CustomDialog, public Counter
 {
   
   public:

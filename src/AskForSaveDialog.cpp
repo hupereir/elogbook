@@ -29,6 +29,7 @@
 */
 
 
+#include <QFrame>
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
@@ -52,7 +53,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
   
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout();
-  layout->setSpacing(10);
+  layout->setSpacing(5);
   layout->setMargin(10);
   setLayout( layout );
   
@@ -73,25 +74,31 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     h_layout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter );
     
   }
+
+  // horizontal separator
+  QFrame* frame( new QFrame( this ) );
+  frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
+  layout->addWidget( frame );
     
   // button layout
   QHBoxLayout *button_layout = new QHBoxLayout();     
   button_layout->setMargin(0);
   button_layout->setSpacing(5);
   layout->addLayout( button_layout );
-
+  button_layout->addStretch(1);
+  
   // yes button
   QPushButton* button;
   if( buttons & YES )
   {
-    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "&Yes", this ) );
+    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), "&Yes", this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _yes() ) );
   }
   
   // yes to all button
   if( buttons & ALL )
   {
-    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_ACCEPT ), "Yes to &All", this ) );
+    button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), "Yes to &All", this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _all() ) );
   }
 

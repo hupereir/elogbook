@@ -98,7 +98,8 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::
   button_layout->setSpacing(5);
   button_layout->setMargin(0);
   layout->addLayout( button_layout );
-
+  button_layout->addStretch(1);
+  
   // resave button
   QPushButton* button;
   button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE ), "&Save Again", this ) );

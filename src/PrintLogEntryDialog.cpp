@@ -50,7 +50,7 @@ PrintLogEntryDialog::PrintLogEntryDialog( QWidget* parent ):
 
   QPushButton* button = new QPushButton( "More ... ", this );
   button->setCheckable( true );
-  mainLayout().addWidget( button );
+  buttonLayout().insertWidget( 0, button );
   connect( button, SIGNAL( toggled( bool ) ), SLOT( showExtension( bool ) ) );
 
   // extension widget

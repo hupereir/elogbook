@@ -37,7 +37,7 @@
 
 //_____________________________________________________
 EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
-  CustomDialog( parent )
+  CustomDialog( parent, OK_BUTTON|CANCEL_BUTTON|SEPARATOR )
 {
   
   Debug::Throw( "EditKeywordDialog::EditKeywordDialog.\n" );
