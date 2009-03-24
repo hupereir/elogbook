@@ -58,11 +58,12 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
   {}
   
   //! number of columns
-  enum { n_columns = 6 };
+  enum { n_columns = 7 };
 
  //! column type enumeration
   enum ColumnType {
     COLOR,
+    KEYWORD,
     TITLE, 
     ATTACHMENT,
     CREATION,

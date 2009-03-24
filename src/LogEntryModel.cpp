@@ -56,6 +56,7 @@ const QString LogEntryModel::DRAG = "elogbook/logentrymodel/drag";
 const QString LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
 { 
   "",
+  "Keyword",
   "Title",
   "",
   "Creation",
@@ -113,6 +114,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
     switch( index.column() )
     {
 
+      case KEYWORD: return entry->keyword().get();
       case TITLE: return entry->title();
       case CREATION: return entry->creation().toString();
       case MODIFICATION: return entry->modification().toString();
@@ -326,7 +328,7 @@ bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) 
   switch( type_ )
   {
 
-    // check if column is a TimeStamp
+    case KEYWORD: return first->keyword() < second->keyword();
     case TITLE: return first->title() < second->title();
     case CREATION: return first->creation() < second->creation();
     case MODIFICATION: return first->modification() < second->modification();
