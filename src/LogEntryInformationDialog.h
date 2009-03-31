@@ -37,7 +37,7 @@
 class LogEntry;
 
 //! logbook entry informations
-class LogEntryInformationDialog: public CustomDialog, public Counter
+class LogEntryInformationDialog: public CustomDialog
 {
   
   public:
