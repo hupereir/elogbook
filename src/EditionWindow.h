@@ -353,7 +353,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   void _displayFocusChanged( TextEditor* );  
 
   //! overwrite mode changed
-  void _overwriteModeChanged( void );
+  void _modifiersChanged( unsigned int );
   
   private:  
   

@@ -1004,10 +1004,14 @@ void EditionWindow::_displayFocusChanged( TextEditor* editor )
 }  
 
 //________________________________________________________________
-void EditionWindow::_overwriteModeChanged( void )
+void EditionWindow::_modifiersChanged( unsigned int modifiers )
 { 
   if( !_hasStatusBar() ) return;
-  statusBar().label(1).setText( activeEditor().overwriteMode() ? "INS":"" );
+  QStringList buffer;
+  if( modifiers & TextEditor::MODIFIER_INSERT ) buffer << "INS";
+  if( modifiers & TextEditor::MODIFIER_CAPS_LOCK ) buffer << "CAPS";
+  if( modifiers & TextEditor::MODIFIER_NUM_LOCK ) buffer << "NUM";
+  statusBar().label(1).setText( buffer.join( " " ) );
 }
 
 //________________________________________________________________
@@ -1254,7 +1258,7 @@ AnimatedTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
   // connections
   connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
   connect( editor, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
-  connect( editor, SIGNAL( overwriteModeChanged() ), SLOT( _overwriteModeChanged() ) );
+  connect( editor, SIGNAL( modifiersChanged( unsigned int ) ), SLOT( _modifiersChanged( unsigned int ) ) );
   connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction() ) );
   connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
   connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction() ) );
