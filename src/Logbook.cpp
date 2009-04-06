@@ -108,7 +108,7 @@ bool Logbook::read( void )
 
   // update StateFrame
   QString buffer;
-  QTextStream( &buffer ) << "Reading \"" << file().localName() << "\"";
+  QTextStream( &buffer ) << "Reading " << file().localName();
   emit messageAvailable( buffer );
 
   // check input file
@@ -218,7 +218,7 @@ bool Logbook::read( void )
       connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
 
       QString buffer;
-      QTextStream( &buffer ) << "Reading \"" << child->file().localName() << "\"";
+      QTextStream( &buffer ) << "Reading " << child->file().localName();
       emit messageAvailable( buffer );
 
       child->read();
@@ -268,7 +268,7 @@ bool Logbook::write( File file )
 
     // update stateFrame
     QString buffer;
-    QTextStream( &buffer ) << "Writing \"" << file.localName() << "\"";
+    QTextStream( &buffer ) << "Writing " << file.localName();
     emit messageAvailable( buffer );
 
     QFile out( file );
@@ -365,7 +365,7 @@ bool Logbook::write( File file )
 
     // update stateFrame
     QString buffer;
-    QTextStream( &buffer ) << "Writing \"" << child_filename.localName() << "\"";
+    QTextStream( &buffer ) << "Writing " << child_filename.localName();
     emit messageAvailable( buffer );
 
     (*it)->setParentFile( file );

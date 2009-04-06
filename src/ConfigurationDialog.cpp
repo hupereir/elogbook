@@ -82,6 +82,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->setSpacing(5);
   grid_layout->setMargin(5);
   grid_layout->setMaxCount( 2 );
+  grid_layout->setColumnAlignment( 0, Qt::AlignRight|Qt::AlignVCenter );
   box->setLayout( grid_layout );
 
   OptionBrowsedLineEditor *editor;
@@ -249,13 +250,14 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( checkbox );
   checkbox->setToolTip( "Automatically save logbook at fixed time interval" );
 
-  grid_layout = new GridLayout();
-  grid_layout->setSpacing(5);
-  grid_layout->setMargin(5);
-  layout->addLayout( grid_layout );
+  QHBoxLayout* h_layout = new QHBoxLayout();
+  h_layout->setSpacing(5);
+  h_layout->setMargin(0);
+  layout->addLayout( h_layout );
 
-  grid_layout->addWidget( new QLabel( "Auto save interval (seconds): ", box ), 0, 0 );
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "AUTO_SAVE_ITV" ), 0, 1 );
+  h_layout->addWidget( new QLabel( "Auto save interval (seconds): ", box ) );
+  h_layout->addWidget( spinbox = new OptionSpinBox( box, "AUTO_SAVE_ITV" ) );
+  h_layout->addStretch(1);
   spinbox->setMinimum( 0 );
   spinbox->setMaximum( 3600 );
   spinbox->setToolTip( "Time interval between two automatic save" );
@@ -273,13 +275,14 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   checkbox->setToolTip( "Make a backup of the logbook at fixed time schedule" );
   addOptionWidget( checkbox );
  
-  grid_layout = new GridLayout();
-  grid_layout->setSpacing(5);
-  grid_layout->setMargin(5);
-  layout->addLayout( grid_layout );
+  h_layout = new QHBoxLayout();
+  h_layout->setSpacing(5);
+  h_layout->setMargin(0);
+  layout->addLayout( h_layout );
   
-  grid_layout->addWidget( new QLabel( "Backup interval (days): ", box ), 0, 0 );
-  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ), 0, 1 );
+  h_layout->addWidget( new QLabel( "Backup interval (days): ", box ) );
+  h_layout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ) );
+  h_layout->addStretch(1);
   spinbox->setMinimum( 0 );
   spinbox->setMaximum( 365 );
   spinbox->setToolTip( "Time interval between two backups" );
