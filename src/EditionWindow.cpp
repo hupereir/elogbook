@@ -139,7 +139,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
 
   // status bar for tooltips
   setStatusBar( statusbar_ = new StatusBar( this ) );
-  statusBar().addLabel( 2 );
+  statusBar().addLabel( 2, true );
   statusBar().addLabels( 3, 0 );
   statusBar().addClock();
 
