@@ -2432,12 +2432,24 @@ void MainWindow::_updateKeywordActions( void )
 void MainWindow::_updateEntryActions( void )
 {
   Debug::Throw( "MainWindow::_updateEntryActions.\n" );
-  bool has_selection( !logEntryList().selectionModel()->selectedRows().empty() );
+  int selected_entries( logEntryList().selectionModel()->selectedRows().size() );
+  bool has_selection( selected_entries > 0 );
+  
+  if( selected_entries > 1 )
+  {
+    editEntryAction().setText( "&Edit Entries" );
+    deleteEntryAction().setText( "&Delete Entries" );
+  } else {
+    editEntryAction().setText( "&Edit Entry" );
+    deleteEntryAction().setText( "&Delete Entry" );
+  }
+  
   editEntryAction().setEnabled( has_selection );
   deleteEntryAction().setEnabled( has_selection );
   entryColorAction().setEnabled( has_selection );
   entryKeywordAction().setEnabled( has_selection );
   editEntryTitleAction().setEnabled( has_selection );  
+  
   return;
 }
 

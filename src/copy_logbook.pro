@@ -9,7 +9,7 @@ win32 {
   DESTDIR = "C:/Program Files" 
 }
 
-VERSION = 1.6.0
+VERSION = 1.6.1
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../extra-includes

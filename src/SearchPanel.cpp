@@ -54,7 +54,7 @@ using namespace std;
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):
   CustomToolBar( title, parent, option_name ),
-  transition_widget_( new TransitionWidget(this) )
+  transition_widget_( new TransitionWidget(parent) )
 {
   Debug::Throw( "SearchPanel::SearchPanel.\n" );
 
@@ -115,14 +115,12 @@ void SearchPanel::show( void )
   Debug::Throw( "SearchPanel::show.\n" );
   
   // check transition enability
-  if( !_transitionWidget().isEnabled() ) return CustomToolBar::show();
+  if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) ) return CustomToolBar::show();
   
   // transition
-  if( rect().topLeft() != QPoint() ) _transitionWidget().initialize();  
-  else _transitionWidget().initialize( parentWidget() );
-  
-  _transitionWidget().start();
+  _transitionWidget().initialize();
   CustomToolBar::show();
+  _transitionWidget().start();
   
 }
 
@@ -132,12 +130,12 @@ void SearchPanel::hide( void )
   Debug::Throw( "SearchPanel::hide.\n" );
 
   // check transition enability
-  if( !_transitionWidget().isEnabled() ) return CustomToolBar::hide();
+  if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )  return CustomToolBar::hide();
     
   // transition
   _transitionWidget().initialize();  
-  _transitionWidget().start();
   CustomToolBar::hide();
+  _transitionWidget().start();
 
 }
 
@@ -148,16 +146,13 @@ void SearchPanel::setVisible( bool state )
   Debug::Throw( "SearchPanel::setVisible.\n" );
 
   // check state and transition enability
-  if( state == isVisible() || !_transitionWidget().isEnabled() ) 
+  if( state == isVisible() || !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )
   { return CustomToolBar::setVisible( state ); }
   
   // transition
-  if( rect().topLeft() != QPoint() ) _transitionWidget().initialize();  
-  else _transitionWidget().initialize( parentWidget() );
-
-  // transition
-  _transitionWidget().start();
+  _transitionWidget().initialize();  
   CustomToolBar::setVisible( state );
+  _transitionWidget().start();
 
 }
 
