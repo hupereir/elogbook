@@ -64,12 +64,12 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
   
   // selection text
   editor_ = new CustomComboBox( this );
-  _editor().setAutoCompletion( true );
-  _editor().setEditable( true );
-  _editor().setToolTip( "Text to be found in logbook" );
-  _editor().setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+  editor().setAutoCompletion( true );
+  editor().setEditable( true );
+  editor().setToolTip( "Text to be found in logbook" );
+  editor().setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   addWidget( editor_ ); 
-  connect( &_editor(), SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest() ) );
+  connect( &editor(), SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest() ) );
   
   addWidget( new QLabel( " in ", this ) );
   
@@ -108,7 +108,10 @@ void SearchPanel::_toggleVisibility( bool state )
 
   Debug::Throw( "SearchPanel::_toggleVisibility.\n" );
   CustomToolBar::_toggleVisibility( state );
-  if( state ) _editor().setFocus();
+  if( state ) {
+    editor().lineEdit()->selectAll();
+    editor().setFocus();
+  }
 
 }
   
@@ -183,7 +186,7 @@ void SearchPanel::_selectionRequest( void )
   { if( iter->second->isChecked() ) mode |= iter->first; }
   
   // text selection
-  emit selectEntries( _editor().currentText(), mode );
+  emit selectEntries( editor().currentText(), mode );
 
 }
 

@@ -81,14 +81,14 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   }
 
   //! retrive search panel
-  SearchPanel& searchPanel( void )
+  SearchPanel& searchPanel( void ) const
   {
     assert( search_panel_ );
     return *search_panel_;
   }
 
   //! retrive state frame
-  SelectionStatusBar& statusBar( void )
+  SelectionStatusBar& statusBar( void ) const
   {
     assert( statusbar_ );
     return *statusbar_;
@@ -194,6 +194,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! delete keyword action
   QAction& deleteKeywordAction( void ) const
   { return *delete_keyword_action_; }
+  
+  //! find entries action
+  QAction& findEntriesAction( void ) const
+  { return *find_entries_action_; }
   
   //! new entry action
   QAction& newEntryAction( void ) const
@@ -390,6 +394,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! close EditionWindows
   virtual void _closeEditionWindows( void ) const;
 
+  //! find entries
+  void _findEntries( void ) const;
+  
   //! create new entry
   virtual void _newEntry( void );
 
@@ -619,6 +626,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   
   //! delete keyword
   QAction* delete_keyword_action_;
+  
+  //! find entries
+  QAction* find_entries_action_;
   
   //! new entry
   QAction* new_entry_action_;

@@ -112,6 +112,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   if( parent == mainwindow )
   {
     menu = addMenu( "&Edit" );
+    menu->addAction( &mainwindow->findEntriesAction() );
+    menu->addSeparator();
     menu->addAction( &mainwindow->newKeywordAction() );
     menu->addAction( &mainwindow->editKeywordAction() );
     menu->addAction( &mainwindow->deleteKeywordAction() );

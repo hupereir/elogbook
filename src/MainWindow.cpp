@@ -104,10 +104,14 @@ MainWindow::MainWindow( QWidget *parent ):
   splitter->setOrientation( Qt::Horizontal );
  
   // search panel
-  search_panel_ = new SearchPanel( "Search panel", this, "SEARCH_PANEL" );
+  // search_panel_ = new SearchPanel( "Search panel", this, "SEARCH_PANEL" );
+  
+  // create hidden search panel
+  addToolBar( Qt::BottomToolBarArea, search_panel_ = new SearchPanel( "Search panel", this ) );
+  search_panel_->hide();
+  
   connect( &searchPanel(), SIGNAL( selectEntries( QString, unsigned int ) ), SLOT( selectEntries( QString, unsigned int ) ) );
   connect( &searchPanel(), SIGNAL( showAllEntries() ), SLOT( showAllEntries() ) );  
-  searchPanel().visibilityAction().setShortcut( Qt::CTRL+Qt::Key_F );
   addAction( &searchPanel().visibilityAction() );
   
   // status bar
@@ -998,6 +1002,11 @@ void MainWindow::_installActions( void )
   delete_keyword_action_->setShortcutContext( Qt::WidgetShortcut );  
   connect( delete_keyword_action_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
 
+  find_entries_action_ = new QAction( IconEngine::get( ICONS::FIND ), "&Find", this );
+  find_entries_action_->setShortcut( Qt::CTRL+Qt::Key_F );
+  find_entries_action_->setToolTip( "Find entries matching specific criteria" );
+  connect( find_entries_action_, SIGNAL( triggered() ), SLOT( _findEntries() ) );
+  
   new_entry_action_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Entry", this );
   new_entry_action_->setToolTip( "Create a new entry" );
   new_entry_action_->setShortcut( Qt::CTRL+Qt::Key_N );
@@ -1780,6 +1789,17 @@ void MainWindow::_closeEditionWindows( void ) const
   for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
   { (*iter)->deleteLater(); }
   return;
+}
+
+//____________________________________________
+void MainWindow::_findEntries( void ) const
+{
+
+  Debug::Throw( "MainWindow::_findEntries.\n" );
+  if( !searchPanel().isVisible() ) searchPanel().visibilityAction().trigger();
+  searchPanel().editor().lineEdit()->selectAll();
+  searchPanel().editor().setFocus();
+
 }
 
 //____________________________________________

@@ -51,7 +51,7 @@ class SearchPanel: public CustomToolBar
   public:
       
   //! constructor
-  SearchPanel( const QString&, QWidget*, const QString& );
+  SearchPanel( const QString&, QWidget*, const QString& = QString() );
   
   //! search mode enumeration
   enum SearchMode 
@@ -64,13 +64,17 @@ class SearchPanel: public CustomToolBar
     COLOR = 1<<4
   };
    
+  //! editor
+  CustomComboBox& editor( void ) const
+  { return *editor_; }
+
   signals:
   
   //! emitted when the Find button is pressed
   void selectEntries( QString text, unsigned int mode );    
 
   //! emitted when the Show All button is pressed
-  void showAllEntries( void );
+  void showAllEntries( void );  
 
   protected:
   
@@ -100,10 +104,6 @@ class SearchPanel: public CustomToolBar
   void _selectionRequest( void );
 
   private:
-  
-  //! editor
-  CustomComboBox& _editor( void ) const
-  { return *editor_; }
   
   //! checkboxes
   typedef std::map<SearchMode, QCheckBox* > CheckBoxMap;
