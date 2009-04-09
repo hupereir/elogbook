@@ -40,6 +40,7 @@
 #include "IconSize.h"
 
 class CustomComboBox;
+class TransitionWidget;
 
 //! selects entries from keyword/title/text/...
 class SearchPanel: public CustomToolBar
@@ -76,10 +77,25 @@ class SearchPanel: public CustomToolBar
   //! emitted when the Show All button is pressed
   void showAllEntries( void );  
 
+  public slots:
+  
+  //! show
+  virtual void show( void );
+  
+  //! hide
+  virtual void hide( void );
+  
+  //! visibility
+  virtual void setVisible( bool );
+  
   protected:
   
   //! context menu
   virtual void contextMenuEvent( QContextMenuEvent* );
+ 
+  //! transition widget
+  TransitionWidget& _transitionWidget( void ) const
+  { return *transition_widget_; }
   
   protected slots:
   
@@ -107,6 +123,9 @@ class SearchPanel: public CustomToolBar
   
   //! checkboxes
   typedef std::map<SearchMode, QCheckBox* > CheckBoxMap;
+  
+  //! transition widget
+  TransitionWidget* transition_widget_;
   
   //! checkboxes
   CheckBoxMap checkboxes_;

@@ -1796,8 +1796,14 @@ void MainWindow::_findEntries( void ) const
 {
 
   Debug::Throw( "MainWindow::_findEntries.\n" );
-  if( !searchPanel().isVisible() ) searchPanel().visibilityAction().trigger();
-  searchPanel().editor().lineEdit()->selectAll();
+  
+  // check panel visibility
+  if( !searchPanel().isVisible() ) {
+    searchPanel().editor().clear();
+    searchPanel().visibilityAction().trigger();
+  } else searchPanel().editor().lineEdit()->selectAll();
+
+  // change focus
   searchPanel().editor().setFocus();
 
 }

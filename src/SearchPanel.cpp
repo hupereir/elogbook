@@ -35,6 +35,7 @@
 #include <QPushButton>
 #include <QLayout>
 
+#include "TransitionWidget.h"
 #include "Debug.h"
 #include "Icons.h"
 #include "IconEngine.h"
@@ -52,7 +53,8 @@ using namespace std;
 
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):
-  CustomToolBar( title, parent, option_name )
+  CustomToolBar( title, parent, option_name ),
+  transition_widget_( new TransitionWidget(this) )
 {
   Debug::Throw( "SearchPanel::SearchPanel.\n" );
 
@@ -87,8 +89,7 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
   addWidget( button = new QPushButton( "&Show All", this ) );
   connect( button, SIGNAL( clicked() ), this, SIGNAL( showAllEntries() ) ); 
   button->setToolTip( "Show all logbook entries" );
-    
-    
+      
   // close button
   QAction* hide_action;
   addAction( hide_action = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), "&Close", this ) );
@@ -99,6 +100,64 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
   // configuration
   connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
+  
+  // transition widget
+  _transitionWidget().setFlag( TransitionWidget::FROM_PARENT, true );
+  _transitionWidget().hide();
+  connect( &_transitionWidget().timeLine(), SIGNAL( finished() ),  &_transitionWidget(), SLOT( hide() ) );
+
+
+}
+
+//_______________________________________________________________
+void SearchPanel::show( void )
+{
+  Debug::Throw( "SearchPanel::show.\n" );
+  
+  // check transition enability
+  if( !_transitionWidget().isEnabled() ) return CustomToolBar::show();
+  
+  // transition
+  if( rect().topLeft() != QPoint() ) _transitionWidget().initialize();  
+  else _transitionWidget().initialize( parentWidget() );
+  
+  _transitionWidget().start();
+  CustomToolBar::show();
+  
+}
+
+//_______________________________________________________________
+void SearchPanel::hide( void )
+{
+  Debug::Throw( "SearchPanel::hide.\n" );
+
+  // check transition enability
+  if( !_transitionWidget().isEnabled() ) return CustomToolBar::hide();
+    
+  // transition
+  _transitionWidget().initialize();  
+  _transitionWidget().start();
+  CustomToolBar::hide();
+
+}
+
+//_______________________________________________________________
+void SearchPanel::setVisible( bool state )
+{
+
+  Debug::Throw( "SearchPanel::setVisible.\n" );
+
+  // check state and transition enability
+  if( state == isVisible() || !_transitionWidget().isEnabled() ) 
+  { return CustomToolBar::setVisible( state ); }
+  
+  // transition
+  if( rect().topLeft() != QPoint() ) _transitionWidget().initialize();  
+  else _transitionWidget().initialize( parentWidget() );
+
+  // transition
+  _transitionWidget().start();
+  CustomToolBar::setVisible( state );
 
 }
 
