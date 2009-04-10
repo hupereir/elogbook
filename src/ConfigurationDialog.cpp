@@ -262,6 +262,10 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   spinbox->setMaximum( 3600 );
   spinbox->setToolTip( "Time interval between two automatic save" );
   addOptionWidget( spinbox );
+  
+  checkbox->setChecked( false );
+  spinbox->setEnabled( false );
+  connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
 
   // auto backup
   box = new QGroupBox( "Auto backup", page );
@@ -287,6 +291,10 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   spinbox->setMaximum( 365 );
   spinbox->setToolTip( "Time interval between two backups" );
   addOptionWidget( spinbox );
+
+  checkbox->setChecked( false );
+  spinbox->setEnabled( false );
+  connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
 
   // spelling
   #if WITH_ASPELL
