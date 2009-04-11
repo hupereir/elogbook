@@ -33,7 +33,6 @@
 
 #include <QBasicTimer>
 #include <QContextMenuEvent>
-#include <QSplitter>
 #include <QTimerEvent>
 
 #include "AskForSaveDialog.h"
@@ -522,9 +521,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! state frame
   SelectionStatusBar* statusbar_;
-
-  //! main splitter
-  QSplitter* splitter_;
 
   //! keyword model
   KeywordModel keyword_model_;

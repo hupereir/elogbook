@@ -30,6 +30,7 @@
 
 #include <QHeaderView>
 #include <QMenu>
+#include <QSplitter>
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -100,7 +101,7 @@ MainWindow::MainWindow( QWidget *parent ):
     
   // splitter for KeywordList/LogEntryList
   QSplitter* splitter( new QSplitter( main ) );
-  layout->addWidget( splitter = new QSplitter( main ), 1 );  
+  layout->addWidget( splitter, 1 );  
   splitter->setOrientation( Qt::Horizontal );
  
   // search panel
@@ -260,7 +261,6 @@ MainWindow::MainWindow( QWidget *parent ):
   logEntryList().menu().addAction( &entryKeywordAction() );
   logEntryList().menu().addAction( &deleteEntryAction() ); 
   logEntryList().menu().addAction( &entryColorAction() );
-  
   
   // add widgets to splitters
   splitter->addWidget( left );
