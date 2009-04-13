@@ -191,8 +191,8 @@ bool Logbook::read( void )
     else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
     else if( tag_name == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
-    else if( tag_name == XML::ENTRY )
-    {
+    else if( tag_name == XML::RECENT_ENTRIES ) _readRecentEntries( element );     
+    else if( tag_name == XML::ENTRY ) {
 
       LogEntry* entry = new LogEntry( element );
       Key::associate( latestChild(), entry );
@@ -311,6 +311,9 @@ bool Logbook::write( File file )
     if( modification().isValid() ) top.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, document ) );
     if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
 
+    //! write recent entries
+    if( !recentEntries().empty() ) top.appendChild( _recentEntriesElement( document ) );
+    
     // write all entries
     static unsigned int progress( 10 );
     unsigned int entry_count( 0 );
@@ -546,6 +549,13 @@ BASE::KeySet<Attachment> Logbook::attachments( void ) const
 
   return out;
 
+}
+
+//___________________________________
+void Logbook::truncateRecentEntriesList( const unsigned int& max_count )
+{ 
+  while( recent_entries_.size() > max_count )
+  { recent_entries_.pop_front(); }
 }
 
 //_________________________________
@@ -828,6 +838,40 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
     break;
   }
   return false;
+}
+
+//_____________________________________________
+void Logbook::_readRecentEntries( const QDomElement& element )
+{
+      
+  Debug::Throw( "Logbook::_readRecentEntries.\n" );
+  recent_entries_.clear();
+  
+  // loop over children
+  for(QDomNode node = element.firstChild(); !node.isNull(); node = node.nextSibling() )
+  {
+    QDomElement child_element = node.toElement();
+    if( child_element.isNull() ) continue;
+    
+    // children
+    QString tag_name( child_element.tagName() );
+    if( tag_name == XML::CREATION ) recent_entries_.push_back( XmlTimeStamp( child_element ) );
+    
+  }
+  
+}
+
+//_________________________________
+QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
+{
+  Debug::Throw( "Logbook::_recentEntriesElement.\n" );
+  
+  QDomElement out( document.createElement( XML::RECENT_ENTRIES ) );
+  for( TimeStampList::const_iterator iter = recent_entries_.begin(); iter != recent_entries_.end(); iter++ )
+  { out.appendChild( XmlTimeStamp( *iter ).domElement( XML::CREATION, document ) ); }
+  
+  return out;
+  
 }
 
 //_________________________________

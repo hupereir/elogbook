@@ -136,6 +136,9 @@ class Logbook:public QObject, public Counter, public BASE::Key
   
   //! retrieve all associated attachments [recursive]
   BASE::KeySet<Attachment> attachments( void ) const;
+    
+  //! truncate recent entries list
+  void truncateRecentEntriesList( const unsigned int& );
   
   //! returns true if logbook is empty (no recursive entries found)
   bool empty( void ) const 
@@ -145,6 +148,21 @@ class Logbook:public QObject, public Counter, public BASE::Key
   
   //! remove empty children logbooks from list [recursive]
   void removeEmptyChildren( void );
+  
+  //!@name recent entries
+  //]{
+  
+  typedef std::list<TimeStamp> TimeStampList;
+  
+  //! recent entries
+  const TimeStampList& recentEntries( void )
+  { return recent_entries_; }
+  
+  //! recent entries
+  void addRecentEntry( const TimeStamp& time_stamp )
+  { recent_entries_.push_back( time_stamp ); }
+
+  //@}
   
   //!@name attributes
   //@{
@@ -413,6 +431,12 @@ class Logbook:public QObject, public Counter, public BASE::Key
   
   private:
   
+  //! read recent entries
+  void _readRecentEntries( const QDomElement& );
+  
+  //! recent entries dom element
+  QDomElement _recentEntriesElement( QDomDocument& ) const;
+  
   //! generate tagged backup filename
   File _childFilename( const File& file, const int& child_number ) const;   
   
@@ -454,6 +478,10 @@ class Logbook:public QObject, public Counter, public BASE::Key
   
   //! method used for LogEntry sort
   SortMethod sort_method_;             
+  
+  //! list of recent entries
+  /*! creation time stamp of recent entries are stored */
+  TimeStampList recent_entries_;
   
   //! sort order
   int sort_order_;

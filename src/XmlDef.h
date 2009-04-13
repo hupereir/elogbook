@@ -41,7 +41,10 @@ namespace XML {
 
   //! attachment tag
   static const QString ATTACHMENT( "Attachment" );
-      
+
+  //! recent entries
+  static const QString RECENT_ENTRIES( "RecentEntries" );
+  
   //! entry tag
   static const QString ENTRY( "Entry" );  
   
