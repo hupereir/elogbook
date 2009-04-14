@@ -513,11 +513,17 @@ void EditionWindow::_save( bool update_selection )
   // set logbook as modified
   BASE::KeySet<Logbook> logbooks( entry );
   for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
-  (*iter)->setModified( true );
+  { (*iter)->setModified( true ); }
+    
   Debug::Throw( "EditionWindow::_save - loogbook modified state updated.\n" );
 
+  // add to main logbook recent entries
+  mainwindow.logbook()->addRecentEntry( entry );
+  
   // Save logbook
-  if( mainwindow.logbook()->file().size() ) mainwindow.save();
+  if( mainwindow.logbook()->file().size() ) 
+  { mainwindow.save(); }
+  
   Debug::Throw( "EditionWindow::_save - mainWindow saved.\n" );
 
   statusBar().label().setText( "" );

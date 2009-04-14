@@ -76,6 +76,7 @@ MainWindow::MainWindow( QWidget *parent ):
   Counter( "MainWindow" ),
   autosave_delay_( 60000 ),
   edition_delay_( 200 ),
+  max_recent_entries_( 0 ),
   logbook_( 0 ),
   working_directory_( Util::workingDirectory() ),
   ignore_warnings_( false ),
@@ -275,7 +276,8 @@ MainWindow::MainWindow( QWidget *parent ):
   // main menu
   menu_ = new Menu( this , this );
   setMenuBar( menu_ );
-    
+  connect( menu_, SIGNAL( logEntrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
+  
   // configuration
   connect( &application, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
   _updateConfiguration();
@@ -740,6 +742,9 @@ void MainWindow::save( const bool& confirm_entries )
   // write logbook to file, retrieve result
   Singleton::get().application<Application>()->busy();
   setEnabled( false );
+  
+  logbook()->truncateRecentEntriesList( max_recent_entries_ );
+  
   bool written( logbook()->write() );
   Singleton::get().application<Application>()->idle();
   setEnabled( true );
@@ -1226,6 +1231,9 @@ void MainWindow::_updateConfiguration( void )
   Options::List color_list( XmlOptions::get().specialOptions( "COLOR" ) );
   for( Options::List::iterator iter = color_list.begin(); iter != color_list.end(); iter++ )
   { color_menu_->add( iter->raw() ); }
+  
+  // max number of recent entries
+  max_recent_entries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );
   
 }
 

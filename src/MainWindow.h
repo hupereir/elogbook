@@ -575,7 +575,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! autosave interval
   int autosave_delay_;
-  
+    
   //!@name item edition
   //@{
   
@@ -586,6 +586,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   int edition_delay_;
   
   //@}
+
+  //! maximum number of recent entries
+  unsigned int max_recent_entries_;
   
   //! associated logbook
   Logbook* logbook_;

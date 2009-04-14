@@ -312,7 +312,7 @@ bool Logbook::write( File file )
     if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
 
     //! write recent entries
-    if( !recentEntries().empty() ) top.appendChild( _recentEntriesElement( document ) );
+    if( !recent_entries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
     
     // write all entries
     static unsigned int progress( 10 );
@@ -554,8 +554,11 @@ BASE::KeySet<Attachment> Logbook::attachments( void ) const
 //___________________________________
 void Logbook::truncateRecentEntriesList( const unsigned int& max_count )
 { 
+  
+  Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
   while( recent_entries_.size() > max_count )
   { recent_entries_.pop_front(); }
+  
 }
 
 //_________________________________
@@ -582,6 +585,41 @@ void Logbook::removeEmptyChildren( void )
 
   children_ = tmp;
   return;
+}
+
+//_________________________________
+std::vector<LogEntry*> Logbook::recentEntries( void ) const
+{
+  
+  std::vector<LogEntry*> out;
+  if( recent_entries_.empty() ) return out;
+  BASE::KeySet<LogEntry> entries( Logbook::entries() );
+  for( TimeStampList::const_iterator iter = recent_entries_.begin(); iter != recent_entries_.end(); iter++ )
+  {
+    BASE::KeySet<LogEntry>::const_iterator entry_iter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( *iter ) ) );
+    if( entry_iter != entries.end() ) out.push_back( *entry_iter );
+  }
+  
+  return out;
+  
+}
+
+//_________________________________
+void Logbook::addRecentEntry( const LogEntry* entry )
+{ 
+
+  Debug::Throw( "Logbook::addRecentEntry.\n" );
+  TimeStamp time_stamp( entry->creation() );
+  
+  // first remove time stamp from list if it exists
+  recent_entries_.erase( std::remove( recent_entries_.begin(), recent_entries_.end(), time_stamp ), recent_entries_.end() );
+  
+  // adds again at the end of the list
+  recent_entries_.push_back( time_stamp );
+  
+  // mark logbook as modified
+  setModified( true );
+  
 }
 
 //_________________________________

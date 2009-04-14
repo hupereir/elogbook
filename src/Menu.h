@@ -39,6 +39,7 @@
 #include "Debug.h"
 #include "Counter.h"
 
+class LogEntry;
 class MainWindow;
 class RecentFilesMenu;
 
@@ -66,7 +67,18 @@ class Menu:public QMenuBar, public Counter
   RecentFilesMenu& recentFilesMenu( void ) const
   { return *recent_files_menu_; }
   
+  signals:
+  
+  //! triggered when an entry is selected in recent entries list
+  void logEntrySelected( LogEntry* );
+  
   private slots:
+  
+  //! recent entries
+  void _updateRecentEntriesMenu( void );
+  
+  //! select entry from recent entries menu
+  void _selectLogEntry( QAction* );
   
   //! get list of editor windows into menu
   void _updateEditorMenu( void );
@@ -76,6 +88,9 @@ class Menu:public QMenuBar, public Counter
   
   private:
 
+  //! recent entries
+  QMenu* recent_entries_menu_;
+  
   //! editor windows menu
   QMenu* editor_menu_;
  
@@ -84,6 +99,12 @@ class Menu:public QMenuBar, public Counter
   
   //! recent files menu
   RecentFilesMenu* recent_files_menu_;
+  
+  //! associates actions and recent entries
+  typedef std::map< QAction*, LogEntry* > ActionMap;
+  
+  //! associates actions and recent entries
+  ActionMap actions_;
   
 };
 

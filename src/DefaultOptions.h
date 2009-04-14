@@ -116,6 +116,8 @@ void installDefaultOptions( void )
   XmlOptions::get().set( "KEYWORD_TOOLBAR", Option( "1" , "entries toolbar visibility" ) );
   XmlOptions::get().set( "SHOW_SEARCHPANEL", Option( "1" , "search panel visibility" ) );
 
+  XmlOptions::get().set( "MAX_RECENT_ENTRIES", Option( "30", "maximum number of recent entries stored in logbook" ) );
+  
   // masks
   XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK", 
     (1<< LogEntryModel::COLOR)|

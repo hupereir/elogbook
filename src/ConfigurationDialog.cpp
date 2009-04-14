@@ -324,14 +324,21 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   addOptionWidget( server_configuration );
   
   box = new QGroupBox( "Misc", page );
-  box->setLayout( new QVBoxLayout() );
-  box->layout()->setSpacing(5);
-  box->layout()->setMargin(5);
+  grid_layout = new GridLayout();
+  grid_layout->setSpacing(5);
+  grid_layout->setMargin(5);
+  grid_layout->setMaxCount( 2 );
+  box->setLayout( grid_layout );
   page->layout()->addWidget( box );
-    
-  box->layout()->addWidget( checkbox = new OptionCheckBox( "Case sensitive", box, "CASE_SENSITIVE" ) );
-  addOptionWidget( checkbox );
+
+  grid_layout->addWidget( new QLabel( "Maximum number of stored recent entries: ", box ) );
+  grid_layout->addWidget( spinbox = new OptionSpinBox( box, "MAX_RECENT_ENTRIES" ) );
+  spinbox->setToolTip( "Maximum number of entries that appear in the <i>Recent Entries</i> menu." );
+  addOptionWidget( spinbox );
+  
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Case sensitive text/entry finding", box, "CASE_SENSITIVE" ), 1, 0, 1, 2 );
   checkbox->setToolTip( "Toggle case sensitive text search" );
+  addOptionWidget( checkbox );
 
   // load initial configuration
   _read();

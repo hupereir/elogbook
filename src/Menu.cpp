@@ -60,7 +60,11 @@ using namespace Qt;
 //_______________________________________________
 Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   QMenuBar( parent ),
-  Counter( "Menu" )
+  Counter( "Menu" ), 
+  recent_entries_menu_(0),
+  editor_menu_(0),
+  preference_menu_(0),
+  recent_files_menu_(0)
 {
   
   Debug::Throw( "Menu::Menu.\n" );
@@ -121,6 +125,11 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     menu->addAction( &mainwindow->newEntryAction() );
     menu->addAction( &mainwindow->editEntryAction() );
     menu->addAction( &mainwindow->deleteEntryAction() );
+    
+    menu->addMenu( recent_entries_menu_ = new QMenu( "Recent Entries" ) );
+    connect( recent_entries_menu_, SIGNAL( aboutToShow() ), this, SLOT( _updateRecentEntriesMenu() ) );
+    connect( recent_entries_menu_, SIGNAL( triggered( QAction* ) ), SLOT( _selectLogEntry( QAction* ) ) );
+    
   }
   
   // preferences
@@ -161,12 +170,43 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
 }
 
 //_______________________________________________
+void Menu::_updateRecentEntriesMenu( void )
+{
+  Debug::Throw( "Menu::_updateRecentEntriesMenu.\n" );
+  
+  assert( recent_entries_menu_ );
+  recent_entries_menu_->clear();
+  actions_.clear();
+  
+  MainWindow &mainwindow( Singleton::get().application<Application>()->mainWindow() );
+  if( !mainwindow.logbook() ) return;
+  
+  std::vector<LogEntry*> entries( mainwindow.logbook()->recentEntries() );
+  for( std::vector<LogEntry*>::const_iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  {
+    QString buffer;
+    QTextStream( &buffer ) << (*iter)->title() << " (" << (*iter)->keyword() << ")";
+    QAction* action = recent_entries_menu_->addAction( buffer );
+    actions_.insert( std::make_pair( action, (*iter) ) );
+  }
+  
+}
+
+//_______________________________________________
+void Menu::_selectLogEntry( QAction* action )
+{
+  Debug::Throw( "Menu::_selectLogEntry.\n" );
+  ActionMap::iterator iter( actions_.find( action ) );
+  assert( iter != actions_.end() );
+  emit logEntrySelected( iter->second );
+}
+
+//_______________________________________________
 void Menu::_updateEditorMenu( void )
 {
   Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
   
   editor_menu_->clear();
-
   MainWindow &mainwindow( Singleton::get().application<Application>()->mainWindow() );
   AttachmentWindow &attachment_window( Singleton::get().application<Application>()->attachmentWindow() );
   

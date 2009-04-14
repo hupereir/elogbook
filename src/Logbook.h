@@ -152,16 +152,12 @@ class Logbook:public QObject, public Counter, public BASE::Key
   //!@name recent entries
   //]{
   
-  typedef std::list<TimeStamp> TimeStampList;
+  //! recent entries
+  std::vector<LogEntry*> recentEntries( void ) const;
   
   //! recent entries
-  const TimeStampList& recentEntries( void )
-  { return recent_entries_; }
+  void addRecentEntry( const LogEntry* );
   
-  //! recent entries
-  void addRecentEntry( const TimeStamp& time_stamp )
-  { recent_entries_.push_back( time_stamp ); }
-
   //@}
   
   //!@name attributes
@@ -478,6 +474,10 @@ class Logbook:public QObject, public Counter, public BASE::Key
   
   //! method used for LogEntry sort
   SortMethod sort_method_;             
+  
+  //! list of recent entries
+  /*! creation time stamp of recent entries are stored */
+  typedef std::list<TimeStamp> TimeStampList;
   
   //! list of recent entries
   /*! creation time stamp of recent entries are stored */
