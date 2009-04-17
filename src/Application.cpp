@@ -131,6 +131,8 @@ bool Application::realizeWidget( void )
   // create selection frame
   main_window_ = new MainWindow();
 
+  connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), &mainWindow(), SLOT( selectEntry( LogEntry* ) ) );
+  
   // update configuration
   emit configurationChanged();
   

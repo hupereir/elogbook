@@ -276,7 +276,8 @@ MainWindow::MainWindow( QWidget *parent ):
   // main menu
   menu_ = new Menu( this , this );
   setMenuBar( menu_ );
-  connect( menu_, SIGNAL( logEntrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
+  connect( menu_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( selectEntry( LogEntry* ) ) );
+  connect( menu_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
   
   // configuration
   connect( &application, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
@@ -2390,10 +2391,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
   
   Keyword keyword( _keywordModel().get( index ) );
   Debug::Throw() << "MainWindow::_keywordSelectionChanged - keyword: " << keyword << endl;
-      
-  // keep track of the last visible entry
-  LogEntry *last_visible_entry( 0 );
-  
+     
   // keep track of the current selected entry
   QModelIndex current_index( logEntryList().selectionModel()->currentIndex() );
   LogEntry *selected_entry( current_index.isValid() ? _logEntryModel().get( current_index ):0 );
@@ -2403,24 +2401,17 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
   BASE::KeySet<LogEntry> turned_off_entries;
   for( BASE::KeySet<LogEntry>::iterator it=entries.begin(); it!= entries.end(); it++ )
   {
-  
-    // retrieve entry
     LogEntry* entry( *it );
-    if( entry->keyword() == keyword ) 
-    {  
-      entry->setKeywordSelected( true );
-      if( entry->isFindSelected() ) last_visible_entry = entry;
-      Debug::Throw() << "MainWindow::_keywordSelectionChanged - found entry: " << entry->key() << endl;
-    } else entry->setKeywordSelected( false );
-    
+    entry->setKeywordSelected( (*it)->keyword() == keyword );    
   }
   
   // reinitialize logEntry list
   _resetLogEntryList();
   
-  // if EditionWindow current entry is visible, select it;
+  // if EditionWindow current entry is visible, select it
+  // otherwise, select last entry in model
   if( selected_entry && selected_entry->isSelected() ) selectEntry( selected_entry );
-  else if( last_visible_entry ) selectEntry( last_visible_entry );
+  else if( _logEntryModel().rowCount() )  { selectEntry( _logEntryModel().get( _logEntryModel().index( _logEntryModel().rowCount()-1, 0 ) ) ); }
   
   return;
 } 

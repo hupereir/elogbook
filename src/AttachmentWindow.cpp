@@ -42,8 +42,7 @@
 #include "Icons.h"
 #include "Logbook.h"
 #include "LogEntry.h"
-#include "MainWindow.h"
-#include "Singleton.h"
+#include "TreeView.h"
 
 using namespace std;
 using namespace Qt;
@@ -99,6 +98,6 @@ void AttachmentWindow::_displayEntry( Attachment& attachment )
   
   // check if entry is visible
   if( entry && !entry->isSelected() ) entry->setFindSelected( true );  
-  Singleton::get().application<Application>()->mainWindow().selectEntry( entry );
+  emit entrySelected( entry );
   
 }

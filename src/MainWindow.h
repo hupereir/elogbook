@@ -121,9 +121,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! clear entry selection
   virtual void clearSelection( void );
 
-  //! select entry
-  virtual void selectEntry( LogEntry* );
-
   //! update entry (create new if not found )
   virtual void updateEntry( LogEntry*, const bool& );
 
@@ -300,6 +297,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! save current logbook
   /*! if argument is false, all modified entries will be saved without asking */
   virtual void save( const bool& confirm_entries = true );
+
+  //! select entry
+  virtual void selectEntry( LogEntry* );
 
   //! select entries using selection criterions
   virtual void selectEntries( QString, unsigned int );

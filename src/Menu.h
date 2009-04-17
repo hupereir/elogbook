@@ -70,7 +70,7 @@ class Menu:public QMenuBar, public Counter
   signals:
   
   //! triggered when an entry is selected in recent entries list
-  void logEntrySelected( LogEntry* );
+  void entrySelected( LogEntry* );
   
   private slots:
   
@@ -78,7 +78,7 @@ class Menu:public QMenuBar, public Counter
   void _updateRecentEntriesMenu( void );
   
   //! select entry from recent entries menu
-  void _selectLogEntry( QAction* );
+  void _selectEntry( QAction* );
   
   //! get list of editor windows into menu
   void _updateEditorMenu( void );

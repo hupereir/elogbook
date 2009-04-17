@@ -81,7 +81,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
   color_menu_( 0 ),
   color_widget_( 0 ),
   active_editor_( 0 ),
-  format_toolbar_( 0 )
+  format_toolbar_( 0 ),
+  statusbar_( 0 )
 {
   Debug::Throw("EditionWindow::EditionWindow.\n" );
   setOptionName( "EDITION_WINDOW" );
@@ -1014,6 +1015,7 @@ void EditionWindow::_modifiersChanged( unsigned int modifiers )
 { 
   if( !_hasStatusBar() ) return;
   QStringList buffer;
+  if( modifiers & TextEditor::MODIFIER_WRAP ) buffer << "WRAP";
   if( modifiers & TextEditor::MODIFIER_INSERT ) buffer << "INS";
   if( modifiers & TextEditor::MODIFIER_CAPS_LOCK ) buffer << "CAPS";
   if( modifiers & TextEditor::MODIFIER_NUM_LOCK ) buffer << "NUM";

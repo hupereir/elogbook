@@ -128,7 +128,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     
     menu->addMenu( recent_entries_menu_ = new QMenu( "Recent Entries" ) );
     connect( recent_entries_menu_, SIGNAL( aboutToShow() ), this, SLOT( _updateRecentEntriesMenu() ) );
-    connect( recent_entries_menu_, SIGNAL( triggered( QAction* ) ), SLOT( _selectLogEntry( QAction* ) ) );
+    connect( recent_entries_menu_, SIGNAL( triggered( QAction* ) ), SLOT( _selectEntry( QAction* ) ) );
     
   }
   
@@ -193,12 +193,13 @@ void Menu::_updateRecentEntriesMenu( void )
 }
 
 //_______________________________________________
-void Menu::_selectLogEntry( QAction* action )
+void Menu::_selectEntry( QAction* action )
 {
-  Debug::Throw( "Menu::_selectLogEntry.\n" );
+  Debug::Throw( "Menu::_selectEntry.\n" );
   ActionMap::iterator iter( actions_.find( action ) );
   assert( iter != actions_.end() );
-  emit logEntrySelected( iter->second );
+  iter->second->setFindSelected( true );
+  emit entrySelected( iter->second );
 }
 
 //_______________________________________________

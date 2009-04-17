@@ -73,6 +73,10 @@ class AttachmentWindow: public CustomDialog
   QAction& uniconifyAction( void )
   { return *uniconify_action_; }
 
+  signals:
+  
+  void entrySelected( LogEntry* );
+  
   public slots:
   
   //! uniconify
