@@ -32,8 +32,8 @@
 #include <QLayout>
 #include <QLabel>
 
+#include "AnimatedLineEditor.h"
 #include "GridLayout.h"
-#include "LineEditor.h"
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
 

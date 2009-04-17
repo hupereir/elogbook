@@ -34,9 +34,9 @@
 
 #include <QString>
 
+#include "AnimatedLineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
-#include "LineEditor.h"
 #include "TextEditor.h"
 #include "File.h"
 #include "Debug.h"

@@ -31,9 +31,9 @@
   \date $Date$
 */
 
+#include "AnimatedLineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
-#include "LineEditor.h"
 #include "TextEditor.h"
 
 class Logbook;

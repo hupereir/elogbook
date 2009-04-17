@@ -35,8 +35,8 @@
 #include <QLayout>
 #include <QTextStream>
 
+#include "AnimatedLineEditor.h"
 #include "GridLayout.h"
-#include "LineEditor.h"
 #include "TextEditor.h"
 #include "Debug.h"
 #include "File.h"
