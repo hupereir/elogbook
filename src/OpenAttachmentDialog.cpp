@@ -59,7 +59,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 
   // file name
   grid_layout->addWidget(new QLabel( "File: ", this ) );
-  LineEditor* file_line_edit = new LineEditor( this );
+  AnimatedLineEditor* file_line_edit = new AnimatedLineEditor( this );
   grid_layout->addWidget( file_line_edit );
   file_line_edit->setReadOnly( true );
   file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );

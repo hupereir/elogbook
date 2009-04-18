@@ -33,7 +33,7 @@
 #include <QLabel>
 
 #include "GridLayout.h"
-#include "LineEditor.h"
+#include "AnimatedLineEditor.h"
 #include "Debug.h"
 #include "EditAttachmentDialog.h"
 #include "File.h"
@@ -49,7 +49,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 
   // file name
   mainLayout().addWidget( new QLabel( "File:", this ) );
-  LineEditor *file_line_edit( new LineEditor( this ) );
+  AnimatedLineEditor *file_line_edit( new AnimatedLineEditor( this ) );
   file_line_edit->setReadOnly( true );
   file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );
   mainLayout().addWidget( file_line_edit );

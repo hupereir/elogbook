@@ -34,7 +34,7 @@
 #include <QPushButton>
 
 #include "TreeView.h"
-#include "LineEditor.h" 
+#include "AnimatedLineEditor.h" 
 #include "Debug.h"
 #include "Logbook.h"
 #include "LogbookStatisticsDialog.h"
@@ -61,7 +61,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
   grid_layout->addWidget( new QLabel( "File: ", this ), 0, 0 );
   
   // create a readonly line editor for the file name
-  LineEditor* edit = new LineEditor( this );
+  AnimatedLineEditor* edit = new AnimatedLineEditor( this );
   grid_layout->addWidget( edit, 0, 1 );
   edit->setReadOnly( true );
   edit->setText( logbook->file().expand() );

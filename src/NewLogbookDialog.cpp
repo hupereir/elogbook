@@ -53,12 +53,12 @@ NewLogbookDialog::NewLogbookDialog( QWidget* parent ):
 
   // title
   grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
-  grid_layout->addWidget( title_ = new LineEditor( this ), 0, 1 );
+  grid_layout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
   title_->setToolTip( "Logbook title" );
   
   // logbook author
   grid_layout->addWidget( new QLabel( "Author: ", this ), 1, 0 );
-  grid_layout->addWidget( author_ = new LineEditor( this ), 1, 1 );
+  grid_layout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
   author_->setToolTip( "Logbook author." );
   
   // attachment directory

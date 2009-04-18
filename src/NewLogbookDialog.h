@@ -100,10 +100,10 @@ class NewLogbookDialog: public CustomDialog
   private:
   
   //! title line edit
-  LineEditor *title_;
+  AnimatedLineEditor *title_;
   
   //! author line edit
-  LineEditor *author_;
+  AnimatedLineEditor *author_;
             
   //! filename browsed line editor
   BrowsedLineEditor *file_;  

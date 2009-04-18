@@ -65,10 +65,10 @@ class LogbookInformationDialog: public CustomDialog
   private:
   
   //! title line edit
-  LineEditor* title_;
+  AnimatedLineEditor* title_;
   
   //! author
-  LineEditor* author_;
+  AnimatedLineEditor* author_;
   
   //! attachment directory
   BrowsedLineEditor* attachment_directory_;
