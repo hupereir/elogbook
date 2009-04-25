@@ -115,14 +115,14 @@ static const QString HelpText[] =
   "</ul>",
   
   //_________________________________________________
-  "Preferences Menu",
-  "<h2>Preferences Menu</h2>"
-  "<p>The Preferences menu is located in the menu bar of both the main window and the entry edition windows and allows to open the application <i>Configuration</i> dialog.</p>",
+  "Settings Menu",
+  "<h2>Settings Menu</h2>"
+  "<p>The settings menu is located in the menu bar of both the main window and the entry edition windows and allows to open the application <i>Configuration</i> dialog.</p>",
   
   //_________________________________________________
-  "Windows Menu",
-  "<h2>Windows Menu</h2>"
-  "<p>The <i>Windows</i> menu is located in the menu bar of both the main window and the entry edition windows. It contains the following buttons:</p>"
+  "Window Menu",
+  "<h2>Window Menu</h2>"
+  "<p>The <i>Window</i> menu is located in the menu bar of both the main window and the entry edition windows. It contains the following buttons:</p>"
   "<ul>"
   "<li><i>Main window</i>, used to raise the application main window;</li>"
   "<li><i>Editors</i>, to select one of the existing entry edition window and raise it. It also offers the possibility to close all existing editor windows;</li>"
@@ -196,7 +196,7 @@ static const QString HelpText[] =
   "<p>At the moment, only plain text, HTML, URL, postscript and image files are supported. Other file types are handled as <i>unknown</i>. URL attachments are handled differently from the other attachment types, since they do not require the attachment to be stored on disk. When selecting this type, the destination directory and the copy action selection box are disabled, since the URL of the attachment is stored unchanged in the body of the logbook.</p>"
   
   "<h3>Attachment lists</h3>"
-  "<p>The list of existing attachments appear either in the corresponding entry edition windows, or in a separate <i>Attachment window</i> that can be opened via the <i>Windows</i> menu. The first list only display the attachments associated to the current entry and allows the creation of new attachments or modifications of existing attachments whereas the second list displays all attachments available in the logbook but does not allow the creation of new attachments nor the modification of existing attachments.</p>"
+  "<p>The list of existing attachments appear either in the corresponding entry edition windows, or in a separate <i>Attachment window</i> that can be opened via the <i>Window</i> menu. The first list only display the attachments associated to the current entry and allows the creation of new attachments or modifications of existing attachments whereas the second list displays all attachments available in the logbook but does not allow the creation of new attachments nor the modification of existing attachments.</p>"
   
   "<h3>Displaying attachments</h3>"
   "<p>To display an existing attachment, on must either double-click on it in one of the attachment lists, or select the corresponding button in the associated pop-up menu. A dialog is then opened to select the action to be taken. Attachments can either be displayed using a third-party application associated to the attachment type or saved on disk locally. The second option is naturally not available for attachments of type URL.</p>"

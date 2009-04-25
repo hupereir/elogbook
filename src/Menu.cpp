@@ -132,12 +132,12 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     
   }
   
-  // preferences
-  preference_menu_ = addMenu( "&Preferences" );
+  // Settings
+  preference_menu_ = addMenu( "&Settings" );
   connect( preference_menu_, SIGNAL( aboutToShow() ), this, SLOT( _updatePreferenceMenu() ) );
   
   // windows menu
-  editor_menu_ = addMenu( "&Windows" );
+  editor_menu_ = addMenu( "&Window" );
   connect( editor_menu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
   // help manager
@@ -259,11 +259,11 @@ void Menu::_updatePreferenceMenu( void )
 
   preference_menu_->clear();
   
-  // preferences menu
+  // Settings menu
   Application& application( *Singleton::get().application<Application>() );
   preference_menu_->addAction( &application.configurationAction() );
   
-  // additional preferences in case parent is a selection frame
+  // additional Settings in case parent is a selection frame
   MainWindow *mainwindow = dynamic_cast<MainWindow*>( parentWidget() );
   if( mainwindow )
   {
@@ -273,7 +273,7 @@ void Menu::_updatePreferenceMenu( void )
     preference_menu_->addAction( &mainwindow->searchPanel().visibilityAction() );
   }
   
-  // additional preferences in case parent is an edition frame
+  // additional Settings in case parent is an edition frame
   EditionWindow *editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );
   if( editionwindow )
   {
