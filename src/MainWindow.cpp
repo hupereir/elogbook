@@ -1961,6 +1961,9 @@ void MainWindow::_displayEntry( LogEntry* entry )
       // also clear modification state
       edit_frame->setModified( false );
       
+      // need to display entry before deleting sub views.
+      edit_frame->displayEntry( entry );
+ 
       // also kill all frames but one
       BASE::KeySet< AnimatedTextEditor > editors( *iter );
       if( editors.size() > 1 )
@@ -1970,11 +1973,11 @@ void MainWindow::_displayEntry( LogEntry* entry )
         local_iter++;
         for( ;local_iter != editors.end(); local_iter++ )
         { (*iter)->_closeEditor( **local_iter ); }
+       
+        (**editors.begin()).setFocus();
+        (*iter)->_setActiveEditor( **editors.begin() );
         
-      }
-
-      
-      
+      }      
       
       break;
     }
@@ -1987,14 +1990,12 @@ void MainWindow::_displayEntry( LogEntry* entry )
     edit_frame = new EditionWindow( 0, false );
     edit_frame->setColorMenu( color_menu_ );
     Key::associate( this, edit_frame );
+    edit_frame->displayEntry( entry );
   }
   
   edit_frame->centerOnWidget( this );
-  edit_frame->displayEntry( entry );
   edit_frame->show();
   
-  Debug::Throw( "MainWindow::_displayEntry - done.\n" );
-
 }
 
 //_______________________________________________

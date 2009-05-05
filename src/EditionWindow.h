@@ -250,6 +250,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! close view
   /*! Ask for save if view is modified */
   void _closeEditor( AnimatedTextEditor& );
+  
+  //! change active display manualy
+  void _setActiveEditor( AnimatedTextEditor& ); 
 
   protected:
 
@@ -366,9 +369,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //!@name display management
   //@{
-
-  //! change active display manualy
-  void _setActiveEditor( AnimatedTextEditor& ); 
 
   //! split view
   AnimatedTextEditor& _splitView( const Qt::Orientation& );
