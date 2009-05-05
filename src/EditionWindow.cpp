@@ -1097,10 +1097,14 @@ void EditionWindow::_closeEditor( AnimatedTextEditor& editor )
     // move child to grand_parent_splitter if any
     if( grand_parent_splitter )
     { 
+
       grand_parent_splitter->insertWidget( grand_parent_splitter->indexOf( parent_splitter ), child );
+      
     }  else {
+      
       child->setParent( grand_parent );
       grand_parent->layout()->addWidget( child );
+      
     }
     
     // delete parent_splitter, now that it is empty

@@ -1938,7 +1938,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     {
       edit_frame = *iter;
       edit_frame->uniconifyAction().trigger();
-      break;
+      return;
     }
 
   }
@@ -1953,9 +1953,29 @@ void MainWindow::_displayEntry( LogEntry* entry )
       
       // skip closed editors
       if( !(*iter)->isClosed() ) continue;
+      
       edit_frame = *iter;
       edit_frame->setIsClosed( false );
       edit_frame->setReadOnly( false );
+
+      // also clear modification state
+      edit_frame->setModified( false );
+      
+      // also kill all frames but one
+      BASE::KeySet< AnimatedTextEditor > editors( *iter );
+      if( editors.size() > 1 )
+      {
+      
+        BASE::KeySet< AnimatedTextEditor >::iterator local_iter( editors.begin() );
+        local_iter++;
+        for( ;local_iter != editors.end(); local_iter++ )
+        { (*iter)->_closeEditor( **local_iter ); }
+        
+      }
+
+      
+      
+      
       break;
     }
     

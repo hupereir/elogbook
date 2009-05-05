@@ -120,6 +120,8 @@ bool Application::realizeWidget( void )
   closeAction().disconnect();
   connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
     
+  configurationAction().setText( "Configure &elogbook ..." );
+  
   // recent files
   recent_files_ = new XmlFileList();
   recent_files_->setCheck( true );

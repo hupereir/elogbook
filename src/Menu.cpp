@@ -261,7 +261,6 @@ void Menu::_updatePreferenceMenu( void )
   
   // Settings menu
   Application& application( *Singleton::get().application<Application>() );
-  preference_menu_->addAction( &application.configurationAction() );
   
   // additional Settings in case parent is a selection frame
   MainWindow *mainwindow = dynamic_cast<MainWindow*>( parentWidget() );
@@ -284,4 +283,7 @@ void Menu::_updatePreferenceMenu( void )
     preference_menu_->addAction( &editionwindow->activeEditor().blockHighlightAction() );
   }
   
+  preference_menu_->addSeparator();
+  preference_menu_->addAction( &application.configurationAction() );
+
 }
