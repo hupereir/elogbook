@@ -4,7 +4,7 @@ TARGET = synchronize_logbook
 CONFIG += qt release
 QT += xml network
 
-VERSION = 1.6.3
+VERSION = 1.6.4
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 win32 {
