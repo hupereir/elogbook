@@ -142,6 +142,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
 
   // help manager
   BASE::HelpManager* help( new BASE::HelpManager( this ) );
+  help->setWindowTitle( "Elogbook Handbook" );
   File help_file( XmlOptions::get().raw( "HELP_FILE" ) );
   if( help_file.exists() ) help->install( help_file );
   else {
