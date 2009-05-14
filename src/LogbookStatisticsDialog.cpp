@@ -118,10 +118,10 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 //_______________________________________________
 const QString LogbookStatisticsDialog::Model::column_titles_[ LogbookStatisticsDialog::Model::n_columns ] =
 { 
-  "file",
-  "entries",
-  "created",
-  "modified"
+  "File",
+  "Entries",
+  "Created",
+  "Modified"
 };
 
 
@@ -134,7 +134,8 @@ QVariant LogbookStatisticsDialog::Model::data( const QModelIndex& index, int rol
   
   // retrieve associated file info
   Logbook& logbook( *get()[index.row()] );
-     // return text associated to file and column
+  
+  // return text associated to file and column
   if( role == Qt::DisplayRole ) 
   {
     
