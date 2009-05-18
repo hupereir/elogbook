@@ -157,9 +157,10 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   menu->addSeparator();
   menu->addAction( &application.aboutAction() );
   menu->addAction( &application.aboutQtAction() );
-  menu->addSeparator();
   
   // debug menu
+  #ifdef DEBUG
+  menu->addSeparator();
   DebugMenu *debug_menu( new DebugMenu( this ) );
   debug_menu->setTitle( "&Debug" );
   menu->addMenu( debug_menu );
@@ -167,7 +168,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   debug_menu->addAction( &mainwindow->showDuplicatesAction() );
   debug_menu->addAction( &help->dumpAction() );
   debug_menu->addAction( &mainwindow->monitoredFilesAction() );
-
+  #endif
+  
 }
 
 //_______________________________________________
