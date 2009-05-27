@@ -31,8 +31,6 @@
 
 #include <QMessageBox>
 
-
-
 #include "Application.h"
 #include "AttachmentWindow.h"
 #include "AttachmentType.h"

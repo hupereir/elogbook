@@ -30,7 +30,7 @@
   \date $Date$
 */
 
-#include <assert.h>
+#include <cassert>
 #include "Debug.h"
 #include "Keyword.h"
 

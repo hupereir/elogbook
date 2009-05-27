@@ -1302,11 +1302,11 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
   if( !_hasStatusBar() ) return;
   
   QString buffer;
-  QTextStream( &buffer ) << "Line : " << position.paragraph()+1;
+  QTextStream( &buffer ) << "Line: " << position.paragraph()+1;
   statusBar().label(2).setText( buffer, false );
 
   buffer.clear();
-  QTextStream( &buffer )  << "Column : " << position.index()+1;
+  QTextStream( &buffer )  << "Column: " << position.index()+1;
   statusBar().label(3).setText( buffer, true );
   
   return;
