@@ -200,18 +200,26 @@ void Application::_exit( void )
 }
 
 //________________________________________________
-void Application::_processRequest( const CommandLineArguments& arguments )
+bool Application::_processCommand( SERVER::ServerCommand command )
 {
 
-  Debug::Throw() << "Application::_processRequest - arguments = " << arguments.join( " " ) << endl;
-  if( main_window_ ) mainWindow().uniconifyAction().trigger();
+  Debug::Throw( "Application::_processCommand.\n" );
+  if( BaseApplication::_processCommand( command ) ) return true;
+  if( command.command() == SERVER::ServerCommand::RAISE )
+  {
+    if( main_window_ ) mainWindow().uniconifyAction().trigger();
+    QStringList filenames( SERVER::ApplicationManager::commandLineParser( command.arguments() ).orphans() );
+    if( !filenames.isEmpty() ) 
+    {
 
-  QStringList filenames( SERVER::ApplicationManager::commandLineParser( arguments ).orphans() );
-  if( filenames.isEmpty() ) return;
+      QString buffer;
+      QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
+      if( QuestionDialog( main_window_, buffer ).centerOnParent().exec() )
+      { mainWindow().setLogbook( File( filenames.front() ) ); }
+      
+    }
+    
+    return true;
+  } else return false;
 
-  QString buffer;
-  QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
-  if( QuestionDialog( main_window_, buffer ).centerOnParent().exec() )
-  { mainWindow().setLogbook( File( filenames.front() ) ); }
-  
 }
