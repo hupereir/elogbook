@@ -45,7 +45,7 @@ using namespace std;
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
-  CustomDialog( parent, CustomDialog::OK_BUTTON )
+  CustomDialog( parent, OkButton )
 {
   Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 

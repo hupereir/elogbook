@@ -49,7 +49,7 @@ using namespace Qt;
 
 //________________________________________
 AttachmentWindow::AttachmentWindow( QWidget* parent ):
-  CustomDialog( parent, CustomDialog::OK_BUTTON )
+  CustomDialog( parent, OkButton )
 {
   
   Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );

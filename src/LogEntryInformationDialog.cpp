@@ -48,7 +48,7 @@ using namespace std;
 
 //_________________________________________________________
 LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):
-    CustomDialog( parent, OK_BUTTON | SEPARATOR )
+    CustomDialog( parent, OkButton| Separator )
 {
   Debug::Throw( "LogEntryInformationDialog::LogEntryInformationDialog.\n" );
     
