@@ -66,8 +66,8 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
   
   // selection text
   editor_ = new CustomComboBox( this );
-  editor().setAutoCompletion( true );
   editor().setEditable( true );
+  editor().setAutoCompletion( true );
   editor().setToolTip( "Text to be found in logbook" );
   editor().setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   addWidget( editor_ ); 

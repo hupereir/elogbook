@@ -43,8 +43,8 @@ EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
   Debug::Throw( "EditKeywordDialog::EditKeywordDialog.\n" );
   
   mainLayout().addWidget( combo_box_ = new CustomComboBox( this ) );
-  combo_box_->setAutoCompletion( true );
   combo_box_->setEditable( true );
+  combo_box_->setAutoCompletion( true );
   
   mainLayout().addWidget( new QLabel( "use \"/\" characters to add keyword to a specific branch", this ) );
 
