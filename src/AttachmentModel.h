@@ -43,10 +43,10 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
   
   Q_OBJECT
     
-    public:
+  public:
     
-    //! constructor
-    AttachmentModel(QObject *parent = 0);
+  //! constructor
+  AttachmentModel(QObject *parent = 0);
   
   //! destructor
   virtual ~AttachmentModel()

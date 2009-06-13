@@ -110,6 +110,10 @@ Attachment::Attachment( const QDomElement& element):
     else Debug::Throw(0) << "Attachment::Attachment - unrecognized child " << child_element.tagName() << ".\n";
   }
   
+  // by default all URL attachments are valid, provided that the SOURCE_FILE is not empty
+  if( type() == AttachmentType::URL && !sourceFile().isEmpty() )
+  { setIsValid( true ); }
+  
 }
 
 //____________________________________________________
@@ -221,6 +225,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     _setFile( source_file_ );
     _setCreation( TimeStamp::now() );
     _setModification( TimeStamp() );
+    setIsValid( true );
     return SUCCESS;
   }
   
