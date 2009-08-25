@@ -1378,12 +1378,6 @@ bool MainWindow::_saveAs( File default_file, bool register_logbook )
   // update working directory
   working_directory_ = fullname.path();
 
-  // check if file exists
-  if(
-    fullname.exists() &&
-    !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() )
-  return false;
-
   // change logbook filename and save
   logbook()->setFile( fullname );
   logbook()->setModifiedRecursive( true );

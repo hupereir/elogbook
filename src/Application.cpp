@@ -144,12 +144,9 @@ bool Application::realizeWidget( void )
   
   // load file from arguments or recent files
   QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
-  if( !filenames.isEmpty() ) mainWindow().setLogbook( File( filenames.front() ).expand() ); 
-  else if( !mainWindow().setLogbook( recentFiles().lastValidFile().file() ) ) 
-  {
-    Debug::Throw() << "Application::realizeWidget - openning last valid logbook failed." << endl;
-    mainWindow().newLogbookAction().trigger();
-  }
+  File file( filenames.empty() ? recentFiles().lastValidFile().file():File( filenames.front() ).expand() );
+  if( mainWindow().setLogbook( file ) ) mainWindow().checkLogbookBackup(); 
+  else mainWindow().newLogbookAction().trigger();
   
   return true;
   
