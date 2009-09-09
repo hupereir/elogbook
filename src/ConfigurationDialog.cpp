@@ -1,26 +1,26 @@
 // $Id$
 
 /******************************************************************************
-*                        
-* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
-*                        
-* This is free software; you can redistribute it and/or modify it under the    
-* terms of the GNU General Public License as published by the Free Software    
-* Foundation; either version 2 of the License, or (at your option) any later  
-* version.                            
-*                         
-* This software is distributed in the hope that it will be useful, but WITHOUT 
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or        
-* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License        
-* for more details.                    
-*                         
-* You should have received a copy of the GNU General Public License along with 
-* software; if not, write to the Free Software Foundation, Inc., 59 Temple    
-* Place, Suite 330, Boston, MA  02111-1307 USA                          
-*                        
-*                        
+*
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+*
+* This is free software; you can redistribute it and/or modify it under the
+* terms of the GNU General Public License as published by the Free Software
+* Foundation; either version 2 of the License, or (at your option) any later
+* version.
+*
+* This software is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+* for more details.
+*
+* You should have received a copy of the GNU General Public License along with
+* software; if not, write to the Free Software Foundation, Inc., 59 Temple
+* Place, Suite 330, Boston, MA  02111-1307 USA
+*
+*
 *******************************************************************************/
- 
+
 /*!
   \file ConfigurationDialog.cpp
   \brief configuration dialog
@@ -65,9 +65,9 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog.\n" );
   setWindowTitle( "Configuration - elogbook" );
-  
+
   baseConfiguration();
-  
+
   // generic objects
   QGroupBox *box;
   OptionCheckBox *checkbox;
@@ -86,11 +86,11 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   box->setLayout( grid_layout );
 
   OptionBrowsedLineEditor *editor;
-  
+
   grid_layout->addWidget( new QLabel( "Default: ", box ) );
   grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_UNKNOWN_ATC" ) );
   addOptionWidget( editor );
-  
+
   grid_layout->addWidget( new QLabel( "HTML: ", box ) );
   grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_HTML_ATC" ) );
   addOptionWidget( editor );
@@ -110,17 +110,17 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->addWidget( new QLabel( "Image: ", box ) );
   grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_IMAGE_ATC" ) );
   addOptionWidget( editor );
-  
+
   grid_layout->setColumnStretch( 1, 1 );
-  
+
   grid_layout->addWidget( new QLabel( "Icon size: ", box ) );
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
   spinbox->setMinimum( 8 );
   spinbox->setMaximum( 96 );
   spinbox->setToolTip( "Icon size in attachment lists" );
-  addOptionWidget( spinbox );  
+  addOptionWidget( spinbox );
 
-  page->layout()->addWidget( box = new QGroupBox( "Print Commands", page ) );  
+  page->layout()->addWidget( box = new QGroupBox( "Print Commands", page ) );
 
   box->setLayout( new QVBoxLayout() );
   box->layout()->setMargin(5);
@@ -135,20 +135,20 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // listview configuration
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - lists.\n" );
-  page = &addPage( "List configuration", "Visible columns in logbook keywords and entries lists" );  
-  TreeViewConfiguration *listview_config = new TreeViewConfiguration( 
-    page, 
-    &Singleton::get().application<Application>()->mainWindow().logEntryList(), 
+  page = &addPage( "List configuration", "Visible columns in logbook keywords and entries lists" );
+  TreeViewConfiguration *listview_config = new TreeViewConfiguration(
+    page,
+    &Singleton::get().application<Application>()->mainWindow().logEntryList(),
     Singleton::get().application<Application>()->mainWindow().logEntryList().maskOptionName() );
-  
+
   listview_config->setTitle( "Logbook entries list" );
   addOptionWidget( listview_config );
   page->layout()->addWidget( listview_config );
 
   // attachment configuration
-  listview_config = new TreeViewConfiguration( 
-    page, 
-    &Singleton::get().application<Application>()->attachmentWindow().frame().list(), 
+  listview_config = new TreeViewConfiguration(
+    page,
+    &Singleton::get().application<Application>()->attachmentWindow().frame().list(),
     Singleton::get().application<Application>()->attachmentWindow().frame().list().maskOptionName() );
   listview_config->setTitle( "Attachments list" );
   addOptionWidget( listview_config );
@@ -170,57 +170,57 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->addWidget( new QLabel( "Location", box ) );
 
   OptionComboBox* combobox;
- 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" )); 
-  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) ); 
-  addOptionWidget( checkbox );
-  addOptionWidget( combobox );
-  
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" )); 
-  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" )); 
+
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" ));
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) );
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" )); 
-  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" ));
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" ));
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" )); 
-  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" ));
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" ));
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" )); 
-  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" ));
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" ));
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
-  grid_layout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" )); 
-  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" )); 
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" ));
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" ));
+  addOptionWidget( checkbox );
+  addOptionWidget( combobox );
+
+  grid_layout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" ));
+  grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" ));
   addOptionWidget( checkbox );
   addOptionWidget( combobox );
 
   box = new QGroupBox( page );
   page->layout()->addWidget( box );
-  
+
   box->setLayout( new QHBoxLayout() );
   box->layout()->setSpacing( 5 );
   box->layout()->setMargin( 5 );
-  
-  box->layout()->addWidget( new QLabel( "Lock position: ", box )); 
-  box->layout()->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "LOCK_TOOLBAR_LOCATION" ) ); 
+
+  box->layout()->addWidget( new QLabel( "Lock position: ", box ));
+  box->layout()->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "LOCK_TOOLBAR_LOCATION" ) );
   addOptionWidget( combobox );
 
   // colors
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - colors.\n" );
-  page = &addPage( "Colors", "Color settings for entry tagging and text highlighting" ); 
+  page = &addPage( "Colors", "Color settings for entry tagging and text highlighting" );
   box = new QGroupBox( "Logbook entry colors", page );
   box->setLayout( new QVBoxLayout() );
   box->layout()->setMargin(5);
   box->layout()->setSpacing(5);
   page->layout()->addWidget( box );
- 
+
   box->layout()->addWidget( listbox = new OptionListBox( box, "COLOR" ) );
   listbox->setToolTip( "Colors used for logbook entry display" );
   addOptionWidget( listbox );
@@ -262,7 +262,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   spinbox->setMaximum( 3600 );
   spinbox->setToolTip( "Time interval between two automatic save" );
   addOptionWidget( spinbox );
-  
+
   checkbox->setChecked( false );
   spinbox->setEnabled( false );
   connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
@@ -278,12 +278,12 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   layout->addWidget( checkbox = new OptionCheckBox( "Auto backup", box, "AUTO_BACKUP" ) );
   checkbox->setToolTip( "Make a backup of the logbook at fixed time schedule" );
   addOptionWidget( checkbox );
- 
+
   h_layout = new QHBoxLayout();
   h_layout->setSpacing(5);
   h_layout->setMargin(0);
   layout->addLayout( h_layout );
-  
+
   h_layout->addWidget( new QLabel( "Backup interval (days): ", box ) );
   h_layout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ) );
   h_layout->addStretch(1);
@@ -313,7 +313,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   RecentFilesConfiguration* recent_files_configuration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
   page->layout()->addWidget( recent_files_configuration );
   addOptionWidget( recent_files_configuration );
-  
+
   // misc
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
   page = &addPage( "Misc", "Additional unsorted settings" );
@@ -322,7 +322,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   SERVER::ServerConfiguration* server_configuration;
   page->layout()->addWidget( server_configuration = new SERVER::ServerConfiguration( page, "Server configuration" ));
   addOptionWidget( server_configuration );
-  
+
   box = new QGroupBox( "Misc", page );
   grid_layout = new GridLayout();
   grid_layout->setSpacing(5);
@@ -335,12 +335,12 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
   grid_layout->addWidget( spinbox = new OptionSpinBox( box, "MAX_RECENT_ENTRIES" ) );
   spinbox->setToolTip( "Maximum number of entries that appear in the <i>Recent Entries</i> menu." );
   addOptionWidget( spinbox );
-  
+
   grid_layout->addWidget( checkbox = new OptionCheckBox( "Case sensitive text/entry finding", box, "CASE_SENSITIVE" ), 1, 0, 1, 2 );
   checkbox->setToolTip( "Toggle case sensitive text search" );
   addOptionWidget( checkbox );
 
   // load initial configuration
   _read();
-  
+
 }

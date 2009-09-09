@@ -1,24 +1,24 @@
 // $Id$
 
 /******************************************************************************
- *                        
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
- *                        
- * This is free software; you can redistribute it and/or modify it under the     
- * terms of the GNU General Public License as published by the Free Software     
- * Foundation; either version 2 of the License, or (at your option) any later   
- * version.                            
- *                         
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or         
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License         
- * for more details.                    
- *                         
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple     
- * Place, Suite 330, Boston, MA   02111-1307 USA                          
- *                        
- *                        
+ *
+ * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+ *
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * software; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA   02111-1307 USA
+ *
+ *
  *******************************************************************************/
 
 /*!
@@ -48,7 +48,7 @@ using namespace std;
 OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& attachment ):
   CustomDialog( parent )
 {
-  
+
   Debug::Throw( "OpenAttachmentDialog::OpenAttachmentDialog.\n" );
 
   GridLayout* grid_layout = new GridLayout();
@@ -78,15 +78,15 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   // modification
   grid_layout->addWidget( new QLabel( "Last Modified: ", this ) );
   grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().toString():"-", this ) );
-  
+
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
   group->setExclusive( true );
-  
+
   QGroupBox *group_box = new QGroupBox( this );
   mainLayout().addWidget( group_box, 0 );
   grid_layout = new GridLayout();
-  
+
   group_box->setLayout( grid_layout );
   grid_layout->setMargin(5);
   grid_layout->setSpacing(5);
@@ -95,7 +95,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   grid_layout->addWidget( open_radio_button_ = new QRadioButton( "Open using: ", group_box ) );
   open_radio_button_->setToolTip( "Select this button to open attachment using the selected application." );
   group->addButton( open_radio_button_ );
-  
+
   grid_layout->addWidget( command_line_edit_ = new BrowsedLineEditor( group_box ) );
   command_line_edit_->setFile( attachment.type().editCommand() );
   command_line_edit_->setToolTip( "Application to be used to display the attachment." );
@@ -106,32 +106,32 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 
   if( attachment.type() == AttachmentType::URL )
   {
-    
+
     open_radio_button_->setChecked( true );
     save_radio_button_->setChecked( false );
     save_radio_button_->setEnabled( false );
-    
+
   } else {
-    
+
     open_radio_button_->setChecked( true );
     save_radio_button_->setChecked( false );
     save_radio_button_->setEnabled( true );
-  }    
-      
+  }
+
   // comments
   if( !( attachment.comments().isEmpty() || attachment.comments()== Attachment::NO_COMMENTS ) )
   {
-    mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );  
+    mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );
     TextEditor* comments_text_edit = new TextEditor( this );
-    mainLayout().addWidget( comments_text_edit, 1 );  
+    mainLayout().addWidget( comments_text_edit, 1 );
     comments_text_edit->setReadOnly( true );
     comments_text_edit->setPlainText( attachment.comments() );
     comments_text_edit->setToolTip( "Attachment comments. (read-only)" );
   }
-  
+
   adjustSize();
-  
-} 
+
+}
 
 //______________________________________________________
 QString OpenAttachmentDialog::command( void ) const

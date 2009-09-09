@@ -59,7 +59,7 @@ class LogbookModifiedDialog: public BaseDialog, public Counter
 
     //! re-load modified file
     RELOAD = 2,
-    
+
     //! ignore warning
     IGNORE = 3
 
@@ -87,13 +87,13 @@ class LogbookModifiedDialog: public BaseDialog, public Counter
   { done( IGNORE ); }
 
   private:
-  
+
   //! model
   FileCheck::Model model_;
-  
+
   //! list
   AnimatedTreeView* list_;
-  
+
 };
 
 #endif

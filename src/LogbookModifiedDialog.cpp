@@ -52,60 +52,60 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::
 
   Debug::Throw( "LogbookModifiedDialog::LogbookModifiedDialog.\n" );
   setOptionName( "LOGBOOK_MODIFIED_DIALOG" );
-  
+
   assert( !files.empty() );
-  
+
   // create vbox layout
   QVBoxLayout* layout=new QVBoxLayout();
   layout->setSpacing(10);
   layout->setMargin(10);
   setLayout( layout );
-  
+
   // create message
   QString buffer;
   QTextStream what( &buffer );
-  what 
+  what
       << "Following files have been modified"
       << " been modified by by another application: "
       << endl;
-  
+
   //! try load Question icon
   QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
   if( question_pixmap.isNull() )
   { layout->addWidget( new QLabel( buffer, this ), 0, Qt::AlignHCenter ); }
   else
   {
-    
+
     QHBoxLayout *h_layout( new QHBoxLayout() );
     layout->addLayout( h_layout, 0 );
     QLabel* label = new QLabel( this );
     label->setPixmap( question_pixmap );
     h_layout->addWidget( label, 0, Qt::AlignHCenter );
     h_layout->addWidget( new QLabel( buffer, this ), 1, Qt::AlignHCenter );
-    
+
   }
 
   // list
   list_ = new AnimatedTreeView( this );
   list_->setModel( &model_ );
   layout->addWidget( list_, 1 );
-  
+
   model_.add( FileCheck::Model::List( files.begin(), files.end() ) );
   list_->resizeColumns();
-  
+
   // button layout
-  QHBoxLayout *button_layout = new QHBoxLayout();     
+  QHBoxLayout *button_layout = new QHBoxLayout();
   button_layout->setSpacing(5);
   button_layout->setMargin(0);
   layout->addLayout( button_layout );
   button_layout->addStretch(1);
-  
+
   // resave button
   QPushButton* button;
   button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE ), "&Save Again", this ) );
   connect( button, SIGNAL( clicked() ), SLOT( _reSave() ) );
   button->setToolTip( "Save file again. Disc modifications will be lost" );
-    
+
   // save as button
   button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE_AS ), "Save &As", this ) );
   connect( button, SIGNAL( clicked() ), SLOT( _saveAs() ) );

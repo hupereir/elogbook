@@ -2,24 +2,24 @@
 // $Id$
 
 /******************************************************************************
- *                            
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>                
- *                            
- * This is free software; you can redistribute it and/or modify it under the      
- * terms of the GNU General Public License as published by the Free Software      
- * Foundation; either version 2 of the License, or (at your option) any later    
- * version.                                    
- *                             
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or            
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License            
- * for more details.                        
- *                             
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple       
- * Place, Suite 330, Boston, MA   02111-1307 USA                                      
- *                            
- *                            
+ *
+ * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+ *
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * software; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA   02111-1307 USA
+ *
+ *
  *******************************************************************************/
 
 /*!
@@ -60,13 +60,13 @@ PrintLogEntryDialog::PrintLogEntryDialog( QWidget* parent ):
   extension->layout()->setSpacing(5);
   setExtension( extension );
   setOrientation( Qt::Vertical );
-  
+
   QGroupBox* group_box = new QGroupBox( "logbook configuration", extension );
   group_box->setLayout( new QVBoxLayout() );
   group_box->layout()->setSpacing( 5 );
   group_box->layout()->setMargin( 5 );
   extension->layout()->addWidget( group_box );
-    
+
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_TITLE] = new QCheckBox( "Title", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_AUTHOR] = new QCheckBox( "Author", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_CREATION] = new QCheckBox( "Creation", group_box ) );
@@ -75,14 +75,14 @@ PrintLogEntryDialog::PrintLogEntryDialog( QWidget* parent ):
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_FILE] = new QCheckBox( "File", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_DIRECTORY] = new QCheckBox( "Attachment directory", group_box ) );
   group_box->layout()->addWidget( logbook_check_boxes_[Logbook::HTML_COMMENTS] = new QCheckBox( "Comments", group_box ) );
-      
-  
+
+
   group_box = new QGroupBox( "Entry configuration", extension );
   group_box->setLayout( new QVBoxLayout() );
   group_box->layout()->setSpacing( 5 );
   group_box->layout()->setMargin( 5 );
   extension->layout()->addWidget( group_box );
-  
+
   group_box->layout()->addWidget( entry_check_boxes_[LogEntry::HTML_TITLE] = new QCheckBox( "Title", group_box ) );
   group_box->layout()->addWidget( entry_check_boxes_[LogEntry::HTML_KEYWORD] = new QCheckBox( "Keyword", group_box ) );
   group_box->layout()->addWidget( entry_check_boxes_[LogEntry::HTML_CREATION] = new QCheckBox( "Creation", group_box ) );

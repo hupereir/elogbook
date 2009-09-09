@@ -4,24 +4,24 @@
 // $Id$
 
 /******************************************************************************
-*                        
-* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
-*                        
-* This is free software; you can redistribute it and/or modify it under the    
-* terms of the GNU General Public License as published by the Free Software    
-* Foundation; either version 2 of the License, or (at your option) any later   
-* version.                            
-*                         
-* This software is distributed in the hope that it will be useful, but WITHOUT 
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or        
-* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License        
-* for more details.                    
-*                         
-* You should have received a copy of the GNU General Public License along with 
-* software; if not, write to the Free Software Foundation, Inc., 59 Temple     
-* Place, Suite 330, Boston, MA  02111-1307 USA                          
-*                        
-*                        
+*
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+*
+* This is free software; you can redistribute it and/or modify it under the
+* terms of the GNU General Public License as published by the Free Software
+* Foundation; either version 2 of the License, or (at your option) any later
+* version.
+*
+* This software is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+* for more details.
+*
+* You should have received a copy of the GNU General Public License along with
+* software; if not, write to the Free Software Foundation, Inc., 59 Temple
+* Place, Suite 330, Boston, MA  02111-1307 USA
+*
+*
 *******************************************************************************/
 
 /*!
@@ -33,9 +33,9 @@
 */
 
 //! eLogbook help text
-static const QString HelpText[] = 
+static const QString HelpText[] =
 {
-  
+
   //_________________________________________________
   "Introduction",
   "<h2>Introduction</h2>"
@@ -46,7 +46,7 @@ static const QString HelpText[] =
   "<li>A basic text editor. Each text entry is tagged using a title, several keywords and its creation time. The user may add new entries, modify/delete existing entries. The time of the last modifications of existing entries is also stored for tagging purposes.</li>"
   "<li>A compact display of all entry tags to allow fast browsing of the entries whose text is to be edited.</li>"
   "<li>A basic search engine to select a subset of the existing entries according to their title/keyword or full text.</li>"
-  "<li>The possibility to attach files to the entries, for later editing. Attached file edition is based on the file type. Following types are supported: postscript, HTML and plain text. An <i>unknown</i> type is also used for all unsupported file types.</li>"   
+  "<li>The possibility to attach files to the entries, for later editing. Attached file edition is based on the file type. Following types are supported: postscript, HTML and plain text. An <i>unknown</i> type is also used for all unsupported file types.</li>"
   "</ul>"
   "<p>The text information are stored together with tags and attached file names/types in a collection of XML files. XML files are created automatically and store a finite number of entries to keep their size small and reduce the amount of disk access when saving modifications. A new file is generated each time the last filled file is full. The files are referred to in a <i>master</i> file which gets loaded first. </p>"
   "<p>The attached files are either copied or linked to a specific directory, whose name is also stored, to avoid irresponsible file deletion.</p>"
@@ -67,7 +67,7 @@ static const QString HelpText[] =
   "<p>An entry consists in a title and a keyword, to enable fast searching through the associated logbook; a text, stored in the logbook file; a collection of attachments whose corresponding file is stored in the logbook directory; a creation time stamp, referring to the time at which the entry was created and a modification time stamp referring to the time at which the entry was modified for the last time. These stamps are also used for fast searching through the logbook.</p>"
   "<h3>Attachments</h3>"
   "<p>An attachment consists in a file, stored in the logbook directory and a type, to enable the editing of the file using the correct application. At the moment plain text, HTML, URL, postscript and image files are supported. Other file types are handled as <i>unknown</i>. An attachment is always linked to a given logbook entry and may be explained or referred to in the entry text.</p>",
-  
+
   //_________________________________________________
   "Getting Started",
   "<h2>Getting Started</h2>"
@@ -90,8 +90,8 @@ static const QString HelpText[] =
   "<li>the list of entries that match the selected keyword;</li>"
   "<li>a search panel to select subsets of the logbook using various basic selection criteria.</li>"
   "</ul>"
-  "<p>For more detailed information on one of the previous frames, refer to the corresponding section in this help.</p>", 
-  
+  "<p>For more detailed information on one of the previous frames, refer to the corresponding section in this help.</p>",
+
    //_________________________________________________
   "File Menu",
   "<h2>File Menu</h2>"
@@ -113,12 +113,12 @@ static const QString HelpText[] =
   "<li><i>Close</i>, used to close the current window. If this is the main window, the application also exits. If the last logbook modifications have not been saved, the user is asked if he wants to save/discard these modifications before exiting.</li>"
   "<li><i>Exit</i>, used to exit the application. If the last logbook modifications have not been saved, the user is asked if he wants to save/discard these modifications before exiting.</li>"
   "</ul>",
-  
+
   //_________________________________________________
   "Settings Menu",
   "<h2>Settings Menu</h2>"
   "<p>The settings menu is located in the menu bar of both the main window and the entry edition windows and allows to open the application <i>Configuration</i> dialog.</p>",
-  
+
   //_________________________________________________
   "Window Menu",
   "<h2>Window Menu</h2>"
@@ -130,13 +130,13 @@ static const QString HelpText[] =
   "<li><i>Logbook statistics</i>, used to raise the <i>logbook statistics</i> dialog that displays information about the current logbook, such as the main and children files, the creation, modification and backup timestamps, the total number of entries and attachments as well as the number of entries per child file. This is a read-only dialog.</li>"
   "<li><i>Logbook information</i>, used to raise the <i>logbook information</i> dialog that displays editable information about the current logbook, such as its title, author, default attachment directory and comments.</li>"
   "</ul>",
-  
+
   //_________________________________________________
   "Help Menu",
   "<h2>Help Menu</h2>"
   "<p>The <i>Help</i> menu is located in the menu bar of both the main window and the entry edition windows. It gives access to this help; to information about the current version of <i>eLogbook</i> and the version of <i>Qt</i> that is used, and to a debugging menu that contains additional features used for maintenance and that the normal user should not need to access.</p>",
-  
-  //_________________________________________________  
+
+  //_________________________________________________
   "Keyword/Entry lists",
   "<h2>Keyword/Entry lists</h2>"
   "<p>Keyword/Entry lists consist in two lists.</p>"
@@ -146,7 +146,7 @@ static const QString HelpText[] =
   "<p>Keywords can be edited directly by clicking on a given keyword and waiting for it to become editable.</p>"
 
   "<h3>Entries</h3>"
-  "<p>The <i>entry list</i> is located to the right of the keyword list and displays basic information for the logbook entries associated the selected keyword such as: the entry title, its creation time and modification time as well as it author. A menu bar is located at the top of the list that allows to:</p>" 
+  "<p>The <i>entry list</i> is located to the right of the keyword list and displays basic information for the logbook entries associated the selected keyword such as: the entry title, its creation time and modification time as well as it author. A menu bar is located at the top of the list that allows to:</p>"
   "<ul>"
   "<li>create a new entry;</li>"
   "<li>edit all selected entries;</li>"
@@ -157,15 +157,15 @@ static const QString HelpText[] =
   "</ul>"
   "<p>The same actions are available in a menu when right-clicking in the list. Entries can be dragged and dropped in the keyword list to change their keyword. An entry gets edited in its dedicated Editor window by double-clicking on it in the list. Clicking twice on the title of an entry makes it editable.<p>",
 
-  //_________________________________________________  
+  //_________________________________________________
   "Entry selection",
   "<h2>Entry Selection</h2>"
   "<p>Some basic criteria can be used to select a fraction of the logbook entries to be displayed in the main window, namely: the entry title, keyword and text, the file name of its associated attachment, or the entry color. The color selection criteria is based on the color-name. Available color names are listed in the <i>Change Entry Color</i> menu obtained by right-clicking in the entry list or in the corresponding toolbar button.</p>"
   "<p>To choose the criteria to be used, one activates the corresponding toggle button at the bottom of the main window. The text entry located in the same frame is used for the selection. Selected are the entries whose title/keyword/text (depending on the activated toggle button) match the corresponding text.</p>"
   "<p>To perform the selection one must either press the <i>return</i> key or click on the <i>Find</i> button. To reset the selection and display all entries, one must either clean the text entry and press <i>return</i> key or click on the <i>Show All</i> button.</p>"
   "<p>By default a new selection always applies on top of previous selection. To apply it to the full selection, press <i>Show All</i> first, then <i>Find</i>.</p>",
-  
-  //_________________________________________________  
+
+  //_________________________________________________
   "Edition Window",
   "<h2>Edition Window</h2>"
   ""
@@ -185,29 +185,29 @@ static const QString HelpText[] =
   "<h3>Read-only edition windows</h3>"
   "<p>There is always only one editable edition window opened for each entry, this to avoid conflicts when modifying entries. However each edition window can be cloned into read-only windows, that do not allow to modify the entry. Such windows have an additional <i>lock</i> button in the toolbars. Clicking on this button will unlock the edition window and allow the user to modify the associated entry, but all other existing windows associated to the same entry will simultaneously become read-only.</p>"
   "<p>The read-only edition windows associated to a given entries are update automatically every time the entry modifications performed in the editable window are saved to the logbook. When an edition window state is changed from editable to read-only, it is checked whether the corresponding entry has been modified and the user is asked whether these modifications should be saved or discarded.</p>",
-  
-  //_________________________________________________  
+
+  //_________________________________________________
   "Attachments",
   "<h2>Attachments</h2>"
   "<p>An attachment consists in a file, stored in the logbook directory and a type, to enable the editing of the file using the correct application. An attachment is always linked to a given logbook entry and may be explained or referred to in the entry text.</p>"
-  
+
   "<h3>Creating a new attachment</h3>"
   "<p>Attachments are created in entry edition windows by clicking on the <i>create attachment</i> button in the toolbars or in the pop-up menu associated to the corresponding attachment list. A pop-up dialog is opened to specify the attachment source file or URL, the directory in which the attachment is to be saved, the attachment type, the action to be performed to store the attachment, and some comments associated to this attachment.</p>"
   "<p>At the moment, only plain text, HTML, URL, postscript and image files are supported. Other file types are handled as <i>unknown</i>. URL attachments are handled differently from the other attachment types, since they do not require the attachment to be stored on disk. When selecting this type, the destination directory and the copy action selection box are disabled, since the URL of the attachment is stored unchanged in the body of the logbook.</p>"
-  
+
   "<h3>Attachment lists</h3>"
   "<p>The list of existing attachments appear either in the corresponding entry edition windows, or in a separate <i>Attachment window</i> that can be opened via the <i>Window</i> menu. The first list only display the attachments associated to the current entry and allows the creation of new attachments or modifications of existing attachments whereas the second list displays all attachments available in the logbook but does not allow the creation of new attachments nor the modification of existing attachments.</p>"
-  
+
   "<h3>Displaying attachments</h3>"
   "<p>To display an existing attachment, on must either double-click on it in one of the attachment lists, or select the corresponding button in the associated pop-up menu. A dialog is then opened to select the action to be taken. Attachments can either be displayed using a third-party application associated to the attachment type or saved on disk locally. The second option is naturally not available for attachments of type URL.</p>"
-  
+
   "<h3>Editing attachments</h3>"
   "<p>The type of an existing attachment, its associated comments, or its URL can be modified by selecting <i>Edit attachment</i> in the pop-up menu associated to the attachment list.</p>"
-  
+
   "<h3>Deleting attachments</h3>"
   "<p>Existing attachments can be deleted by selecting <i>Delete attachment</i> in the pop-up menu associated to the attachment list. A pop-up dialog is then opened to select the action to be taken. The attachment can be either deleted from the list of attachments associated to the current entry or effectively deleted from the disk. The second option is available only for attachments that are not of type URL and the actual deletion from the disk is preformed only if no other entry in the logbook refer to this attachment.</p>",
-    
-  //_________________________________________________  
+
+  //_________________________________________________
   "Configuration Dialog",
   "<h2>Configuration dialog</h2>"
   "<p>The configuration dialog is opened via the preference menu located in the main menu bar and contains a list of tabs used to configure various features of the application. They are:</p>"
@@ -228,7 +228,7 @@ static const QString HelpText[] =
   "<h3>Spell-checking</h3>"
   "<p>The Spell-checking tab is available only if eLogbook was compiled with <i>aspell</i> support. It allows to select the default dictionary and filter used for the spell-checking and the <i>aspell</i> command that is used to load the list of available dictionaries and filters.</p>"
   "<h3>Misc</h3>"
-  "<p>the Misc tab allows to modify additional settings that don't enter the above categories. It covers tab emulation, paragraph highlighting and line-wrapping for the log-entry text edition window; case-sensitivity of the log-entry selection criteria, display of the menu bar in the entry edition windows (on by default) and visibility of eLogbook splash-screen at start-up.</p>",  
+  "<p>the Misc tab allows to modify additional settings that don't enter the above categories. It covers tab emulation, paragraph highlighting and line-wrapping for the log-entry text edition window; case-sensitivity of the log-entry selection criteria, display of the menu bar in the entry edition windows (on by default) and visibility of eLogbook splash-screen at start-up.</p>",
   0 };
 
 

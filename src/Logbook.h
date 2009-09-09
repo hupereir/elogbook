@@ -4,24 +4,24 @@
 // $Id$
 
 /******************************************************************************
- *                        
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
- *                        
- * This is free software; you can redistribute it and/or modify it under the     
- * terms of the GNU General Public License as published by the Free Software     
- * Foundation; either version 2 of the License, or (at your option) any later   
- * version.                            
- *                         
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or         
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License         
- * for more details.                    
- *                         
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple     
- * Place, Suite 330, Boston, MA   02111-1307 USA                          
- *                        
- *                        
+ *
+ * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+ *
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * software; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA   02111-1307 USA
+ *
+ *
  *******************************************************************************/
 
 /*!
@@ -54,30 +54,30 @@ class XmlTextFormatInfo;
    \class Logbook
    \brief log file parser based on xml
 */
-class Logbook:public QObject, public Counter, public BASE::Key 
+class Logbook:public QObject, public Counter, public BASE::Key
 {
- 
+
   Q_OBJECT
-   
-  public:   
-    
+
+  public:
+
   //! default string when no title given
-  static const QString LOGBOOK_NO_TITLE;       
-  
+  static const QString LOGBOOK_NO_TITLE;
+
   //! default string when no author given
-  static const QString LOGBOOK_NO_AUTHOR;     
-  
+  static const QString LOGBOOK_NO_AUTHOR;
+
   //! default string when no file given
-  static const QString LOGBOOK_NO_FILE;       
-  
+  static const QString LOGBOOK_NO_FILE;
+
   //! default string when no directory given
-  static const QString LOGBOOK_NO_DIRECTORY;   
-  
+  static const QString LOGBOOK_NO_DIRECTORY;
+
   //! max number of entries in logbook (make child logbook if larger)
-  enum { MAX_ENTRIES = 50 };         
-  
+  enum { MAX_ENTRIES = 50 };
+
   //! HTML flags
-  enum HtmlTag 
+  enum HtmlTag
   {
     HTML_TITLE = 1<<0,
     HTML_AUTHOR = 1<<1,
@@ -93,20 +93,20 @@ class Logbook:public QObject, public Counter, public BASE::Key
   };
 
   //! constructor from file
-  Logbook( const File& file = File("") );   
-   
+  Logbook( const File& file = File("") );
+
   //! destructor
-  virtual ~Logbook( void ); 
-  
+  virtual ~Logbook( void );
+
   //! read from file
-  /*! 
-    reads all xml based objects in the input file and chlids, 
+  /*!
+    reads all xml based objects in the input file and chlids,
     if any [recursive]
   */
   bool read( void );
 
   //! writes all xml based objects in given|input file, if any [recursive]
-  bool write( File file = File("") ); 
+  bool write( File file = File("") );
 
   //! synchronize logbook with remote
   /*!
@@ -115,394 +115,394 @@ class Logbook:public QObject, public Counter, public BASE::Key
     The second entry is the remote replacement
   */
   std::map<LogEntry*,LogEntry*> synchronize( const Logbook& logbook );
-  
+
   //! retrieve Xml parsing errors [recursive]
   XmlError::List xmlErrors( void ) const;
-  
+
   //! shortcut for logbook children list
   typedef std::list< Logbook* > List;
-  
+
   //!@name recursive accessors
   //@{
-  
+
   //! retrieves list of all child logbook [recursive]
   List children( void ) const;
-  
+
   //! retrieves first not full child.
   Logbook* latestChild( void );
-    
+
   //! retrieve all associated entries [recursive]
   BASE::KeySet<LogEntry> entries( void ) const;
-  
+
   //! retrieve all associated attachments [recursive]
   BASE::KeySet<Attachment> attachments( void ) const;
-    
+
   //! truncate recent entries list
   void truncateRecentEntriesList( const unsigned int& );
-  
+
   //! returns true if logbook is empty (no recursive entries found)
-  bool empty( void ) const 
+  bool empty( void ) const
   { return entries().empty(); }
-  
+
   //@}
-  
+
   //! remove empty children logbooks from list [recursive]
   void removeEmptyChildren( void );
-  
+
   //!@name recent entries
   //]{
-  
+
   //! recent entries
   std::vector<LogEntry*> recentEntries( void ) const;
-  
+
   //! recent entries
   void addRecentEntry( const LogEntry* );
-  
+
   //@}
-  
+
   //!@name attributes
   //@{
-  
+
   //! creation TimeStamp
-  TimeStamp creation( void ) const 
-  { return creation_; }     
-  
+  TimeStamp creation( void ) const
+  { return creation_; }
+
   //! creation TimeStamp
-  void setCreation( const TimeStamp& stamp ) 
-  { creation_ = stamp; }       
-  
+  void setCreation( const TimeStamp& stamp )
+  { creation_ = stamp; }
+
   //! modification TimeStamp
-  TimeStamp modification( void ) const 
-  { return modification_; } 
-  
+  TimeStamp modification( void ) const
+  { return modification_; }
+
   //! modification TimeStamp
   void setModification( const TimeStamp& stamp );
-  
+
   //! backup TimeStamp
-  TimeStamp backup( void ) const 
-  { return backup_; }       
-  
+  TimeStamp backup( void ) const
+  { return backup_; }
+
   //! backup TimeStamp
   void setBackup( const TimeStamp& stamp )
-  { backup_ = stamp; }         
-  
+  { backup_ = stamp; }
+
   //! saved TimeStamp
-  TimeStamp saved( void ) const 
-  { return saved_; }         
-  
+  TimeStamp saved( void ) const
+  { return saved_; }
+
   //! saved TimeStamp
   void setSaved( const TimeStamp& stamp )
-  { saved_ = stamp; }         
-  
+  { saved_ = stamp; }
+
   //! logbook filename
-  const File& file( void ) const 
-  { return file_; }         
-  
+  const File& file( void ) const
+  { return file_; }
+
   //! logbook filename
   void setFile( const File& );
-  
+
   //! parent logbook filename
-  const File& parentFile( void ) const 
-  { return parent_file_; }         
-  
+  const File& parentFile( void ) const
+  { return parent_file_; }
+
   //! parent logbook filename
   void setParentFile( const QString& file )
-  { parent_file_ = file; }     
-  
+  { parent_file_ = file; }
+
   //! logbook title
-  QString title( void ) const 
-  { return title_; }         
-  
+  QString title( void ) const
+  { return title_; }
+
   //! logbook title. Returns true if changed.
-  bool setTitle( const QString& title )     
-  { 
+  bool setTitle( const QString& title )
+  {
     if( title_ == title ) return false;
-    title_ = title; 
+    title_ = title;
     return true;
   }
-  
+
   //! logbook last author
-  QString author( void ) const 
-  { return author_; }       
-  
+  QString author( void ) const
+  { return author_; }
+
   //! logbook author. Returns true if changed.
-  bool setAuthor( const QString& author )   
-  { 
+  bool setAuthor( const QString& author )
+  {
     if( author_ == author ) return false;
-    author_ = author; 
+    author_ = author;
     return true;
-  } 
-  
+  }
+
   //! retrieves attachment comments
-  const QString& comments( void ) const 
-  { return comments_; }        
-  
+  const QString& comments( void ) const
+  { return comments_; }
+
   //! appends string to attachment comments. Returns true if changed.
-  bool setComments( const QString& comments ) 
-  {   
+  bool setComments( const QString& comments )
+  {
     if( comments == comments_ ) return false;
     comments_ = comments ;
     return true;
-  }  
-  
+  }
+
   //! logbook directory
-  const File& directory( void ) const 
-  { return directory_; }     
-  
+  const File& directory( void ) const
+  { return directory_; }
+
   //! checks if logbook directory is set, exists and is a directory
-  bool checkDirectory( void ) const   
+  bool checkDirectory( void ) const
   { return File( directory_ ).isDirectory(); }
-  
+
   //! logbook directory. Returns true if changed.
-  bool setDirectory( const File& directory ) 
-  { 
+  bool setDirectory( const File& directory )
+  {
     if( directory_ == directory ) return false;
-    directory_ = directory; 
+    directory_ = directory;
     return true;
-  }   
-  
-  /*! \brief 
+  }
+
+  /*! \brief
     number of entries in logbook as read from xml
     it is not supposed to be synchronized with current list of entries
   */
   const int& xmlEntries( void ) const
   { return xml_entries_; }
-  
-  /*! \brief 
+
+  /*! \brief
     number of entries in logbook as read from xml
     it is not supposed to be synchronized with current list of entries
     Returns true if changed.
   */
   bool setXmlEntries( const int& value )
-  { 
+  {
     if( xml_entries_ == value ) return false;
-    xml_entries_ = value ; 
+    xml_entries_ = value ;
     return true;
   }
-  
-  /*! \brief 
+
+  /*! \brief
     number of children in logbook as read from xml
     it is not supposed to be synchronized with current list of children
   */
   const int& xmlChildren( void ) const
-  { return xml_children_; }   
-  
-  /*! \brief 
+  { return xml_children_; }
+
+  /*! \brief
     number of children in logbook as read from xml
     it is not supposed to be synchronized with current list of children.
-    Returns true if changed.   
+    Returns true if changed.
   */
   bool setXmlChildren( const int& value )
-  { 
+  {
     if( xml_children_ == value ) return false;
-    xml_children_ = value; 
+    xml_children_ = value;
     return true;
-  }   
-  
+  }
+
   //@}
-  
+
   //! true if last backup is too old
-  bool needsBackup( void ) const;     
-  
+  bool needsBackup( void ) const;
+
   //! generate tagged backup filename
-  QString backupFilename( void ) const;   
-  
+  QString backupFilename( void ) const;
+
   //! html
   QDomElement htmlElement( QDomDocument& parent, const unsigned int& mask = HTML_ALL_MASK ) const;
-  
+
   //! sets logbook modified value
   void setModified( const bool& value );
-  
+
   //! sets logbook and children modified value [recursive]
   void setModifiedRecursive( bool value );
-  
+
   //! tells if logbook or children has been modified since last call [recursive]
-  bool modified( void ) const; 
-  
+  bool modified( void ) const;
+
   //!@name sort
   //@{
-  
+
   //! sort method enumeration
   enum SortMethod
-  { 
+  {
     //! sort LogEntry objects according to creation time
-    SORT_CREATION,     
-      
+    SORT_CREATION,
+
     //! sort LogEntry objects according to last modification time
     SORT_MODIFICATION,
-      
-    //! sort LogEntry objects according to title 
-    SORT_TITLE, 
-    
+
+    //! sort LogEntry objects according to title
+    SORT_TITLE,
+
     //! sort LogEntry objects according to keyword
     SORT_KEYWORD,
-    
+
     //! sort LogEntry objects according to author
     SORT_AUTHOR,
-    
+
     //! colors
     SORT_COLOR
-    
+
   };
-  
+
   //! Sort entries depending on the sort method
   class EntryLessFTor
   {
-    
+
     public:
-    
+
     //! constructor
     EntryLessFTor( const Logbook::SortMethod& sort_method, const int& order = 0 ):
       sort_method_( sort_method ),
       order_(order)
     {}
-      
+
     //! sort operator
     bool operator()( LogEntry* first, LogEntry* second ) const;
-      
+
     private:
-      
+
     //! sort method (defined a constructor)
-    Logbook::SortMethod sort_method_; 
-    
+    Logbook::SortMethod sort_method_;
+
     //! order
     int order_;
-    
+
   };
-  
-  /*! 
+
+  /*!
   changes sort method associated to oldest parent
   returns true if changed
   */
   bool setSortMethod( const SortMethod& sort_method );
-  
+
   //! retrieves current sort method associated to oldest parent
-  SortMethod sortMethod( void ) 
+  SortMethod sortMethod( void )
   { return sort_method_; }
 
   //! sort order
   bool setSortOrder( const int& order );
-  
+
   //! sort order
   const int& sortOrder( void ) const
   { return sort_order_; }
-  
+
   //@}
-  
+
   //! used to retrieve logbook associated to given file
   class SameFileFTor
   {
-    
+
     public:
-    
+
     //! constructor
     SameFileFTor( const QString& file ):
       file_( file )
       {}
-      
-      
+
+
     //! predicate
     bool operator() (const Logbook* logbook) const
     { return logbook && logbook->file() == file_; }
-    
+
     private:
-    
+
     //! predicted file
     QString file_;
-    
+
   };
-  
+
   signals:
-  
+
   //! message emission for logbook status during reading/writting
   void messageAvailable( const QString& message );
-  
+
   //! emit maximum progress
   /*! argument is the maximum number of entries to read */
   void maximumProgressAvailable( unsigned int );
-  
+
   //! emit progress when reading, saving
   /*! argument is the number of entries read since last signal */
   void progressAvailable( unsigned int );
-  
+
   private:
-  
+
   //! read recent entries
   void _readRecentEntries( const QDomElement& );
-  
+
   //! recent entries dom element
   QDomElement _recentEntriesElement( QDomDocument& ) const;
-  
+
   //! generate tagged backup filename
-  File _childFilename( const File& file, const int& child_number ) const;   
-  
+  File _childFilename( const File& file, const int& child_number ) const;
+
   //! list of pointers to logbook children
-  List children_; 
-  
+  List children_;
+
   //! true if at least one logbook entry have been modified/added/deleted until last save
-  bool modified_;       
-  
+  bool modified_;
+
   //! file from which the log book entries are read
-  File file_;       
-  
+  File file_;
+
   //! file of parent logbook, if any
   File parent_file_;
-  
-  //! directory where the attached files are read/saved 
-  File directory_;   
-  
+
+  //! directory where the attached files are read/saved
+  File directory_;
+
   //! title of the log book
-  QString title_;       
-  
+  QString title_;
+
   //! last user name who had access to the logbook
-  QString author_;     
-  
+  QString author_;
+
   //! comments
   QString comments_;
-  
+
   //! logbook creation time
-  TimeStamp creation_;     
-  
+  TimeStamp creation_;
+
   //! logbook last modification time
-  TimeStamp modification_; 
-  
+  TimeStamp modification_;
+
   //! logbook last backup time
-  TimeStamp backup_;       
-  
+  TimeStamp backup_;
+
   //! logbook last save time
-  TimeStamp saved_;         
-  
+  TimeStamp saved_;
+
   //! method used for LogEntry sort
-  SortMethod sort_method_;             
-  
+  SortMethod sort_method_;
+
   //! list of recent entries
   /*! creation time stamp of recent entries are stored */
   typedef std::list<TimeStamp> TimeStampList;
-  
+
   //! list of recent entries
   /*! creation time stamp of recent entries are stored */
   TimeStampList recent_entries_;
-  
+
   //! sort order
   int sort_order_;
-  
+
   //! number of entries in logbook as read from xml
-  /*!  \brief 
+  /*!  \brief
   number of entries in logbook as read from xml
   it is not supposed to be synchronized with current list of entries
   */
-  int xml_entries_;     
-  
+  int xml_entries_;
+
   //! number of children in logbook as read from xml
-  /*!  
+  /*!
   number of children in logbook as read from xml
   it is not supposed to be synchronized with current list of children
   */
   int xml_children_;
-  
+
   //! error when parsing xml file
   XmlError error_;
-  
+
 };
 
 #endif

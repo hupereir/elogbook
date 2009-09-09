@@ -94,7 +94,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   }
 
   //! deletes old logbook, if any. Set the new one an display
-  /* 
+  /*
   note: don't pass a const File& here cause it crashes the application
   when the file that is passed is from the currently opened logbook,
   since the later gets deleted in the method and the file is being re-used
@@ -103,7 +103,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! check if logbook needs a backup, ask for it if needed
   virtual void checkLogbookBackup( void );
-  
+
   //! deletes old logbook, if any
   virtual void reset( void );
 
@@ -142,43 +142,43 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! return keyword list
   AnimatedTreeView& keywordList( void ) const
   { return *keyword_list_; }
-   
+
   //! log entry list
   virtual AnimatedTreeView& logEntryList( void ) const
   { return *entry_list_; }
-  
+
   //! current keyword
   Keyword currentKeyword( void ) const;
-   
+
   //! file checker
   FileCheck& fileCheck( void ) const
   { return *file_check_; }
-  
+
   //!@name toolbars
   //@{
-  
+
   //! keyword toolbar
   CustomToolBar& keywordToolBar( void ) const
-  { 
+  {
     assert( keyword_toolbar_ );
     return *keyword_toolbar_;
   }
-  
+
   //! entry toolbar
   CustomToolBar& entryToolBar( void ) const
-  { 
+  {
     assert( entry_toolbar_ );
     return *entry_toolbar_;
-  }  
+  }
   //@}
-    
-  //!@name actions 
+
+  //!@name actions
   //@{
-  
+
   //! uniconify window
   QAction& uniconifyAction( void ) const
   { return *uniconify_action_; }
-  
+
   //! new keyword action
   QAction& newKeywordAction( void ) const
   { return *new_keyword_action_; }
@@ -190,11 +190,11 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! delete keyword action
   QAction& deleteKeywordAction( void ) const
   { return *delete_keyword_action_; }
-  
+
   //! find entries action
   QAction& findEntriesAction( void ) const
   { return *find_entries_action_; }
-  
+
   //! new entry action
   QAction& newEntryAction( void ) const
   { return *new_entry_action_; }
@@ -222,19 +222,19 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! create new logbook
   QAction& newLogbookAction( void ) const
   { return *new_logbook_action_; }
-  
+
   //! open existing logbook
   QAction& openAction( void ) const
   { return *open_action_; }
-  
+
   //! synchronize logbooks
   QAction& synchronizeAction( void ) const
   { return *synchronize_action_; }
-  
+
   //! reorganize logbook
   QAction& reorganizeAction( void ) const
   { return *reorganize_action_; }
-  
+
   //! save logbook
   QAction& saveAction( void ) const
   { return *save_action_; }
@@ -254,7 +254,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! revert logbook to saved version
   QAction& revertToSaveAction( void ) const
   { return *revert_to_save_action_; }
-  
+
   //! convert logbook to html
   QAction& printAction( void ) const
   { return *print_action_; }
@@ -262,7 +262,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! logbook information
   QAction& logbookInformationsAction( void ) const
   { return *logbook_informations_action_; }
-  
+
   //! logbook information
   QAction& logbookStatisticsAction( void ) const
   { return *logbook_statistics_action_; }
@@ -270,17 +270,17 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! close editionwindows
   QAction& closeFramesAction( void ) const
   { return *close_frames_action_; }
-  
+
   //! show duplicates
   QAction& showDuplicatesAction( void ) const
   { return *show_duplicates_action_; }
-  
-  //! monitored files 
+
+  //! monitored files
   QAction& monitoredFilesAction( void ) const
   { return *monitored_files_action_; }
-  
+
   //@}
-  
+
   signals:
 
   //! emmited when a message is available from logbook
@@ -306,59 +306,59 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! show all entries
   virtual void showAllEntries( void );
-    
+
   protected:
 
   //! close event
   virtual void closeEvent( QCloseEvent* );
-  
+
   //! timer event
   virtual void timerEvent( QTimerEvent* );
 
   //! context menu event [overloaded]
   virtual void contextMenuEvent( QContextMenuEvent* );
-  
+
   //! install actions
   virtual void _installActions( void );
-  
+
   //! keyword model
   KeywordModel& _keywordModel( void )
   { return keyword_model_; }
-  
+
   //! keyword model
   const KeywordModel& _keywordModel( void ) const
   { return keyword_model_; }
- 
+
   //! log entry model
   LogEntryModel& _logEntryModel( void )
   { return entry_model_; }
-    
+
   //! clear list and reinitialize from logbook entries
   virtual void _resetLogEntryList( void );
 
   //! clear list and reinitialize from logbook entries
   virtual void _resetKeywordList( void );
-  
+
   //! load colors (from current logbook)
-  void _loadColors( void );    
+  void _loadColors( void );
 
   private slots:
-  
+
   //! configuration
   void _updateConfiguration( void );
 
   //! files modified
   void _filesModified( FileCheck::DataSet );
-  
+
   //! splitter moved
   void _splitterMoved( void );
-  
+
   //! create a new logbook
   void _newLogbook( void );
 
   //! save logbook and children whether they are modified or not
   void _saveForced( void );
-  
+
   /*! \brief
     save current logbook with a given filename
     returns true if logbook was saved
@@ -395,7 +395,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! find entries
   void _findEntries( void ) const;
-  
+
   //! create new entry
   virtual void _newEntry( void );
 
@@ -407,109 +407,109 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! show EditionWindow associated to a given name
   virtual void _displayEntry( LogEntry* );
-  
+
   //! rename entry with current title
   virtual void _changeEntryTitle( LogEntry*, QString );
 
   //! change selected entries color
   virtual void _changeEntryColor( QColor );
-  
+
   //! create new keyword
   void _newKeyword( void );
-  
+
   //! delete keyword from keyword list using dialog
   void _deleteKeyword( void );
 
   //! change selected entries keyword using dialog
-  /*! 
-  this is triggered by the rename keyword action from 
+  /*!
+  this is triggered by the rename keyword action from
   the keyword list
   */
   void _renameKeyword( void );
 
   //! rename keyword for all entries that match old keyword.
-  /*! 
+  /*!
   this is triggered by drag and drop in the keyword list,
   by renaming a keyword directly from the keyword list,
   or by deleting a keyword in the list, and moving entries to the parent.
   It is also called by the renameKeyword slot above.
   */
   void _renameKeyword( Keyword old_keyword, Keyword new_keyword, bool update_selection = true );
-  
+
   //! rename keyword for selected entries using dialog
-  /*! 
+  /*!
   this is triggered by the rename entry keyword action in the
   logEntry list.
   */
   void _renameEntryKeyword( void );
-  
+
   //! change selected entries keyword using argument
-  /*! 
+  /*!
   this is triggered by drag and drop from the logEntry list
-  to the keyword list, and it is also called by the slot above 
+  to the keyword list, and it is also called by the slot above
   */
   void _renameEntryKeyword( Keyword new_keyword, bool update_selection = true );
-  
+
   //! keyword selection changed
   void _keywordSelectionChanged( const QModelIndex& );
-    
+
   //! update keyword-list related actions
   void _updateKeywordActions( void );
-  
+
   //! update entry-list related actions
   void _updateEntryActions( void );
-  
+
   //! create HTML file from logbook
   virtual void _print( void );
-  
+
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( void )
   { _storeSortMethod( _logEntryModel().sortColumn(), _logEntryModel().sortOrder() ); }
 
   //! store sorting method when changed via list header
   virtual void _storeSortMethod( int, Qt::SortOrder );
- 
+
   //! item clicked
   virtual void _entryItemClicked( const QModelIndex& index );
-      
+
   //! activare item
   void _entryItemActivated( const QModelIndex& index );
-    
+
   //! item data changed
   void _entryDataChanged( const QModelIndex& index );
- 
+
   //! edit entry title
   void _startEntryEdition( void );
- 
+
   //! store selected jobs in model
   void _storeSelectedEntries( void );
 
   //! restore selected jobs from model
   void _restoreSelectedEntries( void );
- 
+
   //! store selected jobs in model
   void _storeSelectedKeywords( void );
 
   //! restore selected jobs from model
   void _restoreSelectedKeywords( void );
- 
+
   //! store expanded jobs in model
   void _storeExpandedKeywords( void );
 
   //! restore expanded jobs from model
   void _restoreExpandedKeywords( void );
-    
+
   //! monitored files
   void _showMonitoredFiles( void );
 
   private:
-  
+
   //! returns true if logbook has modified entries
   bool _hasModifiedEntries( void ) const;
 
   //! perform autoSave
   void _autoSave( void );
-  
+
   //! check modified entries
   AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditionWindow>, const bool& ) const;
 
@@ -524,81 +524,81 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! keyword model
   KeywordModel keyword_model_;
-  
+
   //! entry model
   LogEntryModel entry_model_;
-  
+
   //! logEntry list
   AnimatedTreeView* entry_list_;
 
   //! file check
   FileCheck* file_check_;
-  
+
   //! local TreeView to store size hint
   class KeywordList: public AnimatedTreeView
   {
-    
+
     public:
-        
+
     //! constructor
     KeywordList( QWidget* parent = 0 ):
       AnimatedTreeView( parent ),
       default_width_( -1 )
-    {} 
-   
+    {}
+
     //! default size
     void setDefaultWidth( const int& );
-    
+
     //! default width
     const int& defaultWidth( void ) const
     { return default_width_; }
-    
-  
+
+
     //! size
-    QSize sizeHint( void ) const;  
-    
+    QSize sizeHint( void ) const;
+
     private:
-    
+
     //! default width;
     int default_width_;
-    
+
   };
-  
+
   //! Keyword list
   KeywordList *keyword_list_;
 
   //! color menu
   ColorMenu* color_menu_;
-  
+
   //! autoSaveTimer
   QBasicTimer autosave_timer_;
 
   //! autosave interval
   int autosave_delay_;
-    
+
   //!@name item edition
   //@{
-  
+
   //! edition timer
   QBasicTimer edition_timer_;
 
   //! edit_item delay (ms)
   int edition_delay_;
-  
+
   //@}
 
   //! maximum number of recent entries
   unsigned int max_recent_entries_;
-  
+
   //! associated logbook
   Logbook* logbook_;
 
   //! last directory in which logbook was opened, saved.
   File working_directory_;
-  
+
   //! ignore file modified warnings if true
   bool ignore_warnings_;
-  
+
   //! ask entries for confirmation before saving
   bool confirm_entries_;
 
@@ -606,59 +606,59 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
   //@{
   //! keywords
   CustomToolBar *keyword_toolbar_;
-  
+
   //! entries
   CustomToolBar *entry_toolbar_;
   //@}
-  
+
   //!@name actions
   //@{
-  
+
   //! uniconify action
   QAction* uniconify_action_;
-  
+
   //! add new keyword
   QAction* new_keyword_action_;
- 
+
   //! edit keyword
   QAction* edit_keyword_action_;
-  
+
   //! delete keyword
   QAction* delete_keyword_action_;
-  
+
   //! find entries
   QAction* find_entries_action_;
-  
+
   //! new entry
   QAction* new_entry_action_;
-  
+
   //! edit entry
   QAction* edit_entry_action_;
 
   //! edit entry title
   QAction* edit_entry_title_action_;
-  
+
   //! delete entry
   QAction* delete_entry_action_;
-  
+
   //! change selected entries color
   QAction* entry_color_action_;
-  
+
   //! change selected entries keyword
   QAction* entry_keyword_action_;
-  
+
   //! create new logbook
   QAction* new_logbook_action_;
-  
+
   //! open existing logbook
   QAction* open_action_;
-  
+
   //! synchronize logbooks
   QAction* synchronize_action_;
-  
+
   //! reorganize logbook
   QAction* reorganize_action_;
-  
+
   //! save logbook
   QAction* save_action_;
 
@@ -673,34 +673,34 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! revert logbook to saved version
   QAction* revert_to_save_action_;
-  
+
   //! convert logbook to html
   QAction* print_action_;
 
   //! logbook information
   QAction* logbook_informations_action_;
-  
+
   //! logbook information
   QAction* logbook_statistics_action_;
 
   //! close editionwindows
   QAction* close_frames_action_;
-  
+
   //! show duplicates
   QAction* show_duplicates_action_;
-  
+
   //! show monitored files
   QAction* monitored_files_action_;
-    
+
   //@}
-      
+
   //! resize timer
   /*! needed to store Keyword list width */
   QBasicTimer resize_timer_;
-  
+
   //! drag timer
   QBasicTimer drag_timer_;
-  
+
 };
 
 #endif

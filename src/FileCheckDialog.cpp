@@ -47,33 +47,33 @@ FileCheckDialog::FileCheckDialog( QWidget* parent ):
   Debug::Throw( "FileCheckDialog::FileCheckDialog.\n" );
   setWindowTitle( "monitored files" );
   setOptionName( "FILE_CHECK_DIALOG" );
-  
+
   // custom list display
   mainLayout().addWidget( list_ = new TreeView( this ) );
   _list().setModel( &model_ );
   _list().setSelectionMode( QAbstractItemView::NoSelection );
-       
+
 //   // mask
-//   unsigned int mask( 
+//   unsigned int mask(
 //     (1<<FileRecordModel::ICON)|
 //     (1<<FileRecordModel::FILE)|
 //     (1<<FileRecordModel::PATH ));
 //   int class_column( model_.findColumn( "class_name" ) );
 //   if( class_column >= 0 ) mask |= (1<<class_column);
 //   _list().setMask( mask );
-//   
+//
 //   // sorting
 //   _list().header()->setSortIndicator( FileRecordModel::FILE, Qt::AscendingOrder );
-  
+
   // add options
   _list().setOptionName( "FILE_CHECK_LIST" );
-  
+
 }
 
 //________________________________________________________
 void FileCheckDialog::setFiles( const QStringList& files )
 {
-  
+
   Debug::Throw( "FileCheckDialog::setFiles.\n" );
   FileRecordModel::List records;
   for( QStringList::const_iterator iter = files.begin(); iter != files.end(); iter++ )
@@ -81,6 +81,6 @@ void FileCheckDialog::setFiles( const QStringList& files )
   model_.set( records );
 
   _list().updateMask();
-  _list().resizeColumns();  
+  _list().resizeColumns();
 
 }

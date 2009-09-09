@@ -4,24 +4,24 @@
 // $Id$
 
 /******************************************************************************
- *                            
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>                
- *                            
- * This is free software; you can redistribute it and/or modify it under the      
- * terms of the GNU General Public License as published by the Free Software      
- * Foundation; either version 2 of the License, or (at your option) any later    
- * version.                                    
- *                             
- * This software is distributed in the hope that it will be useful, but WITHOUT 
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or            
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License            
- * for more details.                        
- *                             
- * You should have received a copy of the GNU General Public License along with 
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple       
- * Place, Suite 330, Boston, MA   02111-1307 USA                                      
- *                            
- *                            
+ *
+ * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+ *
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ *
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * software; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA   02111-1307 USA
+ *
+ *
  *******************************************************************************/
 
 /*!
@@ -44,12 +44,12 @@
 //! new attachment popup dialog
 class PrintLogEntryDialog: public PrintDialog
 {
-  
+
   public:
-      
+
   //! constructor
   PrintLogEntryDialog( QWidget* parent );
-  
+
   //! destructor
   virtual ~PrintLogEntryDialog( void )
   {}
@@ -58,7 +58,7 @@ class PrintLogEntryDialog: public PrintDialog
   void setLogbookMask( const unsigned int& mask )
   {
     for( CheckBoxMap::iterator iter = logbook_check_boxes_.begin(); iter != logbook_check_boxes_.end(); iter++ )
-    iter->second->setChecked( mask & iter->first );  
+    iter->second->setChecked( mask & iter->first );
   }
 
   //! mask
@@ -85,18 +85,18 @@ class PrintLogEntryDialog: public PrintDialog
     if( iter->second->isChecked() ) out |= iter->first;
     return out;
   }
-        
+
   private:
-  
+
   //! map mask bits to checkboxes
   typedef std::map<unsigned int, QCheckBox*> CheckBoxMap;
-      
+
   //! checkboxes
   CheckBoxMap logbook_check_boxes_;
-  
+
   //! checkboxes
   CheckBoxMap entry_check_boxes_;
-        
+
 };
 
 #endif

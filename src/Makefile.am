@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = foreign
 EXTRA_DIST = elogbook.rc src.pro elogbook-common.pro elogbook.pro copy_logbook.pro synchronize_logbook.pro pixmaps.qrc
 
-if WITH_ASPELL 
+if WITH_ASPELL
 INCLUDES = \
   -I$(aspell_includes) \
   -I$(qt_includes) \
@@ -34,7 +34,7 @@ CXXFLAGS = @CXXFLAGS@
 noinst_LIBRARIES = libelogbook.a
 bin_PROGRAMS = elogbook copy_logbook synchronize_logbook
 
-if WITH_ASPELL 
+if WITH_ASPELL
 libraries = \
   -L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork \
   -L$(aspell_libraries) -laspell  \

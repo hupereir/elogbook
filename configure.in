@@ -1,16 +1,16 @@
 AC_INIT(configure.in)
 AC_PROG_CXX
 AC_PROG_LIBTOOL
-AM_INIT_AUTOMAKE(elogbook, qt4_1.6.6)
+AM_INIT_AUTOMAKE(elogbook, qt4_1.6.7)
 CXXFLAGS="-Wall -O2 -Wno-non-virtual-dtor"
 
 dnl *********************************************
 dnl external programs
 dnl *********************************************
-AC_PATH_PROG(QEDIT,     qedit,      qedit) 
-AC_PATH_PROG(KONQUEROR, konqueror,  konqueror) 
-AC_PATH_PROG(KUICKSHOW, kuickshow,  kuickshow) 
-AC_PATH_PROG(GV,        kghostview, kghostview) 
+AC_PATH_PROG(QEDIT,     qedit,      qedit)
+AC_PATH_PROG(KONQUEROR, konqueror,  konqueror)
+AC_PATH_PROG(KUICKSHOW, kuickshow,  kuickshow)
+AC_PATH_PROG(GV,        kghostview, kghostview)
 
 dnl *********************************************
 dnl aspell
@@ -19,8 +19,8 @@ AC_PATH_PROG(ASPELL,    aspell,    aspell)
 
 dnl ****************
 dnl set aspell directory
-AC_ARG_WITH( aspell-dir,         
-  [ --with-aspell-dir=path    Path to aspell directory /usr ], 
+AC_ARG_WITH( aspell-dir,
+  [ --with-aspell-dir=path    Path to aspell directory /usr ],
   aspell_dir=$withval, aspell_dir= )
 
 if test "$aspell_dir" = ""; then
@@ -29,7 +29,7 @@ fi
 
 dnl ************************
 dnl set aspell library directory
-AC_ARG_WITH(qt-libraries,         
+AC_ARG_WITH(qt-libraries,
   [ --with-aspell-libraries=path    Path to aspell libraries directory /usr/lib ],
   aspell_libraries=$withval, aspell_libraries=)
 
@@ -39,7 +39,7 @@ fi
 
 dnl ************************
 dnl set aspell include directory
-AC_ARG_WITH(aspell-includes,         
+AC_ARG_WITH(aspell-includes,
   [ --with-aspell-includes=path    Path to aspell includes directory /usr/include ],
   aspell_includes=$withval, aspell_includes=)
 
@@ -85,8 +85,8 @@ dnl *********************************************
 
 dnl ****************
 dnl set Qt directory
-AC_ARG_WITH( qt-dir,         
-  [ --with-qt-dir=path    Path to Qt directory /usr/lib/qt4 ], 
+AC_ARG_WITH( qt-dir,
+  [ --with-qt-dir=path    Path to Qt directory /usr/lib/qt4 ],
   qt_dir=$withval, qt_dir= )
 
 if test "$qt_dir" = ""; then
@@ -95,7 +95,7 @@ fi
 
 dnl ************************
 dnl set Qt library directory
-AC_ARG_WITH(qt-libraries,         
+AC_ARG_WITH(qt-libraries,
   [ --with-qt-libraries=path    Path to Qt libraries directory /usr/lib/qt4/lib ],
   qt_libraries=$withval, qt_libraries=)
 
@@ -105,7 +105,7 @@ fi
 
 dnl ************************
 dnl set Qt include directory
-AC_ARG_WITH(qt-includes,         
+AC_ARG_WITH(qt-includes,
   [ --with-qt-includes=path    Path to Qt includes directory /usr/lib/qt4/include ],
   qt_includes=$withval, qt_includes=)
 
@@ -115,7 +115,7 @@ fi
 
 dnl *********************
 dnl set Qt bin directory
-AC_ARG_WITH(qt-bin,         
+AC_ARG_WITH(qt-bin,
   [ --with-qt-bin=path    Path to Qt bin directory /usr/lib/qt3/bin ],
   qt_bin=$withval, qt_bin=)
 

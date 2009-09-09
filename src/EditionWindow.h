@@ -83,7 +83,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   public:
 
   typedef AnimatedLineEditor Editor;
-    
+
   //! creator
   EditionWindow( QWidget* parent, bool read_only = true );
 
@@ -118,17 +118,17 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //!@name active editor
   //@{
-  
+
   //! retrieve active display
   AnimatedTextEditor& activeEditor( void )
   { return *active_editor_; }
-  
+
   //! retrieve active display
   const AnimatedTextEditor& activeEditor( void ) const
   { return *active_editor_; }
 
   //@}
-  
+
   //! check if this editor is read_only or not
   const bool& isReadOnly( void ) const
   { return read_only_; }
@@ -138,7 +138,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! color menu
   void setColorMenu( ColorMenu* );
-  
+
   //! closed flag
   const bool& isClosed( void ) const
   { return closed_; }
@@ -191,14 +191,14 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     { return !frame->isClosed(); }
 
   };
-  
+
   //!@name actions
   //@{
 
   //! new entry action
   QAction& newEntryAction( void ) const
   { return *new_entry_action_; }
-  
+
   //! previous entry action
   QAction& previousEntryAction( void ) const
   { return *previous_entry_action_; }
@@ -206,33 +206,33 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! next entry action
   QAction& nextEntryAction( void ) const
   { return *next_entry_action_; }
-  
+
   //! save
   QAction& saveAction( void ) const
   { return *save_action_; }
 
-  #if WITH_ASPELL  
+  #if WITH_ASPELL
   //! check spelling of current entry
   QAction& spellCheckAction( void ) const
   { return *spellcheck_action_; }
   #endif
-  
+
   //! entry information
   QAction& entryInfoAction( void ) const
   { return *entry_info_action_; }
-  
+
   //! view html
   QAction& printAction( void ) const
   { return *print_action_; }
-  
+
   //! split view horizontal
   QAction& splitViewHorizontalAction( void ) const
   { return *split_view_horizontal_action_; }
-  
+
   //! split view vertical
   QAction& splitViewVerticalAction( void ) const
   { return *split_view_vertical_action_; }
-  
+
   //! split view vertical
   QAction& cloneWindowAction( void ) const
   { return *clone_window_action_; }
@@ -240,19 +240,19 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! close view
   QAction& closeAction( void ) const
   { return *close_action_; }
-  
+
   //! uniconify
   QAction& uniconifyAction( void ) const
-  { return *uniconify_action_; } 
+  { return *uniconify_action_; }
 
   //@}
 
   //! close view
   /*! Ask for save if view is modified */
   void _closeEditor( AnimatedTextEditor& );
-  
+
   //! change active display manualy
-  void _setActiveEditor( AnimatedTextEditor& ); 
+  void _setActiveEditor( AnimatedTextEditor& );
 
   protected:
 
@@ -299,7 +299,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! clone editor
   void _cloneWindow( void );
-  
+
   //! view current entry as HTML
   void _print( void );
 
@@ -314,7 +314,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! update (enable/disable) save action
   void _updateSaveAction( void );
-  
+
   /*!
     \brief update (enable/disable) undo/redo action
     based on the widget that currently has focus
@@ -341,9 +341,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
     BASE::KeySet< AnimatedTextEditor > editors( this );
     if( editors.size() > 1 ) _closeEditor( activeEditor() );
-    else close();    
+    else close();
   }
-  
+
   //! clone current file
   void _splitView( void )
   { _splitView( Qt::Vertical ); }
@@ -355,15 +355,15 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! clone current file horizontal
   void _splitViewVertical( void )
   { _splitView( Qt::Vertical ); }
-  
+
   //! display focus changed
-  void _displayFocusChanged( TextEditor* );  
+  void _displayFocusChanged( TextEditor* );
 
   //! overwrite mode changed
   void _modifiersChanged( unsigned int );
-  
-  private:  
-  
+
+  private:
+
   //! install actions
   void _installActions( void );
 
@@ -372,15 +372,15 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! split view
   AnimatedTextEditor& _splitView( const Qt::Orientation& );
-  
+
   //! create new splitter
   QSplitter& _newSplitter( const Qt::Orientation&  );
-  
+
   //! create new TextEditor
   AnimatedTextEditor& _newTextEditor( QWidget* parent );
 
   //@}
-  
+
   //! display cursor position
   void _displayCursorPosition( const TextPosition& position );
 
@@ -393,7 +393,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     assert( menu_ );
     return *menu_;
   }
-  
+
   //! update text Widget from current entry
   void _displayText( void );
 
@@ -403,13 +403,13 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   //! true if status bar is set
   bool _hasStatusBar( void ) const
   { return (bool) statusbar_; }
-  
+
   //! if true, LogEntry associated to EditionWindow cannot be modified
   bool read_only_;
 
   //! list of buttons to disactivate in case of read-only
   typedef std::vector< QAction* > ActionList;
-  
+
   //! list of buttons to disactivate in case of read-only
   ActionList read_only_actions_;
 
@@ -424,14 +424,14 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
   CustomToolBar* lock_;
 
   //@}
-  
+
   //! local QSplitter object, derived from Counter
   /*! helps keeping track of how many splitters are created/deleted */
   class LocalSplitter: public QSplitter, public Counter
   {
-    
+
     public:
-    
+
     //! constructor
     LocalSplitter( QWidget* parent ):
       QSplitter( parent ),
@@ -441,12 +441,12 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! destructor
     virtual ~LocalSplitter( void )
     { Debug::Throw( "LocalSplitter::~LocalSplitter.\n" ); }
-    
+
   };
 
   //! main widget (that contains first editor)
   QWidget *main_;
-  
+
   //! titlebar layout
   QHBoxLayout* title_layout_;
 
@@ -468,15 +468,15 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! color
     void setColor( const QColor& color );
-    
+
     //! size hint
     QSize sizeHint( void ) const;
-    
+
     //! size hint
     QSize minimumSizeHint( void ) const;
 
     protected:
-    
+
     //! paint event
     void paintEvent( QPaintEvent* );
 
@@ -496,7 +496,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! menu
   Menu* menu_;
-  
+
   //!@name actions
   //@{
 
@@ -508,7 +508,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! new entry
   QAction* new_entry_action_;
-  
+
   //! previous entry action
   QAction* previous_entry_action_;
 
@@ -517,36 +517,36 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
   //! save
   QAction* save_action_;
-  
+
   #if WITH_ASPELL
   QAction* spellcheck_action_;
   #endif
-  
+
   //! entry information
   QAction* entry_info_action_;
-  
+
   //! view html
   QAction* print_action_;
-  
+
   //! split view horizontal
   QAction* split_view_horizontal_action_;
-  
+
   //! split view vertical
   QAction* split_view_vertical_action_;
 
   //! new window action
   QAction* clone_window_action_;
-  
+
   //! close view (or window) action
   QAction* close_action_;
-  
+
   //! uniconify
   QAction* uniconify_action_;
-  
+
   //@}
-  
+
   QBasicTimer resize_timer_;
-  
+
 };
 
 #endif

@@ -1,24 +1,24 @@
 // $Id$
 
 /******************************************************************************
-*                        
-* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
-*                        
-* This is free software; you can redistribute it and/or modify it under the    
-* terms of the GNU General Public License as published by the Free Software    
-* Foundation; either version 2 of the License, or (at your option) any later  
-* version.                            
-*                         
-* This software is distributed in the hope that it will be useful, but WITHOUT 
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or        
-* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License        
-* for more details.                    
-*                         
-* You should have received a copy of the GNU General Public License along with 
-* software; if not, write to the Free Software Foundation, Inc., 59 Temple    
-* Place, Suite 330, Boston, MA  02111-1307 USA                          
-*                        
-*                        
+*
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+*
+* This is free software; you can redistribute it and/or modify it under the
+* terms of the GNU General Public License as published by the Free Software
+* Foundation; either version 2 of the License, or (at your option) any later
+* version.
+*
+* This software is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+* for more details.
+*
+* You should have received a copy of the GNU General Public License along with
+* software; if not, write to the Free Software Foundation, Inc., 59 Temple
+* Place, Suite 330, Boston, MA  02111-1307 USA
+*
+*
 *******************************************************************************/
 
 /*!
@@ -62,11 +62,11 @@ Attachment::Attachment( const QString orig, const AttachmentType& type ):
   size_str_( NO_SIZE ),
   is_link_( UNKNOWN ),
   is_valid_( false )
-{ 
+{
   Debug::Throw( "Attachment::Attachment.\n" );
-  setType( type ); 
+  setType( type );
 }
-  
+
 //_______________________________________
 Attachment::Attachment( const QDomElement& element):
   Counter( "Attachment" ),
@@ -80,7 +80,7 @@ Attachment::Attachment( const QDomElement& element):
   is_valid_( false )
 {
   Debug::Throw() << "Attachment::Attachment.\n";
-  
+
    // parse attributes
   QDomNamedNodeMap attributes( element.attributes() );
   for( unsigned int i=0; i<attributes.length(); i++ )
@@ -89,37 +89,37 @@ Attachment::Attachment( const QDomElement& element):
     if( attribute.isNull() ) continue;
     QString name( attribute.name() );
     QString value( attribute.value() );
-    
+
     if( name == XML::SOURCE_FILE ) _setSourceFile( XmlString( value ).toText() );
     else if( name == XML::TYPE ) setType( AttachmentType::get( value ) );
     else if( name == XML::FILE ) _setFile( XmlString( value ).toText() );
     else if( name == XML::COMMENTS ) setComments( XmlString( value ).toText() );
     else if( name == XML::VALID ) setIsValid( (bool) value.toInt() );
-    else if( name == XML::IS_LINK ) setIsLink( (LinkState) value.toInt() );  
+    else if( name == XML::IS_LINK ) setIsLink( (LinkState) value.toInt() );
     else Debug::Throw(0) << "unrecognized attachment attribute: \"" << name << "\"\n";
   }
-  
+
   // parse children elements
-  for(QDomNode child_node = element.firstChild(); !child_node.isNull(); child_node = child_node.nextSibling() ) 
+  for(QDomNode child_node = element.firstChild(); !child_node.isNull(); child_node = child_node.nextSibling() )
   {
-    QDomElement child_element = child_node.toElement(); 
+    QDomElement child_element = child_node.toElement();
     QString tag_name( child_element.tagName() );
     if( tag_name == XML::COMMENTS ) setComments( XmlString( child_element.text() ).toText() );
     else if( tag_name == XML::CREATION ) _setCreation( XmlTimeStamp( child_element ) );
-    else if( tag_name == XML::MODIFICATION ) _setModification( XmlTimeStamp( child_element ) );      
+    else if( tag_name == XML::MODIFICATION ) _setModification( XmlTimeStamp( child_element ) );
     else Debug::Throw(0) << "Attachment::Attachment - unrecognized child " << child_element.tagName() << ".\n";
   }
-  
+
   // by default all URL attachments are valid, provided that the SOURCE_FILE is not empty
   if( type() == AttachmentType::URL && !sourceFile().isEmpty() )
   { setIsValid( true ); }
-  
+
 }
 
 //____________________________________________________
 QDomElement Attachment::domElement( QDomDocument& parent ) const
 {
-  
+
   Debug::Throw( "Attachment::DomElement.\n" );
   QDomElement out( parent.createElement( XML::ATTACHMENT ) );
   if( file().size() ) out.setAttribute( XML::FILE, XmlString( file() ).toXml() );
@@ -137,54 +137,54 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
   // dump timeStamp
   if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, parent ) );
   if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, parent ) );
-  
+
   return out;
-    
+
 }
 
 //_______________________________________
 bool Attachment::setType( const AttachmentType& type )
 {
-  
+
   Debug::Throw() << "Attachment::setType.\n";
   if( type_ == type ) return false;
   type_  = type;
-  
-  if( Attachment::type() == AttachmentType::URL ) 
+
+  if( Attachment::type() == AttachmentType::URL )
   { setIsLink( YES ); }
-  
+
   return true;
-} 
+}
 
 //___________________________________
-bool Attachment::operator < ( const Attachment &attachment ) const 
-{ return shortFile().compare( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }  
+bool Attachment::operator < ( const Attachment &attachment ) const
+{ return shortFile().compare( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }
 
 //__________________________________
 void Attachment::updateSize( void )
 {
-  
+
   Debug::Throw( "Attachment::updateSize.\n" );
-  
+
   // check type
   if( type() == AttachmentType::URL || size() != 0 || !isValid() ) return;
   size_ = file().fileSize();
   size_str_ = file().sizeString();
-   
+
 }
 
 
 //__________________________________
 bool Attachment::updateTimeStamps( void )
 {
-  
+
   Debug::Throw( "Attachment::updateTimeStamps.\n" );
   bool changed( false );
-  if( type() == AttachmentType::URL ) { 
+  if( type() == AttachmentType::URL ) {
     if( !creation().isValid() ) changed |= _setCreation( TimeStamp::now() );
     changed |= _setModification( TimeStamp() );
   } else {
-    
+
     if( file().exists() )
     {
       if( !creation().isValid() ) changed |= _setCreation( file().created() );
@@ -193,13 +193,13 @@ bool Attachment::updateTimeStamps( void )
       changed |= _setCreation( TimeStamp() );
       changed |= _setModification( TimeStamp() );
     }
-    
+
   }
-  
+
   return changed;
-  
+
 }
-    
+
 
 //__________________________________
 LogEntry* Attachment::entry( void ) const
@@ -213,7 +213,7 @@ LogEntry* Attachment::entry( void ) const
 Attachment::ErrorCode Attachment::copy( const Command& command, const QString& destdir )
 {
   Debug::Throw() << "Attachment::ProcessCopy.\n";
-  
+
   // check original file
   if( source_file_.isEmpty() ) {
     Debug::Throw(0) << "Attachment::ProcessCopy - orig not set. Canceled.\n";
@@ -228,18 +228,18 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     setIsValid( true );
     return SUCCESS;
   }
-  
+
   // check destination directory
   if( destdir.isEmpty() ) {
     Debug::Throw(0) << "Attachment::ProcessCopy - destdir not set. Canceled.\n";
-    return DEST_NOT_FOUND;  
-  }  
-  
+    return DEST_NOT_FOUND;
+  }
+
   // generate expanded source name
   File fullname( source_file_ .expand() );
   if( !( type() == AttachmentType::URL || fullname.exists() ) ) return SOURCE_NOT_FOUND;
   else if( !( type() == AttachmentType::URL ) && fullname.isDirectory() ) return SOURCE_IS_DIR;
-    
+
   // destination filename
   File destname( fullname.localName().addPath( destdir ).expand() );
   source_file_ = fullname;
@@ -247,7 +247,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
   // for other process command
   ::Command command_string;
   switch (command) {
-    
+
     case COPY:
     if( destname.exists() ) return DEST_EXIST;
     else {
@@ -255,7 +255,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
       setIsLink( NO );
       break;
     }
-    
+
     case LINK:
     if( destname.exists() ) return DEST_EXIST;
     else {
@@ -263,42 +263,42 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
       setIsLink( YES );
       break;
     }
-    
+
     case COPY_FORCED:
     destname.remove();
     command_string << "cp" << source_file_ << destname;
     setIsLink( NO );
     break;
-  
+
     case LINK_FORCED:
     destname.remove();
     command_string << "ln" << "-s" << source_file_ << destname;
     setIsLink( YES );
     break;
-    
+
     case COPY_VERSION:
-    if( destname.exists() && destname.diff( source_file_ ) ) 
+    if( destname.exists() && destname.diff( source_file_ ) )
     { destname = destname.version(); }
     command_string << "cp" << source_file_ << destname;
     setIsLink( NO );
     break;
-    
+
     case LINK_VERSION:
-    if( destname.exists() && destname.diff( source_file_ ) ) 
+    if( destname.exists() && destname.diff( source_file_ ) )
     { destname = destname.version(); }
     command_string << "ln" << "-s" << source_file_ << destname;
     setIsLink( YES );
     break;
-    
+
     case DO_NOTHING:
     default:
     break;
-        
+
   }
-  
+
   // process copy
-  command_string.run();  
-  
+  command_string.run();
+
   // update long/short filenames.
   _setFile( destname );
   if( file().exists() )
@@ -306,7 +306,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     _setCreation( file().created() );
     _setModification( file().lastModified() );
   }
-  
+
   setIsValid( true );
   return SUCCESS;
 }
@@ -315,12 +315,12 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
 File Attachment::shortFile( void ) const
 {
   Debug::Throw( "Attachment::shortFile.\n" );
-  
+
   File file( file_ );
-  
+
   // remove trailing slash
   if( file.size() && file[file.size()-1] == '/' ) { file = File( file.left( file.size()-1 ) ); }
-   
+
   return file.localName();
 }
 
@@ -328,7 +328,7 @@ File Attachment::shortFile( void ) const
 void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) const
 {
   Debug::Throw( "Attachment::HtmlElement.\n" );
-  
+
   // reference to attached file
   QDomElement par = parent.appendChild( document.createElement( "p" ) ).toElement();
   QDomElement ref = par.
@@ -337,17 +337,17 @@ void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) cons
   if( type() == AttachmentType::URL ) ref.setAttribute( "href", file() );
   else ref.setAttribute( "href", QString("file:") + file() );
   ref.appendChild( document.createTextNode( shortFile() ) );
-  
+
   QString buffer;
   QTextStream( &buffer ) << "(" << type().name() << ")";
   par.appendChild( document.createTextNode( buffer ) );
-  
+
   // comments
   if( !comments().isEmpty() )
   HtmlTextNode( comments(), par, document );
   return;
-}  
-  
+}
+
 //_______________________________________
 void Attachment::_setFile( const File& file )
 {
@@ -355,11 +355,11 @@ void Attachment::_setFile( const File& file )
 
   // store file
   file_  = file;
- 
+
   // remove trailing spaces
   static QRegExp regexp( "\\s+$" );
   if( regexp.indexIn( file_ ) >= 0 )
   { file_ = file_.left( file_.size() - regexp.matchedLength() ); }
 
   return;
-} 
+}

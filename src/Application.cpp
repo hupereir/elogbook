@@ -1,24 +1,24 @@
 // $Id$
 
 /******************************************************************************
-*                        
-* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>            
-*                        
-* This is free software; you can redistribute it and/or modify it under the    
-* terms of the GNU General Public License as published by the Free Software    
-* Foundation; either version 2 of the License, or (at your option) any later  
-* version.                            
-*                         
-* This software is distributed in the hope that it will be useful, but WITHOUT 
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or        
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License        
-* for more details.                    
-*                         
-* You should have received a copy of the GNU General Public License along with 
-* software; if not, write to the Free Software Foundation, Inc., 59 Temple    
-* Place, Suite 330, Boston, MA  02111-1307 USA                          
-*                        
-*                        
+*
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+*
+* This is free software; you can redistribute it and/or modify it under the
+* terms of the GNU General Public License as published by the Free Software
+* Foundation; either version 2 of the License, or (at your option) any later
+* version.
+*
+* This software is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+* for more details.
+*
+* You should have received a copy of the GNU General Public License along with
+* software; if not, write to the Free Software Foundation, Inc., 59 Temple
+* Place, Suite 330, Boston, MA  02111-1307 USA
+*
+*
 *******************************************************************************/
 
 /*!
@@ -73,16 +73,16 @@ Application::Application( CommandLineArguments arguments ) :
   recent_files_( 0 ),
   attachment_window_( 0 ),
   main_window_( 0 )
-{} 
+{}
 
 //____________________________________________
-Application::~Application( void ) 
+Application::~Application( void )
 {
-  Debug::Throw( "Application::~Application.\n" );  
+  Debug::Throw( "Application::~Application.\n" );
   if( main_window_ ) delete main_window_;
   if( recent_files_ ) delete recent_files_;
 
-} 
+}
 
 //____________________________________________
 void Application::initApplicationManager( void )
@@ -107,7 +107,7 @@ void Application::initApplicationManager( void )
 bool Application::realizeWidget( void )
 {
   Debug::Throw( "Application::realizeWidget.\n" );
- 
+
   // check if the method has already been called.
   if( !BaseApplication::realizeWidget() ) return false;
 
@@ -117,45 +117,45 @@ bool Application::realizeWidget( void )
   // need to redirect closeAction to proper exit
   closeAction().disconnect();
   connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
-    
+
   configurationAction().setText( "Configure &elogbook ..." );
-  
+
   // recent files
   recent_files_ = new XmlFileList();
   recent_files_->setCheck( true );
-  
+
   // create attachment window
   attachment_window_ = new AttachmentWindow();
   attachmentWindow().centerOnDesktop();
-  
+
   // create selection frame
   main_window_ = new MainWindow();
 
   connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), &mainWindow(), SLOT( selectEntry( LogEntry* ) ) );
-  
+
   // update configuration
   emit configurationChanged();
-  
+
   mainWindow().centerOnDesktop();
   mainWindow().show();
-    
+
   // update
   qApp->processEvents();
-  
+
   // load file from arguments or recent files
   QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
   File file( filenames.empty() ? recentFiles().lastValidFile().file():File( filenames.front() ).expand() );
-  if( mainWindow().setLogbook( file ) ) mainWindow().checkLogbookBackup(); 
+  if( mainWindow().setLogbook( file ) ) mainWindow().checkLogbookBackup();
   else mainWindow().newLogbookAction().trigger();
-  
+
   return true;
-  
+
 }
 
 //_________________________________________________
 void Application::_configuration( void )
 {
-  
+
   Debug::Throw( "Application::_configuration" );
   emit saveConfiguration();
   ConfigurationDialog dialog;
@@ -168,32 +168,32 @@ void Application::_configuration( void )
 //_________________________________________________
 void Application::_exit( void )
 {
-  
+
   Debug::Throw( "Application::_exit.\n" );
-      
+
   // ensure everything is saved properly
   if( main_window_ )
   {
-    // check if editable EditionWindows needs save 
+    // check if editable EditionWindows needs save
     BASE::KeySet<EditionWindow> frames( main_window_ );
     for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
     {
-      if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL ) 
+      if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL )
       { return; }
     }
-    
+
     Debug::Throw( "EditionWindows saved.\n" );
-    
+
     // check if current logbook is modified
-    if( 
+    if(
       mainWindow().logbook() &&
       mainWindow().logbook()->modified() &&
-      mainWindow().askForSave() == AskForSaveDialog::CANCEL ) 
+      mainWindow().askForSave() == AskForSaveDialog::CANCEL )
     return;
   }
-  
+
   qApp->quit();
-  
+
 }
 
 //________________________________________________
@@ -206,16 +206,16 @@ bool Application::_processCommand( SERVER::ServerCommand command )
   {
     if( main_window_ ) mainWindow().uniconifyAction().trigger();
     QStringList filenames( SERVER::ApplicationManager::commandLineParser( command.arguments() ).orphans() );
-    if( !filenames.isEmpty() ) 
+    if( !filenames.isEmpty() )
     {
 
       QString buffer;
       QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
       if( QuestionDialog( main_window_, buffer ).centerOnParent().exec() )
       { mainWindow().setLogbook( File( filenames.front() ) ); }
-      
+
     }
-    
+
     return true;
   } else return false;
 

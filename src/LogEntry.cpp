@@ -180,7 +180,7 @@ LogEntry* LogEntry::clone( void ) const
 //__________________________________
 bool LogEntry::matchTitle( const QString& buffer ) const
 { return title().contains( buffer, _caseSensitive() ); }
-  
+
 //__________________________________
 bool LogEntry::matchKeyword( const QString& buffer ) const
 { return keyword().get().contains( buffer, _caseSensitive() ); }
@@ -196,7 +196,7 @@ bool LogEntry::matchColor( const QString& buffer ) const
   if( color_ == ColorMenu::NONE ) return false;
   return QColor( buffer ) == QColor( color_ );
 }
-  
+
 //__________________________________
 bool LogEntry::matchAttachment( const QString& buffer ) const
 {
@@ -226,10 +226,10 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
   Debug::Throw( "LogEntry::htmlElement.\n" );
 
   QDomElement out = document.createElement( "div" );
-  
+
   // logbook entry header
   if( mask & HTML_HEADER_MASK ) {
-    
+
     // surrounding table
     QDomElement table = out.appendChild( document.createElement( "table" ) ).toElement();
     table.setAttribute( "class", "header_outer_table" );
@@ -339,7 +339,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
 
   out.appendChild( document.createElement( "br" ) );
   return out;
-  
+
 }
 
 //__________________________________
@@ -347,7 +347,7 @@ QDomElement LogEntry::htmlSummary( QDomDocument& document, const unsigned int& m
 {
 
   Debug::Throw( "LogEntry::htmlSummary.\n" );
-  
+
   QDomElement row = document.createElement( "tr" );
   if( mask & HTML_KEYWORD )
   {
@@ -397,13 +397,13 @@ void LogEntry::_htmlTextNode(
     QDomDocument& document ) const
 {
   Debug::Throw( "LogEntry::_htmlTextNode.\n" );
-  
+
   // dump format list
   Debug::Throw() << formats_ << endl;
-  
+
   // copy format list
   FORMAT::TextFormatBlock::List formats( formats_ );
-  
+
   // loop over index position
   QString buffer;
   for( int index = 0; index < text().size(); )
@@ -417,15 +417,15 @@ void LogEntry::_htmlTextNode(
     {
       QTextStream( &buffer ) << text()[index];
       index ++;
-      
+
     } else {
 
       Debug::Throw() << *iter << endl;
-      
+
       // write previous text
       HtmlTextNode( buffer, parent, document );
       buffer.clear();
-      
+
       // open new element define format
       QDomElement local_node( parent );
       if( iter->format() & FORMAT::UNDERLINE ) local_node = local_node.appendChild( document.createElement( "u" ) ).toElement();
@@ -443,10 +443,10 @@ void LogEntry::_htmlTextNode(
         QTextStream( &buffer ) << text()[index];
         index++;
       }
-      
+
       // remove format from list
       formats.erase( iter );
-      
+
       // process text
       HtmlTextNode( buffer, local_node, document );
       buffer.clear();
@@ -455,7 +455,7 @@ void LogEntry::_htmlTextNode(
   }
 
   HtmlTextNode( buffer, parent, document );
-  
+
 }
 
 //________________________________________________________

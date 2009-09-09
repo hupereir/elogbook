@@ -4,17 +4,17 @@ TARGET = copy_logbook
 CONFIG += qt release
 QT += xml network
 
-VERSION = 1.6.6
+VERSION = 1.6.7
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 win32 {
 
   DEFINES += QT_STATIC
-  DESTDIR = "C:\Program Files" 
- 
+  DESTDIR = "C:\Program Files"
+
   # this is needed to copy target into relevant versioned name
   exists( \"$$DESTDIR\\upx.exe\" ) {
-     
+
      # if available, use upx to compress the file
      version.commands = "\"$$DESTDIR\\upx.exe\" -9 -f -o \"$$DESTDIR\\$$TARGET-qt4_"$$VERSION".exe\""  "\"$$DESTDIR\\"$$TARGET".exe\"
 
@@ -28,7 +28,7 @@ win32 {
   # add to Post targets
   QMAKE_EXTRA_TARGETS += version
   QMAKE_POST_LINK += $$version.commands
-  
+
 }
 
 INCLUDEPATH = . ../base ../base-qt ../base-help ../base-server ../extra-includes

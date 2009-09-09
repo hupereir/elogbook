@@ -167,10 +167,10 @@ bool Logbook::read( void )
     else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
     else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
     else if( name == XML::ENTRIES ) {
-      
+
       setXmlEntries( value.toInt() );
       emit maximumProgressAvailable( value.toInt() );
-      
+
     } else if( name == XML::CHILDREN ) setXmlChildren( value.toInt() );
     else Debug::Throw(0) << "Logbook::read - unrecognized logbook attribute: \"" << name << "\"\n";
 
@@ -191,14 +191,14 @@ bool Logbook::read( void )
     else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
     else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
     else if( tag_name == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
-    else if( tag_name == XML::RECENT_ENTRIES ) _readRecentEntries( element );     
+    else if( tag_name == XML::RECENT_ENTRIES ) _readRecentEntries( element );
     else if( tag_name == XML::ENTRY ) {
 
       LogEntry* entry = new LogEntry( element );
       Key::associate( latestChild(), entry );
       entry_count++;
       if( !(entry_count%progress) ) emit progressAvailable( progress );
-      
+
     } else if( tag_name == XML::CHILD ) {
 
       // try retrieve file from attributes
@@ -213,7 +213,7 @@ bool Logbook::read( void )
       if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
       Logbook* child = new Logbook();
       child->setFile( file );
-      
+
       // propagate progressAvailable signal.
       connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
 
@@ -227,7 +227,7 @@ bool Logbook::read( void )
     } else Debug::Throw(0) << "Logbook::read - unrecognized tag_name: " << tag_name << endl;
 
   }
-  
+
   emit progressAvailable( entry_count%progress );
 
   // discard modifications
@@ -242,7 +242,7 @@ bool Logbook::write( File file )
 {
 
   Debug::Throw( "Logbook::write.\n" );
-  
+
   // check filename
   if( file.isEmpty() ) file = Logbook::file();
   if( file.isEmpty() ) return false;
@@ -252,8 +252,8 @@ bool Logbook::write( File file )
 
   // check number of entries and children to save in header
   if( setXmlEntries( entries().size() ) || setXmlChildren( children().size() ) )
-  { setModified( true ); }  
-  
+  { setModified( true ); }
+
   emit maximumProgressAvailable( xmlEntries() );
 
   // write logbook if filename differs from origin or logbook is modified
@@ -313,20 +313,20 @@ bool Logbook::write( File file )
 
     //! write recent entries
     if( !recent_entries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
-    
+
     // write all entries
     static unsigned int progress( 10 );
     unsigned int entry_count( 0 );
     BASE::KeySet<LogEntry> entries( this );
     for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
     {
-      
+
       top.appendChild( (*it)->domElement( document ) );
       entry_count++;
       if( !(entry_count%progress) ) emit progressAvailable( progress );
 
     }
-    
+
     emit progressAvailable( entry_count%progress );
 
     // dump all logbook childrens
@@ -355,7 +355,7 @@ bool Logbook::write( File file )
     }
   } else { emit progressAvailable( BASE::KeySet<LogEntry>( this ).size() ); }
 
-  
+
   // update saved timeStamp
   saved_ = Logbook::file().lastModified();
 
@@ -430,7 +430,7 @@ map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
 
       // insert duplicate pairs in map
       duplicates.insert( make_pair( *duplicate, *it ) );
-      
+
       // reset current entries
       current_entries = entries();
 
@@ -506,11 +506,11 @@ Logbook* Logbook::latestChild( void )
 
     children_.push_back( dest );
     setModified( true );
-    
+
     // associate to existing FileCheck if any
     BASE::KeySet<FileCheck> file_checks( this );
     if( !file_checks.empty() )
-    { 
+    {
       assert( file_checks.size() == 1 );
       (*file_checks.begin())->registerLogbook( dest );
     }
@@ -553,12 +553,12 @@ BASE::KeySet<Attachment> Logbook::attachments( void ) const
 
 //___________________________________
 void Logbook::truncateRecentEntriesList( const unsigned int& max_count )
-{ 
-  
+{
+
   Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
   while( recent_entries_.size() > max_count )
   { recent_entries_.pop_front(); }
-  
+
 }
 
 //_________________________________
@@ -590,7 +590,7 @@ void Logbook::removeEmptyChildren( void )
 //_________________________________
 std::vector<LogEntry*> Logbook::recentEntries( void ) const
 {
-  
+
   std::vector<LogEntry*> out;
   if( recent_entries_.empty() ) return out;
   BASE::KeySet<LogEntry> entries( Logbook::entries() );
@@ -599,34 +599,34 @@ std::vector<LogEntry*> Logbook::recentEntries( void ) const
     BASE::KeySet<LogEntry>::const_iterator entry_iter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( *iter ) ) );
     if( entry_iter != entries.end() ) out.push_back( *entry_iter );
   }
-  
+
   return out;
-  
+
 }
 
 //_________________________________
 void Logbook::addRecentEntry( const LogEntry* entry )
-{ 
+{
 
   Debug::Throw( "Logbook::addRecentEntry.\n" );
   TimeStamp time_stamp( entry->creation() );
-  
+
   // first remove time stamp from list if it exists
   recent_entries_.erase( std::remove( recent_entries_.begin(), recent_entries_.end(), time_stamp ), recent_entries_.end() );
-  
+
   // adds again at the end of the list
   recent_entries_.push_back( time_stamp );
-  
+
   // mark logbook as modified
   setModified( true );
-  
+
 }
 
 //_________________________________
 void Logbook::setFile( const File& file )
 {
   Debug::Throw( "Logbook::setFile.\n" );
-  file_ = file; 
+  file_ = file;
   saved_ = File( file_ ).lastModified();
 }
 
@@ -686,7 +686,7 @@ QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& ma
 
   if( author().size() && (mask&HTML_AUTHOR ) )
   {
-    
+
     row = table.appendChild( document.createElement( "tr" ) ).toElement();
     column = row.appendChild( document.createElement( "td" ) ).toElement();
     column.setAttribute( "width", "15%" );
@@ -843,16 +843,16 @@ bool Logbook::setSortOrder( const int& order )
 //_________________________________
 bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) const
 {
-  
+
   if( order_ ) std::swap( first, second );
-  
+
   switch( sort_method_ )
   {
-    
+
     case Logbook::SORT_COLOR:
     return (first->color() < second->color() );
     break;
-    
+
     case Logbook::SORT_CREATION:
     return (first->creation() < second->creation());
     break;
@@ -881,35 +881,35 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 //_____________________________________________
 void Logbook::_readRecentEntries( const QDomElement& element )
 {
-      
+
   Debug::Throw( "Logbook::_readRecentEntries.\n" );
   recent_entries_.clear();
-  
+
   // loop over children
   for(QDomNode node = element.firstChild(); !node.isNull(); node = node.nextSibling() )
   {
     QDomElement child_element = node.toElement();
     if( child_element.isNull() ) continue;
-    
+
     // children
     QString tag_name( child_element.tagName() );
     if( tag_name == XML::CREATION ) recent_entries_.push_back( XmlTimeStamp( child_element ) );
-    
+
   }
-  
+
 }
 
 //_________________________________
 QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 {
   Debug::Throw( "Logbook::_recentEntriesElement.\n" );
-  
+
   QDomElement out( document.createElement( XML::RECENT_ENTRIES ) );
   for( TimeStampList::const_iterator iter = recent_entries_.begin(); iter != recent_entries_.end(); iter++ )
   { out.appendChild( XmlTimeStamp( *iter ).domElement( XML::CREATION, document ) ); }
-  
+
   return out;
-  
+
 }
 
 //_________________________________
@@ -918,8 +918,8 @@ File Logbook::_childFilename( const File& file, const int& child_number ) const
   File head( file.localName().truncatedName() );
   QString foot( file.extension() );
   if( !foot.isEmpty() ) foot = QString(".") + foot;
-  
-  QString out; 
+
+  QString out;
   QTextStream(&out) << head << "_include_" << child_number << foot;
   Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
   return out;
