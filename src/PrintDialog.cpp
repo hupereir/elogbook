@@ -54,7 +54,7 @@ PrintDialog::PrintDialog( QWidget* parent ):
 
   Debug::Throw( "PrintDialog::PrintDialog.\n" );
 
-  setWindowTitle( "Print - elogbook" );
+  setWindowTitle( "Print - Elogbook" );
   mainLayout().setSpacing(5);
 
   // file

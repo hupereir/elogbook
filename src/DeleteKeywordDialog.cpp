@@ -52,7 +52,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const vector<Keyword>
 
   assert( !keywords.empty() );
 
-  setWindowTitle( "delete keyword" );
+  setWindowTitle( "Delete Keyword - Elogbook" );
   QString buffer;
   QTextStream what( &buffer );
   if( keywords.size() == 1 ) what << "Delete keyword " << keywords.front() << " ?";

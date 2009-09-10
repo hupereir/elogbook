@@ -45,7 +45,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
 {
 
   Debug::Throw( "NewAttachmentDialog::NewAttachmentDialog.\n" );
-  setWindowTitle( "eLogbook - new attachment" );
+  setWindowTitle( "New Attachment - Elogbook" );
 
   // source file
   mainLayout().addWidget( new QLabel( "Source file:", this ) );
