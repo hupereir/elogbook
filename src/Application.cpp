@@ -54,9 +54,9 @@ using namespace std;
 using namespace Qt;
 
 //____________________________________________
-const QString Application::MAIN_TITLE_MODIFIED = "elogbook (modified)";
-const QString Application::MAIN_TITLE = "elogbook";
-const QString Application::ATTACHMENT_TITLE = "elogbook - attachments";
+const QString Application::MAIN_TITLE_MODIFIED = "Elogbook (modified)";
+const QString Application::MAIN_TITLE = "Elogbook";
+const QString Application::ATTACHMENT_TITLE = "Attachments - Elogbook";
 
 //____________________________________________
 void Application::usage( void )

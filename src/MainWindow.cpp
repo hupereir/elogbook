@@ -2081,7 +2081,7 @@ void MainWindow::_newKeyword( void )
 
   //! create dialog
   EditKeywordDialog dialog( this );
-  dialog.setWindowTitle( "New keyword" );
+  dialog.setWindowTitle( "New Keyword - Elogbook" );
 
   KeywordModel::List keywords( _keywordModel().children() );
   for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
@@ -2283,7 +2283,7 @@ void MainWindow::_renameEntryKeyword( void )
 
   //! create dialog
   EditKeywordDialog dialog( this );
-  dialog.setWindowTitle( "Edit keyword" );
+  dialog.setWindowTitle( "Edit Keyword - Elogbook" );
 
   const KeywordModel::List& keywords( _keywordModel().children() );
   for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
