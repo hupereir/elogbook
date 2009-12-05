@@ -72,13 +72,13 @@ class OpenAttachmentDialog: public CustomDialog
   private:
 
   //! command browsed line editor
-  BrowsedLineEditor *command_line_edit_;
+  BrowsedLineEditor *commandEditor_;
 
   //! open with radio button
-  QRadioButton* open_radio_button_;
+  QRadioButton* openRadioButton_;
 
   //! save as radio button
-  QRadioButton* save_radio_button_;
+  QRadioButton* saveRadioButton_;
 
 };
 

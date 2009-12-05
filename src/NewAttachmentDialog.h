@@ -95,22 +95,19 @@ class NewAttachmentDialog: public CustomDialog
   private:
 
   //! filename browsed line editor
-  BrowsedLineEditor *file_line_edit_;
-
-  //! destination directory vbox
-  QLayout* directory_layout_;
+  BrowsedLineEditor *fileEditor_;
 
   //! destination directory browsed line edti
-  BrowsedLineEditor *dest_dir_line_edit_;
+  BrowsedLineEditor *destinationDirectoryEditor_;
 
   //! file type combo box
-  QComboBox *file_type_combo_box_;
+  QComboBox *fileTypeComboBox_;
 
   //! action combo box
-  QComboBox *action_combo_box_;
+  QComboBox *actionComboBox_;
 
   //! comments
-  TextEditor *comments_text_edit_;
+  TextEditor *commentsEditor_;
 
 
 };

@@ -62,10 +62,10 @@ class EditAttachmentDialog: public CustomDialog
   private:
 
   //! file type combo box
-  QComboBox *file_type_combo_box_;
+  QComboBox *fileTypeComboBox_;
 
   //! comments editor
-  TextEditor *comments_text_edit_;
+  TextEditor *commentsEditor_;
 
 };
 

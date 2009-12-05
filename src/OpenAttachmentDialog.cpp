@@ -53,8 +53,8 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 
   GridLayout* grid_layout = new GridLayout();
   grid_layout->setMargin(0);
-  grid_layout->setSpacing(5);
   grid_layout->setMaxCount(2);
+  grid_layout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
   mainLayout().addLayout( grid_layout, 0 );
 
   // file name
@@ -76,46 +76,47 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
   grid_layout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():"-", this ) );
 
   // modification
-  grid_layout->addWidget( new QLabel( "Last Modified: ", this ) );
+  grid_layout->addWidget( new QLabel( "Modified: ", this ) );
   grid_layout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().toString():"-", this ) );
+
+  // horizontal separator
+  QFrame* frame;
+  mainLayout().addWidget( frame = new QFrame( this ) );
+  frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
 
   // radio buttons
   QButtonGroup* group = new QButtonGroup( this );
   group->setExclusive( true );
 
-  QGroupBox *group_box = new QGroupBox( this );
-  mainLayout().addWidget( group_box, 0 );
   grid_layout = new GridLayout();
-
-  group_box->setLayout( grid_layout );
-  grid_layout->setMargin(5);
-  grid_layout->setSpacing(5);
+  mainLayout().addLayout( grid_layout );
+  grid_layout->setMargin(0);
   grid_layout->setMaxCount(2);
 
-  grid_layout->addWidget( open_radio_button_ = new QRadioButton( "Open using: ", group_box ) );
-  open_radio_button_->setToolTip( "Select this button to open attachment using the selected application." );
-  group->addButton( open_radio_button_ );
+  grid_layout->addWidget( openRadioButton_ = new QRadioButton( "Open using: ", this ) );
+  openRadioButton_->setToolTip( "Select this button to open attachment using the selected application." );
+  group->addButton( openRadioButton_ );
 
-  grid_layout->addWidget( command_line_edit_ = new BrowsedLineEditor( group_box ) );
-  command_line_edit_->setFile( attachment.type().editCommand() );
-  command_line_edit_->setToolTip( "Application to be used to display the attachment." );
+  grid_layout->addWidget( commandEditor_ = new BrowsedLineEditor( this ) );
+  commandEditor_->setFile( attachment.type().editCommand() );
+  commandEditor_->setToolTip( "Application to be used to display the attachment." );
 
-  grid_layout->addWidget( save_radio_button_ = new QRadioButton( "save to disk ", group_box ) );
-  save_radio_button_->setToolTip( "Select this button to save a copy of the attachment on disk." );
-  group->addButton( save_radio_button_ );
+  grid_layout->addWidget( saveRadioButton_ = new QRadioButton( "save to disk ", this ) );
+  saveRadioButton_->setToolTip( "Select this button to save a copy of the attachment on disk." );
+  group->addButton( saveRadioButton_ );
 
   if( attachment.type() == AttachmentType::URL )
   {
 
-    open_radio_button_->setChecked( true );
-    save_radio_button_->setChecked( false );
-    save_radio_button_->setEnabled( false );
+    openRadioButton_->setChecked( true );
+    saveRadioButton_->setChecked( false );
+    saveRadioButton_->setEnabled( false );
 
   } else {
 
-    open_radio_button_->setChecked( true );
-    save_radio_button_->setChecked( false );
-    save_radio_button_->setEnabled( true );
+    openRadioButton_->setChecked( true );
+    saveRadioButton_->setChecked( false );
+    saveRadioButton_->setEnabled( true );
   }
 
   // comments
@@ -135,8 +136,8 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 
 //______________________________________________________
 QString OpenAttachmentDialog::command( void ) const
-{ return command_line_edit_->editor().text(); }
+{ return commandEditor_->editor().text(); }
 
 //______________________________________________________
 OpenAttachmentDialog::Action OpenAttachmentDialog::action( void ) const
-{ return open_radio_button_->isChecked() ? OPEN:SAVE_AS; }
+{ return openRadioButton_->isChecked() ? OPEN:SAVE_AS; }
