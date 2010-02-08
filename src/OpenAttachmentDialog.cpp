@@ -46,7 +46,7 @@ using namespace std;
 
 //_____________________________________________________
 OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& attachment ):
-  CustomDialog( parent )
+  CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
   Debug::Throw( "OpenAttachmentDialog::OpenAttachmentDialog.\n" );
