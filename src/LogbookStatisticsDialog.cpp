@@ -45,72 +45,79 @@ using namespace std;
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
-  CustomDialog( parent, OkButton )
+    CustomDialog( parent, OkButton )
 {
-  Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
+    Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
-  setWindowTitle( "Logbook Statistics - Elogbook" );
-  setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
+    setWindowTitle( "Logbook Statistics - Elogbook" );
+    setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
-  QGridLayout* grid_layout = new QGridLayout();
-  grid_layout->setMargin(0);
-  grid_layout->setSpacing(5);
-  mainLayout().addLayout( grid_layout, 0 );
+    QGridLayout* grid_layout = new QGridLayout();
+    grid_layout->setMargin(0);
+    grid_layout->setSpacing(5);
+    mainLayout().addLayout( grid_layout, 0 );
 
-  // file
-  grid_layout->addWidget( new QLabel( "File: ", this ), 0, 0 );
+    // file
+    QLabel* label;
+    grid_layout->addWidget( label = new QLabel( "File: ", this ), 0, 0 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  // create a readonly line editor for the file name
-  AnimatedLineEditor* edit = new AnimatedLineEditor( this );
-  grid_layout->addWidget( edit, 0, 1 );
-  edit->setReadOnly( true );
-  edit->setText( logbook->file().expand() );
+    // create a readonly line editor for the file name
+    AnimatedLineEditor* edit = new AnimatedLineEditor( this );
+    grid_layout->addWidget( edit, 0, 1 );
+    edit->setReadOnly( true );
+    edit->setText( logbook->file().expand() );
 
-  // creation time
-  if( logbook->creation().isValid() )
-  {
-    grid_layout->addWidget( new QLabel( "Created: ", this ), 1, 0 );
-    grid_layout->addWidget( new QLabel( logbook->creation().toString(), this ), 1, 1 );
-  }
+    // creation time
+    if( logbook->creation().isValid() )
+    {
+        grid_layout->addWidget( label = new QLabel( "Created: ", this ), 1, 0 );
+        grid_layout->addWidget( new QLabel( logbook->creation().toString(), this ), 1, 1 );
+        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    }
 
-  // modification time
-  if( logbook->modification().isValid() )
-  {
-    grid_layout->addWidget( new QLabel( "Last modified: ", this ), 2, 0 );
-    grid_layout->addWidget( new QLabel( logbook->modification().toString(), this ), 2, 1 );
-  }
+    // modification time
+    if( logbook->modification().isValid() )
+    {
+        grid_layout->addWidget( label = new QLabel( "Last modified: ", this ), 2, 0 );
+        grid_layout->addWidget( new QLabel( logbook->modification().toString(), this ), 2, 1 );
+        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    }
 
-  // backup time
-  if( logbook->backup().isValid() )
-  {
-    grid_layout->addWidget( new QLabel( "Last backup: ", this ), 3, 0 );
-    grid_layout->addWidget( new QLabel( logbook->backup().toString(), this ), 3, 1 );
-  }
+    // backup time
+    if( logbook->backup().isValid() )
+    {
+        grid_layout->addWidget( label = new QLabel( "Last backup: ", this ), 3, 0 );
+        grid_layout->addWidget( new QLabel( logbook->backup().toString(), this ), 3, 1 );
+        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    }
 
-  // stores all children
+    // stores all children
 
-  // total number of entries
-  grid_layout->addWidget( new QLabel( "Entries: ", this ), 4, 0 );
-  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()), this ), 4, 1 );
+    // total number of entries
+    grid_layout->addWidget( label = new QLabel( "Entries: ", this ), 4, 0 );
+    grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()), this ), 4, 1 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  // total number of attachments
-  grid_layout->addWidget( new QLabel( "Attachments: ", this ), 5, 0 );
-  grid_layout->addWidget( new QLabel( Str().assign<unsigned int>( logbook->attachments().size() ), this ), 5, 1 );
+    // total number of attachments
+    grid_layout->addWidget( label = new QLabel( "Attachments: ", this ), 5, 0 );
+    grid_layout->addWidget( new QLabel( Str().assign<unsigned int>( logbook->attachments().size() ), this ), 5, 1 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  grid_layout->setColumnStretch( 1, 1 );
+    grid_layout->setColumnStretch( 1, 1 );
 
 
-  // detail
-  TreeView *list_view( new TreeView( this ) );
-  list_view->setModel( &model_ );
-  list_view->setSortingEnabled( false );
-  mainLayout().addWidget( list_view, 1 );
+    // detail
+    TreeView *list_view( new TreeView( this ) );
+    list_view->setModel( &model_ );
+    list_view->setSortingEnabled( false );
+    mainLayout().addWidget( list_view, 1 );
 
-  list< Logbook* > all( logbook->children() );
-  all.push_front( logbook );
-  model_.add( Model::List( all.begin(), all.end() ) );
+    list< Logbook* > all( logbook->children() );
+    all.push_front( logbook );
+    model_.add( Model::List( all.begin(), all.end() ) );
 
-  list_view->resizeColumns();
+    list_view->resizeColumns();
 
 }
 
@@ -118,10 +125,10 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 //_______________________________________________
 const QString LogbookStatisticsDialog::Model::column_titles_[ LogbookStatisticsDialog::Model::n_columns ] =
 {
-  "File",
-  "Entries",
-  "Created",
-  "Modified"
+    "File",
+    "Entries",
+    "Created",
+    "Modified"
 };
 
 
@@ -129,27 +136,27 @@ const QString LogbookStatisticsDialog::Model::column_titles_[ LogbookStatisticsD
 QVariant LogbookStatisticsDialog::Model::data( const QModelIndex& index, int role ) const
 {
 
-  // check index, role and column
-  if( !index.isValid() ) return QVariant();
+    // check index, role and column
+    if( !index.isValid() ) return QVariant();
 
-  // retrieve associated file info
-  Logbook& logbook( *get()[index.row()] );
+    // retrieve associated file info
+    Logbook& logbook( *get()[index.row()] );
 
-  // return text associated to file and column
-  if( role == Qt::DisplayRole )
-  {
-
-    switch( index.column() )
+    // return text associated to file and column
+    if( role == Qt::DisplayRole )
     {
 
-      case FILE: return logbook.file().localName();
-      case ENTRIES: return int(BASE::KeySet<LogEntry>(&logbook).size());
-      case CREATED: return logbook.creation().toString();
-      case MODIFIED: return logbook.modification().toString();
-      default: return QVariant();
-    }
-  }
+        switch( index.column() )
+        {
 
-  return QVariant();
+            case FILE: return logbook.file().localName();
+            case ENTRIES: return int(BASE::KeySet<LogEntry>(&logbook).size());
+            case CREATED: return logbook.creation().toString();
+            case MODIFIED: return logbook.modification().toString();
+            default: return QVariant();
+        }
+    }
+
+    return QVariant();
 
 }

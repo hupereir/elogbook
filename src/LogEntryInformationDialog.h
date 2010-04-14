@@ -40,10 +40,10 @@ class LogEntry;
 class LogEntryInformationDialog: public CustomDialog
 {
 
-  public:
+    public:
 
-  //! constructor
-  LogEntryInformationDialog( QWidget* parent, LogEntry* entry  );
+    //! constructor
+    LogEntryInformationDialog( QWidget* parent, LogEntry* entry  );
 
 };
 

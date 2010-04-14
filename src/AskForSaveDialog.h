@@ -24,11 +24,11 @@
 *******************************************************************************/
 
 /*!
-  \file AskForSaveDialog.h
-  \brief QDialog used to ask if modifications of a file should be saved
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file AskForSaveDialog.h
+\brief QDialog used to ask if modifications of a file should be saved
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 #include "BaseDialog.h"
@@ -38,56 +38,56 @@
 //! QDialog used to ask if modifications of a file should be saved
 class AskForSaveDialog: public BaseDialog, public Counter
 {
-
-  //! Qt macro
-  Q_OBJECT
-
-  public:
-
-  //! return codes
-  /*!
+    
+    //! Qt macro
+    Q_OBJECT
+        
+    public:
+        
+    //! return codes
+    /*!
     the enumeration is used both to interpret the result and to decide which
     buttons are to be shown in the dialog.
-  */
-  enum ReturnCode {
+    */
+    enum ReturnCode {
+            
+        //! file is to be saved
+        YES = 1<<0,
+        
+        //! file is not to be saved
+        NO = 1<<1,
 
-    //! file is to be saved
-    YES = 1<<0,
+        //! all files are to be saved
+        ALL = 1<<2,
 
-    //! file is not to be saved
-    NO = 1<<1,
+        //! action is canceled
+        CANCEL = 1<<3,
 
-    //! all files are to be saved
-    ALL = 1<<2,
+        //! all buttons
+        DEFAULT = YES|NO|CANCEL
 
-    //! action is canceled
-    CANCEL = 1<<3,
+    };
 
-    //! all buttons
-    DEFAULT = YES|NO|CANCEL
+    //! constructor
+    AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons = DEFAULT );
 
-  };
+    private slots:
 
-  //! constructor
-  AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons = DEFAULT );
+    //! save changes
+    void _yes( void )
+    { done( YES ); }
 
-  private slots:
+    //! discard changes
+    void _no( void )
+    { done( NO ); }
 
-  //! save changes
-  void _yes( void )
-  { done( YES ); }
+    //! save for all modified entries
+    void _all( void )
+    { done( ALL ); }
 
-  //! discard changes
-  void _no( void )
-  { done( NO ); }
-
-  //! save for all modified entries
-  void _all( void )
-  { done( ALL ); }
-
-  //! cancel action
-  void _cancel( void )
-  { done( CANCEL ); }
+    //! cancel action
+    void _cancel( void )
+    { done( CANCEL ); }
 
 };
 

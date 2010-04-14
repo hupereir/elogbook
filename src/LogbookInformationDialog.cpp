@@ -22,11 +22,11 @@
 *******************************************************************************/
 
 /*!
-  \file LogbookInformationDialog.cpp
-  \brief  logbook informations
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file LogbookInformationDialog.cpp
+\brief  logbook informations
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 #include <QLayout>
@@ -44,40 +44,44 @@ using namespace std;
 LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* logbook ):
     CustomDialog( parent )
 {
-  Debug::Throw( "LogbookInformationDialog::LogbookInformationDialog.\n" );
+    Debug::Throw( "LogbookInformationDialog::LogbookInformationDialog.\n" );
 
-  setWindowTitle( "Logbook Informations - Elogbook" );
-  setOptionName( "LOGBOOK_INFORMATION_DIALOG" );
+    setWindowTitle( "Logbook Informations - Elogbook" );
+    setOptionName( "LOGBOOK_INFORMATION_DIALOG" );
 
-  QGridLayout *grid_layout( new QGridLayout() );
-  grid_layout->setMargin(0);
-  grid_layout->setSpacing(5);
-  mainLayout().addLayout( grid_layout, 0 );
+    QGridLayout *grid_layout( new QGridLayout() );
+    grid_layout->setMargin(0);
+    grid_layout->setSpacing(5);
+    mainLayout().addLayout( grid_layout, 0 );
 
-  grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
-  grid_layout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
-  title_->setText( logbook->title().isEmpty() ?   Logbook::LOGBOOK_NO_TITLE:logbook->title()  );
-  title_->setToolTip( "Logbook title" );
+    QLabel* label;
+    grid_layout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );
+    grid_layout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
+    title_->setText( logbook->title().isEmpty() ?   Logbook::LOGBOOK_NO_TITLE:logbook->title()  );
+    title_->setToolTip( "Logbook title" );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  // logbook author
-  grid_layout->addWidget( new QLabel( "Author: ", this ), 1, 0 );
-  grid_layout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
-  author_->setText( logbook->author().isEmpty() ? Logbook::LOGBOOK_NO_AUTHOR:logbook->author() );
-  author_->setToolTip( "Logbook author." );
+    // logbook author
+    grid_layout->addWidget( label = new QLabel( "Author: ", this ), 1, 0 );
+    grid_layout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
+    author_->setText( logbook->author().isEmpty() ? Logbook::LOGBOOK_NO_AUTHOR:logbook->author() );
+    author_->setToolTip( "Logbook author." );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  // attachment directory
-  grid_layout->addWidget( new QLabel( "Directory: ", this ), 2, 0 );
-  grid_layout->addWidget( attachment_directory_ = new BrowsedLineEditor( this ), 2, 1 );
-  attachment_directory_->setFile( logbook->directory().isEmpty() ? File(Util::workingDirectory()) : logbook->directory() );
-  attachment_directory_->setFileMode( QFileDialog::DirectoryOnly );
-  attachment_directory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );
+    // attachment directory
+    grid_layout->addWidget( label = new QLabel( "Directory: ", this ), 2, 0 );
+    grid_layout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 2, 1 );
+    attachmentDirectory_->setFile( logbook->directory().isEmpty() ? File(Util::workingDirectory()) : logbook->directory() );
+    attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
+    attachmentDirectory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  grid_layout->setColumnStretch( 1, 1 );
+    grid_layout->setColumnStretch( 1, 1 );
 
-  // comments
-  mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );
-  mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
-  comments_->setPlainText( logbook->comments() );
-  comments_->setToolTip( "Logbook comments." );
+    // comments
+    mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );
+    mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
+    comments_->setPlainText( logbook->comments() );
+    comments_->setToolTip( "Logbook comments." );
 
 }

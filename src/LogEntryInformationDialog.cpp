@@ -22,11 +22,11 @@
 *******************************************************************************/
 
 /*!
-  \file LogEntryInformationDialog.cpp
-  \brief  logbook entry informations
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file LogEntryInformationDialog.cpp
+\brief  logbook entry informations
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 #include <QLabel>
@@ -50,51 +50,57 @@ using namespace std;
 LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):
     CustomDialog( parent, OkButton| Separator )
 {
-  Debug::Throw( "LogEntryInformationDialog::LogEntryInformationDialog.\n" );
+    Debug::Throw( "LogEntryInformationDialog::LogEntryInformationDialog.\n" );
 
-  setOptionName( "ENTRY_INFORMATION_DIALOG" );
+    setOptionName( "ENTRY_INFORMATION_DIALOG" );
 
-  QHBoxLayout* h_layout = new QHBoxLayout();
-  h_layout->setSpacing(10);
-  h_layout->setMargin(5);
-  mainLayout().addLayout( h_layout );
+    QHBoxLayout* h_layout = new QHBoxLayout();
+    h_layout->setSpacing(10);
+    h_layout->setMargin(5);
+    mainLayout().addLayout( h_layout );
 
-  //! try load Question icon
-  QPixmap pixmap( PixmapEngine::get( ICONS::INFORMATION ) );
+    //! try load Question icon
+    QPixmap pixmap( PixmapEngine::get( ICONS::INFORMATION ) );
 
-  QLabel* label = new QLabel(this);
-  label->setPixmap( pixmap );
-  h_layout->addWidget( label, 0, Qt::AlignHCenter );
+    QLabel* label = new QLabel(this);
+    label->setPixmap( pixmap );
+    h_layout->addWidget( label, 0, Qt::AlignHCenter );
 
-  QGridLayout *grid_layout = new QGridLayout();
-  grid_layout->setMargin(0);
-  grid_layout->setSpacing(5);
-  h_layout->addLayout( grid_layout, 1 );
+    QGridLayout *grid_layout = new QGridLayout();
+    grid_layout->setMargin(0);
+    grid_layout->setSpacing(5);
+    h_layout->addLayout( grid_layout, 1 );
 
-  grid_layout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
-  grid_layout->addWidget( new QLabel( entry->title(), this ), 0, 1 );
+    grid_layout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );
+    grid_layout->addWidget( new QLabel( entry->title(), this ), 0, 1 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  grid_layout->addWidget( new QLabel( "Keyword: ", this ), 1, 0 );
-  grid_layout->addWidget( new QLabel( entry->keyword().get(), this ), 1, 1 );
+    grid_layout->addWidget( label = new QLabel( "Keyword: ", this ), 1, 0 );
+    grid_layout->addWidget( new QLabel( entry->keyword().get(), this ), 1, 1 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  grid_layout->addWidget( new QLabel( "Author: ", this ), 2, 0 );
-  grid_layout->addWidget( new QLabel( entry->author(), this ), 2, 1 );
+    grid_layout->addWidget( label = new QLabel( "Author: ", this ), 2, 0 );
+    grid_layout->addWidget( new QLabel( entry->author(), this ), 2, 1 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  grid_layout->addWidget( new QLabel( "Creation: ", this ), 3, 0 );
-  grid_layout->addWidget( new QLabel( entry->creation().toString(), this ), 3, 1 );
+    grid_layout->addWidget( label = new QLabel( "Creation: ", this ), 3, 0 );
+    grid_layout->addWidget( new QLabel( entry->creation().toString(), this ), 3, 1 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  grid_layout->addWidget( new QLabel( "Modification: ", this ), 4, 0 );
-  grid_layout->addWidget( new QLabel( entry->modification().toString(), this ), 4, 1 );
+    grid_layout->addWidget( label = new QLabel( "Modification: ", this ), 4, 0 );
+    grid_layout->addWidget( new QLabel( entry->modification().toString(), this ), 4, 1 );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  // retrieve associated logbook
-  int i=5;
-  BASE::KeySet<Logbook> logbooks( entry );
-  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!=logbooks.end(); iter++, i++ )
-  {
+    // retrieve associated logbook
+    int i=5;
+    BASE::KeySet<Logbook> logbooks( entry );
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!=logbooks.end(); iter++, i++ )
+    {
 
-    grid_layout->addWidget( new QLabel( "File: ", this ), i, 0 );
-    grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName(), this ), i, 1);
+        grid_layout->addWidget( label = new QLabel( "File: ", this ), i, 0 );
+        grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName(), this ), i, 1);
+        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-  }
+    }
 
 }

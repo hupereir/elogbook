@@ -24,11 +24,11 @@
 *******************************************************************************/
 
 /*!
-  \file LogbookInformationDialog.h
-  \brief  logbook informations
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file LogbookInformationDialog.h
+\brief  logbook informations
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 #include "AnimatedLineEditor.h"
@@ -41,40 +41,40 @@ class Logbook;
 class LogbookInformationDialog: public CustomDialog
 {
 
-  public:
+    public:
 
-  //! constructor
-  LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
+    //! constructor
+    LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
 
-  //! title
-  QString title( void ) const
-  { return title_->text(); }
+    //! title
+    QString title( void ) const
+    { return title_->text(); }
 
-  //! author
-  QString author( void ) const
-  { return author_->text(); }
+    //! author
+    QString author( void ) const
+    { return author_->text(); }
 
-  //! attachment directory
-  File AttachmentDirectory( void ) const
-  { return attachment_directory_->editor().text(); }
+    //! attachment directory
+    File AttachmentDirectory( void ) const
+    { return attachmentDirectory_->editor().text(); }
 
-  //! comments
-  QString comments( void ) const
-  { return comments_->toPlainText(); }
+    //! comments
+    QString comments( void ) const
+    { return comments_->toPlainText(); }
 
-  private:
+    private:
 
-  //! title line edit
-  AnimatedLineEditor* title_;
+    //! title line edit
+    AnimatedLineEditor* title_;
 
-  //! author
-  AnimatedLineEditor* author_;
+    //! author
+    AnimatedLineEditor* author_;
 
-  //! attachment directory
-  BrowsedLineEditor* attachment_directory_;
+    //! attachment directory
+    BrowsedLineEditor* attachmentDirectory_;
 
-  //! comments
-  TextEditor* comments_;
+    //! comments
+    TextEditor* comments_;
 
 };
 

@@ -40,76 +40,76 @@ class Logbook;
 class LogbookStatisticsDialog: public CustomDialog
 {
 
-  public:
-
-  //! constructor
-  LogbookStatisticsDialog( QWidget* parent, Logbook* logbook  );
-
-  private:
-
-  //! logbook information model
-  class Model: public ListModel<Logbook*>, public Counter
-  {
-
     public:
 
-    //! number of columns
-    enum { n_columns = 5 };
+    //! constructor
+    LogbookStatisticsDialog( QWidget* parent, Logbook* logbook  );
 
-    //! column type enumeration
-    enum ColumnType {
-      FILE,
-      ENTRIES,
-      CREATED,
-      MODIFIED
+    private:
+
+    //! logbook information model
+    class Model: public ListModel<Logbook*>, public Counter
+    {
+
+        public:
+
+        //! number of columns
+        enum { n_columns = 5 };
+
+        //! column type enumeration
+        enum ColumnType {
+            FILE,
+            ENTRIES,
+            CREATED,
+            MODIFIED
+        };
+
+        //! constructor
+        Model( QObject* parent = 0 ):
+            ListModel<Logbook*>( parent ),
+            Counter( "LogbookStatisticsDialog::Model" )
+        {}
+
+        //!@name methods reimplemented from base class
+        //@{
+
+        //! flags
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const
+        { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
+
+        //! return data
+        virtual QVariant data(const QModelIndex &index, int role) const;
+
+        //! header data
+        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+        {
+            if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < n_columns )
+            { return column_titles_[section]; }
+
+            // return empty
+            return QVariant();
+
+        }
+
+        //! number of columns for a given index
+        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+        { return n_columns; }
+
+        //@}
+
+        protected:
+
+        //! sort
+        virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder )
+        {}
+
+        //! list column names
+        static const QString column_titles_[n_columns];
+
     };
 
-    //! constructor
-    Model( QObject* parent = 0 ):
-      ListModel<Logbook*>( parent ),
-      Counter( "LogbookStatisticsDialog::Model" )
-    {}
-
-    //!@name methods reimplemented from base class
-    //@{
-
-    //! flags
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const
-    { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
-
-    //! return data
-    virtual QVariant data(const QModelIndex &index, int role) const;
-
-    //! header data
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
-    {
-      if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < n_columns )
-      { return column_titles_[section]; }
-
-      // return empty
-      return QVariant();
-
-    }
-
-    //! number of columns for a given index
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
-    { return n_columns; }
-
-    //@}
-
-    protected:
-
-    //! sort
-    virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder )
-    {}
-
-    //! list column names
-    static const QString column_titles_[n_columns];
-
-  };
-
-  //! model
-  Model model_;
+    //! model
+    Model model_;
 
 };
 

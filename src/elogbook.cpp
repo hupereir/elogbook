@@ -22,11 +22,11 @@
 *******************************************************************************/
 
 /*!
-  \file    eLogbook.cpp
-  \brief  eLogbook main file
-  \author  Hugo Pereira
-  \version $Revision$
-  \date    $Date$
+\file    eLogbook.cpp
+\brief  eLogbook main file
+\author  Hugo Pereira
+\version $Revision$
+\date    $Date$
 */
 
 #include <QApplication>
@@ -54,54 +54,54 @@ void interrupt( int sig );
 int main (int argc, char *argv[])
 {
 
-  // Ensure proper cleaning at exit
-  signal(SIGINT,  interrupt);
-  signal(SIGTERM, interrupt);
+    // Ensure proper cleaning at exit
+    signal(SIGINT,  interrupt);
+    signal(SIGTERM, interrupt);
 
-  // install error handler
-  qInstallMsgHandler( ErrorHandler::Throw );
+    // install error handler
+    qInstallMsgHandler( ErrorHandler::Throw );
 
-  // load possible command file
-  // load possible command file (supposibly last argument, not starting with a "-"=
-  CommandLineArguments arguments( argc, argv );
-  if( SERVER::ApplicationManager::commandLineParser( arguments, false ).hasFlag( "--help" ) )
-  {
-    Application::usage();
+    // load possible command file
+    // load possible command file (supposibly last argument, not starting with a "-"=
+    CommandLineArguments arguments( argc, argv );
+    if( SERVER::ApplicationManager::commandLineParser( arguments, false ).hasFlag( "--help" ) )
+    {
+        Application::usage();
+        return 0;
+    }
+
+    // install default options
+    installDefaultOptions();
+    installSystemOptions();
+
+    // customize options
+    XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) );
+
+    // set debug level
+    Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
+    if( Debug::level() ) XmlOptions::get().print();
+
+    // initialize main frame and run loop
+    Q_INIT_RESOURCE( basePixmaps );
+    Q_INIT_RESOURCE( pixmaps );
+
+    // create Application
+    QApplication application( argc, argv );
+    application.setApplicationName( "elogbook" );
+
+    // singleton application is deleted before QApplication
+    Application singleton( arguments );
+    Singleton::get().setApplication( &singleton );
+    singleton.initApplicationManager();
+    application.exec();
+
     return 0;
-  }
-
-  // install default options
-  installDefaultOptions();
-  installSystemOptions();
-
-  // customize options
-  XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) );
-
-  // set debug level
-  Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
-  if( Debug::level() ) XmlOptions::get().print();
-
-  // initialize main frame and run loop
-  Q_INIT_RESOURCE( basePixmaps );
-  Q_INIT_RESOURCE( pixmaps );
-
-  // create Application
-  QApplication application( argc, argv );
-
-  // the curly brackets here are to make sure the
-  // singleton application is deleted before QApplication
-  Application singleton( arguments );
-  Singleton::get().setApplication( &singleton );
-  singleton.initApplicationManager();
-  application.exec();
-
-  return 0;
 
 }
 
 //_____________________________________________
 void interrupt( int sig )
 {
-  Debug::Throw() << "interrupt - Recieved signal " << sig << endl;
-  qApp->quit();
+    Debug::Throw() << "interrupt - Recieved signal " << sig << endl;
+    qApp->quit();
 }
