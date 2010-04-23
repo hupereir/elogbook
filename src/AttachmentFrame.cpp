@@ -360,7 +360,7 @@ void AttachmentFrame::customEvent( QEvent* event )
 
   if( event->type() != ValidFileEvent::eventType() ) return QWidget::customEvent( event );
 
-  ValidFileEvent* valid_file_event( dynamic_cast<ValidFileEvent*>(event) );
+  ValidFileEvent* valid_file_event( static_cast<ValidFileEvent*>(event) );
   if( !valid_file_event ) return QWidget::customEvent( event );
 
   Debug::Throw() << "AttachmentFrame::customEvent." << endl;

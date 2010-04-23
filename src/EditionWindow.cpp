@@ -1064,7 +1064,7 @@ void EditionWindow::_closeEditor( AnimatedTextEditor& editor )
 
   // retrieve parent and grandparent of current display
   QWidget* parent( editor.parentWidget() );
-  QSplitter* parent_splitter( dynamic_cast<QSplitter*>( parent ) );
+  QSplitter* parent_splitter( qobject_cast<QSplitter*>( parent ) );
 
   // retrieve editors associated to current
   editors = BASE::KeySet<AnimatedTextEditor>( &editor );
@@ -1092,7 +1092,7 @@ void EditionWindow::_closeEditor( AnimatedTextEditor& editor )
     QWidget* grand_parent( parent_splitter->parentWidget() );
 
     // try cast to a splitter
-    QSplitter* grand_parent_splitter( dynamic_cast<QSplitter*>( grand_parent ) );
+    QSplitter* grand_parent_splitter( qobject_cast<QSplitter*>( grand_parent ) );
 
     // move child to grand_parent_splitter if any
     if( grand_parent_splitter )
@@ -1204,7 +1204,7 @@ QSplitter& EditionWindow::_newSplitter( const Orientation& orientation )
 
   // try cast to splitter
   // do not create a new splitter if the parent has same orientation
-  QSplitter *parent_splitter( dynamic_cast<QSplitter*>( parent ) );
+  QSplitter *parent_splitter( qobject_cast<QSplitter*>( parent ) );
   if( parent_splitter && parent_splitter->orientation() == orientation ) {
 
     Debug::Throw( "EditionWindow::_newSplitter - orientation match. No need to create new splitter.\n" );

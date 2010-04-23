@@ -70,7 +70,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
   Debug::Throw( "Menu::Menu.\n" );
 
   // try cast parent to EditionWindow
-  EditionWindow* editionwindow( dynamic_cast<EditionWindow*>( parent ) );
+  EditionWindow* editionwindow( qobject_cast<EditionWindow*>( parent ) );
 
   // generic menu/action
   QMenu *menu;
@@ -215,7 +215,7 @@ void Menu::_updateEditorMenu( void )
   AttachmentWindow &attachment_window( Singleton::get().application<Application>()->attachmentWindow() );
 
   // retrieve parent editFream if any
-  EditionWindow* editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );
+  EditionWindow* editionwindow = qobject_cast<EditionWindow*>( parentWidget() );
 
   // editor attachments and logbook information
   editor_menu_->addAction( &mainwindow.uniconifyAction() );
@@ -266,7 +266,7 @@ void Menu::_updatePreferenceMenu( void )
   Application& application( *Singleton::get().application<Application>() );
 
   // additional Settings in case parent is a selection frame
-  MainWindow *mainwindow = dynamic_cast<MainWindow*>( parentWidget() );
+  MainWindow *mainwindow = qobject_cast<MainWindow*>( parentWidget() );
   if( mainwindow )
   {
     preference_menu_->addSeparator();
@@ -276,7 +276,7 @@ void Menu::_updatePreferenceMenu( void )
   }
 
   // additional Settings in case parent is an edition frame
-  EditionWindow *editionwindow = dynamic_cast<EditionWindow*>( parentWidget() );
+  EditionWindow *editionwindow = qobject_cast<EditionWindow*>( parentWidget() );
   if( editionwindow )
   {
     preference_menu_->addSeparator();
