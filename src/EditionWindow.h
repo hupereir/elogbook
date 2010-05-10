@@ -25,11 +25,11 @@
 *******************************************************************************/
 
 /*!
-  \file EditionWindow.h
-  \brief log entry edition/creation singleton object
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file EditionWindow.h
+\brief log entry edition/creation singleton object
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 #include <QBasicTimer>
@@ -66,486 +66,485 @@ class StatusBar;
 
 //! log entry edition/creation object
 /*!
-  Note:
-  though EditionWindows are TopLevel widgets, they are not deleted at window closure
-  to avoid crash when object is deleted when still within one of its methods.
-  On the contrary, a close event hides the window, and the MainWindow will delete it
-  because of that next time it is asked to create a new EditionWindow, thus acting like a
-  garbage collector
+Note:
+though EditionWindows are TopLevel widgets, they are not deleted at window closure
+to avoid crash when object is deleted when still within one of its methods.
+On the contrary, a close event hides the window, and the MainWindow will delete it
+because of that next time it is asked to create a new EditionWindow, thus acting like a
+garbage collector
 */
 
 class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 {
 
-  //! Qt meta object declaration
-  Q_OBJECT
+    //! Qt meta object declaration
+    Q_OBJECT
 
-  public:
+        public:
 
-  typedef AnimatedLineEditor Editor;
+        typedef AnimatedLineEditor Editor;
 
-  //! creator
-  EditionWindow( QWidget* parent, bool read_only = true );
-
-  //! destructor
-  ~EditionWindow( void );
-
-  //! display all entries informations
-  void displayEntry( LogEntry *entry = 0 );
-
-  //! returns current entry
-  LogEntry* entry( void ) const
-  {
-    BASE::KeySet<LogEntry> entries( this );
-    assert( entries.size() <= 1 );
-    return( entries.size() ) ? *entries.begin():0;
-  }
-
-  //! retrieve attachment list
-  AttachmentFrame& attachmentFrame( void )
-  {
-    BASE::KeySet<AttachmentFrame> frames( this );
-    assert( frames.size() == 1 );
-    return **frames.begin();
-  }
-
-  //! status bar
-  StatusBar& statusBar( void )
-  {
-    assert( statusbar_ );
-    return *statusbar_;
-  }
-
-  //!@name active editor
-  //@{
-
-  //! retrieve active display
-  AnimatedTextEditor& activeEditor( void )
-  { return *active_editor_; }
-
-  //! retrieve active display
-  const AnimatedTextEditor& activeEditor( void ) const
-  { return *active_editor_; }
-
-  //@}
-
-  //! check if this editor is read_only or not
-  const bool& isReadOnly( void ) const
-  { return read_only_; }
-
-  //! set read_only state of the EditionWindow
-  void setReadOnly( const bool& );
-
-  //! color menu
-  void setColorMenu( ColorMenu* );
-
-  //! closed flag
-  const bool& isClosed( void ) const
-  { return closed_; }
-
-  //! closed flag
-  void setIsClosed( const bool& value )
-  { closed_ = value; }
-
-  //! check if current entry has been modified or not
-  bool modified( void ) const
-  { return title_->isModified() || activeEditor().document()->isModified(); }
-
-  //! computes window title
-  QString windowTitle() const;
-
-  //! change window title
-  void updateWindowTitle()
-  { setWindowTitle( windowTitle() ); }
-
-  //! creates dialog to ask for LogEntry save.
-  AskForSaveDialog::ReturnCode askForSave( const bool & enable_cancel = true );
-
-  //! update title Widget from current entry
-  void displayTitle( void );
-
-  //! update color Widget from current entry
-  void displayColor( void );
-
-  //! check if current entry has been modified or not
-  void setModified( const bool& value );
-
-  //! used to count modified EditionWindows
-  class ModifiedFTor
-  {
-    public:
-
-    //! predicate
-    bool operator() (const EditionWindow* frame )
-    { return frame->modified() && !frame->isReadOnly() && !frame->isClosed(); }
-
-  };
-
-  //! used to count alive frames, that are not subject to delayed deletion
-  class aliveFTor
-  {
-    public:
-
-    //! predicate
-    bool operator() (const EditionWindow* frame )
-    { return !frame->isClosed(); }
-
-  };
-
-  //!@name actions
-  //@{
-
-  //! new entry action
-  QAction& newEntryAction( void ) const
-  { return *new_entry_action_; }
-
-  //! previous entry action
-  QAction& previousEntryAction( void ) const
-  { return *previous_entry_action_; }
-
-  //! next entry action
-  QAction& nextEntryAction( void ) const
-  { return *next_entry_action_; }
-
-  //! save
-  QAction& saveAction( void ) const
-  { return *save_action_; }
-
-  #if WITH_ASPELL
-  //! check spelling of current entry
-  QAction& spellCheckAction( void ) const
-  { return *spellcheck_action_; }
-  #endif
-
-  //! entry information
-  QAction& entryInfoAction( void ) const
-  { return *entry_info_action_; }
-
-  //! view html
-  QAction& printAction( void ) const
-  { return *print_action_; }
-
-  //! split view horizontal
-  QAction& splitViewHorizontalAction( void ) const
-  { return *split_view_horizontal_action_; }
-
-  //! split view vertical
-  QAction& splitViewVerticalAction( void ) const
-  { return *split_view_vertical_action_; }
-
-  //! split view vertical
-  QAction& cloneWindowAction( void ) const
-  { return *clone_window_action_; }
-
-  //! close view
-  QAction& closeAction( void ) const
-  { return *close_action_; }
-
-  //! uniconify
-  QAction& uniconifyAction( void ) const
-  { return *uniconify_action_; }
-
-  //@}
-
-  //! close view
-  /*! Ask for save if view is modified */
-  void _closeEditor( AnimatedTextEditor& );
-
-  //! change active display manualy
-  void _setActiveEditor( AnimatedTextEditor& );
-
-  protected:
-
-  //! close window event handler
-  virtual void closeEvent( QCloseEvent *event );
-
-  //! timer event
-  virtual void timerEvent( QTimerEvent* );
-
-  private slots:
-
-  //! Save Current entry
-  void _save( bool update_selection = true );
-
-  //! creates a new entry
-  void _newEntry( void );
-
-  //! configuration
-  void _updateConfiguration( void );
-
-  //! splitter moved
-  void _splitterMoved( void );
-
-  //! select previous entry
-  void _previousEntry( void );
-
-  //! select next entry
-  void _nextEntry( void );
-
-  //! show entry info
-  void _entryInfo( void );
-
-  //! Delete Current entry
-  void _deleteEntry( void );
-
-  //! check spelling of current entry
-  void _spellCheck( void );
-
-  //! undo in focused editor (text/title/keyword)
-  void _undo( void );
-
-  //! redo in focused editor (text/title/keyword);
-  void _redo( void );
-
-  //! clone editor
-  void _cloneWindow( void );
-
-  //! view current entry as HTML
-  void _print( void );
-
-  //! unlock read-only editors
-  void _unlock( void );
-
-  //! update (enable/disable) undo action
-  void _updateUndoAction( void );
-
-  //! update (enable/disable) redo action
-  void _updateRedoAction( void );
-
-  //! update (enable/disable) save action
-  void _updateSaveAction( void );
-
-  /*!
-    \brief update (enable/disable) undo/redo action
-    based on the widget that currently has focus
-  */
-  void _updateUndoRedoActions( QWidget* old, QWidget* current );
-
-  //! Set entry as modified, change window title
-  void _titleModified( bool );
-
-  //! Set entry as modified, change window title
-  void _textModified( bool );
-
-  //! display cursor position
-  void _displayCursorPosition( void )
-  { _displayCursorPosition( activeEditor().textPosition() ); }
-
-  //! display cursor position
-  void _displayCursorPosition( int, int new_position )
-  { _displayCursorPosition( TextPosition( 0, new_position ) ); }
-
-  //! close
-  void _close( void )
-  {
-    Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
-    BASE::KeySet< AnimatedTextEditor > editors( this );
-    if( editors.size() > 1 ) _closeEditor( activeEditor() );
-    else close();
-  }
-
-  //! clone current file
-  void _splitView( void )
-  { _splitView( Qt::Vertical ); }
-
-  //! clone current file horizontal
-  void _splitViewHorizontal( void )
-  { _splitView( Qt::Horizontal ); }
-
-  //! clone current file horizontal
-  void _splitViewVertical( void )
-  { _splitView( Qt::Vertical ); }
-
-  //! display focus changed
-  void _displayFocusChanged( TextEditor* );
-
-  //! overwrite mode changed
-  void _modifiersChanged( unsigned int );
-
-  private:
-
-  //! install actions
-  void _installActions( void );
-
-  //!@name display management
-  //@{
-
-  //! split view
-  AnimatedTextEditor& _splitView( const Qt::Orientation& );
-
-  //! create new splitter
-  QSplitter& _newSplitter( const Qt::Orientation&  );
-
-  //! create new TextEditor
-  AnimatedTextEditor& _newTextEditor( QWidget* parent );
-
-  //@}
-
-  //! display cursor position
-  void _displayCursorPosition( const TextPosition& position );
-
-  //! retrieve associated MainWindow
-  MainWindow& _mainWindow( void ) const;
-
-  //! menu
-  Menu& _menu( void ) const
-  {
-    assert( menu_ );
-    return *menu_;
-  }
-
-  //! update text Widget from current entry
-  void _displayText( void );
-
-  //! update attachment list Widget from current entry
-  void _displayAttachments( void );
-
-  //! true if status bar is set
-  bool _hasStatusBar( void ) const
-  { return (bool) statusbar_; }
-
-  //! if true, LogEntry associated to EditionWindow cannot be modified
-  bool read_only_;
-
-  //! list of buttons to disactivate in case of read-only
-  typedef std::vector< QAction* > ActionList;
-
-  //! list of buttons to disactivate in case of read-only
-  ActionList read_only_actions_;
-
-  //! "closed" flag
-  /*! this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
-  bool closed_;
-
-  //!@name stored actions to toggle visibility
-  //@{
-
-  //! lock toolbar
-  CustomToolBar* lock_;
-
-  //@}
-
-  //! local QSplitter object, derived from Counter
-  /*! helps keeping track of how many splitters are created/deleted */
-  class LocalSplitter: public QSplitter, public Counter
-  {
-
-    public:
-
-    //! constructor
-    LocalSplitter( QWidget* parent ):
-      QSplitter( parent ),
-      Counter( "LocalSplitter" )
-    { Debug::Throw( "LocalSplitter::LocalSplitter.\n" ); }
+    //! creator
+    EditionWindow( QWidget* parent, bool read_only = true );
 
     //! destructor
-    virtual ~LocalSplitter( void )
-    { Debug::Throw( "LocalSplitter::~LocalSplitter.\n" ); }
+    ~EditionWindow( void );
 
-  };
+    //! display all entries informations
+    void displayEntry( LogEntry *entry = 0 );
 
-  //! main widget (that contains first editor)
-  QWidget *main_;
+    //! returns current entry
+    LogEntry* entry( void ) const
+    {
+        BASE::KeySet<LogEntry> entries( this );
+        assert( entries.size() <= 1 );
+        return( entries.size() ) ? *entries.begin():0;
+    }
 
-  //! titlebar layout
-  QHBoxLayout* title_layout_;
+    //! retrieve attachment list
+    AttachmentFrame& attachmentFrame( void )
+    {
+        BASE::KeySet<AttachmentFrame> frames( this );
+        assert( frames.size() == 1 );
+        return **frames.begin();
+    }
 
-  //! LogEntry title Object
-  Editor *title_;
+    //! status bar
+    StatusBar& statusBar( void )
+    {
+        assert( statusBar_ );
+        return *statusBar_;
+    }
 
-  //! color menu
-  ColorMenu* color_menu_;
+    //!@name active editor
+    //@{
 
-  //! color widget
-  class ColorWidget: public QToolButton, public Counter
-  //class ColorWidget: public QPushButton, public Counter
-  {
+    //! retrieve active display
+    AnimatedTextEditor& activeEditor( void )
+    { return *activeEditor_; }
 
-    public:
+    //! retrieve active display
+    const AnimatedTextEditor& activeEditor( void ) const
+    { return *activeEditor_; }
 
-    //! constructor
-    ColorWidget( QWidget* parent );
+    //@}
 
-    //! color
-    void setColor( const QColor& color );
+    //! check if this editor is read_only or not
+    const bool& isReadOnly( void ) const
+    { return readOnly_; }
 
-    //! size hint
-    QSize sizeHint( void ) const;
+    //! set read_only state of the EditionWindow
+    void setReadOnly( const bool& );
 
-    //! size hint
-    QSize minimumSizeHint( void ) const;
+    //! color menu
+    void setColorMenu( ColorMenu* );
+
+    //! closed flag
+    const bool& isClosed( void ) const
+    { return closed_; }
+
+    //! closed flag
+    void setIsClosed( const bool& value )
+    { closed_ = value; }
+
+    //! check if current entry has been modified or not
+    bool modified( void ) const
+    { return title_->isModified() || activeEditor().document()->isModified(); }
+
+    //! computes window title
+    QString windowTitle() const;
+
+    //! change window title
+    void updateWindowTitle()
+    { setWindowTitle( windowTitle() ); }
+
+    //! creates dialog to ask for LogEntry save.
+    AskForSaveDialog::ReturnCode askForSave( const bool & enable_cancel = true );
+
+    //! update title Widget from current entry
+    void displayTitle( void );
+
+    //! update color Widget from current entry
+    void displayColor( void );
+
+    //! check if current entry has been modified or not
+    void setModified( const bool& value );
+
+    //! used to count modified EditionWindows
+    class ModifiedFTor
+    {
+        public:
+
+        //! predicate
+        bool operator() (const EditionWindow* frame )
+        { return frame->modified() && !frame->isReadOnly() && !frame->isClosed(); }
+
+    };
+
+    //! used to count alive frames, that are not subject to delayed deletion
+    class aliveFTor
+    {
+        public:
+
+        //! predicate
+        bool operator() (const EditionWindow* frame )
+        { return !frame->isClosed(); }
+
+    };
+
+    //!@name actions
+    //@{
+
+    //! new entry action
+    QAction& newEntryAction( void ) const
+    { return *newEntryAction_; }
+
+    //! previous entry action
+    QAction& previousEntryAction( void ) const
+    { return *previousEntryAction_; }
+
+    //! next entry action
+    QAction& nextEntryAction( void ) const
+    { return *next_entryAction_; }
+
+    //! save
+    QAction& saveAction( void ) const
+    { return *saveAction_; }
+
+    #if WITH_ASPELL
+    //! check spelling of current entry
+    QAction& spellCheckAction( void ) const
+    { return *spellcheckAction_; }
+    #endif
+
+    //! entry information
+    QAction& entryInfoAction( void ) const
+    { return *entryInfoAction_; }
+
+    //! view html
+    QAction& printAction( void ) const
+    { return *printAction_; }
+
+    //! split view horizontal
+    QAction& splitViewHorizontalAction( void ) const
+    { return *split_view_horizontalAction_; }
+
+    //! split view vertical
+    QAction& splitViewVerticalAction( void ) const
+    { return *split_view_verticalAction_; }
+
+    //! split view vertical
+    QAction& cloneWindowAction( void ) const
+    { return *cloneWindowAction_; }
+
+    //! close view
+    QAction& closeAction( void ) const
+    { return *closeAction_; }
+
+    //! uniconify
+    QAction& uniconifyAction( void ) const
+    { return *uniconifyAction_; }
+
+    //@}
+
+    //! close view
+    /*! Ask for save if view is modified */
+    void _closeEditor( AnimatedTextEditor& );
+
+    //! change active display manualy
+    void _setActiveEditor( AnimatedTextEditor& );
 
     protected:
 
-    //! paint event
-    void paintEvent( QPaintEvent* );
+    //! close window event handler
+    virtual void closeEvent( QCloseEvent *event );
 
-  };
+    //! timer event
+    virtual void timerEvent( QTimerEvent* );
 
-  //! color widget
-  ColorWidget* color_widget_;
+    private slots:
 
-  //! LogEntry text Object
-  AnimatedTextEditor *active_editor_;
+    //! Save Current entry
+    void _save( bool update_selection = true );
 
-  //! text format bar
-  FormatBar* format_toolbar_;
+    //! creates a new entry
+    void _newEntry( void );
 
-  //! statusbar
-  StatusBar* statusbar_;
+    //! configuration
+    void _updateConfiguration( void );
 
-  //! menu
-  Menu* menu_;
+    //! splitter moved
+    void _splitterMoved( void );
 
-  //!@name actions
-  //@{
+    //! select previous entry
+    void _previousEntry( void );
 
-  //! undo
-  QAction* undo_action_;
+    //! select next entry
+    void _nextEntry( void );
 
-  //! redo
-  QAction* redo_action_;
+    //! show entry info
+    void _entryInfo( void );
 
-  //! new entry
-  QAction* new_entry_action_;
+    //! Delete Current entry
+    void _deleteEntry( void );
 
-  //! previous entry action
-  QAction* previous_entry_action_;
+    //! check spelling of current entry
+    void _spellCheck( void );
 
-  //! next entry action
-  QAction* next_entry_action_;
+    //! undo in focused editor (text/title/keyword)
+    void _undo( void );
 
-  //! save
-  QAction* save_action_;
+    //! redo in focused editor (text/title/keyword);
+    void _redo( void );
 
-  #if WITH_ASPELL
-  QAction* spellcheck_action_;
-  #endif
+    //! clone editor
+    void _cloneWindow( void );
 
-  //! entry information
-  QAction* entry_info_action_;
+    //! view current entry as HTML
+    void _print( void );
 
-  //! view html
-  QAction* print_action_;
+    //! unlock read-only editors
+    void _unlock( void );
 
-  //! split view horizontal
-  QAction* split_view_horizontal_action_;
+    //! update (enable/disable) undo action
+    void _updateUndoAction( void );
 
-  //! split view vertical
-  QAction* split_view_vertical_action_;
+    //! update (enable/disable) redo action
+    void _updateRedoAction( void );
 
-  //! new window action
-  QAction* clone_window_action_;
+    //! update (enable/disable) save action
+    void _updateSaveAction( void );
 
-  //! close view (or window) action
-  QAction* close_action_;
+    /*!
+    \brief update (enable/disable) undo/redo action
+    based on the widget that currently has focus
+    */
+    void _updateUndoRedoActions( QWidget* old, QWidget* current );
 
-  //! uniconify
-  QAction* uniconify_action_;
+    //! Set entry as modified, change window title
+    void _titleModified( bool );
 
-  //@}
+    //! Set entry as modified, change window title
+    void _textModified( bool );
 
-  QBasicTimer resize_timer_;
+    //! display cursor position
+    void _displayCursorPosition( void )
+    { _displayCursorPosition( activeEditor().textPosition() ); }
+
+    //! display cursor position
+    void _displayCursorPosition( int, int new_position )
+    { _displayCursorPosition( TextPosition( 0, new_position ) ); }
+
+    //! close
+    void _close( void )
+    {
+        Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
+        BASE::KeySet< AnimatedTextEditor > editors( this );
+        if( editors.size() > 1 ) _closeEditor( activeEditor() );
+        else close();
+    }
+
+    //! clone current file
+    void _splitView( void )
+    { _splitView( Qt::Vertical ); }
+
+    //! clone current file horizontal
+    void _splitViewHorizontal( void )
+    { _splitView( Qt::Horizontal ); }
+
+    //! clone current file horizontal
+    void _splitViewVertical( void )
+    { _splitView( Qt::Vertical ); }
+
+    //! display focus changed
+    void _displayFocusChanged( TextEditor* );
+
+    //! overwrite mode changed
+    void _modifiersChanged( unsigned int );
+
+    private:
+
+    //! install actions
+    void _installActions( void );
+
+    //!@name display management
+    //@{
+
+    //! split view
+    AnimatedTextEditor& _splitView( const Qt::Orientation& );
+
+    //! create new splitter
+    QSplitter& _newSplitter( const Qt::Orientation&  );
+
+    //! create new TextEditor
+    AnimatedTextEditor& _newTextEditor( QWidget* parent );
+
+    //@}
+
+    //! display cursor position
+    void _displayCursorPosition( const TextPosition& position );
+
+    //! retrieve associated MainWindow
+    MainWindow& _mainWindow( void ) const;
+
+    //! menu
+    Menu& _menu( void ) const
+    {
+        assert( menu_ );
+        return *menu_;
+    }
+
+    //! update text Widget from current entry
+    void _displayText( void );
+
+    //! update attachment list Widget from current entry
+    void _displayAttachments( void );
+
+    //! true if status bar is set
+    bool _hasStatusBar( void ) const
+    { return (bool) statusBar_; }
+
+    //! if true, LogEntry associated to EditionWindow cannot be modified
+    bool readOnly_;
+
+    //! list of buttons to disactivate in case of read-only
+    typedef std::vector< QAction* > ActionList;
+
+    //! list of buttons to disactivate in case of read-only
+    ActionList readOnlyActions_;
+
+    //! "closed" flag
+    /*! this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
+    bool closed_;
+
+    //!@name stored actions to toggle visibility
+    //@{
+
+    //! lock toolbar
+    CustomToolBar* lock_;
+
+    //@}
+
+    //! local QSplitter object, derived from Counter
+    /*! helps keeping track of how many splitters are created/deleted */
+    class LocalSplitter: public QSplitter, public Counter
+    {
+
+        public:
+
+        //! constructor
+        LocalSplitter( QWidget* parent ):
+            QSplitter( parent ),
+            Counter( "LocalSplitter" )
+        { Debug::Throw( "LocalSplitter::LocalSplitter.\n" ); }
+
+        //! destructor
+        virtual ~LocalSplitter( void )
+        { Debug::Throw( "LocalSplitter::~LocalSplitter.\n" ); }
+
+    };
+
+    //! main widget (that contains first editor)
+    QWidget *main_;
+
+    //! titlebar layout
+    QHBoxLayout* titleLayout_;
+
+    //! LogEntry title Object
+    Editor *title_;
+
+    //! color menu
+    ColorMenu* colorMenu_;
+
+    //! color widget
+    class ColorWidget: public QToolButton, public Counter
+    {
+
+        public:
+
+        //! constructor
+        ColorWidget( QWidget* parent );
+
+        //! color
+        void setColor( const QColor& color );
+
+        //! size hint
+        QSize sizeHint( void ) const;
+
+        //! size hint
+        QSize minimumSizeHint( void ) const;
+
+        protected:
+
+        //! paint event
+        void paintEvent( QPaintEvent* );
+
+    };
+
+    //! color widget
+    ColorWidget* colorWidget_;
+
+    //! LogEntry text Object
+    AnimatedTextEditor *activeEditor_;
+
+    //! text format bar
+    FormatBar* formatToolBar_;
+
+    //! statusbar
+    StatusBar* statusBar_;
+
+    //! menu
+    Menu* menu_;
+
+    //!@name actions
+    //@{
+
+    //! undo
+    QAction* undoAction_;
+
+    //! redo
+    QAction* redoAction_;
+
+    //! new entry
+    QAction* newEntryAction_;
+
+    //! previous entry action
+    QAction* previousEntryAction_;
+
+    //! next entry action
+    QAction* next_entryAction_;
+
+    //! save
+    QAction* saveAction_;
+
+    #if WITH_ASPELL
+    QAction* spellcheckAction_;
+    #endif
+
+    //! entry information
+    QAction* entryInfoAction_;
+
+    //! view html
+    QAction* printAction_;
+
+    //! split view horizontal
+    QAction* split_view_horizontalAction_;
+
+    //! split view vertical
+    QAction* split_view_verticalAction_;
+
+    //! new window action
+    QAction* cloneWindowAction_;
+
+    //! close view (or window) action
+    QAction* closeAction_;
+
+    //! uniconify
+    QAction* uniconifyAction_;
+
+    //@}
+
+    QBasicTimer resizeTimer_;
 
 };
 
