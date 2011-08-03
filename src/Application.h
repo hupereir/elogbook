@@ -25,11 +25,11 @@
 #define Application_h
 
 /*!
-  \file    Application.h
-  \brief  Main Window singleton object
-  \author  Hugo Pereira
-  \version $Revision$
-  \date    $Date$
+\file    Application.h
+\brief  Main Window singleton object
+\author  Hugo Pereira
+\version $Revision$
+\date    $Date$
 */
 
 #include "BaseApplication.h"
@@ -44,88 +44,88 @@ class LogEntry;
 class MainWindow;
 
 /*!
-  \class  Application
-  \brief  Main Window singleton object
+\class  Application
+\brief  Main Window singleton object
 */
 
 class Application: public BaseApplication, public Counter
 {
 
-  //! Qt meta object declaration
-  Q_OBJECT
+    //! Qt meta object declaration
+    Q_OBJECT
 
-  public:
+        public:
 
-  //! command line help
-  static void usage( void );
+        //! command line help
+        static void usage( void );
 
-  //! constructor
-  Application( CommandLineArguments );
+    //! constructor
+    Application( CommandLineArguments );
 
-  //! destructor
-  ~Application( void );
+    //! destructor
+    ~Application( void );
 
-  //! window title for modified logbook
-  static const QString MAIN_TITLE_MODIFIED;
+    //! window title for modified logbook
+    static const QString MAIN_TITLE_MODIFIED;
 
-  //! default window title
-  static const QString MAIN_TITLE;
+    //! default window title
+    static const QString MAIN_TITLE;
 
-  //! default window title
-  static const QString ATTACHMENT_TITLE;
+    //! default window title
+    static const QString ATTACHMENT_TITLE;
 
-  //! application manager
-  virtual void initApplicationManager( void );
+    //! application manager
+    virtual void initApplicationManager( void );
 
-  //! create all widgets
-  virtual bool realizeWidget( void );
+    //! create all widgets
+    virtual bool realizeWidget( void );
 
-  //! file list
-  FileList& recentFiles( void ) const
-  {
-    assert( recent_files_ );
-    return *recent_files_;
-  }
+    //! file list
+    FileList& recentFiles( void ) const
+    {
+        assert( recentFiles_ );
+        return *recentFiles_;
+    }
 
-  //! retrieve AttachmentWindow singleton
-  AttachmentWindow & attachmentWindow( void ) const
-  {
-    assert( attachment_window_ );
-    return *attachment_window_;
-  }
+    //! retrieve AttachmentWindow singleton
+    AttachmentWindow & attachmentWindow( void ) const
+    {
+        assert( attachmentWindow_ );
+        return *attachmentWindow_;
+    }
 
-  //! retrieve MainWindow singleton
-  MainWindow& mainWindow( void ) const
-  {
-    assert( main_window_ );
-    return *main_window_;
-  }
+    //! retrieve MainWindow singleton
+    MainWindow& mainWindow( void ) const
+    {
+        assert( mainWindow_ );
+        return *mainWindow_;
+    }
 
-  protected slots:
+    protected slots:
 
-  //! about eLogbook
-  virtual void _about( void )
-  { BaseApplication::_about( MAIN_TITLE, VERSION, BUILD_TIMESTAMP ); }
+    //! about eLogbook
+    virtual void _about( void )
+    { BaseApplication::_about( MAIN_TITLE, VERSION, BUILD_TIMESTAMP ); }
 
-  //! configuration
-  virtual void _configuration( void );
+    //! configuration
+    virtual void _configuration( void );
 
-  //! exit safely
-  void _exit( void );
+    //! exit safely
+    void _exit( void );
 
-  //! process request from application manager
-  virtual bool _processCommand( SERVER::ServerCommand );
+    //! process request from application manager
+    virtual bool _processCommand( SERVER::ServerCommand );
 
-  private:
+    private:
 
-  //! recent files
-  FileList* recent_files_;
+    //! recent files
+    FileList* recentFiles_;
 
-  //! toplevel attachment frame
-  AttachmentWindow* attachment_window_;
+    //! toplevel attachment frame
+    AttachmentWindow* attachmentWindow_;
 
-  //! main window entry selection frame
-  MainWindow* main_window_;
+    //! main window entry selection frame
+    MainWindow* mainWindow_;
 
 };
 

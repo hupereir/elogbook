@@ -24,11 +24,11 @@
 *
 *******************************************************************************/
 /*!
-   \file XmlDef.h
-   \brief some Xml definitions
-   \author Hugo Pereira
-   \version $Revision$
-   \date $Date$
+\file XmlDef.h
+\brief some Xml definitions
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 
@@ -36,80 +36,80 @@
 //! Some Xml definitions
 namespace XML {
 
-  //! logbook tag
-  static const QString LOGBOOK( "Logbook" );
+    //! logbook tag
+    static const QString LOGBOOK( "Logbook" );
 
-  //! attachment tag
-  static const QString ATTACHMENT( "Attachment" );
+    //! attachment tag
+    static const QString ATTACHMENT( "Attachment" );
 
-  //! recent entries
-  static const QString RECENT_ENTRIES( "RecentEntries" );
+    //! recent entries
+    static const QString RECENT_ENTRIES( "RecentEntries" );
 
-  //! entry tag
-  static const QString ENTRY( "Entry" );
+    //! entry tag
+    static const QString ENTRY( "Entry" );
 
-  //! logbook child tag
-  static const QString CHILD( "Child" );
+    //! logbook child tag
+    static const QString CHILD( "Child" );
 
-  //! attachment type
-  static const QString TYPE( "type" );
+    //! attachment type
+    static const QString TYPE( "type" );
 
-  //! attachment destination file
-  static const QString FILE( "file" );
+    //! attachment destination file
+    static const QString FILE( "file" );
 
-  //! attachment source file
-  static const QString SOURCE_FILE( "orig" );
+    //! attachment source file
+    static const QString SOURCE_FILE( "orig" );
 
-  //! parent file
-  static const QString PARENT_FILE( "parent_file" );
+    //! parent file
+    static const QString PARENT_FILE( "parent_file" );
 
-  //! attachment validity
-  static const QString VALID( "valid" );
+    //! attachment validity
+    static const QString VALID( "valid" );
 
-  //! attachement is link
-  static const QString IS_LINK( "is_link" );
+    //! attachement is link
+    static const QString IS_LINK( "is_link" );
 
-  //! directory
-  static const QString DIRECTORY( "directory" );
+    //! directory
+    static const QString DIRECTORY( "directory" );
 
-  //! comments
-  static const QString COMMENTS( "comments" );
+    //! comments
+    static const QString COMMENTS( "comments" );
 
-  //! creation time
-  static const QString CREATION( "Creation" );
+    //! creation time
+    static const QString CREATION( "Creation" );
 
-  //! modification time
-  static const QString MODIFICATION( "Modification" );
+    //! modification time
+    static const QString MODIFICATION( "Modification" );
 
-  //! backup time
-  static const QString BACKUP( "Backup" );
+    //! backup time
+    static const QString BACKUP( "Backup" );
 
-  //! title
-  static const QString TITLE( "title" );
+    //! title
+    static const QString TITLE( "title" );
 
-  //! logbook author
-  static const QString AUTHOR( "author" );
+    //! logbook author
+    static const QString AUTHOR( "author" );
 
-  //! logbook sort method
-  static const QString SORT_METHOD( "sort_method" );
+    //! logbook sort method
+    static const QString SORT_METHOD( "sort_method" );
 
-  //! logbook sort order
-  static const QString SORT_ORDER( "sort_order" );
+    //! logbook sort order
+    static const QString SORT_ORDER( "sort_order" );
 
-  //! logbook number of entries
-  static const QString ENTRIES( "entries" );
+    //! logbook number of entries
+    static const QString ENTRIES( "entries" );
 
-  //! logbook number of children
-  static const QString CHILDREN( "children" );
+    //! logbook number of children
+    static const QString CHILDREN( "children" );
 
-  //! entry text
-  static const QString TEXT( "Text" );
+    //! entry text
+    static const QString TEXT( "Text" );
 
-  //! entry key
-  static const QString KEYWORD( "key" );
+    //! entry key
+    static const QString KEYWORD( "key" );
 
-  //! entry color
-  static const QString COLOR( "color" );
+    //! entry color
+    static const QString COLOR( "color" );
 
 };
 

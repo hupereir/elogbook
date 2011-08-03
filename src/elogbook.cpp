@@ -32,7 +32,6 @@
 #include <QApplication>
 
 #include <signal.h>
-
 #include <unistd.h>
 
 #include "Application.h"
@@ -42,8 +41,6 @@
 #include "ErrorHandler.h"
 #include "Singleton.h"
 #include "XmlOptions.h"
-
-using namespace std;
 
 //_______________________________
 //! to handle keyboard interruptions

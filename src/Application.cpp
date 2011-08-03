@@ -22,14 +22,12 @@
 *******************************************************************************/
 
 /*!
-  \file Application.cpp
-  \brief application Main Window singleton object
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file Application.cpp
+\brief application Main Window singleton object
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
-
-#include <QMessageBox>
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -50,8 +48,7 @@
 #include "QuestionDialog.h"
 #include "XmlFileList.h"
 
-using namespace std;
-using namespace Qt;
+#include <QtGui/QMessageBox>
 
 //____________________________________________
 const QString Application::MAIN_TITLE_MODIFIED = "Elogbook (modified)";
@@ -61,94 +58,94 @@ const QString Application::ATTACHMENT_TITLE = "Attachments - Elogbook";
 //____________________________________________
 void Application::usage( void )
 {
-  Debug::Throw(0) << "usage : elogbook [options] [file]" << endl;
-  SERVER::ApplicationManager::commandLineParser().usage();
-  return;
+    Debug::Throw(0) << "usage : elogbook [options] [file]" << endl;
+    SERVER::ApplicationManager::commandLineParser().usage();
+    return;
 }
 
 //____________________________________________
 Application::Application( CommandLineArguments arguments ) :
-  BaseApplication( 0, arguments ),
-  Counter( "Application" ),
-  recent_files_( 0 ),
-  attachment_window_( 0 ),
-  main_window_( 0 )
+    BaseApplication( 0, arguments ),
+    Counter( "Application" ),
+    recentFiles_( 0 ),
+    attachmentWindow_( 0 ),
+    mainWindow_( 0 )
 {}
 
 //____________________________________________
 Application::~Application( void )
 {
-  Debug::Throw( "Application::~Application.\n" );
-  if( main_window_ ) delete main_window_;
-  if( recent_files_ ) delete recent_files_;
+    Debug::Throw( "Application::~Application.\n" );
+    if( mainWindow_ ) delete mainWindow_;
+    if( recentFiles_ ) delete recentFiles_;
 
 }
 
 //____________________________________________
 void Application::initApplicationManager( void )
 {
-  Debug::Throw( "Application::initApplicationManager.\n" );
+    Debug::Throw( "Application::initApplicationManager.\n" );
 
-  // retrieve files from arguments and expand if needed
-  CommandLineParser parser( SERVER::ApplicationManager::commandLineParser( _arguments() ) );
-  QStringList& orphans( parser.orphans() );
-  for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); iter++ )
-  { if( !iter->isEmpty() ) (*iter) = File( *iter ).expand(); }
+    // retrieve files from arguments and expand if needed
+    CommandLineParser parser( SERVER::ApplicationManager::commandLineParser( _arguments() ) );
+    QStringList& orphans( parser.orphans() );
+    for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); iter++ )
+    { if( !iter->isEmpty() ) (*iter) = File( *iter ).expand(); }
 
-  // replace arguments
-  _setArguments( parser.arguments() );
+    // replace arguments
+    _setArguments( parser.arguments() );
 
-  // base class initialization
-  BaseApplication::initApplicationManager();
+    // base class initialization
+    BaseApplication::initApplicationManager();
 
 }
 
 //____________________________________________
 bool Application::realizeWidget( void )
 {
-  Debug::Throw( "Application::realizeWidget.\n" );
+    Debug::Throw( "Application::realizeWidget.\n" );
 
-  // check if the method has already been called.
-  if( !BaseApplication::realizeWidget() ) return false;
+    // check if the method has already been called.
+    if( !BaseApplication::realizeWidget() ) return false;
 
-  // rename about action
-  aboutAction().setText( "About &elogbook" );
+    // rename about action
+    aboutAction().setText( "About &elogbook" );
 
-  // need to redirect closeAction to proper exit
-  closeAction().disconnect();
-  connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
+    // need to redirect closeAction to proper exit
+    closeAction().disconnect();
+    connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
 
-  configurationAction().setText( "Configure &elogbook ..." );
+    configurationAction().setText( "Configure &elogbook ..." );
 
-  // recent files
-  recent_files_ = new XmlFileList();
-  recent_files_->setCheck( true );
+    // recent files
+    recentFiles_ = new XmlFileList();
+    recentFiles_->setCheck( true );
 
-  // create attachment window
-  attachment_window_ = new AttachmentWindow();
-  attachmentWindow().centerOnDesktop();
+    // create attachment window
+    attachmentWindow_ = new AttachmentWindow();
+    attachmentWindow().centerOnDesktop();
 
-  // create selection frame
-  main_window_ = new MainWindow();
+    // create selection frame
+    mainWindow_ = new MainWindow();
 
-  connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), &mainWindow(), SLOT( selectEntry( LogEntry* ) ) );
+    connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), &mainWindow(), SLOT( selectEntry( LogEntry* ) ) );
 
-  // update configuration
-  emit configurationChanged();
+    // update configuration
+    emit configurationChanged();
 
-  mainWindow().centerOnDesktop();
-  mainWindow().show();
+    mainWindow().centerOnDesktop();
+    mainWindow().show();
 
-  // update
-  qApp->processEvents();
+    // update
+    qApp->processEvents();
 
-  // load file from arguments or recent files
-  QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
-  File file( filenames.empty() ? recentFiles().lastValidFile().file():File( filenames.front() ).expand() );
-  if( mainWindow().setLogbook( file ) ) mainWindow().checkLogbookBackup();
-  else mainWindow().newLogbookAction().trigger();
+    // load file from arguments or recent files
+    QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
+    File file( filenames.empty() ? recentFiles().lastValidFile().file():File( filenames.front() ).expand() );
+    if( mainWindow().setLogbook( file ) ) mainWindow().checkLogbookBackup();
+    else mainWindow().newLogbookAction().trigger();
 
-  return true;
+    return true;
 
 }
 
@@ -156,12 +153,12 @@ bool Application::realizeWidget( void )
 void Application::_configuration( void )
 {
 
-  Debug::Throw( "Application::_configuration" );
-  emit saveConfiguration();
-  ConfigurationDialog dialog;
-  connect( &dialog, SIGNAL( configurationChanged() ), SIGNAL( configurationChanged() ) );
-  dialog.centerOnWidget( qApp->activeWindow() );
-  dialog.exec();
+    Debug::Throw( "Application::_configuration" );
+    emit saveConfiguration();
+    ConfigurationDialog dialog;
+    connect( &dialog, SIGNAL( configurationChanged() ), SIGNAL( configurationChanged() ) );
+    dialog.centerOnWidget( qApp->activeWindow() );
+    dialog.exec();
 
 }
 
@@ -169,30 +166,30 @@ void Application::_configuration( void )
 void Application::_exit( void )
 {
 
-  Debug::Throw( "Application::_exit.\n" );
+    Debug::Throw( "Application::_exit.\n" );
 
-  // ensure everything is saved properly
-  if( main_window_ )
-  {
-    // check if editable EditionWindows needs save
-    BASE::KeySet<EditionWindow> frames( main_window_ );
-    for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    // ensure everything is saved properly
+    if( mainWindow_ )
     {
-      if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL )
-      { return; }
+        // check if editable EditionWindows needs save
+        BASE::KeySet<EditionWindow> frames( mainWindow_ );
+        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+        {
+            if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL )
+            { return; }
+        }
+
+        Debug::Throw( "EditionWindows saved.\n" );
+
+        // check if current logbook is modified
+        if(
+            mainWindow().logbook() &&
+            mainWindow().logbook()->modified() &&
+            mainWindow().askForSave() == AskForSaveDialog::CANCEL )
+        { return; }
     }
 
-    Debug::Throw( "EditionWindows saved.\n" );
-
-    // check if current logbook is modified
-    if(
-      mainWindow().logbook() &&
-      mainWindow().logbook()->modified() &&
-      mainWindow().askForSave() == AskForSaveDialog::CANCEL )
-    return;
-  }
-
-  qApp->quit();
+    qApp->quit();
 
 }
 
@@ -200,23 +197,23 @@ void Application::_exit( void )
 bool Application::_processCommand( SERVER::ServerCommand command )
 {
 
-  Debug::Throw( "Application::_processCommand.\n" );
-  if( BaseApplication::_processCommand( command ) ) return true;
-  if( command.command() == SERVER::ServerCommand::RAISE )
-  {
-    if( main_window_ ) mainWindow().uniconifyAction().trigger();
-    QStringList filenames( SERVER::ApplicationManager::commandLineParser( command.arguments() ).orphans() );
-    if( !filenames.isEmpty() )
+    Debug::Throw( "Application::_processCommand.\n" );
+    if( BaseApplication::_processCommand( command ) ) return true;
+    if( command.command() == SERVER::ServerCommand::RAISE )
     {
+        if( mainWindow_ ) mainWindow().uniconifyAction().trigger();
+        QStringList filenames( SERVER::ApplicationManager::commandLineParser( command.arguments() ).orphans() );
+        if( !filenames.isEmpty() )
+        {
 
-      QString buffer;
-      QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
-      if( QuestionDialog( main_window_, buffer ).centerOnParent().exec() )
-      { mainWindow().setLogbook( File( filenames.front() ) ); }
+            QString buffer;
+            QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
+            if( QuestionDialog( mainWindow_, buffer ).centerOnParent().exec() )
+            { mainWindow().setLogbook( File( filenames.front() ) ); }
 
-    }
+        }
 
-    return true;
-  } else return false;
+        return true;
+    } else return false;
 
 }

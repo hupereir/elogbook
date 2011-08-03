@@ -142,10 +142,10 @@ bool Logbook::read( void )
 
   // read first child
   QDomElement doc_element = document.documentElement();
-  QString tag_name( doc_element.tagName() );
-  if( tag_name != XML::LOGBOOK )
+  QString tagName( doc_element.tagName() );
+  if( tagName != XML::LOGBOOK )
   {
-    Debug::Throw(0) << "Logbook::read - invalid tag name: " << tag_name << endl;
+    Debug::Throw(0) << "Logbook::read - invalid tag name: " << tagName << endl;
     return false;
   }
 
@@ -184,22 +184,22 @@ bool Logbook::read( void )
     QDomElement element = node.toElement();
     if( element.isNull() ) continue;
 
-    QString tag_name( element.tagName() );
+    QString tagName( element.tagName() );
 
     // children
-    if( tag_name == XML::COMMENTS ) setComments( XmlString( element.text() ).toText() );
-    else if( tag_name == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
-    else if( tag_name == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
-    else if( tag_name == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
-    else if( tag_name == XML::RECENT_ENTRIES ) _readRecentEntries( element );
-    else if( tag_name == XML::ENTRY ) {
+    if( tagName == XML::COMMENTS ) setComments( XmlString( element.text() ).toText() );
+    else if( tagName == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
+    else if( tagName == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
+    else if( tagName == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
+    else if( tagName == XML::RECENT_ENTRIES ) _readRecentEntries( element );
+    else if( tagName == XML::ENTRY ) {
 
       LogEntry* entry = new LogEntry( element );
       Key::associate( latestChild(), entry );
       entry_count++;
       if( !(entry_count%progress) ) emit progressAvailable( progress );
 
-    } else if( tag_name == XML::CHILD ) {
+    } else if( tagName == XML::CHILD ) {
 
       // try retrieve file from attributes
       QString file_attribute( element.attribute( XML::FILE ) );
@@ -224,7 +224,7 @@ bool Logbook::read( void )
       child->read();
       children_.push_back( child );
 
-    } else Debug::Throw(0) << "Logbook::read - unrecognized tag_name: " << tag_name << endl;
+    } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << endl;
 
   }
 
@@ -334,9 +334,9 @@ bool Logbook::write( File file )
     for( List::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
     {
       File child_filename = _childFilename( file, child_number );
-      QDomElement child_element = document.createElement( XML::CHILD );
-      child_element.setAttribute( XML::FILE, XmlString( child_filename ).toXml() );
-      top.appendChild( child_element );
+      QDomElement childElement = document.createElement( XML::CHILD );
+      childElement.setAttribute( XML::FILE, XmlString( child_filename ).toXml() );
+      top.appendChild( childElement );
     }
 
     // finish
@@ -888,12 +888,12 @@ void Logbook::_readRecentEntries( const QDomElement& element )
   // loop over children
   for(QDomNode node = element.firstChild(); !node.isNull(); node = node.nextSibling() )
   {
-    QDomElement child_element = node.toElement();
-    if( child_element.isNull() ) continue;
+    QDomElement childElement = node.toElement();
+    if( childElement.isNull() ) continue;
 
     // children
-    QString tag_name( child_element.tagName() );
-    if( tag_name == XML::CREATION ) recent_entries_.push_back( XmlTimeStamp( child_element ) );
+    QString tagName( childElement.tagName() );
+    if( tagName == XML::CREATION ) recent_entries_.push_back( XmlTimeStamp( childElement ) );
 
   }
 
