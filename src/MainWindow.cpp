@@ -1499,7 +1499,9 @@ void MainWindow::_revertToSaved( void )
     }
 
     // ask for confirmation
-    if( ( _hasModifiedEntries() || logbook()->modified() ) && !QuestionDialog( this, "discard changes to current logbook ?" ).exec() )
+    QString buffer;
+    QTextStream( &buffer ) << "Discard changes to " << logbook()->file().localName() << " ?";
+    if( ( _hasModifiedEntries() || logbook()->modified() ) && !QuestionDialog( this, buffer ).exec() )
     { return; }
 
     // reinit MainWindow
