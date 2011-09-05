@@ -46,7 +46,7 @@
 
 #include <QtCore/QBasicTimer>
 #include <QtCore/QTimerEvent>
-#include <GtGui/QContextMenuEvent>
+#include <QtGui/QContextMenuEvent>
 
 class ColorMenu;
 class CustomToolBar;
