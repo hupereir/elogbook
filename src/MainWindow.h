@@ -31,10 +31,6 @@
 \date $Date$
 */
 
-#include <QBasicTimer>
-#include <QContextMenuEvent>
-#include <QTimerEvent>
-
 #include "AskForSaveDialog.h"
 #include "Counter.h"
 #include "BaseMainWindow.h"
@@ -47,6 +43,10 @@
 #include "LogEntryModel.h"
 
 #include "AnimatedTreeView.h"
+
+#include <QtCore/QBasicTimer>
+#include <QtCore/QTimerEvent>
+#include <GtGui/QContextMenuEvent>
 
 class ColorMenu;
 class CustomToolBar;

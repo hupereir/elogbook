@@ -28,10 +28,6 @@
 \date $Date$
 */
 
-#include <QHeaderView>
-#include <QMenu>
-#include <QSplitter>
-
 #include "Application.h"
 #include "AttachmentWindow.h"
 #include "BaseIcons.h"
@@ -67,6 +63,10 @@
 #include "Util.h"
 #include "PrintLogbookDialog.h"
 #include "XmlOptions.h"
+
+#include <QtGui/QHeaderView>
+#include <QtGui/QMenu>
+#include <QtGui/QSplitter>
 
 using namespace std;
 
