@@ -11,6 +11,7 @@ win32 {
 
   DEFINES += QT_STATIC
   DESTDIR = "C:\Program Files"
+  QMAKE_LFLAGS += -static-libgcc -static-libstdc++
 
   # this is needed to copy target into relevant versioned name
   exists( \"$$DESTDIR\\upx.exe\" ) {
