@@ -82,8 +82,7 @@ HEADERS = \
   PrintLogbookDialog.h \
   ProgressBar.h \
   SearchPanel.h \
-  SelectionStatusBar.h \
-  elogbook.h
+  SelectionStatusBar.h
 
 SOURCES = \
   Application.cpp \

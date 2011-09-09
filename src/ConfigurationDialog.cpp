@@ -310,9 +310,9 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
   // recent files
   page = &addPage( "Recent files", "Recent files list settings", true );
-  RecentFilesConfiguration* recent_files_configuration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
-  page->layout()->addWidget( recent_files_configuration );
-  addOptionWidget( recent_files_configuration );
+  RecentFilesConfiguration* recentFilesConfiguration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
+  page->layout()->addWidget( recentFilesConfiguration );
+  addOptionWidget( recentFilesConfiguration );
 
   // misc
   Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
