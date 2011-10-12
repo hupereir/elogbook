@@ -105,9 +105,6 @@ MainWindow::MainWindow( QWidget *parent ):
     layout->addWidget( splitter, 1 );
     splitter->setOrientation( Qt::Horizontal );
 
-    // search panel
-    // searchPanel_ = new SearchPanel( "Search panel", this, "SEARCH_PANEL" );
-
     // create hidden search panel
     addToolBar( Qt::BottomToolBarArea, searchPanel_ = new SearchPanel( "Search panel", this ) );
     searchPanel_->hide();
