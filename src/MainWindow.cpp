@@ -107,6 +107,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // create hidden search panel
     addToolBar( Qt::BottomToolBarArea, searchPanel_ = new SearchPanel( "Search panel", this ) );
+    searchPanel_->setAppearsInMenu( true );
     searchPanel_->hide();
 
     connect( &searchPanel(), SIGNAL( selectEntries( QString, unsigned int ) ), SLOT( selectEntries( QString, unsigned int ) ) );
@@ -135,6 +136,7 @@ MainWindow::MainWindow( QWidget *parent ):
     left->setLayout( v_layout );
 
     keywordToolBar_ = new CustomToolBar( "Keywords Toolbar", left, "KEYWORD_TOOLBAR" );
+    keywordToolBar_->setAppearsInMenu( true );
     v_layout->addWidget( keywordToolBar_ );
 
     // keyword actions
@@ -203,6 +205,7 @@ MainWindow::MainWindow( QWidget *parent ):
     right->setLayout( v_layout );
 
     entryToolBar_ = new CustomToolBar( "Entries Toolbar", right, "ENTRY_TOOLBAR" );
+    entryToolBar_->setAppearsInMenu( true );
     v_layout->addWidget( entryToolBar_ );
 
     // entry actions
