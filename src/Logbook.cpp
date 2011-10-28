@@ -141,8 +141,8 @@ bool Logbook::read( void )
     }
 
     // read first child
-    QDomElement doc_element = document.documentElement();
-    QString tagName( doc_element.tagName() );
+    QDomElement docElement = document.documentElement();
+    QString tagName( docElement.tagName() );
     if( tagName != XML::LOGBOOK )
     {
         Debug::Throw(0) << "Logbook::read - invalid tag name: " << tagName << endl;
@@ -150,7 +150,7 @@ bool Logbook::read( void )
     }
 
     // read attributes
-    QDomNamedNodeMap attributes( doc_element.attributes() );
+    QDomNamedNodeMap attributes( docElement.attributes() );
     for( unsigned int i=0; i<attributes.length(); i++ )
     {
 
@@ -179,7 +179,7 @@ bool Logbook::read( void )
     // parse children
     static unsigned int progress( 10 );
     unsigned int entry_count( 0 );
-    for(QDomNode node = doc_element.firstChild(); !node.isNull(); node = node.nextSibling() )
+    for(QDomNode node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() )
     {
         QDomElement element = node.toElement();
         if( element.isNull() ) continue;
