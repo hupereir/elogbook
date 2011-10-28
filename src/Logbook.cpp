@@ -22,21 +22,19 @@
 *******************************************************************************/
 
 /*!
-  \file Logbook.cpp
-  \brief log file parser based on xml
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file Logbook.cpp
+\brief log file parser based on xml
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
-#include <QFile>
-#include <QTextStream>
+#include "Logbook.h"
 
 #include "Attachment.h"
 #include "Debug.h"
 #include "FileCheck.h"
 #include "HtmlTextNode.h"
-#include "Logbook.h"
 #include "LogEntry.h"
 #include "XmlOptions.h"
 #include "Str.h"
@@ -44,6 +42,9 @@
 #include "XmlDef.h"
 #include "XmlString.h"
 #include "XmlTimeStamp.h"
+
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 using namespace std;
 
@@ -57,183 +58,182 @@ const QString Logbook::LOGBOOK_NO_DIRECTORY = "";
 
 //________________________________
 Logbook::Logbook( const File& file ):
-  Counter( "Logbook" ),
-  modified_( false ),
-  file_( "" ),
-  parent_file_( "" ),
-  directory_( LOGBOOK_NO_DIRECTORY ),
-  title_( LOGBOOK_NO_TITLE ),
-  author_( LOGBOOK_NO_AUTHOR ),
-  creation_( TimeStamp::now() ),
-  sort_method_( Logbook::SORT_CREATION ),
-  sort_order_( 0 ),
-  xml_entries_( 0 ),
-  xml_children_( 0 )
+    Counter( "Logbook" ),
+    modified_( false ),
+    file_( "" ),
+    parentFile_( "" ),
+    directory_( LOGBOOK_NO_DIRECTORY ),
+    title_( LOGBOOK_NO_TITLE ),
+    author_( LOGBOOK_NO_AUTHOR ),
+    creation_( TimeStamp::now() ),
+    sortMethod_( Logbook::SORT_CREATION ),
+    sortOrder_( 0 ),
+    xmlEntries_( 0 ),
+    xmlChildren_( 0 )
 {
-  Debug::Throw( "Logbook::Logbook. (file)\n" );
-  setFile( file );
-  read();
+    Debug::Throw( "Logbook::Logbook. (file)\n" );
+    setFile( file );
+    read();
 
 }
 
 //_________________________________
 Logbook::~Logbook( void )
 {
-  Debug::Throw( "Logbook::~Logbook.\n" );
+    Debug::Throw( "Logbook::~Logbook.\n" );
 
-  // delete log children
-  for( List::iterator it = children_.begin(); it != children_.end(); it++ )
-  delete *it;
-  children_.clear();
+    // delete log children
+    for( List::iterator it = children_.begin(); it != children_.end(); it++ )
+        delete *it;
+    children_.clear();
 
-  // delete associated entries
-  BASE::KeySet<LogEntry> entries( this );
-  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  delete *iter;
+    // delete associated entries
+    BASE::KeySet<LogEntry> entries( this );
+    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+    { delete *iter; }
 
 }
-
 
 //_________________________________
 bool Logbook::read( void )
 {
 
-  Debug::Throw( "Logbook::read.\n" );
+    Debug::Throw( "Logbook::read.\n" );
 
-  if( file().isEmpty() )
-  {
-    Debug::Throw( "Logbook::read - file is empty.\n" );
-    return false;
-  }
+    if( file().isEmpty() )
+    {
+        Debug::Throw( "Logbook::read - file is empty.\n" );
+        return false;
+    }
 
-  // update StateFrame
-  QString buffer;
-  QTextStream( &buffer ) << "Reading " << file().localName();
-  emit messageAvailable( buffer );
+    // update StateFrame
+    QString buffer;
+    QTextStream( &buffer ) << "Reading " << file().localName();
+    emit messageAvailable( buffer );
 
-  // check input file
-  if( !file().exists() ) {
-    Debug::Throw(0) << "Logbook::read - ERROR: cannot access file \"" << file() << "\".\n";
-    return false;
-  }
+    // check input file
+    if( !file().exists() ) {
+        Debug::Throw(0) << "Logbook::read - ERROR: cannot access file \"" << file() << "\".\n";
+        return false;
+    }
 
-  // delete associated entries
-  BASE::KeySet<LogEntry> entries( Logbook::entries() );
-  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  delete *iter;
+    // delete associated entries
+    BASE::KeySet<LogEntry> entries( Logbook::entries() );
+    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+    { delete *iter; }
 
-  // parse the file
-  QFile file( Logbook::file() );
-  if ( !file.open( QIODevice::ReadOnly ) )
-  {
-    Debug::Throw(0, "Logbook::read - cannot open file.\n" );
-    return false;
-  }
+    // parse the file
+    QFile file( Logbook::file() );
+    if ( !file.open( QIODevice::ReadOnly ) )
+    {
+        Debug::Throw(0, "Logbook::read - cannot open file.\n" );
+        return false;
+    }
 
-  // create document
-  QDomDocument document;
-  error_ = XmlError( Logbook::file() );
-  if ( !document.setContent( &file, &error_.error(), &error_.line(), &error_.column() ) )
-  {
-    file.close();
-    Debug::Throw( "Logbook::read - cannot read file.\n" );
-    return false;
-  }
+    // create document
+    QDomDocument document;
+    error_ = XmlError( Logbook::file() );
+    if ( !document.setContent( &file, &error_.error(), &error_.line(), &error_.column() ) )
+    {
+        file.close();
+        Debug::Throw( "Logbook::read - cannot read file.\n" );
+        return false;
+    }
 
-  // read first child
-  QDomElement doc_element = document.documentElement();
-  QString tagName( doc_element.tagName() );
-  if( tagName != XML::LOGBOOK )
-  {
-    Debug::Throw(0) << "Logbook::read - invalid tag name: " << tagName << endl;
-    return false;
-  }
+    // read first child
+    QDomElement doc_element = document.documentElement();
+    QString tagName( doc_element.tagName() );
+    if( tagName != XML::LOGBOOK )
+    {
+        Debug::Throw(0) << "Logbook::read - invalid tag name: " << tagName << endl;
+        return false;
+    }
 
-  // read attributes
-  QDomNamedNodeMap attributes( doc_element.attributes() );
-  for( unsigned int i=0; i<attributes.length(); i++ )
-  {
+    // read attributes
+    QDomNamedNodeMap attributes( doc_element.attributes() );
+    for( unsigned int i=0; i<attributes.length(); i++ )
+    {
 
-    QDomAttr attribute( attributes.item( i ).toAttr() );
-    if( attribute.isNull() ) continue;
-    QString name( attribute.name() );
-    QString value( attribute.value() );
+        QDomAttr attribute( attributes.item( i ).toAttr() );
+        if( attribute.isNull() ) continue;
+        QString name( attribute.name() );
+        QString value( attribute.value() );
 
-    if( name == XML::TITLE ) setTitle( XmlString( value ).toText() );
-    else if( name == XML::FILE ) setFile( File( XmlString( value ).toText() ) );
-    else if( name == XML::PARENT_FILE ) setParentFile( XmlString( value ).toText() );
-    else if( name == XML::DIRECTORY ) setDirectory( File( XmlString( value ).toText() ) );
-    else if( name == XML::AUTHOR ) setAuthor( XmlString( value ).toText() );
-    else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
-    else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
-    else if( name == XML::ENTRIES ) {
+        if( name == XML::TITLE ) setTitle( XmlString( value ).toText() );
+        else if( name == XML::FILE ) setFile( File( XmlString( value ).toText() ) );
+        else if( name == XML::PARENT_FILE ) setParentFile( XmlString( value ).toText() );
+        else if( name == XML::DIRECTORY ) setDirectory( File( XmlString( value ).toText() ) );
+        else if( name == XML::AUTHOR ) setAuthor( XmlString( value ).toText() );
+        else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
+        else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
+        else if( name == XML::ENTRIES ) {
 
-      setXmlEntries( value.toInt() );
-      emit maximumProgressAvailable( value.toInt() );
+            setXmlEntries( value.toInt() );
+            emit maximumProgressAvailable( value.toInt() );
 
-    } else if( name == XML::CHILDREN ) setXmlChildren( value.toInt() );
-    else Debug::Throw(0) << "Logbook::read - unrecognized logbook attribute: \"" << name << "\"\n";
+        } else if( name == XML::CHILDREN ) setXmlChildren( value.toInt() );
+        else Debug::Throw(0) << "Logbook::read - unrecognized logbook attribute: \"" << name << "\"\n";
 
-  }
+    }
 
-  // parse children
-  static unsigned int progress( 10 );
-  unsigned int entry_count( 0 );
-  for(QDomNode node = doc_element.firstChild(); !node.isNull(); node = node.nextSibling() )
-  {
-    QDomElement element = node.toElement();
-    if( element.isNull() ) continue;
+    // parse children
+    static unsigned int progress( 10 );
+    unsigned int entry_count( 0 );
+    for(QDomNode node = doc_element.firstChild(); !node.isNull(); node = node.nextSibling() )
+    {
+        QDomElement element = node.toElement();
+        if( element.isNull() ) continue;
 
-    QString tagName( element.tagName() );
+        QString tagName( element.tagName() );
 
-    // children
-    if( tagName == XML::COMMENTS ) setComments( XmlString( element.text() ).toText() );
-    else if( tagName == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
-    else if( tagName == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
-    else if( tagName == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
-    else if( tagName == XML::RECENT_ENTRIES ) _readRecentEntries( element );
-    else if( tagName == XML::ENTRY ) {
+        // children
+        if( tagName == XML::COMMENTS ) setComments( XmlString( element.text() ).toText() );
+        else if( tagName == XML::CREATION ) setCreation( XmlTimeStamp( element ) );
+        else if( tagName == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
+        else if( tagName == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
+        else if( tagName == XML::RECENT_ENTRIES ) _readRecentEntries( element );
+        else if( tagName == XML::ENTRY ) {
 
-      LogEntry* entry = new LogEntry( element );
-      Key::associate( latestChild(), entry );
-      entry_count++;
-      if( !(entry_count%progress) ) emit progressAvailable( progress );
+            LogEntry* entry = new LogEntry( element );
+            Key::associate( latestChild(), entry );
+            entry_count++;
+            if( !(entry_count%progress) ) emit progressAvailable( progress );
 
-    } else if( tagName == XML::CHILD ) {
+        } else if( tagName == XML::CHILD ) {
 
-      // try retrieve file from attributes
-      QString file_attribute( element.attribute( XML::FILE ) );
-      if( file_attribute.isNull() )
-      {
-        Debug::Throw(0) << "Logbook::read - no file given for child" << endl;
-        continue;
-      }
+            // try retrieve file from attributes
+            QString file_attribute( element.attribute( XML::FILE ) );
+            if( file_attribute.isNull() )
+            {
+                Debug::Throw(0) << "Logbook::read - no file given for child" << endl;
+                continue;
+            }
 
-      File file( file_attribute );
-      if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
-      Logbook* child = new Logbook();
-      child->setFile( file );
+            File file( file_attribute );
+            if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
+            Logbook* child = new Logbook();
+            child->setFile( file );
 
-      // propagate progressAvailable signal.
-      connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
+            // propagate progressAvailable signal.
+            connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
 
-      QString buffer;
-      QTextStream( &buffer ) << "Reading " << child->file().localName();
-      emit messageAvailable( buffer );
+            QString buffer;
+            QTextStream( &buffer ) << "Reading " << child->file().localName();
+            emit messageAvailable( buffer );
 
-      child->read();
-      children_.push_back( child );
+            child->read();
+            children_.push_back( child );
 
-    } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << endl;
+        } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << endl;
 
-  }
+    }
 
-  emit progressAvailable( entry_count%progress );
+    emit progressAvailable( entry_count%progress );
 
-  // discard modifications
-  setModified( false );
-  saved_ = Logbook::file().lastModified();
-  return true;
+    // discard modifications
+    setModified( false );
+    saved_ = Logbook::file().lastModified();
+    return true;
 
 }
 
@@ -241,294 +241,296 @@ bool Logbook::read( void )
 bool Logbook::write( File file )
 {
 
-  Debug::Throw( "Logbook::write.\n" );
+    Debug::Throw( "Logbook::write.\n" );
 
-  // check filename
-  if( file.isEmpty() ) file = Logbook::file();
-  if( file.isEmpty() ) return false;
+    // check filename
+    if( file.isEmpty() ) file = Logbook::file();
+    if( file.isEmpty() ) return false;
 
-  Debug::Throw( ) << "Logbook::write - \"" << file << "\".\n";
-  bool completed = true;
+    Debug::Throw( ) << "Logbook::write - \"" << file << "\".\n";
+    bool completed = true;
 
-  // check number of entries and children to save in header
-  if( setXmlEntries( entries().size() ) || setXmlChildren( children().size() ) )
-  { setModified( true ); }
+    // check number of entries and children to save in header
+    if( setXmlEntries( entries().size() ) || setXmlChildren( children().size() ) )
+    { setModified( true ); }
 
-  emit maximumProgressAvailable( xmlEntries() );
+    emit maximumProgressAvailable( xmlEntries() );
 
-  // write logbook if filename differs from origin or logbook is modified
-  if( file != Logbook::file() || modified_ )
-  {
-
-    // gets last saved timestamp
-    TimeStamp saved_prev( file.lastModified() );
-
-    // make a backup of the file, if necessary
-    file.backup();
-
-    // update stateFrame
-    QString buffer;
-    QTextStream( &buffer ) << "Writing " << file.localName();
-    emit messageAvailable( buffer );
-
-    QFile out( file );
-    if( !out.open( QIODevice::WriteOnly ) )
-    {
-      Debug::Throw(0) << "Logbook::write - unable to write to file " << file << endl;
-      return false;
-    }
-
-    // create document
-    QDomDocument document;
-
-    // create main element
-    QDomElement top = document.createElement( XML::LOGBOOK );
-    if( !title().isEmpty() ) top.setAttribute( XML::TITLE, XmlString( title() ).toXml() );
-    if( !directory().isEmpty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory()) );
-    if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlString( author() ).toXml() ) ;
-
-    top.setAttribute( XML::SORT_METHOD, Str().assign<unsigned int>(sort_method_) );
-    top.setAttribute( XML::SORT_ORDER, Str().assign<int>(sort_order_) );
-
-    // update number of entries and children
-    top.setAttribute( XML::ENTRIES, Str().assign<int>(xmlEntries()) );
-    top.setAttribute( XML::CHILDREN, Str().assign<int>(xmlChildren()) );
-
-    // append node
-    document.appendChild( top );
-
-    // comments
-    if( comments().size() )
-    {
-      QDomElement comments_element = document.createElement( XML::COMMENTS );
-      QDomText comments_text = document.createTextNode( XmlString( comments() ).toXml() );
-      comments_element.appendChild( comments_text );
-      top.appendChild( comments_element );
-    }
-
-    // write time stamps
-    if( creation().isValid() ) top.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, document ) );
-    if( modification().isValid() ) top.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, document ) );
-    if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
-
-    //! write recent entries
-    if( !recent_entries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
-
-    // write all entries
-    static unsigned int progress( 10 );
-    unsigned int entry_count( 0 );
-    BASE::KeySet<LogEntry> entries( this );
-    for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
+    // write logbook if filename differs from origin or logbook is modified
+    if( file != Logbook::file() || modified_ )
     {
 
-      top.appendChild( (*it)->domElement( document ) );
-      entry_count++;
-      if( !(entry_count%progress) ) emit progressAvailable( progress );
+        // gets last saved timestamp
+        TimeStamp saved_prev( file.lastModified() );
 
-    }
+        // make a backup of the file, if necessary
+        file.backup();
 
-    emit progressAvailable( entry_count%progress );
+        // update stateFrame
+        QString buffer;
+        QTextStream( &buffer ) << "Writing " << file.localName();
+        emit messageAvailable( buffer );
 
-    // dump all logbook childrens
+        QFile out( file );
+        if( !out.open( QIODevice::WriteOnly ) )
+        {
+            Debug::Throw(0) << "Logbook::write - unable to write to file " << file << endl;
+            return false;
+        }
+
+        // create document
+        QDomDocument document;
+
+        // create main element
+        QDomElement top = document.createElement( XML::LOGBOOK );
+        if( !title().isEmpty() ) top.setAttribute( XML::TITLE, XmlString( title() ).toXml() );
+        if( !directory().isEmpty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory()) );
+        if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlString( author() ).toXml() ) ;
+
+        top.setAttribute( XML::SORT_METHOD, Str().assign<unsigned int>(sortMethod_) );
+        top.setAttribute( XML::SORT_ORDER, Str().assign<int>(sortOrder_) );
+
+        // update number of entries and children
+        top.setAttribute( XML::ENTRIES, Str().assign<int>(xmlEntries()) );
+        top.setAttribute( XML::CHILDREN, Str().assign<int>(xmlChildren()) );
+
+        // append node
+        document.appendChild( top );
+
+        // comments
+        if( comments().size() )
+        {
+            QDomElement comments_element = document.createElement( XML::COMMENTS );
+            QDomText comments_text = document.createTextNode( XmlString( comments() ).toXml() );
+            comments_element.appendChild( comments_text );
+            top.appendChild( comments_element );
+        }
+
+        // write time stamps
+        if( creation().isValid() ) top.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, document ) );
+        if( modification().isValid() ) top.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, document ) );
+        if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
+
+        //! write recent entries
+        if( !recentEntries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
+
+        // write all entries
+        static unsigned int progress( 10 );
+        unsigned int entry_count( 0 );
+        BASE::KeySet<LogEntry> entries( this );
+        for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
+        {
+
+            top.appendChild( (*it)->domElement( document ) );
+            entry_count++;
+            if( !(entry_count%progress) ) emit progressAvailable( progress );
+
+        }
+
+        emit progressAvailable( entry_count%progress );
+
+        // dump all logbook childrens
+        unsigned int child_number=0;
+        for( List::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
+        {
+            File child_filename = _childFilename( file, child_number );
+            QDomElement childElement = document.createElement( XML::CHILD );
+            childElement.setAttribute( XML::FILE, XmlString( child_filename ).toXml() );
+            top.appendChild( childElement );
+        }
+
+        // finish
+        out.write( document.toByteArray() );
+        out.close();
+
+        // gets/check new saved timestamp
+        TimeStamp saved_new( file.lastModified() );
+        if( !( saved_prev < saved_new ) ) completed = false;
+        else if( file == Logbook::file() ) {
+
+            // change logbook state if saved in nominal file
+            // stores now as last save time
+            modified_ = false;
+
+        }
+    } else { emit progressAvailable( BASE::KeySet<LogEntry>( this ).size() ); }
+
+
+    // update saved timeStamp
+    saved_ = Logbook::file().lastModified();
+
+    // write children
     unsigned int child_number=0;
     for( List::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
     {
-      File child_filename = _childFilename( file, child_number );
-      QDomElement childElement = document.createElement( XML::CHILD );
-      childElement.setAttribute( XML::FILE, XmlString( child_filename ).toXml() );
-      top.appendChild( childElement );
+
+        File child_filename( _childFilename( file, child_number ).addPath( file.path() ) );
+
+        // update stateFrame
+        QString buffer;
+        QTextStream( &buffer ) << "Writing " << child_filename.localName();
+        emit messageAvailable( buffer );
+
+        (*it)->setParentFile( file );
+        completed &= (*it)->write( child_filename );
     }
 
-    // finish
-    out.write( document.toByteArray() );
-    out.close();
-
-    // gets/check new saved timestamp
-    TimeStamp saved_new( file.lastModified() );
-    if( !( saved_prev < saved_new ) ) completed = false;
-    else if( file == Logbook::file() ) {
-
-      // change logbook state if saved in nominal file
-      // stores now as last save time
-      modified_ = false;
-
-    }
-  } else { emit progressAvailable( BASE::KeySet<LogEntry>( this ).size() ); }
-
-
-  // update saved timeStamp
-  saved_ = Logbook::file().lastModified();
-
-  // write children
-  unsigned int child_number=0;
-  for( List::iterator it = children_.begin(); it != children_.end(); it++, child_number++ )
-  {
-
-    File child_filename( _childFilename( file, child_number ).addPath( file.path() ) );
-
-    // update stateFrame
-    QString buffer;
-    QTextStream( &buffer ) << "Writing " << child_filename.localName();
-    emit messageAvailable( buffer );
-
-    (*it)->setParentFile( file );
-    completed &= (*it)->write( child_filename );
-  }
-
-  Debug::Throw( ) << "Logbook::write - \"" << file << "\". Done.\n";
-  return completed;
+    Debug::Throw( ) << "Logbook::write - \"" << file << "\". Done.\n";
+    return completed;
 }
 
 //_________________________________
 map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
 {
-  Debug::Throw( "Logbook::synchronize.\n" );
+    Debug::Throw( "Logbook::synchronize.\n" );
 
-  // retrieve logbook entries
-  BASE::KeySet<LogEntry> new_entries( logbook.entries() );
-  BASE::KeySet<LogEntry> current_entries( entries() );
+    // retrieve logbook entries
+    BASE::KeySet<LogEntry> new_entries( logbook.entries() );
+    BASE::KeySet<LogEntry> current_entries( entries() );
 
-  // map of duplicated entries
-  std::map< LogEntry*, LogEntry* > duplicates;
+    // map of duplicated entries
+    std::map< LogEntry*, LogEntry* > duplicates;
 
-  // merge new entries into current entries
-  for( BASE::KeySet< LogEntry>::iterator it = new_entries.begin(); it != new_entries.end(); it++ )
-  {
-
-    // check if there is an entry with matching creation and modification time
-    BASE::KeySet< LogEntry >::iterator duplicate( find_if(
-      current_entries.begin(),
-      current_entries.end(),
-      LogEntry::DuplicateFTor( *it ) ) );
-
-    // if duplicate entry found and modified more recently, skip the new entry
-    if( duplicate != current_entries.end() && (*duplicate)->modification() >= (*it)->modification() ) continue;
-
-    // retrieve logbook where entry is to be added
-    Logbook* child( latestChild() );
-
-    // create a new entry
-    LogEntry *entry( (*it )->clone() );
-
-    // associate entry with logbook
-    Key::associate( entry, child );
-
-    // set child as modified
-    child->setModified( true );
-
-    // safe remove the duplicated entry
-    if( duplicate != current_entries.end() )
+    // merge new entries into current entries
+    for( BASE::KeySet< LogEntry>::iterator it = new_entries.begin(); it != new_entries.end(); it++ )
     {
-      // set logbooks as modified
-      // and disassociate with entry
-      BASE::KeySet<Logbook> logbooks( *duplicate );
-      for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
-      {
-        (*iter)->setModified( true );
-        BASE::Key::disassociate( *iter, *duplicate );
-      }
 
-      // insert duplicate pairs in map
-      duplicates.insert( make_pair( *duplicate, *it ) );
+        // check if there is an entry with matching creation and modification time
+        BASE::KeySet< LogEntry >::iterator duplicate( find_if(
+            current_entries.begin(),
+            current_entries.end(),
+            LogEntry::DuplicateFTor( *it ) ) );
 
-      // reset current entries
-      current_entries = entries();
+        // if duplicate entry found and modified more recently, skip the new entry
+        if( duplicate != current_entries.end() && (*duplicate)->modification() >= (*it)->modification() ) continue;
+
+        // retrieve logbook where entry is to be added
+        Logbook* child( latestChild() );
+
+        // create a new entry
+        LogEntry *entry( (*it )->clone() );
+
+        // associate entry with logbook
+        Key::associate( entry, child );
+
+        // set child as modified
+        child->setModified( true );
+
+        // safe remove the duplicated entry
+        if( duplicate != current_entries.end() )
+        {
+            // set logbooks as modified
+            // and disassociate with entry
+            BASE::KeySet<Logbook> logbooks( *duplicate );
+            for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+            {
+                (*iter)->setModified( true );
+                BASE::Key::disassociate( *iter, *duplicate );
+            }
+
+            // insert duplicate pairs in map
+            duplicates.insert( make_pair( *duplicate, *it ) );
+
+            // reset current entries
+            current_entries = entries();
+
+        }
 
     }
 
-  }
-
-  return duplicates;
+    return duplicates;
 
 }
 
 //_________________________________
 XmlError::List Logbook::xmlErrors( void ) const
 {
-  Debug::Throw( "Logbook::xmlErrors.\n" );
-  XmlError::List out;
-  if( error_ ) out.push_back( error_ );
-  for( List::const_iterator it = children_.begin(); it != children_.end(); it++ )
-  {
-    XmlError::List tmp( (*it)->xmlErrors() );
-    out.merge( tmp );
-  }
-  return out;
+    Debug::Throw( "Logbook::xmlErrors.\n" );
+    XmlError::List out;
+    if( error_ ) out.push_back( error_ );
+    for( List::const_iterator it = children_.begin(); it != children_.end(); it++ )
+    {
+        XmlError::List tmp( (*it)->xmlErrors() );
+        out.merge( tmp );
+    }
+    return out;
 }
 
 //_________________________________
 Logbook::List Logbook::children( void ) const
 {
-  List out;
-  for(
-    List::const_iterator it = children_.begin();
+    List out;
+    for(
+        List::const_iterator it = children_.begin();
     it!= children_.end();
     it++ )
-  {
-    out.push_back( *it );
-    List children( (*it)->children() );
-    out.merge( children );
-  }
+    {
+        out.push_back( *it );
+        List children( (*it)->children() );
+        out.merge( children );
+    }
 
-  return out;
+    return out;
 }
 
 //_________________________________
 Logbook* Logbook::latestChild( void )
 {
 
-  Debug::Throw( "Logbook::latestChild.\n" );
+    Debug::Throw( "Logbook::latestChild.\n" );
 
-  // get older parent
-  Logbook* dest = 0;
+    // get older parent
+    Logbook* dest = 0;
 
-  // check parent number of entries
-  if( BASE::KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
+    // check parent number of entries
+    if( BASE::KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
 
-  // check if one existsing child is not complete
-  else {
-    for( List::iterator it = children_.begin(); it != children_.end(); it++ )
-    if( *it && BASE::KeySet<LogEntry>(*it).size() < MAX_ENTRIES ) {
-      dest = *it;
-      break;
-    }
-  }
-
-  // add a new child if nothing found
-  if( !dest ) {
-
-    dest = new Logbook();
-    dest->setTitle( title() );
-    dest->setDirectory( directory() );
-    dest->setAuthor( author() );
-    dest->setFile( _childFilename( file(), children_.size() ).addPath( file().path() ) );
-    dest->setModified( true );
-
-    children_.push_back( dest );
-    setModified( true );
-
-    // associate to existing FileCheck if any
-    BASE::KeySet<FileCheck> file_checks( this );
-    if( !file_checks.empty() )
+    // check if one existsing child is not complete
+    else for( List::iterator it = children_.begin(); it != children_.end(); it++ )
     {
-      assert( file_checks.size() == 1 );
-      (*file_checks.begin())->registerLogbook( dest );
+        if( *it && BASE::KeySet<LogEntry>(*it).size() < MAX_ENTRIES )
+        {
+            dest = *it;
+            break;
+        }
     }
 
-  }
+    // add a new child if nothing found
+    if( !dest )
+    {
 
-  return dest;
+        dest = new Logbook();
+        dest->setTitle( title() );
+        dest->setDirectory( directory() );
+        dest->setAuthor( author() );
+        dest->setFile( _childFilename( file(), children_.size() ).addPath( file().path() ) );
+        dest->setModified( true );
+
+        children_.push_back( dest );
+        setModified( true );
+
+        // associate to existing FileCheck if any
+        BASE::KeySet<FileCheck> file_checks( this );
+        if( !file_checks.empty() )
+        {
+            assert( file_checks.size() == 1 );
+            (*file_checks.begin())->registerLogbook( dest );
+        }
+
+    }
+
+    return dest;
 }
 
 //_________________________________
 BASE::KeySet<LogEntry> Logbook::entries( void ) const
 {
 
-  BASE::KeySet<LogEntry> out( this );
-  for( List::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
-  out.merge( (*iter)->entries() );
+    BASE::KeySet<LogEntry> out( this );
+    for( List::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
+        out.merge( (*iter)->entries() );
 
-  return out;
+    return out;
 
 }
 
@@ -536,18 +538,18 @@ BASE::KeySet<LogEntry> Logbook::entries( void ) const
 BASE::KeySet<Attachment> Logbook::attachments( void ) const
 {
 
-  BASE::KeySet<Attachment> out;
+    BASE::KeySet<Attachment> out;
 
-  // loop over associated entries, add entries associated attachments
-  BASE::KeySet<LogEntry> entries( this );
-  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
-  out.merge( BASE::KeySet<Attachment>(*iter) );
+    // loop over associated entries, add entries associated attachments
+    BASE::KeySet<LogEntry> entries( this );
+    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+        out.merge( BASE::KeySet<Attachment>(*iter) );
 
-  // loop over children, add associated attachments
-  for( List::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
-  out.merge( (*iter)->attachments() );
+    // loop over children, add associated attachments
+    for( List::const_iterator iter = children_.begin(); iter != children_.end(); iter++ )
+        out.merge( (*iter)->attachments() );
 
-  return out;
+    return out;
 
 }
 
@@ -555,52 +557,52 @@ BASE::KeySet<Attachment> Logbook::attachments( void ) const
 void Logbook::truncateRecentEntriesList( const unsigned int& max_count )
 {
 
-  Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
-  while( recent_entries_.size() > max_count )
-  { recent_entries_.pop_front(); }
+    Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
+    while( recentEntries_.size() > max_count )
+    { recentEntries_.pop_front(); }
 
 }
 
 //_________________________________
 void Logbook::removeEmptyChildren( void )
 {
-  Debug::Throw( "Logbook::removeEmptyChildren.\n" );
+    Debug::Throw( "Logbook::removeEmptyChildren.\n" );
 
-  // loop over children
-  List tmp;
-  for( List::iterator iter = children_.begin(); iter != children_.end(); iter++ )
-  {
-    (*iter)->removeEmptyChildren();
-    if( (*iter)->empty() )
+    // loop over children
+    List tmp;
+    for( List::iterator iter = children_.begin(); iter != children_.end(); iter++ )
     {
+        (*iter)->removeEmptyChildren();
+        if( (*iter)->empty() )
+        {
 
-      // remove file
-      if( !(*iter)->file().isEmpty() ) (*iter)->file().remove();
+            // remove file
+            if( !(*iter)->file().isEmpty() ) (*iter)->file().remove();
 
-      // delete logbook
-      delete *iter;
+            // delete logbook
+            delete *iter;
 
-    } else tmp.push_back( *iter );
-  }
+        } else tmp.push_back( *iter );
+    }
 
-  children_ = tmp;
-  return;
+    children_ = tmp;
+    return;
 }
 
 //_________________________________
 std::vector<LogEntry*> Logbook::recentEntries( void ) const
 {
 
-  std::vector<LogEntry*> out;
-  if( recent_entries_.empty() ) return out;
-  BASE::KeySet<LogEntry> entries( Logbook::entries() );
-  for( TimeStampList::const_iterator iter = recent_entries_.begin(); iter != recent_entries_.end(); iter++ )
-  {
-    BASE::KeySet<LogEntry>::const_iterator entry_iter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( *iter ) ) );
-    if( entry_iter != entries.end() ) out.push_back( *entry_iter );
-  }
+    std::vector<LogEntry*> out;
+    if( recentEntries_.empty() ) return out;
+    BASE::KeySet<LogEntry> entries( Logbook::entries() );
+    for( TimeStampList::const_iterator iter = recentEntries_.begin(); iter != recentEntries_.end(); iter++ )
+    {
+        BASE::KeySet<LogEntry>::const_iterator entry_iter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( *iter ) ) );
+        if( entry_iter != entries.end() ) out.push_back( *entry_iter );
+    }
 
-  return out;
+    return out;
 
 }
 
@@ -608,320 +610,321 @@ std::vector<LogEntry*> Logbook::recentEntries( void ) const
 void Logbook::addRecentEntry( const LogEntry* entry )
 {
 
-  Debug::Throw( "Logbook::addRecentEntry.\n" );
-  TimeStamp time_stamp( entry->creation() );
+    Debug::Throw( "Logbook::addRecentEntry.\n" );
+    TimeStamp time_stamp( entry->creation() );
 
-  // first remove time stamp from list if it exists
-  recent_entries_.erase( std::remove( recent_entries_.begin(), recent_entries_.end(), time_stamp ), recent_entries_.end() );
+    // first remove time stamp from list if it exists
+    recentEntries_.erase( std::remove( recentEntries_.begin(), recentEntries_.end(), time_stamp ), recentEntries_.end() );
 
-  // adds again at the end of the list
-  recent_entries_.push_back( time_stamp );
+    // adds again at the end of the list
+    recentEntries_.push_back( time_stamp );
 
-  // mark logbook as modified
-  setModified( true );
+    // mark logbook as modified
+    setModified( true );
 
 }
 
 //_________________________________
 void Logbook::setFile( const File& file )
 {
-  Debug::Throw( "Logbook::setFile.\n" );
-  file_ = file;
-  saved_ = File( file_ ).lastModified();
+    Debug::Throw( "Logbook::setFile.\n" );
+    file_ = file;
+    saved_ = File( file_ ).lastModified();
 }
 
 //_________________________________
 bool Logbook::needsBackup( void ) const
 {
-  Debug::Throw( "Logbook::needsBackup.\n" );
-  if( !backup().isValid() ) return true;
-  return( int(TimeStamp::now())-int(backup()) > (24*3600)*XmlOptions::get().get<double>( "BACKUP_ITV" ) );
+    Debug::Throw( "Logbook::needsBackup.\n" );
+    if( !backup().isValid() ) return true;
+    return( int(TimeStamp::now())-int(backup()) > (24*3600)*XmlOptions::get().get<double>( "BACKUP_ITV" ) );
 }
 
 //_________________________________
 QString Logbook::backupFilename( void ) const
 {
-  Debug::Throw( "Logbook::MakeBackupFilename.\n" );
-  QString head( File( file_ ).truncatedName() );
-  QString foot( File( file_ ).extension() );
-  if( !foot.isEmpty() ) foot = QString(".") + foot;
-  QString tag( TimeStamp::now().toString( TimeStamp::DATE_TAG ) );
-  QString out;
-  QTextStream( &out ) << head << "_backup_" << tag << foot;
-  return out;
+    Debug::Throw( "Logbook::MakeBackupFilename.\n" );
+    QString head( File( file_ ).truncatedName() );
+    QString foot( File( file_ ).extension() );
+    if( !foot.isEmpty() ) foot = QString(".") + foot;
+    QString tag( TimeStamp::now().toString( TimeStamp::DATE_TAG ) );
+    QString out;
+    QTextStream( &out ) << head << "_backup_" << tag << foot;
+    return out;
 }
 
 //__________________________________
 QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& mask ) const
 {
-  Debug::Throw( "Logbook::htmlElement.\n" );
+    Debug::Throw( "Logbook::htmlElement.\n" );
 
-  // check header
-  if( !(mask & HTML_ALL_MASK ) ) return QDomElement();
+    // check header
+    if( !(mask & HTML_ALL_MASK ) ) return QDomElement();
 
-  // surrounding table
-  QDomElement out = document.createElement( "table" );
-  out.setAttribute( "class", "header_outer_table" );
-  QDomElement column = out.
-    appendChild( document.createElement( "tr" ) ).
-    appendChild( document.createElement( "td" ) ).
-    toElement();
-  column.setAttribute( "class", "header_column" );
-  QDomElement table = column.
-    appendChild( document.createElement( "table" ) ).
-    toElement();
-  table.setAttribute( "class", "header_inner_table" );
-  table.setAttribute( "width", "100%" );
+    // surrounding table
+    QDomElement out = document.createElement( "table" );
+    out.setAttribute( "class", "header_outer_table" );
+    QDomElement column = out.
+        appendChild( document.createElement( "tr" ) ).
+        appendChild( document.createElement( "td" ) ).
+        toElement();
+    column.setAttribute( "class", "header_column" );
+    QDomElement table = column.
+        appendChild( document.createElement( "table" ) ).
+        toElement();
+    table.setAttribute( "class", "header_inner_table" );
+    table.setAttribute( "width", "100%" );
 
-  QDomElement row;
-  if( title().size() && (mask&HTML_TITLE) )
-  {
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "colspan", "2" );
-    column.
-      appendChild( document.createElement( "h1" ) ).
-      appendChild( document.createTextNode( title() ) );
-  }
+    QDomElement row;
+    if( title().size() && (mask&HTML_TITLE) )
+    {
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "colspan", "2" );
+        column.
+            appendChild( document.createElement( "h1" ) ).
+            appendChild( document.createTextNode( title() ) );
+    }
 
-  if( author().size() && (mask&HTML_AUTHOR ) )
-  {
+    if( author().size() && (mask&HTML_AUTHOR ) )
+    {
 
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "width", "15%" );
-    column.appendChild( document.createTextNode( "Author:" ) );
-    row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( author() ) );
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "width", "15%" );
+        column.appendChild( document.createTextNode( "Author:" ) );
+        row.
+            appendChild( document.createElement( "td" ) ).
+            appendChild( document.createElement( "b" ) ).
+            appendChild( document.createTextNode( author() ) );
 
-  }
+    }
 
-  if( file().size() && (mask&HTML_FILE ) )
-  {
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "width", "15%" );
-    column.appendChild( document.createTextNode( "File:" ) );
-    row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( file() ) );
+    if( file().size() && (mask&HTML_FILE ) )
+    {
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "width", "15%" );
+        column.appendChild( document.createTextNode( "File:" ) );
+        row.
+            appendChild( document.createElement( "td" ) ).
+            appendChild( document.createElement( "b" ) ).
+            appendChild( document.createTextNode( file() ) );
 
-  }
+    }
 
-  if( directory().size() && (mask&HTML_DIRECTORY ) )
-  {
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "width", "15%" );
-    column.appendChild( document.createTextNode( "Directory:" ) );
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( directory() ) );
-    if( !checkDirectory() ) column.appendChild( document.createTextNode( " (not found)" ) );
+    if( directory().size() && (mask&HTML_DIRECTORY ) )
+    {
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "width", "15%" );
+        column.appendChild( document.createTextNode( "Directory:" ) );
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.
+            appendChild( document.createElement( "b" ) ).
+            appendChild( document.createTextNode( directory() ) );
+        if( !checkDirectory() ) column.appendChild( document.createTextNode( " (not found)" ) );
 
-  }
+    }
 
-  if( creation().isValid() && (mask&HTML_CREATION ) )
-  {
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "width", "15%" );
-    column.appendChild( document.createTextNode( "Created:" ) );
-    row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( creation().toString() ) );
+    if( creation().isValid() && (mask&HTML_CREATION ) )
+    {
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "width", "15%" );
+        column.appendChild( document.createTextNode( "Created:" ) );
+        row.
+            appendChild( document.createElement( "td" ) ).
+            appendChild( document.createElement( "b" ) ).
+            appendChild( document.createTextNode( creation().toString() ) );
 
-  }
+    }
 
-  if( modification().isValid() && (mask&HTML_MODIFICATION ) )
-  {
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "width", "15%" );
-    column.appendChild( document.createTextNode( "Last modified:" ) );
-    row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( modification().toString() ) );
+    if( modification().isValid() && (mask&HTML_MODIFICATION ) )
+    {
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "width", "15%" );
+        column.appendChild( document.createTextNode( "Last modified:" ) );
+        row.
+            appendChild( document.createElement( "td" ) ).
+            appendChild( document.createElement( "b" ) ).
+            appendChild( document.createTextNode( modification().toString() ) );
 
-  }
+    }
 
-  if( backup().isValid() && (mask&HTML_BACKUP) )
-  {
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "width", "15%" );
-    column.appendChild( document.createTextNode( "Last backup:" ) );
-    row.
-      appendChild( document.createElement( "td" ) ).
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createTextNode( backup().toString() ) );
+    if( backup().isValid() && (mask&HTML_BACKUP) )
+    {
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "width", "15%" );
+        column.appendChild( document.createTextNode( "Last backup:" ) );
+        row.
+            appendChild( document.createElement( "td" ) ).
+            appendChild( document.createElement( "b" ) ).
+            appendChild( document.createTextNode( backup().toString() ) );
 
-  }
+    }
 
-  if( comments().size() && (mask&HTML_COMMENTS) )
-  {
-    row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    column = row.appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "width", "15%" );
-    column.appendChild( document.createTextNode( "Comments:" ) );
-    column = table.
-      appendChild( document.createElement( "tr" ) ).
-      appendChild( document.createElement( "td" ) ).toElement();
-    column.setAttribute( "colspan", "2" );
-    HtmlTextNode( comments(), column, document );
-  }
+    if( comments().size() && (mask&HTML_COMMENTS) )
+    {
+        row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        column = row.appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "width", "15%" );
+        column.appendChild( document.createTextNode( "Comments:" ) );
+        column = table.
+            appendChild( document.createElement( "tr" ) ).
+            appendChild( document.createElement( "td" ) ).toElement();
+        column.setAttribute( "colspan", "2" );
+        HtmlTextNode( comments(), column, document );
+    }
 
-  return out;
+    return out;
 }
 
 //_________________________________
 void Logbook::setModified( const bool& value )
 {
-  Debug::Throw( "Logbook::setModified.\n");
-  modified_ = value;
-  if( value ) setModification( TimeStamp::now() );
+    Debug::Throw( "Logbook::setModified.\n");
+    modified_ = value;
+    if( value ) setModification( TimeStamp::now() );
 }
 
 //_________________________________
 void Logbook::setModifiedRecursive( bool value )
 {
-  Debug::Throw( "Logbook::SetModifiedRecursive.\n" );
-  modified_ = value;
-  if( value ) setModification( TimeStamp::now() );
-  for( List::iterator it = children_.begin(); it != children_.end(); it++ )
-  (*it)->setModifiedRecursive( value );
+    Debug::Throw( "Logbook::SetModifiedRecursive.\n" );
+    modified_ = value;
+    if( value ) setModification( TimeStamp::now() );
+    for( List::iterator it = children_.begin(); it != children_.end(); it++ )
+    { (*it)->setModifiedRecursive( value ); }
+
 }
 
 //_________________________________
 void Logbook::setModification( const TimeStamp& stamp )
 {
-  Debug::Throw( "Logbook::SetModification.\n" );
-  modification_ = stamp;
+    Debug::Throw( "Logbook::SetModification.\n" );
+    modification_ = stamp;
 }
 
 //_________________________________
 bool Logbook::modified( void ) const
 {
-  Debug::Throw( "Logbook::modified.\n" );
-  if( modified_ ) return true;
-  for( List::const_iterator it = children_.begin(); it != children_.end(); it++ )
-  if ( (*it)->modified() ) return true;
-  return false;
+    Debug::Throw( "Logbook::modified.\n" );
+    if( modified_ ) return true;
+    for( List::const_iterator it = children_.begin(); it != children_.end(); it++ )
+        if ( (*it)->modified() ) return true;
+    return false;
 }
 
 //______________________________________________________________________
 bool Logbook::setSortMethod( const Logbook::SortMethod& sort_method )
 {
-  Debug::Throw( "Logbook::setSortMethod.\n" );
-  bool changed = ( sortMethod() != sort_method );
-  if( changed ) {
-    sort_method_ = sort_method;
-    setModified( true );
-  }
-  return changed;
+    Debug::Throw( "Logbook::setSortMethod.\n" );
+    bool changed = ( sortMethod() != sort_method );
+    if( changed ) {
+        sortMethod_ = sort_method;
+        setModified( true );
+    }
+    return changed;
 }
 
 //______________________________________________________________________
 bool Logbook::setSortOrder( const int& order )
 {
-  Debug::Throw( "Logbook::setSortOrder.\n" );
-  bool changed = (sortOrder() != order );
-  if( changed )
-  {
-    sort_order_ = order;
-    setModified( true );
-  }
-  return changed;
+    Debug::Throw( "Logbook::setSortOrder.\n" );
+    bool changed = (sortOrder() != order );
+    if( changed )
+    {
+        sortOrder_ = order;
+        setModified( true );
+    }
+    return changed;
 }
 
 //_________________________________
 bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) const
 {
 
-  if( order_ ) std::swap( first, second );
+    if( order_ ) std::swap( first, second );
 
-  switch( sort_method_ )
-  {
+    switch( sortMethod_ )
+    {
 
-    case Logbook::SORT_COLOR:
-    return (first->color() < second->color() );
-    break;
+        case Logbook::SORT_COLOR:
+        return (first->color() < second->color() );
+        break;
 
-    case Logbook::SORT_CREATION:
-    return (first->creation() < second->creation());
-    break;
+        case Logbook::SORT_CREATION:
+        return (first->creation() < second->creation());
+        break;
 
-    case Logbook::SORT_MODIFICATION:
-    return (first->modification() < second->modification());
-    break;
+        case Logbook::SORT_MODIFICATION:
+        return (first->modification() < second->modification());
+        break;
 
-    case Logbook::SORT_TITLE:
-    return (first->title() < second->title());
-    break;
+        case Logbook::SORT_TITLE:
+        return (first->title() < second->title());
+        break;
 
-    case Logbook::SORT_KEYWORD:
-    return (first->keyword() < second->keyword());
+        case Logbook::SORT_KEYWORD:
+        return (first->keyword() < second->keyword());
 
-    case Logbook::SORT_AUTHOR:
-    return (first->author() < second->author());
+        case Logbook::SORT_AUTHOR:
+        return (first->author() < second->author());
 
-    default:
-    Debug::Throw(0,"EntryLessFTor - invalid sort method.\n" );
-    break;
-  }
-  return false;
+        default:
+        Debug::Throw(0,"EntryLessFTor - invalid sort method.\n" );
+        break;
+    }
+    return false;
 }
 
 //_____________________________________________
 void Logbook::_readRecentEntries( const QDomElement& element )
 {
 
-  Debug::Throw( "Logbook::_readRecentEntries.\n" );
-  recent_entries_.clear();
+    Debug::Throw( "Logbook::_readRecentEntries.\n" );
+    recentEntries_.clear();
 
-  // loop over children
-  for(QDomNode node = element.firstChild(); !node.isNull(); node = node.nextSibling() )
-  {
-    QDomElement childElement = node.toElement();
-    if( childElement.isNull() ) continue;
+    // loop over children
+    for(QDomNode node = element.firstChild(); !node.isNull(); node = node.nextSibling() )
+    {
+        QDomElement childElement = node.toElement();
+        if( childElement.isNull() ) continue;
 
-    // children
-    QString tagName( childElement.tagName() );
-    if( tagName == XML::CREATION ) recent_entries_.push_back( XmlTimeStamp( childElement ) );
+        // children
+        QString tagName( childElement.tagName() );
+        if( tagName == XML::CREATION ) recentEntries_.push_back( XmlTimeStamp( childElement ) );
 
-  }
+    }
 
 }
 
 //_________________________________
 QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 {
-  Debug::Throw( "Logbook::_recentEntriesElement.\n" );
+    Debug::Throw( "Logbook::_recentEntriesElement.\n" );
 
-  QDomElement out( document.createElement( XML::RECENT_ENTRIES ) );
-  for( TimeStampList::const_iterator iter = recent_entries_.begin(); iter != recent_entries_.end(); iter++ )
-  { out.appendChild( XmlTimeStamp( *iter ).domElement( XML::CREATION, document ) ); }
+    QDomElement out( document.createElement( XML::RECENT_ENTRIES ) );
+    for( TimeStampList::const_iterator iter = recentEntries_.begin(); iter != recentEntries_.end(); iter++ )
+    { out.appendChild( XmlTimeStamp( *iter ).domElement( XML::CREATION, document ) ); }
 
-  return out;
+    return out;
 
 }
 
 //_________________________________
 File Logbook::_childFilename( const File& file, const int& child_number ) const
 {
-  File head( file.localName().truncatedName() );
-  QString foot( file.extension() );
-  if( !foot.isEmpty() ) foot = QString(".") + foot;
+    File head( file.localName().truncatedName() );
+    QString foot( file.extension() );
+    if( !foot.isEmpty() ) foot = QString(".") + foot;
 
-  QString out;
-  QTextStream(&out) << head << "_include_" << child_number << foot;
-  Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
-  return out;
+    QString out;
+    QTextStream(&out) << head << "_include_" << child_number << foot;
+    Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
+    return out;
 
 }
