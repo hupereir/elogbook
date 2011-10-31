@@ -147,8 +147,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     if( help_file.exists() ) help->install( help_file );
     else {
         help->setFile( help_file );
-        help->install( HelpText );
-        help->install( BASE::HelpText, false );
+        help->install( helpText );
+        help->install( BASE::helpText, false );
     }
 
     // help menu
