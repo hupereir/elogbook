@@ -138,7 +138,7 @@ AttachmentType NewAttachmentDialog::type( void ) const
   for(
     AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
     iter != AttachmentType::types().end();
-    iter++ )
+    ++iter )
   { if( iter->second.name() == type ) return iter->second; }
   return AttachmentType::UNKNOWN;
 

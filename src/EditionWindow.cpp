@@ -182,7 +182,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
     formatToolBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
     formatToolBar_->setTarget( activeEditor() );
     const FormatBar::ActionMap& actions( formatToolBar_->actions() );
-    for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); iter++ )
+    for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); ++iter )
     { readOnlyActions_.push_back( iter->second ); }
 
     // set proper connection for first editor
@@ -311,7 +311,7 @@ void EditionWindow::setReadOnly( const bool& value )
 
     // update editors
     BASE::KeySet<AnimatedTextEditor> editors( this );
-    for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+    for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
     { (*iter)->setReadOnly( isReadOnly() ); }
 
     // changes attachment list status
@@ -382,7 +382,7 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( const bool& enable_cance
         */
         if( _mainWindow().logbook()->file().isEmpty() )
         {
-            for( BASE::KeySet<EditionWindow>::iterator iter = editionwindows.begin(); iter!= editionwindows.end(); iter++ )
+            for( BASE::KeySet<EditionWindow>::iterator iter = editionwindows.begin(); iter!= editionwindows.end(); ++iter )
             { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->_save(enable_cancel); }
         } else _mainWindow().save( false );
     }
@@ -498,7 +498,7 @@ void EditionWindow::_save( bool update_selection )
 
     // update associated EditionWindows
     BASE::KeySet<EditionWindow> editors( entry );
-    for( BASE::KeySet<EditionWindow>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+    for( BASE::KeySet<EditionWindow>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
     {
         assert( *iter == this || (*iter)->isReadOnly() || (*iter)->isClosed() );
         if( *iter == this ) continue;
@@ -513,7 +513,7 @@ void EditionWindow::_save( bool update_selection )
 
     // set logbook as modified
     BASE::KeySet<Logbook> logbooks( entry );
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
     { (*iter)->setModified( true ); }
 
     Debug::Throw( "EditionWindow::_save - loogbook modified state updated.\n" );
@@ -888,7 +888,7 @@ void EditionWindow::_print( void )
     /* command list contains the HTML editor, PDF editor and any additional user specified command */
     Options::List commands( XmlOptions::get().specialOptions( "PRINT_COMMAND" ) );
     if( !AttachmentType::HTML.editCommand().isEmpty() ) commands.push_back( AttachmentType::HTML.editCommand() );
-    for( Options::List::iterator iter = commands.begin(); iter != commands.end(); iter++ )
+    for( Options::List::iterator iter = commands.begin(); iter != commands.end(); ++iter )
     { dialog.addCommand( iter->raw() ); }
 
     // generate default filename
@@ -938,7 +938,7 @@ void EditionWindow::_print( void )
 
     // dump logbook header
     BASE::KeySet<Logbook> logbooks( entry );
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
     { body.appendChild( (*iter)->htmlElement( document, html_log_mask ) ); }
 
     // dump entry
@@ -1033,7 +1033,7 @@ void EditionWindow::_setActiveEditor( AnimatedTextEditor& editor )
     {
 
         BASE::KeySet<AnimatedTextEditor> editors( this );
-        for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+        for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
         { (*iter)->setActive( false ); }
 
         activeEditor().setActive( true );
@@ -1122,7 +1122,7 @@ void EditionWindow::_closeEditor( AnimatedTextEditor& editor )
 
     // update activeEditor
     bool active_found( false );
-    for( BASE::KeySet<AnimatedTextEditor>::reverse_iterator iter = editors.rbegin(); iter != editors.rend(); iter++ )
+    for( BASE::KeySet<AnimatedTextEditor>::reverse_iterator iter = editors.rbegin(); iter != editors.rend(); ++iter )
     {
         if( (*iter) != &editor ) {
             _setActiveEditor( **iter );
@@ -1182,7 +1182,7 @@ AnimatedTextEditor& EditionWindow::_splitView( const Orientation& orientation )
 
     // perform associations
     // check if active editors has associates and propagate to new
-    for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); iter++ )
+    for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
     { BASE::Key::associate( &editor, *iter ); }
 
     // associate new display to active

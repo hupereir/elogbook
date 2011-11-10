@@ -185,7 +185,7 @@ void Menu::_updateRecentEntriesMenu( void )
     if( !mainwindow.logbook() ) return;
 
     std::vector<LogEntry*> entries( mainwindow.logbook()->recentEntries() );
-    for( std::vector<LogEntry*>::const_iterator iter = entries.begin(); iter != entries.end(); iter++ )
+    for( std::vector<LogEntry*>::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
     {
         QString buffer;
         QTextStream( &buffer ) << (*iter)->title() << " (" << (*iter)->keyword() << ")";
@@ -232,7 +232,7 @@ void Menu::_updateEditorMenu( void )
     {
 
         editorMenu_->addSeparator();
-        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
         {
 
             // ignore if frame is to be deleted

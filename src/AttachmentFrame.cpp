@@ -123,7 +123,7 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
 {
 
   Debug::Throw( "AttachmentFrame::add.\n" );
-  for( AttachmentModel::List::const_iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  for( AttachmentModel::List::const_iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
   { BASE::Key::associate( this, *iter ); }
 
   _model().add( attachments );
@@ -286,7 +286,7 @@ void AttachmentFrame::_new( void )
 
     // update all windows edition windows associated to entry
     windows = BASE::KeySet<EditionWindow>( entry );
-    for( BASE::KeySet<EditionWindow>::iterator iter = windows.begin(); iter != windows.end(); iter++ )
+    for( BASE::KeySet<EditionWindow>::iterator iter = windows.begin(); iter != windows.end(); ++iter )
     {
 
       (*iter)->attachmentFrame().visibilityAction().setChecked( true );
@@ -298,7 +298,7 @@ void AttachmentFrame::_new( void )
     Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
 
     // update logbooks destination directory
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); iter++ )
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
     {
       (*iter)->setModified( true );
       (*iter)->setDirectory( full_directory );
@@ -330,7 +330,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
 
   // retrieve all attachments from model
   AttachmentModel::List attachments( _model().get() );
-  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
   {
 
     assert( *iter );
@@ -372,7 +372,7 @@ void AttachmentFrame::customEvent( QEvent* event )
   // true if some modifications are to be saved
   bool modified( false );
   AttachmentModel::List attachments( _model().get() );
-  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
   {
 
     assert( *iter );
@@ -426,7 +426,7 @@ void AttachmentFrame::customEvent( QEvent* event )
 
       // get associated logbooks
       BASE::KeySet<Logbook> logbooks( &entry );
-      for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
+      for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
       { (*iter)->setModified( true ); }
 
       modified = true;
@@ -496,7 +496,7 @@ void AttachmentFrame::_open( void )
 
   // loop over attachments
   AttachmentModel::List modified_attachments;
-  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
+  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
   {
 
     Attachment& attachment( **iter );
@@ -560,7 +560,7 @@ void AttachmentFrame::_edit( void )
 
   // loop over attachments
   AttachmentModel::List modified_attachments;
-  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
+  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
   {
 
     // create/check attachment full name
@@ -619,7 +619,7 @@ void AttachmentFrame::_delete( void )
 
   // loop over attachments
   bool logbook_changed( false );
-  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
+  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
   {
 
     Attachment *attachment( *iter );
@@ -636,7 +636,7 @@ void AttachmentFrame::_delete( void )
 
       // retrieve associated attachment frames and remove item
       BASE::KeySet<AttachmentFrame> frames( attachment );
-      for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); iter++ )
+      for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); ++iter )
       { (*iter)->_model().remove( attachment ); }
 
       // retrieve associated entries
@@ -705,7 +705,7 @@ void AttachmentFrame::_reload( void )
 
   // loop over attachments
   AttachmentModel::List modified_attachments;
-  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
+  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
   { if ( (*iter)->updateTimeStamps() ) { modified_attachments.push_back( *iter ); } }
 
   _saveAttachments( modified_attachments );
@@ -728,7 +728,7 @@ void AttachmentFrame::_saveAs( void )
   }
 
   // loop over attachments
-  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); iter++ )
+  for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
   {
 
     Attachment& attachment( **iter );
@@ -783,7 +783,7 @@ void AttachmentFrame::_clean( void )
   // true if some modifications are to be saved
   bool modified( false );
   AttachmentModel::List attachments( _model().get() );
-  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
   {
 
     assert( *iter );
@@ -796,7 +796,7 @@ void AttachmentFrame::_clean( void )
 
     // retrieve associated attachment frames and remove item
     BASE::KeySet<AttachmentFrame> frames( attachment );
-    for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); iter++ )
+    for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); ++iter )
     { (*iter)->_model().remove( attachment ); }
 
     // retrieve associated entries
@@ -807,7 +807,7 @@ void AttachmentFrame::_clean( void )
 
     // retrieve associated logbooks
     BASE::KeySet<Logbook> logbooks( &entry );
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
     { (*iter)->setModified( true ); }
 
     // delete attachment
@@ -847,7 +847,7 @@ void AttachmentFrame::_storeSelection( void )
 
   // retrieve selected indexes in list
   QModelIndexList selected_indexes( list().selectionModel()->selectedRows() );
-  for( QModelIndexList::iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
+  for( QModelIndexList::iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); ++iter )
   {
     // check column
     if( !iter->column() == 0 ) continue;
@@ -870,7 +870,7 @@ void AttachmentFrame::_restoreSelection( void )
   else {
 
     list().selectionModel()->select( selected_indexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-    for( QModelIndexList::const_iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); iter++ )
+    for( QModelIndexList::const_iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); ++iter )
     { list().selectionModel()->select( *iter, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
   }
@@ -932,7 +932,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
   BASE::KeySet<LogEntry> entries;
 
   // loop over attachments
-  for( AttachmentModel::List::const_iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+  for( AttachmentModel::List::const_iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
   {
 
     // get associated entries and store
@@ -942,8 +942,8 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
 
     // get associated attachment frames and store
     BASE::KeySet<AttachmentFrame> local_frames( *iter );
-    for( BASE::KeySet<AttachmentFrame>::iterator frame_iter = local_frames.begin(); frame_iter != local_frames.end(); frame_iter++ )
-    { (*frame_iter)->update( **iter ); }
+    for( BASE::KeySet<AttachmentFrame>::iterator frameIter = local_frames.begin(); frameIter != local_frames.end(); ++frameIter )
+    { (*frameIter)->update( **iter ); }
     Debug::Throw( "AttachmentFrame::_saveAttachments - frames.\n" );
 
   }
@@ -952,7 +952,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
   BASE::KeySet<EditionWindow> edition_windows;
 
   // loop over entries
-  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); iter++ )
+  for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter )
   {
 
     // get associated logbooks and store
@@ -968,12 +968,12 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
   }
 
   // loop over logbook and set modified
-  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); iter++ )
+  for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
   { (*iter)->setModified( true ); }
   Debug::Throw( "AttachmentFrame::_saveAttachments - logbooks modified.\n" );
 
   // loop over edition windows and trigger save action
-  for( BASE::KeySet<EditionWindow>::iterator iter = edition_windows.begin(); iter != edition_windows.end(); iter++ )
+  for( BASE::KeySet<EditionWindow>::iterator iter = edition_windows.begin(); iter != edition_windows.end(); ++iter )
   { (*iter)->saveAction().trigger();  }
   Debug::Throw( "AttachmentFrame::_saveAttachments - edition windows saved.\n" );
 

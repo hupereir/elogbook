@@ -94,7 +94,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     // retrieve associated logbook
     int i=5;
     BASE::KeySet<Logbook> logbooks( entry );
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!=logbooks.end(); iter++, i++ )
+    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!=logbooks.end(); ++iter, i++ )
     {
 
         grid_layout->addWidget( label = new QLabel( "File: ", this ), i, 0 );

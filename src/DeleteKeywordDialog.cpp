@@ -62,7 +62,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const vector<Keyword>
 
     unsigned int max_keywords = 10;
     unsigned int index(0);
-    for( vector<Keyword>::const_iterator iter = keywords.begin(); iter != keywords.end(); iter++ )
+    for( vector<Keyword>::const_iterator iter = keywords.begin(); iter != keywords.end(); ++iter )
     {
       what << *iter << " ";
       index++;

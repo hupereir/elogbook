@@ -137,7 +137,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
   assert( editor_ );
   QTextCursor cursor( editor_->document() );
   cursor.beginEditBlock();
-  for( FORMAT::TextFormatBlock::List::const_iterator iter = format_list.begin(); iter != format_list.end(); iter++ )
+  for( FORMAT::TextFormatBlock::List::const_iterator iter = format_list.begin(); iter != format_list.end(); ++iter )
   {
 
     // check if paragraphs are set to 0 or not. If non 0, need to convert to absolute index
@@ -250,7 +250,7 @@ void FormatBar::_updateConfiguration( void )
 
   } else {
 
-    for( Options::List::iterator iter = text_colors.begin(); iter != text_colors.end(); iter++ )
+    for( Options::List::iterator iter = text_colors.begin(); iter != text_colors.end(); ++iter )
     { color_menu_->add( iter->raw() ); }
 
   }
@@ -264,7 +264,7 @@ void FormatBar::_saveConfiguration( void )
   XmlOptions::get().keep( "TEXT_COLOR" );
 
   const ColorMenu::ColorSet colors( color_menu_->colors() );
-  for( ColorMenu::ColorSet::const_iterator iter = colors.begin(); iter != colors.end(); iter++ )
+  for( ColorMenu::ColorSet::const_iterator iter = colors.begin(); iter != colors.end(); ++iter )
   { XmlOptions::get().add( "TEXT_COLOR", Option( iter->name() ) ); }
 
   return;

@@ -72,7 +72,7 @@ void FileCheck::registerLogbook( Logbook* logbook )
 
   // loop over children and register
   Logbook::List children( logbook->children() );
-  for( Logbook::List::const_iterator iter = children.begin(); iter != children.end(); iter++ )
+  for( Logbook::List::const_iterator iter = children.begin(); iter != children.end(); ++iter )
   {
     if( !(*iter)->file().isEmpty() )
     {

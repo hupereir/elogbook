@@ -82,7 +82,7 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
   addWidget( checkboxes_[COLOR] = new QCheckBox( "&Color", this ) );
   checkboxes_[TEXT]->setChecked( true );
 
-  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); iter++ )
+  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
   { connect( iter->second, SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
 
   // show_all button
@@ -187,7 +187,7 @@ void SearchPanel::_updateConfiguration( void )
   if( XmlOptions::get().find( "SEARCH_PANEL_MASK" ) )
   {
     unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
-    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { iter->second->setChecked( mask & iter->first ); }
   }
 
@@ -222,7 +222,7 @@ void SearchPanel::_saveMask( void )
 
   // store mask
   unsigned int mask(0);
-  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
   { if( iter->second->isChecked() ) mask |= iter->first; }
 
   XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
@@ -236,7 +236,7 @@ void SearchPanel::_selectionRequest( void )
 
   // build mode
   unsigned int mode = NONE;
-  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); iter++ )
+  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
   { if( iter->second->isChecked() ) mode |= iter->first; }
 
   // text selection

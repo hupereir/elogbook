@@ -89,7 +89,7 @@ void Application::initApplicationManager( void )
     // retrieve files from arguments and expand if needed
     CommandLineParser parser( SERVER::ApplicationManager::commandLineParser( _arguments() ) );
     QStringList& orphans( parser.orphans() );
-    for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); iter++ )
+    for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); ++iter )
     { if( !iter->isEmpty() ) (*iter) = File( *iter ).expand(); }
 
     // replace arguments
@@ -173,7 +173,7 @@ void Application::_exit( void )
     {
         // check if editable EditionWindows needs save
         BASE::KeySet<EditionWindow> frames( mainWindow_ );
-        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); iter++ )
+        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
         {
             if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL )
             { return; }

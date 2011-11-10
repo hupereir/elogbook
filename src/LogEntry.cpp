@@ -29,9 +29,6 @@
 \date $Date$
 */
 
-#include <cassert>
-#include <cstdio>
-
 #include "Debug.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
@@ -44,7 +41,8 @@
 #include "XmlTimeStamp.h"
 #include "XmlString.h"
 
-using namespace std;
+#include <cassert>
+#include <cstdio>
 
 //__________________________________
 const QString LogEntry::DRAG = "logEntry_drag";
@@ -106,7 +104,7 @@ LogEntry::~LogEntry( void )
 
     // delete associated attachments
     BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); iter++ )
+    for( BASE::KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
     { delete *iter; }
 
 }
@@ -140,12 +138,12 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
     }
 
     // dump text format
-    for( FORMAT::TextFormatBlock::List::const_iterator iter = formats().begin(); iter != formats().end(); iter++ )
+    for( FORMAT::TextFormatBlock::List::const_iterator iter = formats().begin(); iter != formats().end(); ++iter )
         if( !iter->isEmpty() ) out.appendChild( FORMAT::XmlTextFormatBlock( *iter ).domElement( parent ) );
 
     // dump attachments
     BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
+    for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); ++iter )
         out.appendChild( (*iter)->domElement( parent ) );
 
     return out;
@@ -164,11 +162,11 @@ LogEntry* LogEntry::clone( void ) const
 
     // copy all Attachments
     BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::iterator attachment_iter = attachments.begin(); attachment_iter != attachments.end(); attachment_iter++ )
+    for( BASE::KeySet<Attachment>::iterator attachmentIter = attachments.begin(); attachmentIter != attachments.end(); ++attachmentIter )
     {
 
         // copy attachment, associate to entry
-        Attachment *attachment( new Attachment( **attachment_iter ) );
+        Attachment *attachment( new Attachment( **attachmentIter ) );
         attachment->clearAssociations();
         Key::associate( attachment, out );
 
@@ -204,7 +202,7 @@ bool LogEntry::matchAttachment( const QString& buffer ) const
 
     // retrieve associated attachments
     BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::const_iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
+    for( BASE::KeySet<Attachment>::const_iterator iter( attachments.begin() ); iter != attachments.end(); ++iter )
     {
         if( (*iter)->file().contains( buffer, _caseSensitive() ) )
         { return true; }
@@ -327,7 +325,7 @@ QDomElement LogEntry::htmlElement( QDomDocument& document, const unsigned int &m
     if( !attachments.empty() && ( mask &  HTML_ATTACHMENT ) )
     {
         QDomElement par = out.appendChild( document.createElement("p") ).toElement();
-        for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); iter++ )
+        for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); ++iter )
         { (*iter)->htmlElement( par, document ); }
     }
 

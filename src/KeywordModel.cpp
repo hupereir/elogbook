@@ -57,13 +57,13 @@ Qt::ItemFlags KeywordModel::flags(const QModelIndex &index) const
 //__________________________________________________________________
 QVariant KeywordModel::data( const QModelIndex& index, int role ) const
 {
-    
+
     // check index, role and column
     if( !index.isValid() ) return QVariant();
     if( role != Qt::DisplayRole ) return QVariant();
     if( index.column() != KEYWORD ) return QVariant();
     return _find( index.internalId() ).get().current();
-    
+
 }
 
 //__________________________________________________________________
@@ -71,10 +71,10 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
 {
     Debug::Throw( "KeywordModel::setData.\n" );
     if( !(index.isValid() && index.column() == KEYWORD && role == Qt::EditRole ) ) return false;
-    
+
     // retrieve parent index
     Keyword parent_keyword( get( parent( index ) ) );
-    
+
     Keyword keyword( get( index ) );
     if( value.toString() != keyword.current() )
     {
@@ -84,21 +84,21 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
         emit keywordChanged( keyword, new_keyword );
         emit dataChanged( index, index );
     }
-    
+
     return true;
-    
+
 }
 
 //__________________________________________________________________
 QVariant KeywordModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    
+
     if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < nColumns )
     { return columnTitles_[section]; }
-    
+
     // return empty
     return QVariant();
-    
+
 }
 
 //______________________________________________________________________
@@ -112,86 +112,86 @@ QStringList KeywordModel::mimeTypes( void ) const
 //______________________________________________________________________
 QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 {
-    
+
     assert( !indexes.empty() );
-    
+
     // create mime data
     QMimeData *mime = new QMimeData();
-    
+
     // set DRAG type
-    for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); iter++ )
+    for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); ++iter )
     { if( iter->isValid() ) mime->setData( DRAG, get( *iter ).get().toAscii() ); }
-    
+
     // retrieve associated entry
     QString buffer;
     QTextStream what( &buffer );
-    for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); iter++ )
+    for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); ++iter )
     {
         if( !iter->isValid() ) continue;
         what << get(*iter) << endl;
     }
-    
+
     // set plain text data
     mime->setData( "text/plain", buffer.toAscii() );
-    
+
     return mime;
-    
+
 }
 
 //__________________________________________________________________
 bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, int row, int column, const QModelIndex& parent)
 {
-    
+
     Debug::Throw( "KeywordModel::dropMimeData\n" );
-    
+
     // check action
     if( action == Qt::IgnoreAction) return true;
-    
+
     // Drag from Keyword model
     if( data->hasFormat( DRAG ) )
     {
-        
+
         // retrieve/check string
         QString keyword_string( data->data( DRAG ) );
         if( keyword_string.isNull() || keyword_string.isEmpty() ) return false;
-        
+
         // retrieve old keyword
         Keyword old_keyword( keyword_string );
-        
+
         // retrieve new location
         QModelIndex index = parent.isValid() ? parent : QModelIndex();
         Keyword new_keyword = get( index );
-        
+
         // check that keyword is different
         if( new_keyword == old_keyword ) return false;
-        
+
         // append new keyword to old
         new_keyword.append( old_keyword.current() );
-        
+
         // emit keyword modification signal
         emit keywordChanged( old_keyword, new_keyword );
         return true;
     }
-    
+
     // drag from LogEntryModel
     if( data->hasFormat( LogEntryModel::DRAG ) )
     {
         Debug::Throw( "KeywordModel::dropMimeData - LogEntryModel::DRAG.\n" );
-        
+
         // no drag if parent is invalid
         if( !parent.isValid() ) return false;
-        
+
         // retrieve new location
         Keyword new_keyword = get( parent );
-        
+
         // emit logEntry keyword changed signal
         emit entryKeywordChanged( new_keyword );
         return true;
-        
+
     }
-    
+
     return false;
-    
+
 }
 
 //____________________________________________________________
@@ -206,8 +206,8 @@ void KeywordModel::_sort( int column, Qt::SortOrder order )
 //________________________________________________________
 bool KeywordModel::SortFTor::operator () ( Keyword first, Keyword second ) const
 {
-    
+
     if( order_ == Qt::AscendingOrder ) swap( first, second );
     return first < second;
-    
+
 }
