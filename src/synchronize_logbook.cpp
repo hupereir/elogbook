@@ -42,7 +42,7 @@
 #include "Options.h"
 #include "Util.h"
 
-using namespace std;
+
 
 //_______________________________
 //! to handle keyboard interruptions

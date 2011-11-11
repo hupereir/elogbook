@@ -68,8 +68,6 @@
 #include <QtGui/QMenu>
 #include <QtGui/QSplitter>
 
-using namespace std;
-
 //_____________________________________________
 MainWindow::MainWindow( QWidget *parent ):
     BaseMainWindow( parent ),
@@ -1175,7 +1173,7 @@ void MainWindow::_resetKeywordList( void )
     keywordList().initializeAnimation();
 
     // retrieve new list of keywords (from logbook)
-    set<Keyword> newKeywords;
+    std::set<Keyword> newKeywords;
     BASE::KeySet<LogEntry> entries( logbook()->entries() );
     for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter )
     {
@@ -1651,11 +1649,11 @@ void MainWindow::_reorganize( void )
 
     //! put entry set into a list and sort by creation time.
     // First entry must the oldest
-    list<LogEntry*> entry_list( entries.begin(), entries.end() );
+    std::list<LogEntry*> entry_list( entries.begin(), entries.end() );
     entry_list.sort( LogEntry::FirstCreatedFTor() );
 
     // put entries in logbook
-    for( list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); ++iter )
+    for( std::list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); ++iter )
     {
         Logbook *logbook( MainWindow::logbook()->latestChild() );
         Key::associate( *iter, logbook );
@@ -2624,7 +2622,7 @@ void MainWindow::_print( void )
             appendChild( document.createElement( "b" ) ).
             appendChild( document.createTextNode( "last modified" ) );
 
-        for( vector< LogEntry* >::iterator it=entries.begin(); it != entries.end(); it++ )
+        for( std::vector< LogEntry* >::iterator it=entries.begin(); it != entries.end(); it++ )
         { table.appendChild( (*it)->htmlSummary( document ) ); }
 
     }
@@ -2632,7 +2630,7 @@ void MainWindow::_print( void )
     // dump full logbook
     if( html_log_mask & Logbook::HTML_CONTENT )
     {
-        for( vector<LogEntry*>::iterator it=entries.begin(); it != entries.end(); it++ )
+        for( std::vector<LogEntry*>::iterator it=entries.begin(); it != entries.end(); it++ )
         { body.appendChild( (*it)->htmlElement( document, htmlEntry_mask ) ); }
     }
 

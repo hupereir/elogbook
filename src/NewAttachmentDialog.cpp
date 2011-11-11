@@ -37,7 +37,7 @@
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
 
-using namespace std;
+
 
 //_____________________________________________________
 NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):

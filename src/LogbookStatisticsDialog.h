@@ -54,7 +54,7 @@ class LogbookStatisticsDialog: public CustomDialog
         public:
 
         //! number of columns
-        enum { n_columns = 5 };
+        enum { nColumns = 5 };
 
         //! column type enumeration
         enum ColumnType {
@@ -83,8 +83,8 @@ class LogbookStatisticsDialog: public CustomDialog
         //! header data
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
         {
-            if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < n_columns )
-            { return column_titles_[section]; }
+            if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < nColumns )
+            { return columnTitles_[section]; }
 
             // return empty
             return QVariant();
@@ -93,7 +93,7 @@ class LogbookStatisticsDialog: public CustomDialog
 
         //! number of columns for a given index
         virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
-        { return n_columns; }
+        { return nColumns; }
 
         //@}
 
@@ -104,7 +104,7 @@ class LogbookStatisticsDialog: public CustomDialog
         {}
 
         //! list column names
-        static const QString column_titles_[n_columns];
+        static const QString columnTitles_[nColumns];
 
     };
 

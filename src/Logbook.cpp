@@ -46,7 +46,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-using namespace std;
+
 
 //________________________________
 // public methods
@@ -380,7 +380,7 @@ bool Logbook::write( File file )
 }
 
 //_________________________________
-map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
+std::map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
 {
     Debug::Throw( "Logbook::synchronize.\n" );
 
@@ -429,7 +429,7 @@ map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
             }
 
             // insert duplicate pairs in map
-            duplicates.insert( make_pair( *duplicate, *it ) );
+            duplicates.insert( std::make_pair( *duplicate, *it ) );
 
             // reset current entries
             current_entries = entries();

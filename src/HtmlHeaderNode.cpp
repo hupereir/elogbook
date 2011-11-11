@@ -32,7 +32,7 @@
 #include "HtmlHeaderNode.h"
 #include "Debug.h"
 
-using namespace std;
+
 
 //_________________________________________
 HtmlHeaderNode::HtmlHeaderNode( QDomElement& parent, QDomDocument& document )

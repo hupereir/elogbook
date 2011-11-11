@@ -29,10 +29,6 @@
    \date $Date$
 */
 
-#include <QLayout>
-#include <QLabel>
-#include <QPushButton>
-
 #include "TreeView.h"
 #include "AnimatedLineEditor.h"
 #include "Debug.h"
@@ -41,7 +37,9 @@
 #include "LogEntry.h"
 #include "Util.h"
 
-using namespace std;
+#include <QtGui/QLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
@@ -113,7 +111,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     list_view->setSortingEnabled( false );
     mainLayout().addWidget( list_view, 1 );
 
-    list< Logbook* > all( logbook->children() );
+    std::list< Logbook* > all( logbook->children() );
     all.push_front( logbook );
     model_.add( Model::List( all.begin(), all.end() ) );
 
@@ -123,7 +121,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 
 
 //_______________________________________________
-const QString LogbookStatisticsDialog::Model::column_titles_[ LogbookStatisticsDialog::Model::n_columns ] =
+const QString LogbookStatisticsDialog::Model::columnTitles_[ LogbookStatisticsDialog::Model::nColumns ] =
 {
     "File",
     "Entries",

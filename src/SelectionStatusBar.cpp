@@ -32,7 +32,7 @@
 #include "Debug.h"
 #include "SelectionStatusBar.h"
 
-using namespace std;
+
 
 //______________________________________________________
 SelectionStatusBar::SelectionStatusBar( QWidget* parent ):

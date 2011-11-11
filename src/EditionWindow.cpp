@@ -29,12 +29,6 @@
 \date $Date$
 */
 
-#include <QApplication>
-#include <QLabel>
-#include <QLayout>
-#include <QStylePainter>
-#include <QStyleOptionToolButton>
-
 #include "Application.h"
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
@@ -69,8 +63,11 @@
 #include "SpellDialog.h"
 #endif
 
-using namespace std;
-using namespace Qt;
+#include <QtGui/QApplication>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QStylePainter>
+#include <QtGui/QStyleOptionToolButton>
 
 //_______________________________________________
 EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
@@ -625,13 +622,13 @@ void EditionWindow::_installActions( void )
     addAction( next_entryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), "&Next Entry", this ) );
     next_entryAction_->setToolTip( "Display next entry in current list" );
     connect( next_entryAction_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
-    next_entryAction_->setShortcut( CTRL+Key_N );
+    next_entryAction_->setShortcut( Qt::CTRL+Qt::Key_N );
 
     // save
     addAction( saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "&Save Entry", this ) );
     saveAction_->setToolTip( "Save current entry" );
     connect( saveAction_, SIGNAL( triggered() ), SLOT( _save() ) );
-    saveAction_->setShortcut( CTRL+Key_S );
+    saveAction_->setShortcut( Qt::CTRL+Qt::Key_S );
 
     #if WITH_ASPELL
     addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck", this ) );
@@ -651,13 +648,13 @@ void EditionWindow::_installActions( void )
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // split action
-    addAction( split_view_horizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
-    split_view_horizontalAction_->setToolTip( "Split current text editor vertically" );
-    connect( split_view_horizontalAction_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
+    addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
+    splitViewHorizontalAction_->setToolTip( "Split current text editor vertically" );
+    connect( splitViewHorizontalAction_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
 
-    addAction( split_view_verticalAction_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), "Split View Left/Right", this ) );
-    split_view_verticalAction_->setToolTip( "Split current text editor horizontally" );
-    connect( split_view_verticalAction_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
+    addAction( splitViewVerticalAction_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), "Split View Left/Right", this ) );
+    splitViewVerticalAction_->setToolTip( "Split current text editor horizontally" );
+    connect( splitViewVerticalAction_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
 
     // clone window action
     addAction( cloneWindowAction_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), "Clone Window", this ) );
@@ -666,7 +663,7 @@ void EditionWindow::_installActions( void )
 
     // close window action
     addAction( closeAction_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), "&Close View", this ) );
-    closeAction_->setShortcut( CTRL+Key_W );
+    closeAction_->setShortcut( Qt::CTRL+Qt::Key_W );
     closeAction_->setToolTip( "Close current view" );
     connect( closeAction_, SIGNAL( triggered() ), SLOT( _close() ) );
 
@@ -1139,7 +1136,7 @@ void EditionWindow::_closeEditor( AnimatedTextEditor& editor )
 }
 
 //___________________________________________________________
-AnimatedTextEditor& EditionWindow::_splitView( const Orientation& orientation )
+AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
 {
     Debug::Throw( "EditionWindow::_splitView.\n" );
 
@@ -1148,7 +1145,7 @@ AnimatedTextEditor& EditionWindow::_splitView( const Orientation& orientation )
 
     // compute desired dimension of the new splitter
     // along its splitting direction
-    int dimension( (orientation == Horizontal) ? activeEditor_local.width():activeEditor_local.height() );
+    int dimension( (orientation == Qt::Horizontal) ? activeEditor_local.width():activeEditor_local.height() );
 
     // create new splitter
     QSplitter& splitter( _newSplitter( orientation ) );
@@ -1162,7 +1159,7 @@ AnimatedTextEditor& EditionWindow::_splitView( const Orientation& orientation )
     // recompute dimension
     // take the max of active display and splitter,
     // in case no new splitter was created.
-    dimension = max( dimension, (orientation == Horizontal) ? splitter.width():splitter.height() );
+    dimension = std::max( dimension, (orientation == Qt::Horizontal) ? splitter.width():splitter.height() );
 
     // assign equal size to all splitter children
     QList<int> sizes;
@@ -1193,7 +1190,7 @@ AnimatedTextEditor& EditionWindow::_splitView( const Orientation& orientation )
 }
 
 //____________________________________________________________
-QSplitter& EditionWindow::_newSplitter( const Orientation& orientation )
+QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 {
 
     Debug::Throw( "EditionWindow::_newSplitter.\n" );
@@ -1241,7 +1238,7 @@ QSplitter& EditionWindow::_newSplitter( const Orientation& orientation )
         // resize parent splitter if any
         if( parent_splitter )
         {
-            int dimension = ( parent_splitter->orientation() == Horizontal) ?
+            int dimension = ( parent_splitter->orientation() == Qt::Horizontal) ?
                 parent_splitter->width():
                 parent_splitter->height();
 

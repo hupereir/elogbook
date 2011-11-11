@@ -58,7 +58,7 @@
 #include "TreeView.h"
 #include "InformationDialog.h"
 
-using namespace std;
+
 
 //_____________________________________________
 AttachmentFrame::AttachmentFrame( QWidget *parent, bool read_only ):

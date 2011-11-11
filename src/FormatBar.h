@@ -24,25 +24,23 @@
 *******************************************************************************/
 
 /*!
-  \file FormatBar.h
-  \brief text formating bar
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file FormatBar.h
+\brief text formating bar
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
-
-
-#include <map>
-#include <QAction>
-#include <QFont>
-#include <QTextCharFormat>
-#include <QToolButton>
 
 #include "Counter.h"
 #include "CustomToolBar.h"
-
 #include "TextFormatBlock.h"
 #include "TextFormat.h"
+
+#include <QtGui/QAction>
+#include <QtGui/QFont>
+#include <QtGui/QTextCharFormat>
+#include <QtGui/QToolButton>
+#include <map>
 
 class ColorMenu;
 class TextEditor;
@@ -51,34 +49,34 @@ class TextEditor;
 class FormatColorButton: public QToolButton, public Counter
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+        public:
 
-  //! constructor
-  FormatColorButton( QWidget* parent ):
-    QToolButton( parent ),
-    Counter( "FormatColorButton" )
+        //! constructor
+        FormatColorButton( QWidget* parent ):
+        QToolButton( parent ),
+        Counter( "FormatColorButton" )
     {}
 
-  public slots:
+    public slots:
 
-  //! set color
-  void setColor( QColor color )
-  {
-    color_ = color;
-    update();
-  }
+    //! set color
+    void setColor( QColor color )
+    {
+        color_ = color;
+        update();
+    }
 
-  protected:
+    protected:
 
-  //! paint
-  void paintEvent( QPaintEvent* event );
+    //! paint
+    void paintEvent( QPaintEvent* event );
 
-  private:
+    private:
 
-  // associated color
-  QColor color_;
+    // associated color
+    QColor color_;
 
 };
 
@@ -87,100 +85,100 @@ class FormatColorButton: public QToolButton, public Counter
 class FormatBar: public CustomToolBar
 {
 
-  //! Qt meta object declaration
-  Q_OBJECT
+    //! Qt meta object declaration
+    Q_OBJECT
 
-  public:
+        public:
 
-  //! bold icon name
-  static const QString BOLD_ICON;
+        //! bold icon name
+        static const QString BOLD_ICON;
 
-  //! italic icon name
-  static const QString ITALIC_ICON;
+    //! italic icon name
+    static const QString ITALIC_ICON;
 
-  //! strike icon name
-  static const QString STRIKE_ICON;
+    //! strike icon name
+    static const QString STRIKE_ICON;
 
-  //! underline icon name
-  static const QString UNDERLINE_ICON;
+    //! underline icon name
+    static const QString UNDERLINE_ICON;
 
-  //! action id enumeration
-  enum ActionId
-  {
-    BOLD,
-    ITALIC,
-    STRIKE,
-    UNDERLINE,
-    COLOR
-  };
+    //! action id enumeration
+    enum ActionId
+    {
+        BOLD,
+        ITALIC,
+        STRIKE,
+        UNDERLINE,
+        COLOR
+    };
 
-  //! constructor
-  FormatBar( QWidget* parent, const QString& option_name );
+    //! constructor
+    FormatBar( QWidget* parent, const QString& option_name );
 
-  //! destructor
-  virtual ~FormatBar( void )
-  { Debug::Throw( "FormatBar::~FormatBar.\n" ); }
+    //! destructor
+    virtual ~FormatBar( void )
+    { Debug::Throw( "FormatBar::~FormatBar.\n" ); }
 
-  //! set target editor
-  void setTarget( TextEditor& editor );
+    //! set target editor
+    void setTarget( TextEditor& editor );
 
-  //! load text formats
-  void load( const FORMAT::TextFormatBlock::List& ) const;
+    //! load text formats
+    void load( const FORMAT::TextFormatBlock::List& ) const;
 
-  //! get text formats
-  FORMAT::TextFormatBlock::List get( void ) const;
+    //! get text formats
+    FORMAT::TextFormatBlock::List get( void ) const;
 
-  //! button map
-  typedef std::map< ActionId, QAction* > ActionMap;
+    //! button map
+    typedef std::map< ActionId, QAction* > ActionMap;
 
-  //! actions
-  const ActionMap& actions( void ) const
-  { return actions_; }
+    //! actions
+    const ActionMap& actions( void ) const
+    { return actions_; }
 
-  public slots:
+    public slots:
 
-  //! update button state
-  void updateState( const QTextCharFormat& );
+    //! update button state
+    void updateState( const QTextCharFormat& );
 
-  private slots:
+    private slots:
 
-  //! update configuration
-  void _updateConfiguration( void );
+    //! update configuration
+    void _updateConfiguration( void );
 
-  //! save configuration
-  void _saveConfiguration( void );
+    //! save configuration
+    void _saveConfiguration( void );
 
-  //! bold
-  void _bold( bool );
+    //! bold
+    void _bold( bool );
 
-  //! italic
-  void _italic( bool );
+    //! italic
+    void _italic( bool );
 
-  //! underline
-  void _underline( bool );
+    //! underline
+    void _underline( bool );
 
-  //! strike
-  void _strike( bool );
+    //! strike
+    void _strike( bool );
 
-  //! color
-  void _color( QColor );
+    //! color
+    void _color( QColor );
 
-  //! last selected color
-  void _lastColor( void );
+    //! last selected color
+    void _lastColor( void );
 
-  private:
+    private:
 
-  //! target text editor
-  TextEditor* editor_;
+    //! target text editor
+    TextEditor* editor_;
 
-  // enabled
-  bool enabled_;
+    // enabled
+    bool enabled_;
 
-  //! button map
-  ActionMap actions_;
+    //! button map
+    ActionMap actions_;
 
-  //! color menu
-  ColorMenu* color_menu_;
+    //! color menu
+    ColorMenu* colorMenu_;
 
 };
 

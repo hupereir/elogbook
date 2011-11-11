@@ -37,7 +37,7 @@
 #include "NewLogbookDialog.h"
 #include "QtUtil.h"
 
-using namespace std;
+
 
 //_______________________________________________________
 NewLogbookDialog::NewLogbookDialog( QWidget* parent ):

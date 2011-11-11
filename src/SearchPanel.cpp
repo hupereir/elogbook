@@ -49,7 +49,7 @@
 #include "ToolButtonStyleMenu.h"
 #include "XmlOptions.h"
 
-using namespace std;
+
 
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):

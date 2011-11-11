@@ -38,7 +38,7 @@
 #include "TimeStamp.h"
 #include "XmlOptions.h"
 
-using namespace std;
+
 
 //__________________________________________________________________
 AttachmentModel::IconCache& AttachmentModel::_icons()
@@ -48,7 +48,7 @@ AttachmentModel::IconCache& AttachmentModel::_icons()
 }
 
 //_______________________________________________
-const QString AttachmentModel::column_titles_[ AttachmentModel::n_columns ] =
+const QString AttachmentModel::columnTitles_[ AttachmentModel::nColumns ] =
 {
   "",
   "File",
@@ -133,8 +133,8 @@ QVariant AttachmentModel::headerData(int section, Qt::Orientation orientation, i
     orientation == Qt::Horizontal &&
     role == Qt::DisplayRole &&
     section >= 0 &&
-    section < n_columns )
-  { return QString( column_titles_[section] ); }
+    section < nColumns )
+  { return QString( columnTitles_[section] ); }
 
   // return empty
   return QVariant();
@@ -159,7 +159,7 @@ void AttachmentModel::_sort( int column, Qt::SortOrder order )
 bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* second ) const
 {
 
-  if( order_ == Qt::AscendingOrder ) swap( first, second );
+  if( order_ == Qt::AscendingOrder ) std::swap( first, second );
 
   switch( type_ )
   {
@@ -200,7 +200,7 @@ QIcon AttachmentModel::_icon( QString type )
   }
 
   // store in map and return
-  _icons().insert( make_pair( type, icon ) );
+  _icons().insert( std::make_pair( type, icon ) );
   return icon;
 
 }

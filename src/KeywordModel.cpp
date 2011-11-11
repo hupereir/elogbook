@@ -29,12 +29,8 @@
 \date    $Date$
 */
 
-
-
 #include "KeywordModel.h"
 #include "LogEntryModel.h"
-
-using namespace std;
 
 //______________________________________________________________
 const QString KeywordModel::columnTitles_[ KeywordModel::nColumns ] = { "Keywords" };
@@ -207,7 +203,7 @@ void KeywordModel::_sort( int column, Qt::SortOrder order )
 bool KeywordModel::SortFTor::operator () ( Keyword first, Keyword second ) const
 {
 
-    if( order_ == Qt::AscendingOrder ) swap( first, second );
+    if( order_ == Qt::AscendingOrder ) std::swap( first, second );
     return first < second;
 
 }

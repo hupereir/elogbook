@@ -44,7 +44,7 @@
 #include "QtUtil.h"
 
 
-using namespace std;
+
 
 //_________________________________________________________
 LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):

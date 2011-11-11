@@ -25,11 +25,11 @@
 *******************************************************************************/
 
 /*!
-  \file FileCheck.h
-  \brief keep track of external file modifications
-  \author  Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file FileCheck.h
+\brief keep track of external file modifications
+\author  Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 #include <QBasicTimer>
@@ -50,213 +50,215 @@ class Logbook;
 class FileCheck: public QObject, public BASE::Key, public Counter
 {
 
-  //! Qt meta object declaration
-  Q_OBJECT
+    //! Qt meta object declaration
+    Q_OBJECT
 
-  public:
+        public:
 
-  //! constructor
-  FileCheck( QObject* parent = 0 );
+        //! constructor
+        FileCheck( QObject* parent = 0 );
 
-  //! destructor
-  ~FileCheck( void );
+    //! destructor
+    ~FileCheck( void );
 
-  //! register logbook and children
-  void registerLogbook( Logbook* );
+    //! register logbook and children
+    void registerLogbook( Logbook* );
 
-  //! clear all
-  void clear( void );
+    //! clear all
+    void clear( void );
 
-  //! used to monitor file changes
-  class Data
-  {
-    public:
-
-    //! flag
-    enum Flag
+    //! used to monitor file changes
+    class Data
     {
-      NONE,
-      REMOVED,
-      MODIFIED
+        public:
+
+        //! flag
+        enum Flag
+        {
+            NONE,
+            REMOVED,
+            MODIFIED
+        };
+
+        //! constructor
+        Data( QString file = QString(), Flag flag = NONE, TimeStamp stamp = TimeStamp() ):
+            file_( file ),
+            flag_( flag ),
+            time_stamp_( stamp )
+        {}
+
+        //! equal to operator
+        bool operator == ( const Data& data ) const
+        { return file() == data.file(); }
+
+        //! less than operator
+        bool operator < ( const Data& data ) const
+        { return file() < data.file(); }
+
+        //! file
+        void setFile( const QString& file )
+        { file_ = file; }
+
+        //! file
+        const QString& file( void ) const
+        { return file_; }
+
+        //! flag
+        void setFlag( const Flag& flag )
+        { flag_ = flag; }
+
+        //! flag
+        const Flag& flag( void ) const
+        { return flag_; }
+
+        //! timestamp
+        void setTimeStamp( const TimeStamp& stamp )
+        { time_stamp_ = stamp; }
+
+        //! timestamp
+        const TimeStamp& timeStamp( void ) const
+        { return time_stamp_; }
+
+        private:
+
+        //! file
+        QString file_;
+
+        //! flag
+        Flag flag_;
+
+        //! timestamp
+        TimeStamp time_stamp_;
+
     };
 
-    //! constructor
-    Data( QString file = QString(), Flag flag = NONE, TimeStamp stamp = TimeStamp() ):
-      file_( file ),
-      flag_( flag ),
-      time_stamp_( stamp )
-    {}
+    //! logbook information model
+    class Model: public ListModel<Data>, public Counter
+    {
 
-    //! equal to operator
-    bool operator == ( const Data& data ) const
-    { return file() == data.file(); }
+        public:
 
-    //! less than operator
-    bool operator < ( const Data& data ) const
-    { return file() < data.file(); }
+        //! number of columns
+        enum { nColumns = 3 };
 
-    //! file
-    void setFile( const QString& file )
-    { file_ = file; }
+        //! column type enumeration
+        enum ColumnType {
+            FILE,
+            FLAG,
+            TIME
+        };
 
-    //! file
-    const QString& file( void ) const
-    { return file_; }
+        //! constructor
+        Model( QObject* parent = 0 ):
+            ListModel<Data>( parent ),
+            Counter( "FileCheck::Model" )
+        {}
 
-    //! flag
-    void setFlag( const Flag& flag )
-    { flag_ = flag; }
+        //!@name methods reimplemented from base class
+        //@{
 
-    //! flag
-    const Flag& flag( void ) const
-    { return flag_; }
+        //! flags
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const
+        { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
 
-    //! timestamp
-    void setTimeStamp( const TimeStamp& stamp )
-    { time_stamp_ = stamp; }
+        //! return data
+        virtual QVariant data(const QModelIndex &index, int role) const;
 
-    //! timestamp
-    const TimeStamp& timeStamp( void ) const
-    { return time_stamp_; }
+        //! header data
+        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+        {
+            if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < nColumns )
+            { return columnTitles_[section]; }
 
-    private:
+            // return empty
+            return QVariant();
 
-    //! file
-    QString file_;
+        }
 
-    //! flag
-    Flag flag_;
+        //! number of columns for a given index
+        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+        { return nColumns; }
 
-    //! timestamp
-    TimeStamp time_stamp_;
+        //@}
 
-  };
+        protected:
 
-  //! logbook information model
-  class Model: public ListModel<Data>, public Counter
-  {
 
-    public:
+        //! used to sort Counters
+        class SortFTor: public ItemModel::SortFTor
+        {
 
-    //! number of columns
-    enum { n_columns = 3 };
+            public:
 
-    //! column type enumeration
-    enum ColumnType {
-      FILE,
-      FLAG,
-      TIME
+            //! constructor
+            SortFTor( const int& type, Qt::SortOrder order ):
+                ItemModel::SortFTor( type, order )
+            {}
+
+            //! prediction
+            bool operator() ( Data, Data ) const;
+
+        };
+
+        //! sort
+        virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder )
+        { std::sort( _get().begin(), _get().end(), SortFTor( column, order ) ); }
+
+        //! list column names
+        static const QString columnTitles_[nColumns];
+
     };
 
-    //! constructor
-    Model( QObject* parent = 0 ):
-      ListModel<Data>( parent ),
-      Counter( "FileCheck::Model" )
-    {}
+    //! map data to file
+    typedef std::set<Data> DataSet;
 
-    //!@name methods reimplemented from base class
-    //@{
+    //! file system watcher
+    const QFileSystemWatcher& fileSystemWatcher( void ) const
+    { return fileSystemWatcher_; }
 
-    //! flags
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const
-    { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
+    signals:
 
-    //! return data
-    virtual QVariant data(const QModelIndex &index, int role) const;
-
-    //! header data
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
-    {
-      if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < n_columns )
-      { return column_titles_[section]; }
-
-      // return empty
-      return QVariant();
-
-    }
-
-    //! number of columns for a given index
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
-    { return n_columns; }
-
-    //@}
+    //! files have been modified
+    void filesModified( FileCheck::DataSet );
 
     protected:
 
+    //! timer event, to handle multiple file modification at once
+    virtual void timerEvent( QTimerEvent* event );
 
-    //! used to sort Counters
-    class SortFTor: public ItemModel::SortFTor
-    {
+    private slots:
 
-      public:
+    //! one monitored file has been modified
+    void _fileChanged( const QString& );
 
-      //! constructor
-      SortFTor( const int& type, Qt::SortOrder order ):
-        ItemModel::SortFTor( type, order )
-      {}
+    protected:
 
-      //! prediction
-      bool operator() ( Data, Data ) const;
+    //! add file
+    void _addFile( const QString& file );
 
-    };
+    //! remove file
+    void _removeFile( const QString& file, bool forced = false );
 
-    //! sort
-    virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder )
-    { std::sort( _get().begin(), _get().end(), SortFTor( column, order ) ); }
+    //! file system watcher
+    QFileSystemWatcher& _fileSystemWatcher( void )
+    { return fileSystemWatcher_; }
 
-    //! list column names
-    static const QString column_titles_[n_columns];
+    //! file system watcher
+    QFileSystemWatcher fileSystemWatcher_;
 
-  };
+    private:
 
-  //! map data to file
-  typedef std::set<Data> DataSet;
+    //! file set
+    typedef std::set<QString> FileSet;
 
-  //! file system watcher
-  const QFileSystemWatcher& fileSystemWatcher( void ) const
-  { return file_system_watcher_; }
+    //! file set
+    FileSet files_;
 
-  signals:
+    //! map files and modification data
+    DataSet data_;
 
-  //! files have been modified
-  void filesModified( FileCheck::DataSet );
-
-  protected:
-
-  //! timer event, to handle multiple file modification at once
-  virtual void timerEvent( QTimerEvent* event );
-
-  private slots:
-
-  //! one monitored file has been modified
-  void _fileChanged( const QString& );
-
-  private:
-
-  //! add file
-  void _addFile( const QString& file );
-
-  //! remove file
-  void _removeFile( const QString& file, bool forced = false );
-
-  //! file system watcher
-  QFileSystemWatcher& _fileSystemWatcher( void )
-  { return file_system_watcher_; }
-
-  //! file system watcher
-  QFileSystemWatcher file_system_watcher_;
-
-  //! file set
-  typedef std::set<QString> FileSet;
-
-  //! file set
-  FileSet files_;
-
-  //! map files and modification data
-  DataSet data_;
-
-  //! resize timer
-  QBasicTimer timer_;
+    //! resize timer
+    QBasicTimer timer_;
 
 };
 

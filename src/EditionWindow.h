@@ -32,16 +32,6 @@
 \date $Date$
 */
 
-#include <QBasicTimer>
-#include <QLayout>
-#include <QPushButton>
-#include <QSplitter>
-#include <QTimerEvent>
-#include <QToolButton>
-
-#include <set>
-#include <map>
-#include <list>
 
 #include "AskForSaveDialog.h"
 #include "AnimatedLineEditor.h"
@@ -55,6 +45,17 @@
 #include "Key.h"
 #include "LogEntry.h"
 #include "TextPosition.h"
+
+#include <QtCore/QBasicTimer>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QSplitter>
+#include <QtCore/QTimerEvent>
+#include <QtGui/QToolButton>
+
+#include <set>
+#include <map>
+#include <list>
 
 class Attachment;
 class ColorMenu;
@@ -80,9 +81,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! Qt meta object declaration
     Q_OBJECT
 
-        public:
+    public:
 
-        typedef AnimatedLineEditor Editor;
+    typedef AnimatedLineEditor Editor;
 
     //! creator
     EditionWindow( QWidget* parent, bool read_only = true );
@@ -227,11 +228,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! split view horizontal
     QAction& splitViewHorizontalAction( void ) const
-    { return *split_view_horizontalAction_; }
+    { return *splitViewHorizontalAction_; }
 
     //! split view vertical
     QAction& splitViewVerticalAction( void ) const
-    { return *split_view_verticalAction_; }
+    { return *splitViewVerticalAction_; }
 
     //! split view vertical
     QAction& cloneWindowAction( void ) const
@@ -528,10 +529,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction* printAction_;
 
     //! split view horizontal
-    QAction* split_view_horizontalAction_;
+    QAction* splitViewHorizontalAction_;
 
     //! split view vertical
-    QAction* split_view_verticalAction_;
+    QAction* splitViewVerticalAction_;
 
     //! new window action
     QAction* cloneWindowAction_;

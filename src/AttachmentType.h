@@ -1,3 +1,5 @@
+#ifndef AttachmentType_h
+#define AttachmentType_h
 // $Id$
 
 /******************************************************************************
@@ -21,97 +23,94 @@
 *
 *******************************************************************************/
 
-#ifndef AttachmentType_h
-#define AttachmentType_h
-
-
-#include <map>
 #include "Counter.h"
 
+#include <map>
+
 /*!
-   \file    AttachmentType.h
-   \brief   Attached file types for file manipulations
-   \author  Hugo Pereira
-   \version $Revision$
-   \date    $Date$
+\file    AttachmentType.h
+\brief   Attached file types for file manipulations
+\author  Hugo Pereira
+\version $Revision$
+\date    $Date$
 */
 
 /*!
-   \class   AttachmentType
-   \brief   Attached file types for file manipulations
+\class   AttachmentType
+\brief   Attached file types for file manipulations
 */
 class AttachmentType: public Counter{
 
-  public:
+    public:
 
-  //! unknown file type
-  static AttachmentType UNKNOWN;
+    //! unknown file type
+    static AttachmentType UNKNOWN;
 
-  //! postscript file type
-  static AttachmentType POSTSCRIPT;
+    //! postscript file type
+    static AttachmentType POSTSCRIPT;
 
-  //! image file type
-  static AttachmentType IMAGE;
+    //! image file type
+    static AttachmentType IMAGE;
 
-  //! plain text file type
-  static AttachmentType PLAIN_TEXT;
+    //! plain text file type
+    static AttachmentType PLAIN_TEXT;
 
-  //! html file type
-  static AttachmentType HTML;
+    //! html file type
+    static AttachmentType HTML;
 
-  //! url (pseudo) file type
-  static AttachmentType URL;
+    //! url (pseudo) file type
+    static AttachmentType URL;
 
-  /*!
+    /*!
     retrieves predefined attachment type from key
     returns atcUNKNOWN if key is not found
-  */
-  static AttachmentType get( const QString& key );
+    */
+    static AttachmentType get( const QString& key );
 
-  //! equal to operator
-  bool operator == (const AttachmentType& type ) const
-  { return key_ == type.key_; }
+    //! equal to operator
+    bool operator == (const AttachmentType& type ) const
+    { return key_ == type.key_; }
 
-  //! creator
-  AttachmentType( const QString& key, const QString& name, const QString& icon, const QString& option = ""  );
+    //! creator
+    AttachmentType( const QString& key, const QString& name, const QString& icon, const QString& option = ""  );
 
-  //! retrieves attachment key
-  const QString& key( void ) const
-  { return key_; }
+    //! retrieves attachment key
+    const QString& key( void ) const
+    { return key_; }
 
-  //! retrieves attachment name
-  const QString& name( void ) const
-  { return name_; }
+    //! retrieves attachment name
+    const QString& name( void ) const
+    { return name_; }
 
-  //! icon
-  const QString& icon( void ) const
-  { return icon_; }
+    //! icon
+    const QString& icon( void ) const
+    { return icon_; }
 
-  //! retrieves command used to edit the attachment
-  QString editCommand( void ) const;
+    //! retrieves command used to edit the attachment
+    QString editCommand( void ) const;
 
-  //! attachment types map
-  typedef std::map< QString, AttachmentType > Map;
+    //! attachment types map
+    typedef std::map< QString, AttachmentType > Map;
 
-  //! returns predefined attachment types
-  static const Map& types( void );
+    //! returns predefined attachment types
+    static const Map& types( void );
 
-  private:
+    private:
 
-  //! install static type map
-  static Map _install( void );
+    //! install static type map
+    static Map _install( void );
 
-  //! used to identify the file type
-  QString key_;
+    //! used to identify the file type
+    QString key_;
 
-  //! used to display the file type in readable format
-  QString name_;
+    //! used to display the file type in readable format
+    QString name_;
 
-  //! icon
-  QString icon_;
+    //! icon
+    QString icon_;
 
-  //! option name for looking up command
-  QString option_;
+    //! option name for looking up command
+    QString option_;
 
 };
 

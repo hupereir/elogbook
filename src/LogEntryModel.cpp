@@ -29,20 +29,19 @@
   \date    $Date$
 */
 
-#include <QIcon>
-#include <QPainter>
+#include "LogEntryModel.h"
 
 #include "Attachment.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"
 #include "Icons.h"
-#include "LogEntryModel.h"
 #include "LogEntry.h"
 #include "Singleton.h"
 #include "TimeStamp.h"
 #include "XmlOptions.h"
 
-using namespace std;
+#include <QtGui/QIcon>
+#include <QtGui/QPainter>
 
 //_______________________________________________
 LogEntryModel::IconCache& LogEntryModel::_icons()
@@ -53,7 +52,7 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
 
 //_______________________________________________
 const QString LogEntryModel::DRAG = "elogbook/logentrymodel/drag";
-const QString LogEntryModel::column_titles_[ LogEntryModel::n_columns ] =
+const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 {
   "",
   "Keyword",
@@ -188,8 +187,8 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
     orientation == Qt::Horizontal &&
     role == Qt::DisplayRole &&
     section >= 0 &&
-    section < n_columns )
-  { return column_titles_[section]; }
+    section < nColumns )
+  { return columnTitles_[section]; }
 
   if(
     orientation == Qt::Horizontal &&
@@ -274,7 +273,7 @@ QIcon LogEntryModel::_icon( const QColor& color )
   if( iter != _icons().end() ) return iter->second;
 
   unsigned int icon_size =XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
-  double pixmap_size = 0.75*min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
+  double pixmap_size = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
   double offset = 0.5*( icon_size - pixmap_size );
 
   CustomPixmap pixmap( CustomPixmap().empty( QSize( icon_size, icon_size ) ) );
@@ -323,7 +322,7 @@ QIcon& LogEntryModel::_attachmentIcon( void )
 bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) const
 {
 
-  if( order_ == Qt::AscendingOrder ) swap( first, second );
+  if( order_ == Qt::AscendingOrder ) std::swap( first, second );
 
   switch( type_ )
   {

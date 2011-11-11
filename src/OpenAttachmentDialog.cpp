@@ -42,7 +42,7 @@
 #include "File.h"
 #include "OpenAttachmentDialog.h"
 
-using namespace std;
+
 
 //_____________________________________________________
 OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& attachment ):

@@ -54,7 +54,7 @@
 #include "Util.h"
 #include "XmlOptions.h"
 
-using namespace std;
+
 using namespace Qt;
 
 //_______________________________________________

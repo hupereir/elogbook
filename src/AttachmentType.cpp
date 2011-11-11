@@ -22,17 +22,15 @@
 *******************************************************************************/
 
 /*!
-   \file    AttachmentType.cpp
-   \brief   Attached file types for file manipulations
-   \author  Hugo Pereira
-   \version $Revision$
-   \date    $Date$
+\file    AttachmentType.cpp
+\brief   Attached file types for file manipulations
+\author  Hugo Pereira
+\version $Revision$
+\date    $Date$
 */
 
 #include "AttachmentType.h"
 #include "XmlOptions.h"
-
-using namespace std;
 
 //___________________________________________________________________________________
 AttachmentType AttachmentType::UNKNOWN( "UNKNOWN", "Unknown", "unknown.png", "EDIT_UNKNOWN_ATC" );
@@ -45,44 +43,44 @@ AttachmentType AttachmentType::URL( "URL",  "URL", "text-html.png", "EDIT_URL_AT
 //___________________________________________________________________________________
 const AttachmentType::Map& AttachmentType::types()
 {
-  static Map type_map = _install();
-  return type_map;
+    static Map type_map = _install();
+    return type_map;
 };
 
 //___________________________________________________________________________________
 AttachmentType::AttachmentType( const QString& key, const QString& name, const QString& icon, const QString& option ):
-  Counter( "AttachmentType" ),
-  key_( key ),
-  name_( name ),
-  icon_( icon ),
-  option_( option )
+    Counter( "AttachmentType" ),
+    key_( key ),
+    name_( name ),
+    icon_( icon ),
+    option_( option )
 {}
 
 //___________________________________________________________________________________
 AttachmentType AttachmentType::get( const QString& key )
 {
 
-  Map::const_iterator iter = types().find( key );
-  return ( iter == types().end() ) ? UNKNOWN:iter->second;
+    Map::const_iterator iter = types().find( key );
+    return ( iter == types().end() ) ? UNKNOWN:iter->second;
 
 }
 
 //______________________________________
 QString AttachmentType::editCommand( void ) const
 {
-  if( !option_.size() ) return "";
-  return XmlOptions::get().raw( option_ );
+    if( !option_.size() ) return "";
+    return XmlOptions::get().raw( option_ );
 }
 
 //______________________________________
 AttachmentType::Map AttachmentType::_install( void )
 {
-  Map out;
-  out.insert( make_pair( "UNKNOWN", UNKNOWN ) );
-  out.insert( make_pair( "POSTSCRIPT", POSTSCRIPT ) );
-  out.insert( make_pair( "IMAGE", IMAGE ) );
-  out.insert( make_pair( "PLAIN_TEXT", PLAIN_TEXT ) );
-  out.insert( make_pair( "HTML", HTML ) );
-  out.insert( make_pair( "URL", URL ) );
-  return out;
+    Map out;
+    out.insert( std::make_pair( "UNKNOWN", UNKNOWN ) );
+    out.insert( std::make_pair( "POSTSCRIPT", POSTSCRIPT ) );
+    out.insert( std::make_pair( "IMAGE", IMAGE ) );
+    out.insert( std::make_pair( "PLAIN_TEXT", PLAIN_TEXT ) );
+    out.insert( std::make_pair( "HTML", HTML ) );
+    out.insert( std::make_pair( "URL", URL ) );
+    return out;
 }

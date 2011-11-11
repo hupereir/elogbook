@@ -56,7 +56,7 @@
 #include "SpellCheckConfiguration.h"
 #endif
 
-using namespace std;
+
 
 //_________________________________________________________
 ConfigurationDialog::ConfigurationDialog( QWidget* parent ):

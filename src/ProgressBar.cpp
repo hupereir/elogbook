@@ -35,7 +35,7 @@
 #include "Debug.h"
 #include "ProgressBar.h"
 
-using namespace std;
+
 
 //___________________________________________________________
 ProgressBar::ProgressBar( QWidget* parent ):

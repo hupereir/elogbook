@@ -44,7 +44,7 @@
 #include "LogEntry.h"
 #include "TreeView.h"
 
-using namespace std;
+
 using namespace Qt;
 
 //________________________________________

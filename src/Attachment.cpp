@@ -44,7 +44,7 @@
 #include <stdio.h>
 #include <string.h>
 
-using namespace std;
+
 
 //_______________________________________
 const QString Attachment::NO_FILE( "" );

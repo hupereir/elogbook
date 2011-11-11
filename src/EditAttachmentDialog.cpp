@@ -38,7 +38,7 @@
 #include "EditAttachmentDialog.h"
 #include "File.h"
 
-using namespace std;
+
 
 //_____________________________________________________
 EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& attachment ):

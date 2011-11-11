@@ -40,7 +40,7 @@
 #include "Logbook.h"
 #include "LogEntry.h"
 
-using namespace std;
+
 
 //___________________________________________________
 PrintLogEntryDialog::PrintLogEntryDialog( QWidget* parent ):

@@ -36,7 +36,7 @@
 #include "File.h"
 #include "Util.h"
 
-using namespace std;
+
 
 //_____________________________________________________
 //! Default options installer

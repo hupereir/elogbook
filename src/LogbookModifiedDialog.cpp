@@ -42,7 +42,7 @@
 #include "QtUtil.h"
 #include "XmlOptions.h"
 
-using namespace std;
+
 
 //________________________________________________________
 LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files ):

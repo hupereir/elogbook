@@ -22,31 +22,29 @@
 *******************************************************************************/
 
 /*!
-  \file FileCheck.cpp
-  \brief keep track of external file modifications
-  \author  Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file FileCheck.cpp
+\brief keep track of external file modifications
+\author  Hugo Pereira
+\version $Revision$
+\date $Date$
 */
-
-#include <algorithm>
-#include <cassert>
-#include <QStringList>
 
 #include "Debug.h"
 #include "File.h"
 #include "FileCheck.h"
 #include "Logbook.h"
 
-using namespace std;
+#include <QtCore/QStringList>
+#include <algorithm>
+#include <cassert>
 
 //____________________________________________________
 FileCheck::FileCheck( QObject* parent ):
-  QObject( parent ),
-  Counter( "FileCheck" )
+QObject( parent ),
+Counter( "FileCheck" )
 {
-  Debug::Throw( "FileCheck::FileCheck.\n" );
-  connect( &_fileSystemWatcher(), SIGNAL( fileChanged( const QString& ) ), SLOT( _fileChanged( const QString& ) ) );
+    Debug::Throw( "FileCheck::FileCheck.\n" );
+    connect( &_fileSystemWatcher(), SIGNAL( fileChanged( const QString& ) ), SLOT( _fileChanged( const QString& ) ) );
 }
 
 //______________________________________________________
@@ -57,71 +55,71 @@ FileCheck::~FileCheck( void )
 void FileCheck::registerLogbook( Logbook* logbook )
 {
 
-  Debug::Throw( "FileCheck::clear.\n" );
+    Debug::Throw( "FileCheck::clear.\n" );
 
-  // associate logbook to this and add corresponding file
-  if( !logbook->file().isEmpty() )
-  {
-
-    // associate (make sure association is unique)
-    if( !isAssociated( logbook ) )
-    { BASE::Key::associate( this, logbook ); }
-
-    _addFile( logbook->file() );
-  }
-
-  // loop over children and register
-  Logbook::List children( logbook->children() );
-  for( Logbook::List::const_iterator iter = children.begin(); iter != children.end(); ++iter )
-  {
-    if( !(*iter)->file().isEmpty() )
+    // associate logbook to this and add corresponding file
+    if( !logbook->file().isEmpty() )
     {
 
-      // associate (make sure association is unique)
-      if( !isAssociated( *iter ) )
-      { BASE::Key::associate( this, *iter ); }
+        // associate (make sure association is unique)
+        if( !isAssociated( logbook ) )
+        { BASE::Key::associate( this, logbook ); }
 
-      _addFile( (*iter)->file() );
-
+        _addFile( logbook->file() );
     }
-  }
+
+    // loop over children and register
+    Logbook::List children( logbook->children() );
+    for( Logbook::List::const_iterator iter = children.begin(); iter != children.end(); ++iter )
+    {
+        if( !(*iter)->file().isEmpty() )
+        {
+
+            // associate (make sure association is unique)
+            if( !isAssociated( *iter ) )
+            { BASE::Key::associate( this, *iter ); }
+
+            _addFile( (*iter)->file() );
+
+        }
+    }
 }
 
 //______________________________________________________
 void FileCheck::clear( void )
 {
 
-  Debug::Throw( "FileCheck::clear.\n" );
+    Debug::Throw( "FileCheck::clear.\n" );
 
-  // clear associated logbooks
-  clearAssociations<Logbook>();
+    // clear associated logbooks
+    clearAssociations<Logbook>();
 
-  // clear internal list of monitored files
-  files_.clear();
+    // clear internal list of monitored files
+    files_.clear();
 
-  // clear file system watcher
-  if( !_fileSystemWatcher().files().isEmpty() )
-  { _fileSystemWatcher().removePaths( _fileSystemWatcher().files() ); }
+    // clear file system watcher
+    if( !_fileSystemWatcher().files().isEmpty() )
+    { _fileSystemWatcher().removePaths( _fileSystemWatcher().files() ); }
 
 }
 
 //______________________________________________________
 void FileCheck::timerEvent( QTimerEvent* event )
 {
-  if( event->timerId() == timer_.timerId() )
-  {
-
-    // stop timer
-    timer_.stop();
-
-    // emit signal
-    if( !data_.empty() )
+    if( event->timerId() == timer_.timerId() )
     {
-      emit filesModified( data_ );
-      data_.clear();
-    }
 
-  } else return QObject::timerEvent( event );
+        // stop timer
+        timer_.stop();
+
+        // emit signal
+        if( !data_.empty() )
+        {
+            emit filesModified( data_ );
+            data_.clear();
+        }
+
+    } else return QObject::timerEvent( event );
 
 
 }
@@ -130,12 +128,12 @@ void FileCheck::timerEvent( QTimerEvent* event )
 void FileCheck::_addFile( const QString& file )
 {
 
-  Debug::Throw() << "FileCheck::addFile: " << file << endl;
-  if( files_.find( file ) == files_.end() )
-  {
-    files_.insert( file );
-    _fileSystemWatcher().addPath( file );
-  }
+    Debug::Throw() << "FileCheck::addFile: " << file << endl;
+    if( files_.find( file ) == files_.end() )
+    {
+        files_.insert( file );
+        _fileSystemWatcher().addPath( file );
+    }
 
 }
 
@@ -143,10 +141,10 @@ void FileCheck::_addFile( const QString& file )
 void FileCheck::_removeFile( const QString& file, bool forced )
 {
 
-  Debug::Throw() << "FileCheck::removeFile: " << file << endl;
-  files_.erase( file );
-  _fileSystemWatcher().removePath( file );
-  return;
+    Debug::Throw() << "FileCheck::removeFile: " << file << endl;
+    files_.erase( file );
+    _fileSystemWatcher().removePath( file );
+    return;
 
 }
 
@@ -154,88 +152,88 @@ void FileCheck::_removeFile( const QString& file, bool forced )
 void FileCheck::_fileChanged( const QString& file )
 {
 
-  // filecheck data
-  Data data( file );
+    // filecheck data
+    Data data( file );
 
-  // find associated display with matching file
-  BASE::KeySet<Logbook> logbooks( this );
-  BASE::KeySet<Logbook>::iterator iter( find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
-  if( iter != logbooks.end() )
-  {
-
-    File local( file );
-    if( !local.exists() )
+    // find associated display with matching file
+    BASE::KeySet<Logbook> logbooks( this );
+    BASE::KeySet<Logbook>::iterator iter( find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
+    if( iter != logbooks.end() )
     {
 
-      data.setFlag( Data::REMOVED );
+        File local( file );
+        if( !local.exists() )
+        {
+
+            data.setFlag( Data::REMOVED );
+
+        } else {
+
+            data.setFlag( Data::MODIFIED );
+            data.setTimeStamp( local.lastModified() );
+
+        }
+
+        if( data.flag() == Data::REMOVED || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
+        {
+            data_.insert( data );
+            timer_.start( 200, this );
+        }
 
     } else {
 
-      data.setFlag( Data::MODIFIED );
-      data.setTimeStamp( local.lastModified() );
+        // remove file from list otherwise
+        _removeFile( file, true );
 
     }
-
-    if( data.flag() == Data::REMOVED || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
-    {
-      data_.insert( data );
-      timer_.start( 200, this );
-    }
-
-  } else {
-
-    // remove file from list otherwise
-    _removeFile( file, true );
-
-  }
 
 }
 
 
 //_______________________________________________
-const QString FileCheck::Model::column_titles_[ FileCheck::Model::n_columns ] =
+const QString FileCheck::Model::columnTitles_[ FileCheck::Model::nColumns ] =
 {
-  "file",
-  "flag",
-  "time stamp"
+    "file",
+    "flag",
+    "time stamp"
 };
 
 //_______________________________________________________________________________________
 QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
 {
 
-  // check index, role and column
-  if( !index.isValid() ) return QVariant();
+    // check index, role and column
+    if( !index.isValid() ) return QVariant();
 
-  // retrieve associated file info
-  const Data& data( get()[index.row()] );
+    // retrieve associated file info
+    const Data& data( get()[index.row()] );
 
-  // return text associated to file and column
-  if( role == Qt::DisplayRole )
-  {
-
-    switch( index.column() )
+    // return text associated to file and column
+    if( role == Qt::DisplayRole )
     {
 
-      case FILE: return data.file();
-      case FLAG:
-      {
-        switch( data.flag() )
+        switch( index.column() )
         {
-          case Data::MODIFIED: return "Modified";
-          case Data::REMOVED: return "Removed";
-          case Data::NONE:
-          default: return "None";
+
+            case FILE: return data.file();
+            case FLAG:
+            {
+                switch( data.flag() )
+                {
+                    case Data::MODIFIED: return "Modified";
+                    case Data::REMOVED: return "Removed";
+                    case Data::NONE:
+                    default: return "None";
+                }
+            }
+
+            case TIME: return data.timeStamp().toString();
+
+            default: return QVariant();
         }
-      }
-
-      case TIME: return data.timeStamp().toString();
-
-      default: return QVariant();
     }
-  }
 
-  return QVariant();
+    return QVariant();
 
 }
 
@@ -243,16 +241,16 @@ QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
 bool FileCheck::Model::SortFTor::operator () ( FileCheck::Data first, FileCheck::Data second ) const
 {
 
-  if( order_ == Qt::AscendingOrder ) swap( first, second );
+    if( order_ == Qt::AscendingOrder ) std::swap( first, second );
 
-  switch( type_ )
-  {
+    switch( type_ )
+    {
 
-    case FILE: return first.file() < second.file();
-    case FLAG: return first.flag() < second.flag();
-    case TIME: return (first.timeStamp() != second.timeStamp() ) ? (first.timeStamp() < second.timeStamp()):first.file() < second.file();
-    default: assert( false );
+        case FILE: return first.file() < second.file();
+        case FLAG: return first.flag() < second.flag();
+        case TIME: return (first.timeStamp() != second.timeStamp() ) ? (first.timeStamp() < second.timeStamp()):first.file() < second.file();
+        default: assert( false );
 
-  }
+    }
 
 }

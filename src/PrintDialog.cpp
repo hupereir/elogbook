@@ -45,7 +45,7 @@
 #include "QtUtil.h"
 #include "PrintDialog.h"
 
-using namespace std;
+
 
 //___________________________________________________
 PrintDialog::PrintDialog( QWidget* parent ):

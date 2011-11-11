@@ -41,7 +41,7 @@
 #include "XmlOptions.h"
 #include "QtUtil.h"
 
-using namespace std;
+
 
 //________________________________________________________
 AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons ):

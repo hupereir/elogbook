@@ -34,7 +34,7 @@
 #include "Debug.h"
 #include "Keyword.h"
 
-using namespace std;
+
 
 //_________________________________________________________________
 const Keyword Keyword::NO_KEYWORD( "/" );

@@ -38,7 +38,7 @@
 #include "Debug.h"
 #include "DeleteAttachmentDialog.h"
 
-using namespace std;
+
 
 //_____________________________________________________
 DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachment& attachment ):

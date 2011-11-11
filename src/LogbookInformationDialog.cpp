@@ -38,7 +38,7 @@
 #include "LogbookInformationDialog.h"
 #include "Util.h"
 
-using namespace std;
+
 
 //_________________________________________________________
 LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* logbook ):

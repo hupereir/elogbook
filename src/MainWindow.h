@@ -64,10 +64,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! Qt meta object declaration
     Q_OBJECT
 
-        public:
+    public:
 
-        //! constructor
-        MainWindow( QWidget *parent = 0 );
+    //! constructor
+    MainWindow( QWidget *parent = 0 );
 
     //! destructor
     virtual ~MainWindow( void );

@@ -40,107 +40,107 @@
 //! Job model. Stores job information for display in lists
 class KeywordModel : public TreeModel<Keyword>, public Counter
 {
-    
+
     //! Qt meta object declaration
     Q_OBJECT
-        
-        public:
-        
-        //! used to tag Keyword drags
-        static const QString DRAG;
-    
+
+    public:
+
+    //! used to tag Keyword drags
+    static const QString DRAG;
+
     //! constructor
     KeywordModel(QObject *parent = 0);
-    
+
     //! destructor
     virtual ~KeywordModel()
     {}
-    
+
     //! number of columns
     enum { nColumns = 1 };
-    
+
     //! column type enumeration
     enum ColumnType { KEYWORD };
-    
+
     //!@name methods reimplemented from base class
     //@{
-    
+
     //! flags
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    
+
     //! return data
     virtual QVariant data(const QModelIndex &index, int role) const;
-    
+
     // modify data
     virtual bool setData(const QModelIndex &index, const QVariant& value, int role = Qt::EditRole );
-    
+
     //! header data
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    
+
     //! number of columns for a given index
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
     { return nColumns; }
-    
+
     //! mime type
     virtual QStringList mimeTypes( void ) const;
-    
+
     //! mime data
     virtual QMimeData* mimeData(const QModelIndexList &indexes) const;
-    
+
     //! drop mine data
     virtual bool dropMimeData(const QMimeData*, Qt::DropAction, int row, int column, const QModelIndex&);
-    
+
     //@}
-    
+
     signals:
-    
+
     /*! \brief
     emitted when a logEntryList drag is accepted.
     Sends the new keyword
     */
     void entryKeywordChanged( Keyword );
-    
+
     /*! \brief
     emitted when a Keyword drag is accepted, or when keyword item
     is emitted directly in the list. Sends old keyword, new keyword
     */
     void keywordChanged( Keyword old_keyword, Keyword new_keyword );
-    
+
     protected:
-    
+
     //! sort
     virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
-    
+
     private:
-    
+
     //! list column names
     static const QString columnTitles_[nColumns];
-    
+
     //! used to sort Jobs
     class SortFTor
     {
-        
+
         public:
-        
+
         //! constructor
         SortFTor( Qt::SortOrder order = Qt::AscendingOrder ):
             order_( order )
             {}
-            
+
         //! prediction
         bool operator() ( const Item& first, const Item& second ) const
         { return (*this)( first.get(), second.get() ); }
-        
+
         //! prediction
         bool operator() ( Keyword first, Keyword second ) const;
-        
+
         private:
-        
+
         //! order
         Qt::SortOrder order_;
-        
+
     };
-    
+
 };
 
 #endif
