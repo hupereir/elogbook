@@ -4,7 +4,7 @@ TARGET = copy_logbook
 CONFIG += qt release
 QT += xml network
 
-VERSION = 1.6.11
+VERSION = 1.7.0
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 win32 {

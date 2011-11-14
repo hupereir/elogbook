@@ -119,6 +119,7 @@ void installDefaultOptions( void )
     XmlOptions::get().set( "MAX_RECENT_ENTRIES", Option( "30", "maximum number of recent entries stored in logbook" ) );
 
 
+    XmlOptions::get().set( "SHOW_KEYWORD", "0" );
     XmlOptions::get().set( "USE_TREE", "1" );
 
     // masks

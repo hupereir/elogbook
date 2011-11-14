@@ -281,6 +281,7 @@ void Menu::_updatePreferenceMenu( void )
     if( editionwindow )
     {
         preferenceMenu_->addSeparator();
+        preferenceMenu_->addAction( &editionwindow->showKeywordAction() );
         preferenceMenu_->addAction( &editionwindow->attachmentFrame().visibilityAction() );
         preferenceMenu_->addAction( &editionwindow->activeEditor().showLineNumberAction() );
         preferenceMenu_->addAction( &editionwindow->activeEditor().wrapModeAction() );

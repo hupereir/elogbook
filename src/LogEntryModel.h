@@ -45,10 +45,10 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     //! Qt meta object declaration
     Q_OBJECT
 
-    public:
+        public:
 
-    //! used to tag Keyword drags
-    static const QString DRAG;
+        //! used to tag Keyword drags
+        static const QString DRAG;
 
     //! constructor
     LogEntryModel(QObject *parent = 0);
@@ -100,22 +100,22 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
 
     //! enable edition
     const bool& dragEnabled( void ) const
-    { return drag_enabled_; }
+    { return dragEnabled_; }
 
     //! enable drag
     void setDragEnabled( const bool& value )
-    { drag_enabled_ = value; }
+    { dragEnabled_ = value; }
 
     //!@name edition
     //@{
 
     //! enable edition
     const bool& editionEnabled( void ) const
-    { return edition_enabled_; }
+    { return editionEnabled_; }
 
     //! enable edition
     void setEditionEnabled( const bool& value )
-    { edition_enabled_ = value; }
+    { editionEnabled_ = value; }
 
     //! edition index
     const QModelIndex& editionIndex( void ) const
@@ -124,7 +124,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     //! edition index
     void setEditionIndex( const QModelIndex& index )
     {
-        edition_enabled_ = false;
+        editionEnabled_ = false;
         editionIndex_ = index;
     }
 
@@ -179,10 +179,10 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     };
 
     //! drag flag
-    bool drag_enabled_;
+    bool dragEnabled_;
 
     //! edition flag
-    bool edition_enabled_;
+    bool editionEnabled_;
 
     //! edition index
     /*! needs to be stored to start delayed edition */

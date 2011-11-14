@@ -47,10 +47,10 @@
 #include "TextPosition.h"
 
 #include <QtCore/QBasicTimer>
-#include <QtGui/QLayout>
+#include <QtCore/QTimerEvent>
 #include <QtGui/QPushButton>
 #include <QtGui/QSplitter>
-#include <QtCore/QTimerEvent>
+#include <QtGui/QLabel>
 #include <QtGui/QToolButton>
 
 #include <set>
@@ -86,7 +86,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     typedef AnimatedLineEditor Editor;
 
     //! creator
-    EditionWindow( QWidget* parent, bool read_only = true );
+    EditionWindow( QWidget* parent, bool readOnly = true );
 
     //! destructor
     ~EditionWindow( void );
@@ -130,22 +130,22 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //@}
 
-    //! check if this editor is read_only or not
-    const bool& isReadOnly( void ) const
+    //! check if this editor is readOnly or not
+    bool isReadOnly( void ) const
     { return readOnly_; }
 
-    //! set read_only state of the EditionWindow
-    void setReadOnly( const bool& );
+    //! set readOnly state of the EditionWindow
+    void setReadOnly( bool );
 
     //! color menu
     void setColorMenu( ColorMenu* );
 
     //! closed flag
-    const bool& isClosed( void ) const
+    bool isClosed( void ) const
     { return closed_; }
 
     //! closed flag
-    void setIsClosed( const bool& value )
+    void setIsClosed( bool value )
     { closed_ = value; }
 
     //! check if current entry has been modified or not
@@ -165,7 +165,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     { setWindowTitle( windowTitle() ); }
 
     //! creates dialog to ask for LogEntry save.
-    AskForSaveDialog::ReturnCode askForSave( const bool & enable_cancel = true );
+    AskForSaveDialog::ReturnCode askForSave( bool = true );
 
     //! update keyword Widget from current entry
     void displayKeyword( void );
@@ -177,7 +177,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     void displayColor( void );
 
     //! check if current entry has been modified or not
-    void setModified( const bool& value );
+    void setModified( bool );
 
     //! used to count modified EditionWindows
     class ModifiedFTor
@@ -254,14 +254,21 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& uniconifyAction( void ) const
     { return *uniconifyAction_; }
 
+    //! show keyword
+    QAction& showKeywordAction( void ) const
+    { return *showKeywordAction_; }
+
     //@}
+
+    //! force keyword visibility
+    void setForceShowKeyword( bool value );
 
     //! close view
     /*! Ask for save if view is modified */
-    void _closeEditor( AnimatedTextEditor& );
+    void closeEditor( AnimatedTextEditor& );
 
     //! change active display manualy
-    void _setActiveEditor( AnimatedTextEditor& );
+    void setActiveEditor( AnimatedTextEditor& );
 
     protected:
 
@@ -271,16 +278,56 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! timer event
     virtual void timerEvent( QTimerEvent* );
 
-    private slots:
+    //! install actions
+    void _installActions( void );
+
+    //!@name display management
+    //@{
+
+    //! split view
+    AnimatedTextEditor& _splitView( const Qt::Orientation& );
+
+    //! create new splitter
+    QSplitter& _newSplitter( const Qt::Orientation&  );
+
+    //! create new TextEditor
+    AnimatedTextEditor& _newTextEditor( QWidget* parent );
+
+    //@}
+
+    //! display cursor position
+    void _displayCursorPosition( const TextPosition& position );
+
+    //! retrieve associated MainWindow
+    MainWindow& _mainWindow( void ) const;
+
+    //! menu
+    Menu& _menu( void ) const
+    {
+        assert( menu_ );
+        return *menu_;
+    }
+
+    //! update text Widget from current entry
+    void _displayText( void );
+
+    //! update attachment list Widget from current entry
+    void _displayAttachments( void );
+
+    //! true if status bar is set
+    bool _hasStatusBar( void ) const
+    { return (bool) statusBar_; }
+
+    //! change keyword (and other widgets) visibility
+    void _setKeywordVisible( bool );
+
+    protected slots:
 
     //! Save Current entry
     void _save( bool updateSelection = true );
 
     //! creates a new entry
     void _newEntry( void );
-
-    //! configuration
-    void _updateConfiguration( void );
 
     //! splitter moved
     void _splitterMoved( void );
@@ -346,7 +393,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     {
         Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
         BASE::KeySet< AnimatedTextEditor > editors( this );
-        if( editors.size() > 1 ) _closeEditor( activeEditor() );
+        if( editors.size() > 1 ) closeEditor( activeEditor() );
         else close();
     }
 
@@ -368,47 +415,15 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! overwrite mode changed
     void _modifiersChanged( unsigned int );
 
+    //! toggle show keyword
+    void _toggleShowKeyword( bool );
+
+    private slots:
+
+    //! configuration
+    void _updateConfiguration( void );
+
     private:
-
-    //! install actions
-    void _installActions( void );
-
-    //!@name display management
-    //@{
-
-    //! split view
-    AnimatedTextEditor& _splitView( const Qt::Orientation& );
-
-    //! create new splitter
-    QSplitter& _newSplitter( const Qt::Orientation&  );
-
-    //! create new TextEditor
-    AnimatedTextEditor& _newTextEditor( QWidget* parent );
-
-    //@}
-
-    //! display cursor position
-    void _displayCursorPosition( const TextPosition& position );
-
-    //! retrieve associated MainWindow
-    MainWindow& _mainWindow( void ) const;
-
-    //! menu
-    Menu& _menu( void ) const
-    {
-        assert( menu_ );
-        return *menu_;
-    }
-
-    //! update text Widget from current entry
-    void _displayText( void );
-
-    //! update attachment list Widget from current entry
-    void _displayAttachments( void );
-
-    //! true if status bar is set
-    bool _hasStatusBar( void ) const
-    { return (bool) statusBar_; }
 
     //! if true, LogEntry associated to EditionWindow cannot be modified
     bool readOnly_;
@@ -422,6 +437,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! "closed" flag
     /*! this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
     bool closed_;
+
+    //! true if keyword is forced visible
+    bool forceShowKeyword_;
 
     //!@name stored actions to toggle visibility
     //@{
@@ -453,8 +471,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! main widget (that contains first editor)
     QWidget *main_;
 
-    //! titlebar layout
-    QHBoxLayout* titleLayout_;
+    //! labels
+    QLabel* keywordLabel_;
+
+    //! labels
+    QLabel* titleLabel_;
 
     //! Keyword object
     Editor* keywordEditor_;
@@ -550,6 +571,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! uniconify
     QAction* uniconifyAction_;
+
+    //! show keyword
+    QAction* showKeywordAction_;
 
     //@}
 

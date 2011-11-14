@@ -229,6 +229,7 @@ MainWindow::MainWindow( QWidget *parent ):
     logEntryList().setSelectionMode( QAbstractItemView::ContiguousSelection );
     logEntryList().setDragEnabled(true);
     logEntryList().setOptionName( "ENTRY_LIST" );
+    logEntryList().lockColumnVisibility( LogEntryModel::KEYWORD );
 
     // the use of a custom delegate unfortunately disable the
     // nice selection appearance of the oxygen style.
@@ -480,14 +481,14 @@ void MainWindow::reset( void )
 }
 
 //____________________________________________
-AskForSaveDialog::ReturnCode MainWindow::askForSave( const bool& enable_cancel )
+AskForSaveDialog::ReturnCode MainWindow::askForSave( const bool& enableCancel )
 {
 
     Debug::Throw( "MainWindow::askForSave.\n" );
 
     // create dialog
     unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
-    if( enable_cancel ) buttons |= AskForSaveDialog::CANCEL;
+    if( enableCancel ) buttons |= AskForSaveDialog::CANCEL;
 
     // exec and check return code
     int state = AskForSaveDialog( this, "Logbook has been modified. Save ?", buttons ).centerOnParent().exec();
@@ -1105,15 +1106,18 @@ void MainWindow::_installActions( void )
     closeFramesAction_->setToolTip( "Close all entry editors" );
     connect( closeFramesAction_, SIGNAL( triggered() ), SLOT( _closeEditionWindows() ) );
 
+    // show duplicated entries
     showDuplicatesAction_ = new QAction( "Show Duplicated Entries", this );
     showDuplicatesAction_->setToolTip( "Show duplicated entries in logbook" );
     connect( showDuplicatesAction_, SIGNAL( triggered() ), SLOT( _showDuplicatedEntries() ) );
 
+    // view monitored files
     monitoredFilesAction_ = new QAction( "Show Monitored Files", this );
     monitoredFilesAction_->setToolTip( "Show monitored files" );
     connect( monitoredFilesAction_, SIGNAL( triggered() ), SLOT( _showMonitoredFiles() ) );
 
-    treeModeAction_ = new QAction( IconEngine::get( ICONS::TREE ), "Use Tree to Display Entries and Keywords", this );
+    // tree mode
+    treeModeAction_ = new QAction( "Use Tree to Display Entries and Keywords", this );
     treeModeAction_->setCheckable( true );
     treeModeAction_->setChecked( true );
     connect( treeModeAction_, SIGNAL( toggled( bool ) ), SLOT( _toggleTreeMode( bool ) ) );
@@ -1898,7 +1902,7 @@ void MainWindow::_newEntry( void )
     Debug::Throw( "MainWindow::_NewEntry.\n" );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
-    EditionWindow *edit_frame( 0 );
+    EditionWindow *editFrame( 0 );
     BASE::KeySet<EditionWindow> frames( this );
 
     // the order is reversed to start from latest
@@ -1906,25 +1910,28 @@ void MainWindow::_newEntry( void )
     {
         // skip closed editors
         if( !(*iter)->isClosed() ) continue;
-        edit_frame = *iter;
-        edit_frame->setIsClosed( false );
-        edit_frame->setReadOnly( false );
+        editFrame = *iter;
+        editFrame->setIsClosed( false );
+        editFrame->setReadOnly( false );
     }
 
-    if( !edit_frame )
+    if( !editFrame )
     {
         // create new EditionWindow
-        edit_frame = new EditionWindow( 0, false );
-        edit_frame->setColorMenu( colorMenu_ );
-        Key::associate( this, edit_frame );
+        editFrame = new EditionWindow( 0, false );
+        editFrame->setColorMenu( colorMenu_ );
+        Key::associate( this, editFrame );
     }
 
+    // force editFrame show keyword flag
+    editFrame->setForceShowKeyword( !treeModeAction().isChecked() );
+
     // call NewEntry for the selected frame
-    edit_frame->newEntryAction().trigger();
+    editFrame->newEntryAction().trigger();
 
     // show frame
-    edit_frame->centerOnWidget( this );
-    edit_frame->show();
+    editFrame->centerOnWidget( this );
+    editFrame->show();
 
 }
 
@@ -1999,7 +2006,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     Debug::Throw( "MainWindow::_displayEntry.\n" );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
-    EditionWindow *edit_frame( 0 );
+    EditionWindow *editFrame( 0 );
     BASE::KeySet<EditionWindow> frames( this );
     for( BASE::KeySet<EditionWindow>::iterator iter=frames.begin(); iter != frames.end(); ++iter )
     {
@@ -2010,15 +2017,15 @@ void MainWindow::_displayEntry( LogEntry* entry )
         // check if EditionWindow is editable and match editor
         if( !((*iter)->isReadOnly() ) && (*iter)->entry() == entry )
         {
-            edit_frame = *iter;
-            edit_frame->uniconifyAction().trigger();
+            editFrame = *iter;
+            editFrame->uniconifyAction().trigger();
             return;
         }
 
     }
 
     // if no editFrame is found, try re-used a closed editor
-    if( !edit_frame )
+    if( !editFrame )
     {
 
         // the order is reversed to start from latest
@@ -2028,15 +2035,15 @@ void MainWindow::_displayEntry( LogEntry* entry )
             // skip closed editors
             if( !(*iter)->isClosed() ) continue;
 
-            edit_frame = *iter;
-            edit_frame->setIsClosed( false );
-            edit_frame->setReadOnly( false );
+            editFrame = *iter;
+            editFrame->setIsClosed( false );
+            editFrame->setReadOnly( false );
 
             // also clear modification state
-            edit_frame->setModified( false );
+            editFrame->setModified( false );
 
             // need to display entry before deleting sub views.
-            edit_frame->displayEntry( entry );
+            editFrame->displayEntry( entry );
 
             // also kill all frames but one
             BASE::KeySet< AnimatedTextEditor > editors( *iter );
@@ -2046,10 +2053,10 @@ void MainWindow::_displayEntry( LogEntry* entry )
                 BASE::KeySet< AnimatedTextEditor >::iterator localIter( editors.begin() );
                 ++localIter;
                 for( ;localIter != editors.end(); ++localIter )
-                { (*iter)->_closeEditor( **localIter ); }
+                { (*iter)->closeEditor( **localIter ); }
 
                 (**editors.begin()).setFocus();
-                (*iter)->_setActiveEditor( **editors.begin() );
+                (*iter)->setActiveEditor( **editors.begin() );
 
             }
 
@@ -2059,16 +2066,17 @@ void MainWindow::_displayEntry( LogEntry* entry )
     }
 
     // if no editFrame is found create a new one
-    if( !edit_frame )
+    if( !editFrame )
     {
-        edit_frame = new EditionWindow( 0, false );
-        edit_frame->setColorMenu( colorMenu_ );
-        Key::associate( this, edit_frame );
-        edit_frame->displayEntry( entry );
+        editFrame = new EditionWindow( 0, false );
+        editFrame->setColorMenu( colorMenu_ );
+        Key::associate( this, editFrame );
+        editFrame->displayEntry( entry );
     }
 
-    edit_frame->centerOnWidget( this );
-    edit_frame->show();
+    editFrame->setForceShowKeyword( !treeModeAction().isChecked() );
+    editFrame->centerOnWidget( this );
+    editFrame->show();
 
 }
 
@@ -2746,10 +2754,13 @@ void MainWindow::_entryItemClicked( const QModelIndex& index )
 {
 
     // do nothing if index do not correspond to an entry title
-    if( !(index.isValid() && index.column() == LogEntryModel::TITLE ) ) return;
+    if( !index.isValid() ) return;
 
     // do nothing if index is not already selected
     if( !logEntryList().selectionModel()->isSelected( index ) ) return;
+
+    if( !( index.column() == LogEntryModel::TITLE ||  index.column() == LogEntryModel::KEYWORD ) )
+    { return; }
 
     // compare to model edition index
     if( index == _logEntryModel().editionIndex() ) editionTimer_.start( editionDelay_, this );
@@ -2762,16 +2773,20 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
 {
     Debug::Throw( "MainWindow::_entryDataChanged.\n" );
 
-    if( !( index.isValid() && index.column() == LogEntryModel::TITLE ) ) return;
+    if( !index.isValid() ) return;
     LogEntry* entry( _logEntryModel().get( index ) );
 
+    unsigned int mask(0);
+    if( index.column() == LogEntryModel::TITLE ) mask = TITLE_MASK;
+    else if( index.column() == LogEntryModel::KEYWORD ) mask = KEYWORD_MASK;
+
     // update associated EditionWindows
-    _updateEntryFrames( entry, TITLE_MASK );
+    _updateEntryFrames( entry, mask );
 
     // set logbooks as modified
     BASE::KeySet<Logbook> logbooks( entry );
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
-    {   (*iter)->setModified( true ); }
+    { (*iter)->setModified( true ); }
 
     // save Logbook
     if( logbook() && !logbook()->file().isEmpty() ) save();
@@ -2785,14 +2800,14 @@ void MainWindow::_startEntryEdition( void )
     Debug::Throw( "MainWindow::_startEntryEdition\n" );
 
     // make sure title column is visible
-    if( logEntryList().isColumnHidden( LogEntryModel::TITLE ) ) return;
+    // if( logEntryList().isColumnHidden( LogEntryModel::TITLE ) ) return;
 
     // get current index and check validity
     QModelIndex index( logEntryList().currentIndex() );
     if( !index.isValid() ) return;
 
     // make sure 'title' index is selected
-    index = _logEntryModel().index( index.row(), LogEntryModel::TITLE );
+    // index = _logEntryModel().index( index.row(), LogEntryModel::TITLE );
 
     // enable model edition
     _logEntryModel().setEditionIndex( index );
@@ -2927,6 +2942,9 @@ void MainWindow::_toggleTreeMode( bool value )
     QModelIndex index( logEntryList().selectionModel()->currentIndex() );
     if( index.isValid() ) currentEntry = _logEntryModel().get( index );
 
+    // update keyword list
+    if( value ) _resetKeywordList();
+
     // update log entry list
     _resetLogEntryList();
 
@@ -2935,10 +2953,26 @@ void MainWindow::_toggleTreeMode( bool value )
     if( value ) mask &= ~(1<<LogEntryModel::KEYWORD);
     else mask |= 1<<LogEntryModel::KEYWORD;
     logEntryList().setMask( mask );
+    logEntryList().saveMask();
+
     logEntryList().resizeColumns();
 
     // keyword toolbar visibility action
     keywordToolBar().visibilityAction().setEnabled( value );
+
+    // force show keyword
+    BASE::KeySet<EditionWindow> frames( this );
+    for( BASE::KeySet<EditionWindow>::const_iterator iter = frames.begin(); iter != frames.end(); ++iter )
+    {
+
+        // if hiding keyword, first need ask for save
+        if( value && !(*iter)->isClosed() && (*iter)->modified() && !(*iter)->isReadOnly() )
+        { (*iter)->askForSave( false ); }
+
+        // update force flag
+        (*iter)->setForceShowKeyword( !value );
+
+    }
 
     // make sure entry is visible
     if( currentEntry )
