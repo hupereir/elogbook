@@ -279,6 +279,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& monitoredFilesAction( void ) const
     { return *monitoredFilesAction_; }
 
+    //! tree mode action
+    QAction& treeModeAction( void ) const
+    { return *treeModeAction_; }
+
     //@}
 
     signals:
@@ -345,10 +349,26 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! enable state
     void _setEnabled( bool );
 
-    private slots:
+    //! returns true if logbook has modified entries
+    bool _hasModifiedEntries( void ) const;
 
-    //! configuration
-    void _updateConfiguration( void );
+    //! perform autoSave
+    void _autoSave( void );
+
+    //! check modified entries
+    AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditionWindow>, const bool& ) const;
+
+    enum Mask
+    {
+        NONE = 0,
+        TITLE_MASK = 1<<0,
+        KEYWORD_MASK = 1<<1
+    };
+
+    //! update frames associated to given entry
+    void _updateEntryFrames( LogEntry*, unsigned int );
+
+    protected slots:
 
     //! files modified
     void _filesModified( FileCheck::DataSet );
@@ -437,7 +457,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     or by deleting a keyword in the list, and moving entries to the parent.
     It is also called by the renameKeyword slot above.
     */
-    void _renameKeyword( Keyword oldKeyword, Keyword newKeyword, bool update_selection = true );
+    void _renameKeyword( Keyword oldKeyword, Keyword newKeyword, bool updateSelection = true );
 
     //! rename keyword for selected entries using dialog
     /*!
@@ -451,7 +471,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     this is triggered by drag and drop from the logEntry list
     to the keyword list, and it is also called by the slot above
     */
-    void _renameEntryKeyword( Keyword newKeyword, bool update_selection = true );
+    void _renameEntryKeyword( Keyword newKeyword, bool updateSelection = true );
 
     //! keyword selection changed
     void KeywordSelectionChanged( const QModelIndex& );
@@ -473,13 +493,13 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     virtual void _storeSortMethod( int, Qt::SortOrder );
 
     //! item clicked
-    virtual void EntryItemClicked( const QModelIndex& index );
+    virtual void _entryItemClicked( const QModelIndex& index );
 
     //! activare item
-    void EntryItemActivated( const QModelIndex& index );
+    void _entryItemActivated( const QModelIndex& index );
 
     //! item data changed
-    void EntryDataChanged( const QModelIndex& index );
+    void _entryDataChanged( const QModelIndex& index );
 
     //! edit entry title
     void _startEntryEdition( void );
@@ -505,16 +525,15 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! monitored files
     void _showMonitoredFiles( void );
 
+    //! tree mode
+    void _toggleTreeMode( bool );
+
+    private slots:
+
+    //! configuration
+    void _updateConfiguration( void );
+
     private:
-
-    //! returns true if logbook has modified entries
-    bool _hasModifiedEntries( void ) const;
-
-    //! perform autoSave
-    void _autoSave( void );
-
-    //! check modified entries
-    AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditionWindow>, const bool& ) const;
 
     //! main menu
     Menu* menu_;
@@ -605,6 +624,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! ask entries for confirmation before saving
     bool confirmEntries_;
 
+    //! keyword container
+    QWidget* keywordContainer_;
+
     //@name toolbars
     //@{
     //! keywords
@@ -694,6 +716,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! show monitored files
     QAction* monitoredFilesAction_;
+
+    //! tree mode
+    QAction* treeModeAction_;
 
     //@}
 

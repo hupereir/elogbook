@@ -50,10 +50,10 @@
 #include <list>
 
 //________________________________________
-const QString FormatBar::BOLD_ICON = "text_bold.png";
-const QString FormatBar::ITALIC_ICON = "text_italic.png";
-const QString FormatBar::STRIKE_ICON = "text_strike.png";
-const QString FormatBar::UNDERLINE_ICON = "text_under.png";
+const QString FormatBar::BOLD_ICON = "format-text-bold.png";
+const QString FormatBar::ITALIC_ICON = "format-text-italic.png";
+const QString FormatBar::STRIKE_ICON = "format-text-strikethrough.png";
+const QString FormatBar::UNDERLINE_ICON = "format-text-underline.png";
 
 //________________________________________
 FormatBar::FormatBar( QWidget* parent, const QString& option_name ):

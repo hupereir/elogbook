@@ -124,16 +124,16 @@ MainWindow::MainWindow( QWidget *parent ):
     Application& application( *Singleton::get().application<Application>() );
     addAction( &application.closeAction() );
 
-    // left box for Keywords and buttons
-    QWidget* left = new QWidget();
+    // Keyword container
+    keywordContainer_ = new QWidget();
 
     // set layout
     QVBoxLayout* v_layout = new QVBoxLayout();
     v_layout->setMargin(0);
     v_layout->setSpacing( 5 );
-    left->setLayout( v_layout );
+    keywordContainer_->setLayout( v_layout );
 
-    keywordToolBar_ = new CustomToolBar( "Keywords Toolbar", left, "KEYWORD_TOOLBAR" );
+    keywordToolBar_ = new CustomToolBar( "Keywords Toolbar", keywordContainer_, "KEYWORD_TOOLBAR" );
     keywordToolBar_->setAppearsInMenu( true );
     v_layout->addWidget( keywordToolBar_ );
 
@@ -144,7 +144,7 @@ MainWindow::MainWindow( QWidget *parent ):
     Debug::Throw() << "MainWindow::MainWindow - keyword toolbar created." << endl;
 
     // create keyword list
-    v_layout->addWidget( keywordList_ = new KeywordList( left ), 1 );
+    v_layout->addWidget( keywordList_ = new KeywordList( keywordContainer_ ), 1 );
     keywordList().setFindEnabled( false );
     keywordList().setModel( &_keywordModel() );
     keywordList().setRootIsDecorated( true );
@@ -236,14 +236,14 @@ MainWindow::MainWindow( QWidget *parent ):
 
     connect( logEntryList().header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
     connect( logEntryList().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
-    connect( entryList_, SIGNAL( activated( const QModelIndex& ) ), SLOT( EntryItemActivated( const QModelIndex& ) ) );
-    connect( entryList_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( EntryItemClicked( const QModelIndex& ) ) );
+    connect( entryList_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _entryItemActivated( const QModelIndex& ) ) );
+    connect( entryList_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _entryItemClicked( const QModelIndex& ) ) );
     _updateEntryActions();
 
     connect( &_logEntryModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedEntries() ) );
     connect( &_logEntryModel(), SIGNAL( layoutChanged() ), SLOT( _restoreSelectedEntries() ) );
     connect( &_logEntryModel(), SIGNAL( layoutChanged() ), entryList_, SLOT( resizeColumns() ) );
-    connect( &_logEntryModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( EntryDataChanged( const QModelIndex& ) ) );
+    connect( &_logEntryModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) );
 
     /*
     add the deleteEntry_action to the list,
@@ -262,7 +262,7 @@ MainWindow::MainWindow( QWidget *parent ):
     logEntryList().menu().addAction( &entryColorAction() );
 
     // add widgets to splitters
-    splitter->addWidget( left );
+    splitter->addWidget( keywordContainer_ );
     splitter->addWidget( right );
 
     // assign stretch factors
@@ -522,7 +522,7 @@ void MainWindow::selectEntry( LogEntry* entry )
 }
 
 //_______________________________________________
-void MainWindow::updateEntry( LogEntry* entry, const bool& update_selection )
+void MainWindow::updateEntry( LogEntry* entry, const bool& updateSelection )
 {
 
     Debug::Throw( "MainWindow::updateEntry.\n" );
@@ -540,7 +540,7 @@ void MainWindow::updateEntry( LogEntry* entry, const bool& update_selection )
     _logEntryModel().add( entry );
 
     // select
-    if( update_selection )
+    if( updateSelection )
     {
         QModelIndex index( _logEntryModel().index( entry ) );
         logEntryList().selectionModel()->select( index, QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
@@ -620,40 +620,40 @@ bool MainWindow::lockEntry( LogEntry* entry ) const
 }
 
 //_______________________________________________
-LogEntry* MainWindow::previousEntry( LogEntry* entry, const bool& update_selection )
+LogEntry* MainWindow::previousEntry( LogEntry* entry, const bool& updateSelection )
 {
 
     Debug::Throw( "MainWindow::previousEntry.\n" );
     QModelIndex index( _logEntryModel().index( entry ) );
     if( !( index.isValid() && index.row() > 0 ) ) return 0;
 
-    QModelIndex previous_index( _logEntryModel().index( index.row()-1, index.column() ) );
-    if( update_selection )
+    QModelIndex previousIndex( _logEntryModel().index( index.row()-1, index.column() ) );
+    if( updateSelection )
     {
-        logEntryList().selectionModel()->select( previous_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-        logEntryList().selectionModel()->setCurrentIndex( previous_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        logEntryList().selectionModel()->select( previousIndex, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        logEntryList().selectionModel()->setCurrentIndex( previousIndex, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     }
 
-    return _logEntryModel().get( previous_index );
+    return _logEntryModel().get( previousIndex );
 
 }
 
 //_______________________________________________
-LogEntry* MainWindow::nextEntry( LogEntry* entry, const bool& update_selection )
+LogEntry* MainWindow::nextEntry( LogEntry* entry, const bool& updateSelection )
 {
 
     Debug::Throw( "MainWindow::nextEntry.\n" );
     QModelIndex index( _logEntryModel().index( entry ) );
     if( !( index.isValid() && index.row()+1 < _logEntryModel().rowCount() ) ) return 0;
 
-    QModelIndex next_index( _logEntryModel().index( index.row()+1, index.column() ) );
-    if( update_selection )
+    QModelIndex nextIndex( _logEntryModel().index( index.row()+1, index.column() ) );
+    if( updateSelection )
     {
-        logEntryList().selectionModel()->select( next_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-        logEntryList().selectionModel()->setCurrentIndex( next_index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        logEntryList().selectionModel()->select( nextIndex, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        logEntryList().selectionModel()->setCurrentIndex( nextIndex, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     }
 
-    return _logEntryModel().get( next_index );
+    return _logEntryModel().get( nextIndex );
 
 }
 
@@ -1113,6 +1113,11 @@ void MainWindow::_installActions( void )
     monitoredFilesAction_->setToolTip( "Show monitored files" );
     connect( monitoredFilesAction_, SIGNAL( triggered() ), SLOT( _showMonitoredFiles() ) );
 
+    treeModeAction_ = new QAction( IconEngine::get( ICONS::TREE ), "Use Tree to Display Entries and Keywords", this );
+    treeModeAction_->setCheckable( true );
+    treeModeAction_->setChecked( true );
+    connect( treeModeAction_, SIGNAL( toggled( bool ) ), SLOT( _toggleTreeMode( bool ) ) );
+
 }
 
 //_______________________________________________
@@ -1133,7 +1138,10 @@ void MainWindow::_resetLogEntryList( void )
         LogEntryModel::List modelEntries;
         BASE::KeySet<LogEntry> entries( logbook()->entries() );
         for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); it++ )
-        { if( (*it)->isSelected() ) modelEntries.push_back( *it ); }
+        {
+            if( (!treeModeAction().isChecked() && (*it)->isFindSelected()) || (*it)->isSelected() )
+            { modelEntries.push_back( *it ); }
+        }
 
         _logEntryModel().add( modelEntries );
 
@@ -1227,27 +1235,84 @@ void MainWindow::_setEnabled( bool value )
 
 }
 
+
+//__________________________________________________________________
+bool MainWindow::_hasModifiedEntries( void ) const
+{
+    BASE::KeySet<EditionWindow> frames( this );
+    return find_if( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() ) != frames.end();
+}
+
 //_______________________________________________
-void MainWindow::_updateConfiguration( void )
+void MainWindow::_autoSave( void )
 {
 
-    Debug::Throw( "MainWindow::_updateConfiguration.\n" );
+    if( logbook_ && !logbook()->file().isEmpty() )
+    {
 
-    resize( sizeHint() );
+        statusBar().label().setText( "performing autoSave" );
 
-    // autoSave
-    autoSaveDelay_ = 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" );
-    bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
-    if( autosave ) autosaveTimer_.start( autoSaveDelay_, this );
-    else autosaveTimer_.stop();
+        // retrieve non read only editors; perform save
+        BASE::KeySet<EditionWindow> frames( this );
+        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
+        {
+            if( (*iter)->isReadOnly() || (*iter)->isClosed() ) continue;
+            (*iter)->saveAction().trigger();
+        }
 
-    // colors
-    Options::List color_list( XmlOptions::get().specialOptions( "COLOR" ) );
-    for( Options::List::iterator iter = color_list.begin(); iter != color_list.end(); ++iter )
-    { colorMenu_->add( iter->raw() ); }
+        save();
 
-    // max number of recent entries
-    maxRecentEntries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );
+    } else {
+
+        statusBar().label().setText( "no logbook filename. <Autosave> skipped" );
+
+    }
+
+}
+
+//__________________________________________________________________
+AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( BASE::KeySet<EditionWindow> frames, const bool& confirmEntries ) const
+{
+    Debug::Throw( "_MainWindow::checkModifiedEntries.\n" );
+
+    // check if editable EditionWindows needs save
+    // cancel if required
+    for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
+    {
+        if( !((*iter)->isReadOnly() || (*iter)->isClosed()) && (*iter)->modified() )
+        {
+            if( !confirmEntries ) { (*iter)->saveAction().trigger(); }
+            else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return AskForSaveDialog::CANCEL;
+        }
+    }
+
+    return  AskForSaveDialog::YES;
+}
+
+//_______________________________________________
+void MainWindow::_updateEntryFrames( LogEntry* entry, unsigned int mask )
+{
+    Debug::Throw( "MainWindow::_updateEntryFrames.\n" );
+
+    if( !mask ) return;
+
+    // update associated EditionWindows
+    BASE::KeySet<EditionWindow> frames( entry );
+    for( BASE::KeySet< EditionWindow >::iterator it = frames.begin(); it != frames.end(); it++ )
+    {
+
+        // keep track of already modified EditionWindows
+        bool frameModified( (*it)->modified() && !(*it)->isReadOnly() );
+
+        // update EditionWindow
+        if( mask&TITLE_MASK ) (*it)->displayTitle();
+        if( mask&KEYWORD_MASK ) (*it)->displayKeyword();
+
+        // save if needed [title/keyword changes are discarded since saved here anyway]
+        if( frameModified ) (*it)->askForSave( false );
+        else (*it)->setModified( false );
+
+    }
 
 }
 
@@ -2008,37 +2073,23 @@ void MainWindow::_displayEntry( LogEntry* entry )
 }
 
 //_______________________________________________
-void MainWindow::_changeEntryTitle( LogEntry* entry, QString new_title )
+void MainWindow::_changeEntryTitle( LogEntry* entry, QString newTitle )
 {
     Debug::Throw( "MainWindow::_changeEntryTitle.\n" );
 
     // make sure that title was changed
-    if( new_title == entry->title() ) return;
+    if( newTitle == entry->title() ) return;
 
     // update entry title
-    entry->setTitle( new_title );
+    entry->setTitle( newTitle );
 
-    // update associated EditionWindows
-    BASE::KeySet<EditionWindow> frames( entry );
-    for( BASE::KeySet< EditionWindow >::iterator it = frames.begin(); it != frames.end(); it++ )
-    {
-
-        // keep track of already modified EditionWindows
-        bool frame_modified( (*it)->modified() && !(*it)->isReadOnly() );
-
-        // update EditionWindow
-        (*it)->displayTitle();
-
-        // save if needed [title/keyword changes are discarded since saved here anyway]
-        if( frame_modified ) (*it)->askForSave( false );
-        else (*it)->setModified( false );
-
-    }
+    // update associated entries
+    _updateEntryFrames( entry, TITLE_MASK );
 
     // set logbooks as modified
     BASE::KeySet<Logbook> logbooks( entry );
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
-        (*iter)->setModified( true );
+    { (*iter)->setModified( true ); }
 
     // save Logbook
     if( logbook() && !logbook()->file().isEmpty() ) save();
@@ -2213,7 +2264,7 @@ void MainWindow::_renameKeyword( void )
 }
 
 //____________________________________________
-void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool update_selection )
+void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updateSelection )
 {
 
     Debug::Throw("MainWindow::_renameKeyword.\n" );
@@ -2242,6 +2293,10 @@ void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updat
             set to now() */
             entry->setModification( entry->modification()+1 );
 
+            // update frames
+            _updateEntryFrames( entry, KEYWORD_MASK );
+
+            // set associated logbooks as modified
             BASE::KeySet<Logbook> logbooks( entry );
             for( BASE::KeySet<Logbook>::iterator logIter = logbooks.begin(); logIter!= logbooks.end(); ++logIter )
             { (*logIter)->setModified( true ); }
@@ -2252,12 +2307,12 @@ void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updat
 
     // reset lists
     _resetKeywordList();
-    if( update_selection )
+    if( updateSelection )
     {
 
         // make sure parent keyword index is expanded
-        QModelIndex parent_index( _keywordModel().index( newKeyword.parent() ) );
-        if( parent_index.isValid() ) keywordList().setExpanded( parent_index, true );
+        QModelIndex parentIndex( _keywordModel().index( newKeyword.parent() ) );
+        if( parentIndex.isValid() ) keywordList().setExpanded( parentIndex, true );
 
         // retrieve current index, and select
         QModelIndex index( _keywordModel().index( newKeyword ) );
@@ -2302,7 +2357,8 @@ void MainWindow::_renameEntryKeyword( void )
 
     const KeywordModel::List& keywords( _keywordModel().children() );
     for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); ++iter )
-        dialog.add( *iter );
+    { dialog.add( *iter ); }
+
     dialog.setKeyword( keyword );
 
     // map dialog
@@ -2318,7 +2374,7 @@ void MainWindow::_renameEntryKeyword( void )
 }
 
 //_______________________________________________
-void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool update_selection )
+void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
 {
 
     Debug::Throw() << "MainWindow::_renameEntryKeyword - newKeyword: " << newKeyword << endl;
@@ -2348,6 +2404,9 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool update_selection 
         // keep track of modified entries
         entries.insert( entry );
 
+        // update frames
+        _updateEntryFrames( entry, KEYWORD_MASK );
+
         // set associated logbooks as modified
         BASE::KeySet<Logbook> logbooks( entry );
         for( BASE::KeySet<Logbook>::iterator logIter = logbooks.begin(); logIter!= logbooks.end(); ++logIter )
@@ -2362,12 +2421,12 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool update_selection 
     _resetKeywordList();
 
     // update keyword selection
-    if( update_selection )
+    if( updateSelection )
     {
 
         // make sure parent keyword index is expanded
-        QModelIndex parent_index( _keywordModel().index( newKeyword.parent() ) );
-        if( parent_index.isValid() ) keywordList().setExpanded( parent_index, true );
+        QModelIndex parentIndex( _keywordModel().index( newKeyword.parent() ) );
+        if( parentIndex.isValid() ) keywordList().setExpanded( parentIndex, true );
 
         // retrieve current index, and select
         QModelIndex index( _keywordModel().index( newKeyword ) );
@@ -2379,7 +2438,7 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool update_selection 
     // update entry selection
     _resetLogEntryList();
 
-    if( update_selection )
+    if( updateSelection )
     {
         // clear current selection
         logEntryList().clearSelection();
@@ -2674,7 +2733,7 @@ void MainWindow::_storeSortMethod( int column, Qt::SortOrder order  )
 
 
 //____________________________________________________________
-void MainWindow::EntryItemActivated( const QModelIndex& index )
+void MainWindow::_entryItemActivated( const QModelIndex& index )
 {
     // stop edition timer
     _logEntryModel().setEditionIndex( QModelIndex() );
@@ -2683,7 +2742,7 @@ void MainWindow::EntryItemActivated( const QModelIndex& index )
 }
 
 //____________________________________________________________
-void MainWindow::EntryItemClicked( const QModelIndex& index )
+void MainWindow::_entryItemClicked( const QModelIndex& index )
 {
 
     // do nothing if index do not correspond to an entry title
@@ -2699,34 +2758,20 @@ void MainWindow::EntryItemClicked( const QModelIndex& index )
 }
 
 //_______________________________________________
-void MainWindow::EntryDataChanged( const QModelIndex& index )
+void MainWindow::_entryDataChanged( const QModelIndex& index )
 {
-    Debug::Throw( "MainWindow::EntryDataChanged.\n" );
+    Debug::Throw( "MainWindow::_entryDataChanged.\n" );
 
     if( !( index.isValid() && index.column() == LogEntryModel::TITLE ) ) return;
     LogEntry* entry( _logEntryModel().get( index ) );
 
     // update associated EditionWindows
-    BASE::KeySet<EditionWindow> frames( entry );
-    for( BASE::KeySet< EditionWindow >::iterator it = frames.begin(); it != frames.end(); it++ )
-    {
-
-        // keep track of already modified EditionWindows
-        bool frame_modified( (*it)->modified() && !(*it)->isReadOnly() );
-
-        // update EditionWindow
-        (*it)->displayTitle();
-
-        // save if needed [title/keyword changes are discarded since saved here anyway]
-        if( frame_modified ) (*it)->askForSave( false );
-        else (*it)->setModified( false );
-
-    }
+    _updateEntryFrames( entry, TITLE_MASK );
 
     // set logbooks as modified
     BASE::KeySet<Logbook> logbooks( entry );
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
-        (*iter)->setModified( true );
+    {   (*iter)->setModified( true ); }
 
     // save Logbook
     if( logbook() && !logbook()->file().isEmpty() ) save();
@@ -2868,57 +2913,84 @@ void MainWindow::_showMonitoredFiles( void )
 
 }
 
+//_____________________________________________
+void MainWindow::_toggleTreeMode( bool value )
+{
+
+    Debug::Throw() << "MainWindow::_toggleTreeMode - " << ( value ? "true":"false" ) << endl;
+
+    // show/hide keyword list
+    keywordContainer_->setVisible( value );
+
+    // get current entry
+    LogEntry* currentEntry( 0 );
+    QModelIndex index( logEntryList().selectionModel()->currentIndex() );
+    if( index.isValid() ) currentEntry = _logEntryModel().get( index );
+
+    // update log entry list
+    _resetLogEntryList();
+
+    // update log entry mask
+    unsigned int mask( logEntryList().mask() );
+    if( value ) mask &= ~(1<<LogEntryModel::KEYWORD);
+    else mask |= 1<<LogEntryModel::KEYWORD;
+    logEntryList().setMask( mask );
+    logEntryList().resizeColumns();
+
+    // keyword toolbar visibility action
+    keywordToolBar().visibilityAction().setEnabled( value );
+
+    // make sure entry is visible
+    if( currentEntry )
+    {
+        if( value )
+        {
+            // select keyword
+            QModelIndex index( _keywordModel().index( currentEntry->keyword() ) );
+            keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+            keywordList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+            keywordList().scrollTo( index );
+        }
+
+        // select entry
+        QModelIndex index( _logEntryModel().index( currentEntry ) );
+        logEntryList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        logEntryList().selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        logEntryList().scrollTo( index );
+
+    }
+
+
+    // save to options
+    XmlOptions::get().set<bool>( "USE_TREE", value );
+
+}
+
 //_______________________________________________
-void MainWindow::_autoSave( void )
+void MainWindow::_updateConfiguration( void )
 {
 
-    if( logbook_ && !logbook()->file().isEmpty() )
-    {
+    Debug::Throw( "MainWindow::_updateConfiguration.\n" );
 
-        statusBar().label().setText( "performing autoSave" );
+    resize( sizeHint() );
 
-        // retrieve non read only editors; perform save
-        BASE::KeySet<EditionWindow> frames( this );
-        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
-        {
-            if( (*iter)->isReadOnly() || (*iter)->isClosed() ) continue;
-            (*iter)->saveAction().trigger();
-        }
+    // autoSave
+    autoSaveDelay_ = 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" );
+    bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
+    if( autosave ) autosaveTimer_.start( autoSaveDelay_, this );
+    else autosaveTimer_.stop();
 
-        save();
+    // colors
+    Options::List color_list( XmlOptions::get().specialOptions( "COLOR" ) );
+    for( Options::List::iterator iter = color_list.begin(); iter != color_list.end(); ++iter )
+    { colorMenu_->add( iter->raw() ); }
 
-    } else {
+    // max number of recent entries
+    maxRecentEntries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );
 
-        statusBar().label().setText( "no logbook filename. <Autosave> skipped" );
+    // tree mode
+    treeModeAction().setChecked( XmlOptions::get().get<bool>( "USE_TREE" ) );
 
-    }
-
-}
-
-//__________________________________________________________________
-bool MainWindow::_hasModifiedEntries( void ) const
-{
-    BASE::KeySet<EditionWindow> frames( this );
-    return find_if( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() ) != frames.end();
-}
-
-//__________________________________________________________________
-AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( BASE::KeySet<EditionWindow> frames, const bool& confirmEntries ) const
-{
-    Debug::Throw( "_MainWindow::checkModifiedEntries.\n" );
-
-    // check if editable EditionWindows needs save
-    // cancel if required
-    for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
-    {
-        if( !((*iter)->isReadOnly() || (*iter)->isClosed()) && (*iter)->modified() )
-        {
-            if( !confirmEntries ) { (*iter)->saveAction().trigger(); }
-            else if( (*iter)->askForSave() == AskForSaveDialog::CANCEL ) return AskForSaveDialog::CANCEL;
-        }
-    }
-
-    return  AskForSaveDialog::YES;
 }
 
 //______________________________________________________________________

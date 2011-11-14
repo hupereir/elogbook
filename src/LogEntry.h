@@ -208,23 +208,23 @@ class LogEntry:public Counter, public BASE::Key
 
   //! set if entry is said visible by the find bar
   void setFindSelected( bool value )
-  { find_selected_ = value; }
+  { findSelected_ = value; }
 
   //! set if entry is said vidible by the keyword list
   void setKeywordSelected( bool value )
-  { keyword_selected_ = value; }
+  { keywordSelected_ = value; }
 
   //! returns true if entry is visible (i.e. selected by the find bar and keyword list)
   bool isSelected( void ) const
-  { return find_selected_ && keyword_selected_; }
+  { return findSelected_ && keywordSelected_; }
 
   //! returns true if entry is selected by the find bar
   bool isFindSelected( void ) const
-  { return find_selected_; }
+  { return findSelected_; }
 
   //! returns true if entry is selected by the keyword list
   bool isKeywordSelected( void ) const
-  { return keyword_selected_; }
+  { return keywordSelected_; }
 
   //! use to get last modified entry
   class LastModifiedFTor
@@ -354,10 +354,10 @@ class LogEntry:public Counter, public BASE::Key
   QString color_;
 
   //! set to true if entry is said visible by the selection bar
-  bool find_selected_;
+  bool findSelected_;
 
   //! set to true if entry is said visible by the keyword selection
-  bool keyword_selected_;
+  bool keywordSelected_;
 
   //! list of text formats
   FORMAT::TextFormatBlock::List formats_;

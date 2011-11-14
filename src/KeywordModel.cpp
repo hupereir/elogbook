@@ -75,9 +75,9 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
     if( value.toString() != keyword.current() )
     {
         // generate new keyword from value
-        Keyword new_keyword( parent_keyword.append( value.toString() ) );
-        Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << new_keyword << endl;
-        emit keywordChanged( keyword, new_keyword );
+        Keyword newKeyword( parent_keyword.append( value.toString() ) );
+        Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << newKeyword << endl;
+        emit keywordChanged( keyword, newKeyword );
         emit dataChanged( index, index );
     }
 
@@ -152,20 +152,20 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
         if( keyword_string.isNull() || keyword_string.isEmpty() ) return false;
 
         // retrieve old keyword
-        Keyword old_keyword( keyword_string );
+        Keyword oldKeyword( keyword_string );
 
         // retrieve new location
         QModelIndex index = parent.isValid() ? parent : QModelIndex();
-        Keyword new_keyword = get( index );
+        Keyword newKeyword = get( index );
 
         // check that keyword is different
-        if( new_keyword == old_keyword ) return false;
+        if( newKeyword == oldKeyword ) return false;
 
         // append new keyword to old
-        new_keyword.append( old_keyword.current() );
+        newKeyword.append( oldKeyword.current() );
 
         // emit keyword modification signal
-        emit keywordChanged( old_keyword, new_keyword );
+        emit keywordChanged( oldKeyword, newKeyword );
         return true;
     }
 
@@ -178,10 +178,10 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
         if( !parent.isValid() ) return false;
 
         // retrieve new location
-        Keyword new_keyword = get( parent );
+        Keyword newKeyword = get( parent );
 
         // emit logEntry keyword changed signal
-        emit entryKeywordChanged( new_keyword );
+        emit entryKeywordChanged( newKeyword );
         return true;
 
     }

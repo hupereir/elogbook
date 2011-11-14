@@ -269,6 +269,7 @@ void Menu::_updatePreferenceMenu( void )
     MainWindow *mainwindow = qobject_cast<MainWindow*>( parentWidget() );
     if( mainwindow )
     {
+        preferenceMenu_->addAction( &mainwindow->treeModeAction() );
         preferenceMenu_->addSeparator();
         preferenceMenu_->addAction( &mainwindow->keywordToolBar().visibilityAction() );
         preferenceMenu_->addAction( &mainwindow->entryToolBar().visibilityAction() );

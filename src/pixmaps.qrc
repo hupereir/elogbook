@@ -2,24 +2,25 @@
   <qresource>
     <file alias="icon.png">../icon.ico</file>
     <file alias="icon.png">../icon.png</file>
-    <file alias="pixmaps/1leftarrow.png">../pixmaps/1leftarrow.png</file>
-    <file alias="pixmaps/1rightarrow.png">../pixmaps/1rightarrow.png</file>
+    <file alias="pixmaps/arrow-left.png">../pixmaps/arrow-left.png</file>
+    <file alias="pixmaps/arrow-right.png">../pixmaps/arrow-right.png</file>
     <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
-    <file alias="pixmaps/fileclose.png">../pixmaps/fileclose.png</file>
-    <file alias="pixmaps/filenew.png">../pixmaps/filenew.png</file>
-    <file alias="pixmaps/filesaveas.png">../pixmaps/filesaveas.png</file>
-    <file alias="pixmaps/filesave.png">../pixmaps/filesave.png</file>
-    <file alias="pixmaps/fonts.png">../pixmaps/fonts.png</file>
-    <file alias="pixmaps/homeB.png">../pixmaps/homeB.png</file>
+    <file alias="pixmaps/document-close.png">../pixmaps/document-close.png</file>
+    <file alias="pixmaps/document-new.png">../pixmaps/document-new.png</file>
+    <file alias="pixmaps/document-save.png">../pixmaps/document-save.png</file>
+    <file alias="pixmaps/document-save-as.png">../pixmaps/document-save-as.png</file>
+    <file alias="pixmaps/tools-check-spelling.png">../pixmaps/tools-check-spelling.png</file>
+    <file alias="pixmaps/go-home.png">../pixmaps/go-home.png</file>
     <file alias="pixmaps/html.png">../pixmaps/html.png</file>
     <file alias="pixmaps/info.png">../pixmaps/info.png</file>
-    <file alias="pixmaps/text_bold.png">../pixmaps/text_bold.png</file>
-    <file alias="pixmaps/text_italic.png">../pixmaps/text_italic.png</file>
-    <file alias="pixmaps/text_strike.png">../pixmaps/text_strike.png</file>
-    <file alias="pixmaps/text_under.png">../pixmaps/text_under.png</file>
-    <file alias="pixmaps/view_left_right.png">../pixmaps/view_left_right.png</file>
-    <file alias="pixmaps/view_remove.png">../pixmaps/view_remove.png</file>
-    <file alias="pixmaps/view_top_bottom.png">../pixmaps/view_top_bottom.png</file>
-    <file alias="pixmaps/window_fullscreen.png">../pixmaps/window_fullscreen.png</file>
+    <file alias="pixmaps/format-text-bold.png">../pixmaps/format-text-bold.png</file>
+    <file alias="pixmaps/format-text-italic.png">../pixmaps/format-text-italic.png</file>
+    <file alias="pixmaps/format-text-strikethrough.png">../pixmaps/format-text-strikethrough.png</file>
+    <file alias="pixmaps/format-text-underline.png">../pixmaps/format-text-underline.png</file>
+    <file alias="pixmaps/view-close.png">../pixmaps/view-close.png</file>
+    <file alias="pixmaps/view-fullscreen.png">../pixmaps/view-fullscreen.png</file>
+    <file alias="pixmaps/view-list-tree.png">../pixmaps/view-list-tree.png</file>
+    <file alias="pixmaps/view-split-left-right.png">../pixmaps/view-split-left-right.png</file>
+    <file alias="pixmaps/view-split-top-bottom.png">../pixmaps/view-split-top-bottom.png</file>
   </qresource>
 </RCC>

@@ -93,6 +93,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
     layout->setSpacing(2);
     main->setLayout( layout );
 
+    // keywoard editor
+    layout->addWidget( keywordEditor_ = new Editor( main ) );
+
     // title layout (for editor and button)
     titleLayout_ = new QHBoxLayout();
     titleLayout_->setMargin(0);
@@ -100,8 +103,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
     layout->addLayout( titleLayout_ );
 
     // title label and line
-    titleLayout_->addWidget( title_ = new Editor( main ), 1 );
-    //title_->setHasClearButton( true );
+    titleLayout_->addWidget( titleEditor_ = new Editor( main ), 1 );
 
     // splitter for EditionWindow and attachment list
     QSplitter* splitter = new QSplitter( main );
@@ -124,9 +126,13 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
     AnimatedTextEditor& editor( _newTextEditor( main_ ) );
     main_->layout()->addWidget( &editor );
 
-    connect( title_, SIGNAL( modificationChanged( bool ) ), SLOT( _titleModified( bool ) ) );
+    connect( keywordEditor_, SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
+    connect( keywordEditor_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
+
+    connect( titleEditor_, SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
+    connect( titleEditor_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
+
     connect( activeEditor().document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
-    connect( title_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
 
     // create attachment list
     AttachmentFrame *frame = new AttachmentFrame( 0, isReadOnly() );
@@ -196,9 +202,14 @@ EditionWindow::EditionWindow( QWidget* parent, bool read_only ):
     readOnlyActions_.push_back( redoAction_ );
 
     // undo/redo connections
-    connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
-    connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateRedoAction() ) );
-    connect( title_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
+    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
+    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateRedoAction() ) );
+    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
+
+    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
+    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateRedoAction() ) );
+    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
+
     connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
     connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
 
@@ -262,6 +273,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
     Key::associate( entry, this );
 
     // update all display
+    displayKeyword();
     displayTitle();
     displayColor();
     _displayText();
@@ -304,7 +316,8 @@ void EditionWindow::setReadOnly( const bool& value )
     } else if( !(isReadOnly() || lock_->isHidden() ) ) { lock_->hide(); }
 
     // changes TextEdit readOnly status
-    title_->setReadOnly( isReadOnly() );
+    keywordEditor_->setReadOnly( isReadOnly() );
+    titleEditor_->setReadOnly( isReadOnly() );
 
     // update editors
     BASE::KeySet<AnimatedTextEditor> editors( this );
@@ -389,13 +402,24 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( const bool& enable_cance
 }
 
 //_____________________________________________
+void EditionWindow::displayKeyword( void )
+{
+    Debug::Throw( "EditionWindow::displayKeyword.\n" );
+
+    LogEntry* entry( EditionWindow::entry() );
+    keywordEditor_->setText( ( entry && entry->keyword().get().size() ) ? entry->keyword().get(): LogEntry::UNTITLED  );
+    keywordEditor_->setCursorPosition( 0 );
+    return;
+}
+
+//_____________________________________________
 void EditionWindow::displayTitle( void )
 {
     Debug::Throw( "EditionWindow::displayTitle.\n" );
 
-    LogEntry* entry( EditionWindow::entry() );
-    title_->setText( ( entry && entry->title().size() ) ? entry->title(): LogEntry::UNTITLED  );
-    title_->setCursorPosition( 0 );
+    LogEntry* entry( this->entry() );
+    titleEditor_->setText( ( entry && entry->title().size() ) ? entry->title(): LogEntry::UNTITLED  );
+    titleEditor_->setCursorPosition( 0 );
     return;
 }
 
@@ -407,7 +431,7 @@ void EditionWindow::displayColor( void )
     // Create color widget if none
     if( !colorWidget_ )
     {
-        colorWidget_ = new ColorWidget( title_->parentWidget() );
+        colorWidget_ = new ColorWidget( titleEditor_->parentWidget() );
         colorWidget_->setToolTip( "Change entry color.\nThis is used to tag entries in the main window list." );
         colorWidget_->setAutoRaise( true );
         colorWidget_->setPopupMode( QToolButton::InstantPopup );
@@ -439,22 +463,23 @@ void EditionWindow::displayColor( void )
 void EditionWindow::setModified( const bool& value )
 {
     Debug::Throw( "EditionWindow::setModified.\n" );
-    title_->setModified( value );
+    keywordEditor_->setModified( value );
+    titleEditor_->setModified( value );
     activeEditor().document()->setModified( value );
 }
 
 //_____________________________________________
-void EditionWindow::_save( bool update_selection )
+void EditionWindow::_save( bool updateSelection )
 {
 
     Debug::Throw( "EditionWindow::_save.\n" );
     if( isReadOnly() ) return;
 
     // retrieve associated entry
-    LogEntry *entry( EditionWindow::entry() );
+    LogEntry *entry( this->entry() );
 
     // see if entry is new
-    bool entry_is_new( !entry || BASE::KeySet<Logbook>( entry ).empty() );
+    bool entryIsNew( !entry || BASE::KeySet<Logbook>( entry ).empty() );
 
     // create entry if none set
     if( !entry ) entry = new LogEntry();
@@ -472,8 +497,11 @@ void EditionWindow::_save( bool update_selection )
     entry->setText( activeEditor().toPlainText() );
     entry->setFormats( formatToolBar_->get() );
 
+    //! update entry keyword
+    entry->setKeyword( keywordEditor_->text() );
+
     //! update entry title
-    entry->setTitle( title_->text() );
+    entry->setTitle( titleEditor_->text() );
 
     // update author
     entry->setAuthor( XmlOptions::get().raw( "USER" ) );
@@ -486,7 +514,7 @@ void EditionWindow::_save( bool update_selection )
     Debug::Throw( "EditionWindow::_save - statusbar set.\n" );
 
     // add entry to logbook, if needed
-    if( entry_is_new ) Key::associate( entry, logbook->latestChild() );
+    if( entryIsNew ) Key::associate( entry, logbook->latestChild() );
 
     // update this window title, set unmodified.
     setModified( false );
@@ -504,7 +532,7 @@ void EditionWindow::_save( bool update_selection )
     Debug::Throw( "EditionWindow::_save - editFrames updated.\n" );
 
     // update selection frame
-    mainwindow.updateEntry( entry, update_selection );
+    mainwindow.updateEntry( entry, updateSelection );
     mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
     Debug::Throw( "EditionWindow::_save - mainWindow updated.\n" );
 
@@ -553,8 +581,8 @@ void EditionWindow::_newEntry( void )
     displayEntry( entry );
 
     // set focus to title bar
-    title_->setFocus();
-    title_->selectAll();
+    titleEditor_->setFocus();
+    titleEditor_->selectAll();
 
 }
 
@@ -619,10 +647,10 @@ void EditionWindow::_installActions( void )
     connect( previousEntryAction_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
 
     // previous_entry action
-    addAction( next_entryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), "&Next Entry", this ) );
-    next_entryAction_->setToolTip( "Display next entry in current list" );
-    connect( next_entryAction_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
-    next_entryAction_->setShortcut( Qt::CTRL+Qt::Key_N );
+    addAction( nextEntryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), "&Next Entry", this ) );
+    nextEntryAction_->setToolTip( "Display next entry in current list" );
+    connect( nextEntryAction_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
+    nextEntryAction_->setShortcut( Qt::CTRL+Qt::Key_N );
 
     // save
     addAction( saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "&Save Entry", this ) );
@@ -738,7 +766,8 @@ void EditionWindow::_undo( void )
 {
     Debug::Throw( "EditionWindow::_undo.\n" );
     if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->undo();
-    else if( title_->hasFocus() ) title_->undo();
+    else if( titleEditor_->hasFocus() ) titleEditor_->undo();
+    else if( keywordEditor_->hasFocus() ) keywordEditor_->undo();
     return;
 }
 
@@ -747,7 +776,8 @@ void EditionWindow::_redo( void )
 {
     Debug::Throw( "EditionWindow::_redo.\n" );
     if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->redo();
-    else if( title_->hasFocus() ) title_->redo();
+    else if( titleEditor_->hasFocus() ) titleEditor_->redo();
+    else if( keywordEditor_->hasFocus() ) keywordEditor_->redo();
     return;
 }
 
@@ -755,16 +785,18 @@ void EditionWindow::_redo( void )
 void EditionWindow::_updateUndoAction( void )
 {
     Debug::Throw( "EditionWindow::_updateUndoAction.\n" );
-    if( title_->hasFocus() ) undoAction_->setEnabled( title_->isUndoAvailable() );
-    if( activeEditor().QWidget::hasFocus() ) undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() );
+    if( keywordEditor_->hasFocus() ) undoAction_->setEnabled( keywordEditor_->isUndoAvailable() );
+    else if( titleEditor_->hasFocus() ) undoAction_->setEnabled( titleEditor_->isUndoAvailable() );
+    else if( activeEditor().QWidget::hasFocus() ) undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() );
 }
 
 //_____________________________________________
 void EditionWindow::_updateRedoAction( void )
 {
     Debug::Throw( "EditionWindow::_updateRedoAction.\n" );
-    if( title_->hasFocus() ) redoAction_->setEnabled( title_->isRedoAvailable() );
-    if( activeEditor().QWidget::hasFocus() ) redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() );
+    if( keywordEditor_->hasFocus() ) redoAction_->setEnabled( keywordEditor_->isRedoAvailable() );
+    else if( titleEditor_->hasFocus() ) redoAction_->setEnabled( titleEditor_->isRedoAvailable() );
+    else if( activeEditor().QWidget::hasFocus() ) redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() );
 }
 
 //_____________________________________________
@@ -775,16 +807,22 @@ void EditionWindow::_updateSaveAction( void )
 void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 {
     Debug::Throw( "EditionWindow::_updateUndoRedoAction.\n" );
-    if( current == title_ )
+    if( current == keywordEditor_ )
     {
-        undoAction_->setEnabled( title_->isUndoAvailable() );
-        redoAction_->setEnabled( title_->isRedoAvailable() );
-    }
 
-    if( current == &activeEditor() )
-    {
+        undoAction_->setEnabled( keywordEditor_->isUndoAvailable() );
+        redoAction_->setEnabled( keywordEditor_->isRedoAvailable() );
+
+    } else if( current == titleEditor_ ) {
+
+        undoAction_->setEnabled( titleEditor_->isUndoAvailable() );
+        redoAction_->setEnabled( titleEditor_->isRedoAvailable() );
+
+    } else if( current == &activeEditor() ) {
+
         undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() );
         redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() );
+
     }
 
 }
@@ -970,32 +1008,13 @@ void EditionWindow::_unlock( void )
 }
 
 //_____________________________________________
-void EditionWindow::_titleModified( bool state )
-{
-    Debug::Throw() << "EditionWindow::_titleModified - state: " << (state ? "true":"false" ) << endl;
-
-    // check readonly status
-    if( isReadOnly() ) return;
-
-    bool text_modified( activeEditor().document()->isModified() );
-    if( state && !text_modified ) updateWindowTitle();
-    if( !(state || text_modified ) ) updateWindowTitle();
-
-    return;
-}
-
-//_____________________________________________
 void EditionWindow::_textModified( bool state )
 {
     Debug::Throw() << "EditionWindow::_textModified - state: " << (state ? "true":"false" ) << endl;
 
     // check readonly status
     if( isReadOnly() ) return;
-
-    bool title_modified( title_->isModified() );
-    if( state && !title_modified ) updateWindowTitle();
-    if( !(state || title_modified ) ) updateWindowTitle();
-
+    updateWindowTitle();
 }
 
 //_____________________________________________

@@ -379,8 +379,8 @@ QDomElement LogEntry::htmlSummary( QDomDocument& document, const unsigned int& m
 //__________________________________
 void LogEntry::_init( void )
 {
-    find_selected_ = true;
-    keyword_selected_ = false;
+    findSelected_ = true;
+    keywordSelected_ = false;
     creation_ = TimeStamp::now();
     modification_ = TimeStamp::now();
     title_ = UNTITLED;

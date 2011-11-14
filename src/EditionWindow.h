@@ -150,7 +150,12 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! check if current entry has been modified or not
     bool modified( void ) const
-    { return title_->isModified() || activeEditor().document()->isModified(); }
+    {
+        return
+            keywordEditor_->isModified() ||
+            titleEditor_->isModified() ||
+            activeEditor().document()->isModified();
+    }
 
     //! computes window title
     QString windowTitle() const;
@@ -161,6 +166,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! creates dialog to ask for LogEntry save.
     AskForSaveDialog::ReturnCode askForSave( const bool & enable_cancel = true );
+
+    //! update keyword Widget from current entry
+    void displayKeyword( void );
 
     //! update title Widget from current entry
     void displayTitle( void );
@@ -206,7 +214,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! next entry action
     QAction& nextEntryAction( void ) const
-    { return *next_entryAction_; }
+    { return *nextEntryAction_; }
 
     //! save
     QAction& saveAction( void ) const
@@ -266,7 +274,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     private slots:
 
     //! Save Current entry
-    void _save( bool update_selection = true );
+    void _save( bool updateSelection = true );
 
     //! creates a new entry
     void _newEntry( void );
@@ -321,9 +329,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     based on the widget that currently has focus
     */
     void _updateUndoRedoActions( QWidget* old, QWidget* current );
-
-    //! Set entry as modified, change window title
-    void _titleModified( bool );
 
     //! Set entry as modified, change window title
     void _textModified( bool );
@@ -451,8 +456,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! titlebar layout
     QHBoxLayout* titleLayout_;
 
+    //! Keyword object
+    Editor* keywordEditor_;
+
     //! LogEntry title Object
-    Editor *title_;
+    Editor *titleEditor_;
 
     //! color menu
     ColorMenu* colorMenu_;
@@ -513,7 +521,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction* previousEntryAction_;
 
     //! next entry action
-    QAction* next_entryAction_;
+    QAction* nextEntryAction_;
 
     //! save
     QAction* saveAction_;
