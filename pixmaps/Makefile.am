@@ -1,22 +1,23 @@
 AUTOMAKE_OPTIONS = foreign
 
 EXTRA_DIST = \
-1leftarrow.png \
-1rightarrow.png \
-attach.png \
-fileclose.png \
-filenew.png \
-filesaveas.png \
-filesave.png \
-fonts.png \
-homeB.png \
-html.png \
-info.png \
-text_bold.png \
-text_italic.png \
-text_strike.png \
-text_under.png \
-view_left_right.png \
-view_remove.png \
-view_top_bottom.png \
-window_fullscreen.png
+	arrow-left.png \
+	arrow-right.png \
+	attach.png \
+	document-close.png \
+	document-new.png \
+	document-save.png \
+	document-save-as.png \
+	tools-check-spelling.png \
+	go-home.png \
+	html.png \
+	info.png \
+	format-text-bold.png \
+	format-text-italic.png \
+	format-text-strikethrough.png \
+	format-text-underline.png \
+	view-close.png \
+	view-fullscreen.png \
+	view-list-tree.png \
+	view-split-left-right.png \
+	view-split-top-bottom.png
