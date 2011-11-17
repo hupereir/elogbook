@@ -67,7 +67,6 @@ const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 LogEntryModel::LogEntryModel( QObject* parent ):
     ListModel<LogEntry*>( parent ),
     Counter( "LogEntryModel" ),
-    dragEnabled_( false ),
     editionEnabled_( false )
 {
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );

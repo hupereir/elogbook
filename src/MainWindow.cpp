@@ -917,12 +917,6 @@ void MainWindow::timerEvent( QTimerEvent* event )
         resizeTimer_.stop();
         XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList().width() );
 
-    } else if(event->timerId() == dragTimer_.timerId() ) {
-
-        Debug::Throw(0) << "MainWindow::timerEvent - enabling drag" << endl;
-        dragTimer_.stop();
-        _logEntryModel().setDragEnabled( true );
-
     } else if(event->timerId() == editionTimer_.timerId() ) {
 
         editionTimer_.stop();
@@ -2936,6 +2930,9 @@ void MainWindow::_toggleTreeMode( bool value )
 
     // show/hide keyword list
     keywordContainer_->setVisible( value );
+
+    // change drag mode enability
+    logEntryList().setDragEnabled( value );
 
     // get current entry
     LogEntry* currentEntry( 0 );

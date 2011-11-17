@@ -726,9 +726,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     /*! needed to store Keyword list width */
     QBasicTimer resizeTimer_;
 
-    //! drag timer
-    QBasicTimer dragTimer_;
-
 };
 
 #endif
