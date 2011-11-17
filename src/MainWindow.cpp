@@ -128,14 +128,14 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordContainer_ = new QWidget();
 
     // set layout
-    QVBoxLayout* v_layout = new QVBoxLayout();
-    v_layout->setMargin(0);
-    v_layout->setSpacing( 5 );
-    keywordContainer_->setLayout( v_layout );
+    QVBoxLayout* vLayout = new QVBoxLayout();
+    vLayout->setMargin(0);
+    vLayout->setSpacing( 5 );
+    keywordContainer_->setLayout( vLayout );
 
     keywordToolBar_ = new CustomToolBar( "Keywords Toolbar", keywordContainer_, "KEYWORD_TOOLBAR" );
     keywordToolBar_->setAppearsInMenu( true );
-    v_layout->addWidget( keywordToolBar_ );
+    vLayout->addWidget( keywordToolBar_ );
 
     // keyword actions
     keywordToolBar_->addAction( &newKeywordAction() );
@@ -144,7 +144,7 @@ MainWindow::MainWindow( QWidget *parent ):
     Debug::Throw() << "MainWindow::MainWindow - keyword toolbar created." << endl;
 
     // create keyword list
-    v_layout->addWidget( keywordList_ = new KeywordList( keywordContainer_ ), 1 );
+    vLayout->addWidget( keywordList_ = new KeywordList( keywordContainer_ ), 1 );
     keywordList().setFindEnabled( false );
     keywordList().setModel( &_keywordModel() );
     keywordList().setRootIsDecorated( true );
@@ -197,14 +197,14 @@ MainWindow::MainWindow( QWidget *parent ):
     // right box for entries and buttons
     QWidget* right = new QWidget();
 
-    v_layout = new QVBoxLayout();
-    v_layout->setMargin(0);
-    v_layout->setSpacing( 5 );
-    right->setLayout( v_layout );
+    vLayout = new QVBoxLayout();
+    vLayout->setMargin(0);
+    vLayout->setSpacing( 5 );
+    right->setLayout( vLayout );
 
     entryToolBar_ = new CustomToolBar( "Entries Toolbar", right, "ENTRY_TOOLBAR" );
     entryToolBar_->setAppearsInMenu( true );
-    v_layout->addWidget( entryToolBar_ );
+    vLayout->addWidget( entryToolBar_ );
 
     // entry actions
     entryToolBar_->addAction( &newEntryAction() );
@@ -223,7 +223,7 @@ MainWindow::MainWindow( QWidget *parent ):
     entryToolBar_->addAction( &printAction() );
 
     // create logEntry list
-    v_layout->addWidget( entryList_ = new AnimatedTreeView( right ), 1 );
+    vLayout->addWidget( entryList_ = new AnimatedTreeView( right ), 1 );
     logEntryList().setFindEnabled( false );
     logEntryList().setModel( &_logEntryModel() );
     logEntryList().setSelectionMode( QAbstractItemView::ContiguousSelection );
@@ -262,7 +262,7 @@ MainWindow::MainWindow( QWidget *parent ):
     logEntryList().menu().addAction( &deleteEntryAction() );
     logEntryList().menu().addAction( &entryColorAction() );
 
-    // add widgets to splitters
+    // add widgets to Hs
     splitter->addWidget( keywordContainer_ );
     splitter->addWidget( right );
 
@@ -905,7 +905,6 @@ void MainWindow::closeEvent( QCloseEvent *event )
     Singleton::get().application<Application>()->closeAction().trigger();
 }
 
-
 //_______________________________________________________
 void MainWindow::timerEvent( QTimerEvent* event )
 {
@@ -1344,7 +1343,6 @@ void MainWindow::_splitterMoved( void )
     Debug::Throw( "MainWindow::_splitterMoved.\n" );
     resizeTimer_.start( 200, this );
 }
-
 
 //_______________________________________________
 void MainWindow::_newLogbook( void )
