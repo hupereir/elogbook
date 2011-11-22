@@ -54,11 +54,11 @@
 #include <QtGui/QMessageBox>
 
 //_______________________________________________
-Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
+Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     QMenuBar( parent ),
     Counter( "Menu" ),
-    recent_entriesMenu_(0),
-    editorMenu_(0),
+    recentEntriesMenu_(0),
+    windowsMenu_(0),
     preferenceMenu_(0),
     recentFilesMenu_(0)
 {
@@ -66,75 +66,75 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     Debug::Throw( "Menu::Menu.\n" );
 
     // try cast parent to EditionWindow
-    EditionWindow* editionwindow( qobject_cast<EditionWindow*>( parent ) );
+    EditionWindow* editionWindow( qobject_cast<EditionWindow*>( parent ) );
 
     // generic menu/action
     QMenu *menu;
 
     // file menu
-    menu = addMenu( "&File" );
-    menu->addAction( &mainwindow->newLogbookAction() );
+    menu = addMenu( "File" );
+    menu->addAction( &mainWindow->newLogbookAction() );
 
-    if( editionwindow )
+    if( editionWindow )
     {
-        menu->addAction( &editionwindow->newEntryAction() );
-        menu->addAction( &editionwindow->splitViewHorizontalAction() );
+        menu->addAction( &editionWindow->newEntryAction() );
+        menu->addAction( &editionWindow->splitViewHorizontalAction() );
     }
 
-    menu->addAction( &mainwindow->openAction() );
+    menu->addAction( &mainWindow->openAction() );
 
     // file menu
     recentFilesMenu_ = new RecentFilesMenu( this, Singleton::get().application<Application>()->recentFiles() );
-    connect( recentFilesMenu_, SIGNAL( fileSelected( FileRecord ) ), mainwindow, SLOT( open( FileRecord ) ) );
+    connect( recentFilesMenu_, SIGNAL( fileSelected( FileRecord ) ), mainWindow, SLOT( open( FileRecord ) ) );
     menu->addMenu( recentFilesMenu_ );
 
-    menu->addAction( &mainwindow->synchronizeAction() );
-    menu->addAction( &mainwindow->reorganizeAction() );
+    menu->addAction( &mainWindow->synchronizeAction() );
+    menu->addAction( &mainWindow->reorganizeAction() );
 
     menu->addSeparator();
-    if( editionwindow ) menu->addAction( &editionwindow->saveAction() );
-    else menu->addAction( &mainwindow->saveAction() );
+    if( editionWindow ) menu->addAction( &editionWindow->saveAction() );
+    else menu->addAction( &mainWindow->saveAction() );
 
-    menu->addAction( &mainwindow->saveAsAction() );
-    menu->addAction( &mainwindow->saveBackupAction() );
-    menu->addAction( &mainwindow->revertToSaveAction() );
+    menu->addAction( &mainWindow->saveAsAction() );
+    menu->addAction( &mainWindow->saveBackupAction() );
+    menu->addAction( &mainWindow->revertToSaveAction() );
     menu->addSeparator();
 
-    if( editionwindow ) menu->addAction( &editionwindow->printAction() );
-    else menu->addAction( &mainwindow->printAction() );
+    if( editionWindow ) menu->addAction( &editionWindow->printAction() );
+    else menu->addAction( &mainWindow->printAction() );
 
-    if( editionwindow ) menu->addAction( &editionwindow->closeAction() );
+    if( editionWindow ) menu->addAction( &editionWindow->closeAction() );
 
     Application& application( *Singleton::get().application<Application>() );
     menu->addAction( &application.closeAction() );
 
     // edition menu
-    if( parent == mainwindow )
+    if( parent == mainWindow )
     {
         menu = addMenu( "&Edit" );
-        menu->addAction( &mainwindow->findEntriesAction() );
+        menu->addAction( &mainWindow->findEntriesAction() );
         menu->addSeparator();
-        menu->addAction( &mainwindow->newKeywordAction() );
-        menu->addAction( &mainwindow->editKeywordAction() );
-        menu->addAction( &mainwindow->deleteKeywordAction() );
+        menu->addAction( &mainWindow->newKeywordAction() );
+        menu->addAction( &mainWindow->editKeywordAction() );
+        menu->addAction( &mainWindow->deleteKeywordAction() );
         menu->addSeparator();
-        menu->addAction( &mainwindow->newEntryAction() );
-        menu->addAction( &mainwindow->editEntryAction() );
-        menu->addAction( &mainwindow->deleteEntryAction() );
+        menu->addAction( &mainWindow->newEntryAction() );
+        menu->addAction( &mainWindow->editEntryAction() );
+        menu->addAction( &mainWindow->deleteEntryAction() );
 
-        menu->addMenu( recent_entriesMenu_ = new QMenu( "Recent Entries" ) );
-        connect( recent_entriesMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updateRecentEntriesMenu() ) );
-        connect( recent_entriesMenu_, SIGNAL( triggered( QAction* ) ), SLOT( _selectEntry( QAction* ) ) );
+        menu->addMenu( recentEntriesMenu_ = new QMenu( "Recent Entries" ) );
+        connect( recentEntriesMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updateRecentEntriesMenu() ) );
+        connect( recentEntriesMenu_, SIGNAL( triggered( QAction* ) ), SLOT( _selectEntry( QAction* ) ) );
 
     }
 
-    // Settings
-    preferenceMenu_ = addMenu( "&Settings" );
-    connect( preferenceMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updatePreferenceMenu() ) );
-
     // windows menu
-    editorMenu_ = addMenu( "&Window" );
-    connect( editorMenu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
+    windowsMenu_ = addMenu( "&Windows" );
+    connect( windowsMenu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
+
+    // Settings
+    preferenceMenu_ = addMenu( "Settings" );
+    connect( preferenceMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updatePreferenceMenu() ) );
 
     // help manager
     BASE::HelpManager* help( new BASE::HelpManager( this ) );
@@ -158,12 +158,12 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     //#ifdef DEBUG
     menu->addSeparator();
     DebugMenu *debug_menu( new DebugMenu( this ) );
-    debug_menu->setTitle( "&Debug" );
+    debug_menu->setTitle( "Debug" );
     menu->addMenu( debug_menu );
-    debug_menu->addAction( &mainwindow->saveForcedAction() );
-    debug_menu->addAction( &mainwindow->showDuplicatesAction() );
+    debug_menu->addAction( &mainWindow->saveForcedAction() );
+    debug_menu->addAction( &mainWindow->showDuplicatesAction() );
     debug_menu->addAction( &help->dumpAction() );
-    debug_menu->addAction( &mainwindow->monitoredFilesAction() );
+    debug_menu->addAction( &mainWindow->monitoredFilesAction() );
     //#endif
 
 }
@@ -173,19 +173,19 @@ void Menu::_updateRecentEntriesMenu( void )
 {
     Debug::Throw( "Menu::_updateRecentEntriesMenu.\n" );
 
-    assert( recent_entriesMenu_ );
-    recent_entriesMenu_->clear();
+    assert( recentEntriesMenu_ );
+    recentEntriesMenu_->clear();
     actions_.clear();
 
-    MainWindow &mainwindow( Singleton::get().application<Application>()->mainWindow() );
-    if( !mainwindow.logbook() ) return;
+    MainWindow &mainWindow( Singleton::get().application<Application>()->mainWindow() );
+    if( !mainWindow.logbook() ) return;
 
-    std::vector<LogEntry*> entries( mainwindow.logbook()->recentEntries() );
+    std::vector<LogEntry*> entries( mainWindow.logbook()->recentEntries() );
     for( std::vector<LogEntry*>::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
     {
         QString buffer;
         QTextStream( &buffer ) << (*iter)->title() << " (" << (*iter)->keyword() << ")";
-        QAction* action = recent_entriesMenu_->addAction( buffer );
+        QAction* action = recentEntriesMenu_->addAction( buffer );
         actions_.insert( std::make_pair( action, (*iter) ) );
     }
 
@@ -206,28 +206,28 @@ void Menu::_updateEditorMenu( void )
 {
     Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
 
-    editorMenu_->clear();
-    MainWindow &mainwindow( Singleton::get().application<Application>()->mainWindow() );
-    AttachmentWindow &attachment_window( Singleton::get().application<Application>()->attachmentWindow() );
-
+    windowsMenu_->clear();
     // retrieve parent editFream if any
-    EditionWindow* editionwindow = qobject_cast<EditionWindow*>( parentWidget() );
+    EditionWindow* editionWindow = qobject_cast<EditionWindow*>( parentWidget() );
+
+    MainWindow &mainWindow( Singleton::get().application<Application>()->mainWindow() );
+    AttachmentWindow &attachmentWindow( Singleton::get().application<Application>()->attachmentWindow() );
 
     // editor attachments and logbook information
-    editorMenu_->addAction( &mainwindow.uniconifyAction() );
+    if( editionWindow ) { windowsMenu_->addAction( &mainWindow.uniconifyAction() ); }
 
-    editorMenu_->addAction( &attachment_window.uniconifyAction() );
-    editorMenu_->addAction( &mainwindow.logbookStatisticsAction() );
-    editorMenu_->addAction( &mainwindow.logbookInformationsAction() );
+    windowsMenu_->addAction( &attachmentWindow.uniconifyAction() );
+    windowsMenu_->addAction( &mainWindow.logbookStatisticsAction() );
+    windowsMenu_->addAction( &mainWindow.logbookInformationsAction() );
 
-    if( editionwindow ) { editorMenu_->addAction( &editionwindow->entryInfoAction() ); }
+    if( editionWindow ) { windowsMenu_->addAction( &editionWindow->entryInfoAction() ); }
 
-    BASE::KeySet<EditionWindow> frames( mainwindow );
-    bool has_alive_frame( find_if( frames.begin(), frames.end(), EditionWindow::aliveFTor() ) != frames.end() );
-    if( has_alive_frame )
+    BASE::KeySet<EditionWindow> frames( mainWindow );
+    bool hasAliveFrame( find_if( frames.begin(), frames.end(), EditionWindow::aliveFTor() ) != frames.end() );
+    if( hasAliveFrame )
     {
 
-        editorMenu_->addSeparator();
+        windowsMenu_->addSeparator();
         for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
         {
 
@@ -236,13 +236,13 @@ void Menu::_updateEditorMenu( void )
 
             // add menu entry for this frame
             QString title( (*iter)->windowTitle() );
-            QAction* action = editorMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &(*iter)->uniconifyAction(), SLOT( trigger() ) );
+            QAction* action = windowsMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &(*iter)->uniconifyAction(), SLOT( trigger() ) );
             action->setCheckable( true );
-            action->setChecked( editionwindow && ( editionwindow == (*iter) ) );
+            action->setChecked( editionWindow && ( editionWindow == (*iter) ) );
 
         }
 
-        editorMenu_->addAction( &mainwindow.closeFramesAction() );
+        windowsMenu_->addAction( &mainWindow.closeFramesAction() );
 
     }
 
@@ -262,26 +262,26 @@ void Menu::_updatePreferenceMenu( void )
     Application& application( *Singleton::get().application<Application>() );
 
     // additional Settings in case parent is a selection frame
-    MainWindow *mainwindow = qobject_cast<MainWindow*>( parentWidget() );
-    if( mainwindow )
+    MainWindow *mainWindow = qobject_cast<MainWindow*>( parentWidget() );
+    if( mainWindow )
     {
-        preferenceMenu_->addAction( &mainwindow->treeModeAction() );
+        preferenceMenu_->addAction( &mainWindow->treeModeAction() );
         preferenceMenu_->addSeparator();
-        preferenceMenu_->addAction( &mainwindow->keywordToolBar().visibilityAction() );
-        preferenceMenu_->addAction( &mainwindow->entryToolBar().visibilityAction() );
-        preferenceMenu_->addAction( &mainwindow->searchPanel().visibilityAction() );
+        preferenceMenu_->addAction( &mainWindow->keywordToolBar().visibilityAction() );
+        preferenceMenu_->addAction( &mainWindow->entryToolBar().visibilityAction() );
+        preferenceMenu_->addAction( &mainWindow->searchPanel().visibilityAction() );
     }
 
     // additional Settings in case parent is an edition frame
-    EditionWindow *editionwindow = qobject_cast<EditionWindow*>( parentWidget() );
-    if( editionwindow )
+    EditionWindow *editionWindow = qobject_cast<EditionWindow*>( parentWidget() );
+    if( editionWindow )
     {
         preferenceMenu_->addSeparator();
-        preferenceMenu_->addAction( &editionwindow->showKeywordAction() );
-        preferenceMenu_->addAction( &editionwindow->attachmentFrame().visibilityAction() );
-        preferenceMenu_->addAction( &editionwindow->activeEditor().showLineNumberAction() );
-        preferenceMenu_->addAction( &editionwindow->activeEditor().wrapModeAction() );
-        preferenceMenu_->addAction( &editionwindow->activeEditor().blockHighlightAction() );
+        preferenceMenu_->addAction( &editionWindow->showKeywordAction() );
+        preferenceMenu_->addAction( &editionWindow->attachmentFrame().visibilityAction() );
+        preferenceMenu_->addAction( &editionWindow->activeEditor().showLineNumberAction() );
+        preferenceMenu_->addAction( &editionWindow->activeEditor().wrapModeAction() );
+        preferenceMenu_->addAction( &editionWindow->activeEditor().blockHighlightAction() );
     }
 
     preferenceMenu_->addSeparator();

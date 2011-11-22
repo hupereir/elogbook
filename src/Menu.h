@@ -89,10 +89,10 @@ class Menu:public QMenuBar, public Counter
     private:
 
     //! recent entries
-    QMenu* recent_entriesMenu_;
+    QMenu* recentEntriesMenu_;
 
     //! editor windows menu
-    QMenu* editorMenu_;
+    QMenu* windowsMenu_;
 
     //! preference menu
     QMenu* preferenceMenu_;
