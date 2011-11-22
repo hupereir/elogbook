@@ -29,9 +29,6 @@
 \date $Date$
 */
 
-#include <QMessageBox>
-
-
 #include "Application.h"
 #include "AttachmentWindow.h"
 #include "CustomToolBar.h"
@@ -54,8 +51,7 @@
 #include "Util.h"
 #include "XmlOptions.h"
 
-
-using namespace Qt;
+#include <QtGui/QMessageBox>
 
 //_______________________________________________
 Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
@@ -159,7 +155,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     menu->addAction( &application.aboutQtAction() );
 
     // debug menu
-    #ifdef DEBUG
+    //#ifdef DEBUG
     menu->addSeparator();
     DebugMenu *debug_menu( new DebugMenu( this ) );
     debug_menu->setTitle( "&Debug" );
@@ -168,7 +164,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainwindow ):
     debug_menu->addAction( &mainwindow->showDuplicatesAction() );
     debug_menu->addAction( &help->dumpAction() );
     debug_menu->addAction( &mainwindow->monitoredFilesAction() );
-    #endif
+    //#endif
 
 }
 

@@ -44,12 +44,9 @@
 #include "LogEntry.h"
 #include "TreeView.h"
 
-
-using namespace Qt;
-
 //________________________________________
 AttachmentWindow::AttachmentWindow( QWidget* parent ):
-  CustomDialog( parent, OkButton )
+  CustomDialog( parent, CloseButton )
 {
 
   Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
@@ -62,8 +59,8 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   frame().list().menu().insertAction( &frame().newAction(), &frame().list().findAction() );
 
   // shortcuts
-  connect( new QShortcut( CTRL+Key_Q, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
-  connect( new QShortcut( CTRL+Key_W, this ), SIGNAL( activated() ), SLOT( close() ) );
+  connect( new QShortcut( Qt::CTRL+Qt::Key_Q, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
+  connect( new QShortcut( Qt::CTRL+Qt::Key_W, this ), SIGNAL( activated() ), SLOT( close() ) );
 
   uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );

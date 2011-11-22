@@ -29,11 +29,12 @@
    \date $Date$
 */
 
+#include "LogbookStatisticsDialog.h"
+
 #include "TreeView.h"
 #include "AnimatedLineEditor.h"
 #include "Debug.h"
 #include "Logbook.h"
-#include "LogbookStatisticsDialog.h"
 #include "LogEntry.h"
 #include "Util.h"
 
@@ -43,66 +44,66 @@
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
-    CustomDialog( parent, OkButton )
+    CustomDialog( parent, CloseButton )
 {
     Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
     setWindowTitle( "Logbook Statistics - Elogbook" );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
-    QGridLayout* grid_layout = new QGridLayout();
-    grid_layout->setMargin(0);
-    grid_layout->setSpacing(2);
-    mainLayout().addLayout( grid_layout, 0 );
+    QGridLayout* gridLayout = new QGridLayout();
+    gridLayout->setMargin(0);
+    gridLayout->setSpacing(2);
+    mainLayout().addLayout( gridLayout, 0 );
 
     // file
     QLabel* label;
-    grid_layout->addWidget( label = new QLabel( "File: ", this ), 0, 0 );
+    gridLayout->addWidget( label = new QLabel( "File: ", this ), 0, 0 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-    // create a readonly line editor for the file name
-    AnimatedLineEditor* edit = new AnimatedLineEditor( this );
-    grid_layout->addWidget( edit, 0, 1 );
-    edit->setReadOnly( true );
-    edit->setText( logbook->file().expand() );
+    gridLayout->addWidget( label = new QLabel( logbook->file().expand(), this ), 0, 1 );
+    QFont font( label->font() );
+    font.setWeight( QFont::Bold );
+    label->setFont( font );
+    label->setTextInteractionFlags( Qt::TextSelectableByMouse|Qt::TextSelectableByKeyboard );
 
     // creation time
     if( logbook->creation().isValid() )
     {
-        grid_layout->addWidget( label = new QLabel( "Created: ", this ), 1, 0 );
-        grid_layout->addWidget( new QLabel( logbook->creation().toString(), this ), 1, 1 );
+        gridLayout->addWidget( label = new QLabel( "Created: ", this ), 1, 0 );
+        gridLayout->addWidget( new QLabel( logbook->creation().toString(), this ), 1, 1 );
         label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     }
 
     // modification time
     if( logbook->modification().isValid() )
     {
-        grid_layout->addWidget( label = new QLabel( "Last modified: ", this ), 2, 0 );
-        grid_layout->addWidget( new QLabel( logbook->modification().toString(), this ), 2, 1 );
+        gridLayout->addWidget( label = new QLabel( "Last modified: ", this ), 2, 0 );
+        gridLayout->addWidget( new QLabel( logbook->modification().toString(), this ), 2, 1 );
         label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     }
 
     // backup time
     if( logbook->backup().isValid() )
     {
-        grid_layout->addWidget( label = new QLabel( "Last backup: ", this ), 3, 0 );
-        grid_layout->addWidget( new QLabel( logbook->backup().toString(), this ), 3, 1 );
+        gridLayout->addWidget( label = new QLabel( "Last backup: ", this ), 3, 0 );
+        gridLayout->addWidget( new QLabel( logbook->backup().toString(), this ), 3, 1 );
         label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     }
 
     // stores all children
 
     // total number of entries
-    grid_layout->addWidget( label = new QLabel( "Entries: ", this ), 4, 0 );
-    grid_layout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()), this ), 4, 1 );
+    gridLayout->addWidget( label = new QLabel( "Entries: ", this ), 4, 0 );
+    gridLayout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()), this ), 4, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     // total number of attachments
-    grid_layout->addWidget( label = new QLabel( "Attachments: ", this ), 5, 0 );
-    grid_layout->addWidget( new QLabel( Str().assign<unsigned int>( logbook->attachments().size() ), this ), 5, 1 );
+    gridLayout->addWidget( label = new QLabel( "Attachments: ", this ), 5, 0 );
+    gridLayout->addWidget( new QLabel( Str().assign<unsigned int>( logbook->attachments().size() ), this ), 5, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-    grid_layout->setColumnStretch( 1, 1 );
+    gridLayout->setColumnStretch( 1, 1 );
 
 
     // detail

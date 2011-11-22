@@ -23,14 +23,6 @@
 *
 *******************************************************************************/
 
-/*!
-  \file LogbookStatisticsDialog.h
-  \brief  logbook informations
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
 #include "Counter.h"
 #include "CustomDialog.h"
 #include "ListModel.h"
@@ -44,6 +36,10 @@ class LogbookStatisticsDialog: public CustomDialog
 
     //! constructor
     LogbookStatisticsDialog( QWidget* parent, Logbook* logbook  );
+
+    //! destructor
+    virtual ~LogbookStatisticsDialog( void )
+    {}
 
     private:
 

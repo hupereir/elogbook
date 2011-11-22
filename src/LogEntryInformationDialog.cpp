@@ -29,10 +29,6 @@
 \date $Date$
 */
 
-#include <QLabel>
-#include <QLayout>
-#include <QPushButton>
-
 #include "PixmapEngine.h"
 #include "Debug.h"
 #include "Icons.h"
@@ -43,8 +39,9 @@
 #include "Options.h"
 #include "QtUtil.h"
 
-
-
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 
 //_________________________________________________________
 LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):
@@ -66,29 +63,35 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     label->setPixmap( pixmap );
     h_layout->addWidget( label, 0, Qt::AlignHCenter );
 
-    QGridLayout *grid_layout = new QGridLayout();
-    grid_layout->setMargin(0);
-    grid_layout->setSpacing(5);
-    h_layout->addLayout( grid_layout, 1 );
+    QGridLayout *gridLayout = new QGridLayout();
+    gridLayout->setMargin(0);
+    gridLayout->setSpacing(2);
+    h_layout->addLayout( gridLayout, 1 );
 
-    grid_layout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );
-    grid_layout->addWidget( new QLabel( entry->title(), this ), 0, 1 );
+    // title
+    gridLayout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-    grid_layout->addWidget( label = new QLabel( "Keyword: ", this ), 1, 0 );
-    grid_layout->addWidget( new QLabel( entry->keyword().get(), this ), 1, 1 );
+    gridLayout->addWidget( label = new QLabel( entry->title(), this ), 0, 1 );
+    QFont font( label->font() );
+    font.setWeight( QFont::Bold );
+    label->setFont( font );
+
+    // keyword
+    gridLayout->addWidget( label = new QLabel( "Keyword: ", this ), 1, 0 );
+    gridLayout->addWidget( new QLabel( entry->keyword().get(), this ), 1, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-    grid_layout->addWidget( label = new QLabel( "Author: ", this ), 2, 0 );
-    grid_layout->addWidget( new QLabel( entry->author(), this ), 2, 1 );
+    gridLayout->addWidget( label = new QLabel( "Author: ", this ), 2, 0 );
+    gridLayout->addWidget( new QLabel( entry->author(), this ), 2, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-    grid_layout->addWidget( label = new QLabel( "Creation: ", this ), 3, 0 );
-    grid_layout->addWidget( new QLabel( entry->creation().toString(), this ), 3, 1 );
+    gridLayout->addWidget( label = new QLabel( "Creation: ", this ), 3, 0 );
+    gridLayout->addWidget( new QLabel( entry->creation().toString(), this ), 3, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
-    grid_layout->addWidget( label = new QLabel( "Modification: ", this ), 4, 0 );
-    grid_layout->addWidget( new QLabel( entry->modification().toString(), this ), 4, 1 );
+    gridLayout->addWidget( label = new QLabel( "Modification: ", this ), 4, 0 );
+    gridLayout->addWidget( new QLabel( entry->modification().toString(), this ), 4, 1 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     // retrieve associated logbook
@@ -97,8 +100,8 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!=logbooks.end(); ++iter, i++ )
     {
 
-        grid_layout->addWidget( label = new QLabel( "File: ", this ), i, 0 );
-        grid_layout->addWidget( new QLabel( File( (*iter)->file() ).localName(), this ), i, 1);
+        gridLayout->addWidget( label = new QLabel( "File: ", this ), i, 0 );
+        gridLayout->addWidget( new QLabel( File( (*iter)->file() ).localName(), this ), i, 1);
         label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     }
