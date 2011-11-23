@@ -111,7 +111,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     // edition menu
     if( parent == mainWindow )
     {
-        menu = addMenu( "&Edit" );
+        menu = addMenu( "Edit" );
         menu->addAction( &mainWindow->findEntriesAction() );
         menu->addSeparator();
         menu->addAction( &mainWindow->newKeywordAction() );
@@ -129,7 +129,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     }
 
     // windows menu
-    windowsMenu_ = addMenu( "&Windows" );
+    windowsMenu_ = addMenu( "Windows" );
     connect( windowsMenu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
     // Settings
