@@ -42,11 +42,12 @@
 #include "Logbook.h"
 #include "MainWindow.h"
 #include "Menu.h"
-#include "XmlOptions.h"
 #include "RecentFilesMenu.h"
+#include "ScratchFileMonitor.h"
 #include "QtUtil.h"
 #include "QuestionDialog.h"
 #include "XmlFileList.h"
+#include "XmlOptions.h"
 
 #include <QtGui/QMessageBox>
 
@@ -135,6 +136,10 @@ bool Application::realizeWidget( void )
 
     mainWindow().centerOnDesktop();
     mainWindow().show();
+
+    // scratch files
+    scratchFileMonitor_ = new ScratchFileMonitor( this );
+    connect( qApp, SIGNAL( aboutToQuit( void ) ), scratchFileMonitor_, SLOT( deleteScratchFiles( void ) ) );
 
     // update
     qApp->processEvents();

@@ -1,3 +1,6 @@
+#ifndef Application_h
+#define Application_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,17 +24,6 @@
 *
 *******************************************************************************/
 
-#ifndef Application_h
-#define Application_h
-
-/*!
-\file    Application.h
-\brief  Main Window singleton object
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 #include "BaseApplication.h"
 #include "CommandLineArguments.h"
 #include "CommandLineParser.h"
@@ -42,6 +34,7 @@ class AttachmentWindow;
 class FileList;
 class LogEntry;
 class MainWindow;
+class ScratchFileMonitor;
 
 /*!
 \class  Application
@@ -54,10 +47,10 @@ class Application: public BaseApplication, public Counter
     //! Qt meta object declaration
     Q_OBJECT
 
-        public:
+    public:
 
-        //! command line help
-        static void usage( void );
+    //! command line help
+    static void usage( void );
 
     //! constructor
     Application( CommandLineArguments );
@@ -82,24 +75,19 @@ class Application: public BaseApplication, public Counter
 
     //! file list
     FileList& recentFiles( void ) const
-    {
-        assert( recentFiles_ );
-        return *recentFiles_;
-    }
+    { return *recentFiles_; }
 
     //! retrieve AttachmentWindow singleton
     AttachmentWindow & attachmentWindow( void ) const
-    {
-        assert( attachmentWindow_ );
-        return *attachmentWindow_;
-    }
+    { return *attachmentWindow_; }
 
     //! retrieve MainWindow singleton
     MainWindow& mainWindow( void ) const
-    {
-        assert( mainWindow_ );
-        return *mainWindow_;
-    }
+    { return *mainWindow_; }
+
+    //! scratch files
+    ScratchFileMonitor& scratchFileMonitor( void ) const
+    { return *scratchFileMonitor_; }
 
     protected slots:
 
@@ -126,6 +114,10 @@ class Application: public BaseApplication, public Counter
 
     //! main window entry selection frame
     MainWindow* mainWindow_;
+    
+    //! scratch files
+    ScratchFileMonitor* scratchFileMonitor_;
+
 
 };
 

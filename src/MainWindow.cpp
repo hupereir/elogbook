@@ -20,13 +20,7 @@
 *
 *******************************************************************************/
 
-/*!
-\file MainWindow.cpp
-\brief base class to display entries and keyword::
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
+#include "MainWindow.h"
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -50,12 +44,12 @@
 #include "LogbookInformationDialog.h"
 #include "LogbookModifiedDialog.h"
 #include "LogbookStatisticsDialog.h"
-#include "MainWindow.h"
 #include "Menu.h"
 #include "NewLogbookDialog.h"
 #include "QuestionDialog.h"
 #include "QtUtil.h"
 #include "RecentFilesMenu.h"
+#include "ScratchFileMonitor.h"
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
 #include "Singleton.h"
@@ -2597,6 +2591,9 @@ void MainWindow::_print( void )
         InformationDialog( this, buffer ).exec();
         return;
     }
+
+    // add as scratch file
+    Singleton::get().application<Application>()->scratchFileMonitor().add( file );
 
     // retrieve mask
     unsigned int html_log_mask = dialog.logbookMask();

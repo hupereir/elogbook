@@ -21,13 +21,7 @@
 *
 *******************************************************************************/
 
-/*!
-\file EditionWindow.cpp
-\brief log entry edition/creation object
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
+#include "EditionWindow.h"
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -36,7 +30,6 @@
 #include "ColorMenu.h"
 #include "Command.h"
 #include "CustomToolBar.h"
-#include "EditionWindow.h"
 #include "File.h"
 #include "FormatBar.h"
 #include "HtmlHeaderNode.h"
@@ -53,6 +46,7 @@
 #include "InformationDialog.h"
 #include "RecentFilesMenu.h"
 #include "Singleton.h"
+#include "ScratchFileMonitor.h"
 #include "StatusBar.h"
 #include "Str.h"
 #include "Util.h"
@@ -1322,6 +1316,9 @@ void EditionWindow::_print( void )
         InformationDialog( this, buffer ).exec();
         return;
     }
+
+    // add as scratch file
+    Singleton::get().application<Application>()->scratchFileMonitor().add( file );
 
     // retrieve mask
     unsigned int html_log_mask = dialog.logbookMask();
