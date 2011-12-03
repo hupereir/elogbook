@@ -1,3 +1,6 @@
+#ifndef Icons_h
+#define Icons_h
+
 // $Id$
 
 /******************************************************************************
@@ -20,18 +23,6 @@
 *
 *
 *******************************************************************************/
-
-#ifndef Icons_h
-#define Icons_h
-
-/*!
-\file    Icons.h
-\brief   Icon filenames
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 
 #include "BaseIcons.h"
 #include <QtCore/QString>
