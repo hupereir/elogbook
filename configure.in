@@ -56,7 +56,6 @@ aspell=1
 AC_CHECK_FILE($aspell_includes/aspell.h,, [aspell=0] )
 AC_CHECK_FILE($aspell_libraries/libaspell.so, aspell_lib=aspell, [aspell=0] )
 
-
 if test $aspell = 1; then
 	AC_SUBST(aspell_dir)
 	AC_SUBST(aspell_libraries)

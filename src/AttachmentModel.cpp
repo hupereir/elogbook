@@ -111,7 +111,7 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
     else if( role == Qt::DecorationRole && index.column() == ICON ) return _icon( attachment->type().icon() );
     else if( role == Qt::TextAlignmentRole && index.column() == ICON ) return Qt::AlignCenter;
 
-    return ListModel<Attachment*>::data( index, role );
+    return QVariant();
 
 }
 

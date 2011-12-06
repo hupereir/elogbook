@@ -65,7 +65,7 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
 
     } else {
 
-        return TreeModel<Keyword>::data( index, role );
+        return QVariant();
 
     }
 
