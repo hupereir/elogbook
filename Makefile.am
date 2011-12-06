@@ -9,9 +9,9 @@ endif
 
 # only compile base directories in static mode
 if ENABLE_SHARED
-BASE_DIRS=
+BASEDIRS=
 else
-BASE_DIRS= \
+BASEDIRS= \
  base \
  base-qt \
  base-help \
@@ -21,7 +21,7 @@ BASE_DIRS= \
 endif
 
 SUBDIRS = \
- $(BASE_DIRS) \
+ $(BASEDIRS) \
  pixmaps \
  extra-includes \
  src
