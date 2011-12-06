@@ -7,14 +7,22 @@ else
 SPELLCHECK_SOURCE_DIR=
 endif
 
-SUBDIRS = \
- pixmaps \
- base-pixmaps \
+# only compile base directories in static mode
+if ENABLE_SHARED
+BASE_DIRS=
+else
+BASE_DIRS= \
  base \
  base-qt \
  base-help \
  base-server \
- $(SPELLCHECK_SOURCE_DIR) \
+ base-pixmaps \
+ $(SPELLCHECK_SOURCE_DIR)
+endif
+
+SUBDIRS = \
+ $(BASE_DIRS) \
+ pixmaps \
  extra-includes \
  src
 

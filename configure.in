@@ -167,16 +167,23 @@ AC_SUBST(timestamp)
 echo ""
 echo "timestamp = " $timestamp
 
+dnl **************************
+dnl output files
 echo ""
-AC_OUTPUT( Makefile \
-  elogbook.spec \
-  pixmaps/Makefile \
+if test no = $enable_shared_libs; then
+AC_OUTPUT( \
   base/Makefile \
-  base-pixmaps/Makefile \
   base-qt/Makefile \
   base-help/Makefile \
   base-server/Makefile \
+  base-pixmaps/Makefile \
   base-spellcheck/Makefile \
+)
+fi
+
+AC_OUTPUT( Makefile \
+  elogbook.spec \
+  pixmaps/Makefile \
   extra-includes/Makefile \
   src/Makefile \
   src/Config.h \
