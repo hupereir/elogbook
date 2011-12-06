@@ -54,11 +54,20 @@ Qt::ItemFlags KeywordModel::flags(const QModelIndex &index) const
 QVariant KeywordModel::data( const QModelIndex& index, int role ) const
 {
 
-    // check index, role and column
+    // check index
     if( !index.isValid() ) return QVariant();
-    if( role != Qt::DisplayRole ) return QVariant();
-    if( index.column() != KEYWORD ) return QVariant();
-    return _find( index.internalId() ).get().current();
+
+    // check index, role and column
+    if( role == Qt::DisplayRole && index.column() == KEYWORD )
+    {
+
+        return _find( index.internalId() ).get().current();
+
+    } else {
+
+        return TreeModel<Keyword>::data( index, role );
+
+    }
 
 }
 
