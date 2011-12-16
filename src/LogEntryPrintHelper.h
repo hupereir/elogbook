@@ -59,13 +59,13 @@ class LogEntryPrintHelper: public QObject, public Counter
     protected:
 
     //! print header
-    void _printHeader( QPrinter*, QPointF = QPointF() ) const;
+    void _printHeader( QPrinter*, QPainter*, QPointF& ) const;
 
     //! print body
-    void _printBody( QPrinter*, QPointF = QPointF() ) const;
+    void _printBody( QPrinter*, QPainter*, QPointF& ) const;
 
     //! print attachments
-    void _printAttachments( QPrinter*, QPointF = QPointF() ) const;
+    void _printAttachments( QPrinter*, QPainter*, QPointF& ) const;
 
     private:
 

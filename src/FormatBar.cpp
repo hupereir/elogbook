@@ -128,22 +128,22 @@ void FormatBar::setTarget( TextEditor& editor )
 }
 
 //________________________________________
-void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
+void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 {
 
     Debug::Throw( "FormatBar::loadFormats.\n" );
     assert( editor_ );
     QTextCursor cursor( editor_->document() );
     cursor.beginEditBlock();
-    for( FORMAT::TextFormatBlock::List::const_iterator iter = format_list.begin(); iter != format_list.end(); ++iter )
+    for( FORMAT::TextFormatBlock::List::const_iterator iter = formatList.begin(); iter != formatList.end(); ++iter )
     {
 
         // check if paragraphs are set to 0 or not. If non 0, need to convert to absolute index
         TextPosition begin( iter->parBegin(), iter->begin() );
-        int indexBegin = iter->parBegin() ? editor_->indexFromPosition( begin ) : iter->begin();
+        int indexBegin = iter->parBegin() ? begin.index( editor_->document() ) : iter->begin();
 
         TextPosition end( iter->parEnd(), iter->end() );
-        int indexEnd = iter->parEnd() ? editor_->indexFromPosition( end ) : iter->end();
+        int indexEnd = iter->parEnd() ? end.index( editor_->document() ) : iter->end();
 
         // define cursor
         cursor.setPosition( indexBegin, QTextCursor::MoveAnchor );

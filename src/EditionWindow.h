@@ -318,6 +318,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! Save Current entry
     void _save( bool updateSelection = true );
 
+    //! Print current document
+    void _print( void );
+
     //! creates a new entry
     void _newEntry( void );
 

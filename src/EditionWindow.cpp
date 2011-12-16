@@ -36,14 +36,15 @@
 #include "Icons.h"
 #include "IconSize.h"
 #include "IconEngine.h"
+#include "InformationDialog.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryInformationDialog.h"
+#include "LogEntryPrintHelper.h"
 #include "MainWindow.h"
 #include "Menu.h"
 #include "Options.h"
 #include "QuestionDialog.h"
-#include "InformationDialog.h"
 #include "RecentFilesMenu.h"
 #include "Singleton.h"
 #include "ScratchFileMonitor.h"
@@ -59,6 +60,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
+#include <QtGui/QPrintDialog>
 #include <QtGui/QStylePainter>
 #include <QtGui/QStyleOptionToolButton>
 #include <QtGui/QTextLayout>
@@ -678,6 +680,7 @@ void EditionWindow::_installActions( void )
     addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print", this ) );
     printAction_->setToolTip( "Convert current entry to html and print" );
     printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
+    connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // split action
     addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
@@ -1040,6 +1043,33 @@ void EditionWindow::_save( bool updateSelection )
 
     statusBar().label().setText( "" );
     Debug::Throw( "EditionWindow::_save - done.\n" );
+
+    return;
+
+}
+
+//___________________________________________________________
+void EditionWindow::_print( void )
+{
+    Debug::Throw( "EditionWindow::_print.\n" );
+
+    // check if entry is modified
+    if( modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+    // create printer
+    QPrinter printer( QPrinter::HighResolution );
+
+    // create prind dialog and run.
+    QPrintDialog dialog( &printer, this );
+    dialog.setWindowTitle( "Print Document - qedit" );
+    if( dialog.exec() == QDialog::Rejected ) return;
+
+    // add output file to scratch files, if any
+    if( !printer.outputFileName().isEmpty() )
+    { Singleton::get().application<Application>()->scratchFileMonitor().add( printer.outputFileName() ); }
+
+    // print
+    LogEntryPrintHelper( this, entry() ).print( &printer );
 
     return;
 
