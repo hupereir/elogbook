@@ -482,9 +482,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! update entry-list related actions
     void _updateEntryActions( void );
 
-    //! create HTML file from logbook
-    virtual void _print( void );
-
     //! store sorting method when changed via list header
     virtual void _storeSortMethod( void )
     { _storeSortMethod( _logEntryModel().sortColumn(), _logEntryModel().sortOrder() ); }

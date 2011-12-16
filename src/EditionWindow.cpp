@@ -50,7 +50,6 @@
 #include "StatusBar.h"
 #include "Str.h"
 #include "Util.h"
-#include "PrintLogEntryDialog.h"
 
 #include "Config.h"
 #if WITH_ASPELL
@@ -62,6 +61,7 @@
 #include <QtGui/QLayout>
 #include <QtGui/QStylePainter>
 #include <QtGui/QStyleOptionToolButton>
+#include <QtGui/QTextLayout>
 
 //_______________________________________________
 EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
@@ -73,7 +73,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     colorMenu_( 0 ),
     colorWidget_( 0 ),
     activeEditor_( 0 ),
-    formatToolBar_( 0 ),
+    formatBar_( 0 ),
     statusBar_( 0 )
 {
     Debug::Throw("EditionWindow::EditionWindow.\n" );
@@ -193,9 +193,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( &frame->newAction() );
 
     // format bar
-    formatToolBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
-    formatToolBar_->setTarget( activeEditor() );
-    const FormatBar::ActionMap& actions( formatToolBar_->actions() );
+    formatBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
+    formatBar_->setTarget( activeEditor() );
+    const FormatBar::ActionMap& actions( formatBar_->actions() );
     for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); ++iter )
     { readOnlyActions_.push_back( iter->second ); }
 
@@ -203,7 +203,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // (because it could not be performed in _newTextEditor)
     connect(
         &editor, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ),
-        formatToolBar_, SLOT( updateState( const QTextCharFormat& ) ) );
+        formatBar_, SLOT( updateState( const QTextCharFormat& ) ) );
 
     // edition toolbars
     toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
@@ -271,7 +271,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
     Debug::Throw( "EditionWindow::displayEntry.\n" );
 
     // disassociate with existing entries, if any
-    clearAssociations< LogEntry >();
+    clearAssociations<LogEntry>();
 
     // retrieve selection frame
     MainWindow &mainwindow( _mainWindow() );
@@ -585,7 +585,7 @@ void EditionWindow::setActiveEditor( AnimatedTextEditor& editor )
     }
 
     // associate with toolbar
-    if( formatToolBar_ ) formatToolBar_->setTarget( activeEditor() );
+    if( formatBar_ ) formatBar_->setTarget( activeEditor() );
 
     Debug::Throw( "EditionWindow::setActiveEditor - done.\n" );
 
@@ -678,7 +678,6 @@ void EditionWindow::_installActions( void )
     addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print", this ) );
     printAction_->setToolTip( "Convert current entry to html and print" );
     printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
-    connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // split action
     addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
@@ -849,11 +848,11 @@ AnimatedTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
     connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction() ) );
 
-    if( formatToolBar_ )
+    if( formatBar_ )
     {
         connect(
             editor, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ),
-            formatToolBar_, SLOT( updateState( const QTextCharFormat& ) ) );
+            formatBar_, SLOT( updateState( const QTextCharFormat& ) ) );
     }
 
     // associate display to this editFrame
@@ -904,7 +903,7 @@ void EditionWindow::_displayText( void )
     LogEntry* entry( EditionWindow::entry() );
     activeEditor().setCurrentCharFormat( QTextCharFormat() );
     activeEditor().setPlainText( (entry) ? entry->text() : "" );
-    formatToolBar_->load( entry->formats() );
+    formatBar_->load( entry->formats() );
 
     // reset undo/redo stack
     activeEditor().resetUndoRedoStack();
@@ -982,7 +981,7 @@ void EditionWindow::_save( bool updateSelection )
 
     //! update entry text
     entry->setText( activeEditor().toPlainText() );
-    entry->setFormats( formatToolBar_->get() );
+    entry->setFormats( formatBar_->get() );
 
     //! update entry keyword
     entry->setKeyword( keywordEditor_->text() );
@@ -1258,101 +1257,6 @@ void EditionWindow::_cloneWindow( void )
 
     // raise EditionWindow
     edition_window->show();
-
-    return;
-}
-
-//_____________________________________________
-void EditionWindow::_print( void )
-{
-    Debug::Throw( "EditionWindow::_print.\n" );
-
-    // check logbook entry
-    LogEntry *entry( EditionWindow::entry() );
-    if( !entry ){
-        InformationDialog( this, "No entry. <View HTML> canceled." ).exec();
-        return;
-    }
-
-    // check if entry is modified
-    if( modified() ) askForSave();
-
-    // create custom dialog, retrieve check vbox child
-    PrintLogEntryDialog dialog( this );
-    dialog.setLogbookMask( 0 );
-    dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
-
-    // add commands
-    /* command list contains the HTML editor, PDF editor and any additional user specified command */
-    Options::List commands( XmlOptions::get().specialOptions( "PRINT_COMMAND" ) );
-    if( !AttachmentType::HTML.editCommand().isEmpty() ) commands.push_back( AttachmentType::HTML.editCommand() );
-    for( Options::List::iterator iter = commands.begin(); iter != commands.end(); ++iter )
-    { dialog.addCommand( iter->raw() ); }
-
-    // generate default filename
-    QString buffer;
-    QTextStream( &buffer )  << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
-    dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
-
-    // map dialog
-    if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
-
-    // save command
-    QString command( dialog.command() );
-    XmlOptions::get().add( "PRINT_COMMAND", Option( command, Option::RECORDABLE|Option::CURRENT ) );
-
-    // retrieve/check file
-    File file( dialog.file() );
-    if( file.isEmpty() ) {
-        InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
-        return;
-    }
-
-    QFile out( file );
-    if( !out.open( QIODevice::WriteOnly ) )
-    {
-        QString buffer;
-        QTextStream( &buffer ) << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-        InformationDialog( this, buffer ).exec();
-        return;
-    }
-
-    // add as scratch file
-    Singleton::get().application<Application>()->scratchFileMonitor().add( file );
-
-    // retrieve mask
-    unsigned int html_log_mask = dialog.logbookMask();
-    unsigned int html_entry_mask = dialog.entryMask();
-
-    // dump header/style
-    QDomDocument document( "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"" );
-
-    // html
-    QDomElement html = document.appendChild( document.createElement( "html" ) ).toElement();
-    html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
-
-    // head
-    HtmlHeaderNode( html, document );
-
-    // body
-    QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
-
-    // dump logbook header
-    BASE::KeySet<Logbook> logbooks( entry );
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
-    { body.appendChild( (*iter)->htmlElement( document, html_log_mask ) ); }
-
-    // dump entry
-    body.appendChild( entry->htmlElement( document, html_entry_mask ) );
-
-    out.write( document.toString().toAscii() );
-    out.close();
-
-    // retrieve command
-    if( command.isEmpty() ) return;
-
-    // execute command
-    ( Command( command ) << file ).run();
 
     return;
 }

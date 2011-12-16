@@ -24,14 +24,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file Logbook.h
-\brief log file parser based on xml
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "Counter.h"
 #include "Debug.h"
 #include "File.h"
@@ -57,10 +49,10 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     Q_OBJECT
 
-        public:
+    public:
 
-        //! default string when no title given
-        static const QString LOGBOOK_NO_TITLE;
+    //! default string when no title given
+    static const QString LOGBOOK_NO_TITLE;
 
     //! default string when no author given
     static const QString LOGBOOK_NO_AUTHOR;
@@ -304,9 +296,6 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     //! generate tagged backup filename
     QString backupFilename( void ) const;
-
-    //! html
-    QDomElement htmlElement( QDomDocument& parent, const unsigned int& mask = HTML_ALL_MASK ) const;
 
     //! sets logbook modified value
     void setModified( const bool& value );

@@ -24,15 +24,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file EditionWindow.h
-\brief log entry edition/creation singleton object
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
-
 #include "AskForSaveDialog.h"
 #include "AnimatedLineEditor.h"
 #include "AnimatedTextEditor.h"
@@ -48,9 +39,10 @@
 
 #include <QtCore/QBasicTimer>
 #include <QtCore/QTimerEvent>
+#include <QtGui/QLabel>
+#include <QtGui/QPrinter>
 #include <QtGui/QPushButton>
 #include <QtGui/QSplitter>
-#include <QtGui/QLabel>
 #include <QtGui/QToolButton>
 
 #include <set>
@@ -356,9 +348,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! clone editor
     void _cloneWindow( void );
 
-    //! view current entry as HTML
-    void _print( void );
-
     //! unlock read-only editors
     void _unlock( void );
 
@@ -518,7 +507,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     AnimatedTextEditor *activeEditor_;
 
     //! text format bar
-    FormatBar* formatToolBar_;
+    FormatBar* formatBar_;
 
     //! statusbar
     StatusBar* statusBar_;

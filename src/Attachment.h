@@ -197,9 +197,6 @@ class Attachment: public Counter, public BASE::Key
   //! changes attachment type
   bool setType( const AttachmentType& type );
 
-  //! write html formated to stream
-  void htmlElement( QDomElement& parent, QDomDocument& document ) const;
-
   //! command enum to tell who original file should be transformed into attached file
   enum Command {
     COPY,

@@ -21,20 +21,11 @@
 *
 *******************************************************************************/
 
-/*!
-\file Logbook.cpp
-\brief log file parser based on xml
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "Logbook.h"
 
 #include "Attachment.h"
 #include "Debug.h"
 #include "FileCheck.h"
-#include "HtmlTextNode.h"
 #include "LogEntry.h"
 #include "XmlOptions.h"
 #include "Str.h"
@@ -45,8 +36,6 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-
-
 
 //________________________________
 // public methods
@@ -650,135 +639,6 @@ QString Logbook::backupFilename( void ) const
     QString tag( TimeStamp::now().toString( TimeStamp::DATE_TAG ) );
     QString out;
     QTextStream( &out ) << head << "_backup_" << tag << foot;
-    return out;
-}
-
-//__________________________________
-QDomElement Logbook::htmlElement( QDomDocument& document, const unsigned int& mask ) const
-{
-    Debug::Throw( "Logbook::htmlElement.\n" );
-
-    // check header
-    if( !(mask & HTML_ALL_MASK ) ) return QDomElement();
-
-    // surrounding table
-    QDomElement out = document.createElement( "table" );
-    out.setAttribute( "class", "header_outer_table" );
-    QDomElement column = out.
-        appendChild( document.createElement( "tr" ) ).
-        appendChild( document.createElement( "td" ) ).
-        toElement();
-    column.setAttribute( "class", "header_column" );
-    QDomElement table = column.
-        appendChild( document.createElement( "table" ) ).
-        toElement();
-    table.setAttribute( "class", "header_inner_table" );
-    table.setAttribute( "width", "100%" );
-
-    QDomElement row;
-    if( title().size() && (mask&HTML_TITLE) )
-    {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "colspan", "2" );
-        column.
-            appendChild( document.createElement( "h1" ) ).
-            appendChild( document.createTextNode( title() ) );
-    }
-
-    if( author().size() && (mask&HTML_AUTHOR ) )
-    {
-
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "width", "15%" );
-        column.appendChild( document.createTextNode( "Author:" ) );
-        row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( author() ) );
-
-    }
-
-    if( file().size() && (mask&HTML_FILE ) )
-    {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "width", "15%" );
-        column.appendChild( document.createTextNode( "File:" ) );
-        row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( file() ) );
-
-    }
-
-    if( directory().size() && (mask&HTML_DIRECTORY ) )
-    {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "width", "15%" );
-        column.appendChild( document.createTextNode( "Directory:" ) );
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( directory() ) );
-        if( !checkDirectory() ) column.appendChild( document.createTextNode( " (not found)" ) );
-
-    }
-
-    if( creation().isValid() && (mask&HTML_CREATION ) )
-    {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "width", "15%" );
-        column.appendChild( document.createTextNode( "Created:" ) );
-        row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( creation().toString() ) );
-
-    }
-
-    if( modification().isValid() && (mask&HTML_MODIFICATION ) )
-    {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "width", "15%" );
-        column.appendChild( document.createTextNode( "Last modified:" ) );
-        row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( modification().toString() ) );
-
-    }
-
-    if( backup().isValid() && (mask&HTML_BACKUP) )
-    {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "width", "15%" );
-        column.appendChild( document.createTextNode( "Last backup:" ) );
-        row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( backup().toString() ) );
-
-    }
-
-    if( comments().size() && (mask&HTML_COMMENTS) )
-    {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        column = row.appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "width", "15%" );
-        column.appendChild( document.createTextNode( "Comments:" ) );
-        column = table.
-            appendChild( document.createElement( "tr" ) ).
-            appendChild( document.createElement( "td" ) ).toElement();
-        column.setAttribute( "colspan", "2" );
-        HtmlTextNode( comments(), column, document );
-    }
-
     return out;
 }
 

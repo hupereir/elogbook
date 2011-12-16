@@ -33,7 +33,6 @@
 #include "Command.h"
 #include "Debug.h"
 #include "File.h"
-#include "HtmlTextNode.h"
 #include "LogEntry.h"
 #include "Str.h"
 #include "XmlDef.h"
@@ -322,30 +321,6 @@ File Attachment::shortFile( void ) const
   if( file.size() && file[file.size()-1] == '/' ) { file = File( file.left( file.size()-1 ) ); }
 
   return file.localName();
-}
-
-//_______________________________________
-void Attachment::htmlElement( QDomElement& parent, QDomDocument& document ) const
-{
-  Debug::Throw( "Attachment::HtmlElement.\n" );
-
-  // reference to attached file
-  QDomElement par = parent.appendChild( document.createElement( "p" ) ).toElement();
-  QDomElement ref = par.
-      appendChild( document.createElement( "b" ) ).
-      appendChild( document.createElement( "a" ) ).toElement();
-  if( type() == AttachmentType::URL ) ref.setAttribute( "href", file() );
-  else ref.setAttribute( "href", QString("file:") + file() );
-  ref.appendChild( document.createTextNode( shortFile() ) );
-
-  QString buffer;
-  QTextStream( &buffer ) << "(" << type().name() << ")";
-  par.appendChild( document.createTextNode( buffer ) );
-
-  // comments
-  if( !comments().isEmpty() )
-  HtmlTextNode( comments(), par, document );
-  return;
 }
 
 //_______________________________________

@@ -140,28 +140,28 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& format_list ) const
 
         // check if paragraphs are set to 0 or not. If non 0, need to convert to absolute index
         TextPosition begin( iter->parBegin(), iter->begin() );
-        int index_begin = iter->parBegin() ? editor_->indexFromPosition( begin ) : iter->begin();
+        int indexBegin = iter->parBegin() ? editor_->indexFromPosition( begin ) : iter->begin();
 
         TextPosition end( iter->parEnd(), iter->end() );
-        int index_end = iter->parEnd() ? editor_->indexFromPosition( end ) : iter->end();
+        int indexEnd = iter->parEnd() ? editor_->indexFromPosition( end ) : iter->end();
 
         // define cursor
-        cursor.setPosition( index_begin, QTextCursor::MoveAnchor );
-        cursor.setPosition( index_end, QTextCursor::KeepAnchor );
+        cursor.setPosition( indexBegin, QTextCursor::MoveAnchor );
+        cursor.setPosition( indexEnd, QTextCursor::KeepAnchor );
 
         // define format
-        QTextCharFormat text_format;
-        text_format.setFontWeight( iter->format() & FORMAT::BOLD ? QFont::Bold : QFont::Normal );
-        text_format.setFontItalic( iter->format() & FORMAT::ITALIC );
-        text_format.setFontUnderline( iter->format() & FORMAT::UNDERLINE );
-        text_format.setFontStrikeOut( iter->format() & FORMAT::STRIKE );
-        text_format.setFontOverline( iter->format() & FORMAT::OVERLINE );
+        QTextCharFormat textFormat;
+        textFormat.setFontWeight( iter->format() & FORMAT::BOLD ? QFont::Bold : QFont::Normal );
+        textFormat.setFontItalic( iter->format() & FORMAT::ITALIC );
+        textFormat.setFontUnderline( iter->format() & FORMAT::UNDERLINE );
+        textFormat.setFontStrikeOut( iter->format() & FORMAT::STRIKE );
+        textFormat.setFontOverline( iter->format() & FORMAT::OVERLINE );
 
         // load color
         if( iter->color() != ColorMenu::NONE )
-        { text_format.setForeground( QColor( iter->color() ) ); }
+        { textFormat.setForeground( QColor( iter->color() ) ); }
 
-        cursor.setCharFormat( text_format );
+        cursor.setCharFormat( textFormat );
 
     }
 
@@ -184,33 +184,30 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
         for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
         {
             QTextFragment fragment = it.fragment();
-            if (fragment.isValid())
-            {
+            if( !fragment.isValid() ) continue;
 
-                // retrieve fragments position
-                int begin( fragment.position() );
-                int end( fragment.position() + fragment.length() );
+            // retrieve fragments position
+            int begin( fragment.position() );
+            int end( fragment.position() + fragment.length() );
 
-                // retrieve text format
-                QTextCharFormat text_format( fragment.charFormat() );
-                unsigned int format( FORMAT::DEFAULT );
-                if( text_format.fontWeight() == QFont::Bold ) format |= FORMAT::BOLD;
-                if( text_format.fontItalic() ) format |= FORMAT::ITALIC;
-                if( text_format.fontUnderline() ) format |= FORMAT::UNDERLINE;
-                if( text_format.fontStrikeOut() ) format |= FORMAT::STRIKE;
-                if( text_format.fontOverline() ) format |= FORMAT::OVERLINE;
+            // retrieve text format
+            QTextCharFormat textFormat( fragment.charFormat() );
+            unsigned int format( FORMAT::DEFAULT );
+            if( textFormat.fontWeight() == QFont::Bold ) format |= FORMAT::BOLD;
+            if( textFormat.fontItalic() ) format |= FORMAT::ITALIC;
+            if( textFormat.fontUnderline() ) format |= FORMAT::UNDERLINE;
+            if( textFormat.fontStrikeOut() ) format |= FORMAT::STRIKE;
+            if( textFormat.fontOverline() ) format |= FORMAT::OVERLINE;
 
-                // retrieve text color
-                QColor color( text_format.foreground().color() );
-                QString colorname = (color == editor_->palette().color( QPalette::Text ) ) ? ColorMenu::NONE : color.name();
+            // retrieve text color
+            QColor color( textFormat.foreground().color() );
+            QString colorname = (color == editor_->palette().color( QPalette::Text ) ) ? ColorMenu::NONE : color.name();
 
-                // skip format if corresponds to default
-                if( format == FORMAT::DEFAULT && color == editor_->palette().color( QPalette::Text ) ) continue;
+            // skip format if corresponds to default
+            if( format == FORMAT::DEFAULT && color == editor_->palette().color( QPalette::Text ) ) continue;
 
-                // store new TextFormatBlock
-                out.push_back( FORMAT::TextFormatBlock( begin, end, format, colorname ) );
-
-            }
+            // store new TextFormatBlock
+            out.push_back( FORMAT::TextFormatBlock( begin, end, format, colorname ) );
         }
     }
 

@@ -77,9 +77,6 @@ Menu.h \
 NewAttachmentDialog.h \
 NewLogbookDialog.h \
 OpenAttachmentDialog.h \
-PrintDialog.h \
-PrintLogEntryDialog.h \
-PrintLogbookDialog.h \
 ProgressBar.h \
 SearchPanel.h \
 SelectionStatusBar.h
@@ -109,9 +106,6 @@ Menu.cpp \
 NewAttachmentDialog.cpp \
 NewLogbookDialog.cpp \
 OpenAttachmentDialog.cpp \
-PrintDialog.cpp \
-PrintLogEntryDialog.cpp \
-PrintLogbookDialog.cpp \
 ProgressBar.cpp \
 SearchPanel.cpp \
 SelectionStatusBar.cpp \

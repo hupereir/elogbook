@@ -106,6 +106,7 @@ noinst_HEADERS = \
 	LogbookModifiedDialog.h \
 	LogbookStatisticsDialog.h \
 	LogEntry.h \
+	LogEntryPrintHelper.h \
 	LogEntryInformationDialog.h \
 	LogEntryModel.h \
 	MainWindow.h \
@@ -113,9 +114,6 @@ noinst_HEADERS = \
 	NewAttachmentDialog.h \
 	NewLogbookDialog.h \
 	OpenAttachmentDialog.h \
-	PrintDialog.h \
-	PrintLogEntryDialog.h \
-	PrintLogbookDialog.h \
 	ProgressBar.h \
 	SearchPanel.h \
 	SelectionStatusBar.h \
@@ -159,14 +157,12 @@ elogbook_SOURCES = \
 	LogbookStatisticsDialog.cpp \
 	LogEntryInformationDialog.cpp \
 	LogEntryModel.cpp \
+	LogEntryPrintHelper.cpp \
 	MainWindow.cpp \
 	Menu.cpp \
 	NewAttachmentDialog.cpp \
 	NewLogbookDialog.cpp \
 	OpenAttachmentDialog.cpp \
-	PrintDialog.cpp \
-	PrintLogEntryDialog.cpp \
-	PrintLogbookDialog.cpp \
 	ProgressBar.cpp \
 	SearchPanel.cpp \
 	SelectionStatusBar.cpp \
@@ -184,10 +180,10 @@ nodist_elogbook_SOURCES = \
 	moc_KeywordModel.cpp \
 	moc_LogbookModifiedDialog.cpp \
 	moc_LogEntryModel.cpp \
+	moc_LogEntryPrintHelper.cpp \
 	moc_MainWindow.cpp \
 	moc_Menu.cpp \
 	moc_NewAttachmentDialog.cpp \
-	moc_PrintDialog.cpp \
 	moc_ProgressBar.cpp \
 	moc_SearchPanel.cpp \
 	moc_SelectionStatusBar.cpp

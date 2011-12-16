@@ -55,7 +55,6 @@
 #include "Singleton.h"
 #include "TextEditionDelegate.h"
 #include "Util.h"
-#include "PrintLogbookDialog.h"
 #include "XmlOptions.h"
 
 #include <QtGui/QHeaderView>
@@ -1079,7 +1078,6 @@ void MainWindow::_installActions( void )
     printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "&Print", this );
     printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
     printAction_->setToolTip( "Convert logbook to html and print" );
-    connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics", this );
     logbookStatisticsAction_->setToolTip( "View logbook statistics" );
@@ -2532,169 +2530,6 @@ void MainWindow::_updateEntryActions( void )
     entryKeywordAction().setEnabled( has_selection );
     editEntryTitleAction().setEnabled( has_selection );
 
-    return;
-}
-
-//_____________________________________________
-void MainWindow::_print( void )
-{
-    Debug::Throw( "MainWindow::_print.\n" );
-
-    // check logbook
-    if( !logbook_ )
-    {
-        InformationDialog( this, "No logbook opened. <View HTML> canceled." ).exec();
-        return;
-    }
-
-    // check if logbook is modified
-    if( logbook()->modified() ) askForSave();
-
-    // create custom dialog, retrieve check vbox child
-    PrintLogbookDialog dialog( this );
-    dialog.setSelection( PrintLogbookDialog::ALL );
-    dialog.setLogbookMask( Logbook::HTML_ALL_MASK );
-    dialog.setEntryMask( LogEntry::HTML_ALL_MASK );
-
-    // add commands
-    /* command list contains the HTML editor, PDF editor and any additional user specified command */
-    Options::List commands( XmlOptions::get().specialOptions( "PRINT_COMMAND" ) );
-    if( !AttachmentType::HTML.editCommand().isEmpty() ) commands.push_back( AttachmentType::HTML.editCommand() );
-    for( Options::List::iterator iter = commands.begin(); iter != commands.end(); ++iter )
-    { dialog.addCommand( iter->raw() ); }
-
-    QString buffer;
-    QTextStream( &buffer ) << "_eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
-    dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
-
-    // map dialog
-    if( !dialog.centerOnParent().exec() ) return;
-
-    // save command
-    QString command( dialog.command() );
-    XmlOptions::get().add( "PRINT_COMMAND", Option( command, Option::RECORDABLE|Option::CURRENT ) );
-
-    // retrieve/check file
-    File file( dialog.file() );
-    if( file.isEmpty() )
-    {
-        InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
-        return;
-    }
-
-    // open/check temp file
-    QFile out( file );
-    if( !out.open( QIODevice::WriteOnly ) )
-    {
-        QString buffer;
-        QTextStream(&buffer ) << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-        InformationDialog( this, buffer ).exec();
-        return;
-    }
-
-    // add as scratch file
-    Singleton::get().application<Application>()->scratchFileMonitor().add( file );
-
-    // retrieve mask
-    unsigned int html_log_mask = dialog.logbookMask();
-    unsigned int htmlEntry_mask = dialog.entryMask();
-
-    QDomDocument document( "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"" );
-
-    // html
-    QDomElement html = document.appendChild( document.createElement( "html" ) ).toElement();
-    html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
-
-    // head
-    HtmlHeaderNode( html, document );
-
-    // body
-    QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
-
-    // dump logbook header
-    body.appendChild( logbook()->htmlElement( document, html_log_mask ) );
-
-    // retrieve entries to write
-    LogEntryModel::List entries;
-    if( dialog.allEntries() )
-    {
-
-        BASE::KeySet<LogEntry> entry_set( logbook()->entries() );
-        entries = LogEntryModel::List( entry_set.begin(), entry_set.end() );
-
-    } else if( dialog.visibleEntries() ) {
-
-        entries = _logEntryModel().get();
-
-    } else {
-
-        entries = _logEntryModel().get( logEntryList().selectionModel()->selectedRows() );
-
-    }
-
-    // sort entries using keyword
-    sort( entries.begin(), entries.end(), Logbook::EntryLessFTor( Logbook::SORT_KEYWORD ) );
-
-    if( html_log_mask & Logbook::HTML_TABLE )
-    {
-        // dump table of content
-        QDomElement table = body.appendChild( document.createElement( "table" ) ).toElement();
-        table.setAttribute( "class", "header_outer_table" );
-        QDomElement column = table.
-            appendChild( document.createElement( "tr" ) ).
-            appendChild( document.createElement( "td" ) ).
-            toElement();
-        column.setAttribute( "class", "header_column" );
-        column.
-            appendChild( document.createElement( "h2" ) ).
-            appendChild( document.createTextNode( "Table of contents" ) );
-        column = table.
-            appendChild( document.createElement( "tr" ) ).
-            appendChild( document.createElement( "td" ) ).
-            toElement();
-        column.setAttribute( "class", "header_column" );
-        table = column.appendChild( document.createElement( "table" ) ).toElement();
-        table.setAttribute( "class", "header_inner_table" );
-        QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
-
-        if( htmlEntry_mask & LogEntry::HTML_KEYWORD )
-            row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( "keyword" ) );
-        if( htmlEntry_mask & LogEntry::HTML_TITLE )
-            row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( "title" ) );
-        if( htmlEntry_mask & LogEntry::HTML_CREATION )
-            row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( "created" ) );
-        if( htmlEntry_mask & LogEntry::HTML_MODIFICATION )
-            row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "b" ) ).
-            appendChild( document.createTextNode( "last modified" ) );
-
-        for( std::vector< LogEntry* >::iterator it=entries.begin(); it != entries.end(); it++ )
-        { table.appendChild( (*it)->htmlSummary( document ) ); }
-
-    }
-
-    // dump full logbook
-    if( html_log_mask & Logbook::HTML_CONTENT )
-    {
-        for( std::vector<LogEntry*>::iterator it=entries.begin(); it != entries.end(); it++ )
-        { body.appendChild( (*it)->htmlElement( document, htmlEntry_mask ) ); }
-    }
-
-    out.write( document.toString().toAscii() );
-    out.close();
-
-    // retrieve command
-    if( !dialog.command().isEmpty() ) ( Command( dialog.command() ) << file ).run();
     return;
 }
 
