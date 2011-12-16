@@ -97,7 +97,6 @@ noinst_HEADERS = \
 	FileCheckDialog.h \
 	FormatBar.h \
 	HelpText.h \
-	HtmlHeaderNode.h \
 	Icons.h \
 	Keyword.h \
 	KeywordModel.h \
@@ -125,7 +124,6 @@ libelogbook_a_SOURCES = \
 	Attachment.cpp \
 	AttachmentType.cpp \
 	FileCheck.cpp \
-	HtmlHeaderNode.cpp \
 	Keyword.cpp \
 	Logbook.cpp \
 	LogEntry.cpp

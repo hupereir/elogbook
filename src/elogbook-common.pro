@@ -11,7 +11,6 @@ HEADERS = \
   Attachment.h \
   AttachmentType.h \
   FileCheck.h \
-  HtmlHeaderNode.h \
   Keyword.h \
   Logbook.h \
   LogEntry.h
@@ -20,7 +19,6 @@ SOURCES = \
   Attachment.cpp \
   AttachmentType.cpp \
   FileCheck.cpp \
-  HtmlHeaderNode.cpp \
   Keyword.cpp \
   Logbook.cpp \
   LogEntry.cpp

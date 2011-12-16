@@ -35,7 +35,6 @@
 #include "FileDialog.h"
 #include "FileCheckDialog.h"
 #include "FileList.h"
-#include "HtmlHeaderNode.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "InformationDialog.h"

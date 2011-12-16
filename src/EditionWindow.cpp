@@ -32,7 +32,6 @@
 #include "CustomToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
-#include "HtmlHeaderNode.h"
 #include "Icons.h"
 #include "IconSize.h"
 #include "IconEngine.h"

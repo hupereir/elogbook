@@ -22,6 +22,8 @@
 
 #include "LogEntryPrintHelper.h"
 
+#include "Attachment.h"
+#include "Color.h"
 #include "ColorMenu.h"
 #include "LogEntry.h"
 #include "TextFormat.h"
@@ -46,6 +48,7 @@ void LogEntryPrintHelper::print( QPrinter* printer )
     QPointF offset( 0, 0 );
     _printHeader( printer, &painter, offset );
     _printBody( printer, &painter, offset );
+    _printAttachments( printer, &painter, offset );
 
     painter.end();
 
@@ -57,16 +60,25 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 
     Debug::Throw( "LogEntryPrintHelper::_printHeader.\n" );
 
-
     // create document
     QTextDocument document;
     const QRect pageRect( printer->pageRect() );
     document.setPageSize( printer->pageRect().size() );
+    document.setDocumentMargin(0);
     document.documentLayout()->setPaintDevice( printer );
+
+    const QFont font( document.defaultFont() );
+    const QFontMetrics metrics( font, printer );
 
     // create table
     QTextCursor cursor( &document );
-    QTextTable* table = cursor.insertTable( 5, 2, QTextTableFormat() );
+    QTextTableFormat tableFormat;
+    tableFormat.setBorderStyle( QTextFrameFormat::BorderStyle_None );
+    const int margin( metrics.averageCharWidth() );
+    tableFormat.setMargin(margin);
+    tableFormat.setCellPadding(0);
+    tableFormat.setCellSpacing(0);
+    QTextTable* table = cursor.insertTable( 5, 2, tableFormat );
 
     // populate the cells
     table->cellAt(0,0).firstCursorPosition().insertText( "Keyword: " );
@@ -85,7 +97,9 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     table->cellAt(4,1).firstCursorPosition().insertText( entry_->modification().toString() );
 
     // check for new page
-    const QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
+    QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
+    boundingRect.setWidth( pageRect.width()-5 );
+
     if( offset.y() + boundingRect.height() > pageRect.bottom() )
     {
         offset.setY(0);
@@ -95,11 +109,19 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     // render
     painter->save();
     painter->translate( offset );
+
+    // render background frame
+    QColor color( BASE::Color( entry_->color() ) );
+    if( !color.isValid() ) color = QColor( "#888888" );
+    painter->setPen( color );
+    painter->drawRect( QRectF( QPointF(0,0), boundingRect.size() ) );
+
+    // render contents
     document.drawContents( painter );
     painter->restore();
 
     // update offset
-    offset += boundingRect.bottomLeft();
+    offset.setY( offset.y() + boundingRect.height() + 2*margin );
 
 }
 
@@ -111,6 +133,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     QTextDocument document;
     const QRect pageRect( printer->pageRect() );
     document.setPageSize( pageRect.size() );
+    document.setDocumentMargin(0);
     document.documentLayout()->setPaintDevice( printer );
 
     // layout on document (using proper formats)
@@ -150,80 +173,142 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     }
 
     cursor.endEditBlock();
-//
-//     const QFont font( document.defaultFont() );
-//     const QFontMetrics metrics( font, printer );
-//     const int leading( metrics.leading() );
-//
-//     // get list of blocks from document
-//     for( QTextBlock block( document.begin() ); block.isValid(); block = block.next() )
-//     {
-//
-//         // construct text layout
-//         QTextLayout textLayout( block.text(), font, printer );
-//
-//         // layout text
-//         textLayout.beginLayout();
-//         qreal height(0);
-//         while( true )
-//         {
-//             QTextLine line = textLayout.createLine();
-//             if (!line.isValid()) break;
-//
-//             line.setLineWidth( pageRect.width() );
-//             height += leading;
-//             line.setPosition(QPointF(0, height));
-//             height += line.height();
-//         }
-//
-//         // create ranges
-//         QList<QTextLayout::FormatRange> formatRanges;
-//
-//         // iterator over text fragments
-//         for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
-//         {
-//             QTextFragment fragment = it.fragment();
-//             if( !fragment.isValid() ) continue;
-//
-//             // create corresponding FormatRange and store
-//             QTextLayout::FormatRange formatRange;
-//             formatRange.start = fragment.position();
-//             formatRange.length = fragment.length();
-//             formatRange.format = fragment.charFormat();
-//             formatRanges.push_back( formatRange );
-//
-//         }
-//
-//         // assign to layout
-//         textLayout.setAdditionalFormats( formatRanges );
-//
-//         textLayout.endLayout();
-//
-//         // increase page
-//         int textLayoutHeight( textLayout.boundingRect().height() );
-//         if( (offset.y() + textLayoutHeight ) > pageRect.bottom() )
-//         {
-//             offset.setY(0);
-//             printer->newPage();
-//
-//         }
-//
-//         // render
-//         textLayout.draw( painter, offset );
-//
-//         // update position
-//         offset.setY( offset.y() + textLayoutHeight );
-//
-//     }
 
-    // render
-    painter->save();
-    painter->translate( offset );
-    document.drawContents( painter );
-    painter->restore();
+    // rendering
+    const QFont font( document.defaultFont() );
+    const QFontMetrics metrics( font, printer );
+    const int leading( metrics.leading() );
+
+    // get list of blocks from document
+    for( QTextBlock block( document.begin() ); block.isValid(); block = block.next() )
+    {
+
+        // construct text layout
+        QTextLayout textLayout( block.text(), font, printer );
+
+        // layout text
+        textLayout.beginLayout();
+        qreal height(0);
+        while( true )
+        {
+            QTextLine line = textLayout.createLine();
+            if (!line.isValid()) break;
+
+            line.setLineWidth( pageRect.width() );
+            height += leading;
+            line.setPosition(QPointF(0, height));
+            height += line.height();
+        }
+
+        // create ranges
+        QList<QTextLayout::FormatRange> formatRanges;
+
+        // iterator over text fragments
+        for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+        {
+            QTextFragment fragment = it.fragment();
+            if( !fragment.isValid() ) continue;
+
+            // create corresponding FormatRange and store
+            QTextLayout::FormatRange formatRange;
+            formatRange.start = fragment.position() - block.position();
+            formatRange.length = fragment.length();
+            formatRange.format = fragment.charFormat();
+            formatRanges.push_back( formatRange );
+
+        }
+
+        // assign to layout
+        textLayout.setAdditionalFormats( formatRanges );
+        textLayout.endLayout();
+
+        // increase page
+        int textLayoutHeight( textLayout.boundingRect().height() );
+        if( (offset.y() + textLayoutHeight ) > pageRect.bottom() )
+        {
+            offset.setY(0);
+            printer->newPage();
+
+        }
+
+        // render
+        textLayout.draw( painter, offset );
+
+        // update position
+        offset.setY( offset.y() + textLayoutHeight );
+
+    }
 
 }
 
 //__________________________________________________________________________________
-void LogEntryPrintHelper::_printAttachments( QPrinter*, QPainter* , QPointF& ) const
-{ Debug::Throw( "LogEntryPrintHelper::_printAttachments.\n" ); }
+void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+{
+    Debug::Throw( "LogEntryPrintHelper::_printAttachments.\n" );
+
+    BASE::KeySet<Attachment> attachments( entry_ );
+    if( attachments.empty() ) return;
+
+    // create document
+    QTextDocument document;
+    const QRect pageRect( printer->pageRect() );
+    document.setPageSize( printer->pageRect().size() );
+    document.setDocumentMargin(0);
+    document.documentLayout()->setPaintDevice( printer );
+
+    const QFont font( document.defaultFont() );
+    const QFontMetrics metrics( font, printer );
+
+    // create table
+    QTextCursor cursor( &document );
+    QTextTableFormat tableFormat;
+    tableFormat.setBorderStyle( QTextFrameFormat::BorderStyle_None );
+
+    const int margin( metrics.averageCharWidth() );
+    tableFormat.setMargin(0);
+    tableFormat.setPadding(0);
+    tableFormat.setBorder(0);
+    tableFormat.setCellPadding(0);
+    tableFormat.setCellSpacing(0);
+    QTextTable* table = cursor.insertTable( attachments.size()+1, 3, tableFormat );
+
+    int row(0);
+    table->cellAt( row, 0 ).firstCursorPosition().insertText( "Attachments: " );
+    row++;
+
+    // loop over attachments
+    for( BASE::KeySet<Attachment>::const_iterator iter = attachments.begin(); iter != attachments.end(); ++iter, ++row )
+    {
+        const Attachment& attachment( **iter );
+
+        // filename
+        table->cellAt( row, 0 ).firstCursorPosition().insertText( attachment.shortFile() );
+
+        // type
+        QString buffer;
+        QTextStream( &buffer ) << "  (" << attachment.type().name() << ")  ";
+        table->cellAt( row, 1 ).firstCursorPosition().insertText( buffer );
+
+        // comments
+        table->cellAt( row, 2 ).firstCursorPosition().insertText( attachment.comments() );
+    }
+
+    // check for new page
+    QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
+    if( offset.y() + boundingRect.height() > pageRect.bottom() )
+    {
+        offset.setY(0);
+        printer->newPage();
+    }
+
+    // render
+    painter->save();
+    painter->translate( offset );
+
+    // render contents
+    document.drawContents( painter );
+    painter->restore();
+
+    // update offset
+    offset.setY( offset.y() + boundingRect.height() + 2*margin );
+}
