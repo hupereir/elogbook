@@ -44,6 +44,7 @@
 #include "MainWindow.h"
 #include "Menu.h"
 #include "Options.h"
+#include "PrintPreviewDialog.h"
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
 #include "Singleton.h"
@@ -676,11 +677,16 @@ void EditionWindow::_installActions( void )
     entryInfoAction_->setToolTip( "Show current entry information" );
     connect( entryInfoAction_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
 
-    // html
+    // print
     addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print", this ) );
-    printAction_->setToolTip( "Convert current entry to html and print" );
+    printAction_->setToolTip( "Print current logbook entry" );
     printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
+
+    // print preview
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview", this ) );
+    printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
+    connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
 
     // split action
     addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
@@ -1073,6 +1079,20 @@ void EditionWindow::_print( void )
 
     return;
 
+}
+
+//___________________________________________________________
+void EditionWindow::_printPreview( void )
+{
+    Debug::Throw( "EditionWindow::_printPreview.\n" );
+
+    // create helper
+    LogEntryPrintHelper helper( this, entry() );
+
+    // create dialog, connect and execute
+    PrintPreviewDialog dialog( this );
+    connect( dialog.previewWidget(), SIGNAL( paintRequested( QPrinter* ) ), &helper, SLOT( print( QPrinter* ) ) );
+    dialog.exec();
 }
 
 //_____________________________________________

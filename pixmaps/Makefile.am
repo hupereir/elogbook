@@ -6,6 +6,7 @@ EXTRA_DIST = \
 	attach.png \
 	document-close.png \
 	document-new.png \
+	document-print-preview.png \
 	document-save.png \
 	document-save-as.png \
 	tools-check-spelling.png \

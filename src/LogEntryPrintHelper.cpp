@@ -45,6 +45,7 @@ void LogEntryPrintHelper::print( QPrinter* printer )
 
     QPointF offset( 0, 0 );
     _printHeader( printer, &painter, offset );
+    _printBody( printer, &painter, offset );
 
     painter.end();
 
@@ -56,8 +57,10 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 
     Debug::Throw( "LogEntryPrintHelper::_printHeader.\n" );
 
+
     // create document
     QTextDocument document;
+    const QRect pageRect( printer->pageRect() );
     document.setPageSize( printer->pageRect().size() );
     document.documentLayout()->setPaintDevice( printer );
 
@@ -81,6 +84,14 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     table->cellAt(4,0).firstCursorPosition().insertText( "Modified: " );
     table->cellAt(4,1).firstCursorPosition().insertText( entry_->modification().toString() );
 
+    // check for new page
+    const QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
+    if( offset.y() + boundingRect.height() > pageRect.bottom() )
+    {
+        offset.setY(0);
+        printer->newPage();
+    }
+
     // render
     painter->save();
     painter->translate( offset );
@@ -88,7 +99,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     painter->restore();
 
     // update offset
-    offset += document.documentLayout()->frameBoundingRect( table ).bottomRight();
+    offset += boundingRect.bottomLeft();
 
 }
 
@@ -98,7 +109,8 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     Debug::Throw( "LogEntryPrintHelper::_printBody.\n" );
     // create document
     QTextDocument document;
-    document.setPageSize( printer->pageRect().size() );
+    const QRect pageRect( printer->pageRect() );
+    document.setPageSize( pageRect.size() );
     document.documentLayout()->setPaintDevice( printer );
 
     // layout on document (using proper formats)
@@ -138,8 +150,77 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     }
 
     cursor.endEditBlock();
+//
+//     const QFont font( document.defaultFont() );
+//     const QFontMetrics metrics( font, printer );
+//     const int leading( metrics.leading() );
+//
+//     // get list of blocks from document
+//     for( QTextBlock block( document.begin() ); block.isValid(); block = block.next() )
+//     {
+//
+//         // construct text layout
+//         QTextLayout textLayout( block.text(), font, printer );
+//
+//         // layout text
+//         textLayout.beginLayout();
+//         qreal height(0);
+//         while( true )
+//         {
+//             QTextLine line = textLayout.createLine();
+//             if (!line.isValid()) break;
+//
+//             line.setLineWidth( pageRect.width() );
+//             height += leading;
+//             line.setPosition(QPointF(0, height));
+//             height += line.height();
+//         }
+//
+//         // create ranges
+//         QList<QTextLayout::FormatRange> formatRanges;
+//
+//         // iterator over text fragments
+//         for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+//         {
+//             QTextFragment fragment = it.fragment();
+//             if( !fragment.isValid() ) continue;
+//
+//             // create corresponding FormatRange and store
+//             QTextLayout::FormatRange formatRange;
+//             formatRange.start = fragment.position();
+//             formatRange.length = fragment.length();
+//             formatRange.format = fragment.charFormat();
+//             formatRanges.push_back( formatRange );
+//
+//         }
+//
+//         // assign to layout
+//         textLayout.setAdditionalFormats( formatRanges );
+//
+//         textLayout.endLayout();
+//
+//         // increase page
+//         int textLayoutHeight( textLayout.boundingRect().height() );
+//         if( (offset.y() + textLayoutHeight ) > pageRect.bottom() )
+//         {
+//             offset.setY(0);
+//             printer->newPage();
+//
+//         }
+//
+//         // render
+//         textLayout.draw( painter, offset );
+//
+//         // update position
+//         offset.setY( offset.y() + textLayoutHeight );
+//
+//     }
 
-    // print document block by block
+    // render
+    painter->save();
+    painter->translate( offset );
+    document.drawContents( painter );
+    painter->restore();
 
 }
 
