@@ -36,6 +36,8 @@
 #include "Debug.h"
 #include "FileList.h"
 #include "GridLayout.h"
+#include "LogbookPrintOptionWidget.h"
+#include "LogEntryPrintOptionWidget.h"
 #include "MainWindow.h"
 #include "OptionBrowsedLineEditor.h"
 #include "OptionCheckBox.h"
@@ -72,47 +74,46 @@ BaseConfigurationDialog( parent )
     OptionSpinBox* spinbox;
 
     // attachment editors
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog - attachments.\n" );
     QWidget* page = &addPage( "Commands", "System dependent commands used to edit attachments" );
     page->layout()->addWidget( box = new QGroupBox( "Attachment Editors", page ));
 
-    GridLayout* grid_layout = new GridLayout();
-    grid_layout->setSpacing(5);
-    grid_layout->setMargin(5);
-    grid_layout->setMaxCount( 2 );
-    grid_layout->setColumnAlignment( 0, Qt::AlignRight|Qt::AlignVCenter );
-    box->setLayout( grid_layout );
+    GridLayout* gridLayout = new GridLayout();
+    gridLayout->setSpacing(5);
+    gridLayout->setMargin(5);
+    gridLayout->setMaxCount( 2 );
+    gridLayout->setColumnAlignment( 0, Qt::AlignRight|Qt::AlignVCenter );
+    box->setLayout( gridLayout );
 
     OptionBrowsedLineEditor *editor;
 
-    grid_layout->addWidget( new QLabel( "Default: ", box ) );
-    grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_UNKNOWN_ATC" ) );
+    gridLayout->addWidget( new QLabel( "Default: ", box ) );
+    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_UNKNOWN_ATC" ) );
     addOptionWidget( editor );
 
-    grid_layout->addWidget( new QLabel( "HTML: ", box ) );
-    grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_HTML_ATC" ) );
+    gridLayout->addWidget( new QLabel( "HTML: ", box ) );
+    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_HTML_ATC" ) );
     addOptionWidget( editor );
 
-    grid_layout->addWidget( new QLabel( "URL: ", box ) );
-    grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_URL_ATC" ) );
+    gridLayout->addWidget( new QLabel( "URL: ", box ) );
+    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_URL_ATC" ) );
     addOptionWidget( editor );
 
-    grid_layout->addWidget( new QLabel( "Text: ", box ) );
-    grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_PLAIN_TEXT_ATC" ) );
+    gridLayout->addWidget( new QLabel( "Text: ", box ) );
+    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_PLAIN_TEXT_ATC" ) );
     addOptionWidget( editor );
 
-    grid_layout->addWidget( new QLabel( "Postscript: ", box ) );
-    grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_POSTSCRIPT_ATC" ) );
+    gridLayout->addWidget( new QLabel( "Postscript: ", box ) );
+    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_POSTSCRIPT_ATC" ) );
     addOptionWidget( editor );
 
-    grid_layout->addWidget( new QLabel( "Image: ", box ) );
-    grid_layout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_IMAGE_ATC" ) );
+    gridLayout->addWidget( new QLabel( "Image: ", box ) );
+    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_IMAGE_ATC" ) );
     addOptionWidget( editor );
 
-    grid_layout->setColumnStretch( 1, 1 );
+    gridLayout->setColumnStretch( 1, 1 );
 
-    grid_layout->addWidget( new QLabel( "Icon size: ", box ) );
-    grid_layout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
+    gridLayout->addWidget( new QLabel( "Icon size: ", box ) );
+    gridLayout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
     spinbox->setMinimum( 8 );
     spinbox->setMaximum( 96 );
     spinbox->setToolTip( "Icon size in attachment lists" );
@@ -132,7 +133,6 @@ BaseConfigurationDialog( parent )
     box->layout()->addWidget( listbox );
 
     // listview configuration
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog - lists.\n" );
     page = &addPage( "List configuration", "Visible columns in logbook keywords and entries lists" );
     TreeViewConfiguration *listview_config = new TreeViewConfiguration(
         page,
@@ -153,49 +153,48 @@ BaseConfigurationDialog( parent )
     page->layout()->addWidget( listview_config );
 
     // toolbars
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog - toolbars.\n" );
     page = &addPage( "Toolbars", "Toolbars visibility and location" );
     box = new QGroupBox( "Toolbars", page );
     page->layout()->addWidget( box );
 
-    grid_layout = new GridLayout();
-    grid_layout->setSpacing(5);
-    grid_layout->setMargin(5);
-    grid_layout->setMaxCount(2);
-    box->setLayout( grid_layout );
+    gridLayout = new GridLayout();
+    gridLayout->setSpacing(5);
+    gridLayout->setMargin(5);
+    gridLayout->setMaxCount(2);
+    box->setLayout( gridLayout );
 
-    grid_layout->addWidget( new QLabel( "Visibility", box ) );
-    grid_layout->addWidget( new QLabel( "Location", box ) );
+    gridLayout->addWidget( new QLabel( "Visibility", box ) );
+    gridLayout->addWidget( new QLabel( "Location", box ) );
 
     OptionComboBox* combobox;
 
-    grid_layout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" ));
-    grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" ));
+    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) );
     addOptionWidget( checkbox );
     addOptionWidget( combobox );
 
-    grid_layout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" ));
-    grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" ));
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" ));
+    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" ));
     addOptionWidget( checkbox );
     addOptionWidget( combobox );
 
-    grid_layout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" ));
-    grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" ));
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" ));
+    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" ));
     addOptionWidget( checkbox );
     addOptionWidget( combobox );
 
-    grid_layout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" ));
-    grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" ));
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" ));
+    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" ));
     addOptionWidget( checkbox );
     addOptionWidget( combobox );
 
-    grid_layout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" ));
-    grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" ));
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" ));
+    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" ));
     addOptionWidget( checkbox );
     addOptionWidget( combobox );
 
-    grid_layout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" ));
-    grid_layout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" ));
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" ));
+    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" ));
     addOptionWidget( checkbox );
     addOptionWidget( combobox );
 
@@ -211,7 +210,6 @@ BaseConfigurationDialog( parent )
     addOptionWidget( combobox );
 
     // colors
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog - colors.\n" );
     page = &addPage( "Colors", "Color settings for entry tagging and text highlighting" );
     box = new QGroupBox( "Logbook entry colors", page );
     box->setLayout( new QVBoxLayout() );
@@ -234,7 +232,6 @@ BaseConfigurationDialog( parent )
     addOptionWidget( listbox );
 
     // auto save
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog - backup.\n" );
     page = &addPage( "Backup", "Logbook backup configuration" );
     box = new QGroupBox( "Auto save", page );
     page->layout()->addWidget( box );
@@ -248,14 +245,14 @@ BaseConfigurationDialog( parent )
     addOptionWidget( checkbox );
     checkbox->setToolTip( "Automatically save logbook at fixed time interval" );
 
-    QHBoxLayout* h_layout = new QHBoxLayout();
-    h_layout->setSpacing(5);
-    h_layout->setMargin(0);
-    layout->addLayout( h_layout );
+    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->setSpacing(5);
+    hLayout->setMargin(0);
+    layout->addLayout( hLayout );
 
-    h_layout->addWidget( new QLabel( "Auto save interval (seconds): ", box ) );
-    h_layout->addWidget( spinbox = new OptionSpinBox( box, "AUTO_SAVE_ITV" ) );
-    h_layout->addStretch(1);
+    hLayout->addWidget( new QLabel( "Auto save interval (seconds): ", box ) );
+    hLayout->addWidget( spinbox = new OptionSpinBox( box, "AUTO_SAVE_ITV" ) );
+    hLayout->addStretch(1);
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 3600 );
     spinbox->setToolTip( "Time interval between two automatic save" );
@@ -277,14 +274,14 @@ BaseConfigurationDialog( parent )
     checkbox->setToolTip( "Make a backup of the logbook at fixed time schedule" );
     addOptionWidget( checkbox );
 
-    h_layout = new QHBoxLayout();
-    h_layout->setSpacing(5);
-    h_layout->setMargin(0);
-    layout->addLayout( h_layout );
+    hLayout = new QHBoxLayout();
+    hLayout->setSpacing(5);
+    hLayout->setMargin(0);
+    layout->addLayout( hLayout );
 
-    h_layout->addWidget( new QLabel( "Backup interval (days): ", box ) );
-    h_layout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ) );
-    h_layout->addStretch(1);
+    hLayout->addWidget( new QLabel( "Backup interval (days): ", box ) );
+    hLayout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ) );
+    hLayout->addStretch(1);
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 365 );
     spinbox->setToolTip( "Time interval between two backups" );
@@ -296,7 +293,6 @@ BaseConfigurationDialog( parent )
 
     // spelling
     #if WITH_ASPELL
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog - spellcheck.\n" );
     page = &addPage( "Spell checking", "Spell checking configuration" );
     SpellCheckConfiguration* spell_config = new SpellCheckConfiguration( page );
     page->layout()->addWidget( spell_config );
@@ -306,6 +302,28 @@ BaseConfigurationDialog( parent )
     // edition
     textEditConfiguration();
 
+    // printing
+    page = &addPage( "Printing", "Logbook and logbook entries printing configuration" );
+
+    hLayout = new QHBoxLayout();
+    hLayout->setMargin(0);
+    hLayout->setSpacing(5);
+    page->layout()->addItem( hLayout );
+
+    hLayout->addWidget( box = new QGroupBox( "Logbook", page ) );
+    box->setLayout( new QVBoxLayout() );
+    LogbookPrintOptionWidget* logbookPrintOptionWidget = new LogbookPrintOptionWidget( box );
+    box->layout()->addWidget( logbookPrintOptionWidget );
+    addOptionWidget( logbookPrintOptionWidget );
+
+    hLayout->addWidget( box = new QGroupBox( "Logbook entries", page ) );
+    box->setLayout( new QVBoxLayout() );
+    LogEntryPrintOptionWidget* logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
+    box->layout()->addWidget( logEntryPrintOptionWidget );
+    addOptionWidget( logEntryPrintOptionWidget );
+
+    (static_cast<QVBoxLayout*>(box->layout()))->addStretch(1);
+
     // recent files
     page = &addPage( "Recent files", "Recent files list settings", true );
     RecentFilesConfiguration* recentFilesConfiguration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
@@ -313,7 +331,6 @@ BaseConfigurationDialog( parent )
     addOptionWidget( recentFilesConfiguration );
 
     // misc
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog - misc.\n" );
     page = &addPage( "Misc", "Additional unsorted settings" );
 
     // server configuration
@@ -322,19 +339,19 @@ BaseConfigurationDialog( parent )
     addOptionWidget( server_configuration );
 
     box = new QGroupBox( "Misc", page );
-    grid_layout = new GridLayout();
-    grid_layout->setSpacing(5);
-    grid_layout->setMargin(5);
-    grid_layout->setMaxCount( 2 );
-    box->setLayout( grid_layout );
+    gridLayout = new GridLayout();
+    gridLayout->setSpacing(5);
+    gridLayout->setMargin(5);
+    gridLayout->setMaxCount( 2 );
+    box->setLayout( gridLayout );
     page->layout()->addWidget( box );
 
-    grid_layout->addWidget( new QLabel( "Maximum number of stored recent entries: ", box ) );
-    grid_layout->addWidget( spinbox = new OptionSpinBox( box, "MAX_RECENT_ENTRIES" ) );
+    gridLayout->addWidget( new QLabel( "Maximum number of stored recent entries: ", box ) );
+    gridLayout->addWidget( spinbox = new OptionSpinBox( box, "MAX_RECENT_ENTRIES" ) );
     spinbox->setToolTip( "Maximum number of entries that appear in the <i>Recent Entries</i> menu." );
     addOptionWidget( spinbox );
 
-    grid_layout->addWidget( checkbox = new OptionCheckBox( "Case sensitive text/entry finding", box, "CASE_SENSITIVE" ), 1, 0, 1, 2 );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Case sensitive text/entry finding", box, "CASE_SENSITIVE" ), 1, 0, 1, 2 );
     checkbox->setToolTip( "Toggle case sensitive text search" );
     addOptionWidget( checkbox );
 

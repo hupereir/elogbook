@@ -40,6 +40,7 @@
 #include "LogEntry.h"
 #include "LogEntryInformationDialog.h"
 #include "LogEntryPrintHelper.h"
+#include "LogEntryPrintOptionWidget.h"
 #include "MainWindow.h"
 #include "Menu.h"
 #include "Options.h"
@@ -1064,8 +1065,13 @@ void EditionWindow::_print( void )
     // create printer
     QPrinter printer( QPrinter::HighResolution );
 
+    // create option widget
+    LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
+    optionWidget->read();
+
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
+    dialog.setOptionTabs( QList<QWidget *>() << optionWidget );
     dialog.setWindowTitle( "Print Document - qedit" );
     if( dialog.exec() == QDialog::Rejected ) return;
 
@@ -1073,8 +1079,17 @@ void EditionWindow::_print( void )
     if( !printer.outputFileName().isEmpty() )
     { Singleton::get().application<Application>()->scratchFileMonitor().add( printer.outputFileName() ); }
 
+    // create print helper
+    LogEntryPrintHelper helper( this );
+    helper.setEntry( entry() );
+
+    // retrieve mask and assign
+    const unsigned int mask( optionWidget->mask() );
+    optionWidget->write();
+    helper.setMask( mask );
+
     // print
-    LogEntryPrintHelper( this, entry() ).print( &printer );
+    helper.print( &printer );
 
     return;
 
@@ -1086,12 +1101,15 @@ void EditionWindow::_printPreview( void )
     Debug::Throw( "EditionWindow::_printPreview.\n" );
 
     // create helper
-    LogEntryPrintHelper helper( this, entry() );
+    LogEntryPrintHelper helper( this );
+    helper.setEntry( entry() );
+    helper.setMask( XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );
     connect( dialog.previewWidget(), SIGNAL( paintRequested( QPrinter* ) ), &helper, SLOT( print( QPrinter* ) ) );
     dialog.exec();
+
 }
 
 //_____________________________________________

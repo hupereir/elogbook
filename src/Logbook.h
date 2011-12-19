@@ -66,22 +66,6 @@ class Logbook:public QObject, public Counter, public BASE::Key
     //! max number of entries in logbook (make child logbook if larger)
     enum { MAX_ENTRIES = 50 };
 
-    //! HTML flags
-    enum HtmlTag
-    {
-        HTML_TITLE = 1<<0,
-        HTML_AUTHOR = 1<<1,
-        HTML_FILE = 1<<2,
-        HTML_CREATION = 1<<3,
-        HTML_MODIFICATION = 1<<4,
-        HTML_BACKUP = 1<<5,
-        HTML_DIRECTORY = 1<<6,
-        HTML_COMMENTS = 1<< 7,
-        HTML_TABLE = 1<<8,
-        HTML_CONTENT = 1<<9,
-        HTML_ALL_MASK = (1<<10)-1
-    };
-
     //! constructor from file
     Logbook( const File& file = File("") );
 

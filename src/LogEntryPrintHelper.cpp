@@ -29,6 +29,9 @@
 #include "TextFormat.h"
 #include "TextPosition.h"
 
+#include <QtCore/QList>
+#include <QtCore/QPair>
+
 #include <QtGui/QAbstractTextDocumentLayout>
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocument>
@@ -38,19 +41,41 @@
 //__________________________________________________________________________________
 void LogEntryPrintHelper::print( QPrinter* printer )
 {
-
     Debug::Throw( "LogEntryPrintHelper::print.\n" );
+
+    // check entry
+    assert( entry_ );
+
+    // do nothing if mask is empty
+    if( !mask_ ) return;
 
     // create painter on printer
     QPainter painter;
     painter.begin(printer);
 
+    // print everything
     QPointF offset( 0, 0 );
-    _printHeader( printer, &painter, offset );
-    _printBody( printer, &painter, offset );
-    _printAttachments( printer, &painter, offset );
-
+    printEntry( printer, &painter, offset );
     painter.end();
+
+}
+
+//__________________________________________________________________________________
+void LogEntryPrintHelper::printEntry( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+{
+
+    Debug::Throw( "LogEntryPrintHelper::printEntry.\n" );
+
+    // check entry
+    assert( entry_ );
+
+    // do nothing if mask is empty
+    if( !mask_ ) return;
+
+    // print everything
+    _printHeader( printer, painter, offset );
+    _printBody( printer, painter, offset );
+    _printAttachments( printer, painter, offset );
 
 }
 
@@ -59,6 +84,9 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 {
 
     Debug::Throw( "LogEntryPrintHelper::_printHeader.\n" );
+
+    // check mask
+    if( !( mask_ & ENTRY_HEADER ) ) return;
 
     // create document
     QTextDocument document;
@@ -70,6 +98,17 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     const QFont font( document.defaultFont() );
     const QFontMetrics metrics( font, printer );
 
+    // get table cells
+    typedef QPair<QString, QString> StringPair;
+    typedef QList<StringPair> StringList;
+    StringList values;
+    if( mask_&ENTRY_KEYWORD ) values.push_back( StringPair( "Keyword: ", entry_->keyword().get() ) );
+    if( mask_&ENTRY_TITLE ) values.push_back( StringPair( "Title: ", entry_->title() ) );
+    if( mask_&ENTRY_AUTHOR ) values.push_back( StringPair( "Author: ", entry_->author() ) );
+    if( mask_&ENTRY_CREATION ) values.push_back( StringPair( "Created: ", entry_->creation().toString() ) );
+    if( mask_&ENTRY_MODIFICATION ) values.push_back( StringPair( "Modified: ", entry_->modification().toString() ) );
+    const int nRows( values.size() );
+
     // create table
     QTextCursor cursor( &document );
     QTextTableFormat tableFormat;
@@ -78,23 +117,14 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     tableFormat.setMargin(margin);
     tableFormat.setCellPadding(0);
     tableFormat.setCellSpacing(0);
-    QTextTable* table = cursor.insertTable( 5, 2, tableFormat );
+    QTextTable* table = cursor.insertTable( nRows, 2, tableFormat );
 
-    // populate the cells
-    table->cellAt(0,0).firstCursorPosition().insertText( "Keyword: " );
-    table->cellAt(0,1).firstCursorPosition().insertText( entry_->keyword().get() );
-
-    table->cellAt(1,0).firstCursorPosition().insertText( "Title: " );
-    table->cellAt(1,1).firstCursorPosition().insertText( entry_->title() );
-
-    table->cellAt(2,0).firstCursorPosition().insertText( "Author: " );
-    table->cellAt(2,1).firstCursorPosition().insertText( entry_->author() );
-
-    table->cellAt(3,0).firstCursorPosition().insertText( "Created: " );
-    table->cellAt(3,1).firstCursorPosition().insertText( entry_->creation().toString() );
-
-    table->cellAt(4,0).firstCursorPosition().insertText( "Modified: " );
-    table->cellAt(4,1).firstCursorPosition().insertText( entry_->modification().toString() );
+    // populate cells
+    for( int row=0; row < nRows; ++row )
+    {
+        table->cellAt(row,0).firstCursorPosition().insertText( values[row].first );
+        table->cellAt(row,1).firstCursorPosition().insertText( values[row].second );
+    }
 
     // check for new page
     QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
@@ -129,6 +159,10 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPointF& offset ) const
 {
     Debug::Throw( "LogEntryPrintHelper::_printBody.\n" );
+
+    // check mask
+    if( !(mask_&ENTRY_TEXT ) ) return;
+
     // create document
     QTextDocument document;
     const QRect pageRect( printer->pageRect() );
@@ -246,6 +280,10 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
 {
     Debug::Throw( "LogEntryPrintHelper::_printAttachments.\n" );
 
+    // check mask
+    if( !(mask_&ENTRY_ATTACHMENTS) ) return;
+
+    // check attachments
     BASE::KeySet<Attachment> attachments( entry_ );
     if( attachments.empty() ) return;
 

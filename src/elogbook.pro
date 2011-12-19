@@ -69,9 +69,13 @@ FormatBar.h \
 KeywordModel.h \
 LogbookInformationDialog.h \
 LogbookModifiedDialog.h \
+LogbookPrintHelper.h \
+LogbookPrintOptionWidget.h \
 LogbookStatisticsDialog.h \
 LogEntryInformationDialog.h \
 LogEntryModel.h \
+LogEntryPrintHelper.h \
+LogEntryPrintOptionWidget.h \
 MainWindow.h \
 Menu.h \
 NewAttachmentDialog.h \
@@ -98,8 +102,12 @@ FormatBar.cpp \
 KeywordModel.cpp \
 LogbookInformationDialog.cpp \
 LogbookModifiedDialog.cpp \
+LogbookPrintHelper.cpp \
+LogbookPrintOptionWidget.cpp \
 LogbookStatisticsDialog.cpp \
 LogEntryInformationDialog.cpp \
+LogEntryPrintHelper.cpp \
+LogEntryPrintOptionWidget.cpp \
 LogEntryModel.cpp \
 MainWindow.cpp \
 Menu.cpp \

@@ -63,26 +63,6 @@ class LogEntry:public Counter, public BASE::Key
     //! return a new entry cloned from this
     LogEntry *clone( void ) const;
 
-    //! HTML output configuration output
-    enum HtmlTag
-    {
-        HTML_TITLE = 1<<0,
-        HTML_KEYWORD = 1<<1,
-        HTML_CREATION = 1<<2,
-        HTML_MODIFICATION = 1<<3,
-        HTML_AUTHOR = 1<<4,
-        HTML_TEXT = 1<<5,
-        HTML_ATTACHMENT = 1<<6,
-        HTML_HEADER_MASK =
-        HTML_TITLE |
-        HTML_KEYWORD |
-        HTML_CREATION |
-        HTML_MODIFICATION |
-        HTML_AUTHOR,
-
-        HTML_ALL_MASK = HTML_HEADER_MASK | HTML_TEXT
-    };
-
     //! used to tag LogEntry drag from LogEntryList
     static const QString DRAG;
 

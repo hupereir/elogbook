@@ -1,5 +1,5 @@
-#ifndef LogEntryPrintHelper_h
-#define LogEntryPrintHelper_h
+#ifndef LogbookPrintHelper_h
+#define LogbookPrintHelper_h
 
 // $Id$
 /******************************************************************************
@@ -25,15 +25,17 @@
 
 #include "Counter.h"
 #include "Debug.h"
+#include "LogEntryModel.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 
+class Logbook;
 class LogEntry;
 
-//! printing utility
-class LogEntryPrintHelper: public QObject, public Counter
+//! printing utilityclass
+class LogbookPrintHelper: public QObject, public Counter
 {
 
     Q_OBJECT
@@ -43,39 +45,46 @@ class LogEntryPrintHelper: public QObject, public Counter
     //! HTML output configuration output
     enum Mask
     {
-        ENTRY_KEYWORD = 1<<0,
-        ENTRY_TITLE = 1<<1,
-        ENTRY_AUTHOR = 1<<2,
-        ENTRY_CREATION = 1<<3,
-        ENTRY_MODIFICATION = 1<<4,
-        ENTRY_TEXT = 1<<5,
-        ENTRY_ATTACHMENTS = 1<<6,
-        ENTRY_HEADER = ENTRY_TITLE | ENTRY_KEYWORD | ENTRY_CREATION | ENTRY_MODIFICATION | ENTRY_AUTHOR,
-        ENTRY_ALL = ENTRY_HEADER | ENTRY_TEXT | ENTRY_ATTACHMENTS
+        LOGBOOK_TITLE = 1<<0,
+        LOGBOOK_COMMENTS = 1<< 1,
+        LOGBOOK_AUTHOR = 1<<2,
+        LOGBOOK_FILE = 1<<3,
+        LOGBOOK_DIRECTORY = 1<<4,
+        LOGBOOK_CREATION = 1<<5,
+        LOGBOOK_MODIFICATION = 1<<6,
+        LOGBOOK_BACKUP = 1<<7,
+        LOGBOOK_TABLE = 1<<8,
+        LOGBOOK_CONTENT = 1<<9,
+        LOGBOOK_HEADER =
+            LOGBOOK_TITLE|LOGBOOK_AUTHOR|LOGBOOK_FILE|
+            LOGBOOK_CREATION|LOGBOOK_MODIFICATION|LOGBOOK_BACKUP|
+            LOGBOOK_DIRECTORY|LOGBOOK_COMMENTS,
+        LOGBOOK_ALL = LOGBOOK_HEADER|LOGBOOK_TABLE|LOGBOOK_CONTENT
     };
 
     //! constructor
-    LogEntryPrintHelper( QObject* parent ):
+    LogbookPrintHelper( QObject* parent ):
         QObject( parent ),
-        Counter( "LogEntryPrintHelper" ),
-        mask_( ENTRY_ALL ),
-        entry_( 0 )
-    { Debug::Throw( "LogEntryPrintHelper::LogEntryPrintHelper.\n" ); };
+        Counter( "LogbookPrintHelper" ),
+        mask_( LOGBOOK_ALL ),
+        logbook_( 0 )
+    { Debug::Throw( "LogbookPrintHelper::LogbookPrintHelper.\n" ); };
 
     //! destructor
-    virtual ~LogEntryPrintHelper( void )
+    virtual ~LogbookPrintHelper( void )
     {}
 
-    //! entry
-    void setEntry( LogEntry* entry )
-    { entry_ = entry; }
+    //! logbook
+    void setLogbook( Logbook* logbook )
+    { logbook_ = logbook; }
+
+    //! entries
+    void setEntries( const LogEntryModel::List& entries )
+    { entries_ = entries; }
 
     //! mask
     void setMask( unsigned int value )
     { mask_ = value; }
-
-    // print entry
-    void printEntry( QPrinter*, QPainter*, QPointF& ) const;
 
     public slots:
 
@@ -87,19 +96,22 @@ class LogEntryPrintHelper: public QObject, public Counter
     //! print header
     void _printHeader( QPrinter*, QPainter*, QPointF& ) const;
 
-    //! print body
-    void _printBody( QPrinter*, QPainter*, QPointF& ) const;
+    //! print table
+    void _printTable( QPrinter*, QPainter*, QPointF& ) const;
 
-    //! print attachments
-    void _printAttachments( QPrinter*, QPainter*, QPointF& ) const;
+    //! print contents
+    void _printEntries( QPrinter*, QPainter*, QPointF& ) const;
 
     private:
 
     //! mask
     unsigned int mask_;
 
-    //! log entry
-    LogEntry* entry_;
+    //! logbook
+    Logbook* logbook_;
+
+    //! logbook entries
+    LogEntryModel::List entries_;
 
 };
 
