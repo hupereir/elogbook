@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "Counter.h"
+#include "BasePrintHelper.h"
 #include "Debug.h"
 #include "LogEntryModel.h"
 #include "LogEntryPrintHelper.h"
@@ -37,7 +38,7 @@ class Logbook;
 class LogEntry;
 
 //! printing utilityclass
-class LogbookPrintHelper: public PrintHelper, public Counter
+class LogbookPrintHelper: public BasePrintHelper, public Counter
 {
 
     Q_OBJECT
@@ -66,11 +67,12 @@ class LogbookPrintHelper: public PrintHelper, public Counter
 
     //! constructor
     LogbookPrintHelper( QObject* parent = 0 ):
-        PrintHelper( parent ),
+        BasePrintHelper( parent ),
         Counter( "LogbookPrintHelper" ),
         mask_( LOGBOOK_ALL ),
         entryMask_( LogEntryPrintHelper::ENTRY_ALL ),
         logbook_( 0 ),
+        progressDialog_( 0 ),
         progress_( 0 )
     { Debug::Throw( "LogbookPrintHelper::LogbookPrintHelper.\n" ); };
 
@@ -124,7 +126,10 @@ class LogbookPrintHelper: public PrintHelper, public Counter
     //! logbook entries
     LogEntryModel::List entries_;
 
-    // progress dialog
+    //! progress dialog
+    QProgressDialog* progressDialog_;
+
+    //! progress
     int progress_;
 
 };

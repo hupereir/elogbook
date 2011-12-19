@@ -63,7 +63,12 @@ void LogbookPrintHelper::print( QPrinter* printer )
     if( (mask_&LOGBOOK_CONTENT) && (entryMask_&LogEntryPrintHelper::ENTRY_ALL) ) maxValue += entries_.size();
 
     if( maxValue )
-    {}
+    {
+        progress_ = 0;
+        progressDialog_ = new QProgressDialog( "Generating print output ...", "Cancel", 0, maxValue );
+        progressDialog_->setWindowTitle( "Print Logbook - elogbook" );
+        progressDialog_->setWindowModality(Qt::WindowModal);
+    }
 
     // print everything
     QPointF offset( 0, 0 );
@@ -73,6 +78,12 @@ void LogbookPrintHelper::print( QPrinter* printer )
 
     painter.end();
 
+    if( progressDialog_ )
+    {
+        progressDialog_->setValue( maxValue );
+        progressDialog_->deleteLater();
+        progressDialog_ = 0;
+    }
 }
 
 //__________________________________________________________________________________
@@ -225,6 +236,9 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
             table->cellAt(row,2).firstCursorPosition().insertText( entry.creation().toString() + "  " );
             table->cellAt(row,3).firstCursorPosition().insertText( entry.modification().toString() + "  " );
 
+            // update progress
+            if( progressDialog_ ) progressDialog_->setValue( ++progress_ );
+
         }
 
         // remove empty rows
@@ -285,6 +299,9 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
         helper.setEntry( *iter );
         helper.setMask( entryMask_ );
         helper.printEntry( printer, painter, offset );
+
+        // update progress
+        if( progressDialog_ ) progressDialog_->setValue( ++progress_ );
 
     }
 

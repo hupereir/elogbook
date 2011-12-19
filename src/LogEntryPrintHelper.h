@@ -25,7 +25,7 @@
 
 #include "Counter.h"
 #include "Debug.h"
-#include "PrintHelper.h"
+#include "BasePrintHelper.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QPainter>
@@ -34,7 +34,7 @@
 class LogEntry;
 
 //! printing utility
-class LogEntryPrintHelper: public PrintHelper, public Counter
+class LogEntryPrintHelper: public BasePrintHelper, public Counter
 {
 
     Q_OBJECT
@@ -57,7 +57,7 @@ class LogEntryPrintHelper: public PrintHelper, public Counter
 
     //! constructor
     LogEntryPrintHelper( QObject* parent = 0 ):
-        PrintHelper( parent ),
+        BasePrintHelper( parent ),
         Counter( "LogEntryPrintHelper" ),
         mask_( ENTRY_ALL ),
         entry_( 0 )
