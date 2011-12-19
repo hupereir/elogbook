@@ -1072,21 +1072,22 @@ void EditionWindow::_print( void )
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
     dialog.setOptionTabs( QList<QWidget *>() << optionWidget );
-    dialog.setWindowTitle( "Print Document - qedit" );
+    dialog.setWindowTitle( "Print Logbook Entry - elogbook" );
     if( dialog.exec() == QDialog::Rejected ) return;
 
     // add output file to scratch files, if any
     if( !printer.outputFileName().isEmpty() )
     { Singleton::get().application<Application>()->scratchFileMonitor().add( printer.outputFileName() ); }
 
+    // write options
+    optionWidget->write();
+
     // create print helper
     LogEntryPrintHelper helper( this );
     helper.setEntry( entry() );
 
     // retrieve mask and assign
-    const unsigned int mask( optionWidget->mask() );
-    optionWidget->write();
-    helper.setMask( mask );
+    helper.setMask( optionWidget->mask() );
 
     // print
     helper.print( &printer );
@@ -1099,6 +1100,9 @@ void EditionWindow::_print( void )
 void EditionWindow::_printPreview( void )
 {
     Debug::Throw( "EditionWindow::_printPreview.\n" );
+
+    // check if entry is modified
+    if( modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // create helper
     LogEntryPrintHelper helper( this );

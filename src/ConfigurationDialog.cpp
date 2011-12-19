@@ -322,8 +322,6 @@ BaseConfigurationDialog( parent )
     box->layout()->addWidget( logEntryPrintOptionWidget );
     addOptionWidget( logEntryPrintOptionWidget );
 
-    (static_cast<QVBoxLayout*>(box->layout()))->addStretch(1);
-
     // recent files
     page = &addPage( "Recent files", "Recent files list settings", true );
     RecentFilesConfiguration* recentFilesConfiguration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );

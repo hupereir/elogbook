@@ -23,6 +23,7 @@
 #include "LogbookPrintHelper.h"
 
 #include "Logbook.h"
+#include "LogEntry.h"
 
 #include <QtCore/QList>
 #include <QtCore/QPair>
@@ -32,6 +33,8 @@
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextTable>
 #include <QtGui/QTextTableFormat>
+
+#include <cmath>
 
 //__________________________________________________________________________________
 void LogbookPrintHelper::print( QPrinter* printer )
@@ -44,14 +47,26 @@ void LogbookPrintHelper::print( QPrinter* printer )
     // do nothing if mask is empty
     if( !mask_ ) return;
 
+    // setup
+    setupPage( printer );
+    setFile( logbook_->file() );
+
     // create painter on printer
     QPainter painter;
     painter.begin(printer);
 
-    // print everything
-    QPointF offset( 0, 0 );
+    _newPage( printer, &painter );
+
+    // progress dialog
+    int maxValue(0);
+    if( mask_ & LOGBOOK_TABLE ) maxValue += entries_.size();
+    if( (mask_&LOGBOOK_CONTENT) && (entryMask_&LogEntryPrintHelper::ENTRY_ALL) ) maxValue += entries_.size();
+
+    if( maxValue )
+    {}
 
     // print everything
+    QPointF offset( 0, 0 );
     _printHeader( printer, &painter, offset );
     _printTable( printer, &painter, offset );
     _printEntries( printer, &painter, offset );
@@ -61,7 +76,7 @@ void LogbookPrintHelper::print( QPrinter* printer )
 }
 
 //__________________________________________________________________________________
-void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
     Debug::Throw( "LogbookPrintHelper::_printHeader.\n" );
@@ -71,8 +86,8 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
 
     // create document
     QTextDocument document;
-    const QRect pageRect( printer->pageRect() );
-    document.setPageSize( printer->pageRect().size() );
+    const QRect pageRect( _pageRect() );
+    document.setPageSize( _pageRect().size() );
     document.setDocumentMargin(0);
     document.documentLayout()->setPaintDevice( printer );
 
@@ -107,6 +122,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     QTextCursor cursor( &document );
     QTextTableFormat tableFormat;
     tableFormat.setBorderStyle( QTextFrameFormat::BorderStyle_None );
+
     const int margin( metrics.averageCharWidth() );
     tableFormat.setMargin(margin);
     tableFormat.setCellPadding(0);
@@ -124,15 +140,15 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
     boundingRect.setWidth( pageRect.width()-5 );
 
-    if( offset.y() + boundingRect.height() > pageRect.bottom() )
+    if( offset.y() + boundingRect.height() > pageRect.height() )
     {
         offset.setY(0);
-        printer->newPage();
+        _newPage( printer, painter );
     }
 
-    // render
+    // setup painter
     painter->save();
-    painter->translate( offset );
+    painter->translate( pageRect.topLeft() + offset );
 
     // render background frame
     painter->setPen( QColor( "#888888" ) );
@@ -149,7 +165,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
 
 
 //__________________________________________________________________________________
-void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
     Debug::Throw( "LogbookPrintHelper::_printTable.\n" );
@@ -159,11 +175,93 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
 
     // check mask
     if( !( mask_ & LOGBOOK_TABLE ) ) return;
+
+    // calculate number of entries per page
+    const QFont font( QTextDocument().defaultFont() );
+    const QFontMetrics metrics( font, printer );
+    const QRect pageRect( _pageRect() );
+
+    LogEntryModel::List::const_iterator iter = entries_.begin();
+    while( iter != entries_.end() )
+    {
+
+        // calculate number of rows
+        const int nRows = std::floor( qreal(pageRect.height() - offset.y() ) / (1+metrics.lineSpacing()) );
+
+        // create document
+        QTextDocument document;
+        document.setPageSize( _pageRect().size() );
+        document.setDocumentMargin(0);
+        document.documentLayout()->setPaintDevice( printer );
+
+        QTextCursor cursor( &document );
+        QTextTableFormat tableFormat;
+        tableFormat.setBorderStyle( QTextFrameFormat::BorderStyle_None );
+
+        tableFormat.setMargin(0);
+        tableFormat.setPadding(0);
+        tableFormat.setBorder(0);
+        tableFormat.setCellPadding(0);
+        tableFormat.setCellSpacing(0);
+        tableFormat.setWidth( QTextLength( QTextLength::PercentageLength, 100 ) );
+        QTextTable* table = cursor.insertTable( nRows, 4, tableFormat );
+
+        // header
+        QTextTableCellFormat cellFormat;
+        cellFormat.setFontWeight( QFont::Bold );
+        QTextTableCell cell;
+        (cell = table->cellAt(0,0)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Keyword" );
+        (cell = table->cellAt(0,1)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Title" );
+        (cell = table->cellAt(0,2)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Created" );
+        (cell = table->cellAt(0,3)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Last modified" );
+
+        int row(1);
+        for( ;iter != entries_.end() && row < nRows; ++iter, ++row )
+        {
+
+            const LogEntry& entry( **iter );
+            table->cellAt(row,0).firstCursorPosition().insertText( entry.keyword().get() + "  " );
+            table->cellAt(row,1).firstCursorPosition().insertText( entry.title() + "  " );
+            table->cellAt(row,2).firstCursorPosition().insertText( entry.creation().toString() + "  " );
+            table->cellAt(row,3).firstCursorPosition().insertText( entry.modification().toString() + "  " );
+
+        }
+
+        // remove empty rows
+        if( row + 1 < nRows ) table->removeRows( row+1, nRows - row+1 );
+
+        // check for new page
+        QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
+        boundingRect.setWidth( pageRect.width()-5 );
+
+        // setup painter
+        painter->save();
+        painter->translate( pageRect.topLeft() + offset );
+
+        // render contents
+        document.drawContents( painter );
+        painter->restore();
+
+        // new page
+        if( iter == entries_.end() )
+        {
+
+            const int margin( metrics.averageCharWidth() );
+            offset.setY( offset.y() + boundingRect.height() + 2*margin );
+
+        } else {
+
+            offset.setY(0);
+            _newPage( printer, painter );
+        }
+
+    }
+
 }
 
 
 //__________________________________________________________________________________
-void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
     Debug::Throw( "LogbookPrintHelper::_printEntries.\n" );
@@ -171,6 +269,24 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     // check entries
     if( entries_.empty() ) return;
 
+    // check entries
+    if( !( entryMask_ & LogEntryPrintHelper::ENTRY_ALL ) ) return;
+
     // check mask
     if( !( mask_ & LOGBOOK_CONTENT ) ) return;
+
+    LogEntryPrintHelper helper;
+    helper.setupPage( printer );
+    helper.setFile( logbook_->file() );
+    helper.setPageNumber( _pageNumber() );
+    for( LogEntryModel::List::const_iterator iter = entries_.begin(); iter != entries_.end(); iter++ )
+    {
+
+        helper.setEntry( *iter );
+        helper.setMask( entryMask_ );
+        helper.printEntry( printer, painter, offset );
+
+    }
+
+
 }

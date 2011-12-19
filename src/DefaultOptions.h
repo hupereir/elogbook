@@ -38,6 +38,7 @@
 
 #include "LogbookPrintHelper.h"
 #include "LogEntryPrintHelper.h"
+#include "LogEntryPrintSelectionWidget.h"
 
 //_____________________________________________________
 //! Default options installer
@@ -124,6 +125,7 @@ void installDefaultOptions( void )
     XmlOptions::get().set( "USE_TREE", "1" );
 
     XmlOptions::get().set( "LOGENTRY_PRINT_OPTION_MASK", QString().setNum( LogEntryPrintHelper::ENTRY_ALL ) );
+    XmlOptions::get().set( "LOGENTRY_PRINT_SELECTION", QString().setNum( LogEntryPrintSelectionWidget::ALL_ENTRIES ) );
     XmlOptions::get().set( "LOGBOOK_PRINT_OPTION_MASK", QString().setNum( LogbookPrintHelper::LOGBOOK_ALL ) );
 
     // masks

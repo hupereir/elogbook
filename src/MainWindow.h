@@ -259,6 +259,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& printAction( void ) const
     { return *printAction_; }
 
+    //! print preview
+    QAction& printPreviewAction( void ) const
+    { return *printPreviewAction_; }
+
     //! logbook information
     QAction& logbookInformationsAction( void ) const
     { return *logbookInformationsAction_; }
@@ -393,6 +397,12 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! revert logbook to saved version
     void _revertToSaved( void );
+
+    //! Print current document
+    void _print( void );
+
+    //! Print current document
+    void _printPreview( void );
 
     //! opens a logbook merge it to the existing onecomments
     void _synchronize( void );
@@ -698,6 +708,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! convert logbook to html
     QAction* printAction_;
+
+    //! print preview
+    QAction* printPreviewAction_;
 
     //! logbook information
     QAction* logbookInformationsAction_;

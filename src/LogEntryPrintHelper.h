@@ -25,6 +25,7 @@
 
 #include "Counter.h"
 #include "Debug.h"
+#include "PrintHelper.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QPainter>
@@ -33,7 +34,7 @@
 class LogEntry;
 
 //! printing utility
-class LogEntryPrintHelper: public QObject, public Counter
+class LogEntryPrintHelper: public PrintHelper, public Counter
 {
 
     Q_OBJECT
@@ -55,8 +56,8 @@ class LogEntryPrintHelper: public QObject, public Counter
     };
 
     //! constructor
-    LogEntryPrintHelper( QObject* parent ):
-        QObject( parent ),
+    LogEntryPrintHelper( QObject* parent = 0 ):
+        PrintHelper( parent ),
         Counter( "LogEntryPrintHelper" ),
         mask_( ENTRY_ALL ),
         entry_( 0 )
@@ -75,7 +76,7 @@ class LogEntryPrintHelper: public QObject, public Counter
     { mask_ = value; }
 
     // print entry
-    void printEntry( QPrinter*, QPainter*, QPointF& ) const;
+    void printEntry( QPrinter*, QPainter*, QPointF& );
 
     public slots:
 
@@ -85,13 +86,13 @@ class LogEntryPrintHelper: public QObject, public Counter
     protected:
 
     //! print header
-    void _printHeader( QPrinter*, QPainter*, QPointF& ) const;
+    void _printHeader( QPrinter*, QPainter*, QPointF& );
 
     //! print body
-    void _printBody( QPrinter*, QPainter*, QPointF& ) const;
+    void _printBody( QPrinter*, QPainter*, QPointF& );
 
     //! print attachments
-    void _printAttachments( QPrinter*, QPainter*, QPointF& ) const;
+    void _printAttachments( QPrinter*, QPainter*, QPointF& );
 
     private:
 

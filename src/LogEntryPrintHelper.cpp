@@ -26,6 +26,7 @@
 #include "Color.h"
 #include "ColorMenu.h"
 #include "LogEntry.h"
+#include "Logbook.h"
 #include "TextFormat.h"
 #include "TextPosition.h"
 
@@ -49,9 +50,19 @@ void LogEntryPrintHelper::print( QPrinter* printer )
     // do nothing if mask is empty
     if( !mask_ ) return;
 
+    // setup
+    setupPage( printer );
+
+    // get associated logbook
+    BASE::KeySet<Logbook> logbooks( entry_ );
+    if( !logbooks.empty() ) setFile( (*logbooks.begin())->file() );
+
     // create painter on printer
     QPainter painter;
     painter.begin(printer);
+
+    // page
+    _newPage( printer, &painter );
 
     // print everything
     QPointF offset( 0, 0 );
@@ -61,7 +72,7 @@ void LogEntryPrintHelper::print( QPrinter* printer )
 }
 
 //__________________________________________________________________________________
-void LogEntryPrintHelper::printEntry( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+void LogEntryPrintHelper::printEntry( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
     Debug::Throw( "LogEntryPrintHelper::printEntry.\n" );
@@ -80,7 +91,7 @@ void LogEntryPrintHelper::printEntry( QPrinter* printer, QPainter* painter, QPoi
 }
 
 //__________________________________________________________________________________
-void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
     Debug::Throw( "LogEntryPrintHelper::_printHeader.\n" );
@@ -90,8 +101,8 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 
     // create document
     QTextDocument document;
-    const QRect pageRect( printer->pageRect() );
-    document.setPageSize( printer->pageRect().size() );
+    const QRect pageRect( _pageRect() );
+    document.setPageSize( pageRect.size() );
     document.setDocumentMargin(0);
     document.documentLayout()->setPaintDevice( printer );
 
@@ -113,6 +124,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     QTextCursor cursor( &document );
     QTextTableFormat tableFormat;
     tableFormat.setBorderStyle( QTextFrameFormat::BorderStyle_None );
+
     const int margin( metrics.averageCharWidth() );
     tableFormat.setMargin(margin);
     tableFormat.setCellPadding(0);
@@ -130,15 +142,15 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
     boundingRect.setWidth( pageRect.width()-5 );
 
-    if( offset.y() + boundingRect.height() > pageRect.bottom() )
+    if( offset.y() + boundingRect.height() > pageRect.height() )
     {
         offset.setY(0);
-        printer->newPage();
+        _newPage( printer, painter );
     }
 
-    // render
+    // setup painter
     painter->save();
-    painter->translate( offset );
+    painter->translate( pageRect.topLeft() + offset );
 
     // render background frame
     QColor color( BASE::Color( entry_->color() ) );
@@ -156,7 +168,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 }
 
 //__________________________________________________________________________________
-void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
     Debug::Throw( "LogEntryPrintHelper::_printBody.\n" );
 
@@ -165,7 +177,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
 
     // create document
     QTextDocument document;
-    const QRect pageRect( printer->pageRect() );
+    const QRect pageRect( _pageRect() );
     document.setPageSize( pageRect.size() );
     document.setDocumentMargin(0);
     document.documentLayout()->setPaintDevice( printer );
@@ -258,15 +270,15 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
 
         // increase page
         int textLayoutHeight( textLayout.boundingRect().height() );
-        if( (offset.y() + textLayoutHeight ) > pageRect.bottom() )
+        if( (offset.y() + textLayoutHeight ) > pageRect.height() )
         {
             offset.setY(0);
-            printer->newPage();
+            _newPage( printer, painter );
 
         }
 
         // render
-        textLayout.draw( painter, offset );
+        textLayout.draw( painter, pageRect.topLeft() + offset );
 
         // update position
         offset.setY( offset.y() + textLayoutHeight );
@@ -276,7 +288,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
 }
 
 //__________________________________________________________________________________
-void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painter, QPointF& offset ) const
+void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
     Debug::Throw( "LogEntryPrintHelper::_printAttachments.\n" );
 
@@ -289,8 +301,8 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
 
     // create document
     QTextDocument document;
-    const QRect pageRect( printer->pageRect() );
-    document.setPageSize( printer->pageRect().size() );
+    const QRect pageRect( _pageRect() );
+    document.setPageSize( _pageRect().size() );
     document.setDocumentMargin(0);
     document.documentLayout()->setPaintDevice( printer );
 
@@ -333,15 +345,15 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
 
     // check for new page
     QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
-    if( offset.y() + boundingRect.height() > pageRect.bottom() )
+    if( offset.y() + boundingRect.height() > pageRect.height() )
     {
         offset.setY(0);
-        printer->newPage();
+        _newPage( printer, painter );
     }
 
-    // render
+    // setup painter
     painter->save();
-    painter->translate( offset );
+    painter->translate( pageRect.topLeft() + offset );
 
     // render contents
     document.drawContents( painter );

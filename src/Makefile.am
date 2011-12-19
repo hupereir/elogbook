@@ -111,11 +111,13 @@ LogEntryInformationDialog.h \
 LogEntryModel.h \
 LogEntryPrintHelper.h \
 LogEntryPrintOptionWidget.h \
+LogEntryPrintSelectionWidget.h \
 MainWindow.h \
 Menu.h \
 NewAttachmentDialog.h \
 NewLogbookDialog.h \
 OpenAttachmentDialog.h \
+PrintHelper.h \
 ProgressBar.h \
 SearchPanel.h \
 SelectionStatusBar.h \
@@ -162,11 +164,13 @@ LogEntryInformationDialog.cpp \
 LogEntryModel.cpp \
 LogEntryPrintHelper.cpp \
 LogEntryPrintOptionWidget.cpp \
+LogEntryPrintSelectionWidget.cpp \
 MainWindow.cpp \
 Menu.cpp \
 NewAttachmentDialog.cpp \
 NewLogbookDialog.cpp \
 OpenAttachmentDialog.cpp \
+PrintHelper.cpp \
 ProgressBar.cpp \
 SearchPanel.cpp \
 SelectionStatusBar.cpp \

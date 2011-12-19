@@ -43,8 +43,13 @@
 #include "LogbookInformationDialog.h"
 #include "LogbookModifiedDialog.h"
 #include "LogbookStatisticsDialog.h"
+#include "LogbookPrintOptionWidget.h"
+#include "LogbookPrintHelper.h"
+#include "LogEntryPrintOptionWidget.h"
+#include "LogEntryPrintSelectionWidget.h"
 #include "Menu.h"
 #include "NewLogbookDialog.h"
+#include "PrintPreviewDialog.h"
 #include "QuestionDialog.h"
 #include "QtUtil.h"
 #include "RecentFilesMenu.h"
@@ -58,6 +63,7 @@
 
 #include <QtGui/QHeaderView>
 #include <QtGui/QMenu>
+#include <QtGui/QPrintDialog>
 #include <QtGui/QSplitter>
 
 //_____________________________________________
@@ -967,15 +973,15 @@ void MainWindow::_installActions( void )
 {
 
     Debug::Throw( "MainWindow::_installActions.\n" );
-    uniconifyAction_ = new QAction( IconEngine::get( ICONS::HOME ), "&Main Window", this );
+    uniconifyAction_ = new QAction( IconEngine::get( ICONS::HOME ), "Main Window", this );
     uniconifyAction_->setToolTip( "Raise application main window" );
     connect( uniconifyAction_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
-    newKeywordAction_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Keyword", this );
+    newKeywordAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Keyword", this );
     newKeywordAction_->setToolTip( "Create a new keyword" );
     connect( newKeywordAction_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
 
-    addAction( editKeywordAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename Keyword", this ) );
+    addAction( editKeywordAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "Rename Keyword", this ) );
     editKeywordAction_->setToolTip( "Rename selected keyword" );
     editKeywordAction_->setShortcut( Qt::Key_F2 );
     editKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -986,27 +992,27 @@ void MainWindow::_installActions( void )
     it is associated to the Qt::Key_Delete shortcut
     but the later is enabled only if the KeywordList has focus.
     */
-    deleteKeywordAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete Keyword", this );
+    deleteKeywordAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "Delete Keyword", this );
     deleteKeywordAction_->setToolTip( "Delete selected keyword" );
     deleteKeywordAction_->setShortcut( Qt::Key_Delete );
     deleteKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( deleteKeywordAction_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
 
-    findEntriesAction_ = new QAction( IconEngine::get( ICONS::FIND ), "&Find", this );
+    findEntriesAction_ = new QAction( IconEngine::get( ICONS::FIND ), "Find", this );
     findEntriesAction_->setShortcut( Qt::CTRL+Qt::Key_F );
     findEntriesAction_->setToolTip( "Find entries matching specific criteria" );
     connect( findEntriesAction_, SIGNAL( triggered() ), SLOT( _findEntries() ) );
 
-    newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Entry", this );
+    newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Entry", this );
     newEntryAction_->setToolTip( "Create a new entry" );
     newEntryAction_->setShortcut( Qt::CTRL+Qt::Key_N );
     connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
-    editEntryAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Edit Entries", this );
+    editEntryAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Edit Entries", this );
     editEntryAction_->setToolTip( "Edit selected entries" );
     connect( editEntryAction_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
 
-    editEntryTitleAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "&Rename Entry", this );
+    editEntryTitleAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "Rename Entry", this );
     editEntryTitleAction_->setToolTip( "Edit selected entry title" );
     editEntryTitleAction_->setShortcut( Qt::Key_F2 );
     editEntryTitleAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -1017,7 +1023,7 @@ void MainWindow::_installActions( void )
     it is associated to the Qt::Key_Delete shortcut
     but the later is enabled only if the KeywordList has focus.
     */
-    deleteEntryAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete Entries", this );
+    deleteEntryAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "Delete Entries", this );
     deleteEntryAction_->setToolTip( "Delete selected entries" );
     deleteEntryAction_->setShortcut( Qt::Key_Delete );
     deleteEntryAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -1025,58 +1031,65 @@ void MainWindow::_installActions( void )
 
     // color menu
     colorMenu_ = new ColorMenu( this );
-    colorMenu_->setTitle( "&Change entry color" );
+    colorMenu_->setTitle( "Change entry color" );
     connect( colorMenu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
 
-    entryColorAction_ = new QAction( IconEngine::get( ICONS::COLOR ), "&Entry Color", this );
+    entryColorAction_ = new QAction( IconEngine::get( ICONS::COLOR ), "Entry Color", this );
     entryColorAction_->setToolTip( "Change selected entries color" );
     entryColorAction_->setMenu( colorMenu_ );
 
-    entryKeywordAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "&Change Keyword", this );
+    entryKeywordAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Change Keyword", this );
     entryKeywordAction_->setToolTip( "Edit selected entries keyword" );
     connect( entryKeywordAction_, SIGNAL( triggered() ), SLOT( _renameEntryKeyword() ) );
 
-    newLogbookAction_ = new QAction( IconEngine::get( ICONS::NEW ), "&New Logbook", this );
+    newLogbookAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Logbook", this );
     newLogbookAction_->setToolTip( "Create a new logbook" );
     connect( newLogbookAction_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
-    openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), "&Open", this );
+    openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), "Open", this );
     openAction_->setToolTip( "Open an existsing logbook" );
     openAction_->setShortcut( Qt::CTRL+Qt::Key_O );
     connect( openAction_, SIGNAL( triggered() ), SLOT( open() ) );
 
-    synchronizeAction_ = new QAction( "&Synchronize", this );
+    synchronizeAction_ = new QAction( "Synchronize", this );
     synchronizeAction_->setToolTip( "Synchronize current logbook with remote" );
     connect( synchronizeAction_, SIGNAL( triggered() ), SLOT( _synchronize() ) );
 
-    reorganizeAction_ = new QAction( "&Reorganize", this );
+    reorganizeAction_ = new QAction( "Reorganize", this );
     reorganizeAction_->setToolTip( "Reoganize logbook entries in files" );
     connect( reorganizeAction_, SIGNAL( triggered() ), SLOT( _reorganize() ) );
 
-    saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "&Save", this );
+    saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "Save", this );
     saveAction_->setToolTip( "Save all edited entries" );
     connect( saveAction_, SIGNAL( triggered() ), SLOT( save() ) );
 
-    saveForcedAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "&Save (forced)", this );
+    saveForcedAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "Save (forced)", this );
     saveForcedAction_->setToolTip( "Save all entries" );
     connect( saveForcedAction_, SIGNAL( triggered() ), SLOT( _saveForced() ) );
 
-    saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save &As", this );
+    saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save As", this );
     saveAsAction_->setToolTip( "Save logbook with a different name" );
     connect( saveAsAction_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
 
-    saveBackupAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save &Backup", this );
+    saveBackupAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save Backup", this );
     saveBackupAction_->setToolTip( "Save logbook backup" );
     connect( saveBackupAction_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
 
-    revertToSaveAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), "&Reload", this );
+    revertToSaveAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), "Reload", this );
     revertToSaveAction_->setToolTip( "Restore saved logbook" );
     revertToSaveAction_->setShortcut( Qt::Key_F5 );
     connect( revertToSaveAction_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
-    printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "&Print", this );
+    // print
+    printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print", this );
     printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
     printAction_->setToolTip( "Convert logbook to html and print" );
+    connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
+
+    // print preview
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview", this ) );
+    printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
+    connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
 
     logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics", this );
     logbookStatisticsAction_->setToolTip( "View logbook statistics" );
@@ -1086,7 +1099,7 @@ void MainWindow::_installActions( void )
     logbookInformationsAction_->setToolTip( "Edit logbook informations" );
     connect( logbookInformationsAction_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 
-    closeFramesAction_ = new QAction( IconEngine::get( ICONS::CLOSE ), "&Close Editors", this );
+    closeFramesAction_ = new QAction( IconEngine::get( ICONS::CLOSE ), "Close Editors", this );
     closeFramesAction_->setToolTip( "Close all entry editors" );
     connect( closeFramesAction_, SIGNAL( triggered() ), SLOT( _closeEditionWindows() ) );
 
@@ -1561,6 +1574,144 @@ void MainWindow::_revertToSaved( void )
 
     checkLogbookBackup();
     ignoreWarnings_ = false;
+
+}
+
+//___________________________________________________________
+void MainWindow::_print( void )
+{
+    Debug::Throw( "MainWindow::_print.\n" );
+
+    // save EditionWindows
+    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+
+    // save current logbook
+    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+    // create printer
+    QPrinter printer( QPrinter::HighResolution );
+
+    // create options widget
+    LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
+    logbookOptionWidget->read();
+
+    LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
+    logEntrySelectionWidget->read();
+
+    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    logEntryOptionWidget->read();
+
+    // create prind dialog and run.
+    QPrintDialog dialog( &printer, this );
+    dialog.setOptionTabs( QList<QWidget *>()
+        << logEntrySelectionWidget
+        << logbookOptionWidget
+        << logEntryOptionWidget );
+
+    dialog.setWindowTitle( "Print Logbook - elogbook" );
+    if( dialog.exec() == QDialog::Rejected ) return;
+
+    // add output file to scratch files, if any
+    if( !printer.outputFileName().isEmpty() )
+    { Singleton::get().application<Application>()->scratchFileMonitor().add( printer.outputFileName() ); }
+
+    // write options
+    logbookOptionWidget->write();
+    logEntrySelectionWidget->write();
+    logEntryOptionWidget->write();
+
+    // create print helper
+    LogbookPrintHelper helper( this );
+    helper.setLogbook( logbook() );
+
+    // select entries
+    LogEntryModel::List entries;
+    switch( logEntrySelectionWidget->mode() )
+    {
+        default:
+        case LogEntryPrintSelectionWidget::ALL_ENTRIES:
+        {
+            BASE::KeySet<LogEntry> entry_set( logbook()->entries() );
+            entries = LogEntryModel::List( entry_set.begin(), entry_set.end() );
+            break;
+        }
+
+        case LogEntryPrintSelectionWidget::VISIBLE_ENTRIES:
+        entries = _logEntryModel().get();
+        break;
+
+        case LogEntryPrintSelectionWidget::SELECTED_ENTRIES:
+        entries = _logEntryModel().get( logEntryList().selectionModel()->selectedRows() );
+        break;
+
+    }
+    helper.setEntries( entries );
+
+    // retrieve mask and assign
+    helper.setMask( logbookOptionWidget->mask() );
+    helper.setEntryMask( logEntryOptionWidget->mask() );
+
+    // print
+    helper.print( &printer );
+
+    // reset status bar
+    statusBar().label().setText( "" );
+    statusBar().showLabel();
+
+    return;
+
+}
+
+//___________________________________________________________
+void MainWindow::_printPreview( void )
+{
+    Debug::Throw( "MainWindow::_printPreview.\n" );
+
+    // save EditionWindows
+    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+
+    // save current logbook
+    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+    // create helper
+    LogbookPrintHelper helper( this );
+    helper.setLogbook( logbook() );
+
+    // select entries
+    LogEntryModel::List entries;
+    switch( XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_SELECTION" ) )
+    {
+        default:
+        case LogEntryPrintSelectionWidget::ALL_ENTRIES:
+        {
+            BASE::KeySet<LogEntry> entry_set( logbook()->entries() );
+            entries = LogEntryModel::List( entry_set.begin(), entry_set.end() );
+            break;
+        }
+
+        case LogEntryPrintSelectionWidget::VISIBLE_ENTRIES:
+        entries = _logEntryModel().get();
+        break;
+
+        case LogEntryPrintSelectionWidget::SELECTED_ENTRIES:
+        entries = _logEntryModel().get( logEntryList().selectionModel()->selectedRows() );
+        break;
+
+    }
+    helper.setEntries( entries );
+
+    // masks
+    helper.setMask( XmlOptions::get().get<unsigned int>( "LOGBOOK_PRINT_OPTION_MASK" ) );
+    helper.setEntryMask( XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
+
+    // create dialog, connect and execute
+    PrintPreviewDialog dialog( this );
+    connect( dialog.previewWidget(), SIGNAL( paintRequested( QPrinter* ) ), &helper, SLOT( print( QPrinter* ) ) );
+    dialog.exec();
+
+    // reset status bar
+    statusBar().label().setText( "" );
+    statusBar().showLabel();
 
 }
 

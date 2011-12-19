@@ -371,7 +371,6 @@ class Logbook:public QObject, public Counter, public BASE::Key
             file_( file )
         {}
 
-
         //! predicate
         bool operator() (const Logbook* logbook) const
         { return logbook && logbook->file() == file_; }

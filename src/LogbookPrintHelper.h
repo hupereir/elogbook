@@ -26,16 +26,18 @@
 #include "Counter.h"
 #include "Debug.h"
 #include "LogEntryModel.h"
+#include "LogEntryPrintHelper.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
+#include <QtGui/QProgressDialog>
 
 class Logbook;
 class LogEntry;
 
 //! printing utilityclass
-class LogbookPrintHelper: public QObject, public Counter
+class LogbookPrintHelper: public PrintHelper, public Counter
 {
 
     Q_OBJECT
@@ -63,11 +65,13 @@ class LogbookPrintHelper: public QObject, public Counter
     };
 
     //! constructor
-    LogbookPrintHelper( QObject* parent ):
-        QObject( parent ),
+    LogbookPrintHelper( QObject* parent = 0 ):
+        PrintHelper( parent ),
         Counter( "LogbookPrintHelper" ),
         mask_( LOGBOOK_ALL ),
-        logbook_( 0 )
+        entryMask_( LogEntryPrintHelper::ENTRY_ALL ),
+        logbook_( 0 ),
+        progress_( 0 )
     { Debug::Throw( "LogbookPrintHelper::LogbookPrintHelper.\n" ); };
 
     //! destructor
@@ -86,6 +90,10 @@ class LogbookPrintHelper: public QObject, public Counter
     void setMask( unsigned int value )
     { mask_ = value; }
 
+    //! entry mask
+    void setEntryMask( unsigned int value )
+    { entryMask_ = value; }
+
     public slots:
 
     //! print
@@ -94,24 +102,30 @@ class LogbookPrintHelper: public QObject, public Counter
     protected:
 
     //! print header
-    void _printHeader( QPrinter*, QPainter*, QPointF& ) const;
+    void _printHeader( QPrinter*, QPainter*, QPointF& );
 
     //! print table
-    void _printTable( QPrinter*, QPainter*, QPointF& ) const;
+    void _printTable( QPrinter*, QPainter*, QPointF& );
 
     //! print contents
-    void _printEntries( QPrinter*, QPainter*, QPointF& ) const;
+    void _printEntries( QPrinter*, QPainter*, QPointF& );
 
     private:
 
     //! mask
     unsigned int mask_;
 
+    //! entry mask
+    unsigned int entryMask_;
+
     //! logbook
     Logbook* logbook_;
 
     //! logbook entries
     LogEntryModel::List entries_;
+
+    // progress dialog
+    int progress_;
 
 };
 

@@ -52,6 +52,8 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { layout->addWidget( iter.value() ); }
 
+    layout->addStretch(1);
+
 }
 
 //_________________________________________________________________

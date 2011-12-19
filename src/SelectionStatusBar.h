@@ -24,14 +24,6 @@
 *
 *******************************************************************************/
 
-/*!
-   \file SelectionStatusBar.h
-   \brief customized status bar for selection frame
-   \author Hugo Pereira
-   \version $Revision$
-   \date $Date$
-*/
-
 #include "AnimatedStackedWidget.h"
 #include "ProgressBar.h"
 #include "StatusBar.h"
@@ -40,58 +32,58 @@
 class SelectionStatusBar: public StatusBar
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+    public:
 
-  //! constructor
-  SelectionStatusBar( QWidget* parent );
+    //! constructor
+    SelectionStatusBar( QWidget* parent );
 
-  //! progress bar
-  ProgressBar& progressBar( void ) const
-  {
-    assert( progress_ );
-    return *progress_;
-  }
+    //! progress bar
+    ProgressBar& progressBar( void ) const
+    {
+        assert( progress_ );
+        return *progress_;
+    }
 
-  //! retrieves label with given index
-  virtual StatusBarLabel& label( const unsigned int& i = 0  ) const
-  { return (i==0) ? _label():StatusBar::label(i); }
+    //! retrieves label with given index
+    virtual StatusBarLabel& label( const unsigned int& i = 0  ) const
+    { return (i==0) ? _label():StatusBar::label(i); }
 
-  public slots:
+    public slots:
 
-  //! show progress bar as visible widget
-  void showProgressBar( void );
+    //! show progress bar as visible widget
+    void showProgressBar( void );
 
-  //! show label as visible widget
-  void showLabel( void );
+    //! show label as visible widget
+    void showLabel( void );
 
-  protected:
+    protected:
 
-  //! stack widget
-  AnimatedStackedWidget& _stack( void ) const
-  {
-    assert( stack_ );
-    return *stack_;
-  }
+    //! stack widget
+    AnimatedStackedWidget& _stack( void ) const
+    {
+        assert( stack_ );
+        return *stack_;
+    }
 
-  //! label
-  StatusBarLabel& _label( void ) const
-  {
-    assert( label_ );
-    return *label_;
-  }
+    //! label
+    StatusBarLabel& _label( void ) const
+    {
+        assert( label_ );
+        return *label_;
+    }
 
-  private:
+    private:
 
-  //! stack widget
-  AnimatedStackedWidget* stack_;
+    //! stack widget
+    AnimatedStackedWidget* stack_;
 
-  //! progress bar
-  ProgressBar* progress_;
+    //! progress bar
+    ProgressBar* progress_;
 
-  //! label
-  StatusBarLabel* label_;
+    //! label
+    StatusBarLabel* label_;
 
 };
 

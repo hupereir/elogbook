@@ -97,7 +97,7 @@ class LogEntry:public Counter, public BASE::Key
     TimeStamp modification() const
     { return modification_; }
 
-    //! LogEntry title
+    //! Log entry title
     void setTitle( const QString& title )
     {
         title_ = title;
@@ -108,22 +108,22 @@ class LogEntry:public Counter, public BASE::Key
     QString title( void ) const
     { return title_; }
 
-    //! LogEntry keyword
+    //! Log entry keyword
     void setKeyword( const Keyword& keyword )
     {
         keyword_ = keyword;
         if( keyword_ == Keyword() ) keyword_ = Keyword( "No keyword" );
     }
 
-    //! LogEntry keyword
+    //! Log entry keyword
     const Keyword& keyword( void ) const
     { return keyword_; }
 
-    //! LogEntry author
+    //! Log entry author
     void setAuthor( const QString& author )
     { author_ = author; }
 
-    //! logbook last author
+    //! Log entry last author
     QString author( void ) const
     { return author_; }
 

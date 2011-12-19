@@ -21,39 +21,27 @@
 *
 *******************************************************************************/
 
-/*!
-   \file SelectionStatusBar.cpp
-   \brief  customized status bar for selection frame
-   \author Hugo Pereira
-   \version $Revision$
-   \date $Date$
-*/
-
 #include "Debug.h"
 #include "SelectionStatusBar.h"
 
-
-
 //______________________________________________________
 SelectionStatusBar::SelectionStatusBar( QWidget* parent ):
-  StatusBar( parent )
+StatusBar( parent )
 {
-  Debug::Throw( "SelectionStatusBar::SelectionStatusBar.\n" );
+    Debug::Throw( "SelectionStatusBar::SelectionStatusBar.\n" );
 
-  addPermanentWidget( stack_ = new AnimatedStackedWidget( this ), 1 );
-  _stack().addWidget( label_ = new StatusBarLabel() );
-  _stack().addWidget( progress_ = new ProgressBar() );
-  addClock();
+    addPermanentWidget( stack_ = new AnimatedStackedWidget( this ), 1 );
+    _stack().addWidget( label_ = new StatusBarLabel() );
+    _stack().addWidget( progress_ = new ProgressBar() );
+    addClock();
 
 }
 
 //______________________________________________________
 void SelectionStatusBar::showProgressBar( void )
 {
-  // fix progress bar height, because normal display is too high
-  // with respect to neighbor label
-  progressBar().setFixedHeight( fontMetrics().lineSpacing() + 6 );
-  _stack().setCurrentWidget( &progressBar() );
+    progressBar().setFixedHeight( fontMetrics().lineSpacing() + 6 );
+    _stack().setCurrentWidget( &progressBar() );
 }
 
 //______________________________________________________

@@ -34,7 +34,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     OptionWidget( "LOGBOOK_PRINT_OPTION_MASK" )
 {
 
-    setWindowTitle( "Logbook Entry Configuration" );
+    setWindowTitle( "Logbook Configuration" );
 
     QVBoxLayout* layout = new QVBoxLayout();
     setLayout( layout );
@@ -54,6 +54,8 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     // insert in layout
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { layout->addWidget( iter.value() ); }
+
+    layout->addStretch(1);
 
 }
 
