@@ -1111,7 +1111,8 @@ void EditionWindow::_printPreview( void )
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );
-    connect( dialog.previewWidget(), SIGNAL( paintRequested( QPrinter* ) ), &helper, SLOT( print( QPrinter* ) ) );
+    dialog.setWindowTitle( "Print Preview - elogbook" );
+    dialog.setHelper( helper );
     dialog.exec();
 
 }

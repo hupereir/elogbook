@@ -1083,7 +1083,6 @@ void MainWindow::_installActions( void )
     // print
     printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print", this );
     printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
-    printAction_->setToolTip( "Convert logbook to html and print" );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // print preview
@@ -1706,7 +1705,8 @@ void MainWindow::_printPreview( void )
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );
-    connect( dialog.previewWidget(), SIGNAL( paintRequested( QPrinter* ) ), &helper, SLOT( print( QPrinter* ) ) );
+    dialog.setWindowTitle( "Print Preview - elogbook" );
+    dialog.setHelper( helper );
     dialog.exec();
 
     // reset status bar

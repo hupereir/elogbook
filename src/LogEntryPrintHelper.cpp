@@ -323,6 +323,9 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     QTextTable* table = cursor.insertTable( attachments.size()+1, 3, tableFormat );
 
     int row(0);
+    QTextTableCellFormat cellFormat;
+    cellFormat.setFontWeight( QFont::Bold );
+    table->cellAt( row, 0 ).setFormat( cellFormat );
     table->cellAt( row, 0 ).firstCursorPosition().insertText( "Attachments: " );
     row++;
 

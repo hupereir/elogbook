@@ -47,6 +47,9 @@ void LogbookPrintHelper::print( QPrinter* printer )
     // do nothing if mask is empty
     if( !mask_ ) return;
 
+    // reset abort flag
+    setAborted( false );
+
     // setup
     setupPage( printer );
     setFile( logbook_->file() );
@@ -73,8 +76,8 @@ void LogbookPrintHelper::print( QPrinter* printer )
     // print everything
     QPointF offset( 0, 0 );
     _printHeader( printer, &painter, offset );
-    _printTable( printer, &painter, offset );
-    _printEntries( printer, &painter, offset );
+    if( !isAborted() ) _printTable( printer, &painter, offset );
+    if( !isAborted() ) _printEntries( printer, &painter, offset );
 
     painter.end();
 
@@ -237,8 +240,16 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
             table->cellAt(row,3).firstCursorPosition().insertText( entry.modification().toString() + "  " );
 
             // update progress
-            if( progressDialog_ ) progressDialog_->setValue( ++progress_ );
-
+            if( progressDialog_ )
+            {
+                progressDialog_->setValue( ++progress_ );
+                if( progressDialog_->wasCanceled() )
+                {
+                    printer->abort();
+                    abort();
+                    return;
+                }
+            }
         }
 
         // remove empty rows
@@ -293,6 +304,7 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     helper.setupPage( printer );
     helper.setFile( logbook_->file() );
     helper.setPageNumber( _pageNumber() );
+    connect( &helper, SIGNAL( pageCountChanged( int ) ), this, SIGNAL( pageCountChanged( int ) ) );
     for( LogEntryModel::List::const_iterator iter = entries_.begin(); iter != entries_.end(); iter++ )
     {
 
@@ -301,7 +313,16 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
         helper.printEntry( printer, painter, offset );
 
         // update progress
-        if( progressDialog_ ) progressDialog_->setValue( ++progress_ );
+        if( progressDialog_ )
+        {
+            progressDialog_->setValue( ++progress_ );
+            if( progressDialog_->wasCanceled() )
+            {
+                printer->abort();
+                abort();
+                return;
+            }
+        }
 
     }
 

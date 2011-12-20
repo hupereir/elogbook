@@ -255,7 +255,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& revertToSaveAction( void ) const
     { return *revertToSaveAction_; }
 
-    //! convert logbook to html
+    //! print
     QAction& printAction( void ) const
     { return *printAction_; }
 
@@ -706,7 +706,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! revert logbook to saved version
     QAction* revertToSaveAction_;
 
-    //! convert logbook to html
+    //! print preview
     QAction* printAction_;
 
     //! print preview

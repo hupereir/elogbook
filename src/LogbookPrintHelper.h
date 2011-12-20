@@ -45,7 +45,7 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
 
     public:
 
-    //! HTML output configuration output
+    //! configuration output
     enum Mask
     {
         LOGBOOK_TITLE = 1<<0,
@@ -73,7 +73,8 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
         entryMask_( LogEntryPrintHelper::ENTRY_ALL ),
         logbook_( 0 ),
         progressDialog_( 0 ),
-        progress_( 0 )
+        progress_( 0 ),
+        aborted_( false )
     { Debug::Throw( "LogbookPrintHelper::LogbookPrintHelper.\n" ); };
 
     //! destructor
@@ -95,6 +96,18 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     //! entry mask
     void setEntryMask( unsigned int value )
     { entryMask_ = value; }
+
+    //! abort
+    void setAborted( bool value )
+    { aborted_ = value; }
+
+    //! abort
+    void abort( void )
+    { aborted_ = true; }
+
+    //! abort
+    bool isAborted( void ) const
+    { return aborted_; }
 
     public slots:
 
@@ -131,6 +144,9 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
 
     //! progress
     int progress_;
+
+    //! true when aborted
+    bool aborted_;
 
 };
 

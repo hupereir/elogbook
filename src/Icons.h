@@ -34,7 +34,6 @@ namespace ICONS
     static const QString ATTACH = "attach.png";
     static const QString CLOSE = "document-close.png";
     static const QString HOME = "go-home.png";
-    static const QString HTML = "html.png";
     static const QString INFO = "info.png";
     static const QString PREV = "arrow-left.png";
     static const QString NEXT = "arrow-right.png";

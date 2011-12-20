@@ -41,7 +41,7 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
 
     public:
 
-    //! HTML output configuration output
+    //! configuration output
     enum Mask
     {
         ENTRY_KEYWORD = 1<<0,

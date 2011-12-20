@@ -11,7 +11,6 @@ EXTRA_DIST = \
 	document-save-as.png \
 	tools-check-spelling.png \
 	go-home.png \
-	html.png \
 	info.png \
 	format-text-bold.png \
 	format-text-italic.png \
