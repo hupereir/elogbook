@@ -2,8 +2,6 @@
   <qresource>
     <file alias="icon.png">../icon.ico</file>
     <file alias="icon.png">../icon.png</file>
-    <file alias="pixmaps/arrow-left.png">../pixmaps/arrow-left.png</file>
-    <file alias="pixmaps/arrow-right.png">../pixmaps/arrow-right.png</file>
     <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
     <file alias="pixmaps/document-close.png">../pixmaps/document-close.png</file>
     <file alias="pixmaps/document-new.png">../pixmaps/document-new.png</file>

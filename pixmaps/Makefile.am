@@ -1,8 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 
 EXTRA_DIST = \
-arrow-left.png \
-arrow-right.png \
 attach.png \
 document-close.png \
 document-new.png \

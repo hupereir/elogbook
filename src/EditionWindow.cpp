@@ -650,7 +650,7 @@ void EditionWindow::_installActions( void )
     connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
     // previous_entry action
-    addAction( previousEntryAction_ = new QAction( IconEngine::get( ICONS::PREV ), "Previous Entry", this ) );
+    addAction( previousEntryAction_ = new QAction( IconEngine::get( ICONS::PREVIOUS ), "Previous Entry", this ) );
     previousEntryAction_->setToolTip( "Display previous entry in current list" );
     connect( previousEntryAction_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
 
