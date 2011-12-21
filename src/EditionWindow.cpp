@@ -1065,6 +1065,11 @@ void EditionWindow::_print( void )
     // create printer
     QPrinter printer( QPrinter::HighResolution );
 
+    // generate document name
+    QString buffer;
+    QTextStream( &buffer )  << "eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
+    printer.setDocName( buffer );
+
     // create option widget
     LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
     optionWidget->read();
