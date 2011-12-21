@@ -97,6 +97,7 @@ FileCheck.h \
 FileCheckDialog.h \
 FormatBar.h \
 HelpText.h \
+HtmlHeaderNode.h \
 Icons.h \
 Keyword.h \
 KeywordModel.h \
@@ -107,6 +108,7 @@ LogbookPrintHelper.h \
 LogbookPrintOptionWidget.h \
 LogbookStatisticsDialog.h \
 LogEntry.h \
+LogEntryHtmlHelper.h \
 LogEntryInformationDialog.h \
 LogEntryModel.h \
 LogEntryPrintHelper.h \
@@ -153,12 +155,14 @@ EditionWindow.cpp \
 EditKeywordDialog.cpp \
 FileCheckDialog.cpp \
 FormatBar.cpp \
+HtmlHeaderNode.cpp \
 KeywordModel.cpp \
 LogbookInformationDialog.cpp \
 LogbookModifiedDialog.cpp \
 LogbookPrintHelper.cpp \
 LogbookPrintOptionWidget.cpp \
 LogbookStatisticsDialog.cpp \
+LogEntryHtmlHelper.cpp \
 LogEntryInformationDialog.cpp \
 LogEntryModel.cpp \
 LogEntryPrintHelper.cpp \
@@ -186,6 +190,7 @@ moc_FormatBar.cpp \
 moc_KeywordModel.cpp \
 moc_LogbookModifiedDialog.cpp \
 moc_LogbookPrintHelper.cpp \
+moc_LogEntryHtmlHelper.cpp \
 moc_LogEntryModel.cpp \
 moc_LogEntryPrintHelper.cpp \
 moc_MainWindow.cpp \

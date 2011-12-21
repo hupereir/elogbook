@@ -230,6 +230,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& printPreviewAction( void ) const
     { return *printPreviewAction_; }
 
+    //! html
+    QAction& htmlAction( void ) const
+    { return *htmlAction_; }
+
     //! split view horizontal
     QAction& splitViewHorizontalAction( void ) const
     { return *splitViewHorizontalAction_; }
@@ -327,6 +331,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! Print current document
     void _printPreview( void );
+
+    //! export to html
+    void _toHtml( void );
 
     //! creates a new entry
     void _newEntry( void );
@@ -558,6 +565,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! print preview
     QAction* printPreviewAction_;
+
+    //! export to html
+    QAction* htmlAction_;
 
     //! split view horizontal
     QAction* splitViewHorizontalAction_;

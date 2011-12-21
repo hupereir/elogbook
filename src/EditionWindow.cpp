@@ -32,12 +32,14 @@
 #include "CustomToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
+#include "HtmlDialog.h"
 #include "Icons.h"
 #include "IconSize.h"
 #include "IconEngine.h"
 #include "InformationDialog.h"
 #include "Logbook.h"
 #include "LogEntry.h"
+#include "LogEntryHtmlHelper.h"
 #include "LogEntryInformationDialog.h"
 #include "LogEntryPrintHelper.h"
 #include "LogEntryPrintOptionWidget.h"
@@ -667,26 +669,30 @@ void EditionWindow::_installActions( void )
     saveAction_->setShortcut( Qt::CTRL+Qt::Key_S );
 
     #if WITH_ASPELL
-    addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck", this ) );
+    addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck ...", this ) );
     spellcheckAction_->setToolTip( "Check spelling of current entry" );
     connect( spellcheckAction_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
     #endif
 
     // entry_info
-    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Entry Information", this ) );
+    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Entry Information ...", this ) );
     entryInfoAction_->setToolTip( "Show current entry information" );
     connect( entryInfoAction_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
 
     // print
-    addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print", this ) );
+    addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print ...", this ) );
     printAction_->setToolTip( "Print current logbook entry" );
     printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // print preview
-    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview", this ) );
-    printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview ...", this ) );
     connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
+
+    // print
+    addAction( htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), "Export to HTML ...", this ) );
+    htmlAction_->setToolTip( "Export current logbook entry to HTML" );
+    connect( htmlAction_, SIGNAL( triggered() ), SLOT( _toHtml() ) );
 
     // split action
     addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
@@ -1078,7 +1084,7 @@ void EditionWindow::_print( void )
     QPrintDialog dialog( &printer, this );
     dialog.setOptionTabs( QList<QWidget *>() << optionWidget );
     dialog.setWindowTitle( "Print Logbook Entry - elogbook" );
-    if( dialog.exec() == QDialog::Rejected ) return;
+    if( !dialog.exec() ) return;
 
     // add output file to scratch files, if any
     if( !printer.outputFileName().isEmpty() )
@@ -1090,8 +1096,6 @@ void EditionWindow::_print( void )
     // create print helper
     LogEntryPrintHelper helper( this );
     helper.setEntry( entry() );
-
-    // retrieve mask and assign
     helper.setMask( optionWidget->mask() );
 
     // print
@@ -1119,6 +1123,67 @@ void EditionWindow::_printPreview( void )
     dialog.setWindowTitle( "Print Preview - elogbook" );
     dialog.setHelper( helper );
     dialog.exec();
+
+}
+
+//___________________________________________________________
+void EditionWindow::_toHtml( void )
+{
+    Debug::Throw( "EditionWindow::_toHtml.\n" );
+
+    // check if entry is modified
+    if( modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+    // create option widget
+    LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
+    optionWidget->read();
+
+    // create dialog
+    HtmlDialog dialog( this );
+    dialog.setOptionWidgets( QList<QWidget *>() << optionWidget );
+    dialog.setWindowTitle( "Export to HTML - elogbook" );
+
+    // generate file name
+    QString buffer;
+    QTextStream( &buffer )  << "eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+    dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
+
+    // execute dialog
+    if( !dialog.exec() ) return;
+
+    // retrieve/check file
+    File file( dialog.file() );
+    if( file.isEmpty() ) {
+        InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
+        return;
+    }
+
+    QFile out( file );
+    if( !out.open( QIODevice::WriteOnly ) )
+    {
+        QString buffer;
+        QTextStream( &buffer ) << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
+        InformationDialog( this, buffer ).exec();
+        return;
+    }
+
+    // add as scratch file
+    Singleton::get().application<Application>()->scratchFileMonitor().add( file );
+
+    // write options
+    optionWidget->write();
+
+    LogEntryHtmlHelper helper;
+    helper.setEntry( entry() );
+    helper.setMask( optionWidget->mask() );
+
+    helper.print( &out );
+    out.close();
+
+    // get command and execute
+    QString command( dialog.command() );
+    if( !command.isEmpty() )
+    { ( Command( command ) << file ).run(); }
 
 }
 

@@ -105,8 +105,14 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 
         menu->addAction( &editionWindow->printAction() );
         menu->addAction( &editionWindow->printPreviewAction() );
+        menu->addAction( &editionWindow->htmlAction() );
 
-    } else menu->addAction( &mainWindow->printAction() );
+    } else {
+
+        menu->addAction( &mainWindow->printAction() );
+        menu->addAction( &mainWindow->printPreviewAction() );
+
+    }
 
     if( editionWindow ) menu->addAction( &editionWindow->closeAction() );
 
