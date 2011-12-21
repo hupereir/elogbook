@@ -93,7 +93,10 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case FILE: return attachment->shortFile();
+            case FILE:
+            return
+                attachment->type() == AttachmentType::URL ?
+                attachment->file() : attachment->shortFile();
 
             case TYPE: return attachment->type().name();
 

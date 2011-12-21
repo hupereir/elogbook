@@ -114,6 +114,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 
     }
 
+    menu->addSeparator();
     if( editionWindow ) menu->addAction( &editionWindow->closeAction() );
 
     Application& application( *Singleton::get().application<Application>() );

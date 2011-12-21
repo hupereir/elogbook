@@ -320,29 +320,33 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     tableFormat.setBorder(0);
     tableFormat.setCellPadding(0);
     tableFormat.setCellSpacing(0);
-    QTextTable* table = cursor.insertTable( attachments.size()+1, 3, tableFormat );
+    tableFormat.setWidth( QTextLength( QTextLength::PercentageLength, 100 ) );
+    QTextTable* table = cursor.insertTable( attachments.size()+2, 3, tableFormat );
 
     int row(0);
     QTextTableCellFormat cellFormat;
     cellFormat.setFontWeight( QFont::Bold );
-    table->cellAt( row, 0 ).setFormat( cellFormat );
-    table->cellAt( row, 0 ).firstCursorPosition().insertText( "Attachments: " );
+    QTextTableCell cell;
+    ( cell = table->cellAt( row, 0 ) ).setFormat( cellFormat );
+    cell.firstCursorPosition().insertText( "Attachments: " );
+    row++;
+
+    ( cell = table->cellAt( row, 0 ) ).setFormat( cellFormat );
+    cell.firstCursorPosition().insertText( "Location " );
+
+    ( cell = table->cellAt( row, 1 ) ).setFormat( cellFormat );
+    cell.firstCursorPosition().insertText( "Type " );
+
+    ( cell = table->cellAt( row, 2 ) ).setFormat( cellFormat );
+    cell.firstCursorPosition().insertText( "Comments " );
     row++;
 
     // loop over attachments
     for( BASE::KeySet<Attachment>::const_iterator iter = attachments.begin(); iter != attachments.end(); ++iter, ++row )
     {
         const Attachment& attachment( **iter );
-
-        // filename
-        table->cellAt( row, 0 ).firstCursorPosition().insertText( attachment.shortFile() );
-
-        // type
-        QString buffer;
-        QTextStream( &buffer ) << "  (" << attachment.type().name() << ")  ";
-        table->cellAt( row, 1 ).firstCursorPosition().insertText( buffer );
-
-        // comments
+        table->cellAt( row, 0 ).firstCursorPosition().insertText( attachment.file() );
+        table->cellAt( row, 1 ).firstCursorPosition().insertText( attachment.type().name() );
         table->cellAt( row, 2 ).firstCursorPosition().insertText( attachment.comments() );
     }
 
