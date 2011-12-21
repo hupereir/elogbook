@@ -59,8 +59,6 @@ HtmlHeaderNode::HtmlHeaderNode( QDomElement& parent, QDomDocument& document )
     "  margin-right: 20px; margin-left: 20px; \n"
     "} \n"
     "\n"
-    "A:hover { text-decoration: none; background-color: #f2f2ff }\n"
-    "\n"
     ".header_outer_table {\n"
     "  width: 100%; \n"
     "  border: 1px solid #888888; \n"

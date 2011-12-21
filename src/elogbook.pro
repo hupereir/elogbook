@@ -68,6 +68,7 @@ FileCheckDialog.h \
 FormatBar.h \
 HtmlHeaderNode.h \
 KeywordModel.h \
+LogbookHtmlHelper.h \
 LogbookInformationDialog.h \
 LogbookModifiedDialog.h \
 LogbookPrintHelper.h \
@@ -104,6 +105,7 @@ FileCheckDialog.cpp \
 FormatBar.cpp \
 HtmlHeaderNode.cpp \
 KeywordModel.cpp \
+LogbookHtmlHelper.cpp \
 LogbookInformationDialog.cpp \
 LogbookModifiedDialog.cpp \
 LogbookPrintHelper.cpp \

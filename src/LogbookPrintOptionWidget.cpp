@@ -31,7 +31,7 @@
 //_________________________________________________________________
 LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     QWidget( parent ),
-    OptionWidget( "Logbook::LOGBOOK_PRINT_OPTION_MASK" )
+    OptionWidget( "LOGBOOK_PRINT_OPTION_MASK" )
 {
 
     setWindowTitle( "Logbook Configuration" );

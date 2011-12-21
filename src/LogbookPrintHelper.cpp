@@ -127,7 +127,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     }
 
     if( mask_&Logbook::LOGBOOK_CREATION ) values.push_back( StringPair( "Created: ", logbook_->creation().toString() ) );
-    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values.push_back( StringPair( "Modified: ", logbook_->modification().toString() ) );
+    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values.push_back( StringPair( "Last Modified: ", logbook_->modification().toString() ) );
     if( mask_&Logbook::LOGBOOK_BACKUP ) values.push_back( StringPair( "Last backup: ", logbook_->backup().toString() ) );
     const int nRows( values.size() );
 
@@ -151,7 +151,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
 
     // check for new page
     QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
-    boundingRect.setWidth( pageRect.width()-5 );
+    boundingRect.setWidth( pageRect.width()-1 );
 
     if( offset.y() + boundingRect.height() > pageRect.height() )
     {

@@ -41,6 +41,7 @@
 #include "KeywordModel.h"
 #include "LogEntry.h"
 #include "LogEntryModel.h"
+#include "LogEntryPrintSelectionWidget.h"
 
 #include "AnimatedTreeView.h"
 
@@ -263,6 +264,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& printPreviewAction( void ) const
     { return *printPreviewAction_; }
 
+    //! export to html
+    QAction& htmlAction( void ) const
+    { return *htmlAction_; }
+
     //! logbook information
     QAction& logbookInformationsAction( void ) const
     { return *logbookInformationsAction_; }
@@ -372,6 +377,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! update frames associated to given entry
     void _updateEntryFrames( LogEntry*, unsigned int );
 
+    //! get entries matching a given entry selection mode
+    LogEntryModel::List _entries( LogEntryPrintSelectionWidget::Mode mode );
+
     protected slots:
 
     //! files modified
@@ -403,6 +411,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! Print current document
     void _printPreview( void );
+
+    //! export to html
+    void _toHtml( void );
 
     //! opens a logbook merge it to the existing onecomments
     void _synchronize( void );
@@ -711,6 +722,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! print preview
     QAction* printPreviewAction_;
+
+    //! export to html
+    QAction* htmlAction_;
 
     //! logbook information
     QAction* logbookInformationsAction_;

@@ -1,5 +1,5 @@
-#ifndef LogEntryHtmlHelper_h
-#define LogEntryHtmlHelper_h
+#ifndef LogbookHtmlHelper_h
+#define LogbookHtmlHelper_h
 
 // $Id$
 /******************************************************************************
@@ -25,6 +25,8 @@
 
 #include "Counter.h"
 #include "Debug.h"
+#include "Logbook.h"
+#include "LogEntryModel.h"
 #include "LogEntry.h"
 
 #include <QtCore/QObject>
@@ -32,8 +34,8 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 
-//! printing utility
-class LogEntryHtmlHelper: public QObject, public Counter
+//! printing utilityclass
+class LogbookHtmlHelper: public QObject, public Counter
 {
 
     Q_OBJECT
@@ -41,27 +43,33 @@ class LogEntryHtmlHelper: public QObject, public Counter
     public:
 
     //! constructor
-    LogEntryHtmlHelper( QObject* parent = 0 ):
+    LogbookHtmlHelper( QObject* parent = 0 ):
         QObject( parent ),
-        Counter( "LogEntryHtmlHelper" ),
-        mask_( LogEntry::ENTRY_ALL ),
-        entry_( 0 )
-    { Debug::Throw( "LogEntryHtmlHelper::LogEntryHtmlHelper.\n" ); };
+        Counter( "LogbookHtmlHelper" ),
+        mask_( Logbook::LOGBOOK_ALL ),
+        entryMask_( LogEntry::ENTRY_ALL ),
+        logbook_( 0 )
+    { Debug::Throw( "LogbookHtmlHelper::LogbookHtmlHelper.\n" ); };
 
     //! destructor
-    virtual ~LogEntryHtmlHelper( void )
+    virtual ~LogbookHtmlHelper( void )
     {}
 
-    //! entry
-    void setEntry( LogEntry* entry )
-    { entry_ = entry; }
+    //! logbook
+    void setLogbook( Logbook* logbook )
+    { logbook_ = logbook; }
+
+    //! entries
+    void setEntries( const LogEntryModel::List& entries )
+    { entries_ = entries; }
 
     //! mask
     void setMask( unsigned int value )
     { mask_ = value; }
 
-    //! print header
-    void appendEntry( QDomDocument&, QDomElement& );
+    //! entry mask
+    void setEntryMask( unsigned int value )
+    { entryMask_ = value; }
 
     public slots:
 
@@ -73,19 +81,25 @@ class LogEntryHtmlHelper: public QObject, public Counter
     //! print header
     void _appendHeader( QDomDocument&, QDomElement& );
 
-    //! print body
-    void _appendBody( QDomDocument&, QDomElement& );
+    //! print table
+    void _appendTable( QDomDocument&, QDomElement& );
 
-    //! print attachments
-    void _appendAttachments( QDomDocument&, QDomElement& );
+    //! print contents
+    void _appendEntries( QDomDocument&, QDomElement& );
 
     private:
 
     //! mask
     unsigned int mask_;
 
-    //! log entry
-    LogEntry* entry_;
+    //! entry mask
+    unsigned int entryMask_;
+
+    //! logbook
+    Logbook* logbook_;
+
+    //! logbook entries
+    LogEntryModel::List entries_;
 
 };
 

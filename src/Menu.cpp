@@ -111,6 +111,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 
         menu->addAction( &mainWindow->printAction() );
         menu->addAction( &mainWindow->printPreviewAction() );
+        menu->addAction( &mainWindow->htmlAction() );
 
     }
 

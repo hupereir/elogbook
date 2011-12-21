@@ -102,6 +102,7 @@ Icons.h \
 Keyword.h \
 KeywordModel.h \
 Logbook.h \
+LogbookHtmlHelper.h \
 LogbookInformationDialog.h \
 LogbookModifiedDialog.h \
 LogbookPrintHelper.h \
@@ -157,6 +158,7 @@ FileCheckDialog.cpp \
 FormatBar.cpp \
 HtmlHeaderNode.cpp \
 KeywordModel.cpp \
+LogbookHtmlHelper.cpp \
 LogbookInformationDialog.cpp \
 LogbookModifiedDialog.cpp \
 LogbookPrintHelper.cpp \
@@ -188,6 +190,7 @@ moc_AttachmentWindow.cpp \
 moc_EditionWindow.cpp \
 moc_FormatBar.cpp \
 moc_KeywordModel.cpp \
+moc_LogbookHtmlHelper.cpp \
 moc_LogbookModifiedDialog.cpp \
 moc_LogbookPrintHelper.cpp \
 moc_LogEntryHtmlHelper.cpp \

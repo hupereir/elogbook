@@ -117,7 +117,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     if( mask_&LogEntry::ENTRY_TITLE ) values.push_back( StringPair( "Title: ", entry_->title() ) );
     if( mask_&LogEntry::ENTRY_AUTHOR ) values.push_back( StringPair( "Author: ", entry_->author() ) );
     if( mask_&LogEntry::ENTRY_CREATION ) values.push_back( StringPair( "Created: ", entry_->creation().toString() ) );
-    if( mask_&LogEntry::ENTRY_MODIFICATION ) values.push_back( StringPair( "Modified: ", entry_->modification().toString() ) );
+    if( mask_&LogEntry::ENTRY_MODIFICATION ) values.push_back( StringPair( "Last Modified: ", entry_->modification().toString() ) );
     const int nRows( values.size() );
 
     // create table
@@ -140,7 +140,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 
     // check for new page
     QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
-    boundingRect.setWidth( pageRect.width()-5 );
+    boundingRect.setWidth( pageRect.width()-1 );
 
     if( offset.y() + boundingRect.height() > pageRect.height() )
     {

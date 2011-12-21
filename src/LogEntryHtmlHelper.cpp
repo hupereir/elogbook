@@ -92,9 +92,9 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
     table.setAttribute( "class", "header_outer_table" );
 
+    QColor color( BASE::Color( entry_->color() ) );
+    if( color.isValid() )
     {
-        QColor color( BASE::Color( entry_->color() ) );
-        if( !color.isValid() ) color = QColor( "#888888" );
         QString buffer;
         QTextStream( &buffer ) << "border: 1px solid" << color.name();
         table.setAttribute( "style", buffer );
@@ -164,7 +164,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Modified: " ) );
+            appendChild( document.createTextNode( "Last Modified: " ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( entry_->modification().toString() ) );
 
