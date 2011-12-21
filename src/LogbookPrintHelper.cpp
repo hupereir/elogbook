@@ -217,7 +217,8 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
         tableFormat.setCellPadding(0);
         tableFormat.setCellSpacing(0);
         tableFormat.setWidth( QTextLength( QTextLength::PercentageLength, 100 ) );
-        QTextTable* table = cursor.insertTable( nRows, 4, tableFormat );
+        //QTextTable* table = cursor.insertTable( nRows, 4, tableFormat );
+        QTextTable* table = cursor.insertTable( 1, 4, tableFormat );
 
         // header
         QTextTableCellFormat cellFormat;
@@ -231,6 +232,8 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
         int row(1);
         for( ;iter != entries_.end() && row < nRows; ++iter, ++row )
         {
+
+            table->appendRows( 1 );
 
             const LogEntry& entry( **iter );
             table->cellAt(row,0).firstCursorPosition().insertText( entry.keyword().get() + "  " );
@@ -250,9 +253,6 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
                 }
             }
         }
-
-        // remove empty rows
-        if( row + 1 < nRows ) table->removeRows( row+1, nRows - row+1 );
 
         // check for new page
         QRectF boundingRect( document.documentLayout()->frameBoundingRect( table ) );
