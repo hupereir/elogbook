@@ -36,8 +36,8 @@
 #include "File.h"
 #include "Util.h"
 
-#include "LogbookPrintHelper.h"
-#include "LogEntryPrintHelper.h"
+#include "Logbook.h"
+#include "LogEntry.h"
 #include "LogEntryPrintSelectionWidget.h"
 
 //_____________________________________________________
@@ -124,9 +124,9 @@ void installDefaultOptions( void )
     XmlOptions::get().set( "SHOW_KEYWORD", "0" );
     XmlOptions::get().set( "USE_TREE", "1" );
 
-    XmlOptions::get().set( "LOGENTRY_PRINT_OPTION_MASK", QString().setNum( LogEntryPrintHelper::ENTRY_ALL ) );
+    XmlOptions::get().set( "LOGENTRY_PRINT_OPTION_MASK", QString().setNum( LogEntry::ENTRY_ALL ) );
     XmlOptions::get().set( "LOGENTRY_PRINT_SELECTION", QString().setNum( LogEntryPrintSelectionWidget::ALL_ENTRIES ) );
-    XmlOptions::get().set( "LOGBOOK_PRINT_OPTION_MASK", QString().setNum( LogbookPrintHelper::LOGBOOK_ALL ) );
+    XmlOptions::get().set( "LOGBOOK_PRINT_OPTION_MASK", QString().setNum( Logbook::LOGBOOK_ALL ) );
 
     // masks
     XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK",

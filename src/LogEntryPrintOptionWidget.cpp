@@ -23,7 +23,7 @@
 
 
 #include "LogEntryPrintOptionWidget.h"
-#include "LogEntryPrintHelper.h"
+#include "LogEntry.h"
 #include "XmlOptions.h"
 
 #include <QtGui/QLayout>
@@ -40,13 +40,13 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_.insert( LogEntryPrintHelper::ENTRY_KEYWORD, new QCheckBox( "Keyword", this ) );
-    checkBoxes_.insert( LogEntryPrintHelper::ENTRY_TITLE, new QCheckBox( "Title", this ) );
-    checkBoxes_.insert( LogEntryPrintHelper::ENTRY_AUTHOR, new QCheckBox( "Author", this ) );
-    checkBoxes_.insert( LogEntryPrintHelper::ENTRY_CREATION, new QCheckBox( "Creation time", this ) );
-    checkBoxes_.insert( LogEntryPrintHelper::ENTRY_MODIFICATION, new QCheckBox( "Last modificaion time", this ) );
-    checkBoxes_.insert( LogEntryPrintHelper::ENTRY_TEXT, new QCheckBox( "Contents", this ) );
-    checkBoxes_.insert( LogEntryPrintHelper::ENTRY_ATTACHMENTS, new QCheckBox( "Attachments", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_KEYWORD, new QCheckBox( "Keyword", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_TITLE, new QCheckBox( "Title", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_AUTHOR, new QCheckBox( "Author", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_CREATION, new QCheckBox( "Creation time", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_MODIFICATION, new QCheckBox( "Last modificaion time", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_TEXT, new QCheckBox( "Contents", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_ATTACHMENTS, new QCheckBox( "Attachments", this ) );
 
     // insert in layout
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

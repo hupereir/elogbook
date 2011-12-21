@@ -23,7 +23,7 @@
 
 
 #include "LogbookPrintOptionWidget.h"
-#include "LogbookPrintHelper.h"
+#include "Logbook.h"
 #include "XmlOptions.h"
 
 #include <QtGui/QLayout>
@@ -31,7 +31,7 @@
 //_________________________________________________________________
 LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     QWidget( parent ),
-    OptionWidget( "LOGBOOK_PRINT_OPTION_MASK" )
+    OptionWidget( "Logbook::LOGBOOK_PRINT_OPTION_MASK" )
 {
 
     setWindowTitle( "Logbook Configuration" );
@@ -40,16 +40,16 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_TITLE, new QCheckBox( "Title", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_COMMENTS, new QCheckBox( "Comments", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_AUTHOR, new QCheckBox( "Author", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_FILE, new QCheckBox( "File name", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_DIRECTORY, new QCheckBox( "Attachments directory name", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_CREATION, new QCheckBox( "Creation time", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_MODIFICATION, new QCheckBox( "Last modificaion time", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_BACKUP, new QCheckBox( "Last backup time", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_TABLE, new QCheckBox( "Table of contents", this ) );
-    checkBoxes_.insert( LogbookPrintHelper::LOGBOOK_CONTENT, new QCheckBox( "Selected logbook entries", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_TITLE, new QCheckBox( "Title", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_COMMENTS, new QCheckBox( "Comments", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_AUTHOR, new QCheckBox( "Author", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_FILE, new QCheckBox( "File name", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_DIRECTORY, new QCheckBox( "Attachments directory name", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_CREATION, new QCheckBox( "Creation time", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_MODIFICATION, new QCheckBox( "Last modificaion time", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_BACKUP, new QCheckBox( "Last backup time", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_TABLE, new QCheckBox( "Table of contents", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_CONTENT, new QCheckBox( "Selected logbook entries", this ) );
 
     // insert in layout
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

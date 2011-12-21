@@ -22,8 +22,7 @@
 
 #include "LogbookPrintHelper.h"
 
-#include "Logbook.h"
-#include "LogEntry.h"
+#include "LogEntryPrintHelper.h"
 
 #include <QtCore/QList>
 #include <QtCore/QPair>
@@ -62,8 +61,8 @@ void LogbookPrintHelper::print( QPrinter* printer )
 
     // progress dialog
     int maxValue(0);
-    if( mask_ & LOGBOOK_TABLE ) maxValue += entries_.size();
-    if( (mask_&LOGBOOK_CONTENT) && (entryMask_&LogEntryPrintHelper::ENTRY_ALL) ) maxValue += entries_.size();
+    if( mask_ & Logbook::LOGBOOK_TABLE ) maxValue += entries_.size();
+    if( (mask_&Logbook::LOGBOOK_CONTENT) && (entryMask_&LogEntry::ENTRY_ALL) ) maxValue += entries_.size();
 
     if( maxValue )
     {
@@ -96,7 +95,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     Debug::Throw( "LogbookPrintHelper::_printHeader.\n" );
 
     // check mask
-    if( !( mask_ & LOGBOOK_HEADER ) ) return;
+    if( !( mask_ & Logbook::LOGBOOK_HEADER ) ) return;
 
     // create document
     QTextDocument document;
@@ -112,12 +111,12 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     typedef QPair<QString, QString> StringPair;
     typedef QList<StringPair> StringList;
     StringList values;
-    if( mask_&LOGBOOK_TITLE ) values.push_back( StringPair( "Title: ", logbook_->title() ) );
-    if( mask_&LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() ) values.push_back( StringPair( "Comments: ", logbook_->comments() ) );
-    if( mask_&LOGBOOK_AUTHOR ) values.push_back( StringPair( "Author: ", logbook_->author() ) );
+    if( mask_&Logbook::LOGBOOK_TITLE ) values.push_back( StringPair( "Title: ", logbook_->title() ) );
+    if( mask_&Logbook::LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() ) values.push_back( StringPair( "Comments: ", logbook_->comments() ) );
+    if( mask_&Logbook::LOGBOOK_AUTHOR ) values.push_back( StringPair( "Author: ", logbook_->author() ) );
 
-    if( mask_&LOGBOOK_FILE ) values.push_back( StringPair( "File: ", logbook_->file() ) );
-    if( mask_&LOGBOOK_DIRECTORY && !logbook_->directory().isEmpty() )
+    if( mask_&Logbook::LOGBOOK_FILE ) values.push_back( StringPair( "File: ", logbook_->file() ) );
+    if( mask_&Logbook::LOGBOOK_DIRECTORY && !logbook_->directory().isEmpty() )
     {
         QString buffer;
         QTextStream what( &buffer );
@@ -127,9 +126,9 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
         values.push_back( StringPair( "Attachments directory: ", buffer ) );
     }
 
-    if( mask_&LOGBOOK_CREATION ) values.push_back( StringPair( "Created: ", logbook_->creation().toString() ) );
-    if( mask_&LOGBOOK_MODIFICATION ) values.push_back( StringPair( "Modified: ", logbook_->modification().toString() ) );
-    if( mask_&LOGBOOK_BACKUP ) values.push_back( StringPair( "Last backup: ", logbook_->backup().toString() ) );
+    if( mask_&Logbook::LOGBOOK_CREATION ) values.push_back( StringPair( "Created: ", logbook_->creation().toString() ) );
+    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values.push_back( StringPair( "Modified: ", logbook_->modification().toString() ) );
+    if( mask_&Logbook::LOGBOOK_BACKUP ) values.push_back( StringPair( "Last backup: ", logbook_->backup().toString() ) );
     const int nRows( values.size() );
 
     // create table
@@ -188,7 +187,7 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
     if( entries_.empty() ) return;
 
     // check mask
-    if( !( mask_ & LOGBOOK_TABLE ) ) return;
+    if( !( mask_ & Logbook::LOGBOOK_TABLE ) ) return;
 
     // calculate number of entries per page
     const QFont font( QTextDocument().defaultFont() );
@@ -295,10 +294,10 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     if( entries_.empty() ) return;
 
     // check entries
-    if( !( entryMask_ & LogEntryPrintHelper::ENTRY_ALL ) ) return;
+    if( !( entryMask_ & LogEntry::ENTRY_ALL ) ) return;
 
     // check mask
-    if( !( mask_ & LOGBOOK_CONTENT ) ) return;
+    if( !( mask_ & Logbook::LOGBOOK_CONTENT ) ) return;
 
     LogEntryPrintHelper helper;
     helper.setupPage( printer );

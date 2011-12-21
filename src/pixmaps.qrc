@@ -7,7 +7,6 @@
     <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
     <file alias="pixmaps/document-close.png">../pixmaps/document-close.png</file>
     <file alias="pixmaps/document-new.png">../pixmaps/document-new.png</file>
-    <file alias="pixmaps/document-print-preview.png">../pixmaps/document-print-preview.png</file>
     <file alias="pixmaps/document-save.png">../pixmaps/document-save.png</file>
     <file alias="pixmaps/document-save-as.png">../pixmaps/document-save-as.png</file>
     <file alias="pixmaps/tools-check-spelling.png">../pixmaps/tools-check-spelling.png</file>

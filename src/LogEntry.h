@@ -48,6 +48,20 @@ class LogEntry:public Counter, public BASE::Key
 
     public:
 
+    //! configuration mask
+    enum Mask
+    {
+        ENTRY_KEYWORD = 1<<0,
+        ENTRY_TITLE = 1<<1,
+        ENTRY_AUTHOR = 1<<2,
+        ENTRY_CREATION = 1<<3,
+        ENTRY_MODIFICATION = 1<<4,
+        ENTRY_TEXT = 1<<5,
+        ENTRY_ATTACHMENTS = 1<<6,
+        ENTRY_HEADER = ENTRY_TITLE | ENTRY_KEYWORD | ENTRY_CREATION | ENTRY_MODIFICATION | ENTRY_AUTHOR,
+        ENTRY_ALL = ENTRY_HEADER | ENTRY_TEXT | ENTRY_ATTACHMENTS
+    };
+
     //! empty creator
     LogEntry( void );
 

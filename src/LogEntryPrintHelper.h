@@ -26,12 +26,11 @@
 #include "Counter.h"
 #include "Debug.h"
 #include "BasePrintHelper.h"
+#include "LogEntry.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
-
-class LogEntry;
 
 //! printing utility
 class LogEntryPrintHelper: public BasePrintHelper, public Counter
@@ -41,25 +40,11 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
 
     public:
 
-    //! configuration output
-    enum Mask
-    {
-        ENTRY_KEYWORD = 1<<0,
-        ENTRY_TITLE = 1<<1,
-        ENTRY_AUTHOR = 1<<2,
-        ENTRY_CREATION = 1<<3,
-        ENTRY_MODIFICATION = 1<<4,
-        ENTRY_TEXT = 1<<5,
-        ENTRY_ATTACHMENTS = 1<<6,
-        ENTRY_HEADER = ENTRY_TITLE | ENTRY_KEYWORD | ENTRY_CREATION | ENTRY_MODIFICATION | ENTRY_AUTHOR,
-        ENTRY_ALL = ENTRY_HEADER | ENTRY_TEXT | ENTRY_ATTACHMENTS
-    };
-
     //! constructor
     LogEntryPrintHelper( QObject* parent = 0 ):
         BasePrintHelper( parent ),
         Counter( "LogEntryPrintHelper" ),
-        mask_( ENTRY_ALL ),
+        mask_( LogEntry::ENTRY_ALL ),
         entry_( 0 )
     { Debug::Throw( "LogEntryPrintHelper::LogEntryPrintHelper.\n" ); };
 

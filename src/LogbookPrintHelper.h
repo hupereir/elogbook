@@ -26,16 +26,14 @@
 #include "Counter.h"
 #include "BasePrintHelper.h"
 #include "Debug.h"
+#include "Logbook.h"
 #include "LogEntryModel.h"
-#include "LogEntryPrintHelper.h"
+#include "LogEntry.h"
 
 #include <QtCore/QObject>
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 #include <QtGui/QProgressDialog>
-
-class Logbook;
-class LogEntry;
 
 //! printing utilityclass
 class LogbookPrintHelper: public BasePrintHelper, public Counter
@@ -45,32 +43,12 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
 
     public:
 
-    //! configuration output
-    enum Mask
-    {
-        LOGBOOK_TITLE = 1<<0,
-        LOGBOOK_COMMENTS = 1<< 1,
-        LOGBOOK_AUTHOR = 1<<2,
-        LOGBOOK_FILE = 1<<3,
-        LOGBOOK_DIRECTORY = 1<<4,
-        LOGBOOK_CREATION = 1<<5,
-        LOGBOOK_MODIFICATION = 1<<6,
-        LOGBOOK_BACKUP = 1<<7,
-        LOGBOOK_TABLE = 1<<8,
-        LOGBOOK_CONTENT = 1<<9,
-        LOGBOOK_HEADER =
-            LOGBOOK_TITLE|LOGBOOK_AUTHOR|LOGBOOK_FILE|
-            LOGBOOK_CREATION|LOGBOOK_MODIFICATION|LOGBOOK_BACKUP|
-            LOGBOOK_DIRECTORY|LOGBOOK_COMMENTS,
-        LOGBOOK_ALL = LOGBOOK_HEADER|LOGBOOK_TABLE|LOGBOOK_CONTENT
-    };
-
     //! constructor
     LogbookPrintHelper( QObject* parent = 0 ):
         BasePrintHelper( parent ),
         Counter( "LogbookPrintHelper" ),
-        mask_( LOGBOOK_ALL ),
-        entryMask_( LogEntryPrintHelper::ENTRY_ALL ),
+        mask_( Logbook::LOGBOOK_ALL ),
+        entryMask_( LogEntry::ENTRY_ALL ),
         logbook_( 0 ),
         progressDialog_( 0 ),
         progress_( 0 ),

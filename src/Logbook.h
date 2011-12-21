@@ -66,6 +66,26 @@ class Logbook:public QObject, public Counter, public BASE::Key
     //! max number of entries in logbook (make child logbook if larger)
     enum { MAX_ENTRIES = 50 };
 
+    //! configuration mask
+    enum Mask
+    {
+        LOGBOOK_TITLE = 1<<0,
+        LOGBOOK_COMMENTS = 1<< 1,
+        LOGBOOK_AUTHOR = 1<<2,
+        LOGBOOK_FILE = 1<<3,
+        LOGBOOK_DIRECTORY = 1<<4,
+        LOGBOOK_CREATION = 1<<5,
+        LOGBOOK_MODIFICATION = 1<<6,
+        LOGBOOK_BACKUP = 1<<7,
+        LOGBOOK_TABLE = 1<<8,
+        LOGBOOK_CONTENT = 1<<9,
+        LOGBOOK_HEADER =
+            LOGBOOK_TITLE|LOGBOOK_AUTHOR|LOGBOOK_FILE|
+            LOGBOOK_CREATION|LOGBOOK_MODIFICATION|LOGBOOK_BACKUP|
+            LOGBOOK_DIRECTORY|LOGBOOK_COMMENTS,
+        LOGBOOK_ALL = LOGBOOK_HEADER|LOGBOOK_TABLE|LOGBOOK_CONTENT
+    };
+
     //! constructor from file
     Logbook( const File& file = File("") );
 

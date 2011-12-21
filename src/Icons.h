@@ -46,7 +46,6 @@ namespace ICONS
     static const QString VIEW_REMOVE = "view-close.png";
     static const QString VIEW_CLONE = "view-fullscreen.png";
     static const QString TREE="view-list-tree.png";
-    static const QString PRINT_PREVIEW = "document-print-preview.png";
 
 };
 
