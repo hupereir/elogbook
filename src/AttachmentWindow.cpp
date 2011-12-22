@@ -50,7 +50,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 {
 
   Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
-  setWindowTitle( Application::ATTACHMENT_TITLE );
+  setWindowTitle( "Attachments - elogbook" );
   setOptionName( "ATTACHMENT_WINDOW" );
 
   mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );

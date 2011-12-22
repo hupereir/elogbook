@@ -217,7 +217,6 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
         tableFormat.setCellPadding(0);
         tableFormat.setCellSpacing(0);
         tableFormat.setWidth( QTextLength( QTextLength::PercentageLength, 100 ) );
-        //QTextTable* table = cursor.insertTable( nRows, 4, tableFormat );
         QTextTable* table = cursor.insertTable( 1, 4, tableFormat );
 
         // header
@@ -247,7 +246,6 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
                 progressDialog_->setValue( ++progress_ );
                 if( progressDialog_->wasCanceled() )
                 {
-                    printer->abort();
                     abort();
                     return;
                 }
@@ -317,7 +315,6 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
             progressDialog_->setValue( ++progress_ );
             if( progressDialog_->wasCanceled() )
             {
-                printer->abort();
                 abort();
                 return;
             }

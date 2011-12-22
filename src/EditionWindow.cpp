@@ -1034,7 +1034,7 @@ void EditionWindow::_save( bool updateSelection )
 
     // update selection frame
     mainwindow.updateEntry( entry, updateSelection );
-    mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    mainwindow.setModified( true );
     Debug::Throw( "EditionWindow::_save - mainWindow updated.\n" );
 
     // set logbook as modified

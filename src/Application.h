@@ -58,15 +58,6 @@ class Application: public BaseApplication, public Counter
     //! destructor
     ~Application( void );
 
-    //! window title for modified logbook
-    static const QString MAIN_TITLE_MODIFIED;
-
-    //! default window title
-    static const QString MAIN_TITLE;
-
-    //! default window title
-    static const QString ATTACHMENT_TITLE;
-
     //! application manager
     virtual void initApplicationManager( void );
 
@@ -93,7 +84,7 @@ class Application: public BaseApplication, public Counter
 
     //! about eLogbook
     virtual void _about( void )
-    { BaseApplication::_about( MAIN_TITLE, VERSION, BUILD_TIMESTAMP ); }
+    { BaseApplication::_about( "Elogbook", VERSION, BUILD_TIMESTAMP ); }
 
     //! configuration
     virtual void _configuration( void );
@@ -114,7 +105,7 @@ class Application: public BaseApplication, public Counter
 
     //! main window entry selection frame
     MainWindow* mainWindow_;
-    
+
     //! scratch files
     ScratchFileMonitor* scratchFileMonitor_;
 

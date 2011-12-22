@@ -294,6 +294,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //@}
 
+    //! set modified
+    void setModified( bool );
+
     signals:
 
     //! emmited when a message is available from logbook

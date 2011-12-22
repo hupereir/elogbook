@@ -82,7 +82,7 @@ MainWindow::MainWindow( QWidget *parent ):
 {
     Debug::Throw( "MainWindow::MainWindow.\n" );
     setOptionName( "MAIN_WINDOW" );
-    setWindowTitle( Application::MAIN_TITLE );
+    setModified( false );
 
     // file checker
     fileCheck_ = new FileCheck( this );
@@ -421,6 +421,8 @@ bool MainWindow::setLogbook( File file )
     _updateKeywordActions();
     _updateEntryActions();
 
+    setModified( false );
+
     return true;
 }
 
@@ -749,7 +751,7 @@ void MainWindow::save( const bool& confirmEntries )
     Singleton::get().application<Application>()->idle();
     _setEnabled( true );
 
-    if( written ) { setWindowTitle( Application::MAIN_TITLE );}
+    if( written ) { setModified( false );}
 
     // update StateFrame
     statusBar().label().setText( "" );
@@ -1402,6 +1404,21 @@ void MainWindow::_newLogbook( void )
 }
 
 //_______________________________________________
+void MainWindow::setModified( bool value )
+{
+
+    Debug::Throw() << "MainWindow::setModified - " << value << endl;
+
+    QString buffer;
+    QTextStream what( &buffer );
+    if( !logbook() || logbook()->file().isEmpty() ) what << "Elogbook";
+    else what << logbook()->file().localName() << " - " << logbook()->file().path();
+    if( value ) what << " (modified)";
+    setWindowTitle( buffer );
+
+}
+
+//_______________________________________________
 void MainWindow::open( FileRecord record )
 {
 
@@ -1547,7 +1564,7 @@ void MainWindow::_saveBackup( void )
 
         logbook()->setBackup( TimeStamp::now() );
         logbook()->setModified( true );
-        setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+        setModified( true );
 
         // Save logbook if needed (to make sure the backup stamp is updated)
         if( !logbook()->file().isEmpty() ) save();
@@ -2342,7 +2359,7 @@ void MainWindow::_newKeyword( void )
 
     //! create dialog
     EditKeywordDialog dialog( this );
-    dialog.setWindowTitle( "New Keyword - Elogbook" );
+    dialog.setWindowTitle( "New Keyword - elogbook" );
 
     KeywordModel::List keywords( _keywordModel().children() );
     for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); ++iter )
@@ -2548,7 +2565,7 @@ void MainWindow::_renameEntryKeyword( void )
 
     //! create dialog
     EditKeywordDialog dialog( this );
-    dialog.setWindowTitle( "Edit Keyword - Elogbook" );
+    dialog.setWindowTitle( "Edit Keyword - elogbook" );
 
     const KeywordModel::List& keywords( _keywordModel().children() );
     for( KeywordModel::List::const_iterator iter = keywords.begin(); iter != keywords.end(); ++iter )

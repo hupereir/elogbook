@@ -45,7 +45,7 @@ NewLogbookDialog::NewLogbookDialog( QWidget* parent ):
 {
 
   Debug::Throw( "NewLogbookDialog::NewLogbookDialog.\n" );
-  setWindowTitle( "New Logbook - Elogbook" );
+  setWindowTitle( "New Logbook - elogbook" );
   QGridLayout *grid_layout( new QGridLayout() );
   grid_layout->setMargin(0);
   grid_layout->setSpacing(5);

@@ -45,7 +45,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
 {
 
   Debug::Throw( "NewAttachmentDialog::NewAttachmentDialog.\n" );
-  setWindowTitle( "New Attachment - Elogbook" );
+  setWindowTitle( "New Attachment - elogbook" );
 
   GridLayout* gridLayout = new GridLayout();
   gridLayout->setMargin(0);

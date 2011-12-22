@@ -64,7 +64,7 @@ BaseConfigurationDialog( parent )
 {
 
     Debug::Throw( "ConfigurationDialog::ConfigurationDialog.\n" );
-    setWindowTitle( "Configuration - Elogbook" );
+    setWindowTitle( "Configuration - elogbook" );
 
     baseConfiguration();
 

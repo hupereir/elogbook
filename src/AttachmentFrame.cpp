@@ -305,7 +305,7 @@ void AttachmentFrame::_new( void )
     }
 
     // change Application window title
-    Singleton::get().application<Application>()->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    Singleton::get().application<Application>()->mainWindow().setModified( true );
 
     // save EditionWindow entry
     window.saveAction().trigger();
@@ -444,7 +444,7 @@ void AttachmentFrame::customEvent( QEvent* event )
 
     // set main window title
     MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
-    mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    mainwindow.setModified( true );
     if( mainwindow.logbook()->file().size() ) mainwindow.save();
 
   }
@@ -677,7 +677,7 @@ void AttachmentFrame::_delete( void )
 
   if( logbook_changed )
   {
-    Singleton::get().application<Application>()->mainWindow().setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    Singleton::get().application<Application>()->mainWindow().setModified( true );
     window.saveAction().trigger();
 
     // resize columns
@@ -820,7 +820,7 @@ void AttachmentFrame::_clean( void )
 
     // set main window title
     MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
-    mainwindow.setWindowTitle( Application::MAIN_TITLE_MODIFIED );
+    mainwindow.setModified( true );
     if( mainwindow.logbook()->file().size() ) mainwindow.save();
 
   }

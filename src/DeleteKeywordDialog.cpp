@@ -49,7 +49,7 @@ CustomDialog( parent )
 
     assert( !keywords.empty() );
 
-    setWindowTitle( "Delete Keyword - Elogbook" );
+    setWindowTitle( "Delete Keyword - elogbook" );
     QString buffer;
     QTextStream what( &buffer );
     if( keywords.size() == 1 ) what << "Delete keyword " << keywords.front() << " ?";

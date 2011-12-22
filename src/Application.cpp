@@ -52,11 +52,6 @@
 #include <QtGui/QMessageBox>
 
 //____________________________________________
-const QString Application::MAIN_TITLE_MODIFIED = "Elogbook (modified)";
-const QString Application::MAIN_TITLE = "Elogbook";
-const QString Application::ATTACHMENT_TITLE = "Attachments - Elogbook";
-
-//____________________________________________
 void Application::usage( void )
 {
     Debug::Throw(0) << "usage : elogbook [options] [file]" << endl;
