@@ -1102,8 +1102,8 @@ void MainWindow::_installActions( void )
     logbookStatisticsAction_->setToolTip( "View logbook statistics" );
     connect( logbookStatisticsAction_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
 
-    logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Informations ...", this );
-    logbookInformationsAction_->setToolTip( "Edit logbook informations" );
+    logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Properties ...", this );
+    logbookInformationsAction_->setToolTip( "Edit logbook properties" );
     connect( logbookInformationsAction_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 
     closeFramesAction_ = new QAction( IconEngine::get( ICONS::CLOSE ), "Close Editors", this );

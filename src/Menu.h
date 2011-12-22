@@ -1,3 +1,6 @@
+#ifndef Menu_h
+#define Menu_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,23 +24,11 @@
 *
 *******************************************************************************/
 
-#ifndef Menu_h
-#define Menu_h
-
-/*!
-\file Menu.h
-\brief  main menu
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
-#include <cassert>
-#include <QMenuBar>
-
-
 #include "Debug.h"
 #include "Counter.h"
+
+#include <QtGui/QMenuBar>
+#include <cassert>
 
 class LogEntry;
 class MainWindow;
@@ -54,10 +45,10 @@ class Menu:public QMenuBar, public Counter
     //! Qt meta object declaration
     Q_OBJECT
 
-        public:
+    public:
 
-        //! creator
-        Menu( QWidget* parent, MainWindow* frame );
+    //! creator
+    Menu( QWidget* parent, MainWindow* frame );
 
     //! destructor
     ~Menu( void )
@@ -102,6 +93,9 @@ class Menu:public QMenuBar, public Counter
 
     //! associates actions and recent entries
     typedef std::map< QAction*, LogEntry* > ActionMap;
+
+    //! action group
+    QActionGroup* actionGroup_;
 
     //! associates actions and recent entries
     ActionMap actions_;

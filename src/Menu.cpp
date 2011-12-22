@@ -21,13 +21,7 @@
 *
 *******************************************************************************/
 
-/*!
-\file Menu.cpp
-\brief  main menu
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
+#include "Menu.h"
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -42,7 +36,6 @@
 #include "Icons.h"
 #include "Logbook.h"
 #include "MainWindow.h"
-#include "Menu.h"
 #include "RecentFilesMenu.h"
 #include "QtUtil.h"
 #include "SearchPanel.h"
@@ -50,8 +43,6 @@
 #include "Str.h"
 #include "Util.h"
 #include "XmlOptions.h"
-
-#include <QtGui/QMessageBox>
 
 //_______________________________________________
 Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
@@ -142,6 +133,10 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     }
 
     // windows menu
+
+    actionGroup_ = new QActionGroup( this );
+    actionGroup_->setExclusive( true );
+
     windowsMenu_ = addMenu( "Windows" );
     connect( windowsMenu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
@@ -250,11 +245,18 @@ void Menu::_updateEditorMenu( void )
             // add menu entry for this frame
             QString title( (*iter)->windowTitle() );
             QAction* action = windowsMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &(*iter)->uniconifyAction(), SLOT( trigger() ) );
-            action->setCheckable( true );
-            action->setChecked( editionWindow && ( editionWindow == (*iter) ) );
+
+            if( editionWindow )
+            {
+                action->setCheckable( true );
+                action->setChecked( editionWindow && ( editionWindow == (*iter) ) );
+            }
+
+            actionGroup_->addAction( action );
 
         }
 
+        windowsMenu_->addSeparator();
         windowsMenu_->addAction( &mainWindow.closeFramesAction() );
 
     }
