@@ -36,6 +36,8 @@
 #include "Debug.h"
 #include "FileList.h"
 #include "GridLayout.h"
+#include "IconEngine.h"
+#include "Icons.h"
 #include "LogbookPrintOptionWidget.h"
 #include "LogEntryPrintOptionWidget.h"
 #include "MainWindow.h"
@@ -74,7 +76,7 @@ BaseConfigurationDialog( parent )
     OptionSpinBox* spinbox;
 
     // attachment editors
-    QWidget* page = &addPage( "Commands", "System dependent commands used to edit attachments" );
+    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), "Commands", "System dependent commands used to edit attachments" );
     page->layout()->addWidget( box = new QGroupBox( "Attachment Editors", page ));
 
     GridLayout* gridLayout = new GridLayout();
@@ -133,84 +135,92 @@ BaseConfigurationDialog( parent )
     box->layout()->addWidget( listbox );
 
     // listview configuration
-    page = &addPage( "List configuration", "Visible columns in logbook keywords and entries lists" );
-    TreeViewConfiguration *listview_config = new TreeViewConfiguration(
-        page,
-        &Singleton::get().application<Application>()->mainWindow().logEntryList(),
-        Singleton::get().application<Application>()->mainWindow().logEntryList().maskOptionName() );
+    if( false )
+    {
+        page = &addPage( IconEngine::get( ICONS::PREFERENCE_LISTS ), "Lists", "Visible columns in logbook keywords and entries lists" );
+        TreeViewConfiguration *listview_config = new TreeViewConfiguration(
+            page,
+            &Singleton::get().application<Application>()->mainWindow().logEntryList(),
+            Singleton::get().application<Application>()->mainWindow().logEntryList().maskOptionName() );
 
-    listview_config->setTitle( "Logbook entries list" );
-    addOptionWidget( listview_config );
-    page->layout()->addWidget( listview_config );
+        listview_config->setTitle( "Logbook entries list" );
+        addOptionWidget( listview_config );
+        page->layout()->addWidget( listview_config );
 
-    // attachment configuration
-    listview_config = new TreeViewConfiguration(
-        page,
-        &Singleton::get().application<Application>()->attachmentWindow().frame().list(),
-        Singleton::get().application<Application>()->attachmentWindow().frame().list().maskOptionName() );
-    listview_config->setTitle( "Attachments list" );
-    addOptionWidget( listview_config );
-    page->layout()->addWidget( listview_config );
+        // attachment configuration
+        listview_config = new TreeViewConfiguration(
+            page,
+            &Singleton::get().application<Application>()->attachmentWindow().frame().list(),
+            Singleton::get().application<Application>()->attachmentWindow().frame().list().maskOptionName() );
+        listview_config->setTitle( "Attachments list" );
+        addOptionWidget( listview_config );
+        page->layout()->addWidget( listview_config );
+
+    }
 
     // toolbars
-    page = &addPage( "Toolbars", "Toolbars visibility and location" );
-    box = new QGroupBox( "Toolbars", page );
-    page->layout()->addWidget( box );
+    if( false )
+    {
+        page = &addPage( IconEngine::get( ICONS::PREFERENCE_TOOLBARS ), "Toolbars", "Toolbars visibility and location" );
+        box = new QGroupBox( "Toolbars", page );
+        page->layout()->addWidget( box );
 
-    gridLayout = new GridLayout();
-    gridLayout->setSpacing(5);
-    gridLayout->setMargin(5);
-    gridLayout->setMaxCount(2);
-    box->setLayout( gridLayout );
+        gridLayout = new GridLayout();
+        gridLayout->setSpacing(5);
+        gridLayout->setMargin(5);
+        gridLayout->setMaxCount(2);
+        box->setLayout( gridLayout );
 
-    gridLayout->addWidget( new QLabel( "Visibility", box ) );
-    gridLayout->addWidget( new QLabel( "Location", box ) );
+        gridLayout->addWidget( new QLabel( "Visibility", box ) );
+        gridLayout->addWidget( new QLabel( "Location", box ) );
 
-    OptionComboBox* combobox;
+        OptionComboBox* combobox;
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" ));
-    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) );
-    addOptionWidget( checkbox );
-    addOptionWidget( combobox );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" ));
+        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) );
+        addOptionWidget( checkbox );
+        addOptionWidget( combobox );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" ));
-    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" ));
-    addOptionWidget( checkbox );
-    addOptionWidget( combobox );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" ));
+        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" ));
+        addOptionWidget( checkbox );
+        addOptionWidget( combobox );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" ));
-    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" ));
-    addOptionWidget( checkbox );
-    addOptionWidget( combobox );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" ));
+        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" ));
+        addOptionWidget( checkbox );
+        addOptionWidget( combobox );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" ));
-    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" ));
-    addOptionWidget( checkbox );
-    addOptionWidget( combobox );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" ));
+        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" ));
+        addOptionWidget( checkbox );
+        addOptionWidget( combobox );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" ));
-    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" ));
-    addOptionWidget( checkbox );
-    addOptionWidget( combobox );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" ));
+        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" ));
+        addOptionWidget( checkbox );
+        addOptionWidget( combobox );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" ));
-    gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" ));
-    addOptionWidget( checkbox );
-    addOptionWidget( combobox );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" ));
+        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" ));
+        addOptionWidget( checkbox );
+        addOptionWidget( combobox );
 
-    box = new QGroupBox( page );
-    page->layout()->addWidget( box );
+        box = new QGroupBox( page );
+        page->layout()->addWidget( box );
 
-    box->setLayout( new QHBoxLayout() );
-    box->layout()->setSpacing( 5 );
-    box->layout()->setMargin( 5 );
+        box->setLayout( new QHBoxLayout() );
+        box->layout()->setSpacing( 5 );
+        box->layout()->setMargin( 5 );
 
-    box->layout()->addWidget( new QLabel( "Lock position: ", box ));
-    box->layout()->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "LOCK_TOOLBAR_LOCATION" ) );
-    addOptionWidget( combobox );
+        box->layout()->addWidget( new QLabel( "Lock position: ", box ));
+        box->layout()->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "LOCK_TOOLBAR_LOCATION" ) );
+        addOptionWidget( combobox );
+
+    }
 
     // colors
-    page = &addPage( "Colors", "Color settings for entry tagging and text highlighting" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_COLORS ), "Colors", "Color settings for entry tagging and text highlighting" );
     box = new QGroupBox( "Logbook entry colors", page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
@@ -232,7 +242,7 @@ BaseConfigurationDialog( parent )
     addOptionWidget( listbox );
 
     // auto save
-    page = &addPage( "Backup", "Logbook backup configuration" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_BACKUP ), "Backup", "Logbook backup configuration" );
     box = new QGroupBox( "Auto save", page );
     page->layout()->addWidget( box );
 
@@ -293,7 +303,7 @@ BaseConfigurationDialog( parent )
 
     // spelling
     #if WITH_ASPELL
-    page = &addPage( "Spell checking", "Spell checking configuration" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_SPELLCHECK ), "Spell Checking", "Spell checking configuration" );
     SpellCheckConfiguration* spell_config = new SpellCheckConfiguration( page );
     page->layout()->addWidget( spell_config );
     addOptionWidget( spell_config );
@@ -303,7 +313,7 @@ BaseConfigurationDialog( parent )
     textEditConfiguration();
 
     // printing
-    page = &addPage( "Printing", "Logbook and logbook entries printing configuration" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_PRINTING ), "Printing", "Logbook and logbook entries printing configuration" );
 
     hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
@@ -323,13 +333,13 @@ BaseConfigurationDialog( parent )
     addOptionWidget( logEntryPrintOptionWidget );
 
     // recent files
-    page = &addPage( "Recent files", "Recent files list settings", true );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_RECENT_FILES ), "Recent Files", "Recent files list settings", true );
     RecentFilesConfiguration* recentFilesConfiguration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
     page->layout()->addWidget( recentFilesConfiguration );
     addOptionWidget( recentFilesConfiguration );
 
     // misc
-    page = &addPage( "Misc", "Additional unsorted settings" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_UNSORTED ), "Unsorted", "Additional unsorted settings" );
 
     // server configuration
     SERVER::ServerConfiguration* server_configuration;
