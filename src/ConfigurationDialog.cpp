@@ -52,10 +52,6 @@
 #include "TreeViewConfiguration.h"
 
 #include "Config.h"
-#if WITH_ASPELL
-#include "SpellCheckConfiguration.h"
-#endif
-
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QGroupBox>
@@ -71,12 +67,12 @@ BaseConfigurationDialog( parent )
     baseConfiguration();
 
     // generic objects
-    QGroupBox *box;
+    QWidget *box;
     OptionCheckBox *checkbox;
     OptionSpinBox* spinbox;
 
     // attachment editors
-    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), "Commands", "System dependent commands used to edit attachments" );
+    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), "Applications", "System dependent third-party applications used to edit attachments" );
     page->layout()->addWidget( box = new QGroupBox( "Attachment Editors", page ));
 
     GridLayout* gridLayout = new GridLayout();
@@ -120,19 +116,6 @@ BaseConfigurationDialog( parent )
     spinbox->setMaximum( 96 );
     spinbox->setToolTip( "Icon size in attachment lists" );
     addOptionWidget( spinbox );
-
-    page->layout()->addWidget( box = new QGroupBox( "Print Commands", page ) );
-
-    box->setLayout( new QVBoxLayout() );
-    box->layout()->setMargin(5);
-    box->layout()->setSpacing(5);
-
-    OptionListBox* listbox;
-    listbox = new OptionListBox( box, "PRINT_COMMAND" );
-    listbox->setBrowsable( true );
-    addOptionWidget( listbox );
-    listbox->setToolTip( "Available command for printing/editing converted files" );
-    box->layout()->addWidget( listbox );
 
     // listview configuration
     if( false )
@@ -227,6 +210,7 @@ BaseConfigurationDialog( parent )
     box->layout()->setSpacing(5);
     page->layout()->addWidget( box );
 
+    OptionListBox* listbox;
     box->layout()->addWidget( listbox = new OptionListBox( box, "COLOR" ) );
     listbox->setToolTip( "Colors used for logbook entry display" );
     addOptionWidget( listbox );
@@ -301,14 +285,6 @@ BaseConfigurationDialog( parent )
     spinbox->setEnabled( false );
     connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
 
-    // spelling
-    #if WITH_ASPELL
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_SPELLCHECK ), "Spell Checking", "Spell checking configuration" );
-    SpellCheckConfiguration* spell_config = new SpellCheckConfiguration( page );
-    page->layout()->addWidget( spell_config );
-    addOptionWidget( spell_config );
-    #endif
-
     // edition
     textEditConfiguration();
 
@@ -341,15 +317,10 @@ BaseConfigurationDialog( parent )
     // misc
     page = &addPage( IconEngine::get( ICONS::PREFERENCE_UNSORTED ), "Unsorted", "Additional unsorted settings" );
 
-    // server configuration
-    SERVER::ServerConfiguration* server_configuration;
-    page->layout()->addWidget( server_configuration = new SERVER::ServerConfiguration( page, "Server configuration" ));
-    addOptionWidget( server_configuration );
-
-    box = new QGroupBox( "Misc", page );
+    box = new QWidget( page );
     gridLayout = new GridLayout();
     gridLayout->setSpacing(5);
-    gridLayout->setMargin(5);
+    gridLayout->setMargin(0);
     gridLayout->setMaxCount( 2 );
     box->setLayout( gridLayout );
     page->layout()->addWidget( box );
