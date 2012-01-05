@@ -25,6 +25,8 @@
 #include "Application.h"
 #include "AttachmentWindow.h"
 #include "BaseIcons.h"
+#include "BackupManagerDialog.h"
+#include "BackupManagerWidget.h"
 #include "ColorMenu.h"
 #include "Command.h"
 #include "CustomToolBar.h"
@@ -1079,6 +1081,10 @@ void MainWindow::_installActions( void )
     saveBackupAction_->setToolTip( "Save logbook backup" );
     connect( saveBackupAction_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
 
+    backupManagerAction_ = new QAction( IconEngine::get( ICONS::CONFIGURE_BACKUPS ), "Manage Backups ...", this );
+    backupManagerAction_->setToolTip( "Save logbook backup" );
+    connect( backupManagerAction_, SIGNAL( triggered() ), SLOT( _manageBackups() ) );
+
     revertToSaveAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), "Reload", this );
     revertToSaveAction_->setToolTip( "Restore saved logbook" );
     revertToSaveAction_->setShortcut( Qt::Key_F5 );
@@ -1450,7 +1456,7 @@ void MainWindow::open( FileRecord record )
 }
 
 //_______________________________________________
-bool MainWindow::_saveAs( File default_file, bool register_logbook )
+bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
 {
     Debug::Throw( "MainWindow::_saveAs.\n");
 
@@ -1461,14 +1467,14 @@ bool MainWindow::_saveAs( File default_file, bool register_logbook )
     }
 
     // check default filename
-    if( default_file.isEmpty() ) default_file = logbook()->file();
-    if( default_file.isEmpty() ) default_file = File( "log.xml" ).addPath( workingDirectory() );
+    if( defaultFile.isEmpty() ) defaultFile = logbook()->file();
+    if( defaultFile.isEmpty() ) defaultFile = File( "log.xml" ).addPath( workingDirectory() );
 
     // create file dialog
     FileDialog dialog( this );
     dialog.setAcceptMode( QFileDialog::AcceptSave );
     dialog.setFileMode( QFileDialog::AnyFile );
-    dialog.selectFile( default_file );
+    dialog.selectFile( defaultFile );
 
     // get file
     File fullname( dialog.getFile() );
@@ -1497,7 +1503,7 @@ bool MainWindow::_saveAs( File default_file, bool register_logbook )
     { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
 
     // redo file check registration
-    if( register_logbook )
+    if( registerLogbook )
     {
         fileCheck().clear();
         fileCheck().registerLogbook( logbook() );
@@ -1545,10 +1551,10 @@ void MainWindow::_saveBackup( void )
     }
 
     // store last backup time and update
-    TimeStamp last_backup( logbook()->backup() );
+    TimeStamp lastBackup( logbook()->backup() );
 
     // stores current logbook filename
-    QString current_filename( logbook()->file() );
+    QString currentFilename( logbook()->file() );
 
     // save logbook as backup
     bool saved( _saveAs( filename, false ) );
@@ -1558,11 +1564,11 @@ void MainWindow::_saveBackup( void )
     Singleton::get().application<Application>()->recentFiles().remove( File(filename).expand() );
 
     // restore initial filename
-    logbook()->setFile( current_filename );
+    logbook()->setFile( currentFilename );
 
     if( saved ) {
 
-        logbook()->setBackup( TimeStamp::now() );
+        logbook()->addBackup( filename );
         logbook()->setModified( true );
         setModified( true );
 
@@ -1570,6 +1576,17 @@ void MainWindow::_saveBackup( void )
         if( !logbook()->file().isEmpty() ) save();
     }
 
+}
+
+//_______________________________________________
+void MainWindow::_manageBackups( void )
+{
+    Debug::Throw( "MainWindow::_manageBackups.\n");
+
+    BackupManagerDialog dialog( this );
+    Key::associate( &dialog.managerWidget(), logbook() );
+    dialog.managerWidget().updateBackups();
+    dialog.exec();
 }
 
 //_____________________________________________

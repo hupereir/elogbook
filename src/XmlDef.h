@@ -84,6 +84,9 @@ namespace XML {
     //! backup time
     static const QString BACKUP( "Backup" );
 
+    //! backup file
+    static const QString LOGBOOK_BACKUP( "Logbook_backup" );
+
     //! title
     static const QString TITLE( "title" );
 

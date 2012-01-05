@@ -44,9 +44,10 @@ namespace ICONS
     static const QString VIEW_REMOVE = "view-close.png";
     static const QString VIEW_CLONE = "view-fullscreen.png";
     static const QString TREE="view-list-tree.png";
+    static const QString CONFIGURE_BACKUPS = "configure-backups.png";
 
     static const QString PREFERENCE_SPELLCHECK = "tools-check-spelling.png";
-    static const QString PREFERENCE_BACKUP = "document-save.png";
+    static const QString PREFERENCE_BACKUP = "configure-backups.png";
 
 };
 

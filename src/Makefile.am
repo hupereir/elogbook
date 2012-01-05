@@ -86,6 +86,8 @@ AttachmentFrame.h \
 AttachmentModel.h \
 AttachmentType.h \
 AttachmentWindow.h \
+BackupManagerDialog.h \
+BackupManagerWidget.h \
 ConfigurationDialog.h \
 DefaultOptions.h \
 DeleteAttachmentDialog.h \
@@ -148,6 +150,8 @@ AskForSaveDialog.cpp \
 AttachmentFrame.cpp \
 AttachmentModel.cpp \
 AttachmentWindow.cpp \
+BackupManagerDialog.cpp \
+BackupManagerWidget.cpp \
 ConfigurationDialog.cpp \
 DeleteAttachmentDialog.cpp \
 DeleteKeywordDialog.cpp \
@@ -187,6 +191,7 @@ moc_AskForSaveDialog.cpp \
 moc_AttachmentFrame.cpp \
 moc_AttachmentModel.cpp \
 moc_AttachmentWindow.cpp \
+moc_BackupManagerWidget.cpp \
 moc_EditionWindow.cpp \
 moc_FormatBar.cpp \
 moc_KeywordModel.cpp \

@@ -252,6 +252,10 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& saveBackupAction( void ) const
     { return *saveBackupAction_; }
 
+    //! backup manager
+    QAction& backupManagerAction( void ) const
+    { return *backupManagerAction_; }
+
     //! revert logbook to saved version
     QAction& revertToSaveAction( void ) const
     { return *revertToSaveAction_; }
@@ -401,10 +405,13 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     save current logbook with a given filename
     returns true if logbook was saved
     */
-    bool _saveAs( File default_file = File(""), bool register_logbook = true );
+    bool _saveAs( File defaultFile = File(""), bool registerLogbook = true );
 
     //! save current logbook with a given filename
     void _saveBackup( void );
+
+    //! manage backups
+    void _manageBackups( void );
 
     //! revert logbook to saved version
     void _revertToSaved( void );
@@ -716,6 +723,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! save logbook backup
     QAction* saveBackupAction_;
+
+    //! configure backups
+    QAction* backupManagerAction_;
 
     //! revert logbook to saved version
     QAction* revertToSaveAction_;

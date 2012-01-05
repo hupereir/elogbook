@@ -402,6 +402,83 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     };
 
+    //! store backup information
+    class Backup: public Counter
+    {
+
+        public:
+
+        //! constructor
+        Backup( const File& file = File(), const TimeStamp& creation = TimeStamp::now() ):
+            Counter( "Logbook::Backup" ),
+            file_( file ),
+            creation_( creation )
+        {}
+
+        //! constructor from Dom
+        Backup( const QDomElement& );
+
+        //! equal to operator
+        bool operator == (const Backup& other ) const
+        { return creation() == other.creation() && file() == other.file(); }
+
+        //! less than operator
+        bool operator < (const Backup& other ) const
+        {
+            if( creation() != other.creation() ) return creation() < other.creation();
+            else return file() < other.file();
+        }
+
+        //!@name accessors
+        //@{
+
+        //! get dom
+        QDomElement domElement( QDomDocument& ) const;
+
+        //! creation
+        const TimeStamp& creation( void ) const
+        { return creation_; }
+
+        //! file
+        const File& file( void ) const
+        { return file_; }
+
+        //@}
+
+        //!@name modifiers
+
+        //! time
+        void setCreation( const TimeStamp& creation )
+        { creation_ = creation; }
+
+        //! file
+        void setFile( const File& file )
+        { file_ = file; }
+
+        //! list
+        typedef std::vector<Backup> List;
+
+        private:
+
+        //! filename
+        File file_;
+
+        //! timestamp
+        TimeStamp creation_;
+
+    };
+
+    //! add backup
+    void addBackup( const File& file )
+    {
+        backupFiles_.push_back( Backup( file ) );
+        backup_ = backupFiles_.back().creation();
+    }
+
+    //! backup files
+    const Backup::List& backupFiles( void ) const
+    { return backupFiles_; }
+
     signals:
 
     //! message emission for logbook status during reading/writting
@@ -466,6 +543,9 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     //! method used for LogEntry sort
     SortMethod sortMethod_;
+
+    //! backup list
+    Backup::List backupFiles_;
 
     //! list of recent entries
     /*! creation time stamp of recent entries are stored */

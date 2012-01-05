@@ -58,6 +58,8 @@ AskForSaveDialog.h \
 AttachmentFrame.h \
 AttachmentModel.h \
 AttachmentWindow.h \
+BackupManagerDialog.h \
+BackupManagerWidget.h \
 ConfigurationDialog.h \
 DeleteAttachmentDialog.h \
 DeleteKeywordDialog.h \
@@ -95,6 +97,8 @@ AskForSaveDialog.cpp \
 AttachmentFrame.cpp \
 AttachmentModel.cpp \
 AttachmentWindow.cpp \
+BackupManagerDialog.cpp \
+BackupManagerWidget.cpp \
 ConfigurationDialog.cpp \
 DeleteAttachmentDialog.cpp \
 DeleteKeywordDialog.cpp \

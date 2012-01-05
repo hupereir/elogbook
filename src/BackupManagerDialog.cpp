@@ -1,5 +1,3 @@
-#ifndef _FileCheckDialog_h_
-#define _FileCheckDialog_h_
 // $Id$
 
 /******************************************************************************
@@ -23,36 +21,20 @@
 *
 *******************************************************************************/
 
-#include "CustomDialog.h"
-#include "FileRecordModel.h"
-#include <QtCore/QStringList>
+#include "BackupManagerDialog.h"
+#include "BackupManagerWidget.h"
 
-class TreeView;
-
-//! QDialog used to select opened files
-class FileCheckDialog: public CustomDialog
+//__________________________________________________________________________________
+BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
+   CustomDialog( parent, CloseButton )
 {
+    Debug::Throw( "BackupManagerDialog::BackupManagerDialog.\n" );
+    setWindowTitle( "Monitored Files" );
+    setOptionName( "BACKUP_MANAGER_DIALOG" );
 
-    public:
+    layout()->setMargin(0);
+    buttonLayout().setMargin(10);
 
-    //! constructor
-    FileCheckDialog( QWidget* parent );
-
-    //! set files
-    void setFiles( const QStringList& );
-
-    private:
-
-    //! list
-    TreeView& _list( void ) const
-    { return *list_; }
-
-    //! model
-    FileRecordModel model_;
-
-    //! list of files
-    TreeView* list_;
-
-};
-
-#endif
+    // custom list display
+    mainLayout().addWidget( managerWidget_ = new BackupManagerWidget( this ) );
+}

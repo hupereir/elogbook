@@ -2,6 +2,7 @@ AUTOMAKE_OPTIONS = foreign
 
 EXTRA_DIST = \
 attach.png \
+configure-backups.png \
 document-close.png \
 document-new.png \
 document-save.png \

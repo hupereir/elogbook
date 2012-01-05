@@ -1,5 +1,5 @@
-#ifndef _FileCheckDialog_h_
-#define _FileCheckDialog_h_
+#ifndef _BackupManagerDialog_h_
+#define _BackupManagerDialog_h_
 // $Id$
 
 /******************************************************************************
@@ -25,33 +25,30 @@
 
 #include "CustomDialog.h"
 #include "FileRecordModel.h"
-#include <QtCore/QStringList>
 
-class TreeView;
+class BackupManagerWidget;
 
 //! QDialog used to select opened files
-class FileCheckDialog: public CustomDialog
+class BackupManagerDialog: public CustomDialog
 {
 
     public:
 
     //! constructor
-    FileCheckDialog( QWidget* parent );
+    BackupManagerDialog( QWidget* );
 
-    //! set files
-    void setFiles( const QStringList& );
+    //! destructor
+    virtual ~BackupManagerDialog( void )
+    {}
+
+    //! widget
+    BackupManagerWidget& managerWidget( void ) const
+    { return *managerWidget_; }
 
     private:
 
-    //! list
-    TreeView& _list( void ) const
-    { return *list_; }
-
-    //! model
-    FileRecordModel model_;
-
-    //! list of files
-    TreeView* list_;
+    //! manager widget
+    BackupManagerWidget* managerWidget_;
 
 };
 

@@ -244,17 +244,20 @@ BaseConfigurationDialog( parent )
     hLayout->setMargin(0);
     layout->addLayout( hLayout );
 
-    hLayout->addWidget( new QLabel( "Auto save interval (seconds): ", box ) );
+    QLabel* label;
+    hLayout->addWidget( label = new QLabel( "Auto save interval: ", box ) );
     hLayout->addWidget( spinbox = new OptionSpinBox( box, "AUTO_SAVE_ITV" ) );
     hLayout->addStretch(1);
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 3600 );
+    spinbox->setUnit( "seconds" );
     spinbox->setToolTip( "Time interval between two automatic save" );
     addOptionWidget( spinbox );
 
     checkbox->setChecked( false );
     spinbox->setEnabled( false );
     connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
+    connect( checkbox, SIGNAL( toggled( bool ) ), label, SLOT( setEnabled( bool ) ) );
 
     // auto backup
     box = new QGroupBox( "Auto backup", page );
@@ -273,17 +276,19 @@ BaseConfigurationDialog( parent )
     hLayout->setMargin(0);
     layout->addLayout( hLayout );
 
-    hLayout->addWidget( new QLabel( "Backup interval (days): ", box ) );
+    hLayout->addWidget( label = new QLabel( "Backup interval: ", box ) );
     hLayout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ) );
     hLayout->addStretch(1);
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 365 );
+    spinbox->setUnit( "days" );
     spinbox->setToolTip( "Time interval between two backups" );
     addOptionWidget( spinbox );
 
     checkbox->setChecked( false );
     spinbox->setEnabled( false );
     connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
+    connect( checkbox, SIGNAL( toggled( bool ) ), label, SLOT( setEnabled( bool ) ) );
 
     // edition
     textEditConfiguration();
