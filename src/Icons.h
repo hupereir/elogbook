@@ -48,6 +48,7 @@ namespace ICONS
 
     static const QString PREFERENCE_SPELLCHECK = "tools-check-spelling.png";
     static const QString PREFERENCE_BACKUP = "configure-backups.png";
+    static const QString MERGE = "merge.png";
 
 };
 

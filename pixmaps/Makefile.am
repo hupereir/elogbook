@@ -14,6 +14,7 @@ format-text-bold.png \
 format-text-italic.png \
 format-text-strikethrough.png \
 format-text-underline.png \
+merge.png \
 view-close.png \
 view-fullscreen.png \
 view-list-tree.png \

@@ -39,6 +39,7 @@
 #include "FileRecord.h"
 #include "Key.h"
 #include "KeywordModel.h"
+#include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
@@ -53,7 +54,6 @@ class ColorMenu;
 class CustomToolBar;
 class EditionWindow;
 class FileCheck;
-class Logbook;
 class Menu;
 class SearchPanel;
 class SelectionStatusBar;
@@ -427,6 +427,15 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! opens a logbook merge it to the existing onecomments
     void _synchronize( void );
+
+    //! remove backup
+    void _removeBackup( Logbook::Backup );
+
+    //! restore backup
+    void _restoreBackup( Logbook::Backup );
+
+    //! merge backup
+    void _mergeBackup( Logbook::Backup );
 
     //! reorganize logbook to entries associations
     void _reorganize( void );

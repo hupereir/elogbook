@@ -29,7 +29,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
    CustomDialog( parent, CloseButton )
 {
     Debug::Throw( "BackupManagerDialog::BackupManagerDialog.\n" );
-    setWindowTitle( "Monitored Files" );
+    setWindowTitle( "Backup Manager - elogbook" );
     setOptionName( "BACKUP_MANAGER_DIALOG" );
 
     layout()->setMargin(0);

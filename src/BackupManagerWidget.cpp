@@ -22,6 +22,10 @@
 *******************************************************************************/
 
 #include "BackupManagerWidget.h"
+
+#include "Icons.h"
+#include "IconEngine.h"
+#include "QuestionDialog.h"
 #include "TreeView.h"
 
 #include <QtGui/QLayout>
@@ -32,16 +36,55 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     Counter( "BackupManagerWidget" )
 {
     Debug::Throw( "BackupManagerWidget::BackupManagerWidget" );
-    QVBoxLayout* vLayout = new QVBoxLayout();
-    vLayout->setMargin(0);
-    setLayout( vLayout );
+    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->setMargin(0);
+    setLayout( hLayout );
 
     // add tree
-    vLayout->addWidget( list_ = new TreeView( this ) );
+    hLayout->addWidget( list_ = new TreeView( this ) );
     list_->setModel( &model_ );
-    list_->setSelectionMode( QAbstractItemView::ContiguousSelection );
+    list_->setSelectionMode( QAbstractItemView::SingleSelection );
+    list_->setOptionName( "BACKUP_MANAGER_LIST" );
+
+
+    // buttons
+    QVBoxLayout* vLayout = new QVBoxLayout();
+    vLayout->setMargin(0);
+    hLayout->addLayout( vLayout );
+
+    vLayout->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), "Create New", this ) );
+    vLayout->addWidget( removeButton_ = new QPushButton( IconEngine::get( ICONS::REMOVE ), "Remove", this ) );
+    vLayout->addWidget( restoreButton_ = new QPushButton( IconEngine::get( ICONS::UNDO ), "Restore", this ) );
+    vLayout->addWidget( mergeButton_ = new QPushButton( IconEngine::get( ICONS::MERGE ), "Merge", this ) );
+
+    QFrame* frame = new QFrame( this );
+    frame->setFrameStyle( QFrame::HLine );
+    vLayout->addWidget( frame );
+
+    vLayout->addWidget( cleanButton_ = new QPushButton( IconEngine::get( ICONS::DELETE ), "Clean", this ) );
+
+    vLayout->addStretch( 1 );
+
+    // connections
+    connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
+    connect( cleanButton_, SIGNAL( clicked( void ) ), SLOT( _clean( void ) ) );
+    connect( cleanButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+
+    connect( removeButton_, SIGNAL( clicked( void ) ), SLOT( _remove( void ) ) );
+    connect( removeButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+
+    connect( restoreButton_, SIGNAL( clicked( void ) ), SLOT( _restore( void ) ) );
+    connect( restoreButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+
+    connect( mergeButton_, SIGNAL( clicked( void ) ), SLOT( _merge( void ) ) );
+    connect( mergeButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+
+    connect( newBackupButton_, SIGNAL( clicked( void ) ), SIGNAL( backupRequested( void ) ) );
+    connect( newBackupButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
 
     if( logbook ) Key::associate( this, logbook );
+
+    _updateActions();
 
 }
 
@@ -55,9 +98,98 @@ void BackupManagerWidget::updateBackups( void )
     Logbook* logbook( _logbook() );
     if( !logbook ) return;
 
+    Logbook::Backup::List backups( logbook->backupFiles() );
+    backups.checkValidity();
+
     // clear model
-    model_.set( logbook->backupFiles() );
+    model_.set( backups );
     list_->resizeColumns();
+
+    // update clean button
+    cleanButton_->setEnabled( std::find_if( backups.begin(), backups.end(), Logbook::Backup::InvalidFTor() ) != backups.end() );
+
+}
+
+//____________________________________________________________________________
+void BackupManagerWidget::_clean( void )
+{
+    Debug::Throw( "BackupManagerWidget::_clean.\n" );
+
+    Logbook* logbook( _logbook() );
+    if( !logbook ) return;
+
+    Logbook::Backup::List backups( model_.get() );
+    backups.erase( std::remove_if( backups.begin(), backups.end(), Logbook::Backup::InvalidFTor() ), backups.end() );
+    logbook->setBackupFiles( backups );
+
+    // notify logbook modification
+    if( logbook->modified() && !logbook->file().isEmpty() )
+    { emit saveLogbookRequested(); }
+
+}
+
+//____________________________________________________________________________
+void BackupManagerWidget::_remove( void )
+{
+    Debug::Throw( "BackupManagerWidget::_remove.\n" );
+    QModelIndex index( list_->selectionModel()->currentIndex() );
+    if( !index.isValid() ) return;
+
+    const Logbook::Backup& backup( model_.get( index ) );
+
+    // ask confirmation
+    QString buffer;
+    QTextStream( &buffer )
+        << "Remove backup file named " << backup.file().localName() << " ?" << endl
+        << "Warning: this will permanently delete the files on disk and the corresponding data.";
+    if( !QuestionDialog( this, buffer ).exec() ) return;
+    emit removeBackupRequested( backup );
+}
+
+//____________________________________________________________________________
+void BackupManagerWidget::_restore( void )
+{
+    Debug::Throw( "BackupManagerWidget::_restore.\n" );
+    QModelIndex index( list_->selectionModel()->currentIndex() );
+    if( !index.isValid() ) return;
+
+    const Logbook::Backup& backup( model_.get( index ) );
+
+    // ask confirmation
+    QString buffer;
+    QTextStream( &buffer )
+        << "Restore data from backup file named " << backup.file().localName() << " ?" << endl
+        << "Warning: this will permanently erase all data from the current logbook.";
+    if( !QuestionDialog( this, buffer ).exec() ) return;
+    emit restoreBackupRequested( backup );
+}
+
+//____________________________________________________________________________
+void BackupManagerWidget::_merge( void )
+{
+    Debug::Throw( "BackupManagerWidget::_merge.\n" );
+    QModelIndex index( list_->selectionModel()->currentIndex() );
+    if( !index.isValid() ) return;
+
+    const Logbook::Backup& backup( model_.get( index ) );
+
+    // ask confirmation
+    QString buffer;
+    QTextStream( &buffer )
+        << "Merge backup file named " << backup.file().localName() << " to current logbook ?" << endl
+        << "Warning: this will add all unmatched entry in the backup to the current logbook.";
+    if( !QuestionDialog( this, buffer ).exec() ) return;
+    emit mergeBackupRequested( backup );
+}
+
+//____________________________________________________________________________
+void BackupManagerWidget::_updateActions( void )
+{
+    Debug::Throw( "BackupManagerWidget::_updateActions" );
+    bool hasSelection( !list_->selectionModel()->selectedRows().isEmpty() );
+    removeButton_->setEnabled( hasSelection );
+    restoreButton_->setEnabled( hasSelection );
+    mergeButton_->setEnabled( hasSelection );
 }
 
 //_______________________________________________
@@ -67,6 +199,25 @@ const QString BackupManagerWidget::Model::columnTitles_[ BackupManagerWidget::Mo
     "Path",
     "Created"
 };
+
+//__________________________________________________________________
+Qt::ItemFlags BackupManagerWidget::Model::flags(const QModelIndex &index) const
+{
+
+    // default flags
+    Qt::ItemFlags flags;
+    if( !index.isValid() ) return flags;
+
+    // check associated record validity
+    const Logbook::Backup& backup( get(index) );
+    if( !backup.isValid() ) return flags;
+
+    // default flags
+    flags |=  Qt::ItemIsEnabled |  Qt::ItemIsSelectable;
+
+    return flags;
+
+}
 
 //_______________________________________________
 QVariant BackupManagerWidget::Model::data( const QModelIndex& index, int role ) const

@@ -296,14 +296,24 @@ bool Logbook::write( File file )
         // write time stamps
         if( creation().isValid() ) top.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, document ) );
         if( modification().isValid() ) top.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, document ) );
-        if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
+
+        Debug::Throw( "Logbook::Write - wrote timeStamps.\n" );
+
+        if( backup().isValid() )
+        {
+            top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
+            Debug::Throw( "Logbook::Write - wrote backup time.\n" );
+        }
 
         // write recent entries
         if( !recentEntries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
+        Debug::Throw( "Logbook::Write - wrote recent entries.\n" );
 
         // write backup files
         for( Backup::List::const_iterator iter = backupFiles_.begin(); iter != backupFiles_.end(); ++iter )
         { top.appendChild( iter->domElement( document ) ); }
+
+        Debug::Throw( "Logbook::Write - wrote backup files.\n" );
 
         // write all entries
         static unsigned int progress( 10 );
@@ -636,8 +646,17 @@ QString Logbook::backupFilename( void ) const
     QString foot( File( file_ ).extension() );
     if( !foot.isEmpty() ) foot = QString(".") + foot;
     QString tag( TimeStamp::now().toString( TimeStamp::DATE_TAG ) );
+
     QString out;
     QTextStream( &out ) << head << "_backup_" << tag << foot;
+
+    // check if file exists, add index
+    for( int index = 1; File( out ).exists(); ++index )
+    {
+        out.clear();
+        QTextStream( &out ) << head << "_backup_" << tag << "_" << index << foot;
+    }
+
     return out;
 }
 
@@ -673,7 +692,7 @@ bool Logbook::modified( void ) const
     Debug::Throw( "Logbook::modified.\n" );
     if( modified_ ) return true;
     for( List::const_iterator it = children_.begin(); it != children_.end(); ++it )
-        if ( (*it)->modified() ) return true;
+    { if ( (*it)->modified() ) return true; }
     return false;
 }
 
@@ -741,6 +760,30 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 }
 
 //______________________________________________________________________
+void Logbook::addBackup( const File& file )
+{
+    Debug::Throw( "Logbook::addBackup.\n" );
+    backupFiles_.push_back( Backup( file ) );
+    backup_ = backupFiles_.back().creation();
+    setModified( true );
+}
+
+//______________________________________________________________________
+void Logbook::setBackupFiles( const Backup::List& backups )
+{
+
+    Debug::Throw( "Logbook::setBackupFiles.\n" );
+    if( backupFiles_ == backups ) return;
+    backupFiles_ = backups;
+
+    if( backupFiles_.empty() ) backup_ = TimeStamp();
+    else backup_ = backupFiles_.back().creation();
+
+    setModified( true );
+
+}
+
+//______________________________________________________________________
 void Logbook::_readRecentEntries( const QDomElement& element )
 {
 
@@ -790,9 +833,10 @@ File Logbook::_childFilename( const File& file, const int& childNumber ) const
 
 //______________________________________________________________________
 Logbook::Backup::Backup( const QDomElement& element ):
-    Counter( "Logbook::Backup" )
+    Counter( "Logbook::Backup" ),
+    valid_( true )
 {
-    Debug::Throw( 0, "Logbook::Backup::Backup.\n" );
+    Debug::Throw( "Logbook::Backup::Backup.\n" );
 
     // parse attributes
     QDomNamedNodeMap attributes( element.attributes() );

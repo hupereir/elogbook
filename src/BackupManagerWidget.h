@@ -29,6 +29,7 @@
 #include "ListModel.h"
 
 #include <QtGui/QWidget>
+#include <QtGui/QPushButton>
 
 class TreeView;
 
@@ -48,6 +49,18 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
 
     signals:
 
+    //! emitted when backups are changed (from "clean" action)
+    void saveLogbookRequested( void );
+
+    //! emitted when backup is remove
+    void removeBackupRequested( Logbook::Backup );
+
+    //! emitted when backup is restored
+    void restoreBackupRequested( Logbook::Backup );
+
+    //! emmitted when backup is merged
+    void mergeBackupRequested( Logbook::Backup );
+
     //! emitted when backup is requested
     void backupRequested( void );
 
@@ -64,6 +77,23 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
         BASE::KeySet<Logbook> logbooks( this );
         return logbooks.empty() ? 0L:*logbooks.begin();
     }
+
+    protected slots:
+
+    //! update actions
+    void _updateActions( void );
+
+    //! clean
+    void _clean( void );
+
+    //! remove backup
+    void _remove( void );
+
+    //! restore
+    void _restore( void );
+
+    //! merge
+    void _merge( void );
 
     private:
 
@@ -87,6 +117,9 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
 
         //! column type enumeration
         enum ColumnType { FILE, PATH, CREATION };
+
+        //! flags
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
         //! return data
         virtual QVariant data(const QModelIndex &index, int role) const;
@@ -131,6 +164,17 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
 
     //! list
     TreeView* list_;
+
+    //!@name buttons
+    //@{
+
+    QPushButton* cleanButton_;
+    QPushButton* removeButton_;
+    QPushButton* restoreButton_;
+    QPushButton* mergeButton_;
+    QPushButton* newBackupButton_;
+
+    //@}
 
 };
 

@@ -20,5 +20,6 @@
     <file alias="pixmaps/view-list-tree.png">../pixmaps/view-list-tree.png</file>
     <file alias="pixmaps/view-split-left-right.png">../pixmaps/view-split-left-right.png</file>
     <file alias="pixmaps/view-split-top-bottom.png">../pixmaps/view-split-top-bottom.png</file>
+    <file alias="pixmaps/merge.png">../pixmaps/merge.png</file>
   </qresource>
 </RCC>

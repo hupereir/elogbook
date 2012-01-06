@@ -412,7 +412,8 @@ class Logbook:public QObject, public Counter, public BASE::Key
         Backup( const File& file = File(), const TimeStamp& creation = TimeStamp::now() ):
             Counter( "Logbook::Backup" ),
             file_( file ),
-            creation_( creation )
+            creation_( creation ),
+            valid_( true )
         {}
 
         //! constructor from Dom
@@ -443,6 +444,10 @@ class Logbook:public QObject, public Counter, public BASE::Key
         const File& file( void ) const
         { return file_; }
 
+        //! validity
+        bool isValid( void ) const
+        { return valid_; }
+
         //@}
 
         //!@name modifiers
@@ -455,8 +460,46 @@ class Logbook:public QObject, public Counter, public BASE::Key
         void setFile( const File& file )
         { file_ = file; }
 
+        //! check validity
+        void checkValidity( void )
+        { valid_ = file_.exists(); }
+
+        //@}
+
         //! list
-        typedef std::vector<Backup> List;
+        class List: public std::vector<Backup>
+        {
+            public:
+
+            //! constructor
+            List( void )
+            {}
+
+            //! constructor
+            List( const std::vector<Backup> other ):
+                std::vector<Backup>( other )
+                {}
+
+            //! validity
+            void checkValidity( void )
+            {
+                for( iterator iter = begin(); iter != end(); ++iter )
+                { iter->checkValidity(); }
+            }
+
+        };
+
+        //! test validity
+        class InvalidFTor
+        {
+
+            public:
+
+            //! predicate
+            bool operator() ( Logbook::Backup backup ) const
+            { return !backup.isValid(); }
+
+        };
 
         private:
 
@@ -466,14 +509,16 @@ class Logbook:public QObject, public Counter, public BASE::Key
         //! timestamp
         TimeStamp creation_;
 
+        //! validity
+        bool valid_;
+
     };
 
     //! add backup
-    void addBackup( const File& file )
-    {
-        backupFiles_.push_back( Backup( file ) );
-        backup_ = backupFiles_.back().creation();
-    }
+    void addBackup( const File& );
+
+    //! set backup
+    void setBackupFiles( const Backup::List& );
 
     //! backup files
     const Backup::List& backupFiles( void ) const

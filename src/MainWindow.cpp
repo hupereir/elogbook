@@ -189,7 +189,7 @@ MainWindow::MainWindow( QWidget *parent ):
     connect( &_keywordModel(), SIGNAL( layoutChanged() ), SLOT( _restoreExpandedKeywords() ) );
 
     /*
-    add the deleteKeyword_action to the keyword list,
+    add the deleteKeywordAction to the keyword list,
     so that the corresponding shortcut gets activated whenever it is pressed
     while the list has focus
     */
@@ -249,7 +249,7 @@ MainWindow::MainWindow( QWidget *parent ):
     connect( &_logEntryModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) );
 
     /*
-    add the deleteEntry_action to the list,
+    add the deleteEntryAction to the list,
     so that the corresponding shortcut gets activated whenever it is pressed
     while the list has focus
     */
@@ -1586,6 +1586,11 @@ void MainWindow::_manageBackups( void )
     BackupManagerDialog dialog( this );
     Key::associate( &dialog.managerWidget(), logbook() );
     dialog.managerWidget().updateBackups();
+
+    // connections
+    connect( &dialog.managerWidget(), SIGNAL( saveLogbookRequested( void ) ), SLOT( save( void ) ) );
+    connect( &dialog.managerWidget(), SIGNAL( backupRequested( void ) ), SLOT( _saveBackup( void ) ) );
+
     dialog.exec();
 }
 
@@ -1820,8 +1825,8 @@ void MainWindow::_synchronize( void )
     if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // create file dialog
-    File remote_file( FileDialog(this).getFile() );
-    if( remote_file.isNull() ) return;
+    File remoteFile( FileDialog(this).getFile() );
+    if( remoteFile.isNull() ) return;
 
     // debug
     Debug::Throw() << "MainWindow::_synchronize - number of local files: " << MainWindow::logbook()->children().size() << endl;
@@ -1832,15 +1837,15 @@ void MainWindow::_synchronize( void )
     statusBar().label().setText( "reading remote logbook ... " );
 
     // opens file in remote logbook
-    Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remote_file << endl;
+    Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remoteFile << endl;
 
-    Logbook remote_logbook;
-    connect( &remote_logbook, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
-    remote_logbook.setFile( remote_file );
-    remote_logbook.read();
+    Logbook remoteLogbook;
+    connect( &remoteLogbook, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+    remoteLogbook.setFile( remoteFile );
+    remoteLogbook.read();
 
     // check if logbook is valid
-    XmlError::List errors( remote_logbook.xmlErrors() );
+    XmlError::List errors( remoteLogbook.xmlErrors() );
     if( errors.size() )
     {
 
@@ -1857,13 +1862,13 @@ void MainWindow::_synchronize( void )
     }
 
     // debug
-    Debug::Throw() << "MainWindow::_synchronize - number of remote files: " << remote_logbook.children().size() << endl;
-    Debug::Throw() << "MainWindow::_synchronize - number of remote entries: " << remote_logbook.entries().size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of remote files: " << remoteLogbook.children().size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of remote entries: " << remoteLogbook.entries().size() << endl;
     Debug::Throw() << "MainWindow::_synchronize - updating local from remote" << endl;
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    std::map<LogEntry*,LogEntry*> duplicates( MainWindow::logbook()->synchronize( remote_logbook ) );
+    std::map<LogEntry*,LogEntry*> duplicates( MainWindow::logbook()->synchronize( remoteLogbook ) );
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
@@ -1896,12 +1901,12 @@ void MainWindow::_synchronize( void )
 
     // synchronize remove with local
     Debug::Throw() << "MainWindow::_synchronize - updating remote from local" << endl;
-    unsigned int n_duplicated = remote_logbook.synchronize( *MainWindow::logbook() ).size();
+    unsigned int n_duplicated = remoteLogbook.synchronize( *MainWindow::logbook() ).size();
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << n_duplicated << endl;
 
     // save remote logbook
     statusBar().label().setText( "saving remote logbook ... " );
-    remote_logbook.write();
+    remoteLogbook.write();
 
     // idle
     Singleton::get().application<Application>()->idle();
@@ -1909,6 +1914,56 @@ void MainWindow::_synchronize( void )
 
     return;
 
+}
+
+//_______________________________________________
+void MainWindow::_removeBackup( Logbook::Backup backup )
+{
+    Debug::Throw( "MainWindow::_removeBackup.\n" );
+    if( !backup.file().exists() )
+    {
+        QString buffer;
+        QTextStream( &buffer ) << "Unable to open file named " << backup.file() << ". <Remove Backup> canceled";
+        InformationDialog( this, buffer ).exec();
+        return;
+    }
+
+    // read backup
+    Logbook backupLogbook;
+    backupLogbook.setFile( backup.file() );
+    backupLogbook.read();
+
+    // get list of children
+    Logbook::List all( backupLogbook.children() );
+    all.push_front( &backupLogbook );
+
+    // remove all files
+    for( Logbook::List::const_iterator iter = all.begin(); iter != all.end(); ++iter )
+    { (*iter)->file().remove(); }
+
+    // clean logbook backups
+    Logbook::Backup::List backups( logbook()->backupFiles() );
+    Logbook::Backup::List::iterator iter = std::find( backups.begin(), backups.end(), backup );
+    if( iter != backups.end() )
+    {
+        backups.erase( iter );
+        logbook()->setBackupFiles( backups );
+        if( !logbook()->file().isEmpty() )
+        { save(); }
+    }
+
+}
+
+//_______________________________________________
+void MainWindow::_restoreBackup( Logbook::Backup )
+{
+    Debug::Throw( "MainWindow::_restoreBackup.\n" );
+}
+
+//_______________________________________________
+void MainWindow::_mergeBackup( Logbook::Backup )
+{
+    Debug::Throw( "MainWindow::_mergeBackup.\n" );
 }
 
 //_______________________________________________

@@ -107,16 +107,16 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 
 
     // detail
-    TreeView *list_view( new TreeView( this ) );
-    list_view->setModel( &model_ );
-    list_view->setSortingEnabled( false );
-    mainLayout().addWidget( list_view, 1 );
+    TreeView *listView( new TreeView( this ) );
+    listView->setModel( &model_ );
+    listView->setSortingEnabled( false );
+    mainLayout().addWidget( listView, 1 );
 
-    std::list< Logbook* > all( logbook->children() );
+    Logbook::List all( logbook->children() );
     all.push_front( logbook );
     model_.add( Model::List( all.begin(), all.end() ) );
 
-    list_view->resizeColumns();
+    listView->resizeColumns();
 
 }
 

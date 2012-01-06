@@ -25,11 +25,11 @@
 #define AttachmentFrame_h
 
 /*!
-  \file  AttachmentFrame.h
-  \brief  handles attachment list
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
+\file  AttachmentFrame.h
+\brief  handles attachment list
+\author Hugo Pereira
+\version $Revision$
+\date $Date$
 */
 
 #include <QWidget>
@@ -45,231 +45,231 @@
 class TreeView;
 
 /*!
-  \class  AttachmentFrame
-  \brief  handles attachment list
+\class  AttachmentFrame
+\brief  handles attachment list
 */
 class AttachmentFrame: public QWidget, public BASE::Key
 {
 
-  //! Qt meta object declaration
-  Q_OBJECT
-
-  public:
-
-  //! constructor
-  AttachmentFrame( QWidget *parent, bool read_only );
+    //! Qt meta object declaration
+    Q_OBJECT
+
+    public:
+
+    //! constructor
+    AttachmentFrame( QWidget *, bool );
 
-  //! default size
-  void setDefaultHeight( const int& );
+    //! default size
+    void setDefaultHeight( const int& );
 
-  //! default height
-  const int& defaultHeight( void ) const
-  { return default_height_; }
+    //! default height
+    const int& defaultHeight( void ) const
+    { return defaultHeight_; }
 
-  //! size
-  QSize sizeHint( void ) const;
+    //! size
+    QSize sizeHint( void ) const;
 
-  //! list
-  bool hasList( void ) const
-  { return (bool) list_; }
+    //! list
+    bool hasList( void ) const
+    { return (bool) list_; }
 
-  //! list
-  TreeView& list( void ) const
-  {
-    assert( list_ );
-    return *list_;
-  }
+    //! list
+    TreeView& list( void ) const
+    {
+        assert( list_ );
+        return *list_;
+    }
 
 
-  //! clear
-  void clear( void )
-  {
-    // clear model and associations
-    _model().clear();
-    BASE::Key::clearAssociations<Attachment>();
-  }
+    //! clear
+    void clear( void )
+    {
+        // clear model and associations
+        _model().clear();
+        BASE::Key::clearAssociations<Attachment>();
+    }
 
-  //! add attachment to the list
-  void add( Attachment& attachment )
-  {
-    AttachmentModel::List attachments;
-    attachments.push_back( &attachment );
-    add( attachments );
-  }
+    //! add attachment to the list
+    void add( Attachment& attachment )
+    {
+        AttachmentModel::List attachments;
+        attachments.push_back( &attachment );
+        add( attachments );
+    }
 
-  //! add attachments to list
-  void add( const AttachmentModel::List& attachments );
+    //! add attachments to list
+    void add( const AttachmentModel::List& attachments );
 
-  //! update attachment in the list
-  void update( Attachment& attachment );
+    //! update attachment in the list
+    void update( Attachment& attachment );
 
-  //! select attachment in the list
-  void select( Attachment& attachment );
+    //! select attachment in the list
+    void select( Attachment& attachment );
 
-  //! remove attachment from list
-  void remove( Attachment& attachment )
-  { _model().remove( &attachment ); }
+    //! remove attachment from list
+    void remove( Attachment& attachment )
+    { _model().remove( &attachment ); }
 
-  //! change read only status
-  void setReadOnly( bool value )
-  {
-    read_only_ = value;
-    _updateActions();
-  }
+    //! change read only status
+    void setReadOnly( bool value )
+    {
+        readOnly_ = value;
+        _updateActions();
+    }
 
-  //! read only state
-  const bool& readOnly( void ) const
-  { return read_only_; }
+    //! read only state
+    const bool& readOnly( void ) const
+    { return readOnly_; }
 
-  //!@name actions
-  //@{
+    //!@name actions
+    //@{
 
-  //! visibility action
-  QAction& visibilityAction( void ) const
-  { return *visibility_action_; }
+    //! visibility action
+    QAction& visibilityAction( void ) const
+    { return *visibilityAction_; }
 
-  //! new attachment action
-  QAction& newAction( void ) const
-  { return *new_action_; }
+    //! new attachment action
+    QAction& newAction( void ) const
+    { return *newAction_; }
 
-  //! view attachment action
-  QAction& openAction( void ) const
-  { return *open_action_; }
+    //! view attachment action
+    QAction& openAction( void ) const
+    { return *openAction_; }
 
-  //! edit attachment action
-  QAction& editAction( void ) const
-  { return *edit_action_; }
+    //! edit attachment action
+    QAction& editAction( void ) const
+    { return *editAction_; }
 
-  //! update attachment action
-  QAction& reloadAction( void ) const
-  { return *reload_action_; }
+    //! update attachment action
+    QAction& reloadAction( void ) const
+    { return *reloadAction_; }
 
-  //! update attachment action
-  QAction& saveAsAction( void ) const
-  { return *save_as_action_; }
+    //! update attachment action
+    QAction& saveAsAction( void ) const
+    { return *saveAsAction_; }
 
-  //! delete attachment action
-  QAction& deleteAction( void ) const
-  { return *delete_action_; }
+    //! delete attachment action
+    QAction& deleteAction( void ) const
+    { return *deleteAction_; }
 
-  //! clean action
-  QAction& cleanAction( void ) const
-  { return *clean_action_; }
+    //! clean action
+    QAction& cleanAction( void ) const
+    { return *cleanAction_; }
 
-  //@}
+    //@}
 
-  signals:
+    signals:
 
-  //! emitted when an item is selected in list
-  void attachmentSelected( Attachment& );
+    //! emitted when an item is selected in list
+    void attachmentSelected( Attachment& );
 
-  protected:
+    protected:
 
-  //! enter event
-  virtual void enterEvent( QEvent* );
+    //! enter event
+    virtual void enterEvent( QEvent* );
 
-  //! custom event, used to retrieve file validity check event
-  void customEvent( QEvent* );
+    //! custom event, used to retrieve file validity check event
+    void customEvent( QEvent* );
 
-  private slots:
+    private slots:
 
-  //! update configuration
-  void _updateConfiguration( void );
+    //! update configuration
+    void _updateConfiguration( void );
 
-  //! update context menu
-  void _updateActions( void );
+    //! update context menu
+    void _updateActions( void );
 
-  //! create new attachment
-  void _new( void );
+    //! create new attachment
+    void _new( void );
 
-  //! display current attachment
-  void _open( void );
+    //! display current attachment
+    void _open( void );
 
-  //! edit current attachment
-  void _edit( void );
+    //! edit current attachment
+    void _edit( void );
 
-  //! delete current attachment
-  void _delete( void );
+    //! delete current attachment
+    void _delete( void );
 
-  //! reload attachment time stamps
-  void _reload( void );
+    //! reload attachment time stamps
+    void _reload( void );
 
-  //! save current attachment
-  void _saveAs( void );
+    //! save current attachment
+    void _saveAs( void );
 
-  //! clean
-  void _clean( void );
+    //! clean
+    void _clean( void );
 
-  //!@name selections
-  //@{
+    //!@name selections
+    //@{
 
-  //! current item changed
-  void _itemSelected( const QModelIndex& );
+    //! current item changed
+    void _itemSelected( const QModelIndex& );
 
-  //! restore selection
-  void _storeSelection( void );
+    //! restore selection
+    void _storeSelection( void );
 
-  //! store selection
-  void _restoreSelection( void );
+    //! store selection
+    void _restoreSelection( void );
 
-  //@}
+    //@}
 
-  private:
+    private:
 
-  //! install actions
-  void _installActions( void );
+    //! install actions
+    void _installActions( void );
 
-  //! model
-  AttachmentModel& _model( void )
-  { return model_; }
+    //! model
+    AttachmentModel& _model( void )
+    { return model_; }
 
-  //! save attachment
-  /*! this requires carefull handling of associate entries and Edition windows */
-  void _saveAttachments( const AttachmentModel::List& );
+    //! save attachment
+    /*! this requires carefull handling of associate entries and Edition windows */
+    void _saveAttachments( const AttachmentModel::List& );
 
-  //! if true, listbox is read only
-  bool read_only_;
+    //! if true, listbox is read only
+    bool readOnly_;
 
-  //! default height;
-  int default_height_;
+    //! default height;
+    int defaultHeight_;
 
-  //!@name actions
-  //@{
+    //!@name actions
+    //@{
 
-  //! visibility action
-  QAction* visibility_action_;
+    //! visibility action
+    QAction* visibilityAction_;
 
-  //! new attachment
-  QAction* new_action_;
+    //! new attachment
+    QAction* newAction_;
 
-  //! view attachment
-  QAction* open_action_;
+    //! view attachment
+    QAction* openAction_;
 
-  //! edit attachment
-  QAction* edit_action_;
+    //! edit attachment
+    QAction* editAction_;
 
-  //! update actions
-  QAction* reload_action_;
+    //! update actions
+    QAction* reloadAction_;
 
-  //! save as action
-  QAction* save_as_action_;
+    //! save as action
+    QAction* saveAsAction_;
 
-  //! delete attachment
-  QAction* delete_action_;
+    //! delete attachment
+    QAction* deleteAction_;
 
-  //! clean action
-  QAction* clean_action_;
+    //! clean action
+    QAction* cleanAction_;
 
-  //@}
+    //@}
 
-  //! model
-  AttachmentModel model_;
+    //! model
+    AttachmentModel model_;
 
-  //! list
-  TreeView* list_;
+    //! list
+    TreeView* list_;
 
-  // valid file thread
-  ValidFileThread thread_;
+    // valid file thread
+    ValidFileThread thread_;
 
 };
 
