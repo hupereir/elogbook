@@ -334,9 +334,9 @@ bool Logbook::write( File file )
         unsigned int childNumber=0;
         for( List::iterator it = children_.begin(); it != children_.end(); ++it, ++childNumber )
         {
-            File child_filename = _childFilename( file, childNumber );
+            File childFilename = _childFilename( file, childNumber );
             QDomElement childElement = document.createElement( XML::CHILD );
-            childElement.setAttribute( XML::FILE, XmlString( child_filename ).toXml() );
+            childElement.setAttribute( XML::FILE, XmlString( childFilename ).toXml() );
             top.appendChild( childElement );
         }
 
@@ -345,8 +345,8 @@ bool Logbook::write( File file )
         out.close();
 
         // gets/check new saved timestamp
-        TimeStamp saved_new( file.lastModified() );
-        if( !( lastSaved < saved_new ) ) completed = false;
+        TimeStamp savedNew( file.lastModified() );
+        if( !( lastSaved < savedNew ) ) completed = false;
         else if( file == Logbook::file() ) {
 
             // change logbook state if saved in nominal file
@@ -354,6 +354,10 @@ bool Logbook::write( File file )
             modified_ = false;
 
         }
+
+        // assign new filename
+        if( file != Logbook::file() ) setFile( file );
+
     } else { emit progressAvailable( BASE::KeySet<LogEntry>( this ).size() ); }
 
 
@@ -365,15 +369,16 @@ bool Logbook::write( File file )
     for( List::iterator it = children_.begin(); it != children_.end(); ++it, ++childNumber )
     {
 
-        File child_filename( _childFilename( file, childNumber ).addPath( file.path() ) );
+        File childFilename( _childFilename( file, childNumber ).addPath( file.path() ) );
 
         // update stateFrame
         QString buffer;
-        QTextStream( &buffer ) << "Writing " << child_filename.localName();
+        QTextStream( &buffer ) << "Writing " << childFilename.localName();
         emit messageAvailable( buffer );
 
         (*it)->setParentFile( file );
-        completed &= (*it)->write( child_filename );
+        completed &= (*it)->write( childFilename );
+
     }
 
     Debug::Throw( ) << "Logbook::write - \"" << file << "\". Done.\n";

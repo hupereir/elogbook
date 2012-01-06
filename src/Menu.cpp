@@ -88,8 +88,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 
     menu->addAction( &mainWindow->saveAsAction() );
     menu->addAction( &mainWindow->saveBackupAction() );
-    menu->addAction( &mainWindow->revertToSaveAction() );
     menu->addAction( &mainWindow->backupManagerAction() );
+    menu->addAction( &mainWindow->revertToSaveAction() );
     menu->addSeparator();
 
     if( editionWindow )

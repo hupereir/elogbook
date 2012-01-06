@@ -30,6 +30,7 @@
 
 #include <QtGui/QWidget>
 #include <QtGui/QPushButton>
+#include <QtGui/QLayout>
 
 class TreeView;
 
@@ -46,6 +47,10 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
     //! destructor
     virtual ~BackupManagerWidget( void )
     {}
+
+    //! button layout
+    QVBoxLayout& buttonLayout( void )
+    { return *buttonLayout_; }
 
     signals:
 
@@ -164,6 +169,9 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
 
     //! list
     TreeView* list_;
+
+    //! button layout
+    QVBoxLayout* buttonLayout_;
 
     //!@name buttons
     //@{

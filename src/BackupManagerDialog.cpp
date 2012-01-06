@@ -23,18 +23,24 @@
 
 #include "BackupManagerDialog.h"
 #include "BackupManagerWidget.h"
+#include "Icons.h"
+#include "IconEngine.h"
 
 //__________________________________________________________________________________
 BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
-   CustomDialog( parent, CloseButton )
+   BaseDialog( parent )
 {
     Debug::Throw( "BackupManagerDialog::BackupManagerDialog.\n" );
     setWindowTitle( "Backup Manager - elogbook" );
     setOptionName( "BACKUP_MANAGER_DIALOG" );
 
-    layout()->setMargin(0);
-    buttonLayout().setMargin(10);
+    setLayout( new QVBoxLayout() );
+    layout()->setMargin(5);
+    layout()->addWidget( managerWidget_ = new BackupManagerWidget( this ) );
 
-    // custom list display
-    mainLayout().addWidget( managerWidget_ = new BackupManagerWidget( this ) );
+    // add close button
+    QPushButton* closeButton = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), "Close", managerWidget_ );
+    connect( closeButton, SIGNAL( clicked() ), this, SLOT( close() ) );
+    managerWidget_->buttonLayout().addWidget( closeButton );
+
 }

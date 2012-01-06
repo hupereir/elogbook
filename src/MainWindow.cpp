@@ -164,7 +164,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList().setItemDelegate( new TextEditionDelegate( this ) );
 
     // update LogEntryList when keyword selection change
-    connect( keywordList().selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( KeywordSelectionChanged( const QModelIndex& ) ) );
+    connect( keywordList().selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );
     connect( keywordList().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection& ) ), SLOT( _updateKeywordActions() ) );
     _updateKeywordActions();
 
@@ -379,7 +379,7 @@ bool MainWindow::setLogbook( File file )
 
     // retrieve last modified entry
     BASE::KeySet<LogEntry> entries( logbook()->entries() );
-    BASE::KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     logEntryList().setFocus();
 
@@ -1057,7 +1057,7 @@ void MainWindow::_installActions( void )
     openAction_->setShortcut( Qt::CTRL+Qt::Key_O );
     connect( openAction_, SIGNAL( triggered() ), SLOT( open() ) );
 
-    synchronizeAction_ = new QAction( "Synchronize ...", this );
+    synchronizeAction_ = new QAction( IconEngine::get( ICONS::MERGE ), "Synchronize ...", this );
     synchronizeAction_->setToolTip( "Synchronize current logbook with remote" );
     connect( synchronizeAction_, SIGNAL( triggered() ), SLOT( _synchronize() ) );
 
@@ -1832,8 +1832,8 @@ void MainWindow::_synchronize( void )
     if( remoteFile.isNull() ) return;
 
     // debug
-    Debug::Throw() << "MainWindow::_synchronize - number of local files: " << MainWindow::logbook()->children().size() << endl;
-    Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << MainWindow::logbook()->entries().size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of local files: " << logbook()->children().size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << logbook()->entries().size() << endl;
 
     // set busy flag
     Singleton::get().application<Application>()->busy();
@@ -1871,7 +1871,7 @@ void MainWindow::_synchronize( void )
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    std::map<LogEntry*,LogEntry*> duplicates( MainWindow::logbook()->synchronize( remoteLogbook ) );
+    std::map<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( remoteLogbook ) );
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
@@ -1890,22 +1890,26 @@ void MainWindow::_synchronize( void )
 
     // reinitialize lists
     _resetKeywordList();
-    _resetLogEntryList();
+
+    // reset selected keyword
+    _keywordSelectionChanged( keywordList().selectionModel()->currentIndex() );
+
+    // reset attachment window
     resetAttachmentWindow();
 
     // retrieve last modified entry
-    BASE::KeySet<LogEntry> entries( MainWindow::logbook()->entries() );
-    BASE::KeySet<LogEntry>::const_iterator iter = min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     logEntryList().setFocus();
 
     // write local logbook
-    if( !MainWindow::logbook()->file().isEmpty() ) save();
+    if( !logbook()->file().isEmpty() ) save();
 
     // synchronize remove with local
     Debug::Throw() << "MainWindow::_synchronize - updating remote from local" << endl;
-    unsigned int n_duplicated = remoteLogbook.synchronize( *MainWindow::logbook() ).size();
-    Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << n_duplicated << endl;
+    unsigned int nDuplicated = remoteLogbook.synchronize( *logbook() ).size();
+    Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << nDuplicated << endl;
 
     // save remote logbook
     statusBar().label().setText( "saving remote logbook ... " );
@@ -2005,9 +2009,111 @@ void MainWindow::_restoreBackup( Logbook::Backup backup )
 }
 
 //_______________________________________________
-void MainWindow::_mergeBackup( Logbook::Backup )
+void MainWindow::_mergeBackup( Logbook::Backup backup )
 {
     Debug::Throw( "MainWindow::_mergeBackup.\n" );
+
+    // check current logbook is valid
+    if( !logbook_ ) {
+        InformationDialog( this, "No logbook opened. <Merge> canceled." ).exec();
+        return;
+    }
+
+    if( !backup.file().exists() )
+    {
+        QString buffer;
+        QTextStream( &buffer ) << "Unable to open file named " << backup.file() << ". <Remove Backup> canceled";
+        InformationDialog( this, buffer ).exec();
+        return;
+    }
+
+    // save EditionWindows
+    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+
+    // save current logbook
+    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+    // debug
+    Debug::Throw() << "MainWindow::_mergeBackup - number of local files: " << logbook()->children().size() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of local entries: " << logbook()->entries().size() << endl;
+
+    // set busy flag
+    Singleton::get().application<Application>()->busy();
+    statusBar().label().setText( "reading remote logbook ... " );
+
+    // opens file in remote logbook
+    Debug::Throw() << "MainWindow::_mergeBackup - reading remote logbook from file: " << backup.file() << endl;
+
+    Logbook backupLogbook;
+    connect( &backupLogbook, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+    backupLogbook.setFile( backup.file() );
+    backupLogbook.read();
+
+    // check if logbook is valid
+    XmlError::List errors( backupLogbook.xmlErrors() );
+    if( errors.size() )
+    {
+
+        QString buffer;
+        QTextStream what( &buffer );
+        if( errors.size() > 1 ) what << "Errors occured while parsing files." << endl;
+        else what << "An error occured while parsing files." << endl;
+        what << errors;
+        InformationDialog( 0, buffer ).exec();
+
+        Singleton::get().application<Application>()->idle();
+        return;
+
+    }
+
+    // debug
+    Debug::Throw() << "MainWindow::_mergeBackup - number of remote files: " << backupLogbook.children().size() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of remote entries: " << backupLogbook.entries().size() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - updating local from remote" << endl;
+
+    // synchronize local with remote
+    // retrieve map of duplicated entries
+    std::map<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( backupLogbook ) );
+    Debug::Throw() << "MainWindow::_mergeBackup - number of duplicated entries: " << duplicates.size() << endl;
+
+    // update possible EditionWindows when duplicated entries are found
+    // delete the local duplicated entries
+    for( std::map<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); ++iter )
+    {
+
+        // display the new entry in all matching edit frames
+        BASE::KeySet<EditionWindow> frames( iter->first );
+        for( BASE::KeySet<EditionWindow>::iterator frameIter = frames.begin(); frameIter != frames.end(); ++frameIter )
+        { (*frameIter)->displayEntry( iter->second ); }
+
+        delete iter->first;
+
+    }
+
+    // reinitialize lists
+    _resetKeywordList();
+
+    // reset selected keyword
+    _keywordSelectionChanged( keywordList().selectionModel()->currentIndex() );
+
+    // reset attachments
+    resetAttachmentWindow();
+
+    // retrieve last modified entry
+    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    selectEntry( *iter );
+    logEntryList().setFocus();
+
+    // write local logbook
+    if( !logbook()->file().isEmpty() ) save();
+
+    // idle
+    Singleton::get().application<Application>()->idle();
+    statusBar().label().setText( "" );
+
+    return;
+
 }
 
 //_______________________________________________
@@ -2799,15 +2905,15 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
 }
 
 //_______________________________________________
-void MainWindow::KeywordSelectionChanged( const QModelIndex& index )
+void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
 {
 
-    Debug::Throw( "MainWindow::KeywordSelectionChanged.\n" );
+    Debug::Throw( "MainWindow::_keywordSelectionChanged.\n" );
     if( !logbook_ ) return;
     if( !index.isValid() ) return;
 
     Keyword keyword( _keywordModel().get( index ) );
-    Debug::Throw() << "MainWindow::KeywordSelectionChanged - keyword: " << keyword << endl;
+    Debug::Throw() << "MainWindow::_keywordSelectionChanged - keyword: " << keyword << endl;
 
     // keep track of the current selected entry
     QModelIndex current_index( logEntryList().selectionModel()->currentIndex() );

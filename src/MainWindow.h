@@ -514,7 +514,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _renameEntryKeyword( Keyword newKeyword, bool updateSelection = true );
 
     //! keyword selection changed
-    void KeywordSelectionChanged( const QModelIndex& );
+    void _keywordSelectionChanged( const QModelIndex& );
 
     //! update keyword-list related actions
     void _updateKeywordActions( void );

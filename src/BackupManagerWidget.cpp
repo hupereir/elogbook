@@ -28,8 +28,6 @@
 #include "QuestionDialog.h"
 #include "TreeView.h"
 
-#include <QtGui/QLayout>
-
 //____________________________________________________________________________
 BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     QWidget( parent ),
@@ -48,22 +46,22 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
 
 
     // buttons
-    QVBoxLayout* vLayout = new QVBoxLayout();
-    vLayout->setMargin(0);
-    hLayout->addLayout( vLayout );
+    buttonLayout_ = new QVBoxLayout();
+    buttonLayout_->setMargin(0);
+    hLayout->addLayout( buttonLayout_ );
 
-    vLayout->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), "New", this ) );
-    vLayout->addWidget( removeButton_ = new QPushButton( IconEngine::get( ICONS::REMOVE ), "Remove", this ) );
-    vLayout->addWidget( restoreButton_ = new QPushButton( IconEngine::get( ICONS::UNDO ), "Restore", this ) );
-    vLayout->addWidget( mergeButton_ = new QPushButton( IconEngine::get( ICONS::MERGE ), "Merge", this ) );
+    buttonLayout_->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), "New", this ) );
+    buttonLayout_->addWidget( removeButton_ = new QPushButton( IconEngine::get( ICONS::REMOVE ), "Remove", this ) );
+    buttonLayout_->addWidget( restoreButton_ = new QPushButton( IconEngine::get( ICONS::UNDO ), "Restore", this ) );
+    buttonLayout_->addWidget( mergeButton_ = new QPushButton( IconEngine::get( ICONS::MERGE ), "Merge", this ) );
 
     QFrame* frame = new QFrame( this );
     frame->setFrameStyle( QFrame::HLine );
-    vLayout->addWidget( frame );
+    buttonLayout_->addWidget( frame );
 
-    vLayout->addWidget( cleanButton_ = new QPushButton( IconEngine::get( ICONS::DELETE ), "Clean", this ) );
+    buttonLayout_->addWidget( cleanButton_ = new QPushButton( IconEngine::get( ICONS::DELETE ), "Clean", this ) );
 
-    vLayout->addStretch( 1 );
+    buttonLayout_->addStretch( 1 );
 
     // connections
     connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );

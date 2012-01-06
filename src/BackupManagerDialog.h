@@ -29,7 +29,7 @@
 class BackupManagerWidget;
 
 //! QDialog used to select opened files
-class BackupManagerDialog: public CustomDialog
+class BackupManagerDialog: public BaseDialog
 {
 
     public:
