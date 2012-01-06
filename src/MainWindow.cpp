@@ -1590,6 +1590,9 @@ void MainWindow::_manageBackups( void )
     // connections
     connect( &dialog.managerWidget(), SIGNAL( saveLogbookRequested( void ) ), SLOT( save( void ) ) );
     connect( &dialog.managerWidget(), SIGNAL( backupRequested( void ) ), SLOT( _saveBackup( void ) ) );
+    connect( &dialog.managerWidget(), SIGNAL( removeBackupRequested( Logbook::Backup ) ), SLOT( _removeBackup( Logbook::Backup ) ) );
+    connect( &dialog.managerWidget(), SIGNAL( restoreBackupRequested( Logbook::Backup ) ), SLOT( _restoreBackup( Logbook::Backup ) ) );
+    connect( &dialog.managerWidget(), SIGNAL( mergeBackupRequested( Logbook::Backup ) ), SLOT( _mergeBackup( Logbook::Backup ) ) );
 
     dialog.exec();
 }
@@ -1955,9 +1958,50 @@ void MainWindow::_removeBackup( Logbook::Backup backup )
 }
 
 //_______________________________________________
-void MainWindow::_restoreBackup( Logbook::Backup )
+void MainWindow::_restoreBackup( Logbook::Backup backup )
 {
     Debug::Throw( "MainWindow::_restoreBackup.\n" );
+    if( !backup.file().exists() )
+    {
+        QString buffer;
+        QTextStream( &buffer ) << "Unable to open file named " << backup.file() << ". <Remove Backup> canceled";
+        InformationDialog( this, buffer ).exec();
+        return;
+    }
+
+    // store old filename
+    File oldName( logbook()->file() );
+
+    // store old backups
+    Logbook::Backup::List backups( logbook()->backupFiles() );
+
+    // store associated backup manager Widget
+    BASE::KeySet<BackupManagerWidget> widgets( logbook() );
+
+    // replace logbook with backup
+    setLogbook( backup.file() );
+
+    // remove the "backup" filename from the openPrevious list
+    // to avoid confusion
+    Singleton::get().application<Application>()->recentFiles().remove( backup.file().expand() );
+
+    // change filename
+    logbook()->setFile( oldName );
+
+    // reassign backups
+    logbook()->setBackupFiles( backups );
+
+    // re-associate
+    for( BASE::KeySet<BackupManagerWidget>::const_iterator iter = widgets.begin(); iter != widgets.end(); ++iter )
+    { BASE::Key::associate( *iter, logbook() ); }
+
+    // and save
+    if( !logbook()->file().isEmpty() )
+    {
+        save();
+        Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+    }
+
 }
 
 //_______________________________________________
@@ -2142,13 +2186,13 @@ void MainWindow::_editLogbookInformations( void )
 }
 
 //_______________________________________________
-void MainWindow::_closeEditionWindows( void ) const
+void MainWindow::_closeEditionWindows( bool askForSave ) const
 {
     Debug::Throw( "MainWindow::_closeEditionWindows.\n" );
 
     // get all EditionWindows from MainWindow
     BASE::KeySet<EditionWindow> frames( this );
-    if( _checkModifiedEntries( frames, true ) == AskForSaveDialog::CANCEL ) return;
+    if( askForSave && _checkModifiedEntries( frames, true ) == AskForSaveDialog::CANCEL ) return;
     for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
     { (*iter)->deleteLater(); }
     return;

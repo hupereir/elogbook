@@ -454,7 +454,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     virtual void _editLogbookInformations( void );
 
     //! close EditionWindows
-    virtual void _closeEditionWindows( void ) const;
+    virtual void _closeEditionWindows( bool askForSave = true ) const;
 
     //! find entries
     void _findEntries( void ) const;

@@ -52,7 +52,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     vLayout->setMargin(0);
     hLayout->addLayout( vLayout );
 
-    vLayout->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), "Create New", this ) );
+    vLayout->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), "New", this ) );
     vLayout->addWidget( removeButton_ = new QPushButton( IconEngine::get( ICONS::REMOVE ), "Remove", this ) );
     vLayout->addWidget( restoreButton_ = new QPushButton( IconEngine::get( ICONS::UNDO ), "Restore", this ) );
     vLayout->addWidget( mergeButton_ = new QPushButton( IconEngine::get( ICONS::MERGE ), "Merge", this ) );
