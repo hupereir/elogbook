@@ -227,68 +227,37 @@ BaseConfigurationDialog( parent )
 
     // auto save
     page = &addPage( IconEngine::get( ICONS::PREFERENCE_BACKUP ), "Backup", "Logbook backup configuration" );
-    box = new QGroupBox( "Auto save", page );
-    page->layout()->addWidget( box );
+    gridLayout = new GridLayout();
+    gridLayout->setSpacing(5);
+    gridLayout->setMargin(0);
+    gridLayout->setMaxCount(2);
+    page->layout()->addItem( gridLayout );
 
-    QVBoxLayout* layout = new QVBoxLayout();
-    layout->setMargin(5);
-    layout->setSpacing(5);
-    box->setLayout( layout );
-
-    layout->addWidget( checkbox = new OptionCheckBox( "Auto save", box, "AUTO_SAVE" ) );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Automatically save logbook every ", page, "AUTO_SAVE" ) );
     addOptionWidget( checkbox );
-    checkbox->setToolTip( "Automatically save logbook at fixed time interval" );
 
-    QHBoxLayout* hLayout = new QHBoxLayout();
-    hLayout->setSpacing(5);
-    hLayout->setMargin(0);
-    layout->addLayout( hLayout );
-
-    QLabel* label;
-    hLayout->addWidget( label = new QLabel( "Auto save interval: ", box ) );
-    hLayout->addWidget( spinbox = new OptionSpinBox( box, "AUTO_SAVE_ITV" ) );
-    hLayout->addStretch(1);
+    gridLayout->addWidget( spinbox = new OptionSpinBox( page, "AUTO_SAVE_ITV" ) );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 3600 );
     spinbox->setUnit( "seconds" );
-    spinbox->setToolTip( "Time interval between two automatic save" );
     addOptionWidget( spinbox );
 
     checkbox->setChecked( false );
     spinbox->setEnabled( false );
     connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
-    connect( checkbox, SIGNAL( toggled( bool ) ), label, SLOT( setEnabled( bool ) ) );
 
-    // auto backup
-    box = new QGroupBox( "Auto backup", page );
-    layout = new QVBoxLayout();
-    layout->setMargin(5);
-    layout->setSpacing(5);
-    box->setLayout( layout );
-    page->layout()->addWidget( box );
-
-    layout->addWidget( checkbox = new OptionCheckBox( "Auto backup", box, "AUTO_BACKUP" ) );
-    checkbox->setToolTip( "Make a backup of the logbook at fixed time schedule" );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Backup logbook every ", page, "AUTO_BACKUP" ) );
     addOptionWidget( checkbox );
 
-    hLayout = new QHBoxLayout();
-    hLayout->setSpacing(5);
-    hLayout->setMargin(0);
-    layout->addLayout( hLayout );
-
-    hLayout->addWidget( label = new QLabel( "Backup interval: ", box ) );
-    hLayout->addWidget( spinbox = new OptionSpinBox( box, "BACKUP_ITV" ) );
-    hLayout->addStretch(1);
+    gridLayout->addWidget( spinbox = new OptionSpinBox( page, "BACKUP_ITV" ) );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 365 );
     spinbox->setUnit( "days" );
-    spinbox->setToolTip( "Time interval between two backups" );
     addOptionWidget( spinbox );
 
     checkbox->setChecked( false );
     spinbox->setEnabled( false );
     connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
-    connect( checkbox, SIGNAL( toggled( bool ) ), label, SLOT( setEnabled( bool ) ) );
 
     // edition
     textEditConfiguration();
@@ -296,7 +265,7 @@ BaseConfigurationDialog( parent )
     // printing
     page = &addPage( IconEngine::get( ICONS::PREFERENCE_PRINTING ), "Printing", "Logbook and logbook entries printing configuration" );
 
-    hLayout = new QHBoxLayout();
+    QHBoxLayout* hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
     hLayout->setSpacing(5);
     page->layout()->addItem( hLayout );
