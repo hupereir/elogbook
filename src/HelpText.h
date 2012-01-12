@@ -207,29 +207,7 @@ static const QString helpText[] =
   "<h3>Deleting attachments</h3>"
   "<p>Existing attachments can be deleted by selecting <i>Delete attachment</i> in the pop-up menu associated to the attachment list. A pop-up dialog is then opened to select the action to be taken. The attachment can be either deleted from the list of attachments associated to the current entry or effectively deleted from the disk. The second option is available only for attachments that are not of type URL and the actual deletion from the disk is preformed only if no other entry in the logbook refer to this attachment.</p>",
 
-  //_________________________________________________
-  "Configuration Dialog",
-  "<h2>Configuration dialog</h2>"
-  "<p>The configuration dialog is opened via the preference menu located in the main menu bar and contains a list of tabs used to configure various features of the application. They are:</p>"
-   "<h3>Base</h3>"
-  "<p>The Base tab allows to modify the font used to display the widgets and the text; the application icon, the location where the toolbar icons are found (since the name of the toolbar icons match the one used for most of the desktop icon themes, this option allows to pick a set of icons that match the current desktop icon theme. Besides, it allows to try find additional icons that are foreseen in eLogbook, but not included in the distribution); the appearance of the toolbar buttons, and the background color of the items displayed in lists.</p>"
-  "<h3>Attachments</h3>"
-  "<p>The Attachments tab allows to select the third-party applications used to display the different attachment types supported by the application and to enable/disable automatic check of the existence of attached files when loading a logbook.</p>"
-  "<h3>Window sizes</h3>"
-  "<p>The Window sizes tab allows to select the default size of the various application windows. These options get automatically updated with the current values for the existing windows when closing the application.</p>"
-  "<h3>List configuration</h3>"
-  "<p>The List configuration tab allows to select which columns are displayed/hidden in the logbook entry list of the application main window.</p>"
-  "<h3>Toolbars</h3>"
-  "<p>The Toolbars tab allows to decide which toolbars should be visible/hidden by default in the entry edition windows, as well as the side of the window at which they should appear</p>"
-  "<h3>Colors</h3>"
-  "<p>The Colors tab defines which colors are available to tag entries in the main window entry list or the highlight text in the entry edition windows.</p>"
-  "<h3>Backup</h3>"
-  "<p>The Backup tab allows to enable/disable automatic save of the logbook modifications to its current file and associated children at fixed time intervals (in seconds), and the automatic backup of the logbook in a different file at fixed time interval (in days), for book-keeping. The auto-saved option is disabled by default. The auto-backup option is enabled by default and the backup time interval is 30 days.</p>"
-  "<h3>Spell-checking</h3>"
-  "<p>The Spell-checking tab is available only if eLogbook was compiled with <i>aspell</i> support. It allows to select the default dictionary and filter used for the spell-checking and the <i>aspell</i> command that is used to load the list of available dictionaries and filters.</p>"
-  "<h3>Misc</h3>"
-  "<p>the Misc tab allows to modify additional settings that don't enter the above categories. It covers tab emulation, paragraph highlighting and line-wrapping for the log-entry text edition window; case-sensitivity of the log-entry selection criteria, display of the menu bar in the entry edition windows (on by default) and visibility of eLogbook splash-screen at start-up.</p>",
-  0 };
+0 };
 
 
 #endif
