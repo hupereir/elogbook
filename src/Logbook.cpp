@@ -253,6 +253,10 @@ bool Logbook::write( File file )
         // gets last saved timestamp
         TimeStamp lastSaved( file.lastModified() );
 
+        // make a backup of the file, if necessary
+        if( XmlOptions::get().get<bool>( "FILE_BACKUP" ) )
+        { file.backup(); }
+
         // update stateFrame
         QString buffer;
         QTextStream( &buffer ) << "Writing " << file.localName();
@@ -296,24 +300,14 @@ bool Logbook::write( File file )
         // write time stamps
         if( creation().isValid() ) top.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, document ) );
         if( modification().isValid() ) top.appendChild( XmlTimeStamp( modification() ).domElement( XML::MODIFICATION, document ) );
-
-        Debug::Throw( "Logbook::Write - wrote timeStamps.\n" );
-
-        if( backup().isValid() )
-        {
-            top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
-            Debug::Throw( "Logbook::Write - wrote backup time.\n" );
-        }
+        if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( XML::BACKUP, document ) );
 
         // write recent entries
         if( !recentEntries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
-        Debug::Throw( "Logbook::Write - wrote recent entries.\n" );
 
         // write backup files
         for( Backup::List::const_iterator iter = backupFiles_.begin(); iter != backupFiles_.end(); ++iter )
         { top.appendChild( iter->domElement( document ) ); }
-
-        Debug::Throw( "Logbook::Write - wrote backup files.\n" );
 
         // write all entries
         static unsigned int progress( 10 );

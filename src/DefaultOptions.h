@@ -83,6 +83,7 @@ void installDefaultOptions( void )
     XmlOptions::get().set( "LIST_ICON_SIZE", Option( "10", "default icon size in lists" ) );
     XmlOptions::get().set( "ATTACHMENT_LIST_ICON_SIZE", Option( "22", "default icon size in lists" ) );
 
+    XmlOptions::get().set( "FILE_BACKUP", "0" );
     XmlOptions::get().set( "AUTO_BACKUP", Option( "1" , "1 to make a backup of logbook file prior to any writting"  ) );
     XmlOptions::get().set( "AUTO_SAVE", Option( "0" , "1 to save logbook automaticaly every given interval"  ) );
     XmlOptions::get().set( "AUTO_SAVE_ITV", Option( "60" , "interval between two consecutive automatic save [seconds]"  ) );

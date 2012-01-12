@@ -204,7 +204,7 @@ BaseConfigurationDialog( parent )
 
     // colors
     page = &addPage( IconEngine::get( ICONS::PREFERENCE_COLORS ), "Colors", "Color settings for entry tagging and text highlighting" );
-    box = new QGroupBox( "Logbook entry colors", page );
+    box = new QGroupBox( "Logbook Entry Colors", page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
     box->layout()->setSpacing(5);
@@ -215,7 +215,7 @@ BaseConfigurationDialog( parent )
     listbox->setToolTip( "Colors used for logbook entry display" );
     addOptionWidget( listbox );
 
-    box = new QGroupBox( "Text colors", page );
+    box = new QGroupBox( "Text Colors", page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
     box->layout()->setSpacing(5);
@@ -230,13 +230,16 @@ BaseConfigurationDialog( parent )
     gridLayout = new GridLayout();
     gridLayout->setSpacing(5);
     gridLayout->setMargin(0);
-    gridLayout->setMaxCount(2);
     page->layout()->addItem( gridLayout );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Automatically save logbook every ", page, "AUTO_SAVE" ) );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Make backup of files when saving modifications", page, "FILE_BACKUP" ), 0, 0, 1, 2 );
+    checkbox->setToolTip( "Make backup of the file prior to saving modifications" );
     addOptionWidget( checkbox );
 
-    gridLayout->addWidget( spinbox = new OptionSpinBox( page, "AUTO_SAVE_ITV" ) );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Automatically save logbook every ", page, "AUTO_SAVE" ), 1, 0, 1, 1 );
+    addOptionWidget( checkbox );
+
+    gridLayout->addWidget( spinbox = new OptionSpinBox( page, "AUTO_SAVE_ITV" ), 1, 1, 1, 1 );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 3600 );
     spinbox->setUnit( "seconds" );
@@ -246,10 +249,10 @@ BaseConfigurationDialog( parent )
     spinbox->setEnabled( false );
     connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Backup logbook every ", page, "AUTO_BACKUP" ) );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( "Backup logbook every ", page, "AUTO_BACKUP" ), 2, 0, 1, 1 );
     addOptionWidget( checkbox );
 
-    gridLayout->addWidget( spinbox = new OptionSpinBox( page, "BACKUP_ITV" ) );
+    gridLayout->addWidget( spinbox = new OptionSpinBox( page, "BACKUP_ITV" ), 2, 1, 1, 1 );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 365 );
     spinbox->setUnit( "days" );
@@ -276,7 +279,7 @@ BaseConfigurationDialog( parent )
     box->layout()->addWidget( logbookPrintOptionWidget );
     addOptionWidget( logbookPrintOptionWidget );
 
-    hLayout->addWidget( box = new QGroupBox( "Logbook entries", page ) );
+    hLayout->addWidget( box = new QGroupBox( "Logbook Entries", page ) );
     box->setLayout( new QVBoxLayout() );
     LogEntryPrintOptionWidget* logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
     box->layout()->addWidget( logEntryPrintOptionWidget );
