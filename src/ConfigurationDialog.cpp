@@ -72,7 +72,7 @@ BaseConfigurationDialog( parent )
     OptionSpinBox* spinbox;
 
     // attachment editors
-    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), "Applications", "System dependent third-party applications used to edit attachments" );
+    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), "Applications", "Third-party applications used to edit attachments" );
     page->layout()->addWidget( box = new QGroupBox( "Attachment Editors", page ));
 
     GridLayout* gridLayout = new GridLayout();
