@@ -38,6 +38,9 @@ FileCheckDialog::FileCheckDialog( QWidget* parent ):
     setWindowTitle( "Monitored Files" );
     setOptionName( "FILE_CHECK_DIALOG" );
 
+    layout()->setMargin(0);
+    buttonLayout().setMargin(5);
+
     // custom list display
     mainLayout().addWidget( list_ = new TreeView( this ) );
     _list().setModel( &model_ );
