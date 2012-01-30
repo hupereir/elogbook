@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = elogbook
 
 CONFIG += qt release
-QT += xml network
+QT += xml network dbus
 
 VERSION = 1.8.3
 DEFINES += VERSION=\\\"$$VERSION\\\"
