@@ -388,7 +388,7 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( bool enableCancel )
 
     // retrieve other editFrames
     BASE::KeySet<EditionWindow> editionwindows( &_mainWindow() );
-    unsigned int count( count_if( editionwindows.begin(), editionwindows.end(), ModifiedFTor() ) );
+    unsigned int count( std::count_if( editionwindows.begin(), editionwindows.end(), ModifiedFTor() ) );
 
     // create dialog
     unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
@@ -554,16 +554,20 @@ void EditionWindow::closeEditor( AnimatedTextEditor& editor )
     }
 
     // update activeEditor
-    bool active_found( false );
-    for( BASE::KeySet<AnimatedTextEditor>::reverse_iterator iter = editors.rbegin(); iter != editors.rend(); ++iter )
+    bool activeFound( false );
+    BASE::KeySetIterator<AnimatedTextEditor> iterator( editors );
+    iterator.toBack();
+    while( iterator.hasPrevious() )
     {
-        if( (*iter) != &editor ) {
-            setActiveEditor( **iter );
-            active_found = true;
+        AnimatedTextEditor* current( iterator.previous() );
+        if( current != &editor )
+        {
+            setActiveEditor( *current );
+            activeFound = true;
             break;
         }
     }
-    assert( active_found );
+    assert( activeFound );
 
     // change focus
     activeEditor().setFocus();

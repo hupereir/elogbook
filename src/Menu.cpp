@@ -232,7 +232,7 @@ void Menu::_updateEditorMenu( void )
     if( editionWindow ) { windowsMenu_->addAction( &editionWindow->entryInfoAction() ); }
 
     BASE::KeySet<EditionWindow> frames( mainWindow );
-    bool hasAliveFrame( find_if( frames.begin(), frames.end(), EditionWindow::aliveFTor() ) != frames.end() );
+    bool hasAliveFrame( std::find_if( frames.begin(), frames.end(), EditionWindow::aliveFTor() ) != frames.end() );
     if( hasAliveFrame )
     {
 

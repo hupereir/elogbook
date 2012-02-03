@@ -642,7 +642,7 @@ void AttachmentFrame::_delete( void )
             {
 
                 BASE::KeySet<Attachment> attachments( (*logbooks.begin())->attachments() );
-                unsigned int n_share = count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) );
+                unsigned int n_share = std::count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) );
                 if( n_share > 1 ) {
 
                     InformationDialog( this, "Attachment still in use by other entries. Kept on disk." ).exec();
@@ -925,8 +925,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     {
 
         // get associated entries and store
-        BASE::KeySet<LogEntry> local_entries( *iter );
-        entries.insert( local_entries.begin(), local_entries.end() );
+        entries.unite( BASE::KeySet<LogEntry>( *iter ) );
         Debug::Throw( "AttachmentFrame::_saveAttachments - entries.\n" );
 
         // get associated attachment frames and store
@@ -945,13 +944,11 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     {
 
         // get associated logbooks and store
-        BASE::KeySet<Logbook> local_logbooks( *iter );
-        logbooks.insert( local_logbooks.begin(), local_logbooks.end() );
+        logbooks.unite( BASE::KeySet<Logbook>( *iter ) );
         Debug::Throw( "AttachmentFrame::_saveAttachments - logbooks.\n" );
 
         // get associated Edition windows
-        BASE::KeySet<EditionWindow> local_edition_windows( *iter );
-        edition_windows.insert( local_edition_windows.begin(), local_edition_windows.end() );
+        edition_windows.unite( BASE::KeySet<EditionWindow>( *iter ) );
         Debug::Throw( "AttachmentFrame::_saveAttachments - edition windows.\n" );
 
     }

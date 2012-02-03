@@ -396,7 +396,7 @@ std::map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     {
 
         // check if there is an entry with matching creation and modification time
-        BASE::KeySet< LogEntry >::iterator duplicate( find_if(
+        BASE::KeySet< LogEntry >::iterator duplicate( std::find_if(
             currentEntries.begin(),
             currentEntries.end(),
             LogEntry::DuplicateFTor( *it ) ) );
@@ -525,7 +525,7 @@ BASE::KeySet<LogEntry> Logbook::entries( void ) const
 
     BASE::KeySet<LogEntry> out( this );
     for( List::const_iterator iter = children_.begin(); iter != children_.end(); ++iter )
-        out.merge( (*iter)->entries() );
+    { out.merge( (*iter)->entries() ); }
 
     return out;
 

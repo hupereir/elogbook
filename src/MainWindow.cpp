@@ -1254,7 +1254,7 @@ void MainWindow::_setEnabled( bool value )
 bool MainWindow::_hasModifiedEntries( void ) const
 {
     BASE::KeySet<EditionWindow> frames( this );
-    return find_if( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() ) != frames.end();
+    return std::find_if( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() ) != frames.end();
 }
 
 //_______________________________________________
@@ -2196,7 +2196,7 @@ void MainWindow::_showDuplicatedEntries( void )
         if( !entry->isSelected() ) continue;
 
         // check duplicated entries
-        int n_duplicates( count_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( (*iter)->creation() ) ) );
+        int n_duplicates( std::count_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( (*iter)->creation() ) ) );
         if( n_duplicates < 2 ) {
 
             entry->setFindSelected( false );
@@ -2330,15 +2330,18 @@ void MainWindow::_newEntry( void )
     // retrieve associated EditionWindows, check if one matches the selected entry
     EditionWindow *editFrame( 0 );
     BASE::KeySet<EditionWindow> frames( this );
-
-    // the order is reversed to start from latest
-    for( BASE::KeySet<EditionWindow>::reverse_iterator iter=frames.rbegin(); iter != frames.rend(); ++iter )
+    BASE::KeySetIterator<EditionWindow> iterator( frames );
+    iterator.toBack();
+    while( iterator.hasPrevious() )
     {
+        EditionWindow* current( iterator.previous() );
+
         // skip closed editors
-        if( !(*iter)->isClosed() ) continue;
-        editFrame = *iter;
+        if( !current->isClosed() ) continue;
+        editFrame = current;
         editFrame->setIsClosed( false );
         editFrame->setReadOnly( false );
+        break;
     }
 
     if( !editFrame )
@@ -2455,13 +2458,16 @@ void MainWindow::_displayEntry( LogEntry* entry )
     {
 
         // the order is reversed to start from latest
-        for( BASE::KeySet<EditionWindow>::reverse_iterator iter=frames.rbegin(); iter != frames.rend(); ++iter )
+        BASE::KeySetIterator<EditionWindow> iterator( frames );
+        iterator.toBack();
+        while( iterator.hasPrevious() )
         {
+            EditionWindow* current( iterator.previous() );
 
             // skip closed editors
-            if( !(*iter)->isClosed() ) continue;
+            if( !current->isClosed() ) continue;
 
-            editFrame = *iter;
+            editFrame = current;
             editFrame->setIsClosed( false );
             editFrame->setReadOnly( false );
 
@@ -2472,17 +2478,17 @@ void MainWindow::_displayEntry( LogEntry* entry )
             editFrame->displayEntry( entry );
 
             // also kill all frames but one
-            BASE::KeySet< AnimatedTextEditor > editors( *iter );
+            BASE::KeySet< AnimatedTextEditor > editors( editFrame );
             if( editors.size() > 1 )
             {
 
                 BASE::KeySet< AnimatedTextEditor >::iterator localIter( editors.begin() );
                 ++localIter;
                 for( ;localIter != editors.end(); ++localIter )
-                { (*iter)->closeEditor( **localIter ); }
+                { editFrame->closeEditor( **localIter ); }
 
                 (**editors.begin()).setFocus();
-                (*iter)->setActiveEditor( **editors.begin() );
+                editFrame->setActiveEditor( **editors.begin() );
 
             }
 
