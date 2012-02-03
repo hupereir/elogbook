@@ -376,7 +376,7 @@ void AttachmentFrame::customEvent( QEvent* event )
         Attachment::LinkState is_link( attachment.isLink() );
 
         // check destination file
-        FileRecord::List::const_iterator found = find_if(
+        FileRecord::List::const_iterator found = std::find_if(
             records.begin(),
             records.end(),
             FileRecord::SameFileFTor( attachment.file() ) );
@@ -394,7 +394,7 @@ void AttachmentFrame::customEvent( QEvent* event )
         // check source file
         if( is_valid && is_link == Attachment::YES )
         {
-            found = find_if(
+            found = std::find_if(
                 records.begin(),
                 records.end(),
                 FileRecord::SameFileFTor( attachment.sourceFile() ) );
