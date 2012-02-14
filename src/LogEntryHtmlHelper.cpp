@@ -194,7 +194,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     for( int index = 0; index < text.size(); )
     {
         Debug::Throw() << "index: " << index << " position: " << index << endl;
-        FORMAT::TextFormatBlock::List::iterator iter( find_if(
+        FORMAT::TextFormatBlock::List::iterator iter( std::find_if(
             formats.begin(),
             formats.end(),
             FORMAT::TextFormatBlock::ContainsFTor( index ) ) );
