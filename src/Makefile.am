@@ -54,7 +54,7 @@ else
 # static libraries
 if WITH_ASPELL
 libraries = \
--L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork \
+-L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtDBus \
 -L$(aspell_libraries) -laspell  \
 libelogbook.a \
 ../base-spellcheck/libbase-spellcheck.a \

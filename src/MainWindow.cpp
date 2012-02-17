@@ -1195,7 +1195,7 @@ void MainWindow::_resetKeywordList( void )
     keywordList().initializeAnimation();
 
     // retrieve new list of keywords (from logbook)
-    std::set<Keyword> newKeywords;
+    KeywordModel::List newKeywords;
     BASE::KeySet<LogEntry> entries( logbook()->entries() );
     for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter )
     {
@@ -1204,7 +1204,7 @@ void MainWindow::_resetKeywordList( void )
             Keyword keyword( (*iter)->keyword() );
             while( keyword != Keyword::NO_KEYWORD )
             {
-                newKeywords.insert( keyword );
+                if( !newKeywords.contains( keyword ) ) newKeywords << keyword;
                 keyword = keyword.parent();
             }
 
@@ -2662,12 +2662,15 @@ void MainWindow::_deleteKeyword( void )
     _resetKeywordList();
 
     // select last valid keyword parent
-    for( KeywordModel::List::reverse_iterator iter = keywords.rbegin(); iter != keywords.rend(); ++iter )
+    KeywordModel::ListIterator iter( keywords );
+    iter.toBack();
+    while( iter.hasPrevious() )
     {
+        const Keyword& keyword( iter.previous() );
 
         // retrieve index associated to parent keyword
         // if valid, select and break
-        QModelIndex index( _keywordModel().index( iter->parent() ) );
+        QModelIndex index( _keywordModel().index( keyword.parent() ) );
         if( index.isValid() )
         {
             keywordList().selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
