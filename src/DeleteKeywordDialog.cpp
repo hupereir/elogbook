@@ -41,7 +41,7 @@
 #include <cassert>
 
 //_____________________________________________________
-DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QVector<Keyword>& keywords, const bool& has_entries ):
+DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, const bool& has_entries ):
 CustomDialog( parent )
 {
 
@@ -59,7 +59,7 @@ CustomDialog( parent )
 
         unsigned int max_keywords = 10;
         unsigned int index(0);
-        for( QVector<Keyword>::const_iterator iter = keywords.begin(); iter != keywords.end(); ++iter )
+        for( QList<Keyword>::const_iterator iter = keywords.begin(); iter != keywords.end(); ++iter )
         {
             what << *iter << " ";
             index++;
