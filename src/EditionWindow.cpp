@@ -956,7 +956,7 @@ void EditionWindow::_displayAttachments( void )
     } else {
 
         frame.visibilityAction().setChecked( true );
-        frame.add( AttachmentModel::List( attachments.begin(), attachments.end() ) );
+        frame.add( attachments.toList() );
 
     }
 

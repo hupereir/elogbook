@@ -90,7 +90,7 @@ LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::
   list_->setModel( &model_ );
   layout->addWidget( list_, 1 );
 
-  model_.add( FileCheck::Model::List( files.begin(), files.end() ) );
+  model_.add( files.toList() );
   list_->resizeColumns();
 
   // button layout

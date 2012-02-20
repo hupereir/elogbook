@@ -189,8 +189,8 @@ void Menu::_updateRecentEntriesMenu( void )
     MainWindow &mainWindow( Singleton::get().application<Application>()->mainWindow() );
     if( !mainWindow.logbook() ) return;
 
-    std::vector<LogEntry*> entries( mainWindow.logbook()->recentEntries() );
-    for( std::vector<LogEntry*>::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
+    QList<LogEntry*> entries( mainWindow.logbook()->recentEntries() );
+    for( QList<LogEntry*>::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
     {
         QString buffer;
         QTextStream( &buffer ) << (*iter)->title() << " (" << (*iter)->keyword() << ")";

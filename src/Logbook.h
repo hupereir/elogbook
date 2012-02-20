@@ -149,7 +149,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     //]{
 
     //! recent entries
-    std::vector<LogEntry*> recentEntries( void ) const;
+    QList<LogEntry*> recentEntries( void ) const;
 
     //! recent entries
     void addRecentEntry( const LogEntry* );
@@ -469,7 +469,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
         //@}
 
         //! list
-        class List: public std::vector<Backup>
+        class List: public QList<Backup>
         {
             public:
 
@@ -478,8 +478,8 @@ class Logbook:public QObject, public Counter, public BASE::Key
             {}
 
             //! constructor
-            List( const std::vector<Backup> other ):
-                std::vector<Backup>( other )
+            List( const QList<Backup>& other ):
+                QList<Backup>( other )
                 {}
 
             //! validity

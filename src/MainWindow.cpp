@@ -669,15 +669,15 @@ void MainWindow::resetAttachmentWindow( void ) const
     Debug::Throw( "MainWindow::resetAttachmentWindow.\n" );
 
     // clear the AttachmentWindow
-    AttachmentWindow &attachment_window( Singleton::get().application<Application>()->attachmentWindow() );
-    attachment_window.frame().clear();
+    AttachmentWindow &attachmentWindow( Singleton::get().application<Application>()->attachmentWindow() );
+    attachmentWindow.frame().clear();
 
     // check current logbook
     if( !logbook_ ) return;
 
     // retrieve logbook attachments, adds to AttachmentWindow
     BASE::KeySet<Attachment> attachments( logbook()->attachments() );
-    attachment_window.frame().add( AttachmentModel::List( attachments.begin(), attachments.end() ) );
+    attachmentWindow.frame().add( attachments.toList() );
 
     return;
 
@@ -3313,10 +3313,7 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     {
         default:
         case LogEntryPrintSelectionWidget::ALL_ENTRIES:
-        {
-            BASE::KeySet<LogEntry> entry_set( logbook()->entries() );
-            return LogEntryModel::List( entry_set.begin(), entry_set.end() );
-        }
+        { BASE::KeySet<LogEntry>( logbook()->entries() ).toList(); }
 
         case LogEntryPrintSelectionWidget::VISIBLE_ENTRIES:
         return _logEntryModel().get();

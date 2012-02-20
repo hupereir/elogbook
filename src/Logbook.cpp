@@ -587,16 +587,16 @@ void Logbook::removeEmptyChildren( void )
 }
 
 //_________________________________
-std::vector<LogEntry*> Logbook::recentEntries( void ) const
+QList<LogEntry*> Logbook::recentEntries( void ) const
 {
 
-    std::vector<LogEntry*> out;
+    QList<LogEntry*> out;
     if( recentEntries_.empty() ) return out;
     BASE::KeySet<LogEntry> entries( Logbook::entries() );
     for( TimeStampList::const_iterator iter = recentEntries_.begin(); iter != recentEntries_.end(); ++iter )
     {
-        BASE::KeySet<LogEntry>::const_iterator entry_iter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( *iter ) ) );
-        if( entry_iter != entries.end() ) out.push_back( *entry_iter );
+        BASE::KeySet<LogEntry>::const_iterator entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( *iter ) ) );
+        if( entryIter != entries.end() ) out.push_back( *entryIter );
     }
 
     return out;

@@ -24,25 +24,15 @@
 *
 *******************************************************************************/
 
-/*!
-\file FileCheck.h
-\brief keep track of external file modifications
-\author  Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
-#include <QBasicTimer>
-#include <QFileSystemWatcher>
-#include <QObject>
-#include <QTimerEvent>
-
-#include <map>
-#include <set>
-
 #include "Key.h"
 #include "ListModel.h"
 #include "TimeStamp.h"
+
+#include <QtCore/QBasicTimer>
+#include <QtCore/QFileSystemWatcher>
+#include <QtCore/QObject>
+#include <QtCore/QTimerEvent>
+#include <QtCore/QSet>
 
 class Logbook;
 
@@ -210,7 +200,7 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     };
 
     //! map data to file
-    typedef std::set<Data> DataSet;
+    typedef QSet<Data> DataSet;
 
     //! file system watcher
     const QFileSystemWatcher& fileSystemWatcher( void ) const
@@ -249,7 +239,7 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     private:
 
     //! file set
-    typedef std::set<QString> FileSet;
+    typedef QSet<QString> FileSet;
 
     //! file set
     FileSet files_;
@@ -261,5 +251,8 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     QBasicTimer timer_;
 
 };
+
+inline unsigned int qHash( const FileCheck::Data& data )
+{ return qHash( data.file() ); }
 
 #endif

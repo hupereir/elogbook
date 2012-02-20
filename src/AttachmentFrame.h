@@ -1,3 +1,6 @@
+#ifndef AttachmentFrame_h
+#define AttachmentFrame_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,26 +24,13 @@
 *
 *******************************************************************************/
 
-#ifndef AttachmentFrame_h
-#define AttachmentFrame_h
-
-/*!
-\file  AttachmentFrame.h
-\brief  handles attachment list
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
-#include <QWidget>
-
-#include <set>
-
 #include "Attachment.h"
 #include "AttachmentModel.h"
 #include "Debug.h"
 #include "Key.h"
 #include "ValidFileThread.h"
+
+#include <QtGui/QWidget>
 
 class TreeView;
 

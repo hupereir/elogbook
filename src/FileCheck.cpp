@@ -142,7 +142,7 @@ void FileCheck::_removeFile( const QString& file, bool forced )
 {
 
     Debug::Throw() << "FileCheck::removeFile: " << file << endl;
-    files_.erase( file );
+    files_.remove( file );
     _fileSystemWatcher().removePath( file );
     return;
 
