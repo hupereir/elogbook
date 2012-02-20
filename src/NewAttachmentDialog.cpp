@@ -71,7 +71,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
     AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
     iter != AttachmentType::types().end();
     iter ++ )
-  { fileTypeComboBox_->addItem( iter->second.name() ); }
+  { fileTypeComboBox_->addItem( iter.value().name() ); }
   fileTypeComboBox_->setToolTip( "Attachment type. Defines the default application used to display the attachment." );
   connect( fileTypeComboBox_, SIGNAL( activated( int ) ), SLOT( _attachmentTypeChanged( int ) ) );
 
@@ -139,7 +139,7 @@ AttachmentType NewAttachmentDialog::type( void ) const
     AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
     iter != AttachmentType::types().end();
     ++iter )
-  { if( iter->second.name() == type ) return iter->second; }
+  { if( iter.value().name() == type ) return iter.value(); }
   return AttachmentType::UNKNOWN;
 
 }

@@ -43,8 +43,8 @@ AttachmentType AttachmentType::URL( "URL",  "URL", "text-html.png", "EDIT_URL_AT
 //___________________________________________________________________________________
 const AttachmentType::Map& AttachmentType::types()
 {
-    static Map type_map = _install();
-    return type_map;
+    static Map typeMap = _install();
+    return typeMap;
 };
 
 //___________________________________________________________________________________
@@ -61,7 +61,7 @@ AttachmentType AttachmentType::get( const QString& key )
 {
 
     Map::const_iterator iter = types().find( key );
-    return ( iter == types().end() ) ? UNKNOWN:iter->second;
+    return ( iter == types().end() ) ? UNKNOWN:iter.value();
 
 }
 
@@ -76,11 +76,11 @@ QString AttachmentType::editCommand( void ) const
 AttachmentType::Map AttachmentType::_install( void )
 {
     Map out;
-    out.insert( std::make_pair( "UNKNOWN", UNKNOWN ) );
-    out.insert( std::make_pair( "POSTSCRIPT", POSTSCRIPT ) );
-    out.insert( std::make_pair( "IMAGE", IMAGE ) );
-    out.insert( std::make_pair( "PLAIN_TEXT", PLAIN_TEXT ) );
-    out.insert( std::make_pair( "HTML", HTML ) );
-    out.insert( std::make_pair( "URL", URL ) );
+    out.insert( "UNKNOWN", UNKNOWN );
+    out.insert( "POSTSCRIPT", POSTSCRIPT );
+    out.insert( "IMAGE", IMAGE );
+    out.insert( "PLAIN_TEXT", PLAIN_TEXT );
+    out.insert( "HTML", HTML );
+    out.insert( "URL", URL );
     return out;
 }

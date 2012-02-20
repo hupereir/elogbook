@@ -195,7 +195,7 @@ void Menu::_updateRecentEntriesMenu( void )
         QString buffer;
         QTextStream( &buffer ) << (*iter)->title() << " (" << (*iter)->keyword() << ")";
         QAction* action = recentEntriesMenu_->addAction( buffer );
-        actions_.insert( std::make_pair( action, (*iter) ) );
+        actions_.insert( action, (*iter) );
     }
 
 }
@@ -206,8 +206,8 @@ void Menu::_selectEntry( QAction* action )
     Debug::Throw( "Menu::_selectEntry.\n" );
     ActionMap::iterator iter( actions_.find( action ) );
     assert( iter != actions_.end() );
-    iter->second->setFindSelected( true );
-    emit entrySelected( iter->second );
+    iter.value()->setFindSelected( true );
+    emit entrySelected( iter.value() );
 }
 
 //_______________________________________________

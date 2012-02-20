@@ -54,7 +54,7 @@
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):
   CustomToolBar( title, parent, option_name ),
-  transition_widget_( new TransitionWidget(parent) )
+  transitionWidget_( new TransitionWidget(parent) )
 {
   Debug::Throw( "SearchPanel::SearchPanel.\n" );
 
@@ -83,7 +83,7 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
   checkboxes_[TEXT]->setChecked( true );
 
   for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
-  { connect( iter->second, SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
+  { connect( iter.value(), SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
 
   // show_all button
   addWidget( button = new QPushButton( "&Show All", this ) );
@@ -188,7 +188,7 @@ void SearchPanel::_updateConfiguration( void )
   {
     unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
-    { iter->second->setChecked( mask & iter->first ); }
+    { iter.value()->setChecked( mask & iter.key() ); }
   }
 
 }
@@ -223,7 +223,7 @@ void SearchPanel::_saveMask( void )
   // store mask
   unsigned int mask(0);
   for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
-  { if( iter->second->isChecked() ) mask |= iter->first; }
+  { if( iter.value()->isChecked() ) mask |= iter.key(); }
 
   XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
 
@@ -237,7 +237,7 @@ void SearchPanel::_selectionRequest( void )
   // build mode
   unsigned int mode = NONE;
   for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
-  { if( iter->second->isChecked() ) mode |= iter->first; }
+  { if( iter.value()->isChecked() ) mode |= iter.key(); }
 
   // text selection
   emit selectEntries( editor().currentText(), mode );

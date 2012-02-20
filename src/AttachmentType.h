@@ -25,20 +25,9 @@
 
 #include "Counter.h"
 
-#include <map>
+#include <QtCore/QMap>
 
-/*!
-\file    AttachmentType.h
-\brief   Attached file types for file manipulations
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
-/*!
-\class   AttachmentType
-\brief   Attached file types for file manipulations
-*/
+//! Attached file types for file manipulations
 class AttachmentType: public Counter{
 
     public:
@@ -90,7 +79,7 @@ class AttachmentType: public Counter{
     QString editCommand( void ) const;
 
     //! attachment types map
-    typedef std::map< QString, AttachmentType > Map;
+    typedef QMap< QString, AttachmentType > Map;
 
     //! returns predefined attachment types
     static const Map& types( void );

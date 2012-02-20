@@ -28,6 +28,7 @@
 #include "Counter.h"
 
 #include <QtGui/QMenuBar>
+#include <QtCore/QHash>
 #include <cassert>
 
 class LogEntry;
@@ -92,7 +93,7 @@ class Menu:public QMenuBar, public Counter
     RecentFilesMenu* recentFilesMenu_;
 
     //! associates actions and recent entries
-    typedef std::map< QAction*, LogEntry* > ActionMap;
+    typedef QHash< QAction*, LogEntry* > ActionMap;
 
     //! action group
     QActionGroup* actionGroup_;

@@ -380,7 +380,7 @@ bool Logbook::write( File file )
 }
 
 //_________________________________
-std::map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
+QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
 {
     Debug::Throw( "Logbook::synchronize.\n" );
 
@@ -389,7 +389,7 @@ std::map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     BASE::KeySet<LogEntry> currentEntries( entries() );
 
     // map of duplicated entries
-    std::map< LogEntry*, LogEntry* > duplicates;
+    QHash< LogEntry*, LogEntry* > duplicates;
 
     // merge new entries into current entries
     for( BASE::KeySet< LogEntry>::iterator it = newEntries.begin(); it != newEntries.end(); ++it )
@@ -429,7 +429,7 @@ std::map<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
             }
 
             // insert duplicate pairs in map
-            duplicates.insert( std::make_pair( *duplicate, *it ) );
+            duplicates.insert( *duplicate, *it );
 
             // reset current entries
             currentEntries = entries();
@@ -464,7 +464,7 @@ Logbook::List Logbook::children( void ) const
     {
         out.push_back( *it );
         List children( (*it)->children() );
-        out.merge( children );
+        out << children;
     }
 
     return out;
@@ -551,11 +551,11 @@ BASE::KeySet<Attachment> Logbook::attachments( void ) const
 }
 
 //___________________________________
-void Logbook::truncateRecentEntriesList( const unsigned int& max_count )
+void Logbook::truncateRecentEntriesList( int maxCount )
 {
 
     Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
-    while( recentEntries_.size() > max_count )
+    while( recentEntries_.size() > maxCount )
     { recentEntries_.pop_front(); }
 
 }

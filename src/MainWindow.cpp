@@ -1871,20 +1871,20 @@ void MainWindow::_synchronize( void )
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    std::map<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( remoteLogbook ) );
+    QHash<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( remoteLogbook ) );
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
     // delete the local duplicated entries
-    for( std::map<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); ++iter )
+    for( QHash<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); ++iter )
     {
 
         // display the new entry in all matching edit frames
-        BASE::KeySet<EditionWindow> frames( iter->first );
+        BASE::KeySet<EditionWindow> frames( iter.key() );
         for( BASE::KeySet<EditionWindow>::iterator frameIter = frames.begin(); frameIter != frames.end(); ++frameIter )
-        { (*frameIter)->displayEntry( iter->second ); }
+        { (*frameIter)->displayEntry( iter.value() ); }
 
-        delete iter->first;
+        delete iter.key();
 
     }
 
@@ -2073,20 +2073,20 @@ void MainWindow::_mergeBackup( Logbook::Backup backup )
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    std::map<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( backupLogbook ) );
+    QHash<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( backupLogbook ) );
     Debug::Throw() << "MainWindow::_mergeBackup - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
     // delete the local duplicated entries
-    for( std::map<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); ++iter )
+    for( QHash<LogEntry*,LogEntry*>::iterator iter = duplicates.begin(); iter != duplicates.end(); ++iter )
     {
 
         // display the new entry in all matching edit frames
-        BASE::KeySet<EditionWindow> frames( iter->first );
+        BASE::KeySet<EditionWindow> frames( iter.key() );
         for( BASE::KeySet<EditionWindow>::iterator frameIter = frames.begin(); frameIter != frames.end(); ++frameIter )
-        { (*frameIter)->displayEntry( iter->second ); }
+        { (*frameIter)->displayEntry( iter.value() ); }
 
-        delete iter->first;
+        delete iter.key();
 
     }
 

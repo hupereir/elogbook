@@ -1,6 +1,7 @@
-// $Id$
 #ifndef SearchPanel_h
 #define SearchPanel_h
+
+// $Id$
 
 /******************************************************************************
 *
@@ -23,21 +24,12 @@
 *
 *******************************************************************************/
 
-/*!
-  \file SearchPanel.h
-  \brief selects entries from keyword/title/text/...
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
-#include <QCheckBox>
-#include <QContextMenuEvent>
-
-#include <map>
-
 #include "CustomToolBar.h"
 #include "IconSize.h"
+
+#include <QtGui/QCheckBox>
+#include <QtGui/QContextMenuEvent>
+#include <QtCore/QHash>
 
 class CustomComboBox;
 class TransitionWidget;
@@ -46,107 +38,107 @@ class TransitionWidget;
 class SearchPanel: public CustomToolBar
 {
 
-  //! Qt meta object declaration
-  Q_OBJECT
+    //! Qt meta object declaration
+    Q_OBJECT
 
-  public:
+    public:
 
-  //! constructor
-  SearchPanel( const QString&, QWidget*, const QString& = QString() );
+    //! constructor
+    SearchPanel( const QString&, QWidget*, const QString& = QString() );
 
-  //! search mode enumeration
-  enum SearchMode
-  {
-    NONE = 0,
-    TITLE = 1<<0,
-    KEYWORD = 1<<1,
-    TEXT = 1<<2,
-    ATTACHMENT = 1<<3,
-    COLOR = 1<<4
-  };
+    //! search mode enumeration
+    enum SearchMode
+    {
+        NONE = 0,
+        TITLE = 1<<0,
+        KEYWORD = 1<<1,
+        TEXT = 1<<2,
+        ATTACHMENT = 1<<3,
+        COLOR = 1<<4
+    };
 
-  //! editor
-  CustomComboBox& editor( void ) const
-  { return *editor_; }
+    //! editor
+    CustomComboBox& editor( void ) const
+    { return *editor_; }
 
-  signals:
+    signals:
 
-  //! emitted when the Find button is pressed
-  void selectEntries( QString text, unsigned int mode );
+    //! emitted when the Find button is pressed
+    void selectEntries( QString text, unsigned int mode );
 
-  //! emitted when the Show All button is pressed
-  void showAllEntries( void );
+    //! emitted when the Show All button is pressed
+    void showAllEntries( void );
 
-  public slots:
+    public slots:
 
-  //! show
-  virtual void show( void );
+    //! show
+    virtual void show( void );
 
-  //! hide
-  virtual void hide( void );
+    //! hide
+    virtual void hide( void );
 
-  //! visibility
-  virtual void setVisible( bool );
+    //! visibility
+    virtual void setVisible( bool );
 
-  protected:
+    protected:
 
-  //! context menu
-  virtual void contextMenuEvent( QContextMenuEvent* );
+    //! context menu
+    virtual void contextMenuEvent( QContextMenuEvent* );
 
-  //! transition widget
-  TransitionWidget& _transitionWidget( void ) const
-  { return *transition_widget_; }
+    //! transition widget
+    TransitionWidget& _transitionWidget( void ) const
+    { return *transitionWidget_; }
 
-  protected slots:
+    protected slots:
 
-  //! toggle visibility [overloaded]
-  virtual void _toggleVisibility( bool );
+    //! toggle visibility [overloaded]
+    virtual void _toggleVisibility( bool );
 
-  private slots:
+    private slots:
 
-  //! configuration
-  void _updateConfiguration( void );
+    //! configuration
+    void _updateConfiguration( void );
 
-  //! toolbar text position
-  void _updateToolButtonStyle( Qt::ToolButtonStyle );
+    //! toolbar text position
+    void _updateToolButtonStyle( Qt::ToolButtonStyle );
 
-  //! toolbar text position
-  void _updateToolButtonIconSize( IconSize::Size );
+    //! toolbar text position
+    void _updateToolButtonIconSize( IconSize::Size );
 
-  //! save configuration
-  void _saveMask( void );
+    //! save configuration
+    void _saveMask( void );
 
-  //! send SelectEntries request
-  void _selectionRequest( void );
+    //! send SelectEntries request
+    void _selectionRequest( void );
 
-  private:
+    private:
 
-  //! checkboxes
-  typedef std::map<SearchMode, QCheckBox* > CheckBoxMap;
+    //! checkboxes
+    typedef QHash<SearchMode, QCheckBox* > CheckBoxMap;
 
-  //! transition widget
-  TransitionWidget* transition_widget_;
+    //! transition widget
+    TransitionWidget* transitionWidget_;
 
-  //! checkboxes
-  CheckBoxMap checkboxes_;
+    //! checkboxes
+    CheckBoxMap checkboxes_;
 
-  //! select LogEntry according to title
-  QCheckBox *title_selection_;
+    //! select LogEntry according to title
+    QCheckBox *titleSelection_;
 
-  //! select LogEntry according to key
-  QCheckBox *keyword_selection_;
+    //! select LogEntry according to key
+    QCheckBox *keywordSelection_;
 
-  //! select LogEntry according to text
-  QCheckBox *text_selection_;
+    //! select LogEntry according to text
+    QCheckBox *textSelection_;
 
-  //! select LogEntry according to attachment title
-  QCheckBox *attachment_selection_;
+    //! select LogEntry according to attachment title
+    QCheckBox *attachmentSelection_;
 
-  //! select LogEntry according to color
-  QCheckBox *color_selection_;
+    //! select LogEntry according to color
+    QCheckBox *colorSelection_;
 
-  //! selection text widget
-  CustomComboBox *editor_;
+    //! selection text widget
+    CustomComboBox *editor_;
 
 };
 #endif

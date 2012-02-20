@@ -40,7 +40,7 @@
 #include <QtGui/QFont>
 #include <QtGui/QTextCharFormat>
 #include <QtGui/QToolButton>
-#include <map>
+#include <QtCore/QMap>
 
 class ColorMenu;
 class TextEditor;
@@ -88,10 +88,10 @@ class FormatBar: public CustomToolBar
     //! Qt meta object declaration
     Q_OBJECT
 
-        public:
+    public:
 
-        //! bold icon name
-        static const QString BOLD_ICON;
+    //! bold icon name
+    static const QString BOLD_ICON;
 
     //! italic icon name
     static const QString ITALIC_ICON;
@@ -129,7 +129,7 @@ class FormatBar: public CustomToolBar
     FORMAT::TextFormatBlock::List get( void ) const;
 
     //! button map
-    typedef std::map< ActionId, QAction* > ActionMap;
+    typedef QMap< ActionId, QAction* > ActionMap;
 
     //! actions
     const ActionMap& actions( void ) const

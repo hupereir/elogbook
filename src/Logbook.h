@@ -33,8 +33,10 @@
 
 #include <QtXml/QDomElement>
 #include <QtXml/QDomDocument>
+
+#include <QtCore/QHash>
+#include <QtCore/QList>
 #include <QtCore/QObject>
-#include <list>
 
 class LogEntry;
 class Attachment;
@@ -108,13 +110,13 @@ class Logbook:public QObject, public Counter, public BASE::Key
     The first entry is local and can be safely deleted
     The second entry is the remote replacement
     */
-    std::map<LogEntry*,LogEntry*> synchronize( const Logbook& logbook );
+    QHash<LogEntry*,LogEntry*> synchronize( const Logbook& logbook );
 
     //! retrieve Xml parsing errors [recursive]
     XmlError::List xmlErrors( void ) const;
 
     //! shortcut for logbook children list
-    typedef std::list< Logbook* > List;
+    typedef QList< Logbook* > List;
 
     //!@name recursive accessors
     //@{
@@ -132,7 +134,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     BASE::KeySet<Attachment> attachments( void ) const;
 
     //! truncate recent entries list
-    void truncateRecentEntriesList( const unsigned int& );
+    void truncateRecentEntriesList( int );
 
     //! returns true if logbook is empty (no recursive entries found)
     bool empty( void ) const
@@ -594,7 +596,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     //! list of recent entries
     /*! creation time stamp of recent entries are stored */
-    typedef std::list<TimeStamp> TimeStampList;
+    typedef QList<TimeStamp> TimeStampList;
 
     //! list of recent entries
     /*! creation time stamp of recent entries are stored */

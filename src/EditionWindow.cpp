@@ -202,7 +202,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     formatBar_->setTarget( activeEditor() );
     const FormatBar::ActionMap& actions( formatBar_->actions() );
     for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); ++iter )
-    { readOnlyActions_.push_back( iter->second ); }
+    { readOnlyActions_.push_back( iter.value() ); }
 
     // set proper connection for first editor
     // (because it could not be performed in _newTextEditor)

@@ -68,31 +68,31 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
     QAction* action;
     addAction( action = new QAction( IconEngine::get( BOLD_ICON ), "&Bold", this ) );
     action->setCheckable( true );
-    actions_.insert( std::make_pair( BOLD, action ) );
+    actions_.insert( BOLD, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _bold( bool ) ) );
 
     // underline
     addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), "&Italic", this ) );
     action->setCheckable( true );
-    actions_.insert( std::make_pair( ITALIC, action ) );
+    actions_.insert( ITALIC, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _italic( bool ) ) );
 
     // underline
     addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), "&Underline", this ) );
     action->setCheckable( true );
-    actions_.insert( std::make_pair( UNDERLINE, action ) );
+    actions_.insert( UNDERLINE, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _underline( bool ) ) );
 
     // strike
     addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), "&Strike", this ) );
     action->setCheckable( true );
-    actions_.insert( std::make_pair( STRIKE, action ) );
+    actions_.insert( STRIKE, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _strike( bool ) ) );
 
     // color
     action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this );
     connect( action, SIGNAL( triggered() ), SLOT( _lastColor() ) );
-    actions_.insert( std::make_pair( COLOR, action ) );
+    actions_.insert( COLOR, action );
 
     // color menu
     colorMenu_ = new ColorMenu( this );

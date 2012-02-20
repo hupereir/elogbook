@@ -24,16 +24,10 @@
 *
 *******************************************************************************/
 
-/*!
-\file    AttachmentModel.h
-\brief   Stores file information for display in lists
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 #include "Counter.h"
 #include "ListModel.h"
+
+#include <QtCore/QHash>
 
 class Attachment;
 
@@ -120,7 +114,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     static QIcon _icon( QString );
 
     //! icon cache
-    typedef std::map<QString, QIcon> IconCache;
+    typedef QHash<QString, QIcon> IconCache;
 
     //! type icon cache
     static IconCache& _icons();
