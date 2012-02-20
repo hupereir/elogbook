@@ -24,17 +24,10 @@
 *
 *******************************************************************************/
 
-/*!
-\file    LogEntryModel.h
-\brief   Stores file information for display in lists
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
-#include "ColorMenu.h"
 #include "Counter.h"
 #include "ListModel.h"
+
+#include <QtCore/QHash>
 
 class LogEntry;
 
@@ -45,10 +38,10 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     //! Qt meta object declaration
     Q_OBJECT
 
-        public:
+    public:
 
-        //! used to tag Keyword drags
-        static const QString DRAG;
+    //! used to tag Keyword drags
+    static const QString DRAG;
 
     //! constructor
     LogEntryModel(QObject *parent = 0);
@@ -140,7 +133,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     private:
 
     //! color icon cache
-    typedef std::map<QColor, QIcon, ColorMenu::ColorLessFTor> IconCache;
+    typedef QHash<QString, QIcon> IconCache;
 
     //! color icon cache
     static IconCache& _icons( void );

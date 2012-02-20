@@ -275,14 +275,14 @@ QIcon LogEntryModel::_icon( const QColor& color )
 
     // Debug::Throw( "LogEntryModel::_icon.\n" );
 
-    IconCache::iterator iter( _icons().find( color ) );
-    if( iter != _icons().end() ) return iter->second;
+    IconCache::iterator iter( _icons().find( color.name() ) );
+    if( iter != _icons().end() ) return iter.value();
 
-    unsigned int icon_size =XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
-    double pixmap_size = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
-    double offset = 0.5*( icon_size - pixmap_size );
+    unsigned int iconSize =XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
+    double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
+    double offset = 0.5*( iconSize - pixmapSize );
 
-    CustomPixmap pixmap( CustomPixmap().empty( QSize( icon_size, icon_size ) ) );
+    CustomPixmap pixmap( CustomPixmap().empty( QSize( iconSize, iconSize ) ) );
 
     if( color.isValid() )
     {
@@ -291,16 +291,14 @@ QIcon LogEntryModel::_icon( const QColor& color )
         painter.setRenderHints(QPainter::Antialiasing );
         painter.setPen( Qt::NoPen );
 
-        QRectF rect( QPointF( offset, offset ), QSizeF( pixmap_size, pixmap_size ) );
+        QRectF rect( QPointF( offset, offset ), QSizeF( pixmapSize, pixmapSize ) );
         painter.setBrush( color );
         painter.drawEllipse( rect );
         painter.end();
 
     }
 
-    QIcon out( pixmap );
-    _icons()[color] = out;
-    return out;
+    return _icons().insert( color.name(), QIcon( pixmap ) ).value();
 
 }
 
@@ -313,8 +311,8 @@ QIcon& LogEntryModel::_attachmentIcon( void )
     static QIcon attachment_icon;
     if( !attachment_icon.isNull() ) return attachment_icon;
 
-    unsigned int pixmap_size = XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
-    QSize size( pixmap_size, pixmap_size );
+    unsigned int pixmapSize = XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
+    QSize size( pixmapSize, pixmapSize );
     QSize scale(size*0.9);
     attachment_icon = CustomPixmap()
         .empty( size )

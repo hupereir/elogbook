@@ -260,7 +260,7 @@ void FormatBar::_saveConfiguration( void )
 
     const ColorMenu::ColorSet colors( colorMenu_->colors() );
     for( ColorMenu::ColorSet::const_iterator iter = colors.begin(); iter != colors.end(); ++iter )
-    { XmlOptions::get().add( "TEXT_COLOR", Option( iter->name() ) ); }
+    { XmlOptions::get().add( "TEXT_COLOR", Option( *iter ) ); }
 
     return;
 }
