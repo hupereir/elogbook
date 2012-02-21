@@ -44,10 +44,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QSplitter>
 #include <QtGui/QToolButton>
-
-#include <set>
-#include <map>
-#include <list>
+#include <QtCore/QList>
 
 class Attachment;
 class ColorMenu;
@@ -435,7 +432,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     bool readOnly_;
 
     //! list of buttons to disactivate in case of read-only
-    typedef std::vector< QAction* > ActionList;
+    typedef QList< QAction* > ActionList;
 
     //! list of buttons to disactivate in case of read-only
     ActionList readOnlyActions_;
