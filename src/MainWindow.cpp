@@ -2144,11 +2144,11 @@ void MainWindow::_reorganize( void )
 
     //! put entry set into a list and sort by creation time.
     // First entry must the oldest
-    std::list<LogEntry*> entry_list( entries.begin(), entries.end() );
-    entry_list.sort( LogEntry::FirstCreatedFTor() );
+    QList<LogEntry*> entryList( entries.toList() );
+    std::sort( entryList.begin(), entryList.end(), LogEntry::FirstCreatedFTor() );
 
     // put entries in logbook
-    for( std::list<LogEntry*>::iterator iter = entry_list.begin(); iter != entry_list.end(); ++iter )
+    for( QList<LogEntry*>::iterator iter = entryList.begin(); iter != entryList.end(); ++iter )
     {
         Logbook *logbook( MainWindow::logbook()->latestChild() );
         Key::associate( *iter, logbook );

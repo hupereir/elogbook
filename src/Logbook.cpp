@@ -451,7 +451,7 @@ XmlError::List Logbook::xmlErrors( void ) const
     for( List::const_iterator it = children_.begin(); it != children_.end(); ++it )
     {
         XmlError::List tmp( (*it)->xmlErrors() );
-        out.merge( tmp );
+        out << tmp;
     }
     return out;
 }
