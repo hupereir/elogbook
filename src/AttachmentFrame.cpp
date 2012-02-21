@@ -47,7 +47,6 @@
 
 #include <QtGui/QHeaderView>
 #include <QtGui/QShortcut>
-#include <list>
 
 //_____________________________________________
 AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):

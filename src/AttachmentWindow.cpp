@@ -21,19 +21,10 @@
 *
 *******************************************************************************/
 
-/*!
-  \file AttachmentWindow.cpp
-  \brief popup window to list/edit all attachments independantly from entries
-  \author  Hugo Pereira
-  \version $Revision$
-  \date    $Date$
-*/
-
 #include <QApplication>
 #include <QShortcut>
 #include <QLayout>
 #include <QPushButton>
-#include <list>
 
 #include "Application.h"
 #include "AttachmentWindow.h"

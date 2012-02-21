@@ -35,8 +35,6 @@
 #include <QtXml/QDomElement>
 #include <QtXml/QDomDocument>
 
-#include <vector>
-
 class Logbook;
 
 /*!

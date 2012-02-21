@@ -24,83 +24,74 @@
 *
 *******************************************************************************/
 
-/*!
-  \file Keyword.h
-  \brief log entry keyword
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
-#include <QString>
-#include <QTextStream>
-#include <vector>
-
 #include "Counter.h"
+
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 //! log entry keyword
 class Keyword: public Counter
 {
 
-  public:
+    public:
 
-  //! used when LogEntry keyword is not defined
-  static const Keyword NO_KEYWORD;
+    //! used when LogEntry keyword is not defined
+    static const Keyword NO_KEYWORD;
 
-  //! constructor
-  Keyword( const QString& value = QString("")):
-    Counter( "Keyword" )
-  { value_ = _format( value ); }
+    //! constructor
+    Keyword( const QString& value = QString("")):
+        Counter( "Keyword" )
+    { value_ = _format( value ); }
 
-  //! equal to operator
-  bool operator == (const Keyword& keyword ) const
-  { return get() == keyword.get(); }
+    //! equal to operator
+    bool operator == (const Keyword& keyword ) const
+    { return get() == keyword.get(); }
 
-  //! equal to operator
-  bool operator != (const Keyword& keyword ) const
-  { return !( *this == keyword ); }
+    //! equal to operator
+    bool operator != (const Keyword& keyword ) const
+    { return !( *this == keyword ); }
 
-  //! less than operator
-  bool operator < (const Keyword& keyword ) const
-  { return get() < keyword.get(); }
+    //! less than operator
+    bool operator < (const Keyword& keyword ) const
+    { return get() < keyword.get(); }
 
-  //! set full keyword
-  void set( const QString& value )
-  { value_ = _format( value ); }
+    //! set full keyword
+    void set( const QString& value )
+    { value_ = _format( value ); }
 
-  //! append
-  Keyword& append( const QString& value );
+    //! append
+    Keyword& append( const QString& value );
 
-  //! full keyword
-  const QString& get( void ) const
-  { return value_; }
+    //! full keyword
+    const QString& get( void ) const
+    { return value_; }
 
-  //! current keyword
-  QString current( void ) const;
+    //! current keyword
+    QString current( void ) const;
 
-  //! parent keyword
-  Keyword parent( void ) const;
+    //! parent keyword
+    Keyword parent( void ) const;
 
-  /*! true if this keyword is direct child of this one */
-  bool isChild( const Keyword& keyword ) const;
+    /*! true if this keyword is direct child of this one */
+    bool isChild( const Keyword& keyword ) const;
 
-  //! true if this keyword in descendance of argument
-  bool inherits( const Keyword& keyword ) const;
+    //! true if this keyword in descendance of argument
+    bool inherits( const Keyword& keyword ) const;
 
-  private:
+    private:
 
-  //! format keyword
-  static QString _format( const QString& );
+    //! format keyword
+    static QString _format( const QString& );
 
-  //! full value
-  QString value_;
+    //! full value
+    QString value_;
 
-  //! streamer
-  friend QTextStream& operator << (QTextStream& out, const Keyword& keyword )
-  {
-    out << keyword.get();
-    return out;
-  }
+    //! streamer
+    friend QTextStream& operator << (QTextStream& out, const Keyword& keyword )
+    {
+        out << keyword.get();
+        return out;
+    }
 };
 
 #endif

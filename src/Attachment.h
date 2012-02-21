@@ -1,3 +1,6 @@
+#ifndef Attachment_h
+#define Attachment_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,27 +24,14 @@
 *
 *******************************************************************************/
 
-#ifndef Attachment_h
-#define Attachment_h
-
-/*!
-  \file    Attachment.h
-  \brief  Attached file object
-  \author  Hugo Pereira
-  \version $Revision$
-  \date    $Date$
-*/
-
-
-
-#include <list>
-#include <qdom.h>
-
 #include "AttachmentType.h"
 #include "Counter.h"
 #include "File.h"
 #include "Key.h"
 #include "TimeStamp.h"
+
+#include <QtXml/QDomDocument>
+#include <QtXml/QDomElement>
 
 class LogEntry;
 

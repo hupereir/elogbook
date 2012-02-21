@@ -21,14 +21,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file FormatBar.cpp
-\brief text formating bar
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "FormatBar.h"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
@@ -47,7 +39,6 @@
 #include <QTextCursor>
 #include <QTextEdit>
 #include <QTextFragment>
-#include <list>
 
 //________________________________________
 const QString FormatBar::BOLD_ICON = "format-text-bold.png";

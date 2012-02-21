@@ -23,16 +23,6 @@
 *
 *******************************************************************************/
 
-/*!
-  \file LogbookModifiedDialog.h
-  \brief QDialog used when a file has been modified on disk
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
-#include <list>
-
 #include "BaseDialog.h"
 #include "Counter.h"
 #include "FileCheck.h"
