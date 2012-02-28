@@ -18,17 +18,66 @@ dnl aspell
 dnl *********************************************
 AC_PATH_PROG(ASPELL,    aspell,    aspell)
 
+dnl ****************
+dnl set aspell directory
+AC_ARG_WITH( aspell-dir,
+  [ --with-aspell-dir=path    Path to aspell directory /usr ],
+  aspell_dir=$withval, aspell_dir= )
+
+if test "$aspell_dir" = ""; then
+  aspell_dir=/usr
+fi
+
+dnl ************************
+dnl set aspell library directory
+AC_ARG_WITH(qt-libraries,
+  [ --with-aspell-libraries=path    Path to aspell libraries directory /usr/lib ],
+  aspell_libraries=$withval, aspell_libraries=)
+
+if test "$aspell_libraries" = ""; then
+  aspell_libraries=$aspell_dir/lib
+fi
+
+dnl ************************
+dnl set aspell include directory
+AC_ARG_WITH(aspell-includes,
+  [ --with-aspell-includes=path    Path to aspell includes directory /usr/include ],
+  aspell_includes=$withval, aspell_includes=)
+
+if test "$aspell_includes" = ""; then
+  aspell_includes=$aspell_dir/include
+fi
+
 dnl ***********************
 dnl aspell configuration checks
-AC_CHECK_LIB(aspell, new_aspell_speller,
-	 [AC_CHECK_HEADER(aspell.h, [
-	  have_aspell=yes
-	  AC_DEFINE(HAVE_ASPELL, 1, [Define to 1 if you have aspell available])
-	 ],
-	 [have_aspell="no (requires aspell http://www.gzip.org/zlib/)"])],
-	 [have_aspell="no (requires aspell http://www.gzip.org/zlib/)"])
 
-AC_SUBST(have_aspell)
+echo ""
+aspell=1
+AC_CHECK_FILE($aspell_includes/aspell.h,, [aspell=0] )
+AC_CHECK_FILE($aspell_libraries/libaspell.so, aspell_lib=aspell, [aspell=0] )
+
+if test $aspell = 1; then
+	AC_SUBST(aspell_dir)
+	AC_SUBST(aspell_libraries)
+	AC_SUBST(aspell_includes)
+
+	echo ""
+	echo "aspell configuration:"
+	echo "aspell_lib       = " $aspell_lib
+	echo "aspell_dir       = " $aspell_dir
+	echo "aspell_libraries = " $aspell_libraries
+	echo "aspell_includes  = " $aspell_includes
+	echo ""
+else
+	echo ""
+	echo "aspell configuration:"
+	echo "invalid aspell configuration"
+	echo "spell-check disabled"
+	echo ""
+fi
+
+AM_CONDITIONAL(WITH_ASPELL, [test $aspell = 1])
+AC_SUBST(aspell)
 
 dnl *********************************************
 dnl Qt

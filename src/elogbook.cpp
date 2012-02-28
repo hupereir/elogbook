@@ -21,19 +21,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file    eLogbook.cpp
-\brief  eLogbook main file
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
-#include <QApplication>
-
-#include <signal.h>
-#include <unistd.h>
-
 #include "Application.h"
 #include "Debug.h"
 #include "DefaultOptions.h"
@@ -41,6 +28,11 @@
 #include "ErrorHandler.h"
 #include "Singleton.h"
 #include "XmlOptions.h"
+
+#include <QtGui/QApplication>
+
+#include <signal.h>
+#include <unistd.h>
 
 //_______________________________
 //! to handle keyboard interruptions
