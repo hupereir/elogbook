@@ -312,6 +312,6 @@ BaseConfigurationDialog( parent )
     addOptionWidget( checkbox );
 
     // load initial configuration
-    _read();
+    read();
 
 }
