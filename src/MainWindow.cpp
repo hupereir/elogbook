@@ -156,7 +156,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList().setDropIndicatorShown(true);
 
     // default width from options, if found
-    if( XmlOptions::get().find( "KEYWORD_LIST_WIDTH" ) )
+    if( XmlOptions::get().contains( "KEYWORD_LIST_WIDTH" ) )
     { keywordList_->setDefaultWidth( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) ); }
 
     // the use of a custom delegate unfortunately disable the

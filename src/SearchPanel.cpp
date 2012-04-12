@@ -184,7 +184,7 @@ void SearchPanel::_updateConfiguration( void )
   setToolButtonStyle( style );
 
   // load mask
-  if( XmlOptions::get().find( "SEARCH_PANEL_MASK" ) )
+  if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
   {
     unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
