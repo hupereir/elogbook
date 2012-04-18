@@ -4,7 +4,7 @@ TARGET = elogbook
 CONFIG += qt release
 QT += xml network dbus
 
-VERSION = 1.8.3
+VERSION = 1.8.4
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 win32 {

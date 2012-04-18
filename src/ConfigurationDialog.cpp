@@ -58,7 +58,7 @@
 
 //_________________________________________________________
 ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
-BaseConfigurationDialog( parent )
+   BaseConfigurationDialog( parent )
 {
 
     Debug::Throw( "ConfigurationDialog::ConfigurationDialog.\n" );
