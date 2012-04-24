@@ -154,6 +154,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList().setDragEnabled(true);
     keywordList().setAcceptDrops(true);
     keywordList().setDropIndicatorShown(true);
+    keywordList().setOptionName( "KEYWORD_LIST" );
 
     // default width from options, if found
     if( XmlOptions::get().contains( "KEYWORD_LIST_WIDTH" ) )
