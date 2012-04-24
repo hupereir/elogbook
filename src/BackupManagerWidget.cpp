@@ -266,7 +266,7 @@ void BackupManagerWidget::Model::_sort( int column, Qt::SortOrder order )
 bool BackupManagerWidget::Model::SortFTor::operator () ( Logbook::Backup first, Logbook::Backup second ) const
 {
 
-    if( order_ == Qt::AscendingOrder ) std::swap( first, second );
+    if( order_ == Qt::DescendingOrder ) std::swap( first, second );
 
     switch( type_ )
     {

@@ -212,7 +212,7 @@ void KeywordModel::_sort( int column, Qt::SortOrder order )
 bool KeywordModel::SortFTor::operator () ( Keyword first, Keyword second ) const
 {
 
-    if( order_ == Qt::AscendingOrder ) std::swap( first, second );
+    if( order_ == Qt::DescendingOrder ) std::swap( first, second );
     return first < second;
 
 }

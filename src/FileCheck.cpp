@@ -241,7 +241,7 @@ QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
 bool FileCheck::Model::SortFTor::operator () ( FileCheck::Data first, FileCheck::Data second ) const
 {
 
-    if( order_ == Qt::AscendingOrder ) std::swap( first, second );
+    if( order_ == Qt::DescendingOrder ) std::swap( first, second );
 
     switch( type_ )
     {

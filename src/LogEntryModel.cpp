@@ -326,7 +326,7 @@ QIcon& LogEntryModel::_attachmentIcon( void )
 bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) const
 {
 
-    if( order_ == Qt::AscendingOrder ) std::swap( first, second );
+    if( order_ == Qt::DescendingOrder ) std::swap( first, second );
 
     switch( type_ )
     {

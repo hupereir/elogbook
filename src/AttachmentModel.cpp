@@ -152,7 +152,7 @@ void AttachmentModel::_sort( int column, Qt::SortOrder order )
 bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* second ) const
 {
 
-    if( order_ == Qt::AscendingOrder ) std::swap( first, second );
+    if( order_ == Qt::DescendingOrder ) std::swap( first, second );
 
     switch( type_ )
     {
