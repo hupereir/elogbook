@@ -737,7 +737,7 @@ void EditionWindow::_installActions( void )
     // insert link
     addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), "Insert Link", this ) );
     connect( insertLinkAction_, SIGNAL( triggered( void ) ), SLOT( _insertLink( void ) ) );
-
+    insertLinkAction_->setEnabled( false );
 }
 
 //___________________________________________________________
@@ -870,13 +870,14 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     LocalTextEditor* editor = new LocalTextEditor( parent );
 
     // connections
+    connect( &editor->insertLinkAction(), SIGNAL( triggered( void ) ), SLOT( _insertLink( void ) ) );
     connect( &editor->openLinkAction(), SIGNAL( triggered( void ) ), SLOT( _openLink( void ) ) );
     connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
     connect( editor, SIGNAL( cursorPositionChanged( void ) ), SLOT( _displayCursorPosition( void ) ) );
     connect( editor, SIGNAL( modifiersChanged( unsigned int ) ), SLOT( _modifiersChanged( unsigned int ) ) );
     connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction( void ) ) );
     connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction( void ) ) );
-    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkAction( void ) ) );
+    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkActions( void ) ) );
     connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction( void ) ) );
 
     if( formatBar_ )
@@ -894,6 +895,9 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     editor->setFocus();
     Debug::Throw() << "EditionWindow::_newTextEditor - key: " << editor->key() << endl;
     Debug::Throw( "EditionWindow::_newTextEditor - done.\n" );
+
+    // update insert Link actions
+    _updateInsertLinkActions();
 
     return *editor;
 
@@ -1361,11 +1365,19 @@ void EditionWindow::_openLink( void )
 }
 
 //_____________________________________________
-void EditionWindow::_updateInsertLinkAction( void )
+void EditionWindow::_updateInsertLinkActions( void )
 {
-    Debug::Throw( "EditionWindow::_updateInsertLinkAction.\n" );
-    if( !hasInsertLinkAction() ) return;
-    insertLinkAction().setEnabled( (!isReadOnly()) && activeEditor().textCursor().hasSelection() );
+    Debug::Throw( "EditionWindow::_updateInsertLinkActions.\n" );
+    const bool enabled( !isReadOnly() && activeEditor().textCursor().hasSelection() );
+
+    // disable main window action
+    if( hasInsertLinkAction() ) insertLinkAction().setEnabled( enabled );
+
+    // also disable editors action
+    BASE::KeySet<LocalTextEditor> editors( this );
+    foreach( LocalTextEditor* editor, editors )
+    { editor->insertLinkAction().setEnabled( enabled ); }
+
 }
 
 //_____________________________________________
@@ -1560,7 +1572,12 @@ void EditionWindow::_updateConfiguration( void )
 void EditionWindow::LocalTextEditor::_installActions( void )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), "Insert Link ...", this ) );
     addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), "View Link ...", this ) );
+
+    // disable insert link action by default
+    insertLinkAction_->setEnabled( false );
+
 }
 
 //___________________________________________________________________________________
@@ -1569,11 +1586,15 @@ void EditionWindow::LocalTextEditor::installContextMenuActions( QMenu& menu, con
     Debug::Throw( "EditionWindow::LocalTextEditor::installContextMenuActions.\n" );
     AnimatedTextEditor::installContextMenuActions( menu, allActions );
 
+    // insert link
+    menu.insertAction( &showLineNumberAction(), &insertLinkAction() );
+
+    // open link
     if( !anchorAt( _contextMenuPosition() ).isEmpty() )
-    {
-        menu.insertAction( &showLineNumberAction(), &openLinkAction() );
-        menu.insertSeparator( &showLineNumberAction() );
-    }
+    { menu.insertAction( &showLineNumberAction(), &openLinkAction() ); }
+
+    // separator
+    menu.insertSeparator( &showLineNumberAction() );
 
 }
 

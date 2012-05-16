@@ -124,6 +124,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
         virtual ~LocalTextEditor( void )
         {}
 
+        //! insert link action
+        QAction& insertLinkAction( void ) const
+        { return *insertLinkAction_; }
+
         //! view link action
         QAction& openLinkAction( void ) const
         { return *openLinkAction_; }
@@ -142,6 +146,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
         //! install actions
         void _installActions( void );
 
+        //! insert link
+        QAction* insertLinkAction_;
+
+        //! open link
         QAction* openLinkAction_;
 
     };
@@ -414,7 +422,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _openLink( void );
 
     //! update (enable/disable) insert link action
-    void _updateInsertLinkAction( void );
+    void _updateInsertLinkActions( void );
 
     //! update (enable/disable) undo action
     void _updateUndoAction( void );
