@@ -47,6 +47,8 @@ void installDefaultOptions( void )
     // set options default values
     XmlOptions::get().setAutoDefault( true );
 
+    XmlOptions::get().keep( "OPEN_LINK_APPLICATIONS" );
+
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( "COLOR" );
     XmlOptions::get().add( "COLOR", Option( "#aa0000" , "entry display color"  ) );

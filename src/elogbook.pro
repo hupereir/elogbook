@@ -90,7 +90,8 @@ NewLogbookDialog.h \
 OpenAttachmentDialog.h \
 ProgressBar.h \
 SearchPanel.h \
-SelectionStatusBar.h
+SelectionStatusBar.h \
+OpenLinkDialog.h
 
 SOURCES = \
 Application.cpp \
@@ -131,4 +132,5 @@ OpenAttachmentDialog.cpp \
 ProgressBar.cpp \
 SearchPanel.cpp \
 SelectionStatusBar.cpp \
+OpenLinkDialog.cpp \
 elogbook.cpp

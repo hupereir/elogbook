@@ -126,6 +126,7 @@ OpenAttachmentDialog.h \
 ProgressBar.h \
 SearchPanel.h \
 SelectionStatusBar.h \
+OpenLinkDialog.h \
 XmlDef.h
 
 #####################
@@ -184,6 +185,7 @@ OpenAttachmentDialog.cpp \
 ProgressBar.cpp \
 SearchPanel.cpp \
 SelectionStatusBar.cpp \
+OpenLinkDialog.cpp \
 elogbook.cpp
 
 nodist_elogbook_SOURCES = \
@@ -209,7 +211,8 @@ moc_Menu.cpp \
 moc_NewAttachmentDialog.cpp \
 moc_ProgressBar.cpp \
 moc_SearchPanel.cpp \
-moc_SelectionStatusBar.cpp
+moc_SelectionStatusBar.cpp \
+moc_OpenLinkDialog.cpp
 
 ###############################
 # copy_logbook

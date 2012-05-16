@@ -125,8 +125,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
         {}
 
         //! view link action
-        QAction& viewLinkAction( void ) const
-        { return *viewLinkAction_; }
+        QAction& openLinkAction( void ) const
+        { return *openLinkAction_; }
 
         //! anchor at context menu
         QString anchor( void ) const
@@ -142,7 +142,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
         //! install actions
         void _installActions( void );
 
-        QAction* viewLinkAction_;
+        QAction* openLinkAction_;
 
     };
 
@@ -411,7 +411,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _insertLink( void );
 
     //! view link
-    void _viewLink( void );
+    void _openLink( void );
 
     //! update (enable/disable) insert link action
     void _updateInsertLinkAction( void );

@@ -54,6 +54,7 @@
 #include "ScratchFileMonitor.h"
 #include "StatusBar.h"
 #include "Str.h"
+#include "OpenLinkDialog.h"
 #include "Util.h"
 
 #include "Config.h"
@@ -869,7 +870,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     LocalTextEditor* editor = new LocalTextEditor( parent );
 
     // connections
-    connect( &editor->viewLinkAction(), SIGNAL( triggered( void ) ), SLOT( _viewLink( void ) ) );
+    connect( &editor->openLinkAction(), SIGNAL( triggered( void ) ), SLOT( _openLink( void ) ) );
     connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
     connect( editor, SIGNAL( cursorPositionChanged( void ) ), SLOT( _displayCursorPosition( void ) ) );
     connect( editor, SIGNAL( modifiersChanged( unsigned int ) ), SLOT( _modifiersChanged( unsigned int ) ) );
@@ -1321,15 +1322,42 @@ void EditionWindow::_insertLink( void )
     outputFormat.setFontUnderline( true );
     outputFormat.setForeground( activeEditor().palette().color( QPalette::Link ) );
     outputFormat.setAnchorHref( dialog.link() );
+    outputFormat.setAnchor( true );
     activeEditor().mergeCurrentCharFormat( outputFormat );
 
 }
 
 //_____________________________________________
-void EditionWindow::_viewLink( void )
+void EditionWindow::_openLink( void )
 {
-    Debug::Throw( "EditionWindow::_viewLink.\n" );
+    Debug::Throw( "EditionWindow::_openLink.\n" );
     QString anchor( activeEditor().anchor() );
+    if( anchor.isEmpty() ) return;
+
+    OpenLinkDialog dialog( this, anchor );
+    dialog.setWindowTitle( "Open Link - elogbook" );
+
+    // retrieve applications from options
+    Options::List applications( XmlOptions::get().specialOptions( "OPEN_LINK_APPLICATIONS" ) );
+    for( Options::List::const_iterator iter = applications.begin(); iter != applications.end(); ++iter )
+    { dialog.actionComboBox().addItem( iter->raw() ); }
+
+    if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
+
+    // retrieve application from combobox and add as options
+    QString command( dialog.actionComboBox().currentText() );
+    if( command.isEmpty() )
+    {
+        InformationDialog( this, "No command specified to open the selected files. <Open> canceled." ).exec();
+        return;
+    }
+
+    // update options
+    XmlOptions::get().add( "OPEN_LINK_APPLICATIONS", Option( command, Option::RECORDABLE|Option::CURRENT ) );
+
+    // execute
+    ( Command( command ) << anchor ).run();
+
 }
 
 //_____________________________________________
@@ -1532,7 +1560,7 @@ void EditionWindow::_updateConfiguration( void )
 void EditionWindow::LocalTextEditor::_installActions( void )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
-    addAction( viewLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), "View Link", this ) );
+    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), "View Link ...", this ) );
 }
 
 //___________________________________________________________________________________
@@ -1543,7 +1571,7 @@ void EditionWindow::LocalTextEditor::installContextMenuActions( QMenu& menu, con
 
     if( !anchorAt( _contextMenuPosition() ).isEmpty() )
     {
-        menu.insertAction( &showLineNumberAction(), &viewLinkAction() );
+        menu.insertAction( &showLineNumberAction(), &openLinkAction() );
         menu.insertSeparator( &showLineNumberAction() );
     }
 
