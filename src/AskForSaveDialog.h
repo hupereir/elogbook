@@ -1,6 +1,6 @@
 // $Id$
-#ifndef _AskForSaveDialog_h_
-#define _AskForSaveDialog_h_
+#ifndef AskForSaveDialog_h
+#define AskForSaveDialog_h
 
 /******************************************************************************
 *
@@ -38,22 +38,22 @@
 //! QDialog used to ask if modifications of a file should be saved
 class AskForSaveDialog: public BaseDialog, public Counter
 {
-    
+
     //! Qt macro
     Q_OBJECT
-        
+
     public:
-        
+
     //! return codes
     /*!
     the enumeration is used both to interpret the result and to decide which
     buttons are to be shown in the dialog.
     */
     enum ReturnCode {
-            
+
         //! file is to be saved
         YES = 1<<0,
-        
+
         //! file is not to be saved
         NO = 1<<1,
 

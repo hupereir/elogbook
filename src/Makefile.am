@@ -101,6 +101,7 @@ FormatBar.h \
 HelpText.h \
 HtmlHeaderNode.h \
 Icons.h \
+InsertLinkDialog.h \
 Keyword.h \
 KeywordModel.h \
 Logbook.h \
@@ -161,6 +162,7 @@ EditKeywordDialog.cpp \
 FileCheckDialog.cpp \
 FormatBar.cpp \
 HtmlHeaderNode.cpp \
+InsertLinkDialog.cpp \
 KeywordModel.cpp \
 LogbookHtmlHelper.cpp \
 LogbookInformationDialog.cpp \
@@ -194,6 +196,7 @@ moc_AttachmentWindow.cpp \
 moc_BackupManagerWidget.cpp \
 moc_EditionWindow.cpp \
 moc_FormatBar.cpp \
+moc_InsertLinkDialog.cpp \
 moc_KeywordModel.cpp \
 moc_LogbookHtmlHelper.cpp \
 moc_LogbookModifiedDialog.cpp \

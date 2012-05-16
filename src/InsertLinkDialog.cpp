@@ -1,6 +1,3 @@
-#ifndef OpenAttachmentDialog_h
-#define OpenAttachmentDialog_h
-
 // $Id$
 
 /******************************************************************************
@@ -24,53 +21,27 @@
 *
 *******************************************************************************/
 
-#include "Attachment.h"
-#include "BrowsedLineEditor.h"
-#include "CustomDialog.h"
+#include "InsertLinkDialog.h"
+#include "Debug.h"
 
-#include <QtGui/QRadioButton>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
 
-//! open attachment popup dialog
-class OpenAttachmentDialog: public CustomDialog
+//_________________________________________________________
+InsertLinkDialog::InsertLinkDialog( QWidget* parent, QString value ):
+CustomDialog( parent, OkButton|CancelButton|Separator )
 {
+    Debug::Throw( "InsertLinkDialog::InsertLinkDialog.\n" );
+    setOptionName( "INSERT_LINK_DIALOG" );
+    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->setMargin(0);
+    mainLayout().addLayout( hLayout );
+    QLabel* label;
 
-    public:
+    hLayout->addWidget( label = new QLabel( "Link:", this ) );
+    hLayout->addWidget( editor_ = new BrowsedLineEditor( this ) );
+    label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
+    label->setBuddy( editor_ );
 
-    //! constructor
-    OpenAttachmentDialog( QWidget*, const Attachment& );
-
-    //! destructor
-    virtual ~OpenAttachmentDialog( void )
-    {}
-
-    //! get command
-    QString command( void ) const;
-
-    //! action
-    enum Action
-    {
-        //! open attachment with command
-        OPEN,
-
-        //! save attachment locally
-        SAVE_AS
-
-    };
-
-    //! get action
-    Action action( void ) const;
-
-    private:
-
-    //! command browsed line editor
-    BrowsedLineEditor *commandEditor_;
-
-    //! open with radio button
-    QRadioButton* openRadioButton_;
-
-    //! save as radio button
-    QRadioButton* saveRadioButton_;
-
-};
-
-#endif
+    editor_->editor().setText( value );
+}

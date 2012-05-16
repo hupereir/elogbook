@@ -255,6 +255,14 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     QAction& showKeywordAction( void ) const
     { return *showKeywordAction_; }
 
+    //! add hyperlink
+    bool hasInsertLinkAction( void ) const
+    { return insertLinkAction_; }
+
+    //! add hyperLink
+    QAction& insertLinkAction( void ) const
+    { return *insertLinkAction_; }
+
     //@}
 
     //! force keyword visibility
@@ -364,6 +372,12 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! unlock read-only editors
     void _unlock( void );
+
+    //! insert link
+    void _insertLink( void );
+
+    //! update (enable/disable) insert link action
+    void _updateInsertLinkAction( void );
 
     //! update (enable/disable) undo action
     void _updateUndoAction( void );
@@ -583,6 +597,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! show keyword
     QAction* showKeywordAction_;
+
+    //! hyperlink action
+    QAction* insertLinkAction_;
 
     //@}
 

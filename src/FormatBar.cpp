@@ -129,16 +129,9 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
     for( FORMAT::TextFormatBlock::List::const_iterator iter = formatList.begin(); iter != formatList.end(); ++iter )
     {
 
-        // check if paragraphs are set to 0 or not. If non 0, need to convert to absolute index
-        TextPosition begin( iter->parBegin(), iter->begin() );
-        int indexBegin = iter->parBegin() ? begin.index( editor_->document() ) : iter->begin();
-
-        TextPosition end( iter->parEnd(), iter->end() );
-        int indexEnd = iter->parEnd() ? end.index( editor_->document() ) : iter->end();
-
         // define cursor
-        cursor.setPosition( indexBegin, QTextCursor::MoveAnchor );
-        cursor.setPosition( indexEnd, QTextCursor::KeepAnchor );
+        cursor.setPosition( iter->begin(), QTextCursor::MoveAnchor );
+        cursor.setPosition( iter->end(), QTextCursor::KeepAnchor );
 
         // define format
         QTextCharFormat textFormat;
@@ -151,6 +144,10 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
         // load color
         if( iter->color() != ColorMenu::NONE )
         { textFormat.setForeground( QColor( iter->color() ) ); }
+
+        // load href
+        if( !iter->href().isEmpty() )
+        { textFormat.setAnchorHref( iter->href() ); }
 
         cursor.setCharFormat( textFormat );
 
@@ -183,6 +180,7 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
 
             // retrieve text format
             QTextCharFormat textFormat( fragment.charFormat() );
+
             unsigned int format( FORMAT::DEFAULT );
             if( textFormat.fontWeight() == QFont::Bold ) format |= FORMAT::BOLD;
             if( textFormat.fontItalic() ) format |= FORMAT::ITALIC;
@@ -194,11 +192,21 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
             QColor color( textFormat.foreground().color() );
             QString colorname = (color == editor_->palette().color( QPalette::Text ) ) ? ColorMenu::NONE : color.name();
 
+            const QString href( textFormat.anchorHref() );
+
             // skip format if corresponds to default
-            if( format == FORMAT::DEFAULT && color == editor_->palette().color( QPalette::Text ) ) continue;
+            if( format == FORMAT::DEFAULT && color == editor_->palette().color( QPalette::Text ) && href.isEmpty() ) continue;
 
             // store new TextFormatBlock
-            out.push_back( FORMAT::TextFormatBlock( begin, end, format, colorname ) );
+            FORMAT::TextFormatBlock textFormatBlock( begin, end, format, colorname );
+            if( !href.isEmpty() )
+            {
+                Debug::Throw(0) << "FormatBar::get - found href: " << href << endl;
+                textFormatBlock.setHRef( href );
+            }
+
+            out << textFormatBlock;
+
         }
     }
 

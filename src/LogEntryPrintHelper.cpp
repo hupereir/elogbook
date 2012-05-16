@@ -191,16 +191,9 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     for( FORMAT::TextFormatBlock::List::const_iterator iter = formatList.begin(); iter != formatList.end(); ++iter )
     {
 
-        // check if paragraphs are set to 0 or not. If non 0, need to convert to absolute index
-        TextPosition begin( iter->parBegin(), iter->begin() );
-        int indexBegin = iter->parBegin() ? begin.index( &document ) : iter->begin();
-
-        TextPosition end( iter->parEnd(), iter->end() );
-        int indexEnd = iter->parEnd() ? end.index( &document ) : iter->end();
-
         // define cursor
-        cursor.setPosition( indexBegin, QTextCursor::MoveAnchor );
-        cursor.setPosition( indexEnd, QTextCursor::KeepAnchor );
+        cursor.setPosition( iter->begin(), QTextCursor::MoveAnchor );
+        cursor.setPosition( iter->end(), QTextCursor::KeepAnchor );
 
         // define format
         QTextCharFormat textFormat;

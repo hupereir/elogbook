@@ -10,6 +10,7 @@ document-save-as.png \
 tools-check-spelling.png \
 go-home.png \
 info.png \
+insert-link.png \
 format-text-bold.png \
 format-text-italic.png \
 format-text-strikethrough.png \

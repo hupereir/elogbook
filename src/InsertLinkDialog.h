@@ -1,5 +1,5 @@
-#ifndef OpenAttachmentDialog_h
-#define OpenAttachmentDialog_h
+#ifndef InsertLinkDialog_h
+#define InsertLinkDialog_h
 
 // $Id$
 
@@ -24,52 +24,26 @@
 *
 *******************************************************************************/
 
-#include "Attachment.h"
+#include "AnimatedLineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 
-#include <QtGui/QRadioButton>
-
 //! open attachment popup dialog
-class OpenAttachmentDialog: public CustomDialog
+class InsertLinkDialog: public CustomDialog
 {
 
     public:
 
     //! constructor
-    OpenAttachmentDialog( QWidget*, const Attachment& );
+    InsertLinkDialog( QWidget*, QString = QString() );
 
-    //! destructor
-    virtual ~OpenAttachmentDialog( void )
-    {}
-
-    //! get command
-    QString command( void ) const;
-
-    //! action
-    enum Action
-    {
-        //! open attachment with command
-        OPEN,
-
-        //! save attachment locally
-        SAVE_AS
-
-    };
-
-    //! get action
-    Action action( void ) const;
+    QString link( void )
+    { return editor_->editor().text(); }
 
     private:
 
-    //! command browsed line editor
-    BrowsedLineEditor *commandEditor_;
-
-    //! open with radio button
-    QRadioButton* openRadioButton_;
-
-    //! save as radio button
-    QRadioButton* saveRadioButton_;
+    //! editor
+    BrowsedLineEditor* editor_;
 
 };
 

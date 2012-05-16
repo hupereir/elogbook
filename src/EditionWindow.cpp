@@ -37,6 +37,7 @@
 #include "IconSize.h"
 #include "IconEngine.h"
 #include "InformationDialog.h"
+#include "InsertLinkDialog.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryHtmlHelper.h"
@@ -79,7 +80,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     colorWidget_( 0 ),
     activeEditor_( 0 ),
     formatBar_( 0 ),
-    statusBar_( 0 )
+    statusBar_( 0 ),
+    insertLinkAction_( 0 )
 {
     Debug::Throw("EditionWindow::EditionWindow.\n" );
     setOptionName( "EDITION_WINDOW" );
@@ -200,6 +202,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // format bar
     formatBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
     formatBar_->setTarget( activeEditor() );
+    formatBar_->addAction( &insertLinkAction() );
+    readOnlyActions_.push_back( &insertLinkAction() );
+
     const FormatBar::ActionMap& actions( formatBar_->actions() );
     for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); ++iter )
     { readOnlyActions_.push_back( iter.value() ); }
@@ -728,6 +733,10 @@ void EditionWindow::_installActions( void )
     showKeywordAction_->setChecked( false );
     connect( showKeywordAction_, SIGNAL( toggled( bool ) ), SLOT( _toggleShowKeyword( bool ) ) );
 
+    // insert link
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), "Insert Link", this ) );
+    connect( insertLinkAction_, SIGNAL( triggered( void ) ), SLOT( _insertLink( void ) ) );
+
 }
 
 //___________________________________________________________
@@ -736,11 +745,11 @@ AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientatio
     Debug::Throw( "EditionWindow::_splitView.\n" );
 
     // keep local pointer to current active display
-    AnimatedTextEditor& activeEditor_local( activeEditor() );
+    AnimatedTextEditor& activeEditorLocal( activeEditor() );
 
     // compute desired dimension of the new splitter
     // along its splitting direction
-    int dimension( (orientation == Qt::Horizontal) ? activeEditor_local.width():activeEditor_local.height() );
+    int dimension( (orientation == Qt::Horizontal) ? activeEditorLocal.width():activeEditorLocal.height() );
 
     // create new splitter
     QSplitter& splitter( _newSplitter( orientation ) );
@@ -749,7 +758,7 @@ AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientatio
     AnimatedTextEditor& editor( _newTextEditor(0) );
 
     // insert in splitter, at correct position
-    splitter.insertWidget( splitter.indexOf( &activeEditor_local )+1, &editor );
+    splitter.insertWidget( splitter.indexOf( &activeEditorLocal )+1, &editor );
 
     // recompute dimension
     // take the max of active display and splitter,
@@ -767,10 +776,10 @@ AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientatio
     if there exists no clone of active display,
     backup text and register a new Sync object
     */
-    BASE::KeySet<AnimatedTextEditor> editors( &activeEditor_local );
+    BASE::KeySet<AnimatedTextEditor> editors( &activeEditorLocal );
 
     // clone new display
-    editor.synchronize( &activeEditor_local );
+    editor.synchronize( &activeEditorLocal );
 
     // perform associations
     // check if active editors has associates and propagate to new
@@ -778,7 +787,7 @@ AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientatio
     { BASE::Key::associate( &editor, *iter ); }
 
     // associate new display to active
-    BASE::Key::associate( &editor, &activeEditor_local );
+    BASE::Key::associate( &editor, &activeEditorLocal );
 
     return editor;
 
@@ -865,6 +874,7 @@ AnimatedTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( editor, SIGNAL( modifiersChanged( unsigned int ) ), SLOT( _modifiersChanged( unsigned int ) ) );
     connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction() ) );
     connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
+    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkAction() ) );
     connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction() ) );
 
     if( formatBar_ )
@@ -1287,6 +1297,40 @@ void EditionWindow::_redo( void )
     else if( titleEditor_->hasFocus() ) titleEditor_->redo();
     else if( keywordEditor_->hasFocus() ) keywordEditor_->redo();
     return;
+}
+
+//_____________________________________________
+void EditionWindow::_insertLink( void )
+{
+    Debug::Throw( "EditionWindow::_insertLink.\n" );
+
+    // check readonly and selection
+    const QTextCursor cursor( activeEditor().textCursor() );
+    if( isReadOnly() || !cursor.hasSelection() ) return;
+
+    const QTextCharFormat format( cursor.charFormat() );
+    const QString selection( format.anchorHref().isEmpty() ? cursor.selectedText() : format.anchorHref() );
+
+    // create dialog
+    InsertLinkDialog dialog( this, selection );
+    if( !dialog.exec() ) return;
+
+    // update format
+    QTextCharFormat outputFormat;
+    outputFormat.setFontUnderline( true );
+    outputFormat.setForeground( activeEditor().palette().color( QPalette::Link ) );
+    outputFormat.setAnchorHref( dialog.link() );
+    activeEditor().mergeCurrentCharFormat( outputFormat );
+
+}
+
+
+//_____________________________________________
+void EditionWindow::_updateInsertLinkAction( void )
+{
+    Debug::Throw( "EditionWindow::_updateInsertLinkAction.\n" );
+    if( !hasInsertLinkAction() ) return;
+    insertLinkAction().setEnabled( (!isReadOnly()) && activeEditor().textCursor().hasSelection() );
 }
 
 //_____________________________________________

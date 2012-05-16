@@ -69,6 +69,7 @@ EditKeywordDialog.h \
 FileCheckDialog.h \
 FormatBar.h \
 HtmlHeaderNode.h \
+InsertLinkDialog.h \
 KeywordModel.h \
 LogbookHtmlHelper.h \
 LogbookInformationDialog.h \
@@ -108,6 +109,7 @@ EditKeywordDialog.cpp \
 FileCheckDialog.cpp \
 FormatBar.cpp \
 HtmlHeaderNode.cpp \
+InsertLinkDialog.cpp \
 KeywordModel.cpp \
 LogbookHtmlHelper.cpp \
 LogbookInformationDialog.cpp \

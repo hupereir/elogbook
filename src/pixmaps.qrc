@@ -11,6 +11,7 @@
     <file alias="pixmaps/tools-check-spelling.png">../pixmaps/tools-check-spelling.png</file>
     <file alias="pixmaps/go-home.png">../pixmaps/go-home.png</file>
     <file alias="pixmaps/info.png">../pixmaps/info.png</file>
+    <file alias="pixmaps/insert-link.png">../pixmaps/insert-link.png</file>
     <file alias="pixmaps/format-text-bold.png">../pixmaps/format-text-bold.png</file>
     <file alias="pixmaps/format-text-italic.png">../pixmaps/format-text-italic.png</file>
     <file alias="pixmaps/format-text-strikethrough.png">../pixmaps/format-text-strikethrough.png</file>
