@@ -109,12 +109,49 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //!@name active editor
     //@{
 
+    //! local text editor, to deal with HTML edition
+    class LocalTextEditor: public AnimatedTextEditor
+    {
+
+        public:
+
+        //! constructor
+        LocalTextEditor( QWidget* parent ):
+            AnimatedTextEditor( parent )
+        { _installActions(); }
+
+        //! destructor
+        virtual ~LocalTextEditor( void )
+        {}
+
+        //! view link action
+        QAction& viewLinkAction( void ) const
+        { return *viewLinkAction_; }
+
+        //! anchor at context menu
+        QString anchor( void ) const
+        { return anchorAt( _contextMenuPosition() ); }
+
+        protected:
+
+        //! put actions in context menu
+        virtual void installContextMenuActions( QMenu& menu, const bool& = true );
+
+        private:
+
+        //! install actions
+        void _installActions( void );
+
+        QAction* viewLinkAction_;
+
+    };
+
     //! retrieve active display
-    AnimatedTextEditor& activeEditor( void )
+    LocalTextEditor& activeEditor( void )
     { return *activeEditor_; }
 
     //! retrieve active display
-    const AnimatedTextEditor& activeEditor( void ) const
+    const LocalTextEditor& activeEditor( void ) const
     { return *activeEditor_; }
 
     //@}
@@ -270,10 +307,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! close view
     /*! Ask for save if view is modified */
-    void closeEditor( AnimatedTextEditor& );
+    void closeEditor( LocalTextEditor& );
 
     //! change active display manualy
-    void setActiveEditor( AnimatedTextEditor& );
+    void setActiveEditor( LocalTextEditor& );
 
     protected:
 
@@ -283,20 +320,17 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! timer event
     virtual void timerEvent( QTimerEvent* );
 
-    //! install actions
-    void _installActions( void );
-
     //!@name display management
     //@{
 
     //! split view
-    AnimatedTextEditor& _splitView( const Qt::Orientation& );
+    LocalTextEditor& _splitView( const Qt::Orientation& );
 
     //! create new splitter
     QSplitter& _newSplitter( const Qt::Orientation&  );
 
     //! create new TextEditor
-    AnimatedTextEditor& _newTextEditor( QWidget* parent );
+    LocalTextEditor& _newTextEditor( QWidget* parent );
 
     //@}
 
@@ -376,6 +410,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! insert link
     void _insertLink( void );
 
+    //! view link
+    void _viewLink( void );
+
     //! update (enable/disable) insert link action
     void _updateInsertLinkAction( void );
 
@@ -409,7 +446,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _close( void )
     {
         Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
-        BASE::KeySet< AnimatedTextEditor > editors( this );
+        BASE::KeySet< LocalTextEditor > editors( this );
         if( editors.size() > 1 ) closeEditor( activeEditor() );
         else close();
     }
@@ -441,6 +478,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _updateConfiguration( void );
 
     private:
+
+    //! install actions
+    void _installActions( void );
 
     //! if true, LogEntry associated to EditionWindow cannot be modified
     bool readOnly_;
@@ -532,7 +572,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     ColorWidget* colorWidget_;
 
     //! LogEntry text Object
-    AnimatedTextEditor *activeEditor_;
+    LocalTextEditor *activeEditor_;
 
     //! text format bar
     FormatBar* formatBar_;

@@ -338,9 +338,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! context menu event [overloaded]
     virtual void contextMenuEvent( QContextMenuEvent* );
 
-    //! install actions
-    virtual void _installActions( void );
-
     //! keyword model
     KeywordModel& _keywordModel( void )
     { return keywordModel_; }
@@ -571,6 +568,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _updateConfiguration( void );
 
     private:
+
+    //! install actions
+    void _installActions( void );
 
     //! main menu
     Menu* menu_;

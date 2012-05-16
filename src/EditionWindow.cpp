@@ -141,7 +141,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( _splitterMoved( void ) ) );
 
     // create editor
-    AnimatedTextEditor& editor( _newTextEditor( main_ ) );
+    LocalTextEditor& editor( _newTextEditor( main_ ) );
     main_->layout()->addWidget( &editor );
 
     connect( keywordEditor_, SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
@@ -341,8 +341,8 @@ void EditionWindow::setReadOnly( bool value )
     titleEditor_->setReadOnly( isReadOnly() );
 
     // update editors
-    BASE::KeySet<AnimatedTextEditor> editors( this );
-    for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
+    BASE::KeySet<LocalTextEditor> editors( this );
+    for( BASE::KeySet<LocalTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
     { (*iter)->setReadOnly( isReadOnly() ); }
 
     // changes attachment list status
@@ -486,13 +486,13 @@ void EditionWindow::setForceShowKeyword( bool value )
 }
 
 //___________________________________________________________
-void EditionWindow::closeEditor( AnimatedTextEditor& editor )
+void EditionWindow::closeEditor( LocalTextEditor& editor )
 {
     Debug::Throw( "EditionWindow::closeEditor.\n" );
 
     // retrieve number of editors
     // if only one display, close the entire window
-    BASE::KeySet<AnimatedTextEditor> editors( this );
+    BASE::KeySet<LocalTextEditor> editors( this );
     if( editors.size() < 2 )
     {
         Debug::Throw() << "EditionWindow::closeEditor - full close." << endl;
@@ -502,24 +502,24 @@ void EditionWindow::closeEditor( AnimatedTextEditor& editor )
 
     // retrieve parent and grandparent of current display
     QWidget* parent( editor.parentWidget() );
-    QSplitter* parent_splitter( qobject_cast<QSplitter*>( parent ) );
+    QSplitter* parentSplitter( qobject_cast<QSplitter*>( parent ) );
 
     // retrieve editors associated to current
-    editors = BASE::KeySet<AnimatedTextEditor>( &editor );
+    editors = BASE::KeySet<LocalTextEditor>( &editor );
 
-    // check how many children remain in parent_splitter if any
+    // check how many children remain in parentSplitter if any
     // take action if it is less than 2 (the current one to be deleted, and another one)
-    if( parent_splitter && parent_splitter->count() <= 2 )
+    if( parentSplitter && parentSplitter->count() <= 2 )
     {
 
         // retrieve child that is not the current editor
         // need to loop over existing widgets because the editor above has not been deleted yet
         QWidget* child(0);
-        for( int index = 0; index < parent_splitter->count(); index++ )
+        for( int index = 0; index < parentSplitter->count(); index++ )
         {
-            if( parent_splitter->widget( index ) != &editor )
+            if( parentSplitter->widget( index ) != &editor )
             {
-                child = parent_splitter->widget( index );
+                child = parentSplitter->widget( index );
                 break;
             }
         }
@@ -527,16 +527,16 @@ void EditionWindow::closeEditor( AnimatedTextEditor& editor )
         Debug::Throw( "EditionWindow::closeEditor - found child.\n" );
 
         // retrieve splitter parent
-        QWidget* grand_parent( parent_splitter->parentWidget() );
+        QWidget* grand_parent( parentSplitter->parentWidget() );
 
         // try cast to a splitter
-        QSplitter* grand_parent_splitter( qobject_cast<QSplitter*>( grand_parent ) );
+        QSplitter* grand_parentSplitter( qobject_cast<QSplitter*>( grand_parent ) );
 
-        // move child to grand_parent_splitter if any
-        if( grand_parent_splitter )
+        // move child to grand_parentSplitter if any
+        if( grand_parentSplitter )
         {
 
-            grand_parent_splitter->insertWidget( grand_parent_splitter->indexOf( parent_splitter ), child );
+            grand_parentSplitter->insertWidget( grand_parentSplitter->indexOf( parentSplitter ), child );
 
         }  else {
 
@@ -545,8 +545,8 @@ void EditionWindow::closeEditor( AnimatedTextEditor& editor )
 
         }
 
-        // delete parent_splitter, now that it is empty
-        parent_splitter->deleteLater();
+        // delete parentSplitter, now that it is empty
+        parentSplitter->deleteLater();
         Debug::Throw( "EditionWindow::closeEditor - deleted splitter.\n" );
 
     } else {
@@ -560,11 +560,11 @@ void EditionWindow::closeEditor( AnimatedTextEditor& editor )
 
     // update activeEditor
     bool activeFound( false );
-    BASE::KeySetIterator<AnimatedTextEditor> iterator( editors );
+    BASE::KeySetIterator<LocalTextEditor> iterator( editors );
     iterator.toBack();
     while( iterator.hasPrevious() )
     {
-        AnimatedTextEditor* current( iterator.previous() );
+        LocalTextEditor* current( iterator.previous() );
         if( current != &editor )
         {
             setActiveEditor( *current );
@@ -581,7 +581,7 @@ void EditionWindow::closeEditor( AnimatedTextEditor& editor )
 }
 
 //________________________________________________________________
-void EditionWindow::setActiveEditor( AnimatedTextEditor& editor )
+void EditionWindow::setActiveEditor( LocalTextEditor& editor )
 {
     Debug::Throw() << "EditionWindow::setActiveEditor - key: " << editor.key() << endl;
     assert( editor.isAssociated( this ) );
@@ -590,8 +590,8 @@ void EditionWindow::setActiveEditor( AnimatedTextEditor& editor )
     if( !activeEditor().isActive() )
     {
 
-        BASE::KeySet<AnimatedTextEditor> editors( this );
-        for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
+        BASE::KeySet<LocalTextEditor> editors( this );
+        for( BASE::KeySet<LocalTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
         { (*iter)->setActive( false ); }
 
         activeEditor().setActive( true );
@@ -740,12 +740,12 @@ void EditionWindow::_installActions( void )
 }
 
 //___________________________________________________________
-AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
+EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
 {
     Debug::Throw( "EditionWindow::_splitView.\n" );
 
     // keep local pointer to current active display
-    AnimatedTextEditor& activeEditorLocal( activeEditor() );
+    LocalTextEditor& activeEditorLocal( activeEditor() );
 
     // compute desired dimension of the new splitter
     // along its splitting direction
@@ -755,7 +755,7 @@ AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientatio
     QSplitter& splitter( _newSplitter( orientation ) );
 
     // create new display
-    AnimatedTextEditor& editor( _newTextEditor(0) );
+    LocalTextEditor& editor( _newTextEditor(0) );
 
     // insert in splitter, at correct position
     splitter.insertWidget( splitter.indexOf( &activeEditorLocal )+1, &editor );
@@ -776,14 +776,14 @@ AnimatedTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientatio
     if there exists no clone of active display,
     backup text and register a new Sync object
     */
-    BASE::KeySet<AnimatedTextEditor> editors( &activeEditorLocal );
+    BASE::KeySet<LocalTextEditor> editors( &activeEditorLocal );
 
     // clone new display
     editor.synchronize( &activeEditorLocal );
 
     // perform associations
     // check if active editors has associates and propagate to new
-    for( BASE::KeySet<AnimatedTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
+    for( BASE::KeySet<LocalTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
     { BASE::Key::associate( &editor, *iter ); }
 
     // associate new display to active
@@ -805,17 +805,17 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 
     // try cast to splitter
     // do not create a new splitter if the parent has same orientation
-    QSplitter *parent_splitter( qobject_cast<QSplitter*>( parent ) );
-    if( parent_splitter && parent_splitter->orientation() == orientation ) {
+    QSplitter *parentSplitter( qobject_cast<QSplitter*>( parent ) );
+    if( parentSplitter && parentSplitter->orientation() == orientation ) {
 
         Debug::Throw( "EditionWindow::_newSplitter - orientation match. No need to create new splitter.\n" );
-        splitter = parent_splitter;
+        splitter = parentSplitter;
 
     } else {
 
 
         // move splitter to the first place if needed
-        if( parent_splitter )
+        if( parentSplitter )
         {
 
             Debug::Throw( "EditionWindow::_newSplitter - found parent splitter with incorrect orientation.\n" );
@@ -823,7 +823,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
             // give him no parent, because the parent is set in QSplitter::insertWidget()
             splitter = new LocalSplitter(0);
             splitter->setOrientation( orientation );
-            parent_splitter->insertWidget( parent_splitter->indexOf( &activeEditor() ), splitter );
+            parentSplitter->insertWidget( parentSplitter->indexOf( &activeEditor() ), splitter );
 
         } else {
 
@@ -840,16 +840,16 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
         splitter->addWidget( &activeEditor() );
 
         // resize parent splitter if any
-        if( parent_splitter )
+        if( parentSplitter )
         {
-            int dimension = ( parent_splitter->orientation() == Qt::Horizontal) ?
-                parent_splitter->width():
-                parent_splitter->height();
+            int dimension = ( parentSplitter->orientation() == Qt::Horizontal) ?
+                parentSplitter->width():
+                parentSplitter->height();
 
             QList<int> sizes;
-            for( int i=0; i<parent_splitter->count(); i++ )
-            { sizes.push_back( dimension/parent_splitter->count() ); }
-            parent_splitter->setSizes( sizes );
+            for( int i=0; i<parentSplitter->count(); i++ )
+            { sizes.push_back( dimension/parentSplitter->count() ); }
+            parentSplitter->setSizes( sizes );
 
         }
 
@@ -861,21 +861,22 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 }
 
 //_____________________________________________________________
-AnimatedTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
+EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 {
     Debug::Throw( "EditionWindow::_newTextEditor.\n" );
 
     // create textDisplay
-    AnimatedTextEditor* editor = new AnimatedTextEditor( parent );
+    LocalTextEditor* editor = new LocalTextEditor( parent );
 
     // connections
+    connect( &editor->viewLinkAction(), SIGNAL( triggered( void ) ), SLOT( _viewLink( void ) ) );
     connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
-    connect( editor, SIGNAL( cursorPositionChanged() ), SLOT( _displayCursorPosition() ) );
+    connect( editor, SIGNAL( cursorPositionChanged( void ) ), SLOT( _displayCursorPosition( void ) ) );
     connect( editor, SIGNAL( modifiersChanged( unsigned int ) ), SLOT( _modifiersChanged( unsigned int ) ) );
-    connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction() ) );
-    connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction() ) );
-    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkAction() ) );
-    connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction() ) );
+    connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction( void ) ) );
+    connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction( void ) ) );
+    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkAction( void ) ) );
+    connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction( void ) ) );
 
     if( formatBar_ )
     {
@@ -1324,6 +1325,12 @@ void EditionWindow::_insertLink( void )
 
 }
 
+//_____________________________________________
+void EditionWindow::_viewLink( void )
+{
+    Debug::Throw( "EditionWindow::_viewLink.\n" );
+    QString anchor( activeEditor().anchor() );
+}
 
 //_____________________________________________
 void EditionWindow::_updateInsertLinkAction( void )
@@ -1482,7 +1489,7 @@ void EditionWindow::_displayFocusChanged( TextEditor* editor )
 {
 
     Debug::Throw() << "EditionWindow::_DisplayFocusChanged - " << editor->key() << endl;
-    setActiveEditor( *static_cast<AnimatedTextEditor*>(editor) );
+    setActiveEditor( *static_cast<LocalTextEditor*>(editor) );
 
 }
 
@@ -1522,9 +1529,29 @@ void EditionWindow::_updateConfiguration( void )
 }
 
 //___________________________________________________________________________________
+void EditionWindow::LocalTextEditor::_installActions( void )
+{
+    Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
+    addAction( viewLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), "View Link", this ) );
+}
+
+//___________________________________________________________________________________
+void EditionWindow::LocalTextEditor::installContextMenuActions( QMenu& menu, const bool& allActions )
+{
+    Debug::Throw( "EditionWindow::LocalTextEditor::installContextMenuActions.\n" );
+    AnimatedTextEditor::installContextMenuActions( menu, allActions );
+
+    if( !anchorAt( _contextMenuPosition() ).isEmpty() )
+    {
+        menu.insertAction( &showLineNumberAction(), &viewLinkAction() );
+        menu.insertSeparator( &showLineNumberAction() );
+    }
+
+}
+
+//___________________________________________________________________________________
 EditionWindow::ColorWidget::ColorWidget( QWidget* parent ):
     QToolButton( parent ),
-    //QPushButton( parent ),
     Counter( "ColorWidget" )
 { Debug::Throw( "ColorWidget::ColorWidget.\n" ); }
 

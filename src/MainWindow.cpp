@@ -2479,11 +2479,11 @@ void MainWindow::_displayEntry( LogEntry* entry )
             editFrame->displayEntry( entry );
 
             // also kill all frames but one
-            BASE::KeySet< AnimatedTextEditor > editors( editFrame );
+            BASE::KeySet< EditionWindow::LocalTextEditor > editors( editFrame );
             if( editors.size() > 1 )
             {
 
-                BASE::KeySet< AnimatedTextEditor >::iterator localIter( editors.begin() );
+                BASE::KeySet<EditionWindow::LocalTextEditor>::iterator localIter( editors.begin() );
                 ++localIter;
                 for( ;localIter != editors.end(); ++localIter )
                 { editFrame->closeEditor( **localIter ); }
@@ -2965,7 +2965,7 @@ void MainWindow::_updateEntryActions( void )
 {
     Debug::Throw( "MainWindow::_updateEntryActions.\n" );
     int selectedEntries( logEntryList().selectionModel()->selectedRows().size() );
-    bool has_selection( selectedEntries > 0 );
+    bool hasSelection( selectedEntries > 0 );
 
     if( selectedEntries > 1 )
     {
@@ -2976,11 +2976,11 @@ void MainWindow::_updateEntryActions( void )
         deleteEntryAction().setText( "&Delete Entry" );
     }
 
-    editEntryAction().setEnabled( has_selection );
-    deleteEntryAction().setEnabled( has_selection );
-    entryColorAction().setEnabled( has_selection );
-    entryKeywordAction().setEnabled( has_selection );
-    editEntryTitleAction().setEnabled( has_selection );
+    editEntryAction().setEnabled( hasSelection );
+    deleteEntryAction().setEnabled( hasSelection );
+    entryColorAction().setEnabled( hasSelection );
+    entryKeywordAction().setEnabled( hasSelection );
+    editEntryTitleAction().setEnabled( hasSelection );
 
     return;
 }

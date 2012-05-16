@@ -199,11 +199,7 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
 
             // store new TextFormatBlock
             FORMAT::TextFormatBlock textFormatBlock( begin, end, format, colorname );
-            if( !href.isEmpty() )
-            {
-                Debug::Throw(0) << "FormatBar::get - found href: " << href << endl;
-                textFormatBlock.setHRef( href );
-            }
+            if( !href.isEmpty() ) textFormatBlock.setHRef( href );
 
             out << textFormatBlock;
 
