@@ -2,10 +2,14 @@ TEMPLATE = app
 TARGET = elogbook
 
 CONFIG += qt release
-QT += xml network dbus
+QT += xml network
 
 VERSION = 1.8.4
 DEFINES += VERSION=\\\"$$VERSION\\\"
+
+unix {
+  QT += dbus
+}
 
 win32 {
 

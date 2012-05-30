@@ -2,10 +2,14 @@ TEMPLATE = app
 TARGET = synchronize_logbook
 
 CONFIG += qt release
-QT += xml network dbus
+QT += xml network
 
 VERSION = 1.8.4
 DEFINES += VERSION=\\\"$$VERSION\\\"
+
+unix {
+  QT += dbus
+}
 
 win32 {
 
@@ -16,13 +20,13 @@ win32 {
   # this is needed to copy target into relevant versioned name
   exists( \"$$DESTDIR\\upx.exe\" ) {
 
-     # if available, use upx to compress the file
-     version.commands = "\"$$DESTDIR\\upx.exe\" -9 -f -o \"$$DESTDIR\\$$TARGET-"$$VERSION".exe\""  "\"$$DESTDIR\\"$$TARGET".exe\"
+	  # if available, use upx to compress the file
+	  version.commands = "\"$$DESTDIR\\upx.exe\" -9 -f -o \"$$DESTDIR\\$$TARGET-"$$VERSION".exe\""  "\"$$DESTDIR\\"$$TARGET".exe\"
 
   } else {
 
-     # simple copy
-     version.commands = @copy "\"$$DESTDIR\\"$$TARGET".exe\" \"$$DESTDIR\\$$TARGET-"$$VERSION".exe\""
+	  # simple copy
+	  version.commands = @copy "\"$$DESTDIR\\"$$TARGET".exe\" \"$$DESTDIR\\$$TARGET-"$$VERSION".exe\""
 
   }
 
