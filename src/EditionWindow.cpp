@@ -180,7 +180,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     lock_->visibilityAction().setVisible( false );
 
     QAction *action;
-    lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), "&Unlock", this ) );
+    lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), "Unlock", this ) );
     connect( action, SIGNAL( triggered() ), SLOT( _unlock() ) );
     action->setToolTip( "Remove read-only lock for current editor." );
 
@@ -193,7 +193,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( &saveAction() );
 
     // delete_entry button
-    toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete Entry", this ) );
+    toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), "Delete Entry", this ) );
     connect( action, SIGNAL( triggered() ), SLOT( _deleteEntry() ) );
     readOnlyActions_.push_back( action );
 

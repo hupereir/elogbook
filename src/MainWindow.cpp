@@ -215,7 +215,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // need to use a button to be able to set the popup mode
     QToolButton *button = new QToolButton(0);
-    button->setText( "&Entry Color" );
+    button->setText( "Entry Color" );
     button->setIcon( IconEngine::get( ICONS::COLOR ) );
     button->setPopupMode( QToolButton::InstantPopup );
     button->setMenu( colorMenu_ );
@@ -2969,11 +2969,11 @@ void MainWindow::_updateEntryActions( void )
 
     if( selectedEntries > 1 )
     {
-        editEntryAction().setText( "&Edit Entries" );
-        deleteEntryAction().setText( "&Delete Entries" );
+        editEntryAction().setText( "Edit Entries" );
+        deleteEntryAction().setText( "Delete Entries" );
     } else {
-        editEntryAction().setText( "&Edit Entry" );
-        deleteEntryAction().setText( "&Delete Entry" );
+        editEntryAction().setText( "Edit Entry" );
+        deleteEntryAction().setText( "Delete Entry" );
     }
 
     editEntryAction().setEnabled( hasSelection );
