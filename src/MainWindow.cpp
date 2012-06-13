@@ -1001,18 +1001,18 @@ void MainWindow::_installActions( void )
     */
     deleteKeywordAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "Delete Keyword", this );
     deleteKeywordAction_->setToolTip( "Delete selected keyword" );
-    deleteKeywordAction_->setShortcut( Qt::Key_Delete );
+    deleteKeywordAction_->setShortcut( QKeySequence::Delete );
     deleteKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( deleteKeywordAction_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
 
     findEntriesAction_ = new QAction( IconEngine::get( ICONS::FIND ), "Find", this );
-    findEntriesAction_->setShortcut( Qt::CTRL+Qt::Key_F );
+    findEntriesAction_->setShortcut( QKeySequence::Find );
     findEntriesAction_->setToolTip( "Find entries matching specific criteria" );
     connect( findEntriesAction_, SIGNAL( triggered() ), SLOT( _findEntries() ) );
 
     newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Entry ...", this );
     newEntryAction_->setToolTip( "Create a new entry" );
-    newEntryAction_->setShortcut( Qt::CTRL+Qt::Key_N );
+    newEntryAction_->setShortcut( QKeySequence::New );
     connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
     editEntryAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Edit Entries ...", this );
@@ -1032,7 +1032,7 @@ void MainWindow::_installActions( void )
     */
     deleteEntryAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "Delete Entries", this );
     deleteEntryAction_->setToolTip( "Delete selected entries" );
-    deleteEntryAction_->setShortcut( Qt::Key_Delete );
+    deleteEntryAction_->setShortcut( QKeySequence::Delete );
     deleteEntryAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( deleteEntryAction_, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
 
@@ -1055,7 +1055,7 @@ void MainWindow::_installActions( void )
 
     openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), "Open ...", this );
     openAction_->setToolTip( "Open an existsing logbook" );
-    openAction_->setShortcut( Qt::CTRL+Qt::Key_O );
+    openAction_->setShortcut( QKeySequence::Open );
     connect( openAction_, SIGNAL( triggered() ), SLOT( open() ) );
 
     synchronizeAction_ = new QAction( IconEngine::get( ICONS::MERGE ), "Synchronize ...", this );
@@ -1088,12 +1088,12 @@ void MainWindow::_installActions( void )
 
     revertToSaveAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), "Reload", this );
     revertToSaveAction_->setToolTip( "Restore saved logbook" );
-    revertToSaveAction_->setShortcut( Qt::Key_F5 );
+    revertToSaveAction_->setShortcut( QKeySequence::Refresh );
     connect( revertToSaveAction_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
     // print
     printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print ...", this );
-    printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
+    printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // print preview

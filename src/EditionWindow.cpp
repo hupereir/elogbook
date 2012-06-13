@@ -657,26 +657,25 @@ void EditionWindow::_installActions( void )
 
     // new entry
     addAction( newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Entry", this ) );
-    newEntryAction_->setShortcut( Qt::CTRL + Qt::Key_N );
+    newEntryAction_->setShortcut( QKeySequence::New );
     newEntryAction_->setToolTip( "Create new entry in current editor" );
     connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
-    // previous_entry action
+    // previous entry action
     addAction( previousEntryAction_ = new QAction( IconEngine::get( ICONS::PREVIOUS ), "Previous Entry", this ) );
     previousEntryAction_->setToolTip( "Display previous entry in current list" );
     connect( previousEntryAction_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
 
-    // previous_entry action
+    // next entry action
     addAction( nextEntryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), "Next Entry", this ) );
     nextEntryAction_->setToolTip( "Display next entry in current list" );
     connect( nextEntryAction_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
-    nextEntryAction_->setShortcut( Qt::CTRL+Qt::Key_N );
 
     // save
     addAction( saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "Save Entry", this ) );
     saveAction_->setToolTip( "Save current entry" );
     connect( saveAction_, SIGNAL( triggered() ), SLOT( _save() ) );
-    saveAction_->setShortcut( Qt::CTRL+Qt::Key_S );
+    saveAction_->setShortcut( QKeySequence::Save );
 
     #if WITH_ASPELL
     addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck ...", this ) );
@@ -692,7 +691,7 @@ void EditionWindow::_installActions( void )
     // print
     addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print ...", this ) );
     printAction_->setToolTip( "Print current logbook entry" );
-    printAction_->setShortcut( Qt::CTRL + Qt::Key_P );
+    printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // print preview
@@ -720,7 +719,7 @@ void EditionWindow::_installActions( void )
 
     // close window action
     addAction( closeAction_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), "Close View", this ) );
-    closeAction_->setShortcut( Qt::CTRL+Qt::Key_W );
+    closeAction_->setShortcut( QKeySequence::Close );
     closeAction_->setToolTip( "Close current view" );
     connect( closeAction_, SIGNAL( triggered() ), SLOT( _close() ) );
 

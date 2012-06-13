@@ -891,12 +891,12 @@ void AttachmentFrame::_installActions( void )
     connect( &editAction(), SIGNAL( triggered() ), SLOT( _edit() ) );
 
     addAction( deleteAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "&Delete", this ) );
-    deleteAction().setShortcut( Qt::Key_Delete );
+    deleteAction().setShortcut( QKeySequence::Delete );
     deleteAction().setToolTip( "Delete selected attachments" );
     connect( &deleteAction(), SIGNAL( triggered() ), SLOT( _delete() ) );
 
     addAction( reloadAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), "&Reload", this ) );
-    reloadAction().setShortcut( Qt::Key_F5 );
+    reloadAction().setShortcut( QKeySequence::Refresh );
     reloadAction().setToolTip( "Reload attachments timestamps" );
     connect( &reloadAction(), SIGNAL( triggered() ), SLOT( _reload() ) );
 

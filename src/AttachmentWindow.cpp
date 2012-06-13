@@ -50,8 +50,8 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   frame().list().menu().insertAction( &frame().newAction(), &frame().list().findAction() );
 
   // shortcuts
-  connect( new QShortcut( Qt::CTRL+Qt::Key_Q, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
-  connect( new QShortcut( Qt::CTRL+Qt::Key_W, this ), SIGNAL( activated() ), SLOT( close() ) );
+  connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
+  connect( new QShortcut( QKeySequence::Close, this ), SIGNAL( activated() ), SLOT( close() ) );
 
   uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
   uniconify_action_->setToolTip( "Raise application main window" );
