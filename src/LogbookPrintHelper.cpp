@@ -67,7 +67,7 @@ void LogbookPrintHelper::print( QPrinter* printer )
     if( maxValue )
     {
         progress_ = 0;
-        progressDialog_ = new QProgressDialog( "Generating print output ...", "Cancel", 0, maxValue );
+        progressDialog_ = new QProgressDialog( "Generating print output...", "Cancel", 0, maxValue );
         progressDialog_->setWindowTitle( "Print Logbook - elogbook" );
         progressDialog_->setWindowModality(Qt::WindowModal);
     }

@@ -111,7 +111,7 @@ bool Application::realizeWidget( void )
     closeAction().disconnect();
     connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
 
-    configurationAction().setText( "Configure &elogbook ..." );
+    configurationAction().setText( "Configure &elogbook..." );
 
     // recent files
     recentFiles_ = new XmlFileList();

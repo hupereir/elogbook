@@ -988,7 +988,7 @@ void MainWindow::_installActions( void )
     newKeywordAction_->setToolTip( "Create a new keyword" );
     connect( newKeywordAction_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
 
-    addAction( editKeywordAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "Rename Keyword ...", this ) );
+    addAction( editKeywordAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "Rename Keyword...", this ) );
     editKeywordAction_->setToolTip( "Rename selected keyword" );
     editKeywordAction_->setShortcut( Qt::Key_F2 );
     editKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -1010,16 +1010,16 @@ void MainWindow::_installActions( void )
     findEntriesAction_->setToolTip( "Find entries matching specific criteria" );
     connect( findEntriesAction_, SIGNAL( triggered() ), SLOT( _findEntries() ) );
 
-    newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Entry ...", this );
+    newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Entry...", this );
     newEntryAction_->setToolTip( "Create a new entry" );
     newEntryAction_->setShortcut( QKeySequence::New );
     connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
-    editEntryAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Edit Entries ...", this );
+    editEntryAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Edit Entries...", this );
     editEntryAction_->setToolTip( "Edit selected entries" );
     connect( editEntryAction_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
 
-    editEntryTitleAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "Rename Entry ...", this );
+    editEntryTitleAction_ = new QAction( IconEngine::get( ICONS::RENAME ), "Rename Entry...", this );
     editEntryTitleAction_->setToolTip( "Edit selected entry title" );
     editEntryTitleAction_->setShortcut( Qt::Key_F2 );
     editEntryTitleAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -1045,20 +1045,20 @@ void MainWindow::_installActions( void )
     entryColorAction_->setToolTip( "Change selected entries color" );
     entryColorAction_->setMenu( colorMenu_ );
 
-    entryKeywordAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Change Keyword ...", this );
+    entryKeywordAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Change Keyword...", this );
     entryKeywordAction_->setToolTip( "Edit selected entries keyword" );
     connect( entryKeywordAction_, SIGNAL( triggered() ), SLOT( _renameEntryKeyword() ) );
 
-    newLogbookAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Logbook ...", this );
+    newLogbookAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Logbook...", this );
     newLogbookAction_->setToolTip( "Create a new logbook" );
     connect( newLogbookAction_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
 
-    openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), "Open ...", this );
+    openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), "Open...", this );
     openAction_->setToolTip( "Open an existsing logbook" );
     openAction_->setShortcut( QKeySequence::Open );
     connect( openAction_, SIGNAL( triggered() ), SLOT( open() ) );
 
-    synchronizeAction_ = new QAction( IconEngine::get( ICONS::MERGE ), "Synchronize ...", this );
+    synchronizeAction_ = new QAction( IconEngine::get( ICONS::MERGE ), "Synchronize...", this );
     synchronizeAction_->setToolTip( "Synchronize current logbook with remote" );
     connect( synchronizeAction_, SIGNAL( triggered() ), SLOT( _synchronize() ) );
 
@@ -1074,15 +1074,15 @@ void MainWindow::_installActions( void )
     saveForcedAction_->setToolTip( "Save all entries" );
     connect( saveForcedAction_, SIGNAL( triggered() ), SLOT( _saveForced() ) );
 
-    saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save As ...", this );
+    saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save As...", this );
     saveAsAction_->setToolTip( "Save logbook with a different name" );
     connect( saveAsAction_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
 
-    saveBackupAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save Backup ...", this );
+    saveBackupAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save Backup...", this );
     saveBackupAction_->setToolTip( "Save logbook backup" );
     connect( saveBackupAction_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
 
-    backupManagerAction_ = new QAction( IconEngine::get( ICONS::CONFIGURE_BACKUPS ), "Manage Backups ...", this );
+    backupManagerAction_ = new QAction( IconEngine::get( ICONS::CONFIGURE_BACKUPS ), "Manage Backups...", this );
     backupManagerAction_->setToolTip( "Save logbook backup" );
     connect( backupManagerAction_, SIGNAL( triggered() ), SLOT( _manageBackups() ) );
 
@@ -1092,24 +1092,24 @@ void MainWindow::_installActions( void )
     connect( revertToSaveAction_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
 
     // print
-    printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print ...", this );
+    printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print...", this );
     printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // print preview
-    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview ...", this ) );
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview...", this ) );
     printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
     connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
 
     // export to HTML
-    htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), "Export to HTML ...", this );
+    htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), "Export to HTML...", this );
     connect( htmlAction_, SIGNAL( triggered() ), SLOT( _toHtml() ) );
 
-    logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics ...", this );
+    logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics...", this );
     logbookStatisticsAction_->setToolTip( "View logbook statistics" );
     connect( logbookStatisticsAction_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
 
-    logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Properties ...", this );
+    logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Properties...", this );
     logbookInformationsAction_->setToolTip( "Edit logbook properties" );
     connect( logbookInformationsAction_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 
@@ -1118,12 +1118,12 @@ void MainWindow::_installActions( void )
     connect( closeFramesAction_, SIGNAL( triggered() ), SLOT( _closeEditionWindows() ) );
 
     // show duplicated entries
-    showDuplicatesAction_ = new QAction( "Show Duplicated Entries ...", this );
+    showDuplicatesAction_ = new QAction( "Show Duplicated Entries...", this );
     showDuplicatesAction_->setToolTip( "Show duplicated entries in logbook" );
     connect( showDuplicatesAction_, SIGNAL( triggered() ), SLOT( _showDuplicatedEntries() ) );
 
     // view monitored files
-    monitoredFilesAction_ = new QAction( "Show Monitored Files ...", this );
+    monitoredFilesAction_ = new QAction( "Show Monitored Files...", this );
     monitoredFilesAction_->setToolTip( "Show monitored files" );
     connect( monitoredFilesAction_, SIGNAL( triggered() ), SLOT( _showMonitoredFiles() ) );
 

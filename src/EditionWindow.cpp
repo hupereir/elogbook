@@ -678,28 +678,28 @@ void EditionWindow::_installActions( void )
     saveAction_->setShortcut( QKeySequence::Save );
 
     #if WITH_ASPELL
-    addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck ...", this ) );
+    addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck...", this ) );
     spellcheckAction_->setToolTip( "Check spelling of current entry" );
     connect( spellcheckAction_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
     #endif
 
     // entry_info
-    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Entry Properties ...", this ) );
+    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Entry Properties...", this ) );
     entryInfoAction_->setToolTip( "Show current entry properties" );
     connect( entryInfoAction_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
 
     // print
-    addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print ...", this ) );
+    addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print...", this ) );
     printAction_->setToolTip( "Print current logbook entry" );
     printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // print preview
-    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview ...", this ) );
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview...", this ) );
     connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
 
     // print
-    addAction( htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), "Export to HTML ...", this ) );
+    addAction( htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), "Export to HTML...", this ) );
     htmlAction_->setToolTip( "Export current logbook entry to HTML" );
     connect( htmlAction_, SIGNAL( triggered() ), SLOT( _toHtml() ) );
 
@@ -1030,7 +1030,7 @@ void EditionWindow::_save( bool updateSelection )
     entry->modified();
 
     // status bar
-    statusBar().label().setText(  "writting entry to logbook ..." );
+    statusBar().label().setText(  "writting entry to logbook..." );
     Debug::Throw( "EditionWindow::_save - statusbar set.\n" );
 
     // add entry to logbook, if needed
@@ -1571,8 +1571,8 @@ void EditionWindow::_updateConfiguration( void )
 void EditionWindow::LocalTextEditor::_installActions( void )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
-    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), "Insert Link ...", this ) );
-    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), "View Link ...", this ) );
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), "Insert Link...", this ) );
+    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), "View Link...", this ) );
 
     // disable insert link action by default
     insertLinkAction_->setEnabled( false );
