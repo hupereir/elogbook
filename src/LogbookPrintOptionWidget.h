@@ -33,6 +33,8 @@
 class LogbookPrintOptionWidget: public QWidget, public OptionWidget
 {
 
+    Q_OBJECT
+
     public:
 
     //! constructor
@@ -50,6 +52,17 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
 
     //! mask
     unsigned int mask( void ) const;
+
+    signals:
+
+    //! mask changed
+    void maskChanged( unsigned int );
+
+    protected slots:
+
+    //! update mask
+    void _updateMask( void )
+    { emit maskChanged( mask() ); }
 
     private:
 

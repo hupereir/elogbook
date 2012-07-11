@@ -89,6 +89,30 @@ void LogbookPrintHelper::print( QPrinter* printer )
 }
 
 //__________________________________________________________________________________
+void LogbookPrintHelper::_updateEntries( void )
+{
+
+    Debug::Throw( "LogbookPrintHelper::_updateEntries.\n" );
+    switch( selectionMode_ )
+    {
+        case LogEntryPrintSelectionWidget::ALL_ENTRIES:
+        entries_ = allEntries_;
+        break;
+
+        default:
+        case LogEntryPrintSelectionWidget::VISIBLE_ENTRIES:
+        entries_ = visibleEntries_;
+        break;
+
+        case LogEntryPrintSelectionWidget::SELECTED_ENTRIES:
+        entries_ = selectedEntries_;
+        break;
+    }
+
+}
+
+
+//__________________________________________________________________________________
 void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 

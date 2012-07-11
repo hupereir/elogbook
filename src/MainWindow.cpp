@@ -53,6 +53,7 @@
 #include "LogEntryPrintSelectionWidget.h"
 #include "Menu.h"
 #include "NewLogbookDialog.h"
+#include "PrinterOptionWidget.h"
 #include "PrintPreviewDialog.h"
 #include "QuestionDialog.h"
 #include "QtUtil.h"
@@ -1646,20 +1647,29 @@ void MainWindow::_print( void )
 
     // create helper
     LogbookPrintHelper helper( this );
+    helper.setLogbook( logbook() );
+    helper.setEntries(
+        BASE::KeySet<LogEntry>( logbook()->entries() ).toList(),
+        _logEntryModel().get(),
+        _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
 
     // create options widget
-    PRINT::PrinterOptionWidget* optionWidget( new PRINT::PrinterOptionWidget() );
+    PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
+    optionWidget->setHelper( &helper );
     connect( optionWidget, SIGNAL( orientationChanged( QPrinter::Orientation ) ), &helper, SLOT( setOrientation( QPrinter::Orientation ) ) );
     connect( optionWidget, SIGNAL( pageModeChanged( BasePrintHelper::PageMode ) ), &helper, SLOT( setPageMode( BasePrintHelper::PageMode ) ) );
 
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
+    connect( logbookOptionWidget, SIGNAL( maskChanged( unsigned int ) ), &helper, SLOT( setMask( unsigned int ) ) );
     logbookOptionWidget->read();
 
-    LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
-    logEntrySelectionWidget->read();
-
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    connect( logEntryOptionWidget, SIGNAL( maskChanged( unsigned int ) ), &helper, SLOT( setEntryMask( unsigned int ) ) );
     logEntryOptionWidget->read();
+
+    LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
+    connect( logEntrySelectionWidget, SIGNAL( modeChanged( LogEntryPrintSelectionWidget::Mode ) ), &helper, SLOT( setSelectionMode( LogEntryPrintSelectionWidget::Mode ) ) );
+    logEntrySelectionWidget->read();
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
@@ -1681,15 +1691,10 @@ void MainWindow::_print( void )
     logEntrySelectionWidget->write();
     logEntryOptionWidget->write();
 
-    // create print helper
-    helper.setLogbook( logbook() );
-
-    // select entries
-    helper.setEntries( _entries( logEntrySelectionWidget->mode() ) );
-
     // retrieve mask and assign
     helper.setMask( logbookOptionWidget->mask() );
     helper.setEntryMask( logEntryOptionWidget->mask() );
+    helper.setSelectionMode( logEntrySelectionWidget->mode() );
 
     // print
     helper.print( &printer );
@@ -1716,9 +1721,12 @@ void MainWindow::_printPreview( void )
     // create helper
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook() );
+    helper.setEntries(
+        BASE::KeySet<LogEntry>( logbook()->entries() ).toList(),
+        _logEntryModel().get(),
+        _logEntryModel().get( logEntryList().selectionModel()->selectedRows() ) );
 
-    // select entries
-    helper.setEntries( _entries( (LogEntryPrintSelectionWidget::Mode) XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_SELECTION" ) ) );
+    helper.setSelectionMode( (LogEntryPrintSelectionWidget::Mode) XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_SELECTION" ) );
 
     // masks
     helper.setMask( XmlOptions::get().get<unsigned int>( "LOGBOOK_PRINT_OPTION_MASK" ) );
@@ -1727,7 +1735,7 @@ void MainWindow::_printPreview( void )
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );
     dialog.setWindowTitle( "Print Preview - elogbook" );
-    dialog.setHelper( helper );
+    dialog.setHelper( &helper );
     dialog.exec();
 
     // reset status bar
@@ -3313,6 +3321,14 @@ void MainWindow::_updateConfiguration( void )
 
 }
 
+//______________________________________________________________________
+void MainWindow::KeywordList::setDefaultWidth( const int& value )
+{ defaultWidth_ = value; }
+
+//____________________________________________
+QSize MainWindow::KeywordList::sizeHint( void ) const
+{ return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):TreeView::sizeHint(); }
+
 //_______________________________________________
 LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mode )
 {
@@ -3332,11 +3348,3 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     }
 
 }
-
-//______________________________________________________________________
-void MainWindow::KeywordList::setDefaultWidth( const int& value )
-{ defaultWidth_ = value; }
-
-//____________________________________________
-QSize MainWindow::KeywordList::sizeHint( void ) const
-{ return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):TreeView::sizeHint(); }

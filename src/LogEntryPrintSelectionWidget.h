@@ -33,6 +33,8 @@
 class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 {
 
+    Q_OBJECT
+
     public:
 
     //! constructor
@@ -57,6 +59,17 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     };
 
     Mode mode( void ) const;
+
+    signals:
+
+    //! emited when selection mode is changed
+    void modeChanged( LogEntryPrintSelectionWidget::Mode );
+
+    protected slots:
+
+    //! update mode
+    void _updateMode( void )
+    { emit modeChanged( mode() ); }
 
     private:
 

@@ -203,9 +203,12 @@ moc_KeywordModel.cpp \
 moc_LogbookHtmlHelper.cpp \
 moc_LogbookModifiedDialog.cpp \
 moc_LogbookPrintHelper.cpp \
+moc_LogbookPrintOptionWidget.cpp \
 moc_LogEntryHtmlHelper.cpp \
 moc_LogEntryModel.cpp \
 moc_LogEntryPrintHelper.cpp \
+moc_LogEntryPrintSelectionWidget.cpp \
+moc_LogEntryPrintOptionWidget.cpp \
 moc_MainWindow.cpp \
 moc_Menu.cpp \
 moc_NewAttachmentDialog.cpp \

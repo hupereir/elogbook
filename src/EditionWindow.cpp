@@ -47,6 +47,7 @@
 #include "MainWindow.h"
 #include "Menu.h"
 #include "Options.h"
+#include "PrinterOptionWidget.h"
 #include "PrintPreviewDialog.h"
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
@@ -1097,13 +1098,17 @@ void EditionWindow::_print( void )
 
     // create helper
     LogEntryPrintHelper helper( this );
+    helper.setEntry( entry() );
 
     // create option widget
-    PRINT::PrinterOptionWidget* optionWidget( new PRINT::PrinterOptionWidget() );
+    PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
+    optionWidget->setHelper( &helper );
+
     connect( optionWidget, SIGNAL( orientationChanged( QPrinter::Orientation ) ), &helper, SLOT( setOrientation( QPrinter::Orientation ) ) );
     connect( optionWidget, SIGNAL( pageModeChanged( BasePrintHelper::PageMode ) ), &helper, SLOT( setPageMode( BasePrintHelper::PageMode ) ) );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    connect( logEntryOptionWidget, SIGNAL( maskChanged( unsigned int ) ), &helper, SLOT( setMask( unsigned int ) ) );
     logEntryOptionWidget->read();
 
     // create prind dialog and run.
@@ -1118,10 +1123,6 @@ void EditionWindow::_print( void )
 
     // write options
     logEntryOptionWidget->write();
-
-    // create print helper
-    helper.setEntry( entry() );
-    helper.setMask( logEntryOptionWidget->mask() );
 
     // print
     helper.print( &printer );
@@ -1146,7 +1147,7 @@ void EditionWindow::_printPreview( void )
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );
     dialog.setWindowTitle( "Print Preview - elogbook" );
-    dialog.setHelper( helper );
+    dialog.setHelper( &helper );
     dialog.exec();
 
 }

@@ -56,14 +56,14 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
     void setEntry( LogEntry* entry )
     { entry_ = entry; }
 
-    //! mask
-    void setMask( unsigned int value )
-    { mask_ = value; }
-
     // print entry
     void printEntry( QPrinter*, QPainter*, QPointF& );
 
     public slots:
+
+    //! mask
+    void setMask( unsigned int value )
+    { mask_ = value; }
 
     //! print
     void print( QPrinter* );

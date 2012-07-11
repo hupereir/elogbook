@@ -50,7 +50,10 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
 
     // insert in layout
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
-    { layout->addWidget( iter.value() ); }
+    {
+        connect( iter.value(), SIGNAL( toggled( bool ) ), SLOT( _updateMask( void ) ) );
+        layout->addWidget( iter.value() );
+    }
 
     layout->addStretch(1);
 
