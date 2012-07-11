@@ -1644,7 +1644,14 @@ void MainWindow::_print( void )
     QTextStream( &buffer )  << "eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
     printer.setDocName( buffer );
 
+    // create helper
+    LogbookPrintHelper helper( this );
+
     // create options widget
+    PRINT::PrinterOptionWidget* optionWidget( new PRINT::PrinterOptionWidget() );
+    connect( optionWidget, SIGNAL( orientationChanged( QPrinter::Orientation ) ), &helper, SLOT( setOrientation( QPrinter::Orientation ) ) );
+    connect( optionWidget, SIGNAL( pageModeChanged( BasePrintHelper::PageMode ) ), &helper, SLOT( setPageMode( BasePrintHelper::PageMode ) ) );
+
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
     logbookOptionWidget->read();
 
@@ -1657,6 +1664,7 @@ void MainWindow::_print( void )
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
     dialog.setOptionTabs( QList<QWidget *>()
+        << optionWidget
         << logEntrySelectionWidget
         << logbookOptionWidget
         << logEntryOptionWidget );
@@ -1674,7 +1682,6 @@ void MainWindow::_print( void )
     logEntryOptionWidget->write();
 
     // create print helper
-    LogbookPrintHelper helper( this );
     helper.setLogbook( logbook() );
 
     // select entries

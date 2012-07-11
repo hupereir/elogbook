@@ -1095,13 +1095,20 @@ void EditionWindow::_print( void )
     QTextStream( &buffer )  << "eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
     printer.setDocName( buffer );
 
+    // create helper
+    LogEntryPrintHelper helper( this );
+
     // create option widget
-    LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
-    optionWidget->read();
+    PRINT::PrinterOptionWidget* optionWidget( new PRINT::PrinterOptionWidget() );
+    connect( optionWidget, SIGNAL( orientationChanged( QPrinter::Orientation ) ), &helper, SLOT( setOrientation( QPrinter::Orientation ) ) );
+    connect( optionWidget, SIGNAL( pageModeChanged( BasePrintHelper::PageMode ) ), &helper, SLOT( setPageMode( BasePrintHelper::PageMode ) ) );
+
+    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    logEntryOptionWidget->read();
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
-    dialog.setOptionTabs( QList<QWidget *>() << optionWidget );
+    dialog.setOptionTabs( QList<QWidget *>() << optionWidget << logEntryOptionWidget );
     dialog.setWindowTitle( "Print Logbook Entry - elogbook" );
     if( !dialog.exec() ) return;
 
@@ -1110,12 +1117,11 @@ void EditionWindow::_print( void )
     { Singleton::get().application<Application>()->scratchFileMonitor().add( printer.outputFileName() ); }
 
     // write options
-    optionWidget->write();
+    logEntryOptionWidget->write();
 
     // create print helper
-    LogEntryPrintHelper helper( this );
     helper.setEntry( entry() );
-    helper.setMask( optionWidget->mask() );
+    helper.setMask( logEntryOptionWidget->mask() );
 
     // print
     helper.print( &printer );

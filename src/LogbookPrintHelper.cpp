@@ -298,9 +298,14 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     if( !( mask_ & Logbook::LOGBOOK_CONTENT ) ) return;
 
     LogEntryPrintHelper helper;
+    helper.setOrientation( orientation() );
+    helper.setPageMode( pageMode() );
     helper.setupPage( printer );
+
     helper.setFile( logbook_->file() );
-    helper.setPageNumber( _pageNumber() );
+    helper.setPageNumber( pageNumber() );
+    helper.setSheetNumber( sheetNumber() );
+
     connect( &helper, SIGNAL( pageCountChanged( int ) ), this, SIGNAL( pageCountChanged( int ) ) );
     for( LogEntryModel::List::const_iterator iter = entries_.begin(); iter != entries_.end(); iter++ )
     {
