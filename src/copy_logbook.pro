@@ -4,7 +4,7 @@ TARGET = copy_logbook
 CONFIG += qt release
 QT += xml network
 
-VERSION = 1.8.4
+VERSION = 1.8.5
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 unix {
