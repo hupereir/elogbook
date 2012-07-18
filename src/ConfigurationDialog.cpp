@@ -112,6 +112,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     gridLayout->addWidget( new QLabel( "Icon size: ", box ) );
     gridLayout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
+    spinbox->setSuffix( "px" );
     spinbox->setMinimum( 8 );
     spinbox->setMaximum( 96 );
     spinbox->setToolTip( "Icon size in attachment lists" );
@@ -240,9 +241,9 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     addOptionWidget( checkbox );
 
     gridLayout->addWidget( spinbox = new OptionSpinBox( page, "AUTO_SAVE_ITV" ), 1, 1, 1, 1 );
+    spinbox->setSuffix( "s" );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 3600 );
-    spinbox->setUnit( "seconds" );
     addOptionWidget( spinbox );
 
     checkbox->setChecked( false );
@@ -253,9 +254,9 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     addOptionWidget( checkbox );
 
     gridLayout->addWidget( spinbox = new OptionSpinBox( page, "BACKUP_ITV" ), 2, 1, 1, 1 );
+    spinbox->setSuffix( "days" );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 365 );
-    spinbox->setUnit( "days" );
     addOptionWidget( spinbox );
 
     checkbox->setChecked( false );
