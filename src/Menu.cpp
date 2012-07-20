@@ -189,13 +189,12 @@ void Menu::_updateRecentEntriesMenu( void )
     MainWindow &mainWindow( Singleton::get().application<Application>()->mainWindow() );
     if( !mainWindow.logbook() ) return;
 
-    QList<LogEntry*> entries( mainWindow.logbook()->recentEntries() );
-    for( QList<LogEntry*>::const_iterator iter = entries.begin(); iter != entries.end(); ++iter )
+    foreach( LogEntry* entry, mainWindow.logbook()->recentEntries() )
     {
         QString buffer;
-        QTextStream( &buffer ) << (*iter)->title() << " (" << (*iter)->keyword() << ")";
+        QTextStream( &buffer ) << entry->title() << " (" << entry->keyword() << ")";
         QAction* action = recentEntriesMenu_->addAction( buffer );
-        actions_.insert( action, (*iter) );
+        actions_.insert( action, entry );
     }
 
 }
@@ -231,26 +230,26 @@ void Menu::_updateEditorMenu( void )
 
     if( editionWindow ) { windowsMenu_->addAction( &editionWindow->entryInfoAction() ); }
 
-    BASE::KeySet<EditionWindow> frames( mainWindow );
-    bool hasAliveFrame( std::find_if( frames.begin(), frames.end(), EditionWindow::aliveFTor() ) != frames.end() );
+    BASE::KeySet<EditionWindow> windows( mainWindow );
+    bool hasAliveFrame( std::find_if( windows.begin(), windows.end(), EditionWindow::aliveFTor() ) != windows.end() );
     if( hasAliveFrame )
     {
 
         windowsMenu_->addSeparator();
-        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
+        foreach( EditionWindow* window, windows )
         {
 
             // ignore if frame is to be deleted
-            if( (*iter)->isClosed() ) continue;
+            if( window->isClosed() ) continue;
 
             // add menu entry for this frame
-            QString title( (*iter)->windowTitle() );
-            QAction* action = windowsMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &(*iter)->uniconifyAction(), SLOT( trigger() ) );
+            QString title( window->windowTitle() );
+            QAction* action = windowsMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &window->uniconifyAction(), SLOT( trigger() ) );
 
             if( editionWindow )
             {
                 action->setCheckable( true );
-                action->setChecked( editionWindow && ( editionWindow == (*iter) ) );
+                action->setChecked( editionWindow && ( editionWindow == window ) );
             }
 
             actionGroup_->addAction( action );

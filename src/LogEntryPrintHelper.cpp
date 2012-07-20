@@ -187,25 +187,24 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     QTextCursor cursor( &document );
     cursor.beginEditBlock();
 
-    const FORMAT::TextFormatBlock::List& formatList( entry_->formats() );
-    for( FORMAT::TextFormatBlock::List::const_iterator iter = formatList.begin(); iter != formatList.end(); ++iter )
+    foreach( const FORMAT::TextFormatBlock& format, entry_->formats() )
     {
 
         // define cursor
-        cursor.setPosition( iter->begin(), QTextCursor::MoveAnchor );
-        cursor.setPosition( iter->end(), QTextCursor::KeepAnchor );
+        cursor.setPosition( format.begin(), QTextCursor::MoveAnchor );
+        cursor.setPosition( format.end(), QTextCursor::KeepAnchor );
 
         // define format
         QTextCharFormat textFormat;
-        textFormat.setFontWeight( iter->format() & FORMAT::BOLD ? QFont::Bold : QFont::Normal );
-        textFormat.setFontItalic( iter->format() & FORMAT::ITALIC );
-        textFormat.setFontUnderline( iter->format() & FORMAT::UNDERLINE );
-        textFormat.setFontStrikeOut( iter->format() & FORMAT::STRIKE );
-        textFormat.setFontOverline( iter->format() & FORMAT::OVERLINE );
+        textFormat.setFontWeight( format.format() & FORMAT::BOLD ? QFont::Bold : QFont::Normal );
+        textFormat.setFontItalic( format.format() & FORMAT::ITALIC );
+        textFormat.setFontUnderline( format.format() & FORMAT::UNDERLINE );
+        textFormat.setFontStrikeOut( format.format() & FORMAT::STRIKE );
+        textFormat.setFontOverline( format.format() & FORMAT::OVERLINE );
 
         // load color
-        if( iter->color() != ColorMenu::NONE )
-        { textFormat.setForeground( QColor( iter->color() ) ); }
+        if( format.color() != ColorMenu::NONE )
+        { textFormat.setForeground( QColor( format.color() ) ); }
 
         cursor.setCharFormat( textFormat );
 
@@ -335,12 +334,11 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     row++;
 
     // loop over attachments
-    for( BASE::KeySet<Attachment>::const_iterator iter = attachments.begin(); iter != attachments.end(); ++iter, ++row )
+    foreach( Attachment* attachment, attachments )
     {
-        const Attachment& attachment( **iter );
-        table->cellAt( row, 0 ).firstCursorPosition().insertText( attachment.file() );
-        table->cellAt( row, 1 ).firstCursorPosition().insertText( attachment.type().name() );
-        table->cellAt( row, 2 ).firstCursorPosition().insertText( attachment.comments() );
+        table->cellAt( row, 0 ).firstCursorPosition().insertText( attachment->file() );
+        table->cellAt( row, 1 ).firstCursorPosition().insertText( attachment->type().name() );
+        table->cellAt( row, 2 ).firstCursorPosition().insertText( attachment->comments() );
     }
 
     // check for new page

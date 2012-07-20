@@ -172,10 +172,10 @@ void Application::_exit( void )
     if( mainWindow_ )
     {
         // check if editable EditionWindows needs save
-        BASE::KeySet<EditionWindow> frames( mainWindow_ );
-        for( BASE::KeySet<EditionWindow>::iterator iter = frames.begin(); iter != frames.end(); ++iter )
+        BASE::KeySet<EditionWindow> windows( mainWindow_ );
+        foreach( EditionWindow* window, windows )
         {
-            if( !( (*iter)->isReadOnly() || (*iter)->isClosed() ) && (*iter)->modified() && (*iter)->askForSave() == AskForSaveDialog::CANCEL )
+            if( !( window->isReadOnly() || window->isClosed() ) && window->modified() && window->askForSave() == AskForSaveDialog::CANCEL )
             { return; }
         }
 

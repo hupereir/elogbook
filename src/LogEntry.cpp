@@ -94,9 +94,8 @@ LogEntry::~LogEntry( void )
     Debug::Throw( "LogEntry::~LogEntry.\n" );
 
     // delete associated attachments
-    BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
-    { delete *iter; }
+    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
+    { delete attachment; }
 
 }
 
@@ -129,13 +128,12 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
     }
 
     // dump text format
-    for( FORMAT::TextFormatBlock::List::const_iterator iter = formats().begin(); iter != formats().end(); ++iter )
-        if( !iter->isEmpty() ) out.appendChild( FORMAT::XmlTextFormatBlock( *iter ).domElement( parent ) );
+    foreach( const FORMAT::TextFormatBlock& format, formats() )
+    { if( !format.isEmpty() ) out.appendChild( FORMAT::XmlTextFormatBlock( format ).domElement( parent ) ); }
 
     // dump attachments
-    BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); ++iter )
-        out.appendChild( (*iter)->domElement( parent ) );
+    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
+    { out.appendChild( attachment->domElement( parent ) ); }
 
     return out;
 
@@ -152,14 +150,13 @@ LogEntry* LogEntry::clone( void ) const
     out->clearAssociations();
 
     // copy all Attachments
-    BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::iterator attachmentIter = attachments.begin(); attachmentIter != attachments.end(); ++attachmentIter )
+    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
     {
 
         // copy attachment, associate to entry
-        Attachment *attachment( new Attachment( **attachmentIter ) );
-        attachment->clearAssociations();
-        Key::associate( attachment, out );
+        Attachment *copy( new Attachment( *attachment ) );
+        copy->clearAssociations();
+        Key::associate( copy, out );
 
     }
 
@@ -192,10 +189,9 @@ bool LogEntry::matchAttachment( const QString& buffer ) const
     Debug::Throw( "LogEntry::matchAttachment.\n" );
 
     // retrieve associated attachments
-    BASE::KeySet<Attachment> attachments( this );
-    for( BASE::KeySet<Attachment>::const_iterator iter( attachments.begin() ); iter != attachments.end(); ++iter )
+    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
     {
-        if( (*iter)->file().contains( buffer, _caseSensitive() ) )
+        if( attachment->file().contains( buffer, _caseSensitive() ) )
         { return true; }
     }
 

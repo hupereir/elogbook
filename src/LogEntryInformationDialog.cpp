@@ -97,11 +97,11 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     // retrieve associated logbook
     int i=5;
     BASE::KeySet<Logbook> logbooks( entry );
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!=logbooks.end(); ++iter, i++ )
+    foreach( Logbook* logbook, logbooks )
     {
 
         gridLayout->addWidget( label = new QLabel( "File: ", this ), i, 0 );
-        gridLayout->addWidget( new QLabel( File( (*iter)->file() ).localName(), this ), i, 1);
+        gridLayout->addWidget( new QLabel( File( logbook->file() ).localName(), this ), i, 1);
         label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     }

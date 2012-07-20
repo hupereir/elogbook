@@ -331,10 +331,10 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     helper.setSheetNumber( sheetNumber() );
 
     connect( &helper, SIGNAL( pageCountChanged( int ) ), this, SIGNAL( pageCountChanged( int ) ) );
-    for( LogEntryModel::List::const_iterator iter = entries_.begin(); iter != entries_.end(); iter++ )
+    foreach( LogEntry* entry, entries_ )
     {
 
-        helper.setEntry( *iter );
+        helper.setEntry( entry );
         helper.setMask( entryMask_ );
         helper.printEntry( printer, painter, offset );
 

@@ -69,20 +69,20 @@ void FileCheck::registerLogbook( Logbook* logbook )
     }
 
     // loop over children and register
-    Logbook::List children( logbook->children() );
-    for( Logbook::List::const_iterator iter = children.begin(); iter != children.end(); ++iter )
+    foreach( Logbook* iter, logbook->children() )
     {
-        if( !(*iter)->file().isEmpty() )
+        if( !iter->file().isEmpty() )
         {
 
             // associate (make sure association is unique)
-            if( !isAssociated( *iter ) )
-            { BASE::Key::associate( this, *iter ); }
+            if( !isAssociated( iter ) )
+            { BASE::Key::associate( this, iter ); }
 
-            _addFile( (*iter)->file() );
+            _addFile( iter->file() );
 
         }
     }
+
 }
 
 //______________________________________________________

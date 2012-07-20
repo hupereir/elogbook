@@ -280,10 +280,8 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
         appendChild( document.createTextNode( "Comments" ) );
 
     // attachments
-    for( BASE::KeySet<Attachment>::iterator iter( attachments.begin() ); iter != attachments.end(); ++iter )
+    foreach( Attachment* attachment, attachments )
     {
-
-        const Attachment& attachment( **iter );
 
         // file
         QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
@@ -291,19 +289,19 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
             appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).
             toElement();
-        if( attachment.type() == AttachmentType::URL ) ref.setAttribute( "href", attachment.file() );
-        else ref.setAttribute( "href", QString("file:") + attachment.file() );
-        ref.appendChild( document.createTextNode( attachment.file() ) );
+        if( attachment->type() == AttachmentType::URL ) ref.setAttribute( "href", attachment->file() );
+        else ref.setAttribute( "href", QString("file:") + attachment->file() );
+        ref.appendChild( document.createTextNode( attachment->file() ) );
 
         // type
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( attachment.type().name() ) );
+            appendChild( document.createTextNode( attachment->type().name() ) );
 
         // comments
-        if( !attachment.comments().isEmpty() )
+        if( !attachment->comments().isEmpty() )
         {
             QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
-            HtmlTextNode( attachment.comments(), column, document );
+            HtmlTextNode( attachment->comments(), column, document );
         }
 
     }

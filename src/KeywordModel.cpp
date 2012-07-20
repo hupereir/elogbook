@@ -124,16 +124,16 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     QMimeData *mime = new QMimeData();
 
     // set DRAG type
-    for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); ++iter )
-    { if( iter->isValid() ) mime->setData( DRAG, get( *iter ).get().toAscii() ); }
+    foreach( const QModelIndex& index, indexes )
+    { if( index.isValid() ) mime->setData( DRAG, get( index ).get().toAscii() ); }
 
     // retrieve associated entry
     QString buffer;
     QTextStream what( &buffer );
-    for( QModelIndexList::const_iterator iter = indexes.begin(); iter != indexes.end(); ++iter )
+    foreach( const QModelIndex& index, indexes )
     {
-        if( !iter->isValid() ) continue;
-        what << get(*iter) << endl;
+        if( !index.isValid() ) continue;
+        what << get(index) << endl;
     }
 
     // set plain text data

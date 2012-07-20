@@ -111,8 +111,8 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
 {
 
     Debug::Throw( "AttachmentFrame::add.\n" );
-    for( AttachmentModel::List::const_iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
-    { BASE::Key::associate( this, *iter ); }
+    foreach( Attachment* attachment, attachments )
+    { BASE::Key::associate( this, attachment ); }
 
     _model().add( attachments );
     list().resizeColumns();
@@ -274,11 +274,11 @@ void AttachmentFrame::_new( void )
 
         // update all windows edition windows associated to entry
         windows = BASE::KeySet<EditionWindow>( entry );
-        for( BASE::KeySet<EditionWindow>::iterator iter = windows.begin(); iter != windows.end(); ++iter )
+        foreach( EditionWindow* window, windows )
         {
 
-            (*iter)->attachmentFrame().visibilityAction().setChecked( true );
-            (*iter)->attachmentFrame().add( *attachment );
+            window->attachmentFrame().visibilityAction().setChecked( true );
+            window->attachmentFrame().add( *attachment );
 
         }
 
@@ -286,10 +286,10 @@ void AttachmentFrame::_new( void )
         Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
 
         // update logbooks destination directory
-        for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
+        foreach( Logbook* logbook, logbooks )
         {
-            (*iter)->setModified( true );
-            (*iter)->setDirectory( full_directory );
+            logbook->setModified( true );
+            logbook->setDirectory( full_directory );
         }
 
         // change Application window title
@@ -318,19 +318,16 @@ void AttachmentFrame::enterEvent( QEvent* event )
 
     // retrieve all attachments from model
     AttachmentModel::List attachments( _model().get() );
-    for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
+    foreach( Attachment* attachment, attachments )
     {
 
-        assert( *iter );
-        Attachment &attachment( **iter );
+        if( attachment->type() == AttachmentType::URL ) continue;
+        if( attachment->file().isEmpty() ) continue;
 
-        if( attachment.type() == AttachmentType::URL ) continue;
-        if( attachment.file().isEmpty() ) continue;
+        records.push_back( FileRecord( attachment->file() ) );
 
-        records.push_back( FileRecord( attachment.file() ) );
-
-        if( attachment.isLink() == Attachment::YES || attachment.isLink() == Attachment::UNKNOWN )
-        { records.push_back( FileRecord( attachment.sourceFile() ) ); }
+        if( attachment->isLink() == Attachment::YES || attachment->isLink() == Attachment::UNKNOWN )
+        { records << FileRecord( attachment->sourceFile() ); }
 
     }
 
@@ -414,8 +411,7 @@ void AttachmentFrame::customEvent( QEvent* event )
 
             // get associated logbooks
             BASE::KeySet<Logbook> logbooks( &entry );
-            for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
-            { (*iter)->setModified( true ); }
+            foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
             modified = true;
 
@@ -483,15 +479,14 @@ void AttachmentFrame::_open( void )
     }
 
     // loop over attachments
-    AttachmentModel::List modified_attachments;
-    for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
+    AttachmentModel::List modifiedAttachments;
+    foreach( Attachment* attachment, selection )
     {
 
-        Attachment& attachment( **iter );
-        if( attachment.updateTimeStamps() ) modified_attachments.push_back( &attachment );
+        if( attachment->updateTimeStamps() ) modifiedAttachments << attachment;
 
-        AttachmentType type = attachment.type();
-        File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
+        AttachmentType type = attachment->type();
+        File fullname( ( type == AttachmentType::URL ) ? attachment->file():attachment->file().expand() );
         if( !( type == AttachmentType::URL || fullname.exists() ) )
         {
             QString buffer;
@@ -500,7 +495,7 @@ void AttachmentFrame::_open( void )
             continue;
         }
 
-        OpenAttachmentDialog dialog( this, attachment );
+        OpenAttachmentDialog dialog( this, *attachment );
         if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted )
         {
             if( dialog.action() == OpenAttachmentDialog::OPEN ) ( Command( dialog.command() ) << fullname ).run();
@@ -524,7 +519,7 @@ void AttachmentFrame::_open( void )
     }
 
     // need to save attachments because timeStamps might have been updated
-    _saveAttachments( modified_attachments );
+    _saveAttachments( modifiedAttachments );
 
     return;
 
@@ -547,40 +542,37 @@ void AttachmentFrame::_edit( void )
     }
 
     // loop over attachments
-    AttachmentModel::List modified_attachments;
-    for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
+    AttachmentModel::List modifiedAttachments;
+    foreach( Attachment* attachment, selection )
     {
 
-        // create/check attachment full name
-        Attachment& attachment( **iter );
-
         // update time stamps
-        bool attachment_changed( false );
-        attachment_changed |= attachment.updateTimeStamps();
-        EditAttachmentDialog dialog( this, attachment );
+        bool attachmentChanged( false );
+        attachmentChanged |= attachment->updateTimeStamps();
+        EditAttachmentDialog dialog( this, *attachment );
 
         // map dialog
         if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted )
         {
 
             // change attachment type
-            attachment_changed |= attachment.setType( dialog.type() );
+            attachmentChanged |= attachment->setType( dialog.type() );
 
             // retrieve comments
-            attachment_changed |= attachment.setComments( dialog.comments() );
+            attachmentChanged |= attachment->setComments( dialog.comments() );
 
             // update time stamps
-            attachment_changed |= attachment.updateTimeStamps();
+            attachmentChanged |= attachment->updateTimeStamps();
 
         }
 
-        if( !attachment_changed ) continue;
-        modified_attachments.push_back( &attachment );
+        if( !attachmentChanged ) continue;
+        modifiedAttachments << attachment;
 
     }
 
     // save
-    _saveAttachments( modified_attachments );
+    _saveAttachments( modifiedAttachments );
 
 }
 
@@ -606,26 +598,23 @@ void AttachmentFrame::_delete( void )
     EditionWindow &window( **windows.begin() );
 
     // loop over attachments
-    bool logbook_changed( false );
-    for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
+    bool logbookChanged( false );
+    foreach( Attachment* attachment, selection )
     {
-
-        Attachment *attachment( *iter );
 
         // dialog
         DeleteAttachmentDialog dialog( this, *attachment );
         if( dialog.centerOnWidget( AttachmentFrame::window() ).exec() == QDialog::Accepted )
         {
 
-            logbook_changed = true;
+            logbookChanged = true;
 
             // retrieve action
-            bool from_disk( dialog.action() == DeleteAttachmentDialog::FROM_DISK );
+            bool fromDisk( dialog.action() == DeleteAttachmentDialog::FROM_DISK );
 
             // retrieve associated attachment frames and remove item
             BASE::KeySet<AttachmentFrame> frames( attachment );
-            for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); ++iter )
-            { (*iter)->_model().remove( attachment ); }
+            foreach( AttachmentFrame* frame, frames ) frame->_model().remove( attachment );
 
             // retrieve associated entries
             BASE::KeySet<LogEntry> entries( attachment );
@@ -636,8 +625,8 @@ void AttachmentFrame::_delete( void )
             // retrieve associated logbooks
             BASE::KeySet<Logbook> logbooks( &entry );
 
-            // check sharing attachments to avoid from_disk deletion
-            if( from_disk && logbooks.size() )
+            // check sharing attachments to avoid fromDisk deletion
+            if( fromDisk && logbooks.size() )
             {
 
                 BASE::KeySet<Attachment> attachments( (*logbooks.begin())->attachments() );
@@ -645,7 +634,7 @@ void AttachmentFrame::_delete( void )
                 if( n_share > 1 ) {
 
                     InformationDialog( this, "Attachment still in use by other entries. Kept on disk." ).exec();
-                    from_disk = false;
+                    fromDisk = false;
 
                 }
 
@@ -653,7 +642,7 @@ void AttachmentFrame::_delete( void )
 
             // remove file from disk, if required
             File file( attachment->file().expand() );
-            if( from_disk && ( !( attachment->type() == AttachmentType::URL ) ) && file.isWritable() )
+            if( fromDisk && ( !( attachment->type() == AttachmentType::URL ) ) && file.isWritable() )
             { file.remove(); }
 
             // delete attachment
@@ -663,7 +652,7 @@ void AttachmentFrame::_delete( void )
 
     }
 
-    if( logbook_changed )
+    if( logbookChanged )
     {
         Singleton::get().application<Application>()->mainWindow().setModified( true );
         window.saveAction().trigger();
@@ -692,11 +681,11 @@ void AttachmentFrame::_reload( void )
     }
 
     // loop over attachments
-    AttachmentModel::List modified_attachments;
-    for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
-    { if ( (*iter)->updateTimeStamps() ) { modified_attachments.push_back( *iter ); } }
+    AttachmentModel::List modifiedAttachments;
+    foreach( Attachment* attachment, selection )
+    { if( attachment->updateTimeStamps() ) modifiedAttachments << attachment; }
 
-    _saveAttachments( modified_attachments );
+    _saveAttachments( modifiedAttachments );
 
 }
 
@@ -716,12 +705,11 @@ void AttachmentFrame::_saveAs( void )
     }
 
     // loop over attachments
-    for( AttachmentModel::List::const_iterator iter = selection.begin(); iter != selection.end(); ++iter )
+    foreach( Attachment* attachment, selection )
     {
 
-        Attachment& attachment( **iter );
-        AttachmentType type = attachment.type();
-        File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
+        const AttachmentType type = attachment->type();
+        File fullname( ( type == AttachmentType::URL ) ? attachment->file():attachment->file().expand() );
         if( type == AttachmentType::URL )
         {
 
@@ -784,8 +772,7 @@ void AttachmentFrame::_clean( void )
 
         // retrieve associated attachment frames and remove item
         BASE::KeySet<AttachmentFrame> frames( attachment );
-        for( BASE::KeySet<AttachmentFrame>::const_iterator iter = frames.begin(); iter != frames.end(); ++iter )
-        { (*iter)->_model().remove( attachment ); }
+        foreach( AttachmentFrame* frame, frames ) frame->_model().remove( attachment );
 
         // retrieve associated entries
         BASE::KeySet<LogEntry> entries( attachment );
@@ -834,8 +821,8 @@ void AttachmentFrame::_storeSelection( void )
     _model().clearSelectedIndexes();
 
     // retrieve selected indexes in list
-    QModelIndexList selected_indexes( list().selectionModel()->selectedRows() );
-    for( QModelIndexList::iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); ++iter )
+    QModelIndexList selectedIndexes( list().selectionModel()->selectedRows() );
+    for( QModelIndexList::iterator iter = selectedIndexes.begin(); iter != selectedIndexes.end(); ++iter )
     {
         // check column
         if( !iter->column() == 0 ) continue;
@@ -853,13 +840,13 @@ void AttachmentFrame::_restoreSelection( void )
     Debug::Throw( "AttachmentFrame::_restoreSelection.\n" );
 
     // retrieve indexes
-    QModelIndexList selected_indexes( _model().selectedIndexes() );
-    if( selected_indexes.empty() ) list().selectionModel()->clear();
+    QModelIndexList selectedIndexes( _model().selectedIndexes() );
+    if( selectedIndexes.empty() ) list().selectionModel()->clear();
     else {
 
-        list().selectionModel()->select( selected_indexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        for( QModelIndexList::const_iterator iter = selected_indexes.begin(); iter != selected_indexes.end(); ++iter )
-        { list().selectionModel()->select( *iter, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
+        list().selectionModel()->select( selectedIndexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+        foreach( const QModelIndex& index, selectedIndexes )
+        { list().selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     }
 
@@ -920,46 +907,46 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     BASE::KeySet<LogEntry> entries;
 
     // loop over attachments
-    for( AttachmentModel::List::const_iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
+    foreach( Attachment* attachment, attachments )
     {
 
         // get associated entries and store
-        entries.unite( BASE::KeySet<LogEntry>( *iter ) );
+        entries.unite( BASE::KeySet<LogEntry>( attachment ) );
         Debug::Throw( "AttachmentFrame::_saveAttachments - entries.\n" );
 
         // get associated attachment frames and store
-        BASE::KeySet<AttachmentFrame> local_frames( *iter );
-        for( BASE::KeySet<AttachmentFrame>::iterator frameIter = local_frames.begin(); frameIter != local_frames.end(); ++frameIter )
-        { (*frameIter)->update( **iter ); }
+        BASE::KeySet<AttachmentFrame> localFrames( attachment );
+        foreach( AttachmentFrame* frame, localFrames )
+        { frame->update( *attachment ); }
+
         Debug::Throw( "AttachmentFrame::_saveAttachments - frames.\n" );
 
     }
 
     BASE::KeySet<Logbook> logbooks;
-    BASE::KeySet<EditionWindow> edition_windows;
+    BASE::KeySet<EditionWindow> editionWindows;
 
     // loop over entries
-    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter )
+    foreach( LogEntry* entry, entries )
     {
 
         // get associated logbooks and store
-        logbooks.unite( BASE::KeySet<Logbook>( *iter ) );
+        logbooks.unite( BASE::KeySet<Logbook>( entry ) );
+
         Debug::Throw( "AttachmentFrame::_saveAttachments - logbooks.\n" );
 
         // get associated Edition windows
-        edition_windows.unite( BASE::KeySet<EditionWindow>( *iter ) );
+        editionWindows.unite( BASE::KeySet<EditionWindow>( entry ) );
         Debug::Throw( "AttachmentFrame::_saveAttachments - edition windows.\n" );
 
     }
 
     // loop over logbook and set modified
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
-    { (*iter)->setModified( true ); }
+    foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
     Debug::Throw( "AttachmentFrame::_saveAttachments - logbooks modified.\n" );
 
     // loop over edition windows and trigger save action
-    for( BASE::KeySet<EditionWindow>::iterator iter = edition_windows.begin(); iter != edition_windows.end(); ++iter )
-    { (*iter)->saveAction().trigger();  }
+    foreach( EditionWindow* window, editionWindows ) window->saveAction().trigger();
     Debug::Throw( "AttachmentFrame::_saveAttachments - edition windows saved.\n" );
 
     MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );

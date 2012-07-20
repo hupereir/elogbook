@@ -59,9 +59,9 @@ CustomDialog( parent )
 
         unsigned int max_keywords = 10;
         unsigned int index(0);
-        for( QList<Keyword>::const_iterator iter = keywords.begin(); iter != keywords.end(); ++iter )
+        foreach( const Keyword& keyword, keywords )
         {
-            what << *iter << " ";
+            what << keyword << " ";
             index++;
             if( index >= max_keywords )
             {

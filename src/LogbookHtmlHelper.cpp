@@ -210,30 +210,29 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
         appendChild( document.createTextNode( "Last Modified" ) );
 
     // loop over entries
-    for( LogEntryModel::List::const_iterator iter = entries_.begin(); iter != entries_.end(); ++iter )
+    foreach( LogEntry* entry, entries_ )
     {
-        const LogEntry& entry( **iter );
         QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
 
         // keyword
         QDomElement ref = row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", QString( "#" ) + QString().setNum( entry.creation() ) );
-        ref.appendChild( document.createTextNode( entry.keyword().get() ) );
+        ref.setAttribute( "href", QString( "#" ) + QString().setNum( entry->creation() ) );
+        ref.appendChild( document.createTextNode( entry->keyword().get() ) );
 
         // title
         ref = row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", QString( "#" ) + QString().setNum( entry.creation() ) );
-        ref.appendChild( document.createTextNode( entry.title() ) );
+        ref.setAttribute( "href", QString( "#" ) + QString().setNum( entry->creation() ) );
+        ref.appendChild( document.createTextNode( entry->title() ) );
 
         // creation
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry.creation().toString() ) );
+            appendChild( document.createTextNode( entry->creation().toString() ) );
 
         // modification
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry.modification().toString() ) );
+            appendChild( document.createTextNode( entry->modification().toString() ) );
 
     }
 
@@ -260,10 +259,10 @@ void LogbookHtmlHelper::_appendEntries( QDomDocument& document, QDomElement& par
     if( !( mask_ & Logbook::LOGBOOK_CONTENT ) ) return;
 
     LogEntryHtmlHelper helper;
-    for( LogEntryModel::List::const_iterator iter = entries_.begin(); iter != entries_.end(); iter++ )
+    foreach( LogEntry* entry, entries_ )
     {
 
-        helper.setEntry( *iter );
+        helper.setEntry( entry );
         helper.setMask( entryMask_ );
         helper.appendEntry( document, parent );
         parent.appendChild( document.createElement( "p" ) );

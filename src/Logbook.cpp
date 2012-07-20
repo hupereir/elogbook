@@ -78,8 +78,7 @@ Logbook::~Logbook( void )
 
     // delete associated entries
     BASE::KeySet<LogEntry> entries( this );
-    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter )
-    { delete *iter; }
+    foreach( LogEntry* entry, entries ) delete entry;
 
 }
 
@@ -107,9 +106,8 @@ bool Logbook::read( void )
     }
 
     // delete associated entries
-    BASE::KeySet<LogEntry> entries( Logbook::entries() );
-    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter )
-    { delete *iter; }
+    foreach( LogEntry* entry, Logbook::entries() )
+    { delete entry; }
 
     // parse the file
     QFile file( Logbook::file() );
@@ -167,7 +165,7 @@ bool Logbook::read( void )
 
     // parse children
     static unsigned int progress( 10 );
-    unsigned int entry_count( 0 );
+    unsigned int entryCount( 0 );
     for(QDomNode node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() )
     {
         QDomElement element = node.toElement();
@@ -186,8 +184,8 @@ bool Logbook::read( void )
 
             LogEntry* entry = new LogEntry( element );
             Key::associate( latestChild(), entry );
-            entry_count++;
-            if( !(entry_count%progress) ) emit progressAvailable( progress );
+            entryCount++;
+            if( !(entryCount%progress) ) emit progressAvailable( progress );
 
         } else if( tagName == XML::CHILD ) {
 
@@ -218,7 +216,7 @@ bool Logbook::read( void )
 
     }
 
-    emit progressAvailable( entry_count%progress );
+    emit progressAvailable( entryCount%progress );
 
     // discard modifications
     setModified( false );
@@ -306,23 +304,23 @@ bool Logbook::write( File file )
         if( !recentEntries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
 
         // write backup files
-        for( Backup::List::const_iterator iter = backupFiles_.begin(); iter != backupFiles_.end(); ++iter )
-        { top.appendChild( iter->domElement( document ) ); }
+        foreach( const Backup& backup, backupFiles_ )
+        { top.appendChild( backup.domElement( document ) ); }
 
         // write all entries
         static unsigned int progress( 10 );
-        unsigned int entry_count( 0 );
+        unsigned int entryCount( 0 );
         BASE::KeySet<LogEntry> entries( this );
-        for( BASE::KeySet<LogEntry>::iterator it = entries.begin(); it != entries.end(); ++it )
+        foreach( LogEntry* entry, entries )
         {
 
-            top.appendChild( (*it)->domElement( document ) );
-            entry_count++;
-            if( !(entry_count%progress) ) emit progressAvailable( progress );
+            top.appendChild( entry->domElement( document ) );
+            entryCount++;
+            if( !(entryCount%progress) ) emit progressAvailable( progress );
 
         }
 
-        emit progressAvailable( entry_count%progress );
+        emit progressAvailable( entryCount%progress );
 
         // dump all logbook childrens
         unsigned int childNumber=0;
@@ -392,26 +390,26 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     QHash< LogEntry*, LogEntry* > duplicates;
 
     // merge new entries into current entries
-    for( BASE::KeySet< LogEntry>::iterator it = newEntries.begin(); it != newEntries.end(); ++it )
+    foreach( LogEntry* entry, newEntries )
     {
 
         // check if there is an entry with matching creation and modification time
         BASE::KeySet< LogEntry >::iterator duplicate( std::find_if(
             currentEntries.begin(),
             currentEntries.end(),
-            LogEntry::DuplicateFTor( *it ) ) );
+            LogEntry::DuplicateFTor( entry ) ) );
 
         // if duplicate entry found and modified more recently, skip the new entry
-        if( duplicate != currentEntries.end() && (*duplicate)->modification() >= (*it)->modification() ) continue;
+        if( duplicate != currentEntries.end() && (*duplicate)->modification() >= entry->modification() ) continue;
 
         // retrieve logbook where entry is to be added
         Logbook* child( latestChild() );
 
         // create a new entry
-        LogEntry *entry( (*it )->clone() );
+        LogEntry *copy( entry->clone() );
 
         // associate entry with logbook
-        Key::associate( entry, child );
+        Key::associate( copy, child );
 
         // set child as modified
         child->setModified( true );
@@ -422,14 +420,14 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
             // set logbooks as modified
             // and disassociate with entry
             BASE::KeySet<Logbook> logbooks( *duplicate );
-            for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter != logbooks.end(); ++iter )
+            foreach( Logbook* logbook, logbooks )
             {
-                (*iter)->setModified( true );
-                BASE::Key::disassociate( *iter, *duplicate );
+                logbook->setModified( true );
+                BASE::Key::disassociate( logbook, *duplicate );
             }
 
             // insert duplicate pairs in map
-            duplicates.insert( *duplicate, *it );
+            duplicates.insert( *duplicate, entry );
 
             // reset current entries
             currentEntries = entries();
@@ -448,9 +446,9 @@ XmlError::List Logbook::xmlErrors( void ) const
     Debug::Throw( "Logbook::xmlErrors.\n" );
     XmlError::List out;
     if( error_ ) out.push_back( error_ );
-    for( List::const_iterator it = children_.begin(); it != children_.end(); ++it )
+    foreach( Logbook* logbook, children_ )
     {
-        XmlError::List tmp( (*it)->xmlErrors() );
+        XmlError::List tmp( logbook->xmlErrors() );
         out << tmp;
     }
     return out;
@@ -460,10 +458,10 @@ XmlError::List Logbook::xmlErrors( void ) const
 Logbook::List Logbook::children( void ) const
 {
     List out;
-    for( List::const_iterator it = children_.begin(); it!= children_.end(); ++it )
+    foreach( Logbook* logbook, children_ )
     {
-        out.push_back( *it );
-        List children( (*it)->children() );
+        out << logbook;
+        List children( logbook->children() );
         out << children;
     }
 
@@ -507,11 +505,11 @@ Logbook* Logbook::latestChild( void )
         setModified( true );
 
         // associate to existing FileCheck if any
-        BASE::KeySet<FileCheck> file_checks( this );
-        if( !file_checks.empty() )
+        BASE::KeySet<FileCheck> fileChecks( this );
+        if( !fileChecks.empty() )
         {
-            assert( file_checks.size() == 1 );
-            (*file_checks.begin())->registerLogbook( dest );
+            assert( fileChecks.size() == 1 );
+            (*fileChecks.begin())->registerLogbook( dest );
         }
 
     }
@@ -524,9 +522,7 @@ BASE::KeySet<LogEntry> Logbook::entries( void ) const
 {
 
     BASE::KeySet<LogEntry> out( this );
-    for( List::const_iterator iter = children_.begin(); iter != children_.end(); ++iter )
-    { out.merge( (*iter)->entries() ); }
-
+    foreach( Logbook* logbook, children_ ) out.merge( logbook->entries() );
     return out;
 
 }
@@ -539,12 +535,10 @@ BASE::KeySet<Attachment> Logbook::attachments( void ) const
 
     // loop over associated entries, add entries associated attachments
     BASE::KeySet<LogEntry> entries( this );
-    for( BASE::KeySet<LogEntry>::iterator iter = entries.begin(); iter != entries.end(); ++iter )
-        out.merge( BASE::KeySet<Attachment>(*iter) );
+    foreach( LogEntry* entry, entries ) out.merge( BASE::KeySet<Attachment>(entry) );
 
     // loop over children, add associated attachments
-    for( List::const_iterator iter = children_.begin(); iter != children_.end(); ++iter )
-        out.merge( (*iter)->attachments() );
+    foreach( Logbook* logbook, children_ ) out.merge( logbook->attachments() );
 
     return out;
 
@@ -592,10 +586,11 @@ QList<LogEntry*> Logbook::recentEntries( void ) const
 
     QList<LogEntry*> out;
     if( recentEntries_.empty() ) return out;
+
     BASE::KeySet<LogEntry> entries( Logbook::entries() );
-    for( TimeStampList::const_iterator iter = recentEntries_.begin(); iter != recentEntries_.end(); ++iter )
+    foreach( const TimeStamp& timeStamp, recentEntries_ )
     {
-        BASE::KeySet<LogEntry>::const_iterator entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( *iter ) ) );
+        BASE::KeySet<LogEntry>::const_iterator entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( timeStamp ) ) );
         if( entryIter != entries.end() ) out.push_back( *entryIter );
     }
 
@@ -608,13 +603,13 @@ void Logbook::addRecentEntry( const LogEntry* entry )
 {
 
     Debug::Throw( "Logbook::addRecentEntry.\n" );
-    TimeStamp time_stamp( entry->creation() );
+    TimeStamp timeStamp( entry->creation() );
 
     // first remove time stamp from list if it exists
-    recentEntries_.erase( std::remove( recentEntries_.begin(), recentEntries_.end(), time_stamp ), recentEntries_.end() );
+    recentEntries_.erase( std::remove( recentEntries_.begin(), recentEntries_.end(), timeStamp ), recentEntries_.end() );
 
     // adds again at the end of the list
-    recentEntries_.push_back( time_stamp );
+    recentEntries_.push_back( timeStamp );
 
     // mark logbook as modified
     setModified( true );
@@ -689,9 +684,12 @@ void Logbook::setModification( const TimeStamp& stamp )
 bool Logbook::modified( void ) const
 {
     Debug::Throw( "Logbook::modified.\n" );
+
     if( modified_ ) return true;
-    for( List::const_iterator it = children_.begin(); it != children_.end(); ++it )
-    { if ( (*it)->modified() ) return true; }
+
+    foreach( Logbook* logbook, children_ )
+    { if( logbook->modified() ) return true; }
+
     return false;
 }
 
@@ -809,8 +807,8 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
     Debug::Throw( "Logbook::_recentEntriesElement.\n" );
 
     QDomElement out( document.createElement( XML::RECENT_ENTRIES ) );
-    for( TimeStampList::const_iterator iter = recentEntries_.begin(); iter != recentEntries_.end(); ++iter )
-    { out.appendChild( XmlTimeStamp( *iter ).domElement( XML::CREATION, document ) ); }
+    foreach( const TimeStamp& timeStamp, recentEntries_ )
+    { out.appendChild( XmlTimeStamp( timeStamp ).domElement( XML::CREATION, document ) ); }
 
     return out;
 

@@ -1349,8 +1349,8 @@ void EditionWindow::_openLink( void )
 
     // retrieve applications from options
     Options::List applications( XmlOptions::get().specialOptions( "OPEN_LINK_APPLICATIONS" ) );
-    for( Options::List::const_iterator iter = applications.begin(); iter != applications.end(); ++iter )
-    { dialog.actionComboBox().addItem( iter->raw() ); }
+    foreach( const Option& option, applications )
+    { dialog.actionComboBox().addItem( option.raw() ); }
 
     if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
 
