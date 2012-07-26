@@ -14,6 +14,13 @@ AC_PATH_PROG(KUICKSHOW, kuickshow,  kuickshow)
 AC_PATH_PROG(GV,        kghostview, kghostview)
 
 dnl *********************************************
+dnl x11
+dnl *********************************************
+AC_CHECK_LIB([X11], [XOpenDisplay], [],[
+         echo "X11 library is required for this program"
+         exit -1])
+
+dnl *********************************************
 dnl aspell
 dnl *********************************************
 AC_PATH_PROG(ASPELL,    aspell,    aspell)
