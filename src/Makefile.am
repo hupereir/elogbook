@@ -1,34 +1,27 @@
+# $Id$
+
+AUTOMAKE_OPTIONS = foreign
+ACLOCAL_AMFLAGS = -I m4
+AM_CXXFLAGS = ${QT_CFLAGS}
+AM_LDFLAGS = ${QT_LIBS}
+
 EXTRA_DIST = elogbook.rc src.pro elogbook-common.pro elogbook.pro copy_logbook.pro synchronize_logbook.pro pixmaps.qrc
 
 if WITH_ASPELL
 INCLUDES = \
-	-I$(aspell_includes) \
-	-I$(qt_includes) \
-	-I$(qt_includes)/Qt \
-	-I$(qt_includes)/QtCore  \
-	-I$(qt_includes)/QtNetwork  \
-	-I$(qt_includes)/QtXml \
-	-I$(qt_includes)/QtGui \
-	-I$(top_srcdir)/base  \
-	-I$(top_srcdir)/base-qt \
-	-I$(top_srcdir)/base-help \
-	-I$(top_srcdir)/base-server \
-	-I$(top_srcdir)/base-spellcheck
+-I$(aspell_includes) \
+-I$(top_srcdir)/base  \
+-I$(top_srcdir)/base-qt \
+-I$(top_srcdir)/base-help \
+-I$(top_srcdir)/base-server \
+-I$(top_srcdir)/base-spellcheck
 else
 INCLUDES = \
-	-I$(qt_includes) \
-	-I$(qt_includes)/Qt \
-	-I$(qt_includes)/QtCore  \
-	-I$(qt_includes)/QtNetwork  \
-	-I$(qt_includes)/QtXml \
-	-I$(qt_includes)/QtGui \
-	-I$(top_srcdir)/base  \
-	-I$(top_srcdir)/base-qt \
-	-I$(top_srcdir)/base-help \
-	-I$(top_srcdir)/base-server
+-I$(top_srcdir)/base  \
+-I$(top_srcdir)/base-qt \
+-I$(top_srcdir)/base-help \
+-I$(top_srcdir)/base-server
 endif
-
-CXXFLAGS = @CXXFLAGS@
 
 noinst_LIBRARIES = libelogbook.a
 bin_PROGRAMS = elogbook copy_logbook synchronize_logbook
@@ -37,15 +30,10 @@ bin_PROGRAMS = elogbook copy_logbook synchronize_logbook
 # shared libraries
 if ENABLE_SHARED
 if WITH_ASPELL
-libraries = \
-  -L$(libdir) -lbase-spellcheck -lbase-server -lbase-help \
-	libelogbook.a
+libraries = -L$(libdir) -lbase-spellcheck -lbase-server -lbase-help libelogbook.a
 
 else
-
-libraries =  \
-  -L$(libdir) -lbase-server -lbase-help \
-	libelogbook.a
+libraries =  -L$(libdir) -lbase-server -lbase-help libelogbook.a
 
 endif
 
@@ -53,9 +41,7 @@ else
 ##################
 # static libraries
 if WITH_ASPELL
-libraries = \
--L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork -lQtDBus \
--L$(aspell_libraries) -laspell  \
+libraries = -L$(aspell_libraries) -laspell  \
 libelogbook.a \
 ../base-spellcheck/libbase-spellcheck.a \
 ../base-server/libbase-server.a \
@@ -65,9 +51,7 @@ libelogbook.a \
 
 else
 
-libraries =  \
--L$(qt_libraries) -l$(qt_lib) -lQtGui -lQtXml -lQtNetwork \
-libelogbook.a \
+libraries = libelogbook.a \
 ../base-server/libbase-server.a \
 ../base-help/libbase-help.a \
 ../base-qt/libbase-qt.a \
@@ -233,7 +217,7 @@ clean-local:
 
 ### rule to generate qt meta objects
 moc_%.cpp: %.h
-	$(qt_moc) $^ -o $@
+	moc $^ -o $@
 
 qrc_%.cpp: %.qrc
-	$(qt_rcc) -name $* $^ -o $@
+	rcc -name $* $^ -o $@
