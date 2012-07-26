@@ -8,7 +8,8 @@ VERSION = 1.8.5
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 unix {
-  QT += dbus
+	QT += dbus
+	LIBS += -lX11
 }
 
 win32 {
