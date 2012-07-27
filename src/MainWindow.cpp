@@ -1634,7 +1634,7 @@ void MainWindow::_print( void )
 
     // generate document name
     QString buffer;
-    QTextStream( &buffer )  << "eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
+    QTextStream( &buffer )  << "elogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
     printer.setDocName( buffer );
 
     // create helper
