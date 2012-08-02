@@ -1,3 +1,5 @@
+# $Id$
+
 TEMPLATE = app
 TARGET = synchronize_logbook
 

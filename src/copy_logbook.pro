@@ -1,3 +1,5 @@
+# $Id$
+
 TEMPLATE = app
 TARGET = copy_logbook
 
