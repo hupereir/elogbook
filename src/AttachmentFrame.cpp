@@ -356,55 +356,51 @@ void AttachmentFrame::customEvent( QEvent* event )
     // retrieve all attachments from model
     // true if some modifications are to be saved
     bool modified( false );
-    AttachmentModel::List attachments( _model().get() );
-    for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
+    foreach( Attachment* attachment, _model().get() )
     {
 
-        assert( *iter );
-        Attachment &attachment( **iter );
+        if( attachment->type() == AttachmentType::URL ) continue;
+        if( attachment->file().isEmpty() ) continue;
 
-        if( attachment.type() == AttachmentType::URL ) continue;
-        if( attachment.file().isEmpty() ) continue;
+        Debug::Throw() << "AttachmentFrame::customEvent - checking: " << attachment->file() << endl;
 
-        Debug::Throw() << "AttachmentFrame::customEvent - checking: " << attachment.file() << endl;
-
-        bool is_valid( attachment.isValid() );
-        Attachment::LinkState is_link( attachment.isLink() );
+        bool isValid( attachment->isValid() );
+        Attachment::LinkState isLink( attachment->isLink() );
 
         // check destination file
         FileRecord::List::const_iterator found = std::find_if(
             records.begin(),
             records.end(),
-            FileRecord::SameFileFTor( attachment.file() ) );
-        if( found != records.end() ) { is_valid = found->isValid(); }
+            FileRecord::SameFileFTor( attachment->file() ) );
+        if( found != records.end() ) { isValid = found->isValid(); }
         else { Debug::Throw() << "AttachmentFrame::customEvent - not found." << endl; }
 
         // check link status
-        if( is_valid && is_link == Attachment::UNKNOWN )
+        if( isValid && isLink == Attachment::UNKNOWN )
         {
             // check if destination is a link
-            QFileInfo file_info( attachment.file() );
-            is_link = file_info.isSymLink() ? Attachment::YES : Attachment::NO;
+            QFileInfo fileInfo( attachment->file() );
+            isLink = fileInfo.isSymLink() ? Attachment::YES : Attachment::NO;
         }
 
         // check source file
-        if( is_valid && is_link == Attachment::YES )
+        if( isValid && isLink == Attachment::YES )
         {
             found = std::find_if(
                 records.begin(),
                 records.end(),
-                FileRecord::SameFileFTor( attachment.sourceFile() ) );
-            if( found != records.end() ) { is_valid &= found->isValid(); }
+                FileRecord::SameFileFTor( attachment->sourceFile() ) );
+            if( found != records.end() ) { isValid &= found->isValid(); }
             else { Debug::Throw() << "AttachmentFrame::customEvent - not found." << endl; }
         }
 
         // update validity flag and set parent logbook as modified if needed
-        Debug::Throw() << "AttachmentFrame::customEvent - valid: " << is_valid << " link: " << is_link << endl;
-        if( attachment.setIsValid( is_valid ) || attachment.setIsLink( is_link ) )
+        Debug::Throw() << "AttachmentFrame::customEvent - valid: " << isValid << " link: " << isLink << endl;
+        if( attachment->setIsValid( isValid ) || attachment->setIsLink( isLink ) )
         {
 
             // get associated entry
-            BASE::KeySet<LogEntry> entries( &attachment );
+            BASE::KeySet<LogEntry> entries( attachment );
             assert( entries.size() == 1 );
             LogEntry& entry( **entries.begin() );
             entry.modified();
@@ -418,7 +414,7 @@ void AttachmentFrame::customEvent( QEvent* event )
         }
 
         // update attachment size
-        attachment.updateSize();
+        attachment->updateSize();
 
     }
 
@@ -758,12 +754,8 @@ void AttachmentFrame::_clean( void )
     // retrieve all attachments from model
     // true if some modifications are to be saved
     bool modified( false );
-    AttachmentModel::List attachments( _model().get() );
-    for( AttachmentModel::List::iterator iter = attachments.begin(); iter != attachments.end(); ++iter )
+    foreach( Attachment* attachment, _model().get() )
     {
-
-        assert( *iter );
-        Attachment *attachment( *iter );
 
         // skip attachment if valid
         if( attachment->isValid() ) continue;
@@ -782,8 +774,8 @@ void AttachmentFrame::_clean( void )
 
         // retrieve associated logbooks
         BASE::KeySet<Logbook> logbooks( &entry );
-        for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
-        { (*iter)->setModified( true ); }
+        foreach( Logbook* logbook, logbooks )
+        { logbook->setModified( true ); }
 
         // delete attachment
         delete attachment;
@@ -821,13 +813,8 @@ void AttachmentFrame::_storeSelection( void )
     _model().clearSelectedIndexes();
 
     // retrieve selected indexes in list
-    QModelIndexList selectedIndexes( list().selectionModel()->selectedRows() );
-    for( QModelIndexList::iterator iter = selectedIndexes.begin(); iter != selectedIndexes.end(); ++iter )
-    {
-        // check column
-        if( !iter->column() == 0 ) continue;
-        _model().setIndexSelected( *iter, true );
-    }
+    foreach( const QModelIndex& index, list().selectionModel()->selectedRows() )
+    { if( index.column() == 0 ) _model().setIndexSelected( index, true ); }
 
     return;
 

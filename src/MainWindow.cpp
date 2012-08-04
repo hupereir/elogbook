@@ -2154,10 +2154,10 @@ void MainWindow::_reorganize( void )
     std::sort( entryList.begin(), entryList.end(), LogEntry::FirstCreatedFTor() );
 
     // put entries in logbook
-    for( QList<LogEntry*>::iterator iter = entryList.begin(); iter != entryList.end(); ++iter )
+    foreach( LogEntry* entry, entryList )
     {
         Logbook *logbook( MainWindow::logbook()->latestChild() );
-        Key::associate( *iter, logbook );
+        Key::associate( entry, logbook );
         logbook->setModified( true );
     }
 
@@ -2381,8 +2381,8 @@ void MainWindow::_editEntries( void )
     }
 
     // retrieve associated entry
-    for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); ++iter )
-    { _displayEntry( *iter ); }
+    foreach( LogEntry* entry, selection )
+    { _displayEntry( entry ); }
 
     return;
 
@@ -2398,19 +2398,19 @@ void MainWindow::_deleteEntries( void )
 
     // convert into LogEntry list
     LogEntryModel::List selection;
-    bool has_edited_index( false );
-    for( QModelIndexList::iterator iter = selectedIndexes.begin(); iter != selectedIndexes.end(); ++iter )
+    bool hasEditedIndex( false );
+    foreach( const QModelIndex& index, selectedIndexes )
     {
         // check if index is not being edited
-        if( _logEntryModel().editionEnabled() && *iter ==  _logEntryModel().editionIndex() )
+        if( _logEntryModel().editionEnabled() && index ==  _logEntryModel().editionIndex() )
         {
-            has_edited_index = true;
+            hasEditedIndex = true;
             InformationDialog( this, "Cannot delete entry that is being edited." ).exec();
-        } else selection.push_back( _logEntryModel().get( *iter ) );
+        } else selection << _logEntryModel().get( index );
     }
 
     // check selection size
-    if( selection.empty() && !has_edited_index )
+    if( selection.empty() && !hasEditedIndex )
     {
         InformationDialog( this, "no entry selected. Request canceled.").exec();
         return;
@@ -2422,8 +2422,8 @@ void MainWindow::_deleteEntries( void )
     if( !QuestionDialog( this, buffer ).exec() ) return;
 
     // retrieve associated entry
-    for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); ++iter )
-    { deleteEntry( *iter, false ); }
+    foreach( LogEntry* entry, selection )
+    { deleteEntry( entry, false ); }
 
     // Save logbook if needed
     if( !logbook()->file().isEmpty() ) save();
@@ -2553,11 +2553,8 @@ void MainWindow::_changeEntryColor( QColor color )
     }
 
     // retrieve associated entry
-    for( LogEntryModel::List::iterator iter = selection.begin(); iter != selection.end(); ++iter )
+    foreach( LogEntry* entry, selection )
     {
-
-        // get associated entry
-        LogEntry* entry( *iter );
 
         entry->setColor( color.isValid() ? color.name():ColorMenu::NONE );
         entry->setModification( entry->modification()+1 );
@@ -2626,8 +2623,8 @@ void MainWindow::_deleteKeyword( void )
 
     // store corresponding list of keywords
     KeywordModel::List keywords;
-    for( QModelIndexList::iterator iter = selectedIndexes.begin(); iter != selectedIndexes.end(); ++iter )
-    { if( iter->isValid() ) keywords.push_back( _keywordModel().get( *iter ) ); }
+    foreach( const QModelIndex& index, selectedIndexes )
+    { if( index.isValid() ) keywords << _keywordModel().get( index ); }
 
     // retrieve associated entries
     BASE::KeySet<LogEntry> entries( logbook()->entries() );
@@ -2647,8 +2644,8 @@ void MainWindow::_deleteKeyword( void )
     {
 
         Debug::Throw( "MainWindow::_deleteKeyword - moving entries.\n" );
-        for( KeywordModel::List::iterator iter = keywords.begin(); iter != keywords.end(); ++iter )
-        { _renameKeyword( *iter, iter->parent(), false );  }
+        foreach( const Keyword& keyword, keywords )
+        { _renameKeyword( keyword, keyword.parent(), false ); }
 
     } else if( dialog.deleteEntries() ) {
 
@@ -2708,7 +2705,7 @@ void MainWindow::_renameKeyword( void )
 }
 
 //____________________________________________
-void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updateSelection )
+void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeyword, bool updateSelection )
 {
 
     Debug::Throw("MainWindow::_renameKeyword.\n" );
@@ -3087,12 +3084,8 @@ void MainWindow::_storeSelectedEntries( void )
 
     // retrieve selected indexes in list
     QModelIndexList selectedIndexes( logEntryList().selectionModel()->selectedRows() );
-    for( QModelIndexList::iterator iter = selectedIndexes.begin(); iter != selectedIndexes.end(); ++iter )
-    {
-        // check column
-        if( !iter->column() == 0 ) continue;
-        _logEntryModel().setIndexSelected( *iter, true );
-    }
+    foreach( const QModelIndex& index, selectedIndexes )
+    { if( index.column() == 0 ) _logEntryModel().setIndexSelected( index, true ); }
 
 }
 
@@ -3121,13 +3114,8 @@ void MainWindow::_storeSelectedKeywords( void )
     _keywordModel().clearSelectedIndexes();
 
     // retrieve selected indexes in list
-    QModelIndexList selectedIndexes( keywordList().selectionModel()->selectedRows() );
-    for( QModelIndexList::iterator iter = selectedIndexes.begin(); iter != selectedIndexes.end(); ++iter )
-    {
-        // check column
-        if( !iter->column() == 0 ) continue;
-        _keywordModel().setIndexSelected( *iter, true );
-    }
+    foreach( const QModelIndex& index, keywordList().selectionModel()->selectedRows() )
+    { if( index.column() == 0 ) _keywordModel().setIndexSelected( index, true ); }
 
 }
 
@@ -3154,13 +3142,9 @@ void MainWindow::_storeExpandedKeywords( void )
 {
 
     Debug::Throw( "MainWindow::_storeExpandedKeywords.\n" );
-    // clear
     _keywordModel().clearExpandedIndexes();
-
-    // retrieve expanded indexes in list
-    QModelIndexList indexes( _keywordModel().indexes() );
-    for( QModelIndexList::iterator iter = indexes.begin(); iter != indexes.end(); ++iter )
-    { if( keywordList().isExpanded( *iter ) ) _keywordModel().setIndexExpanded( *iter, true ); }
+    foreach( const QModelIndex& index, _keywordModel().indexes() )
+    { if( keywordList().isExpanded( index ) ) _keywordModel().setIndexExpanded( index, true ); }
 
 }
 
@@ -3279,9 +3263,8 @@ void MainWindow::_updateConfiguration( void )
     else autosaveTimer_.stop();
 
     // colors
-    Options::List color_list( XmlOptions::get().specialOptions( "COLOR" ) );
-    for( Options::List::iterator iter = color_list.begin(); iter != color_list.end(); ++iter )
-    { colorMenu_->add( iter->raw() ); }
+    foreach( const Option& color, XmlOptions::get().specialOptions( "COLOR" ) )
+    { colorMenu_->add( color.raw() ); }
 
     // max number of recent entries
     maxRecentEntries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );

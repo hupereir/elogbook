@@ -21,73 +21,63 @@
 *
 *******************************************************************************/
 
-/*!
-  \file ProgressBar.cc
-  \brief display command progress
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
-#include <QStyleOptionProgressBarV2>
-#include <QStylePainter>
-
-#include "Debug.h"
 #include "ProgressBar.h"
+#include "Debug.h"
 
-
+#include <QtGui/QStyleOptionProgressBarV2>
+#include <QtGui/QStylePainter>
 
 //___________________________________________________________
 ProgressBar::ProgressBar( QWidget* parent ):
-  QProgressBar( parent ),
-  Counter( "ProgressBar" ),
-  current_( 0 )
+    QProgressBar( parent ),
+    Counter( "ProgressBar" ),
+    current_( 0 )
 {
-  Debug::Throw( "ProgressBar::ProgressBar.\n" );
-  QPalette palette( QProgressBar::palette() );
-  palette.setColor( QPalette::HighlightedText, palette.color( QPalette::Text ) );
+    Debug::Throw( "ProgressBar::ProgressBar.\n" );
+    QPalette palette( QProgressBar::palette() );
+    palette.setColor( QPalette::HighlightedText, palette.color( QPalette::Text ) );
 }
 
 //___________________________________________________________
 void ProgressBar::setText( const QString& text )
 {
-  text_ = text;
-  update();
+    text_ = text;
+    update();
 }
 
 //___________________________________________________________
 void ProgressBar::setMaximumProgress( unsigned int value )
 {
-  Debug::Throw( "ProgressBar::setMaximumProgress.\n" );
-  setRange( 0, value );
-  setValue( (current_ = 0 ) );
+    Debug::Throw( "ProgressBar::setMaximumProgress.\n" );
+    setRange( 0, value );
+    setValue( (current_ = 0 ) );
 }
 
 //___________________________________________________________
 void ProgressBar::addToProgress( unsigned int value )
 {
-  Debug::Throw( "ProgressBar::addToProgress.\n" );
-  setValue( (current_ += value ) );
+    Debug::Throw( "ProgressBar::addToProgress.\n" );
+    setValue( (current_ += value ) );
 }
 
 //___________________________________________________________
 void ProgressBar::paintEvent( QPaintEvent* event )
 {
-  QStylePainter painter(this);
-  QStyleOptionProgressBarV2 opt;
-  initStyleOption(&opt);
+    QStylePainter painter(this);
+    QStyleOptionProgressBarV2 opt;
+    initStyleOption(&opt);
 
-  opt.text = "";
-  painter.drawControl(QStyle::CE_ProgressBar, opt);
+    opt.text = "";
+    painter.drawControl(QStyle::CE_ProgressBar, opt);
 
-  // need to draw the label separately
-  // because the "BASE" color is used by default, which might be too light,
-  // when the selection color (used for the bar) is light
-  // one use HighlightedText instead
-  opt.text = text_;
+    // need to draw the label separately
+    // because the "BASE" color is used by default, which might be too light,
+    // when the selection color (used for the bar) is light
+    // one use HighlightedText instead
+    opt.text = text_;
 
-  // ope should use a different color whether the bar is enabled or disabled
-  opt.palette.setColor( QPalette::Base, palette().color( QPalette::HighlightedText ) );
-  painter.drawControl(QStyle::CE_ProgressBarLabel, opt);
+    // ope should use a different color whether the bar is enabled or disabled
+    opt.palette.setColor( QPalette::Base, palette().color( QPalette::HighlightedText ) );
+    painter.drawControl(QStyle::CE_ProgressBarLabel, opt);
 
 }

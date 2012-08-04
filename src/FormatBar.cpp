@@ -215,8 +215,8 @@ void FormatBar::_updateConfiguration( void )
     Debug::Throw( "FormatBar::_updateConfiguration.\n" );
 
     // retrieve colors from options
-    Options::List text_colors( XmlOptions::get().specialOptions( "TEXT_COLOR" ) );
-    if( text_colors.empty() )
+    Options::List colors( XmlOptions::get().specialOptions( "TEXT_COLOR" ) );
+    if( colors.empty() )
     {
 
         // add default colors
@@ -240,8 +240,8 @@ void FormatBar::_updateConfiguration( void )
 
     } else {
 
-        for( Options::List::iterator iter = text_colors.begin(); iter != text_colors.end(); ++iter )
-        { colorMenu_->add( iter->raw() ); }
+        foreach( const Option& color, colors )
+        { colorMenu_->add( color.raw() ); }
 
     }
 }

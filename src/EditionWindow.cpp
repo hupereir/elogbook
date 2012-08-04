@@ -325,8 +325,8 @@ void EditionWindow::setReadOnly( bool value )
     readOnly_ = value;
 
     // changes button state
-    for( ActionList::iterator it=readOnlyActions_.begin(); it != readOnlyActions_.end(); it++ )
-    { (*it)->setEnabled( !isReadOnly() ); }
+    foreach( QAction* action, readOnlyActions_ )
+    { action->setEnabled( !isReadOnly() ); }
 
     // changes lock button state
     if( isReadOnly() && lock_->isHidden() )
@@ -343,9 +343,8 @@ void EditionWindow::setReadOnly( bool value )
     titleEditor_->setReadOnly( isReadOnly() );
 
     // update editors
-    BASE::KeySet<LocalTextEditor> editors( this );
-    for( BASE::KeySet<LocalTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
-    { (*iter)->setReadOnly( isReadOnly() ); }
+    foreach( LocalTextEditor* editor, BASE::KeySet<LocalTextEditor>( this ) )
+    { editor->setReadOnly( isReadOnly() ); }
 
     // changes attachment list status
     attachmentFrame().setReadOnly( isReadOnly() );
@@ -415,8 +414,8 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( bool enableCancel )
         */
         if( _mainWindow().logbook()->file().isEmpty() )
         {
-            for( BASE::KeySet<EditionWindow>::iterator iter = editionwindows.begin(); iter!= editionwindows.end(); ++iter )
-            { if( (*iter)->modified() && !(*iter)->isReadOnly() ) (*iter)->_save(enableCancel); }
+            foreach( EditionWindow* window, editionwindows )
+            { if( window->modified() && !window->isReadOnly() ) window->_save(enableCancel); }
         } else _mainWindow().save( false );
     }
 
@@ -592,9 +591,8 @@ void EditionWindow::setActiveEditor( LocalTextEditor& editor )
     if( !activeEditor().isActive() )
     {
 
-        BASE::KeySet<LocalTextEditor> editors( this );
-        for( BASE::KeySet<LocalTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
-        { (*iter)->setActive( false ); }
+        foreach( LocalTextEditor* editor, BASE::KeySet<LocalTextEditor>( this ) )
+        { editor->setActive( false ); }
 
         activeEditor().setActive( true );
 
@@ -784,8 +782,8 @@ EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation
 
     // perform associations
     // check if active editors has associates and propagate to new
-    for( BASE::KeySet<LocalTextEditor>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
-    { BASE::Key::associate( &editor, *iter ); }
+    foreach( LocalTextEditor* iter, editors )
+    { BASE::Key::associate( &editor, iter ); }
 
     // associate new display to active
     BASE::Key::associate( &editor, &activeEditorLocal );
@@ -1043,12 +1041,11 @@ void EditionWindow::_save( bool updateSelection )
     Debug::Throw( "EditionWindow::_save - modified state saved.\n" );
 
     // update associated EditionWindows
-    BASE::KeySet<EditionWindow> editors( entry );
-    for( BASE::KeySet<EditionWindow>::iterator iter = editors.begin(); iter != editors.end(); ++iter )
+    BASE::KeySet<EditionWindow> windows( entry );
+    foreach( EditionWindow* window, windows )
     {
-        assert( *iter == this || (*iter)->isReadOnly() || (*iter)->isClosed() );
-        if( *iter == this ) continue;
-        (*iter)->displayEntry( entry );
+        assert( window == this || window->isReadOnly() || window->isClosed() );
+        if( window != this ) window->displayEntry( entry );
     }
     Debug::Throw( "EditionWindow::_save - editFrames updated.\n" );
 
@@ -1059,8 +1056,8 @@ void EditionWindow::_save( bool updateSelection )
 
     // set logbook as modified
     BASE::KeySet<Logbook> logbooks( entry );
-    for( BASE::KeySet<Logbook>::iterator iter = logbooks.begin(); iter!= logbooks.end(); ++iter )
-    { (*iter)->setModified( true ); }
+    foreach( Logbook* logbook, logbooks )
+    { logbook->setModified( true ); }
 
     Debug::Throw( "EditionWindow::_save - loogbook modified state updated.\n" );
 

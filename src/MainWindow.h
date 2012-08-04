@@ -494,7 +494,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     or by deleting a keyword in the list, and moving entries to the parent.
     It is also called by the renameKeyword slot above.
     */
-    void _renameKeyword( Keyword oldKeyword, Keyword newKeyword, bool updateSelection = true );
+    void _renameKeyword( const Keyword& oldKeyword, const Keyword& newKeyword, bool updateSelection = true );
 
     //! rename keyword for selected entries using dialog
     /*!

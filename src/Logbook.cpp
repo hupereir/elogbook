@@ -72,8 +72,7 @@ Logbook::~Logbook( void )
     Debug::Throw( "Logbook::~Logbook.\n" );
 
     // delete log children
-    for( List::iterator it = children_.begin(); it != children_.end(); ++it )
-        delete *it;
+    foreach( Logbook* logbook, children_ ) delete logbook;
     children_.clear();
 
     // delete associated entries
@@ -323,10 +322,9 @@ bool Logbook::write( File file )
         emit progressAvailable( entryCount%progress );
 
         // dump all logbook childrens
-        unsigned int childNumber=0;
-        for( List::iterator it = children_.begin(); it != children_.end(); ++it, ++childNumber )
+        for( int childCount = 0; childCount < children_.size(); ++childCount )
         {
-            File childFilename = _childFilename( file, childNumber );
+            File childFilename = _childFilename( file, childCount );
             QDomElement childElement = document.createElement( XML::CHILD );
             childElement.setAttribute( XML::FILE, XmlString( childFilename ).toXml() );
             top.appendChild( childElement );
@@ -357,19 +355,21 @@ bool Logbook::write( File file )
     saved_ = Logbook::file().lastModified();
 
     // write children
-    unsigned int childNumber=0;
-    for( List::iterator it = children_.begin(); it != children_.end(); ++it, ++childNumber )
+    unsigned int childCount=0;
+    foreach( Logbook* logbook, children_ )
     {
 
-        File childFilename( _childFilename( file, childNumber ).addPath( file.path() ) );
+        File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
 
         // update stateFrame
         QString buffer;
         QTextStream( &buffer ) << "Writing " << childFilename.localName();
         emit messageAvailable( buffer );
 
-        (*it)->setParentFile( file );
-        completed &= (*it)->write( childFilename );
+        logbook->setParentFile( file );
+        completed &= logbook->write( childFilename );
+
+        ++childCount;
 
     }
 
@@ -481,11 +481,11 @@ Logbook* Logbook::latestChild( void )
     if( BASE::KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
 
     // check if one existsing child is not complete
-    else for( List::iterator it = children_.begin(); it != children_.end(); ++it )
+    foreach( Logbook* logbook, children_ )
     {
-        if( *it && BASE::KeySet<LogEntry>(*it).size() < MAX_ENTRIES )
+        if( logbook && BASE::KeySet<LogEntry>(logbook).size() < MAX_ENTRIES )
         {
-            dest = *it;
+            dest = logbook;
             break;
         }
     }
@@ -561,19 +561,18 @@ void Logbook::removeEmptyChildren( void )
 
     // loop over children
     List tmp;
-    for( List::iterator iter = children_.begin(); iter != children_.end(); ++iter )
+    foreach( Logbook* logbook, children_ )
     {
-        (*iter)->removeEmptyChildren();
-        if( (*iter)->empty() )
+        logbook->removeEmptyChildren();
+        if( logbook->empty() )
         {
 
             // remove file
-            if( !(*iter)->file().isEmpty() ) (*iter)->file().remove();
+            if( !logbook->file().isEmpty() ) logbook->file().remove();
 
-            // delete logbook
-            delete *iter;
+            delete logbook;
 
-        } else tmp.push_back( *iter );
+        } else tmp << logbook;
     }
 
     children_ = tmp;
@@ -668,8 +667,8 @@ void Logbook::setModifiedRecursive( bool value )
     Debug::Throw( "Logbook::SetModifiedRecursive.\n" );
     modified_ = value;
     if( value ) setModification( TimeStamp::now() );
-    for( List::iterator it = children_.begin(); it != children_.end(); ++it )
-    { (*it)->setModifiedRecursive( value ); }
+    foreach( Logbook* logbook, children_ )
+    { logbook->setModifiedRecursive( value ); }
 
 }
 
@@ -815,14 +814,14 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 }
 
 //______________________________________________________________________
-File Logbook::_childFilename( const File& file, const int& childNumber ) const
+File Logbook::_childFilename( const File& file, const int& childCount ) const
 {
     File head( file.localName().truncatedName() );
     QString foot( file.extension() );
     if( !foot.isEmpty() ) foot = QString(".") + foot;
 
     QString out;
-    QTextStream(&out) << head << "_include_" << childNumber << foot;
+    QTextStream(&out) << head << "_include_" << childCount << foot;
     Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
     return out;
 

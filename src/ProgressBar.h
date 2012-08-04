@@ -24,54 +24,45 @@
 *
 *******************************************************************************/
 
-/*!
-  \file ProgressBar.h
-  \brief display read/write progress and file name
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
-#include <QPaintEvent>
-#include <QProgressBar>
-
-
 #include "Counter.h"
+
+#include <QtGui/QPaintEvent>
+#include <QtGui/QProgressBar>
 
 //! display command progress and remaining time
 class ProgressBar:public QProgressBar, public Counter
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+    public:
 
-  //! constructor
-  ProgressBar( QWidget* parent = 0 );
+    //! constructor
+    ProgressBar( QWidget* parent = 0 );
 
-  public slots:
+    public slots:
 
-  //! change displayed text
-  void setText( const QString& );
+    //! change displayed text
+    void setText( const QString& );
 
-  //! set maximum
-  void setMaximumProgress( unsigned int );
+    //! set maximum
+    void setMaximumProgress( unsigned int );
 
-  //! add to progress
-  void addToProgress( unsigned int );
+    //! add to progress
+    void addToProgress( unsigned int );
 
-  protected:
+    protected:
 
-  //! paint
-  void paintEvent( QPaintEvent* );
+    //! paint
+    void paintEvent( QPaintEvent* );
 
-  private:
+    private:
 
-  //! text
-  QString text_;
+    //! text
+    QString text_;
 
-  //! current progress
-  unsigned int current_;
+    //! current progress
+    unsigned int current_;
 
 };
 
