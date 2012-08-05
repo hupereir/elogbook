@@ -25,6 +25,7 @@
 #include "GridLayout.h"
 #include "TextEditor.h"
 #include "Debug.h"
+#include "ElidedLabel.h"
 #include "File.h"
 #include "OpenAttachmentDialog.h"
 
@@ -48,27 +49,29 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
     mainLayout().addLayout( gridLayout, 0 );
 
-    // file name
-    gridLayout->addWidget(new QLabel( "File: ", this ) );
-    AnimatedLineEditor* file_line_edit = new AnimatedLineEditor( this );
-    gridLayout->addWidget( file_line_edit );
-    file_line_edit->setReadOnly( true );
-    file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );
-
+    // attachment full name
     File fullname( ( attachment.type() == AttachmentType::URL ) ? attachment.file() : attachment.file().expand() );
-    file_line_edit->setText( fullname );
+
+    // file name
+    QLabel* label;
+    gridLayout->addWidget( label = new QLabel( "File:", this ) );
+    gridLayout->addWidget( label = new ElidedLabel( fullname, this ) );
+    label->setTextInteractionFlags( Qt::TextSelectableByMouse|Qt::TextSelectableByKeyboard );
 
     // attachment type
-    gridLayout->addWidget(new QLabel( "Type: ", this ) );
+    gridLayout->addWidget(new QLabel( "Type:", this ) );
     gridLayout->addWidget( new QLabel( attachment.type().name(), this ) );
 
     // creation
-    gridLayout->addWidget( new QLabel( "Created: ", this ) );
+    gridLayout->addWidget( new QLabel( "Created:", this ) );
     gridLayout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():"-", this ) );
 
     // modification
-    gridLayout->addWidget( new QLabel( "Modified: ", this ) );
-    gridLayout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().toString():"-", this ) );
+    if( attachment.modification().isValid() )
+    {
+        gridLayout->addWidget( new QLabel( "Modified:", this ) );
+        gridLayout->addWidget( new QLabel( attachment.modification().toString(), this ) );
+    }
 
     // horizontal separator
     QFrame* frame;
@@ -84,7 +87,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);
 
-    gridLayout->addWidget( openRadioButton_ = new QRadioButton( "Open using: ", this ) );
+    gridLayout->addWidget( openRadioButton_ = new QRadioButton( "Open using:", this ) );
     openRadioButton_->setToolTip( "Select this button to open attachment using the selected application." );
     group->addButton( openRadioButton_ );
 

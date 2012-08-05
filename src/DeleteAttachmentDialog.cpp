@@ -2,79 +2,95 @@
 // $Id$
 
 /******************************************************************************
- *
- * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
- *
- * This is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License
- * for more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * software; if not, write to the Free Software Foundation, Inc., 59 Temple
- * Place, Suite 330, Boston, MA   02111-1307 USA
- *
- *
- *******************************************************************************/
+*
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+*
+* This is free software; you can redistribute it and/or modify it under the
+* terms of the GNU General Public License as published by the Free Software
+* Foundation; either version 2 of the License, or (at your option) any later
+* version.
+*
+* This software is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY;  without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE.   See the GNU General Public License
+* for more details.
+*
+* You should have received a copy of the GNU General Public License along with
+* software; if not, write to the Free Software Foundation, Inc., 59 Temple
+* Place, Suite 330, Boston, MA   02111-1307 USA
+*
+*
+*******************************************************************************/
 
-/*!
-   \file DeleteAttachmentDialog.cpp
-   \brief Delete attachment popup dialog
-   \author Hugo Pereira
-   \version $Revision$
-   \date $Date$
-*/
+#include "DeleteAttachmentDialog.h"
+#include "Debug.h"
+#include "Icons.h"
+#include "IconEngine.h"
+#include "PixmapEngine.h"
 
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
 
-#include "Debug.h"
-#include "DeleteAttachmentDialog.h"
-
-
-
 //_____________________________________________________
 DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachment& attachment ):
-  CustomDialog( parent )
+    CustomDialog( parent, OkButton | CancelButton| Separator )
 {
 
-  Debug::Throw( "DeleteAttachmentDialog::DeleteAttachmentDialog.\n" );
+    Debug::Throw( "DeleteAttachmentDialog::DeleteAttachmentDialog.\n" );
 
-  // radio buttons
-  QButtonGroup* group = new QButtonGroup( this );
-  group->setExclusive( true );
+    // radio buttons
+    QButtonGroup* group = new QButtonGroup( this );
+    group->setExclusive( true );
 
-  mainLayout().addWidget( new QLabel( "Delete attachment ?", this ) );
+    //! try load Question icon
+    QPixmap questionPixmap = PixmapEngine::get( ICONS::WARNING );
+    if( questionPixmap.isNull() )
+    {
 
-  QGroupBox *group_box = new QGroupBox( this );
-  mainLayout().addWidget( group_box );
-  group_box->setLayout( new QVBoxLayout() );
-  group_box->layout()->setMargin(5);
-  group_box->layout()->setSpacing(5);
+        mainLayout().addWidget( new QLabel( "Delete attachment ?", this ) );
 
-  group_box->layout()->addWidget( from_disk_radio_button_ = new QRadioButton( "From disk", group_box ) );
-  from_disk_radio_button_->setChecked( true );
-  from_disk_radio_button_->setToolTip( "Select this button to remove attachment file from disk and logbook." );
-  group->addButton( from_disk_radio_button_ );
+    } else {
 
-  group_box->layout()->addWidget( from_logbook_radio_button_ = new QRadioButton( "From frame", group_box ) );
-  from_logbook_radio_button_->setToolTip( "Select this button to remove attachment file from logbook only (attachment is kept on disk)." );
-  group->addButton( from_logbook_radio_button_ );
+        QHBoxLayout *hLayout( new QHBoxLayout() );
+        hLayout->setSpacing(10);
+        hLayout->setMargin(0);
+        mainLayout().addLayout( hLayout );
 
-  if( attachment.type() == AttachmentType::URL )
-  { group_box->setEnabled( false ); }
+        QLabel* label = new QLabel( this );
+        label->setPixmap( questionPixmap );
+        hLayout->addWidget( label, 0, Qt::AlignHCenter );
 
-  adjustSize();
+        hLayout->addWidget( new QLabel( "Delete attachment ?", this ) );
+
+    }
+
+    QWidget *groupBox = new QWidget( this );
+    mainLayout().addWidget( groupBox );
+    groupBox->setLayout( new QVBoxLayout() );
+    groupBox->layout()->setMargin(5);
+    groupBox->layout()->setSpacing(5);
+
+    groupBox->layout()->addWidget( fromDiskButton_ = new QRadioButton( "From disk", groupBox ) );
+    fromDiskButton_->setChecked( true );
+    fromDiskButton_->setToolTip( "Select this button to remove attachment file from disk and logbook." );
+    group->addButton( fromDiskButton_ );
+
+    groupBox->layout()->addWidget( fromLogbookButton_ = new QRadioButton( "From frame", groupBox ) );
+    fromLogbookButton_->setToolTip( "Select this button to remove attachment file from logbook only (attachment is kept on disk)." );
+    group->addButton( fromLogbookButton_ );
+
+    if( attachment.type() == AttachmentType::URL )
+    { groupBox->setEnabled( false ); }
+
+    okButton().setText( "Delete" );
+    okButton().setIcon( IconEngine::get( ICONS::DELETE ) );
+
+    adjustSize();
 
 }
 
 //______________________________________________________
 DeleteAttachmentDialog::Action DeleteAttachmentDialog::action( void ) const
-{ return from_disk_radio_button_->isChecked() ? FROM_DISK:FROM_LOGBOOK; }
+{ return fromDiskButton_->isChecked() ? FROM_DISK:FROM_LOGBOOK; }

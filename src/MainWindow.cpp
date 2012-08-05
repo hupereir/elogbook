@@ -2419,7 +2419,10 @@ void MainWindow::_deleteEntries( void )
     // ask confirmation
     QString buffer;
     QTextStream( &buffer ) << "Delete selected entr" << ( selection.size() == 1 ? "y":"ies" );
-    if( !QuestionDialog( this, buffer ).exec() ) return;
+    QuestionDialog dialog( this, buffer );
+    dialog.okButton().setText( "Delete" );
+    dialog.okButton().setIcon( IconEngine::get( ICONS::DELETE ) );
+    if( !dialog.exec() ) return;
 
     // retrieve associated entry
     foreach( LogEntry* entry, selection )

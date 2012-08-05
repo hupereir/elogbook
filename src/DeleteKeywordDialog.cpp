@@ -22,34 +22,30 @@
 *
 *******************************************************************************/
 
-/*!
-\file DeleteKeywordDialog.cpp
-\brief Delete attachment popup dialog
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "DeleteKeywordDialog.h"
 #include "Debug.h"
+#include "Icons.h"
+#include "IconEngine.h"
+#include "PixmapEngine.h"
 
 #include <QtGui/QButtonGroup>
-#include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 
 #include <cassert>
 
 //_____________________________________________________
-DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, const bool& has_entries ):
-CustomDialog( parent )
+DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, const bool& hasEntries ):
+    CustomDialog( parent, OkButton | CancelButton| Separator )
 {
 
     Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
 
     assert( !keywords.empty() );
-
+    
     setWindowTitle( "Delete Keyword - elogbook" );
+
+    // create label
     QString buffer;
     QTextStream what( &buffer );
     if( keywords.size() == 1 ) what << "Delete keyword " << keywords.front() << " ?";
@@ -73,9 +69,28 @@ CustomDialog( parent )
 
     }
 
-    mainLayout().addWidget( new QLabel( buffer, this ) );
+    //! try load Question icon
+    QPixmap questionPixmap = PixmapEngine::get( ICONS::WARNING );
+    if( questionPixmap.isNull() )
+    {
+        mainLayout().addWidget( new QLabel( buffer, this ) );
 
-    QGroupBox *box = new QGroupBox( this );
+    } else {
+
+        QHBoxLayout *hLayout( new QHBoxLayout() );
+        hLayout->setSpacing(10);
+        hLayout->setMargin(0);
+        mainLayout().addLayout( hLayout );
+
+        QLabel* label = new QLabel( this );
+        label->setPixmap( questionPixmap );
+        hLayout->addWidget( label, 0, Qt::AlignHCenter );
+
+        hLayout->addWidget( new QLabel( buffer, this ) );
+
+    }
+
+    QWidget *box = new QWidget( this );
     mainLayout().addWidget( box );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
@@ -96,7 +111,10 @@ CustomDialog( parent )
     group->setExclusive( true );
     moveRadioButton_->setChecked( true );
 
-    if( !has_entries ) box->setEnabled( false );
+    if( !hasEntries ) box->setEnabled( false );
+
+    okButton().setText( "Delete" );
+    okButton().setIcon( IconEngine::get( ICONS::DELETE ) );
 
     adjustSize();
 
