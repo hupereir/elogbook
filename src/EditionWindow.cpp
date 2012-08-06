@@ -52,7 +52,6 @@
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
 #include "Singleton.h"
-#include "ScratchFileMonitor.h"
 #include "StatusBar.h"
 #include "Str.h"
 #include "OpenLinkDialog.h"
@@ -1116,7 +1115,7 @@ void EditionWindow::_print( void )
 
     // add output file to scratch files, if any
     if( !printer.outputFileName().isEmpty() )
-    { Singleton::get().application<Application>()->scratchFileMonitor().add( printer.outputFileName() ); }
+    { emit scratchFileCreated( printer.outputFileName() ); }
 
     // write options
     logEntryOptionWidget->write();
@@ -1191,7 +1190,7 @@ void EditionWindow::_toHtml( void )
     }
 
     // add as scratch file
-    Singleton::get().application<Application>()->scratchFileMonitor().add( file );
+    emit scratchFileCreated( file );
 
     // write options
     optionWidget->write();

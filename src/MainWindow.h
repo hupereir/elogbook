@@ -303,6 +303,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     signals:
 
+    //! emmited when new scratch file is created
+    void scratchFileCreated( const File& );
+
     //! emmited when a message is available from logbook
     void messageAvailable( const QString& );
 

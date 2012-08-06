@@ -123,7 +123,6 @@ bool Application::realizeWidget( void )
 
     // create selection frame
     mainWindow_ = new MainWindow();
-
     connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), &mainWindow(), SLOT( selectEntry( LogEntry* ) ) );
 
     // update configuration
@@ -135,6 +134,7 @@ bool Application::realizeWidget( void )
     // scratch files
     scratchFileMonitor_ = new ScratchFileMonitor( this );
     connect( qApp, SIGNAL( aboutToQuit( void ) ), scratchFileMonitor_, SLOT( deleteScratchFiles( void ) ) );
+    connect( &mainWindow(), SIGNAL( scratchFileCreated( const File& ) ), scratchFileMonitor_, SLOT( add( const File& ) ) );
 
     // update
     qApp->processEvents();

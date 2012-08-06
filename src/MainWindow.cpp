@@ -58,7 +58,6 @@
 #include "QuestionDialog.h"
 #include "QtUtil.h"
 #include "RecentFilesMenu.h"
-#include "ScratchFileMonitor.h"
 #include "SearchPanel.h"
 #include "SelectionStatusBar.h"
 #include "Singleton.h"
@@ -1676,7 +1675,7 @@ void MainWindow::_print( void )
 
     // add output file to scratch files, if any
     if( !printer.outputFileName().isEmpty() )
-    { Singleton::get().application<Application>()->scratchFileMonitor().add( printer.outputFileName() ); }
+    { emit scratchFileCreated( printer.outputFileName() ); }
 
     // write options
     logbookOptionWidget->write();
@@ -1789,7 +1788,7 @@ void MainWindow::_toHtml( void )
     }
 
     // add as scratch file
-    Singleton::get().application<Application>()->scratchFileMonitor().add( file );
+    emit scratchFileCreated( file );
 
     // write options
     logbookOptionWidget->write();
@@ -2332,7 +2331,7 @@ void MainWindow::_newEntry( void )
     Debug::Throw( "MainWindow::_NewEntry.\n" );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
-    EditionWindow *editWindow( 0 );
+    EditionWindow *editionWindow( 0 );
     BASE::KeySet<EditionWindow> frames( this );
     BASE::KeySetIterator<EditionWindow> iterator( frames );
     iterator.toBack();
@@ -2342,29 +2341,30 @@ void MainWindow::_newEntry( void )
 
         // skip closed editors
         if( !current->isClosed() ) continue;
-        editWindow = current;
-        editWindow->setIsClosed( false );
-        editWindow->setReadOnly( false );
+        editionWindow = current;
+        editionWindow->setIsClosed( false );
+        editionWindow->setReadOnly( false );
         break;
     }
 
-    if( !editWindow )
+    if( !editionWindow )
     {
         // create new EditionWindow
-        editWindow = new EditionWindow( 0, false );
-        editWindow->setColorMenu( colorMenu_ );
-        Key::associate( this, editWindow );
+        editionWindow = new EditionWindow( 0, false );
+        editionWindow->setColorMenu( colorMenu_ );
+        Key::associate( this, editionWindow );
+        connect( editionWindow, SIGNAL( scratchFileCreated( const File& ) ), this, SIGNAL( scratchFileCreated( const File& ) ) );
     }
 
-    // force editWindow show keyword flag
-    editWindow->setForceShowKeyword( !treeModeAction().isChecked() );
+    // force editionWindow show keyword flag
+    editionWindow->setForceShowKeyword( !treeModeAction().isChecked() );
 
     // call NewEntry for the selected frame
-    editWindow->newEntryAction().trigger();
+    editionWindow->newEntryAction().trigger();
 
     // show frame
-    editWindow->centerOnWidget( this );
-    editWindow->show();
+    editionWindow->centerOnWidget( this );
+    editionWindow->show();
 
 }
 
@@ -2442,7 +2442,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     Debug::Throw( "MainWindow::_displayEntry.\n" );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
-    EditionWindow *editWindow( 0 );
+    EditionWindow *editionWindow( 0 );
     BASE::KeySet<EditionWindow> windows( this );
     foreach( EditionWindow* window, windows )
     {
@@ -2453,15 +2453,15 @@ void MainWindow::_displayEntry( LogEntry* entry )
         // check if EditionWindow is editable and match editor
         if( !window->isReadOnly() && window->entry() == entry )
         {
-            editWindow = window;
-            editWindow->uniconifyAction().trigger();
+            editionWindow = window;
+            editionWindow->uniconifyAction().trigger();
             return;
         }
 
     }
 
-    // if no editWindow is found, try re-used a closed editor
-    if( !editWindow )
+    // if no editionWindow is found, try re-used a closed editor
+    if( !editionWindow )
     {
 
         // the order is reversed to start from latest
@@ -2474,28 +2474,28 @@ void MainWindow::_displayEntry( LogEntry* entry )
             // skip closed editors
             if( !current->isClosed() ) continue;
 
-            editWindow = current;
-            editWindow->setIsClosed( false );
-            editWindow->setReadOnly( false );
+            editionWindow = current;
+            editionWindow->setIsClosed( false );
+            editionWindow->setReadOnly( false );
 
             // also clear modification state
-            editWindow->setModified( false );
+            editionWindow->setModified( false );
 
             // need to display entry before deleting sub views.
-            editWindow->displayEntry( entry );
+            editionWindow->displayEntry( entry );
 
             // also kill all frames but one
-            BASE::KeySet< EditionWindow::LocalTextEditor > editors( editWindow );
+            BASE::KeySet< EditionWindow::LocalTextEditor > editors( editionWindow );
             if( editors.size() > 1 )
             {
 
                 BASE::KeySet<EditionWindow::LocalTextEditor>::iterator localIter( editors.begin() );
                 ++localIter;
                 for( ;localIter != editors.end(); ++localIter )
-                { editWindow->closeEditor( **localIter ); }
+                { editionWindow->closeEditor( **localIter ); }
 
                 (**editors.begin()).setFocus();
-                editWindow->setActiveEditor( **editors.begin() );
+                editionWindow->setActiveEditor( **editors.begin() );
 
             }
 
@@ -2504,18 +2504,21 @@ void MainWindow::_displayEntry( LogEntry* entry )
 
     }
 
-    // if no editWindow is found create a new one
-    if( !editWindow )
+    // if no editionWindow is found create a new one
+    if( !editionWindow )
     {
-        editWindow = new EditionWindow( 0, false );
-        editWindow->setColorMenu( colorMenu_ );
-        Key::associate( this, editWindow );
-        editWindow->displayEntry( entry );
+        editionWindow = new EditionWindow( 0, false );
+        editionWindow->setColorMenu( colorMenu_ );
+        Key::associate( this, editionWindow );
+        editionWindow->displayEntry( entry );
+
+        connect( editionWindow, SIGNAL( scratchFileCreated( const File& ) ), this, SIGNAL( scratchFileCreated( const File& ) ) );
+
     }
 
-    editWindow->setForceShowKeyword( !treeModeAction().isChecked() );
-    editWindow->centerOnWidget( this );
-    editWindow->show();
+    editionWindow->setForceShowKeyword( !treeModeAction().isChecked() );
+    editionWindow->centerOnWidget( this );
+    editionWindow->show();
 
 }
 

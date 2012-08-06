@@ -320,6 +320,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! change active display manualy
     void setActiveEditor( LocalTextEditor& );
 
+    signals:
+
+    //! emmited when new scratch file is created
+    void scratchFileCreated( const File& );
+
     protected:
 
     //! close window event handler
