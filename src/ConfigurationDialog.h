@@ -23,24 +23,20 @@
 *
 *******************************************************************************/
 
-/*!
-  \file ConfigurationDialog.h
-  \brief configuration dialog
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
 #include "BaseConfigurationDialog.h"
 
 //! configuration dialog
 class ConfigurationDialog: public BaseConfigurationDialog
 {
 
-  public:
+    public:
 
-  //! creator
-  ConfigurationDialog( QWidget *parent = 0 );
+    //! creator
+    ConfigurationDialog( QWidget *parent = 0 );
+
+    //! destructor
+    virtual ~ConfigurationDialog( void )
+    {}
 
 };
 
