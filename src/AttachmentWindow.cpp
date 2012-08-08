@@ -47,7 +47,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
   mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
   connect( frame_, SIGNAL( attachmentSelected( Attachment& ) ), SLOT( _displayEntry( Attachment& ) ) );
 
-  frame().list().menu().insertAction( &frame().newAction(), &frame().list().findAction() );
+  frame().contextMenu().insertAction( &frame().newAction(), &frame().list().findAction() );
 
   // shortcuts
   connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );

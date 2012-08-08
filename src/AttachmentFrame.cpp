@@ -26,6 +26,7 @@
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
 #include "Command.h"
+#include "ContextMenu.h"
 #include "Debug.h"
 #include "DeleteAttachmentDialog.h"
 #include "EditAttachmentDialog.h"
@@ -76,14 +77,15 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     // install actions
     _installActions();
 
-    list().menu().addAction( &newAction() );
-    list().menu().addAction( &openAction() );
-    list().menu().addAction( &saveAsAction() );
-    list().menu().addAction( &editAction() );
-    list().menu().addAction( &deleteAction() );
-    list().menu().addAction( &reloadAction() );
-    list().menu().addSeparator();
-    list().menu().addAction( &cleanAction() );
+    contextMenu_ = new ContextMenu( &list() );
+    contextMenu_->addAction( &newAction() );
+    contextMenu_->addAction( &openAction() );
+    contextMenu_->addAction( &saveAsAction() );
+    contextMenu_->addAction( &editAction() );
+    contextMenu_->addAction( &deleteAction() );
+    contextMenu_->addAction( &reloadAction() );
+    contextMenu_->addSeparator();
+    contextMenu_->addAction( &cleanAction() );
 
     // connections
     connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );

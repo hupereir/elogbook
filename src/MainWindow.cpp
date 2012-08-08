@@ -29,6 +29,7 @@
 #include "BackupManagerWidget.h"
 #include "ColorMenu.h"
 #include "Command.h"
+#include "ContextMenu.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
 #include "DeleteKeywordDialog.h"
@@ -177,11 +178,14 @@ MainWindow::MainWindow( QWidget *parent ):
     // drag and drop inside the keyword list, or to direct edition of a keyword list item.
     connect( &keywordModel_, SIGNAL( keywordChanged( Keyword, Keyword ) ), SLOT( _renameKeyword( Keyword, Keyword ) ) );
 
-    // popup menu for keyword list
-    keywordList().menu().addAction( &newEntryAction() );
-    keywordList().menu().addAction( &newKeywordAction() );
-    keywordList().menu().addAction( &deleteKeywordAction() );
-    keywordList().menu().addAction( &editKeywordAction() );
+    {
+        // popup menu for keyword list
+        QMenu* menu = new ContextMenu( &keywordList() );
+        menu->addAction( &newEntryAction() );
+        menu->addAction( &newKeywordAction() );
+        menu->addAction( &deleteKeywordAction() );
+        menu->addAction( &editKeywordAction() );
+    }
 
     connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedKeywords() ) );
     connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeExpandedKeywords() ) );
@@ -257,13 +261,16 @@ MainWindow::MainWindow( QWidget *parent ):
     logEntryList().addAction( &deleteEntryAction() );
     logEntryList().addAction( &editEntryTitleAction() );
 
-    // create popup menu for list
-    logEntryList().menu().addAction( &newEntryAction() );
-    logEntryList().menu().addAction( &editEntryTitleAction() );
-    logEntryList().menu().addAction( &editEntryAction() );
-    logEntryList().menu().addAction( &entryKeywordAction() );
-    logEntryList().menu().addAction( &deleteEntryAction() );
-    logEntryList().menu().addAction( &entryColorAction() );
+    {
+        // popup menu for list
+        QMenu* menu = new ContextMenu( &logEntryList() );
+        menu->addAction( &newEntryAction() );
+        menu->addAction( &editEntryTitleAction() );
+        menu->addAction( &editEntryAction() );
+        menu->addAction( &entryKeywordAction() );
+        menu->addAction( &deleteEntryAction() );
+        menu->addAction( &entryColorAction() );
+    }
 
     // add widgets to Hs
     splitter->addWidget( keywordContainer_ );

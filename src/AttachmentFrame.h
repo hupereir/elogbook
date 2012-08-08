@@ -31,6 +31,7 @@
 #include "ValidFileThread.h"
 
 #include <QtGui/QWidget>
+#include <QtGui/QMenu>
 
 class TreeView;
 
@@ -110,6 +111,10 @@ class AttachmentFrame: public QWidget, public BASE::Key
     //! read only state
     const bool& readOnly( void ) const
     { return readOnly_; }
+
+    //! context menu
+    QMenu& contextMenu( void ) const
+    { return *contextMenu_; }
 
     //!@name actions
     //@{
@@ -222,6 +227,9 @@ class AttachmentFrame: public QWidget, public BASE::Key
 
     //! default height;
     int defaultHeight_;
+
+    //! context menu
+    QMenu* contextMenu_;
 
     //!@name actions
     //@{
