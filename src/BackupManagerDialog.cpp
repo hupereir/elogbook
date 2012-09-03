@@ -31,7 +31,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
    BaseDialog( parent )
 {
     Debug::Throw( "BackupManagerDialog::BackupManagerDialog.\n" );
-    setWindowTitle( "Backup Manager - elogbook" );
+    setWindowTitle( "Backup Manager - Elogbook" );
     setOptionName( "BACKUP_MANAGER_DIALOG" );
 
     setLayout( new QVBoxLayout() );

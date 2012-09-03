@@ -105,13 +105,13 @@ bool Application::realizeWidget( void )
     if( !BaseApplication::realizeWidget() ) return false;
 
     // rename about action
-    aboutAction().setText( "About &elogbook" );
+    aboutAction().setText( "About Elogbook" );
 
     // need to redirect closeAction to proper exit
     closeAction().disconnect();
     connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
 
-    configurationAction().setText( "Configure &elogbook..." );
+    configurationAction().setText( "Configure Elogbook..." );
 
     // recent files
     recentFiles_ = new XmlFileList();

@@ -1110,7 +1110,7 @@ void EditionWindow::_print( void )
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
     dialog.setOptionTabs( QList<QWidget *>() << optionWidget << logEntryOptionWidget );
-    dialog.setWindowTitle( "Print Logbook Entry - elogbook" );
+    dialog.setWindowTitle( "Print Logbook Entry - Elogbook" );
     if( !dialog.exec() ) return;
 
     // add output file to scratch files, if any

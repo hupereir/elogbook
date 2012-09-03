@@ -48,7 +48,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 {
     Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
-    setWindowTitle( "Logbook Statistics - elogbook" );
+    setWindowTitle( "Logbook Statistics - Elogbook" );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
     QGridLayout* gridLayout = new QGridLayout();
