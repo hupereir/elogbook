@@ -69,10 +69,10 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
 
     // create list
     layout()->addWidget( list_ = new TreeView( this ) );
-    list().setModel( &_model() );
-    list().setSelectionMode( QAbstractItemView::ContiguousSelection );
-    list().setOptionName( "ATTACHMENTLIST" );
-    list().setTextElideMode ( Qt::ElideMiddle );
+    list_->setModel( &_model() );
+    list_->setSelectionMode( QAbstractItemView::ContiguousSelection );
+    list_->setOptionName( "ATTACHMENTLIST" );
+    list_->setTextElideMode ( Qt::ElideMiddle );
 
     // install actions
     _installActions();
@@ -90,8 +90,8 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     // connections
     connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );
     connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
-    connect( list().selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
-    connect( list().selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
+    connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
+    connect( list_->selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
     connect( &list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
 
     connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
@@ -116,8 +116,8 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
     foreach( Attachment* attachment, attachments )
     { BASE::Key::associate( this, attachment ); }
 
-    _model().add( attachments );
-    list().resizeColumns();
+    model_.add( attachments );
+    list_->resizeColumns();
 
 }
 
@@ -127,8 +127,8 @@ void AttachmentFrame::update( Attachment& attachment )
 
     Debug::Throw( 0, "AttachmentFrame::update.\n" );
     assert( attachment.isAssociated( this ) );
-    _model().add( &attachment );
-    list().resizeColumns();
+    model_.add( &attachment );
+    list_->resizeColumns();
     Debug::Throw( 0, "AttachmentFrame::update - done.\n" );
 
 }
@@ -141,13 +141,13 @@ void AttachmentFrame::select( Attachment& attachment )
     assert( attachment.isAssociated( this ) );
 
     // get matching model index
-    QModelIndex index( _model().index( &attachment ) );
+    QModelIndex index( model_.index( &attachment ) );
 
     // check if index is valid and not selected
-    if( ( !index.isValid() ) || list().selectionModel()->isSelected( index ) ) return;
+    if( ( !index.isValid() ) || list_->selectionModel()->isSelected( index ) ) return;
 
     // select
-    list().selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    list_->selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
 
     return;
 
@@ -319,7 +319,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
     FileRecord::List records;
 
     // retrieve all attachments from model
-    AttachmentModel::List attachments( _model().get() );
+    AttachmentModel::List attachments( model_.get() );
     foreach( Attachment* attachment, attachments )
     {
 
@@ -358,7 +358,7 @@ void AttachmentFrame::customEvent( QEvent* event )
     // retrieve all attachments from model
     // true if some modifications are to be saved
     bool modified( false );
-    foreach( Attachment* attachment, _model().get() )
+    foreach( Attachment* attachment, model_.get() )
     {
 
         if( attachment->type() == AttachmentType::URL ) continue;
@@ -442,7 +442,7 @@ void AttachmentFrame::_updateConfiguration( void )
 
     Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
     int icon_size( XmlOptions::get().get<int>( "ATTACHMENT_LIST_ICON_SIZE" ) );
-    list().setIconSize( QSize( icon_size, icon_size ) );
+    list_->setIconSize( QSize( icon_size, icon_size ) );
 
 }
 
@@ -450,7 +450,7 @@ void AttachmentFrame::_updateConfiguration( void )
 void AttachmentFrame::_updateActions( void )
 {
 
-    bool hasSelection( !list().selectionModel()->selectedRows().isEmpty() );
+    bool hasSelection( !list_->selectionModel()->selectedRows().isEmpty() );
     newAction().setEnabled( !readOnly() );
     openAction().setEnabled( hasSelection );
     saveAsAction().setEnabled( hasSelection );
@@ -467,7 +467,7 @@ void AttachmentFrame::_open( void )
     Debug::Throw( "AttachmentFrame::_open.\n" );
 
     // get selection
-    AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -530,7 +530,7 @@ void AttachmentFrame::_edit( void )
 
     // store selected item locally
     // get selection
-    AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -581,7 +581,7 @@ void AttachmentFrame::_delete( void )
 
     // store selected item locally
     // get selection
-    AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -612,7 +612,7 @@ void AttachmentFrame::_delete( void )
 
             // retrieve associated attachment frames and remove item
             BASE::KeySet<AttachmentFrame> frames( attachment );
-            foreach( AttachmentFrame* frame, frames ) frame->_model().remove( attachment );
+            foreach( AttachmentFrame* frame, frames ) frame->model_.remove( attachment );
 
             // retrieve associated entries
             BASE::KeySet<LogEntry> entries( attachment );
@@ -656,7 +656,7 @@ void AttachmentFrame::_delete( void )
         window.saveAction().trigger();
 
         // resize columns
-        list().resizeColumns();
+        list_->resizeColumns();
     }
 
     return;
@@ -669,7 +669,7 @@ void AttachmentFrame::_reload( void )
     Debug::Throw( "AttachmentFrame::_reload.\n" );
 
     // get selection
-    AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -693,7 +693,7 @@ void AttachmentFrame::_saveAs( void )
     Debug::Throw( "AttachmentFrame::_saveAs.\n" );
 
     // get selection
-    AttachmentModel::List selection( _model().get( list().selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -756,7 +756,7 @@ void AttachmentFrame::_clean( void )
     // retrieve all attachments from model
     // true if some modifications are to be saved
     bool modified( false );
-    foreach( Attachment* attachment, _model().get() )
+    foreach( Attachment* attachment, model_.get() )
     {
 
         // skip attachment if valid
@@ -766,7 +766,7 @@ void AttachmentFrame::_clean( void )
 
         // retrieve associated attachment frames and remove item
         BASE::KeySet<AttachmentFrame> frames( attachment );
-        foreach( AttachmentFrame* frame, frames ) frame->_model().remove( attachment );
+        foreach( AttachmentFrame* frame, frames ) frame->model_.remove( attachment );
 
         // retrieve associated entries
         BASE::KeySet<LogEntry> entries( attachment );
@@ -809,14 +809,13 @@ void AttachmentFrame::_itemSelected( const QModelIndex& index )
 //______________________________________________________________________
 void AttachmentFrame::_storeSelection( void )
 {
-    Debug::Throw( "AttachmentFrame::_storeSelection.\n" );
 
     // clear
-    _model().clearSelectedIndexes();
+    model_.clearSelectedIndexes();
 
     // retrieve selected indexes in list
-    foreach( const QModelIndex& index, list().selectionModel()->selectedRows() )
-    { if( index.column() == 0 ) _model().setIndexSelected( index, true ); }
+    foreach( const QModelIndex& index, list_->selectionModel()->selectedRows() )
+    { if( index.column() == 0 ) model_.setIndexSelected( index, true ); }
 
     return;
 
@@ -826,18 +825,11 @@ void AttachmentFrame::_storeSelection( void )
 void AttachmentFrame::_restoreSelection( void )
 {
 
-    Debug::Throw( "AttachmentFrame::_restoreSelection.\n" );
+    QModelIndexList selection( model_.selectedIndexes() );
+    list_->selectionModel()->clearSelection();
 
-    // retrieve indexes
-    QModelIndexList selectedIndexes( _model().selectedIndexes() );
-    if( selectedIndexes.empty() ) list().selectionModel()->clear();
-    else {
-
-        list().selectionModel()->select( selectedIndexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        foreach( const QModelIndex& index, selectedIndexes )
-        { list().selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
-
-    }
+    foreach( const QModelIndex& index, selection )
+    { list_->selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
 
     return;
 
