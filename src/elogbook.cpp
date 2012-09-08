@@ -76,7 +76,7 @@ int main (int argc, char *argv[])
 
     // create Application
     QApplication application( argc, argv );
-    application.setApplicationName( "elogbook" );
+    application.setApplicationName( "Elogbook" );
 
     // singleton application is deleted before QApplication
     Application singleton( arguments );
