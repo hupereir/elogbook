@@ -77,7 +77,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     // install actions
     _installActions();
 
-    contextMenu_ = new ContextMenu( &list() );
+    contextMenu_ = new ContextMenu( list_ );
     contextMenu_->addAction( &newAction() );
     contextMenu_->addAction( &openAction() );
     contextMenu_->addAction( &saveAsAction() );
@@ -92,7 +92,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
     connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
     connect( list_->selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
-    connect( &list(), SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
+    connect( list_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
 
     connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
     _updateConfiguration();
@@ -808,24 +808,13 @@ void AttachmentFrame::_itemSelected( const QModelIndex& index )
 
 //______________________________________________________________________
 void AttachmentFrame::_storeSelection( void )
-{
-
-    // clear
-    model_.clearSelectedIndexes();
-
-    // retrieve selected indexes in list
-    foreach( const QModelIndex& index, list_->selectionModel()->selectedRows() )
-    { if( index.column() == 0 ) model_.setIndexSelected( index, true ); }
-
-    return;
-
-}
+{ model_.setSelectedIndexes( list_->selectionModel()->selectedRows() ); }
 
 //______________________________________________________________________
 void AttachmentFrame::_restoreSelection( void )
 {
 
-    QModelIndexList selection( model_.selectedIndexes() );
+    const QModelIndexList selection( model_.selectedIndexes() );
     list_->selectionModel()->clearSelection();
 
     foreach( const QModelIndex& index, selection )

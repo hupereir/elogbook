@@ -3091,23 +3091,14 @@ void MainWindow::_startEntryEdition( void )
 
 //________________________________________
 void MainWindow::_storeSelectedEntries( void )
-{
-    // clear
-    _logEntryModel().clearSelectedIndexes();
-
-    // retrieve selected indexes in list
-    QModelIndexList selectedIndexes( logEntryList().selectionModel()->selectedRows() );
-    foreach( const QModelIndex& index, selectedIndexes )
-    { if( index.column() == 0 ) _logEntryModel().setIndexSelected( index, true ); }
-
-}
+{ _logEntryModel().setSelectedIndexes( logEntryList().selectionModel()->selectedRows() ); }
 
 //________________________________________
 void MainWindow::_restoreSelectedEntries( void )
 {
 
     // retrieve indexes
-    QModelIndexList selectedIndexes( _logEntryModel().selectedIndexes() );
+    const QModelIndexList selectedIndexes( _logEntryModel().selectedIndexes() );
     if( selectedIndexes.empty() ) logEntryList().selectionModel()->clear();
     else {
 
@@ -3122,22 +3113,14 @@ void MainWindow::_restoreSelectedEntries( void )
 
 //________________________________________
 void MainWindow::_storeSelectedKeywords( void )
-{
-    // clear
-    _keywordModel().clearSelectedIndexes();
-
-    // retrieve selected indexes in list
-    foreach( const QModelIndex& index, keywordList().selectionModel()->selectedRows() )
-    { if( index.column() == 0 ) _keywordModel().setIndexSelected( index, true ); }
-
-}
+{ _keywordModel().setSelectedIndexes( keywordList().selectionModel()->selectedRows() ); }
 
 //________________________________________
 void MainWindow::_restoreSelectedKeywords( void )
 {
 
     // retrieve indexes
-    QModelIndexList selectedIndexes( _keywordModel().selectedIndexes() );
+    const QModelIndexList selectedIndexes( _keywordModel().selectedIndexes() );
     if( selectedIndexes.empty() ) keywordList().selectionModel()->clear();
     else {
 
