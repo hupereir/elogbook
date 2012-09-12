@@ -63,7 +63,7 @@ Qt::ItemFlags AttachmentModel::flags(const QModelIndex &index) const
 
     // default flags
     Qt::ItemFlags flags;
-    if( index.isValid() )
+    if( index.isValid() && contains( index ) )
     {
 
         // check associated record validity
