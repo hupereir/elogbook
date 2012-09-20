@@ -533,11 +533,11 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     //! emit maximum progress
     /*! argument is the maximum number of entries to read */
-    void maximumProgressAvailable( unsigned int );
+    void maximumProgressAvailable( int );
 
     //! emit progress when reading, saving
     /*! argument is the number of entries read since last signal */
-    void progressAvailable( unsigned int );
+    void progressAvailable( int );
 
     protected:
 

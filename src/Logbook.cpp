@@ -202,7 +202,7 @@ bool Logbook::read( void )
             child->setFile( file );
 
             // propagate progressAvailable signal.
-            connect( child, SIGNAL( progressAvailable( unsigned int ) ), SIGNAL( progressAvailable( unsigned int ) ) );
+            connect( child, SIGNAL( progressAvailable( int ) ), SIGNAL( progressAvailable( int ) ) );
 
             QString buffer;
             QTextStream( &buffer ) << "Reading " << child->file().localName();

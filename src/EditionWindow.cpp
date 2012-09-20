@@ -27,6 +27,7 @@
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
 #include "BaseIcons.h"
+#include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
 #include "CustomToolBar.h"
@@ -52,7 +53,6 @@
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
 #include "Singleton.h"
-#include "StatusBar.h"
 #include "Str.h"
 #include "OpenLinkDialog.h"
 #include "Util.h"
@@ -161,7 +161,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     Key::associate( this, frame );
 
     // status bar for tooltips
-    setStatusBar( statusBar_ = new StatusBar( this ) );
+    setStatusBar( statusBar_ = new BaseStatusBar( this ) );
     statusBar().addLabel( 2, true );
     statusBar().addLabels( 3, 0 );
     statusBar().addClock();

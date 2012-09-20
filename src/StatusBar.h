@@ -1,5 +1,5 @@
-#ifndef SelectionStatusBar_h
-#define SelectionStatusBar_h
+#ifndef StatusBar_h
+#define StatusBar_h
 
 // $Id$
 
@@ -25,11 +25,11 @@
 *******************************************************************************/
 
 #include "AnimatedStackedWidget.h"
+#include "BaseStatusBar.h"
 #include "ProgressBar.h"
-#include "StatusBar.h"
 
 //! customized status bar for selection frame
-class SelectionStatusBar: public StatusBar
+class StatusBar: public BaseStatusBar
 {
 
     Q_OBJECT
@@ -37,7 +37,7 @@ class SelectionStatusBar: public StatusBar
     public:
 
     //! constructor
-    SelectionStatusBar( QWidget* parent );
+    StatusBar( QWidget* parent );
 
     //! progress bar
     ProgressBar& progressBar( void ) const
@@ -48,7 +48,7 @@ class SelectionStatusBar: public StatusBar
 
     //! retrieves label with given index
     virtual StatusBarLabel& label( const unsigned int& i = 0  ) const
-    { return (i==0) ? _label():StatusBar::label(i); }
+    { return (i==0) ? _label():BaseStatusBar::label(i); }
 
     public slots:
 

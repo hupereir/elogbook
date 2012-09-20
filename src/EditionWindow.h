@@ -52,7 +52,7 @@ class CustomToolBar;
 class FormatBar;
 class MainWindow;
 class Menu;
-class StatusBar;
+class BaseStatusBar;
 
 //! log entry edition/creation object
 /*!
@@ -100,7 +100,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     }
 
     //! status bar
-    StatusBar& statusBar( void )
+    BaseStatusBar& statusBar( void )
     {
         assert( statusBar_ );
         return *statusBar_;
@@ -591,7 +591,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     FormatBar* formatBar_;
 
     //! statusbar
-    StatusBar* statusBar_;
+    BaseStatusBar* statusBar_;
 
     //! menu
     Menu* menu_;

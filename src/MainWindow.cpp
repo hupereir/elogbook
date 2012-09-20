@@ -60,7 +60,7 @@
 #include "QtUtil.h"
 #include "RecentFilesMenu.h"
 #include "SearchPanel.h"
-#include "SelectionStatusBar.h"
+#include "StatusBar.h"
 #include "Singleton.h"
 #include "TextEditionDelegate.h"
 #include "Util.h"
@@ -116,7 +116,7 @@ MainWindow::MainWindow( QWidget *parent ):
     addAction( &searchPanel().visibilityAction() );
 
     // status bar
-    setStatusBar( statusbar_ = new SelectionStatusBar( this ) );
+    setStatusBar( statusbar_ = new StatusBar( this ) );
     connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().label(), SLOT( setTextAndUpdate( const QString& ) ) );
     connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().progressBar(), SLOT( setText( const QString& ) ) );
 
@@ -345,9 +345,9 @@ bool MainWindow::setLogbook( File file )
         return false;
     }
 
-    connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &statusBar(), SLOT( showProgressBar() ) );
-    connect( logbook_, SIGNAL( maximumProgressAvailable( unsigned int ) ), &statusBar().progressBar(), SLOT( setMaximumProgress( unsigned int ) ) );
-    connect( logbook_, SIGNAL( progressAvailable( unsigned int ) ), &statusBar().progressBar(), SLOT( addToProgress( unsigned int ) ) );
+    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), &statusBar(), SLOT( showProgressBar() ) );
+    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), &statusBar().progressBar(), SLOT( setMaximum( int ) ) );
+    connect( logbook_, SIGNAL( progressAvailable( int ) ), &statusBar().progressBar(), SLOT( addToProgress( int ) ) );
     connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
 
     // one need to disable everything in the window

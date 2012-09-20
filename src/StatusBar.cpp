@@ -22,13 +22,13 @@
 *******************************************************************************/
 
 #include "Debug.h"
-#include "SelectionStatusBar.h"
+#include "StatusBar.h"
 
 //______________________________________________________
-SelectionStatusBar::SelectionStatusBar( QWidget* parent ):
-StatusBar( parent )
+StatusBar::StatusBar( QWidget* parent ):
+    BaseStatusBar( parent )
 {
-    Debug::Throw( "SelectionStatusBar::SelectionStatusBar.\n" );
+    Debug::Throw( "StatusBar::StatusBar.\n" );
 
     addPermanentWidget( stack_ = new AnimatedStackedWidget( this ), 1 );
     _stack().addWidget( label_ = new StatusBarLabel() );
@@ -38,12 +38,12 @@ StatusBar( parent )
 }
 
 //______________________________________________________
-void SelectionStatusBar::showProgressBar( void )
+void StatusBar::showProgressBar( void )
 {
     progressBar().setFixedHeight( fontMetrics().lineSpacing() + 6 );
     _stack().setCurrentWidget( &progressBar() );
 }
 
 //______________________________________________________
-void SelectionStatusBar::showLabel( void )
+void StatusBar::showLabel( void )
 { _stack().setCurrentWidget( &_label() ); }

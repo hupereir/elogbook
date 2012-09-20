@@ -24,13 +24,11 @@
 *
 *******************************************************************************/
 
+#include "BaseProgressBar.h"
 #include "Counter.h"
 
-#include <QtGui/QPaintEvent>
-#include <QtGui/QProgressBar>
-
 //! display command progress and remaining time
-class ProgressBar:public QProgressBar, public Counter
+class ProgressBar:public BaseProgressBar, public Counter
 {
 
     Q_OBJECT
@@ -38,31 +36,33 @@ class ProgressBar:public QProgressBar, public Counter
     public:
 
     //! constructor
-    ProgressBar( QWidget* parent = 0 );
+    ProgressBar( QWidget* parent = 0 ):
+        BaseProgressBar( parent ),
+        Counter( "ProgressBar" ),
+        current_( 0 )
+    {}
+
+    //! destructor
+    virtual ~ProgressBar( void )
+    {}
 
     public slots:
 
-    //! change displayed text
-    void setText( const QString& );
-
     //! set maximum
-    void setMaximumProgress( unsigned int );
+    virtual void setMaximum( int value )
+    {
+        BaseProgressBar::setMaximum( value );
+        current_ = 0;
+    }
 
     //! add to progress
-    void addToProgress( unsigned int );
-
-    protected:
-
-    //! paint
-    void paintEvent( QPaintEvent* );
+    void addToProgress( int value )
+    { setValue( current_ += value ); }
 
     private:
 
-    //! text
-    QString text_;
-
     //! current progress
-    unsigned int current_;
+    int current_;
 
 };
 

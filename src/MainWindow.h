@@ -23,14 +23,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file MainWindow.h
-\brief base class to display entries and keyword
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "AskForSaveDialog.h"
 #include "Counter.h"
 #include "BaseMainWindow.h"
@@ -56,7 +48,7 @@ class EditionWindow;
 class FileCheck;
 class Menu;
 class SearchPanel;
-class SelectionStatusBar;
+class StatusBar;
 
 //! display a set of log entries, allows selection of one
 class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
@@ -88,7 +80,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     }
 
     //! retrive state frame
-    SelectionStatusBar& statusBar( void ) const
+    StatusBar& statusBar( void ) const
     {
         assert( statusbar_ );
         return *statusbar_;
@@ -582,7 +574,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     SearchPanel *searchPanel_;
 
     //! state frame
-    SelectionStatusBar* statusbar_;
+    StatusBar* statusbar_;
 
     //! keyword model
     KeywordModel keywordModel_;

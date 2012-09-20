@@ -109,7 +109,7 @@ NewLogbookDialog.h \
 OpenAttachmentDialog.h \
 ProgressBar.h \
 SearchPanel.h \
-SelectionStatusBar.h \
+StatusBar.h \
 OpenLinkDialog.h \
 XmlDef.h
 
@@ -166,9 +166,8 @@ Menu.cpp \
 NewAttachmentDialog.cpp \
 NewLogbookDialog.cpp \
 OpenAttachmentDialog.cpp \
-ProgressBar.cpp \
 SearchPanel.cpp \
-SelectionStatusBar.cpp \
+StatusBar.cpp \
 OpenLinkDialog.cpp \
 elogbook.cpp
 
@@ -198,7 +197,7 @@ moc_Menu.cpp \
 moc_NewAttachmentDialog.cpp \
 moc_ProgressBar.cpp \
 moc_SearchPanel.cpp \
-moc_SelectionStatusBar.cpp \
+moc_StatusBar.cpp \
 moc_OpenLinkDialog.cpp
 
 ###############################
