@@ -56,11 +56,12 @@
 #include "NewLogbookDialog.h"
 #include "PrinterOptionWidget.h"
 #include "PrintPreviewDialog.h"
+#include "ProgressBar.h"
+#include "ProgressStatusBar.h"
 #include "QuestionDialog.h"
 #include "QtUtil.h"
 #include "RecentFilesMenu.h"
 #include "SearchPanel.h"
-#include "StatusBar.h"
 #include "Singleton.h"
 #include "TextEditionDelegate.h"
 #include "Util.h"
@@ -116,7 +117,8 @@ MainWindow::MainWindow( QWidget *parent ):
     addAction( &searchPanel().visibilityAction() );
 
     // status bar
-    setStatusBar( statusbar_ = new StatusBar( this ) );
+    setStatusBar( statusbar_ = new ProgressStatusBar( this ) );
+    statusbar_->setProgressBar( new ProgressBar() );
     connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().label(), SLOT( setTextAndUpdate( const QString& ) ) );
     connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().progressBar(), SLOT( setText( const QString& ) ) );
 

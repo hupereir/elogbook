@@ -48,7 +48,7 @@ class EditionWindow;
 class FileCheck;
 class Menu;
 class SearchPanel;
-class StatusBar;
+class ProgressStatusBar;
 
 //! display a set of log entries, allows selection of one
 class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
@@ -67,24 +67,15 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! retrive menu
     Menu& menu( void )
-    {
-        assert( menu_ );
-        return *menu_;
-    }
+    { return *menu_; }
 
     //! retrive search panel
     SearchPanel& searchPanel( void ) const
-    {
-        assert( searchPanel_ );
-        return *searchPanel_;
-    }
+    { return *searchPanel_; }
 
     //! retrive state frame
-    StatusBar& statusBar( void ) const
-    {
-        assert( statusbar_ );
-        return *statusbar_;
-    }
+    ProgressStatusBar& statusBar( void ) const
+    { return *statusbar_; }
 
     //! deletes old logbook, if any. Set the new one an display
     /*
@@ -152,17 +143,12 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! keyword toolbar
     CustomToolBar& keywordToolBar( void ) const
-    {
-        assert( keywordToolBar_ );
-        return *keywordToolBar_;
-    }
+    { return *keywordToolBar_; }
 
     //! entry toolbar
     CustomToolBar& entryToolBar( void ) const
-    {
-        assert( entryToolBar_ );
-        return *entryToolBar_;
-    }
+    { return *entryToolBar_; }
+
     //@}
 
     //!@name actions
@@ -574,7 +560,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     SearchPanel *searchPanel_;
 
     //! state frame
-    StatusBar* statusbar_;
+    ProgressStatusBar* statusbar_;
 
     //! keyword model
     KeywordModel keywordModel_;
