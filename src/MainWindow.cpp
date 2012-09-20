@@ -119,8 +119,9 @@ MainWindow::MainWindow( QWidget *parent ):
     // status bar
     setStatusBar( statusbar_ = new ProgressStatusBar( this ) );
     statusbar_->setProgressBar( new ProgressBar() );
-    connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().label(), SLOT( setTextAndUpdate( const QString& ) ) );
-    connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusBar().progressBar(), SLOT( setText( const QString& ) ) );
+    statusbar_->addClock();
+    connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusbar_->label(), SLOT( setTextAndUpdate( const QString& ) ) );
+    connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusbar_->progressBar(), SLOT( setText( const QString& ) ) );
 
     // global scope actions
     _installActions();
@@ -347,9 +348,9 @@ bool MainWindow::setLogbook( File file )
         return false;
     }
 
-    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), &statusBar(), SLOT( showProgressBar() ) );
-    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), &statusBar().progressBar(), SLOT( setMaximum( int ) ) );
-    connect( logbook_, SIGNAL( progressAvailable( int ) ), &statusBar().progressBar(), SLOT( addToProgress( int ) ) );
+    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), statusbar_, SLOT( showProgressBar() ) );
+    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), &statusbar_->progressBar(), SLOT( setMaximum( int ) ) );
+    connect( logbook_, SIGNAL( progressAvailable( int ) ), &statusbar_->progressBar(), SLOT( addToProgress( int ) ) );
     connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
 
     // one need to disable everything in the window
@@ -404,8 +405,8 @@ bool MainWindow::setLogbook( File file )
 
     // store logbook directory for next open, save comment
     workingDirectory_ = File( logbook()->file() ).path();
-    statusBar().label().setText( "" );
-    statusBar().showLabel();
+    statusbar_->label().setText( "" );
+    statusbar_->showLabel();
 
     // register logbook to fileCheck
     fileCheck().registerLogbook( logbook() );
@@ -765,8 +766,8 @@ void MainWindow::save( const bool& confirmEntries )
     if( written ) { setModified( false );}
 
     // update StateFrame
-    statusBar().label().setText( "" );
-    statusBar().showLabel();
+    statusbar_->label().setText( "" );
+    statusbar_->showLabel();
 
     // add new file to openPreviousMenu
     if( !logbook()->file().isEmpty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
@@ -853,7 +854,7 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
     if( !found )
     {
 
-        statusBar().label().setText( "no match found. Find canceled" );
+        statusbar_->label().setText( "no match found. Find canceled" );
 
         // reset flag for the turned off entries to true
         foreach( LogEntry* entry, turnedOffEntries )
@@ -877,7 +878,7 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
     if( found > 1 ) out << " entries selected";
     else out << " entry selected";
 
-    statusBar().label().setText( buffer );
+    statusbar_->label().setText( buffer );
 
     return;
 }
@@ -902,7 +903,7 @@ void MainWindow::showAllEntries( void )
     if( selectedEntry && selectedEntry->isSelected() ) selectEntry( selectedEntry );
     else if( _logEntryModel().rowCount() ) selectEntry( _logEntryModel().get( _logEntryModel().index( _logEntryModel().rowCount()-1, 0 ) ) );
 
-    statusBar().label().setText( "" );
+    statusbar_->label().setText( "" );
     return;
 }
 
@@ -1266,7 +1267,7 @@ void MainWindow::_autoSave( void )
     if( logbook_ && !logbook()->file().isEmpty() )
     {
 
-        statusBar().label().setText( "performing autoSave" );
+        statusbar_->label().setText( "performing autoSave" );
 
         // retrieve non read only editors; perform save
         BASE::KeySet<EditionWindow> windows( this );
@@ -1280,7 +1281,7 @@ void MainWindow::_autoSave( void )
 
     } else {
 
-        statusBar().label().setText( "no logbook filename. <Autosave> skipped" );
+        statusbar_->label().setText( "no logbook filename. <Autosave> skipped" );
 
     }
 
@@ -1700,8 +1701,8 @@ void MainWindow::_print( void )
     helper.print( &printer );
 
     // reset status bar
-    statusBar().label().setText( "" );
-    statusBar().showLabel();
+    statusbar_->label().setText( "" );
+    statusbar_->showLabel();
 
     return;
 
@@ -1739,8 +1740,8 @@ void MainWindow::_printPreview( void )
     dialog.exec();
 
     // reset status bar
-    statusBar().label().setText( "" );
-    statusBar().showLabel();
+    statusbar_->label().setText( "" );
+    statusbar_->showLabel();
 
 }
 
@@ -1853,7 +1854,7 @@ void MainWindow::_synchronize( void )
 
     // set busy flag
     Singleton::get().application<Application>()->busy();
-    statusBar().label().setText( "reading remote logbook ... " );
+    statusbar_->label().setText( "reading remote logbook ... " );
 
     // opens file in remote logbook
     Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remoteFile << endl;
@@ -1928,12 +1929,12 @@ void MainWindow::_synchronize( void )
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << nDuplicated << endl;
 
     // save remote logbook
-    statusBar().label().setText( "saving remote logbook ... " );
+    statusbar_->label().setText( "saving remote logbook ... " );
     remoteLogbook.write();
 
     // idle
     Singleton::get().application<Application>()->idle();
-    statusBar().label().setText( "" );
+    statusbar_->label().setText( "" );
 
     return;
 
@@ -2055,7 +2056,7 @@ void MainWindow::_mergeBackup( Logbook::Backup backup )
 
     // set busy flag
     Singleton::get().application<Application>()->busy();
-    statusBar().label().setText( "reading remote logbook ... " );
+    statusbar_->label().setText( "reading remote logbook ... " );
 
     // opens file in remote logbook
     Debug::Throw() << "MainWindow::_mergeBackup - reading remote logbook from file: " << backup.file() << endl;
@@ -2126,7 +2127,7 @@ void MainWindow::_mergeBackup( Logbook::Backup backup )
 
     // idle
     Singleton::get().application<Application>()->idle();
-    statusBar().label().setText( "" );
+    statusbar_->label().setText( "" );
 
     return;
 
