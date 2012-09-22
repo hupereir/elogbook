@@ -1359,7 +1359,7 @@ void EditionWindow::_openLink( void )
     }
 
     // update options
-    XmlOptions::get().add( "OPEN_LINK_APPLICATIONS", Option( command, Option::RECORDABLE|Option::CURRENT ) );
+    XmlOptions::get().add( "OPEN_LINK_APPLICATIONS", Option( command, Option::Recordable|Option::Current ) );
 
     // execute
     ( Command( command ) << anchor ).run();

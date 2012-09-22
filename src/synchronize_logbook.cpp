@@ -70,7 +70,7 @@ int main (int argc, char *argv[])
   // load options
   QString user( Util::user( ) );
   QString host( Util::host() );
-  XmlOptions::get().set( "USER", Option( user+"@"+host, Option::NONE ) );
+  XmlOptions::get().set( "USER", Option( user+"@"+host, Option::None ) );
 
   // install default options
   installDefaultOptions();

@@ -148,11 +148,11 @@ void installDefaultOptions( void )
     // add run-time non recordable options
     QString user( Util::user( ) );
     QString host( Util::host() );
-    XmlOptions::get().set( "USER", Option( user+"@"+host, Option::NONE ) );
-    XmlOptions::get().set( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::NONE ) );
-    XmlOptions::get().set( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::NONE ) );
-    XmlOptions::get().set( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::NONE ) );
-    XmlOptions::get().set( "APP_NAME", Option(  "ELOGBOOK", Option::NONE ) );
+    XmlOptions::get().set( "USER", Option( user+"@"+host, Option::None ) );
+    XmlOptions::get().set( "HELP_FILE", Option(  File( ".elogbook_help" ).addPath( Util::home() ), Option::None ) );
+    XmlOptions::get().set( "DB_FILE", Option( File( ".elogbook_db" ).addPath( Util::home() ), Option::None ) );
+    XmlOptions::get().set( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::None ) );
+    XmlOptions::get().set( "APP_NAME", Option(  "ELOGBOOK", Option::None ) );
     XmlOptions::get().setAutoDefault( false );
 
 };
