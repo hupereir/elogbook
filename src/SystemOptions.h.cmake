@@ -1,3 +1,6 @@
+#ifndef SystemOptions_h
+#define SystemOptions_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,14 +24,6 @@
 *
 *******************************************************************************/
 
-/*!
-  \file SystemOptions.h
-  \brief System options
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
 #include "XmlOptions.h"
 #include "Config.h"
 
@@ -40,12 +35,12 @@ void installSystemOptions( void )
 
   XmlOptions::get().setAutoDefault( true );
 
-  XmlOptions::get().set( "EDIT_HTML_ATC", Option( "@KONQUEROR@" , "to edit html attachments"  ) );
-  XmlOptions::get().set( "EDIT_IMAGE_ATC", Option( "@KUICKSHOW@" , "to edit image type attachments"  ) );
+  XmlOptions::get().set( "EDIT_HTML_ATC", Option( "@FIREFOX@" , "to edit html attachments"  ) );
+  XmlOptions::get().set( "EDIT_IMAGE_ATC", Option( "@GWENVIEW@" , "to edit image type attachments"  ) );
   XmlOptions::get().set( "EDIT_PLAIN_TEXT_ATC", Option( "@QEDIT@" , "to edit plain text attachments"  ) );
-  XmlOptions::get().set( "EDIT_POSTSCRIPT_ATC", Option( "@GV@" , "to edit postscript attachments"  ) );
+  XmlOptions::get().set( "EDIT_POSTSCRIPT_ATC", Option( "@OKULAR@" , "to edit postscript attachments"  ) );
   XmlOptions::get().set( "EDIT_UNKNOWN_ATC", Option( "@QEDIT@" , "to edit unknown type attachments"  ) );
-  XmlOptions::get().set( "EDIT_URL_ATC", Option( "@KONQUEROR@" , "to edit url attachments"  ) );
+  XmlOptions::get().set( "EDIT_URL_ATC", Option( "@FIREFOX@" , "to edit url attachments"  ) );
 
   #ifdef WITH_ASPELL
   XmlOptions::get().set( "ASPELL", Option( "@ASPELL@", "aspell command" ) );
@@ -55,3 +50,5 @@ void installSystemOptions( void )
   XmlOptions::get().setAutoDefault( false );
 
 };
+
+#endif

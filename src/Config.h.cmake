@@ -1,3 +1,6 @@
+#ifndef Config_h
+#define Config_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,17 +24,8 @@
 *
 *******************************************************************************/
 
-/*!
-  \file    Config.h
-  \brief   used to handle defines based on configure script
-  \author  Hugo Pereira
-  \version $Revision$
-  \date    $Date$
-*/
-#ifndef Config_h
-#define Config_h
-
-#define WITH_ASPELL @aspell@
-#define BUILD_TIMESTAMP "@timestamp@"
+#define WITH_ASPELL @ASPELL_FOUND@
+#define VERSION "@ELOGBOOK_VERSION@"
+#define BUILD_TIMESTAMP "@TIMESTAMP@"
 
 #endif
