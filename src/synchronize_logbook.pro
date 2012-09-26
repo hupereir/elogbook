@@ -6,7 +6,7 @@ TARGET = synchronize_logbook
 CONFIG += qt release
 QT += xml network
 
-VERSION = 1.8.7
+VERSION = 1.8.6
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 mac {
