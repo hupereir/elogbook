@@ -1,4 +1,4 @@
-%define ver      @VERSION@
+%define ver      @ELOGBOOK_VERSION@
 %define rel      0
 %define prefix   /usr
 
@@ -20,11 +20,12 @@ Qt-based electronic logbook
 %setup -q -n %{name}-%{ver} %{rel}
 
 %build
-./autogen.sh --prefix=%{prefix}
-make RPM_OPT_FLAGS="$RPM_OPT_FLAGS"
+cmake -DCMAKE_INSTALL_PREFIX=%{prefix} .
+make
 
 %install
-make prefix=$RPM_BUILD_ROOT%{prefix} install-strip
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -32,8 +33,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc COPYING INSTALL
-%{prefix}/bin/copy_logbook
-%{prefix}/bin/synchronize_logbook
+%{prefix}/bin/copy-logbook
+%{prefix}/bin/synchronize-logbook
 %{prefix}/bin/elogbook
 
 %changelog
