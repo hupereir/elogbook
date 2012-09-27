@@ -24,14 +24,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file    KeywordModel.h
-\brief   keyword model
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 #include "Counter.h"
 #include "Keyword.h"
 #include "TreeModel.h"
@@ -51,7 +43,7 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
     static const QString DRAG;
 
     //! constructor
-    KeywordModel(QObject *parent = 0);
+    KeywordModel( QObject* = 0 );
 
     //! destructor
     virtual ~KeywordModel()
@@ -67,29 +59,29 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
     //@{
 
     //! flags
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flags( const QModelIndex& ) const;
 
     //! return data
-    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual QVariant data( const QModelIndex&, int ) const;
 
     // modify data
-    virtual bool setData(const QModelIndex &index, const QVariant& value, int role = Qt::EditRole );
+    virtual bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole );
 
     //! header data
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
 
     //! number of columns for a given index
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+    virtual int columnCount( const QModelIndex& = QModelIndex() ) const
     { return nColumns; }
 
     //! mime type
     virtual QStringList mimeTypes( void ) const;
 
     //! mime data
-    virtual QMimeData* mimeData(const QModelIndexList &indexes) const;
+    virtual QMimeData* mimeData( const QModelIndexList& ) const;
 
     //! drop mine data
-    virtual bool dropMimeData(const QMimeData*, Qt::DropAction, int row, int column, const QModelIndex&);
+    virtual bool dropMimeData(const QMimeData*, Qt::DropAction, int, int, const QModelIndex&);
 
     //@}
 
@@ -105,12 +97,12 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
     emitted when a Keyword drag is accepted, or when keyword item
     is emitted directly in the list. Sends old keyword, new keyword
     */
-    void keywordChanged( Keyword old_keyword, Keyword new_keyword );
+    void keywordChanged( Keyword, Keyword );
 
     protected:
 
     //! sort
-    virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
+    virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
 
     private:
 

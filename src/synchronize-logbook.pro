@@ -63,4 +63,4 @@ POST_TARGETDEPS = \
 RESOURCES = pixmaps.qrc ../base-qt/basePixmaps.qrc
 RC_FILE = elogbook.rc
 
-SOURCES = synchronize_logbook.cpp
+SOURCES = synchronize-logbook.cpp

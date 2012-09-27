@@ -1,4 +1,7 @@
 # $Id$
 
 TEMPLATE = subdirs
-SUBDIRS += elogbook-common.pro elogbook.pro copy_logbook.pro synchronize_logbook.pro
+SUBDIRS += elogbook-common.pro
+SUBDIRS += elogbook.pro
+SUBDIRS += copy-logbook.pro
+SUBDIRS += synchronize-logbook.pro

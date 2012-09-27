@@ -43,10 +43,10 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     //! Qt meta object declaration
     Q_OBJECT
 
-        public:
+    public:
 
-        //! constructor
-        FileCheck( QObject* parent = 0 );
+    //! constructor
+    FileCheck( QObject* = 0 );
 
     //! destructor
     ~FileCheck( void );
@@ -74,7 +74,7 @@ class FileCheck: public QObject, public BASE::Key, public Counter
         Data( QString file = QString(), Flag flag = NONE, TimeStamp stamp = TimeStamp() ):
             file_( file ),
             flag_( flag ),
-            time_stamp_( stamp )
+            timeStamp_( stamp )
         {}
 
         //! equal to operator
@@ -103,11 +103,11 @@ class FileCheck: public QObject, public BASE::Key, public Counter
 
         //! timestamp
         void setTimeStamp( const TimeStamp& stamp )
-        { time_stamp_ = stamp; }
+        { timeStamp_ = stamp; }
 
         //! timestamp
         const TimeStamp& timeStamp( void ) const
-        { return time_stamp_; }
+        { return timeStamp_; }
 
         private:
 
@@ -118,7 +118,7 @@ class FileCheck: public QObject, public BASE::Key, public Counter
         Flag flag_;
 
         //! timestamp
-        TimeStamp time_stamp_;
+        TimeStamp timeStamp_;
 
     };
 
@@ -148,11 +148,11 @@ class FileCheck: public QObject, public BASE::Key, public Counter
         //@{
 
         //! flags
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const
+        virtual Qt::ItemFlags flags( const QModelIndex& ) const
         { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
 
         //! return data
-        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant data( const QModelIndex&, int ) const;
 
         //! header data
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
@@ -166,7 +166,7 @@ class FileCheck: public QObject, public BASE::Key, public Counter
         }
 
         //! number of columns for a given index
-        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+        virtual int columnCount(const QModelIndex& = QModelIndex()) const
         { return nColumns; }
 
         //@}
@@ -224,10 +224,10 @@ class FileCheck: public QObject, public BASE::Key, public Counter
     protected:
 
     //! add file
-    void _addFile( const QString& file );
+    void _addFile( const QString& );
 
     //! remove file
-    void _removeFile( const QString& file, bool forced = false );
+    void _removeFile( const QString&, bool = false );
 
     //! file system watcher
     QFileSystemWatcher& _fileSystemWatcher( void )

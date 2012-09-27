@@ -144,7 +144,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 }
 
 //__________________________________________________________________
-bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, int row, int column, const QModelIndex& parent)
+bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, int, int, const QModelIndex& parent)
 {
 
     Debug::Throw( "KeywordModel::dropMimeData\n" );

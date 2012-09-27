@@ -35,7 +35,7 @@ class LogbookStatisticsDialog: public CustomDialog
     public:
 
     //! constructor
-    LogbookStatisticsDialog( QWidget* parent, Logbook* logbook  );
+    LogbookStatisticsDialog( QWidget*, Logbook* );
 
     //! destructor
     virtual ~LogbookStatisticsDialog( void )
@@ -70,11 +70,11 @@ class LogbookStatisticsDialog: public CustomDialog
         //@{
 
         //! flags
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const
+        virtual Qt::ItemFlags flags( const QModelIndex& ) const
         { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
 
         //! return data
-        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant data( const QModelIndex&, int ) const;
 
         //! header data
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
@@ -88,7 +88,7 @@ class LogbookStatisticsDialog: public CustomDialog
         }
 
         //! number of columns for a given index
-        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const
+        virtual int columnCount( const QModelIndex& = QModelIndex() ) const
         { return nColumns; }
 
         //@}
@@ -96,7 +96,7 @@ class LogbookStatisticsDialog: public CustomDialog
         protected:
 
         //! sort
-        virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder )
+        virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder )
         {}
 
         //! list column names

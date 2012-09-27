@@ -171,7 +171,7 @@ QString NewAttachmentDialog::comments( void ) const
 }
 
 //____________________________________________________
-void NewAttachmentDialog::_attachmentTypeChanged( int index )
+void NewAttachmentDialog::_attachmentTypeChanged( int )
 {
   bool enabled = !( type() == AttachmentType::URL );
   destinationDirectoryEditor_->setEnabled( enabled );
