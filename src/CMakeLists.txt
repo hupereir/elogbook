@@ -9,8 +9,10 @@ ADD_DEFINITIONS( ${QT_DEFINITIONS} )
 
 ########### X11 #########
 IF( NOT Q_WS_WIN )
+
   FIND_PACKAGE( X11 REQUIRED )
   INCLUDE_DIRECTORIES( ${X11_X11_INCLUDE_PATH} )
+
 ENDIF()
 
 ########### includes #########
@@ -124,13 +126,27 @@ SET( elogbook_RESOURCES pixmaps.qrc)
 QT4_WRAP_CPP( elogbook_HEADERS_MOC ${elogbook_HEADERS} )
 QT4_ADD_RESOURCES( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
 
-ADD_EXECUTABLE( elogbook
-  ${elogbook_SOURCES}
-  ${elogbook_HEADERS_MOC}
-  ${elogbook_RESOURCES_RCC}
-)
+IF( Q_WS_WIN )
 
-TARGET_LINK_LIBRARIES( elogbook ${X11_X11_LIB} )
+  ADD_EXECUTABLE( elogbook WIN32
+    ${elogbook_SOURCES}
+    ${elogbook_HEADERS_MOC}
+    ${elogbook_RESOURCES_RCC}
+    elogbook_win32.rc
+  )
+
+ELSE()
+
+  ADD_EXECUTABLE( elogbook
+    ${elogbook_SOURCES}
+    ${elogbook_HEADERS_MOC}
+    ${elogbook_RESOURCES_RCC}
+  )
+
+  TARGET_LINK_LIBRARIES( elogbook ${X11_X11_LIB} )
+
+ENDIF()
+
 TARGET_LINK_LIBRARIES( elogbook ${QT_LIBRARIES} )
 TARGET_LINK_LIBRARIES( elogbook
   base
@@ -148,29 +164,37 @@ TARGET_LINK_LIBRARIES( elogbook elogbook_lib )
 INSTALL( TARGETS elogbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 
 ########### next target ###############
-SET( copy_logbook_SOURCES copy-logbook.cpp )
-ADD_EXECUTABLE( copy-logbook ${copy_logbook_SOURCES} )
+IF( NOT Q_WS_WIN )
 
-TARGET_LINK_LIBRARIES( copy-logbook ${QT_LIBRARIES} )
-TARGET_LINK_LIBRARIES( copy-logbook
-  base
-  base-qt
-  base-server
-  elogbook_lib
-)
+  SET( copy_logbook_SOURCES copy-logbook.cpp )
+  ADD_EXECUTABLE( copy-logbook ${copy_logbook_SOURCES} )
+  TARGET_LINK_LIBRARIES( copy-elogbook ${X11_X11_LIB} )
+  TARGET_LINK_LIBRARIES( copy-logbook ${QT_LIBRARIES} )
+  TARGET_LINK_LIBRARIES( copy-logbook
+    base
+    base-qt
+    base-server
+    elogbook_lib
+  )
 
-INSTALL( TARGETS copy-logbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+  INSTALL( TARGETS copy-logbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+
+ENDIF()
 
 ########### next target ###############
-SET( synchronize_logbook_SOURCES synchronize-logbook.cpp )
-ADD_EXECUTABLE( synchronize-logbook ${synchronize_logbook_SOURCES} )
+IF( NOT Q_WS_WIN )
 
-TARGET_LINK_LIBRARIES( synchronize-logbook ${QT_LIBRARIES} )
-TARGET_LINK_LIBRARIES( synchronize-logbook
-  base
-  base-qt
-  base-server
-  elogbook_lib
-)
+  SET( synchronize_logbook_SOURCES synchronize-logbook.cpp )
+  ADD_EXECUTABLE( synchronize-logbook ${synchronize_logbook_SOURCES} )
+  TARGET_LINK_LIBRARIES( synchronize-elogbook ${X11_X11_LIB} )
+  TARGET_LINK_LIBRARIES( synchronize-logbook ${QT_LIBRARIES} )
+  TARGET_LINK_LIBRARIES( synchronize-logbook
+    base
+    base-qt
+    base-server
+    elogbook_lib
+  )
 
-INSTALL( TARGETS synchronize-logbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+  INSTALL( TARGETS synchronize-logbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+
+ENDIF()
