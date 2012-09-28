@@ -168,7 +168,7 @@ IF( NOT Q_WS_WIN )
 
   SET( copy_logbook_SOURCES copy-logbook.cpp )
   ADD_EXECUTABLE( copy-logbook ${copy_logbook_SOURCES} )
-  TARGET_LINK_LIBRARIES( copy-elogbook ${X11_X11_LIB} )
+  TARGET_LINK_LIBRARIES( copy-logbook ${X11_X11_LIB} )
   TARGET_LINK_LIBRARIES( copy-logbook ${QT_LIBRARIES} )
   TARGET_LINK_LIBRARIES( copy-logbook
     base
@@ -186,7 +186,7 @@ IF( NOT Q_WS_WIN )
 
   SET( synchronize_logbook_SOURCES synchronize-logbook.cpp )
   ADD_EXECUTABLE( synchronize-logbook ${synchronize_logbook_SOURCES} )
-  TARGET_LINK_LIBRARIES( synchronize-elogbook ${X11_X11_LIB} )
+  TARGET_LINK_LIBRARIES( synchronize-logbook ${X11_X11_LIB} )
   TARGET_LINK_LIBRARIES( synchronize-logbook ${QT_LIBRARIES} )
   TARGET_LINK_LIBRARIES( synchronize-logbook
     base
