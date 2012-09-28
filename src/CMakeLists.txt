@@ -135,6 +135,28 @@ IF( Q_WS_WIN )
     elogbook_win32.rc
   )
 
+  ### get full target path
+  GET_TARGET_PROPERTY( TARGET_PATH elogbook LOCATION )
+
+  ### Compress target
+  FIND_PROGRAM( UPX upx )
+  IF( UPX )
+
+    ADD_CUSTOM_COMMAND( TARGET elogbook POST_BUILD COMMAND upx ${TARGET_PATH} )
+
+  ENDIF()
+
+  ### copy to version release
+  SET( elogbook_RELEASE elogbook-${ELOGBOOK_VERSION} )
+  ADD_CUSTOM_COMMAND(
+    TARGET elogbook POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${TARGET_PATH} ${CMAKE_CURRENT_BINARY_DIR}/${elogbook_RELEASE}.exe
+  )
+
+  INSTALL(
+    PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${elogbook_RELEASE}.exe
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/release )
+
 ELSE()
 
   ADD_EXECUTABLE( elogbook
@@ -160,7 +182,6 @@ IF( ASPELL_FOUND )
 ENDIF()
 
 TARGET_LINK_LIBRARIES( elogbook elogbook_lib )
-
 INSTALL( TARGETS elogbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
 
 ########### next target ###############
