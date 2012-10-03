@@ -10,6 +10,14 @@ SET( ELOGBOOK_VERSION_MINOR 8 )
 SET( ELOGBOOK_VERSION_PATCH 8 )
 SET( ELOGBOOK_VERSION ${ELOGBOOK_VERSION_MAJOR}.${ELOGBOOK_VERSION_MINOR}.${ELOGBOOK_VERSION_PATCH} )
 
+########### modules #################
+SET( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/base-cmake" )
+INCLUDE( Macros )
+INCLUDE( Win32Macros )
+
+########### timestamp #########
+GET_BUILD_TIMESTAMP( TIMESTAMP )
+
 ########### packages ###############
 SET( CPACK_PACKAGE_NAME "elogbook" )
 SET( CPACK_PACKAGE_VENDOR "hugo.pereira@free.fr" )
