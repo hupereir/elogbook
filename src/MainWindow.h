@@ -519,24 +519,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! edit entry title
     void _startEntryEdition( void );
 
-    //! store selected jobs in model
-    void _storeSelectedEntries( void );
-
-    //! restore selected jobs from model
-    void _restoreSelectedEntries( void );
-
-    //! store selected jobs in model
-    void _storeSelectedKeywords( void );
-
-    //! restore selected jobs from model
-    void _restoreSelectedKeywords( void );
-
-    //! store expanded jobs in model
-    void _storeExpandedKeywords( void );
-
-    //! restore expanded jobs from model
-    void _restoreExpandedKeywords( void );
-
     //! monitored files
     void _showMonitoredFiles( void );
 

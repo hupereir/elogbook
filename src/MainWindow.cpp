@@ -190,12 +190,6 @@ MainWindow::MainWindow( QWidget *parent ):
         menu->addAction( &editKeywordAction() );
     }
 
-    connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedKeywords() ) );
-    connect( &_keywordModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeExpandedKeywords() ) );
-
-    connect( &_keywordModel(), SIGNAL( layoutChanged() ), SLOT( _restoreSelectedKeywords() ) );
-    connect( &_keywordModel(), SIGNAL( layoutChanged() ), SLOT( _restoreExpandedKeywords() ) );
-
     /*
     add the deleteKeywordAction to the keyword list,
     so that the corresponding shortcut gets activated whenever it is pressed
@@ -251,8 +245,6 @@ MainWindow::MainWindow( QWidget *parent ):
     connect( entryList_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _entryItemClicked( const QModelIndex& ) ) );
     _updateEntryActions();
 
-    connect( &_logEntryModel(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelectedEntries() ) );
-    connect( &_logEntryModel(), SIGNAL( layoutChanged() ), SLOT( _restoreSelectedEntries() ) );
     connect( &_logEntryModel(), SIGNAL( layoutChanged() ), entryList_, SLOT( resizeColumns() ) );
     connect( &_logEntryModel(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) );
 
@@ -3090,75 +3082,6 @@ void MainWindow::_startEntryEdition( void )
     // edit item
     logEntryList().edit( index );
 
-}
-
-//________________________________________
-void MainWindow::_storeSelectedEntries( void )
-{ _logEntryModel().setSelectedIndexes( logEntryList().selectionModel()->selectedRows() ); }
-
-//________________________________________
-void MainWindow::_restoreSelectedEntries( void )
-{
-
-    // retrieve indexes
-    const QModelIndexList selectedIndexes( _logEntryModel().selectedIndexes() );
-    if( selectedIndexes.empty() ) logEntryList().selectionModel()->clear();
-    else {
-
-        logEntryList().selectionModel()->select( selectedIndexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        foreach( const QModelIndex& index, selectedIndexes )
-        { logEntryList().selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
-
-    }
-
-    return;
-}
-
-//________________________________________
-void MainWindow::_storeSelectedKeywords( void )
-{ _keywordModel().setSelectedIndexes( keywordList().selectionModel()->selectedRows() ); }
-
-//________________________________________
-void MainWindow::_restoreSelectedKeywords( void )
-{
-
-    // retrieve indexes
-    const QModelIndexList selectedIndexes( _keywordModel().selectedIndexes() );
-    if( selectedIndexes.empty() ) keywordList().selectionModel()->clear();
-    else {
-
-        keywordList().selectionModel()->select( selectedIndexes.front(),  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
-        foreach( const QModelIndex& index, selectedIndexes )
-        { keywordList().selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
-
-    }
-
-    return;
-}
-
-//________________________________________
-void MainWindow::_storeExpandedKeywords( void )
-{
-
-    Debug::Throw( "MainWindow::_storeExpandedKeywords.\n" );
-    _keywordModel().clearExpandedIndexes();
-    foreach( const QModelIndex& index, _keywordModel().indexes() )
-    { if( keywordList().isExpanded( index ) ) _keywordModel().setIndexExpanded( index, true ); }
-
-}
-
-//________________________________________
-void MainWindow::_restoreExpandedKeywords( void )
-{
-
-    Debug::Throw( "MainWindow::_restoreExpandedKeywords.\n" );
-
-    QModelIndexList expandedIndexes( _keywordModel().expandedIndexes() );
-    keywordList().collapseAll();
-    foreach( const QModelIndex& index, expandedIndexes )
-    { keywordList().setExpanded( index, true ); }
-
-    return;
 }
 
 //_____________________________________________

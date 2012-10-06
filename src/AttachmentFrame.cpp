@@ -88,8 +88,6 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     contextMenu_->addAction( &cleanAction() );
 
     // connections
-    connect( &_model(), SIGNAL( layoutAboutToBeChanged() ), SLOT( _storeSelection() ) );
-    connect( &_model(), SIGNAL( layoutChanged() ), SLOT( _restoreSelection() ) );
     connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
     connect( list_->selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
     connect( list_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
@@ -803,24 +801,6 @@ void AttachmentFrame::_itemSelected( const QModelIndex& index )
     Attachment& attachment( *model_.get( index ) );
     Debug::Throw() << "AttachmentFrame::_itemSelected - " << attachment.file() << endl;
     emit attachmentSelected( attachment );
-
-}
-
-//______________________________________________________________________
-void AttachmentFrame::_storeSelection( void )
-{ model_.setSelectedIndexes( list_->selectionModel()->selectedRows() ); }
-
-//______________________________________________________________________
-void AttachmentFrame::_restoreSelection( void )
-{
-
-    const QModelIndexList selection( model_.selectedIndexes() );
-    list_->selectionModel()->clearSelection();
-
-    foreach( const QModelIndex& index, selection )
-    { list_->selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows ); }
-
-    return;
 
 }
 

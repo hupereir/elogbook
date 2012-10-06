@@ -201,12 +201,6 @@ class AttachmentFrame: public QWidget, public BASE::Key
     //! current item changed
     void _itemSelected( const QModelIndex& );
 
-    //! restore selection
-    void _storeSelection( void );
-
-    //! store selection
-    void _restoreSelection( void );
-
     //@}
 
     private:
