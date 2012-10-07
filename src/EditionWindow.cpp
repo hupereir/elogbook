@@ -1611,7 +1611,7 @@ void EditionWindow::ColorWidget::setColor( const QColor& color )
 {
 
     // create pixmap
-    QPixmap pixmap( IconSize( IconSize::Huge ) );
+    QPixmap pixmap = QPixmap( IconSize( IconSize::Huge ) );
     pixmap.fill( Qt::transparent );
 
     QPainter painter( &pixmap );

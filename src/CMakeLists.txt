@@ -126,27 +126,12 @@ SET( elogbook_RESOURCES pixmaps.qrc)
 QT4_WRAP_CPP( elogbook_HEADERS_MOC ${elogbook_HEADERS} )
 QT4_ADD_RESOURCES( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
 
-IF( WIN32 )
-
-  INCLUDE("${CMAKE_SOURCE_DIR}/base-cmake/Win32Macros.cmake")
-  ADD_WIN32_EXECUTABLE( elogbook
-    ${ELOGBOOK_VERSION}
-    ${elogbook_SOURCES}
-    ${elogbook_HEADERS_MOC}
-    ${elogbook_RESOURCES_RCC}
-  )
-
-ELSE()
-
-  ADD_EXECUTABLE( elogbook
-    ${elogbook_SOURCES}
-    ${elogbook_HEADERS_MOC}
-    ${elogbook_RESOURCES_RCC}
-  )
-
-  TARGET_LINK_LIBRARIES( elogbook ${X11_X11_LIB} )
-
-ENDIF()
+ADD_PLATFORM_EXECUTABLE( elogbook
+  ${ELOGBOOK_VERSION}
+  ${elogbook_SOURCES}
+  ${elogbook_HEADERS_MOC}
+  ${elogbook_RESOURCES_RCC}
+)
 
 TARGET_LINK_LIBRARIES( elogbook ${QT_LIBRARIES} )
 TARGET_LINK_LIBRARIES( elogbook
@@ -161,7 +146,7 @@ IF( ASPELL_FOUND )
 ENDIF()
 
 TARGET_LINK_LIBRARIES( elogbook elogbook_lib )
-INSTALL( TARGETS elogbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+INSTALL( TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR} )
 
 ########### next target ###############
 IF( UNIX )
@@ -177,7 +162,7 @@ IF( UNIX )
     elogbook_lib
   )
 
-  INSTALL( TARGETS copy-logbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+  INSTALL( TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR} )
 
 ENDIF()
 
@@ -195,6 +180,6 @@ IF( UNIX )
     elogbook_lib
   )
 
-  INSTALL( TARGETS synchronize-logbook DESTINATION ${CMAKE_INSTALL_PREFIX}/bin )
+  INSTALL( TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR} )
 
 ENDIF()

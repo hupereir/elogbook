@@ -6,7 +6,7 @@ TARGET = copy_logbook
 CONFIG += qt release
 QT += xml network
 
-VERSION = 1.8.8
+VERSION = 1.8.9
 DEFINES += VERSION=\\\"$$VERSION\\\"
 
 mac {
