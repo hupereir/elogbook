@@ -143,10 +143,10 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     void _resetIcons( void );
 
     //! create icon for a given color
-    static QIcon _icon( const QColor& );
+    static const QIcon& _icon( const QColor& );
 
     //! attachment icon
-    static QIcon& _attachmentIcon( void );
+    static const QIcon& _attachmentIcon( void );
 
     //! used to sort IconCaches
     class SortFTor: public ItemModel::SortFTor

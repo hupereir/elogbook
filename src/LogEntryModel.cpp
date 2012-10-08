@@ -21,20 +21,13 @@
 *
 *******************************************************************************/
 
-/*!
-\file    LogEntryModel.h
-\brief   LogEntry information to display in lists
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 #include "LogEntryModel.h"
 
 #include "Attachment.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"
 #include "Icons.h"
+#include "IconEngine.h"
 #include "LogEntry.h"
 #include "Singleton.h"
 #include "TimeStamp.h"
@@ -270,10 +263,8 @@ void LogEntryModel::_resetIcons( void )
 }
 
 //________________________________________________________
-QIcon LogEntryModel::_icon( const QColor& color )
+const QIcon& LogEntryModel::_icon( const QColor& color )
 {
-
-    // Debug::Throw( "LogEntryModel::_icon.\n" );
 
     IconCache::iterator iter( _icons().find( color.name() ) );
     if( iter != _icons().end() ) return iter.value();
@@ -303,23 +294,15 @@ QIcon LogEntryModel::_icon( const QColor& color )
 }
 
 //________________________________________________________
-QIcon& LogEntryModel::_attachmentIcon( void )
+const QIcon& LogEntryModel::_attachmentIcon( void )
 {
 
     Debug::Throw( "LogEntryModel::_attachmentIcon" );
 
-    static QIcon attachment_icon;
-    if( !attachment_icon.isNull() ) return attachment_icon;
+    static QIcon attachmentIcon;
+    if( attachmentIcon.isNull() ) attachmentIcon = IconEngine::get( ICONS::ATTACH );
+    return attachmentIcon;
 
-    unsigned int pixmapSize = XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
-    QSize size( pixmapSize, pixmapSize );
-    QSize scale(size*0.9);
-    attachment_icon = CustomPixmap()
-        .empty( size )
-        .merge( CustomPixmap().find( ICONS::ATTACH )
-        .scaled( scale, Qt::KeepAspectRatio, Qt::SmoothTransformation ), CustomPixmap::CENTER );
-
-    return attachment_icon;
 }
 
 //________________________________________________________
