@@ -351,8 +351,8 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
         painter.setBrush( color_ );
         painter.setPen( Qt::NoPen );
         QRectF tmp_rect( FormatColorButton::rect() );
-        tmp_rect.setWidth( 0.5*std::min( rect().width(), rect().height() ) );
-        tmp_rect.setHeight( 0.5*std::min( rect().width(), rect().height() ) );
+        tmp_rect.setWidth( 0.5*qMin( rect().width(), rect().height() ) );
+        tmp_rect.setHeight( 0.5*qMin( rect().width(), rect().height() ) );
         tmp_rect.translate( rect().width() - tmp_rect.width(), rect().height() - tmp_rect.height() );
         painter.drawEllipse( tmp_rect );
         painter.end();

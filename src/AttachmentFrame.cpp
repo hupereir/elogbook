@@ -324,7 +324,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
         if( attachment->type() == AttachmentType::URL ) continue;
         if( attachment->file().isEmpty() ) continue;
 
-        records.push_back( FileRecord( attachment->file() ) );
+        records << FileRecord( attachment->file() );
 
         if( attachment->isLink() == Attachment::YES || attachment->isLink() == Attachment::UNKNOWN )
         { records << FileRecord( attachment->sourceFile() ); }

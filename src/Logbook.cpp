@@ -178,7 +178,7 @@ bool Logbook::read( void )
         else if( tagName == XML::MODIFICATION ) setModification( XmlTimeStamp( element ) );
         else if( tagName == XML::BACKUP ) setBackup( XmlTimeStamp( element ) );
         else if( tagName == XML::RECENT_ENTRIES ) _readRecentEntries( element );
-        else if( tagName == XML::LOGBOOK_BACKUP ) backupFiles_.push_back( Backup( element ) );
+        else if( tagName == XML::LOGBOOK_BACKUP ) backupFiles_ << Backup( element );
         else if( tagName == XML::ENTRY ) {
 
             LogEntry* entry = new LogEntry( element );
@@ -209,7 +209,7 @@ bool Logbook::read( void )
             emit messageAvailable( buffer );
 
             child->read();
-            children_.push_back( child );
+            children_ << child;
 
         } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << endl;
 
@@ -445,7 +445,7 @@ XmlError::List Logbook::xmlErrors( void ) const
 {
     Debug::Throw( "Logbook::xmlErrors.\n" );
     XmlError::List out;
-    if( error_ ) out.push_back( error_ );
+    if( error_ ) out << error_;
     foreach( Logbook* logbook, children_ )
     {
         XmlError::List tmp( logbook->xmlErrors() );
@@ -501,7 +501,7 @@ Logbook* Logbook::latestChild( void )
         dest->setFile( _childFilename( file(), children_.size() ).addPath( file().path() ) );
         dest->setModified( true );
 
-        children_.push_back( dest );
+        children_ << dest;
         setModified( true );
 
         // associate to existing FileCheck if any
@@ -550,7 +550,7 @@ void Logbook::truncateRecentEntriesList( int maxCount )
 
     Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
     while( recentEntries_.size() > maxCount )
-    { recentEntries_.pop_front(); }
+    { recentEntries_.removeFirst(); }
 
 }
 
@@ -590,7 +590,7 @@ QList<LogEntry*> Logbook::recentEntries( void ) const
     foreach( const TimeStamp& timeStamp, recentEntries_ )
     {
         BASE::KeySet<LogEntry>::const_iterator entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( timeStamp ) ) );
-        if( entryIter != entries.end() ) out.push_back( *entryIter );
+        if( entryIter != entries.end() ) out << *entryIter;
     }
 
     return out;
@@ -608,7 +608,7 @@ void Logbook::addRecentEntry( const LogEntry* entry )
     recentEntries_.erase( std::remove( recentEntries_.begin(), recentEntries_.end(), timeStamp ), recentEntries_.end() );
 
     // adds again at the end of the list
-    recentEntries_.push_back( timeStamp );
+    recentEntries_ << timeStamp;
 
     // mark logbook as modified
     setModified( true );
@@ -759,7 +759,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 void Logbook::addBackup( const File& file )
 {
     Debug::Throw( "Logbook::addBackup.\n" );
-    backupFiles_.push_back( Backup( file ) );
+    backupFiles_ << Backup( file );
     backup_ = backupFiles_.back().creation();
     setModified( true );
 }
@@ -794,7 +794,7 @@ void Logbook::_readRecentEntries( const QDomElement& element )
 
         // children
         QString tagName( childElement.tagName() );
-        if( tagName == XML::CREATION ) recentEntries_.push_back( XmlTimeStamp( childElement ) );
+        if( tagName == XML::CREATION ) recentEntries_ << XmlTimeStamp( childElement );
 
     }
 

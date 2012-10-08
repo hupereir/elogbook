@@ -135,11 +135,11 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     typedef QPair<QString, QString> StringPair;
     typedef QList<StringPair> StringList;
     StringList values;
-    if( mask_&Logbook::LOGBOOK_TITLE ) values.push_back( StringPair( "Title: ", logbook_->title() ) );
-    if( mask_&Logbook::LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() ) values.push_back( StringPair( "Comments: ", logbook_->comments() ) );
-    if( mask_&Logbook::LOGBOOK_AUTHOR ) values.push_back( StringPair( "Author: ", logbook_->author() ) );
+    if( mask_&Logbook::LOGBOOK_TITLE ) values << StringPair( "Title: ", logbook_->title() );
+    if( mask_&Logbook::LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() ) values << StringPair( "Comments: ", logbook_->comments() );
+    if( mask_&Logbook::LOGBOOK_AUTHOR ) values << StringPair( "Author: ", logbook_->author() );
 
-    if( mask_&Logbook::LOGBOOK_FILE ) values.push_back( StringPair( "File: ", logbook_->file() ) );
+    if( mask_&Logbook::LOGBOOK_FILE ) values << StringPair( "File: ", logbook_->file() );
     if( mask_&Logbook::LOGBOOK_DIRECTORY && !logbook_->directory().isEmpty() )
     {
         QString buffer;
@@ -147,12 +147,12 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
         what << logbook_->directory();
         if( !logbook_->checkDirectory() ) what << " (not found)";
 
-        values.push_back( StringPair( "Attachments directory: ", buffer ) );
+        values << StringPair( "Attachments directory: ", buffer );
     }
 
-    if( mask_&Logbook::LOGBOOK_CREATION ) values.push_back( StringPair( "Created: ", logbook_->creation().toString() ) );
-    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values.push_back( StringPair( "Last Modified: ", logbook_->modification().toString() ) );
-    if( mask_&Logbook::LOGBOOK_BACKUP ) values.push_back( StringPair( "Last backup: ", logbook_->backup().toString() ) );
+    if( mask_&Logbook::LOGBOOK_CREATION ) values << StringPair( "Created: ", logbook_->creation().toString() );
+    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values << StringPair( "Last Modified: ", logbook_->modification().toString() );
+    if( mask_&Logbook::LOGBOOK_BACKUP ) values << StringPair( "Last backup: ", logbook_->backup().toString() );
     const int nRows( values.size() );
 
     // create table

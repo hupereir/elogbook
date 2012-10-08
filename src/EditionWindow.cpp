@@ -195,7 +195,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // delete_entry button
     toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), "Delete Entry", this ) );
     connect( action, SIGNAL( triggered() ), SLOT( _deleteEntry() ) );
-    readOnlyActions_.push_back( action );
+    readOnlyActions_ << action;
 
     // add_attachment button
     toolbar->addAction( &frame->newAction() );
@@ -204,11 +204,11 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     formatBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
     formatBar_->setTarget( activeEditor() );
     formatBar_->addAction( &insertLinkAction() );
-    readOnlyActions_.push_back( &insertLinkAction() );
+    readOnlyActions_ << &insertLinkAction();
 
     const FormatBar::ActionMap& actions( formatBar_->actions() );
     for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); ++iter )
-    { readOnlyActions_.push_back( iter.value() ); }
+    { readOnlyActions_ << iter.value(); }
 
     // set proper connection for first editor
     // (because it could not be performed in _newTextEditor)
@@ -220,8 +220,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
     toolbar->addAction( undoAction_ );
     toolbar->addAction( redoAction_ );
-    readOnlyActions_.push_back( undoAction_ );
-    readOnlyActions_.push_back( redoAction_ );
+    readOnlyActions_ << undoAction_;
+    readOnlyActions_ << redoAction_;
 
     // undo/redo connections
     connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
@@ -761,12 +761,12 @@ EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation
     // recompute dimension
     // take the max of active display and splitter,
     // in case no new splitter was created.
-    dimension = std::max( dimension, (orientation == Qt::Horizontal) ? splitter.width():splitter.height() );
+    dimension = qMax( dimension, (orientation == Qt::Horizontal) ? splitter.width():splitter.height() );
 
     // assign equal size to all splitter children
     QList<int> sizes;
     for( int i=0; i<splitter.count(); i++ )
-    { sizes.push_back( dimension/splitter.count() ); }
+    { sizes << dimension/splitter.count(); }
     splitter.setSizes( sizes );
 
     // synchronize both editors, if cloned
@@ -846,7 +846,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 
             QList<int> sizes;
             for( int i=0; i<parentSplitter->count(); i++ )
-            { sizes.push_back( dimension/parentSplitter->count() ); }
+            { sizes << dimension/parentSplitter->count(); }
             parentSplitter->setSizes( sizes );
 
         }

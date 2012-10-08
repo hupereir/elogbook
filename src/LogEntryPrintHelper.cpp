@@ -113,11 +113,11 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     typedef QPair<QString, QString> StringPair;
     typedef QList<StringPair> StringList;
     StringList values;
-    if( mask_&LogEntry::ENTRY_KEYWORD ) values.push_back( StringPair( "Keyword: ", entry_->keyword().get() ) );
-    if( mask_&LogEntry::ENTRY_TITLE ) values.push_back( StringPair( "Title: ", entry_->title() ) );
-    if( mask_&LogEntry::ENTRY_AUTHOR ) values.push_back( StringPair( "Author: ", entry_->author() ) );
-    if( mask_&LogEntry::ENTRY_CREATION ) values.push_back( StringPair( "Created: ", entry_->creation().toString() ) );
-    if( mask_&LogEntry::ENTRY_MODIFICATION ) values.push_back( StringPair( "Last Modified: ", entry_->modification().toString() ) );
+    if( mask_&LogEntry::ENTRY_KEYWORD ) values << StringPair( "Keyword: ", entry_->keyword().get() );
+    if( mask_&LogEntry::ENTRY_TITLE ) values << StringPair( "Title: ", entry_->title() );
+    if( mask_&LogEntry::ENTRY_AUTHOR ) values << StringPair( "Author: ", entry_->author() );
+    if( mask_&LogEntry::ENTRY_CREATION ) values << StringPair( "Created: ", entry_->creation().toString() );
+    if( mask_&LogEntry::ENTRY_MODIFICATION ) values << StringPair( "Last Modified: ", entry_->modification().toString() );
     const int nRows( values.size() );
 
     // create table
@@ -252,7 +252,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
             formatRange.start = fragment.position() - block.position();
             formatRange.length = fragment.length();
             formatRange.format = fragment.charFormat();
-            formatRanges.push_back( formatRange );
+            formatRanges << formatRange;
 
         }
 

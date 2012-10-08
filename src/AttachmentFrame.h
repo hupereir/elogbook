@@ -84,7 +84,7 @@ class AttachmentFrame: public QWidget, public BASE::Key
     void add( Attachment& attachment )
     {
         AttachmentModel::List attachments;
-        attachments.push_back( &attachment );
+        attachments << &attachment;
         add( attachments );
     }
 
