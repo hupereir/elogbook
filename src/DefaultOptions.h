@@ -1,3 +1,6 @@
+#ifndef DefaultOptions_h
+#define DefaultOptions_h
+
 // $Id$
 
 /******************************************************************************
@@ -20,14 +23,6 @@
 *
 *
 *******************************************************************************/
-
-/*!
-\file DefaultOptions.h
-\brief Default options
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
 
 #include "LogEntryModel.h"
 #include "AttachmentModel.h"
@@ -156,3 +151,5 @@ void installDefaultOptions( void )
     XmlOptions::get().setAutoDefault( false );
 
 };
+
+#endif
