@@ -21,13 +21,9 @@
 *
 *******************************************************************************/
 
-#include <QApplication>
-#include <QShortcut>
-#include <QLayout>
-#include <QPushButton>
+#include "AttachmentWindow.h"
 
 #include "Application.h"
-#include "AttachmentWindow.h"
 #include "EditionWindow.h"
 #include "IconEngine.h"
 #include "Icons.h"
@@ -35,57 +31,60 @@
 #include "LogEntry.h"
 #include "TreeView.h"
 
+#include <QtGui/QShortcut>
+#include <QtGui/QLayout>
+
 //________________________________________
 AttachmentWindow::AttachmentWindow( QWidget* parent ):
-  CustomDialog( parent, CloseButton )
+    CustomDialog( parent, CloseButton )
 {
 
-  Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
-  setWindowTitle( "Attachments - Elogbook" );
-  setOptionName( "ATTACHMENT_WINDOW" );
+    Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
+    setWindowTitle( "Attachments - Elogbook" );
+    setOptionName( "ATTACHMENT_WINDOW" );
 
-  mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
-  connect( frame_, SIGNAL( attachmentSelected( Attachment& ) ), SLOT( _displayEntry( Attachment& ) ) );
+    mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
+    connect( frame_, SIGNAL( attachmentSelected( Attachment& ) ), SLOT( _displayEntry( Attachment& ) ) );
 
-  frame().contextMenu().insertAction( &frame().newAction(), &frame().list().findAction() );
+    frame().contextMenu().insertAction( &frame().newAction(), &frame().list().findAction() );
 
-  // shortcuts
-  connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
-  connect( new QShortcut( QKeySequence::Close, this ), SIGNAL( activated() ), SLOT( close() ) );
+    // shortcuts
+    connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
+    connect( new QShortcut( QKeySequence::Close, this ), SIGNAL( activated() ), SLOT( close() ) );
 
-  uniconify_action_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
-  uniconify_action_->setToolTip( "Raise application main window" );
-  connect( uniconify_action_, SIGNAL( triggered() ), SLOT( uniconify() ) );
+    uniconifyAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
+    uniconifyAction_->setToolTip( "Raise application main window" );
+    connect( uniconifyAction_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
 };
 
 //________________________________________
 void AttachmentWindow::show( void )
 {
-  Debug::Throw( "AttachmentWindow::show.\n" );
-  centerOnWidget( qApp->activeWindow());
-  QWidget::show();
-  QWidget::raise();
+    Debug::Throw( "AttachmentWindow::show.\n" );
+    centerOnWidget( qApp->activeWindow());
+    QWidget::show();
+    QWidget::raise();
 }
 
 //________________________________________
 void AttachmentWindow::uniconify( void )
 {
-  CustomDialog::uniconify();
-  frame().list().setFocus();
+    CustomDialog::uniconify();
+    frame().list().setFocus();
 }
 
 //________________________________________
 void AttachmentWindow::_displayEntry( Attachment& attachment )
 {
 
-  Debug::Throw( "AttachmentWindow::_displayEntry.\n");
+    Debug::Throw( "AttachmentWindow::_displayEntry.\n");
 
-  // retrieve associated entry
-  LogEntry *entry( attachment.entry() );
+    // retrieve associated entry
+    LogEntry *entry( attachment.entry() );
 
-  // check if entry is visible
-  if( entry && !entry->isSelected() ) entry->setFindSelected( true );
-  emit entrySelected( entry );
+    // check if entry is visible
+    if( entry && !entry->isSelected() ) entry->setFindSelected( true );
+    emit entrySelected( entry );
 
 }

@@ -1,3 +1,6 @@
+#ifndef AttachmentWindow_h
+#define AttachmentWindow_h
+
 // $Id$
 
 /******************************************************************************
@@ -21,79 +24,59 @@
 *
 *******************************************************************************/
 
-#ifndef AttachmentWindow_h
-#define AttachmentWindow_h
-
-/*!
-   \file    AttachmentWindow.h
-   \brief   popup window to list/edit all attachments
-            independantly from entries
-   \author  Hugo Pereira
-   \version $Revision$
-   \date    $Date$
-*/
-
-#include <QEvent>
-
-
 #include "CustomDialog.h"
 #include "Counter.h"
 #include "AttachmentFrame.h"
 #include "Debug.h"
 
+#include <QtCore/QEvent>
+
 class Attachment;
 
-/*!
-  \class  AttachmentWindow
-   \brief popup window to list/edit all attachments independantly from entries
-*/
-
+//! popup window to list/edit all attachments independantly from entries
 class AttachmentWindow: public CustomDialog
 {
 
-  //! Qt meta object declaration
-  Q_OBJECT
+    //! Qt meta object declaration
+    Q_OBJECT
 
-  public:
+    public:
 
-  //! creator
-  AttachmentWindow( QWidget* parent = 0 );
+    //! creator
+    AttachmentWindow( QWidget* = 0 );
 
-  //! display widget
-  void show( void );
+    //! display widget
+    void show( void );
 
-  //! retrieve associated List
-  AttachmentFrame& frame()
-  {
-    assert( frame_ );
-    return *frame_;
-  }
+    //! retrieve associated List
+    AttachmentFrame& frame()
+    { return *frame_; }
 
-  //! uniconify window
-  QAction& uniconifyAction( void )
-  { return *uniconify_action_; }
+    //! uniconify window
+    QAction& uniconifyAction( void )
+    { return *uniconifyAction_; }
 
-  signals:
+    signals:
 
-  void entrySelected( LogEntry* );
+    void entrySelected( LogEntry* );
 
-  public slots:
+    public slots:
 
-  //! uniconify
-  void uniconify( void );
+    //! uniconify
+    void uniconify( void );
 
-  protected slots:
+    protected slots:
 
-  //! display entry associated to selected attachment when selection changes
-  void _displayEntry( Attachment& );
+    //! display entry associated to selected attachment when selection changes
+    void _displayEntry( Attachment& );
 
-  private:
+    private:
 
-  //! associated attachment list
-  AttachmentFrame* frame_;
+    //! associated attachment list
+    AttachmentFrame* frame_;
 
-  //! uniconify action
-  QAction* uniconify_action_;
+    //! uniconify action
+    QAction* uniconifyAction_;
 
 };
 

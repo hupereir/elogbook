@@ -111,7 +111,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     static const QString columnTitles_[nColumns];
 
     //! icon
-    static QIcon _icon( QString );
+    static const QIcon& _icon( QString );
 
     //! icon cache
     typedef QHash<QString, QIcon> IconCache;
