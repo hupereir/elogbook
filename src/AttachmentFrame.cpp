@@ -69,6 +69,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
 
     // create list
     layout()->addWidget( list_ = new TreeView( this ) );
+    list_->setItemMargin( 2 );
     list_->setModel( &_model() );
     list_->setSelectionMode( QAbstractItemView::ContiguousSelection );
     list_->setOptionName( "ATTACHMENTLIST" );
