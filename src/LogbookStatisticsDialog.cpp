@@ -21,21 +21,15 @@
 *
 *******************************************************************************/
 
-/*!
-   \file LogbookStatisticsDialog.cpp
-   \brief  logbook informations
-   \author Hugo Pereira
-   \version $Revision$
-   \date $Date$
-*/
-
 #include "LogbookStatisticsDialog.h"
 
-#include "TreeView.h"
+#include "Icons.h"
+#include "IconEngine.h"
 #include "AnimatedLineEditor.h"
 #include "Debug.h"
 #include "Logbook.h"
 #include "LogEntry.h"
+#include "TreeView.h"
 #include "Util.h"
 
 #include <QtGui/QLayout>
@@ -51,13 +45,21 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     setWindowTitle( "Logbook Statistics - Elogbook" );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
+    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->setSpacing(10);
+    hLayout->setMargin(5);
+    mainLayout().addLayout( hLayout );
+
+    QLabel* label = new QLabel(this);
+    label->setPixmap( IconEngine::get( ICONS::INFORMATION ).pixmap( iconSize() ) );
+    hLayout->addWidget( label, 0, Qt::AlignTop );
+
     QGridLayout* gridLayout = new QGridLayout();
     gridLayout->setMargin(0);
     gridLayout->setSpacing(2);
-    mainLayout().addLayout( gridLayout, 0 );
+    hLayout->addLayout( gridLayout, 0 );
 
     // file
-    QLabel* label;
     gridLayout->addWidget( label = new QLabel( "File: ", this ), 0, 0 );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 

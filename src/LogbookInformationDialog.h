@@ -23,17 +23,10 @@
 *
 *******************************************************************************/
 
-/*!
-\file LogbookInformationDialog.h
-\brief  logbook informations
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "AnimatedLineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
+#include "File.h"
 #include "TextEditor.h"
 
 class Logbook;

@@ -50,7 +50,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     QLabel* label = new QLabel(this);
     label->setPixmap( IconEngine::get( ICONS::INFORMATION ).pixmap( iconSize() ) );
-    hLayout->addWidget( label, 0, Qt::AlignHCenter );
+    hLayout->addWidget( label, 0, Qt::AlignTop );
 
     QGridLayout *gridLayout = new QGridLayout();
     gridLayout->setMargin(0);
