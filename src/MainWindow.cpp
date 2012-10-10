@@ -1412,9 +1412,14 @@ void MainWindow::setModified( bool value )
 
     QString buffer;
     QTextStream what( &buffer );
-    if( !logbook() || logbook()->file().isEmpty() ) what << "Elogbook";
-    else what << logbook()->file().localName() << " - " << logbook()->file().path();
-    if( value ) what << " (modified)";
+    if( logbook() && !logbook()->file().isEmpty() )
+    {
+        what << logbook()->file().localName();
+        if( value ) what << " (modified)";
+        what << " - ";
+    }
+
+    what << "Elogbook";
     setWindowTitle( buffer );
 
 }

@@ -373,14 +373,13 @@ QString EditionWindow::windowTitle( void ) const
     QTextStream what( &buffer );
     if( entry )
     {
-
         what << entry->title();
-        if( entry->keyword() != Keyword::NO_KEYWORD ) what << " - " << entry->keyword().get();
+        if( isReadOnly() ) what << " (read only)";
+        else if( modified()  ) what << " (modified)";
+        what << " - ";
+    }
 
-    } else what << "Electronic Logbook Editor";
-
-    if( isReadOnly() ) what << " (read only)";
-    else if( modified()  ) what << " (modified)";
+    what << "Elogbook";
     return buffer;
 
 }
