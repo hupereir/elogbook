@@ -681,7 +681,7 @@ void EditionWindow::_installActions( void )
     #endif
 
     // entry_info
-    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Entry Properties...", this ) );
+    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), "Entry Properties...", this ) );
     entryInfoAction_->setToolTip( "Show current entry properties" );
     connect( entryInfoAction_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
 

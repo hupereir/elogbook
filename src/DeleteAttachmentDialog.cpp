@@ -26,12 +26,11 @@
 #include "Debug.h"
 #include "Icons.h"
 #include "IconEngine.h"
-#include "PixmapEngine.h"
 
-#include <QButtonGroup>
-#include <QGroupBox>
-#include <QLabel>
-#include <QLayout>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
 
 //_____________________________________________________
 DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachment& attachment ):
@@ -44,27 +43,15 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     QButtonGroup* group = new QButtonGroup( this );
     group->setExclusive( true );
 
-    //! try load Question icon
-    QPixmap questionPixmap = PixmapEngine::get( ICONS::WARNING );
-    if( questionPixmap.isNull() )
-    {
+    QHBoxLayout *hLayout( new QHBoxLayout() );
+    hLayout->setSpacing(10);
+    hLayout->setMargin(0);
+    mainLayout().addLayout( hLayout );
 
-        mainLayout().addWidget( new QLabel( "Delete attachment ?", this ) );
-
-    } else {
-
-        QHBoxLayout *hLayout( new QHBoxLayout() );
-        hLayout->setSpacing(10);
-        hLayout->setMargin(0);
-        mainLayout().addLayout( hLayout );
-
-        QLabel* label = new QLabel( this );
-        label->setPixmap( questionPixmap );
-        hLayout->addWidget( label, 0, Qt::AlignHCenter );
-
-        hLayout->addWidget( new QLabel( "Delete attachment ?", this ) );
-
-    }
+    QLabel* label = new QLabel( this );
+    label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
+    hLayout->addWidget( label, 0, Qt::AlignHCenter );
+    hLayout->addWidget( new QLabel( "Delete attachment ?", this ) );
 
     QWidget *groupBox = new QWidget( this );
     mainLayout().addWidget( groupBox );

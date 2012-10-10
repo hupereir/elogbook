@@ -21,19 +21,11 @@
 *
 *******************************************************************************/
 
-/*!
-\file LogEntryInformationDialog.cpp
-\brief  logbook entry informations
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
+#include "LogEntryInformationDialog.h"
 
-#include "PixmapEngine.h"
 #include "Debug.h"
 #include "Icons.h"
 #include "IconEngine.h"
-#include "LogEntryInformationDialog.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "Options.h"
@@ -51,22 +43,19 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     setOptionName( "ENTRY_INFORMATION_DIALOG" );
 
-    QHBoxLayout* h_layout = new QHBoxLayout();
-    h_layout->setSpacing(10);
-    h_layout->setMargin(5);
-    mainLayout().addLayout( h_layout );
-
-    //! try load Question icon
-    QPixmap pixmap( PixmapEngine::get( ICONS::INFORMATION ) );
+    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->setSpacing(10);
+    hLayout->setMargin(5);
+    mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel(this);
-    label->setPixmap( pixmap );
-    h_layout->addWidget( label, 0, Qt::AlignHCenter );
+    label->setPixmap( IconEngine::get( ICONS::INFORMATION ).pixmap( iconSize() ) );
+    hLayout->addWidget( label, 0, Qt::AlignHCenter );
 
     QGridLayout *gridLayout = new QGridLayout();
     gridLayout->setMargin(0);
     gridLayout->setSpacing(2);
-    h_layout->addLayout( gridLayout, 1 );
+    hLayout->addLayout( gridLayout, 1 );
 
     // title
     gridLayout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );

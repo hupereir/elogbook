@@ -26,13 +26,10 @@
 #include "Debug.h"
 #include "Icons.h"
 #include "IconEngine.h"
-#include "PixmapEngine.h"
 
 #include <QtGui/QButtonGroup>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
-
-#include <cassert>
 
 //_____________________________________________________
 DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, const bool& hasEntries ):
@@ -42,7 +39,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
 
     assert( !keywords.empty() );
-    
+
     setWindowTitle( "Delete Keyword - Elogbook" );
 
     // create label
@@ -70,25 +67,15 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     }
 
     //! try load Question icon
-    QPixmap questionPixmap = PixmapEngine::get( ICONS::WARNING );
-    if( questionPixmap.isNull() )
-    {
-        mainLayout().addWidget( new QLabel( buffer, this ) );
+    QHBoxLayout *hLayout( new QHBoxLayout() );
+    hLayout->setSpacing(10);
+    hLayout->setMargin(0);
+    mainLayout().addLayout( hLayout );
 
-    } else {
-
-        QHBoxLayout *hLayout( new QHBoxLayout() );
-        hLayout->setSpacing(10);
-        hLayout->setMargin(0);
-        mainLayout().addLayout( hLayout );
-
-        QLabel* label = new QLabel( this );
-        label->setPixmap( questionPixmap );
-        hLayout->addWidget( label, 0, Qt::AlignHCenter );
-
-        hLayout->addWidget( new QLabel( buffer, this ) );
-
-    }
+    QLabel* label = new QLabel( this );
+    label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
+    hLayout->addWidget( label, 0, Qt::AlignHCenter );
+    hLayout->addWidget( new QLabel( buffer, this ) );
 
     QWidget *box = new QWidget( this );
     mainLayout().addWidget( box );

@@ -21,104 +21,83 @@
 *
 *******************************************************************************/
 
-/*!
-  \file LogbookModifiedDialog.cpp
-  \brief QDialog used when a file has been modified on disk
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
-#include <cassert>
-#include <QLabel>
-#include <QLayout>
-#include <QPushButton>
-
 #include "AnimatedTreeView.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "LogbookModifiedDialog.h"
-#include "PixmapEngine.h"
 #include "QtUtil.h"
 #include "XmlOptions.h"
 
-
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 
 //________________________________________________________
 LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files ):
-  BaseDialog( parent ),
-  Counter( "LogbookModifiedDialog" )
+BaseDialog( parent ),
+Counter( "LogbookModifiedDialog" )
 {
 
-  Debug::Throw( "LogbookModifiedDialog::LogbookModifiedDialog.\n" );
-  setOptionName( "LOGBOOK_MODIFIED_DIALOG" );
+    Debug::Throw( "LogbookModifiedDialog::LogbookModifiedDialog.\n" );
+    setOptionName( "LOGBOOK_MODIFIED_DIALOG" );
 
-  assert( !files.empty() );
+    assert( !files.empty() );
 
-  // create vbox layout
-  QVBoxLayout* layout=new QVBoxLayout();
-  layout->setSpacing(10);
-  layout->setMargin(10);
-  setLayout( layout );
+    // create vbox layout
+    QVBoxLayout* layout=new QVBoxLayout();
+    layout->setSpacing(10);
+    layout->setMargin(10);
+    setLayout( layout );
 
-  // create message
-  QString buffer;
-  QTextStream what( &buffer );
-  what
-      << "Following files have been modified"
-      << " been modified by by another application: "
-      << endl;
+    // create message
+    QString buffer;
+    QTextStream what( &buffer );
+    what
+        << "Following files have been modified"
+        << " been modified by by another application: "
+        << endl;
 
-  //! try load Question icon
-  QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
-  if( question_pixmap.isNull() )
-  { layout->addWidget( new QLabel( buffer, this ), 0, Qt::AlignHCenter ); }
-  else
-  {
-
-    QHBoxLayout *h_layout( new QHBoxLayout() );
-    layout->addLayout( h_layout, 0 );
+    QHBoxLayout *hLayout( new QHBoxLayout() );
+    layout->addLayout( hLayout, 0 );
     QLabel* label = new QLabel( this );
-    label->setPixmap( question_pixmap );
-    h_layout->addWidget( label, 0, Qt::AlignHCenter );
-    h_layout->addWidget( new QLabel( buffer, this ), 1, Qt::AlignHCenter );
+    label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
+    hLayout->addWidget( label, 0, Qt::AlignHCenter );
+    hLayout->addWidget( new QLabel( buffer, this ), 1, Qt::AlignHCenter );
 
-  }
+    // list
+    list_ = new AnimatedTreeView( this );
+    list_->setModel( &model_ );
+    layout->addWidget( list_, 1 );
 
-  // list
-  list_ = new AnimatedTreeView( this );
-  list_->setModel( &model_ );
-  layout->addWidget( list_, 1 );
+    model_.add( files.toList() );
+    list_->resizeColumns();
 
-  model_.add( files.toList() );
-  list_->resizeColumns();
+    // button layout
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    buttonLayout->setSpacing(5);
+    buttonLayout->setMargin(0);
+    layout->addLayout( buttonLayout );
+    buttonLayout->addStretch(1);
 
-  // button layout
-  QHBoxLayout *button_layout = new QHBoxLayout();
-  button_layout->setSpacing(5);
-  button_layout->setMargin(0);
-  layout->addLayout( button_layout );
-  button_layout->addStretch(1);
+    // resave button
+    QPushButton* button;
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE ), "&Save Again", this ) );
+    connect( button, SIGNAL( clicked() ), SLOT( _reSave() ) );
+    button->setToolTip( "Save file again. Disc modifications will be lost" );
 
-  // resave button
-  QPushButton* button;
-  button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE ), "&Save Again", this ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _reSave() ) );
-  button->setToolTip( "Save file again. Disc modifications will be lost" );
+    // save as button
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE_AS ), "Save &As", this ) );
+    connect( button, SIGNAL( clicked() ), SLOT( _saveAs() ) );
+    button->setToolTip( "Save file with a different name" );
 
-  // save as button
-  button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE_AS ), "Save &As", this ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _saveAs() ) );
-  button->setToolTip( "Save file with a different name" );
+    // reload button.
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::RELOAD ), "&Reload", this ) );
+    connect( button, SIGNAL( clicked() ), SLOT( _reLoad() ) );
+    button->setToolTip( "Reload file from disc. Modifications will be lost" );
 
-  // reload button.
-  button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::RELOAD ), "&Reload", this ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _reLoad() ) );
-  button->setToolTip( "Reload file from disc. Modifications will be lost" );
-
-  // ignore button.
-  button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), "&Ignore", this ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _ignore() ) );
-  button->setToolTip( "Ignore warning" );
+    // ignore button.
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), "&Ignore", this ) );
+    connect( button, SIGNAL( clicked() ), SLOT( _ignore() ) );
+    button->setToolTip( "Ignore warning" );
 
 }

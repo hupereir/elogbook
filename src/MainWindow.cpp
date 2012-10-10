@@ -1102,11 +1102,11 @@ void MainWindow::_installActions( void )
     htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), "Export to HTML...", this );
     connect( htmlAction_, SIGNAL( triggered() ), SLOT( _toHtml() ) );
 
-    logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Statistics...", this );
+    logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), "Logbook Statistics...", this );
     logbookStatisticsAction_->setToolTip( "View logbook statistics" );
     connect( logbookStatisticsAction_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
 
-    logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFO ), "Logbook Properties...", this );
+    logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), "Logbook Properties...", this );
     logbookInformationsAction_->setToolTip( "Edit logbook properties" );
     connect( logbookInformationsAction_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
 

@@ -20,28 +20,16 @@
 *
 *******************************************************************************/
 
-/*!
-\file AskForSaveDialog.cpp
-\brief QDialog used to ask if modifications of a file should be saved
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
-
-#include <QFrame>
-#include <QLabel>
-#include <QLayout>
-#include <QPushButton>
-
 #include "AskForSaveDialog.h"
-#include "PixmapEngine.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "XmlOptions.h"
 #include "QtUtil.h"
 
-
+#include <QtGui/QFrame>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 
 //________________________________________________________
 AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons ):
@@ -58,23 +46,14 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     layout->setMargin(10);
     setLayout( layout );
 
-    //! try load Question icon
-    QPixmap question_pixmap( PixmapEngine::get( ICONS::WARNING ) );
-    if( question_pixmap.isNull() )
-    { layout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter ); }
-    else
-    {
-
-        QHBoxLayout *h_layout( new QHBoxLayout() );
-        h_layout->setSpacing(10);
-        h_layout->setMargin(10);
-        layout->addLayout( h_layout, 1 );
-        QLabel* label = new QLabel( this );
-        label->setPixmap( question_pixmap );
-        h_layout->addWidget( label, 0, Qt::AlignHCenter );
-        h_layout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter );
-
-    }
+    QHBoxLayout *hLayout( new QHBoxLayout() );
+    hLayout->setSpacing(10);
+    hLayout->setMargin(10);
+    layout->addLayout( hLayout, 1 );
+    QLabel* label = new QLabel( this );
+    label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
+    hLayout->addWidget( label, 0, Qt::AlignHCenter );
+    hLayout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter );
 
     // horizontal separator
     QFrame* frame( new QFrame( this ) );
