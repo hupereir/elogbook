@@ -1,6 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
-    <file alias="icon.png">../icon.ico</file>
     <file alias="icon.png">../icon.png</file>
     <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
     <file alias="pixmaps/configure-backups.png">../pixmaps/configure-backups.png</file>
