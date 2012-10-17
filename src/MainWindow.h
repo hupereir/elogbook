@@ -319,18 +319,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! context menu event [overloaded]
     virtual void contextMenuEvent( QContextMenuEvent* );
 
-    //! keyword model
-    KeywordModel& _keywordModel( void )
-    { return keywordModel_; }
-
-    //! keyword model
-    const KeywordModel& _keywordModel( void ) const
-    { return keywordModel_; }
-
-    //! log entry model
-    LogEntryModel& _logEntryModel( void )
-    { return entryModel_; }
-
     //! clear list and reinitialize from logbook entries
     virtual void _resetLogEntryList( void );
 
@@ -502,7 +490,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! store sorting method when changed via list header
     virtual void _storeSortMethod( void )
-    { _storeSortMethod( _logEntryModel().sortColumn(), _logEntryModel().sortOrder() ); }
+    { _storeSortMethod( entryModel_.sortColumn(), entryModel_.sortOrder() ); }
 
     //! store sorting method when changed via list header
     virtual void _storeSortMethod( int, Qt::SortOrder );
