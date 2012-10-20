@@ -159,9 +159,11 @@ class AttachmentFrame: public QWidget, public BASE::Key
     //! enter event
     virtual void enterEvent( QEvent* );
 
-    //! custom event, used to retrieve file validity check event
-    void customEvent( QEvent* );
-
+    protected slots:
+    
+    //! process records from thread
+    void _processRecords( const FileRecord::List&, bool );
+    
     private slots:
 
     //! update configuration

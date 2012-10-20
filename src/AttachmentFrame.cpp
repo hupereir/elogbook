@@ -61,6 +61,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     // tell validFile thread not to check duplicates
     // this is needed when checking files that are links
     thread_.setCheckDuplicates( false );
+    connect( &thread_, SIGNAL( recordsAvailable( const FileRecord::List&, bool ) ), this, SLOT( _processRecords( const FileRecord::List&, bool ) ) );
 
     // default layout
     setLayout( new QVBoxLayout() );
@@ -341,18 +342,10 @@ void AttachmentFrame::enterEvent( QEvent* event )
 }
 
 //_______________________________________________
-void AttachmentFrame::customEvent( QEvent* event )
+void AttachmentFrame::_processRecords( const FileRecord::List& records, bool hasInvalidRecords )
 {
 
-    if( event->type() != ValidFileEvent::eventType() ) return QWidget::customEvent( event );
-
-    ValidFileEvent* valid_file_event( static_cast<ValidFileEvent*>(event) );
-    if( !valid_file_event ) return QWidget::customEvent( event );
-
-    Debug::Throw() << "AttachmentFrame::customEvent." << endl;
-
-    // set file records validity
-    const FileRecord::List& records( valid_file_event->records() );
+    Debug::Throw() << "AttachmentFrame::_processRecords." << endl;
 
     // retrieve all attachments from model
     // true if some modifications are to be saved
@@ -363,18 +356,15 @@ void AttachmentFrame::customEvent( QEvent* event )
         if( attachment->type() == AttachmentType::URL ) continue;
         if( attachment->file().isEmpty() ) continue;
 
-        Debug::Throw() << "AttachmentFrame::customEvent - checking: " << attachment->file() << endl;
+        Debug::Throw() << "AttachmentFrame::_processRecords - checking: " << attachment->file() << endl;
 
         bool isValid( attachment->isValid() );
         Attachment::LinkState isLink( attachment->isLink() );
 
         // check destination file
-        FileRecord::List::const_iterator found = std::find_if(
-            records.begin(),
-            records.end(),
-            FileRecord::SameFileFTor( attachment->file() ) );
+        FileRecord::List::const_iterator found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTor( attachment->file() ) );
         if( found != records.end() ) { isValid = found->isValid(); }
-        else { Debug::Throw() << "AttachmentFrame::customEvent - not found." << endl; }
+        else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
 
         // check link status
         if( isValid && isLink == Attachment::UNKNOWN )
@@ -387,16 +377,13 @@ void AttachmentFrame::customEvent( QEvent* event )
         // check source file
         if( isValid && isLink == Attachment::YES )
         {
-            found = std::find_if(
-                records.begin(),
-                records.end(),
-                FileRecord::SameFileFTor( attachment->sourceFile() ) );
+            found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTor( attachment->sourceFile() ) );
             if( found != records.end() ) { isValid &= found->isValid(); }
-            else { Debug::Throw() << "AttachmentFrame::customEvent - not found." << endl; }
+            else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
         }
 
         // update validity flag and set parent logbook as modified if needed
-        Debug::Throw() << "AttachmentFrame::customEvent - valid: " << isValid << " link: " << isLink << endl;
+        Debug::Throw() << "AttachmentFrame::_processRecords - valid: " << isValid << " link: " << isLink << endl;
         if( attachment->setIsValid( isValid ) || attachment->setIsLink( isLink ) )
         {
 
@@ -430,8 +417,8 @@ void AttachmentFrame::customEvent( QEvent* event )
 
     }
 
-    cleanAction().setEnabled( valid_file_event->hasInvalidRecords() );
-    return QWidget::customEvent( event );
+    cleanAction().setEnabled( hasInvalidRecords );
+    return;
 
 }
 
