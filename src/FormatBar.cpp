@@ -59,31 +59,31 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
     QAction* action;
     addAction( action = new QAction( IconEngine::get( BOLD_ICON ), "&Bold", this ) );
     action->setCheckable( true );
-    actions_.insert( BOLD, action );
+    actions_.insert( Bold, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _bold( bool ) ) );
 
     // underline
     addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), "&Italic", this ) );
     action->setCheckable( true );
-    actions_.insert( ITALIC, action );
+    actions_.insert( Italic, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _italic( bool ) ) );
 
     // underline
     addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), "&Underline", this ) );
     action->setCheckable( true );
-    actions_.insert( UNDERLINE, action );
+    actions_.insert( Underline, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _underline( bool ) ) );
 
     // strike
     addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), "&Strike", this ) );
     action->setCheckable( true );
-    actions_.insert( STRIKE, action );
+    actions_.insert( Strike, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _strike( bool ) ) );
 
     // color
     action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this );
     connect( action, SIGNAL( triggered() ), SLOT( _lastColor() ) );
-    actions_.insert( COLOR, action );
+    actions_.insert( Color, action );
 
     // color menu
     colorMenu_ = new ColorMenu( this );
@@ -135,11 +135,11 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 
         // define format
         QTextCharFormat textFormat;
-        textFormat.setFontWeight( block.format() & FORMAT::BOLD ? QFont::Bold : QFont::Normal );
-        textFormat.setFontItalic( block.format() & FORMAT::ITALIC );
-        textFormat.setFontUnderline( block.format() & FORMAT::UNDERLINE );
-        textFormat.setFontStrikeOut( block.format() & FORMAT::STRIKE );
-        textFormat.setFontOverline( block.format() & FORMAT::OVERLINE );
+        textFormat.setFontWeight( block.format() & FORMAT::Bold ? QFont::Bold : QFont::Normal );
+        textFormat.setFontItalic( block.format() & FORMAT::Italic );
+        textFormat.setFontUnderline( block.format() & FORMAT::Underline );
+        textFormat.setFontStrikeOut( block.format() & FORMAT::Strike );
+        textFormat.setFontOverline( block.format() & FORMAT::Overline );
 
         // load color
         if( block.color() != ColorMenu::NONE )
@@ -181,12 +181,12 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
             // retrieve text format
             QTextCharFormat textFormat( fragment.charFormat() );
 
-            unsigned int format( FORMAT::DEFAULT );
-            if( textFormat.fontWeight() == QFont::Bold ) format |= FORMAT::BOLD;
-            if( textFormat.fontItalic() ) format |= FORMAT::ITALIC;
-            if( textFormat.fontUnderline() ) format |= FORMAT::UNDERLINE;
-            if( textFormat.fontStrikeOut() ) format |= FORMAT::STRIKE;
-            if( textFormat.fontOverline() ) format |= FORMAT::OVERLINE;
+            FORMAT::TextFormatFlags format( FORMAT::Default );
+            if( textFormat.fontWeight() == QFont::Bold ) format |= FORMAT::Bold;
+            if( textFormat.fontItalic() ) format |= FORMAT::Italic;
+            if( textFormat.fontUnderline() ) format |= FORMAT::Underline;
+            if( textFormat.fontStrikeOut() ) format |= FORMAT::Strike;
+            if( textFormat.fontOverline() ) format |= FORMAT::Overline;
 
             // retrieve text color
             QColor color( textFormat.foreground().color() );
@@ -195,7 +195,7 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
             const QString href( textFormat.anchorHref() );
 
             // skip format if corresponds to default
-            if( format == FORMAT::DEFAULT && color == editor_->palette().color( QPalette::Text ) && href.isEmpty() ) continue;
+            if( format == FORMAT::Default && color == editor_->palette().color( QPalette::Text ) && href.isEmpty() ) continue;
 
             // store new TextFormatBlock
             FORMAT::TextFormatBlock textFormatBlock( begin, end, format, colorname );
@@ -220,7 +220,7 @@ void FormatBar::_updateConfiguration( void )
     {
 
         // add default colors
-        QString default_colors[] =
+        QString defaultColors[] =
         {
             "None",
             "#aa0000",
@@ -232,10 +232,10 @@ void FormatBar::_updateConfiguration( void )
         };
 
         XmlOptions::get().keep( "TEXT_COLOR" );
-        for( unsigned int i=0; default_colors[i].size(); i++ )
+        for( unsigned int i=0; defaultColors[i].size(); i++ )
         {
-            XmlOptions::get().add( "TEXT_COLOR", Option( default_colors[i] ) );
-            colorMenu_->add( default_colors[i] );
+            XmlOptions::get().add( "TEXT_COLOR", Option( defaultColors[i] ) );
+            colorMenu_->add( defaultColors[i] );
         }
 
     } else {
@@ -332,10 +332,10 @@ void FormatBar::updateState( const QTextCharFormat& format )
 {
     Debug::Throw( "FormatBar::updateState.\n" );
     enabled_ = false;
-    actions_[BOLD]->setChecked( format.fontWeight() == QFont::Bold );
-    actions_[ITALIC]->setChecked( format.fontItalic() );
-    actions_[UNDERLINE]->setChecked( format.fontUnderline() );
-    actions_[STRIKE]->setChecked( format.fontStrikeOut() );
+    actions_[Bold]->setChecked( format.fontWeight() == QFont::Bold );
+    actions_[Italic]->setChecked( format.fontItalic() );
+    actions_[Underline]->setChecked( format.fontUnderline() );
+    actions_[Strike]->setChecked( format.fontStrikeOut() );
     enabled_ = true;
 }
 

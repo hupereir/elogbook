@@ -213,10 +213,10 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
 
             // open new element define format
             QDomElement localNode( parent );
-            if( iter->format() & FORMAT::UNDERLINE ) localNode = localNode.appendChild( document.createElement( "u" ) ).toElement();
-            if( iter->format() & FORMAT::ITALIC ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
-            if( iter->format() & FORMAT::BOLD ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
-            if( iter->format() & FORMAT::STRIKE ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
+            if( iter->format() & FORMAT::Underline ) localNode = localNode.appendChild( document.createElement( "u" ) ).toElement();
+            if( iter->format() & FORMAT::Italic ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
+            if( iter->format() & FORMAT::Bold ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
+            if( iter->format() & FORMAT::Strike ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
             if( !( iter->color().isEmpty() || iter->color().compare( ColorMenu::NONE, Qt::CaseInsensitive ) == 0 ) )
             {
                 localNode = localNode.appendChild( document.createElement( "font" ) ).toElement();

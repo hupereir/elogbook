@@ -51,10 +51,10 @@ class FormatColorButton: public QToolButton, public Counter
 
     Q_OBJECT
 
-        public:
+    public:
 
-        //! constructor
-        FormatColorButton( QWidget* parent ):
+    //! constructor
+    FormatColorButton( QWidget* parent ):
         QToolButton( parent ),
         Counter( "FormatColorButton" )
     {}
@@ -105,11 +105,11 @@ class FormatBar: public CustomToolBar
     //! action id enumeration
     enum ActionId
     {
-        BOLD,
-        ITALIC,
-        STRIKE,
-        UNDERLINE,
-        COLOR
+        Bold,
+        Italic,
+        Strike,
+        Underline,
+        Color
     };
 
     //! constructor
