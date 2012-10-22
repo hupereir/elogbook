@@ -480,7 +480,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _displayFocusChanged( TextEditor* );
 
     //! overwrite mode changed
-    void _modifiersChanged( unsigned int );
+    void _modifiersChanged( TextEditor::Modifiers );
 
     //! toggle show keyword
     void _toggleShowKeyword( bool );

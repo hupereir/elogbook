@@ -870,7 +870,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( &editor->openLinkAction(), SIGNAL( triggered( void ) ), SLOT( _openLink( void ) ) );
     connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
     connect( editor, SIGNAL( cursorPositionChanged( void ) ), SLOT( _displayCursorPosition( void ) ) );
-    connect( editor, SIGNAL( modifiersChanged( unsigned int ) ), SLOT( _modifiersChanged( unsigned int ) ) );
+    connect( editor, SIGNAL( modifiersChanged( TextEditor::Modifiers ) ), SLOT( _modifiersChanged( TextEditor::Modifiers ) ) );
     connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction( void ) ) );
     connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction( void ) ) );
     connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkActions( void ) ) );
@@ -1535,14 +1535,14 @@ void EditionWindow::_displayFocusChanged( TextEditor* editor )
 }
 
 //________________________________________________________________
-void EditionWindow::_modifiersChanged( unsigned int modifiers )
+void EditionWindow::_modifiersChanged( TextEditor::Modifiers modifiers )
 {
     if( !_hasStatusBar() ) return;
     QStringList buffer;
-    if( modifiers & TextEditor::MODIFIER_WRAP ) buffer << "WRAP";
-    if( modifiers & TextEditor::MODIFIER_INSERT ) buffer << "INS";
-    if( modifiers & TextEditor::MODIFIER_CAPS_LOCK ) buffer << "CAPS";
-    if( modifiers & TextEditor::MODIFIER_NUM_LOCK ) buffer << "NUM";
+    if( modifiers & TextEditor::ModifierWrap ) buffer << "WRAP";
+    if( modifiers & TextEditor::ModifierInsert ) buffer << "INS";
+    if( modifiers & TextEditor::ModifierCapsLock ) buffer << "CAPS";
+    if( modifiers & TextEditor::ModifierNumLock ) buffer << "NUM";
     statusBar().label(1).setText( buffer.join( " " ) );
 }
 
