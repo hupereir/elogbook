@@ -21,14 +21,6 @@
 *
 *******************************************************************************/
 
-/*!
-  \file SearchPanel.cpp
-  \brief selects entries from keyword/title/text/...
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
 #include <QApplication>
 #include <QGroupBox>
 #include <QLabel>
@@ -49,8 +41,6 @@
 #include "ToolButtonStyleMenu.h"
 #include "XmlOptions.h"
 
-
-
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):
   CustomToolBar( title, parent, option_name ),
@@ -66,12 +56,12 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
 
   // selection text
   editor_ = new CustomComboBox( this );
-  editor().setEditable( true );
-  editor().setAutoCompletion( true );
-  editor().setToolTip( "Text to be found in logbook" );
-  editor().setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+  editor_->setEditable( true );
+  editor_->setAutoCompletion( true );
+  editor_->setToolTip( "Text to be found in logbook" );
+  editor_->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   addWidget( editor_ );
-  connect( &editor(), SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest() ) );
+  connect( editor_, SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest() ) );
 
   addWidget( new QLabel( " in ", this ) );
 
@@ -163,8 +153,8 @@ void SearchPanel::_toggleVisibility( bool state )
   Debug::Throw( "SearchPanel::_toggleVisibility.\n" );
   CustomToolBar::_toggleVisibility( state );
   if( state ) {
-    editor().lineEdit()->selectAll();
-    editor().setFocus();
+    editor_->lineEdit()->selectAll();
+    editor_->setFocus();
   }
 
 }
@@ -240,7 +230,7 @@ void SearchPanel::_selectionRequest( void )
   { if( iter.value()->isChecked() ) mode |= iter.key(); }
 
   // text selection
-  emit selectEntries( editor().currentText(), mode );
+  emit selectEntries( editor_->currentText(), mode );
 
 }
 
