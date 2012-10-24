@@ -265,6 +265,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // changes display according to readOnly flag
     setReadOnly( readOnly_ );
 
+    // update modifiers
+    _modifiersChanged( activeEditor().modifiers() );
+
     // configuration
     connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
     _updateConfiguration();
