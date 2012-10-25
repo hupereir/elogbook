@@ -33,13 +33,10 @@
 
 //_____________________________________________________
 DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, const bool& hasEntries ):
-    CustomDialog( parent, OkButton | CancelButton| Separator )
+    CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
     Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
-
-    assert( !keywords.empty() );
-
     setWindowTitle( "Delete Keyword - Elogbook" );
 
     // create label
