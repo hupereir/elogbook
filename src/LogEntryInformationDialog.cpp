@@ -23,7 +23,9 @@
 
 #include "LogEntryInformationDialog.h"
 
+#include "BaseFileInformationDialog.h"
 #include "Debug.h"
+#include "GridLayout.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "Logbook.h"
@@ -52,47 +54,53 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     label->setPixmap( IconEngine::get( ICONS::INFORMATION ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
-    QGridLayout *gridLayout = new QGridLayout();
+    GridLayout *gridLayout = new GridLayout();
     gridLayout->setMargin(0);
     gridLayout->setSpacing(2);
-    hLayout->addLayout( gridLayout, 1 );
+    gridLayout->setMaxCount(2);
+
+    hLayout->addStretch();
+    hLayout->addLayout( gridLayout );
+    hLayout->addStretch();
+
+    BaseFileInformationDialog::Item* item;
 
     // title
-    gridLayout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-
-    gridLayout->addWidget( label = new QLabel( entry->title(), this ), 0, 1 );
-    QFont font( label->font() );
-    font.setWeight( QFont::Bold );
-    label->setFont( font );
+    item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Bold );
+    item->setKey( "Title:" );
+    item->setText( entry->title() );
 
     // keyword
-    gridLayout->addWidget( label = new QLabel( "Keyword: ", this ), 1, 0 );
-    gridLayout->addWidget( new QLabel( entry->keyword().get(), this ), 1, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Keyword:" );
+    item->setText( entry->keyword().get() );
 
-    gridLayout->addWidget( label = new QLabel( "Author: ", this ), 2, 0 );
-    gridLayout->addWidget( new QLabel( entry->author(), this ), 2, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    // author
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Author:" );
+    item->setText( entry->author() );
 
-    gridLayout->addWidget( label = new QLabel( "Creation: ", this ), 3, 0 );
-    gridLayout->addWidget( new QLabel( entry->creation().toString(), this ), 3, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    // creation
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Created:" );
+    item->setText( entry->creation().toString() );
 
-    gridLayout->addWidget( label = new QLabel( "Modification: ", this ), 4, 0 );
-    gridLayout->addWidget( new QLabel( entry->modification().toString(), this ), 4, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    // modified
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Modified:" );
+    item->setText( entry->modification().toString() );
 
     // retrieve associated logbook
-    int i=5;
     BASE::KeySet<Logbook> logbooks( entry );
-    foreach( Logbook* logbook, logbooks )
+    if( !logbooks.empty() )
     {
 
-        gridLayout->addWidget( label = new QLabel( "File: ", this ), i, 0 );
-        gridLayout->addWidget( new QLabel( File( logbook->file() ).localName(), this ), i, 1);
-        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+        item = new BaseFileInformationDialog::Item( this, gridLayout );
+        item->setKey( "File:" );
+        item->setText( File( (*logbooks.begin())->file() ).localName() );
 
     }
+
+    mainLayout().addStretch();
 
 }

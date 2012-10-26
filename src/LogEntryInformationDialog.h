@@ -23,14 +23,6 @@
 *
 *******************************************************************************/
 
-/*!
-  \file LogEntryInformationDialog.h
-  \brief  logbook entry informations
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
 #include "CustomDialog.h"
 #include "Counter.h"
 
