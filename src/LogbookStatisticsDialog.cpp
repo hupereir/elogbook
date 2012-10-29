@@ -23,10 +23,12 @@
 
 #include "LogbookStatisticsDialog.h"
 
+#include "AnimatedLineEditor.h"
+#include "BaseFileInformationDialog.h"
+#include "Debug.h"
+#include "GridLayout.h"
 #include "Icons.h"
 #include "IconEngine.h"
-#include "AnimatedLineEditor.h"
-#include "Debug.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "TreeView.h"
@@ -53,60 +55,57 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     QLabel* label = new QLabel(this);
     label->setPixmap( IconEngine::get( ICONS::INFORMATION ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
+    hLayout->addStretch();
 
-    QGridLayout* gridLayout = new QGridLayout();
+    GridLayout* gridLayout = new GridLayout();
     gridLayout->setMargin(0);
-    gridLayout->setSpacing(2);
-    hLayout->addLayout( gridLayout, 0 );
+    gridLayout->setSpacing(5);
+    gridLayout->setMaxCount(2);
+    hLayout->addLayout( gridLayout );
+    hLayout->addStretch();
 
-    // file
-    gridLayout->addWidget( label = new QLabel( "File: ", this ), 0, 0 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    // generic item
+    BaseFileInformationDialog::Item* item;
 
-    gridLayout->addWidget( label = new QLabel( logbook->file().expand(), this ), 0, 1 );
-    QFont font( label->font() );
-    font.setWeight( QFont::Bold );
-    label->setFont( font );
-    label->setTextInteractionFlags( Qt::TextSelectableByMouse|Qt::TextSelectableByKeyboard );
-
-    // creation time
-    if( logbook->creation().isValid() )
+    if( !logbook->file().isEmpty() )
     {
-        gridLayout->addWidget( label = new QLabel( "Created: ", this ), 1, 0 );
-        gridLayout->addWidget( new QLabel( logbook->creation().toString(), this ), 1, 1 );
-        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+        // file
+        item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::All );
+        item->setKey( "File name" );
+        item->setValue( logbook->file().localName() );
+
+        // path
+        item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Selectable|BaseFileInformationDialog::Elide );
+        item->setKey( "Path" );
+        item->setValue( logbook->file().path() );
     }
 
-    // modification time
-    if( logbook->modification().isValid() )
-    {
-        gridLayout->addWidget( label = new QLabel( "Last modified: ", this ), 2, 0 );
-        gridLayout->addWidget( new QLabel( logbook->modification().toString(), this ), 2, 1 );
-        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    }
+    // creation
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Created:" );
+    item->setValue( logbook->creation().isValid() ? logbook->creation().toString():QString() );
 
-    // backup time
-    if( logbook->backup().isValid() )
-    {
-        gridLayout->addWidget( label = new QLabel( "Last backup: ", this ), 3, 0 );
-        gridLayout->addWidget( new QLabel( logbook->backup().toString(), this ), 3, 1 );
-        label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
-    }
+    // modification
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Modified:" );
+    item->setValue( logbook->modification().isValid() ? logbook->modification().toString():QString() );
 
-    // stores all children
+    // backup
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Last backup:" );
+    item->setValue( logbook->backup().isValid() ? logbook->backup().toString():QString() );
 
-    // total number of entries
-    gridLayout->addWidget( label = new QLabel( "Entries: ", this ), 4, 0 );
-    gridLayout->addWidget( new QLabel( Str().assign<unsigned int>(logbook->entries().size()), this ), 4, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    // entries
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Entries:" );
+    item->setValue( QString().setNum( logbook->entries().size() ) );
 
-    // total number of attachments
-    gridLayout->addWidget( label = new QLabel( "Attachments: ", this ), 5, 0 );
-    gridLayout->addWidget( new QLabel( Str().assign<unsigned int>( logbook->attachments().size() ), this ), 5, 1 );
-    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    // attachments
+    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item->setKey( "Attachments:" );
+    item->setValue( QString().setNum( logbook->attachments().size() ) );
 
     gridLayout->setColumnStretch( 1, 1 );
-
 
     // detail
     TreeView *listView( new TreeView( this ) );
@@ -115,8 +114,8 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     mainLayout().addWidget( listView, 1 );
 
     Logbook::List all( logbook->children() );
-    all.push_front( logbook );
-    model_.add( all );
+    all.prepend( logbook );
+    model_.set( all );
 
     listView->resizeColumns();
 

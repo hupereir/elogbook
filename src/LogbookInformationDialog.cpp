@@ -53,7 +53,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
 
     QGridLayout *gridLayout( new QGridLayout() );
     gridLayout->setMargin(0);
-    gridLayout->setSpacing(2);
+    gridLayout->setSpacing(5);
     hLayout->addLayout( gridLayout, 0 );
 
     gridLayout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );

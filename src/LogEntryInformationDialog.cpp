@@ -56,7 +56,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     GridLayout *gridLayout = new GridLayout();
     gridLayout->setMargin(0);
-    gridLayout->setSpacing(2);
+    gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
 
     hLayout->addStretch();
@@ -68,27 +68,27 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     // title
     item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Bold );
     item->setKey( "Title:" );
-    item->setText( entry->title() );
+    item->setValue( entry->title() );
 
     // keyword
     item = new BaseFileInformationDialog::Item( this, gridLayout );
     item->setKey( "Keyword:" );
-    item->setText( entry->keyword().get() );
+    item->setValue( entry->keyword().get() );
 
     // author
     item = new BaseFileInformationDialog::Item( this, gridLayout );
     item->setKey( "Author:" );
-    item->setText( entry->author() );
+    item->setValue( entry->author() );
 
     // creation
     item = new BaseFileInformationDialog::Item( this, gridLayout );
     item->setKey( "Created:" );
-    item->setText( entry->creation().toString() );
+    item->setValue( entry->creation().toString() );
 
     // modified
     item = new BaseFileInformationDialog::Item( this, gridLayout );
     item->setKey( "Modified:" );
-    item->setText( entry->modification().toString() );
+    item->setValue( entry->modification().toString() );
 
     // retrieve associated logbook
     BASE::KeySet<Logbook> logbooks( entry );
@@ -97,7 +97,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
         item = new BaseFileInformationDialog::Item( this, gridLayout );
         item->setKey( "File:" );
-        item->setText( File( (*logbooks.begin())->file() ).localName() );
+        item->setValue( File( (*logbooks.begin())->file() ).localName() );
 
     }
 

@@ -50,7 +50,7 @@ class LogbookStatisticsDialog: public CustomDialog
         public:
 
         //! number of columns
-        enum { nColumns = 5 };
+        enum { nColumns = 4 };
 
         //! column type enumeration
         enum ColumnType {
