@@ -565,7 +565,7 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
 {
     Debug::Throw( "MainWindow::deleteEntry.\n" );
 
-    assert( entry );
+    Q_CHECK_PTR( entry );
 
     // get associated attachments
     BASE::KeySet<Attachment> attachments( entry );
@@ -1189,7 +1189,7 @@ void MainWindow::_resetKeywordList( void )
 {
 
     Debug::Throw( "MainWindow::_resetKeywordList.\n" );
-    assert( logbook() );
+    Q_CHECK_PTR( logbook_ );
 
     // animation
     keywordList_->initializeAnimation();
@@ -1378,7 +1378,7 @@ void MainWindow::_newLogbook( void )
 
     // create a new logbook, with no file
     setLogbook( dialog.file() );
-    assert( logbook_ );
+    Q_CHECK_PTR( logbook_ );
 
     logbook()->setTitle( dialog.title() );
     logbook()->setAuthor( dialog.author() );

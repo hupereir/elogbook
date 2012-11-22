@@ -525,7 +525,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
                 break;
             }
         }
-        assert( child );
+        Q_CHECK_PTR( child );
         Debug::Throw( "EditionWindow::closeEditor - found child.\n" );
 
         // retrieve splitter parent
@@ -574,7 +574,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
             break;
         }
     }
-    assert( activeFound );
+    Q_ASSERT( activeFound );
 
     // change focus
     activeEditor().setFocus();
@@ -586,7 +586,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
 void EditionWindow::setActiveEditor( LocalTextEditor& editor )
 {
     Debug::Throw() << "EditionWindow::setActiveEditor - key: " << editor.key() << endl;
-    assert( editor.isAssociated( this ) );
+    Q_ASSERT( editor.isAssociated( this ) );
 
     activeEditor_ = &editor;
     if( !activeEditor().isActive() )
@@ -924,7 +924,7 @@ MainWindow& EditionWindow::_mainWindow( void ) const
 {
     Debug::Throw( "EditionWindow::_mainWindow.\n" );
     BASE::KeySet<MainWindow> mainwindows( this );
-    assert( mainwindows.size()==1 );
+    Q_ASSERT( mainwindows.size()==1 );
     return **mainwindows.begin();
 }
 
@@ -1045,7 +1045,7 @@ void EditionWindow::_save( bool updateSelection )
     BASE::KeySet<EditionWindow> windows( entry );
     foreach( EditionWindow* window, windows )
     {
-        assert( window == this || window->isReadOnly() || window->isClosed() );
+        Q_ASSERT( window == this || window->isReadOnly() || window->isClosed() );
         if( window != this ) window->displayEntry( entry );
     }
     Debug::Throw( "EditionWindow::_save - editFrames updated.\n" );

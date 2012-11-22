@@ -21,14 +21,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file FileCheck.cpp
-\brief keep track of external file modifications
-\author  Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "Debug.h"
 #include "File.h"
 #include "FileCheck.h"
@@ -36,7 +28,6 @@
 
 #include <QtCore/QStringList>
 #include <algorithm>
-#include <cassert>
 
 //____________________________________________________
 FileCheck::FileCheck( QObject* parent ):
@@ -246,10 +237,10 @@ bool FileCheck::Model::SortFTor::operator () ( FileCheck::Data first, FileCheck:
     switch( type_ )
     {
 
+        default:
         case FILE: return first.file() < second.file();
         case FLAG: return first.flag() < second.flag();
         case TIME: return (first.timeStamp() != second.timeStamp() ) ? (first.timeStamp() < second.timeStamp()):first.file() < second.file();
-        default: assert( false );
 
     }
 

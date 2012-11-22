@@ -32,9 +32,6 @@
 #include "XmlTimeStamp.h"
 #include "XmlString.h"
 
-#include <cassert>
-#include <cstdio>
-
 //__________________________________
 const QString LogEntry::DRAG = "logEntry_drag";
 const QString LogEntry::UNTITLED = "untitled";

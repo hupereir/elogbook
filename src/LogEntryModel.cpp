@@ -212,7 +212,7 @@ QStringList LogEntryModel::mimeTypes( void ) const
 QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
 {
 
-    assert( !indexes.empty() );
+    Q_ASSERT( !indexes.empty() );
 
     // create mime data
     QMimeData *mime = new QMimeData();

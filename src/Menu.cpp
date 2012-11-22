@@ -182,7 +182,7 @@ void Menu::_updateRecentEntriesMenu( void )
 {
     Debug::Throw( "Menu::_updateRecentEntriesMenu.\n" );
 
-    assert( recentEntriesMenu_ );
+    Q_CHECK_PTR( recentEntriesMenu_ );
     recentEntriesMenu_->clear();
     actions_.clear();
 
@@ -204,7 +204,7 @@ void Menu::_selectEntry( QAction* action )
 {
     Debug::Throw( "Menu::_selectEntry.\n" );
     ActionMap::iterator iter( actions_.find( action ) );
-    assert( iter != actions_.end() );
+    Q_ASSERT( iter != actions_.end() );
     iter.value()->setFindSelected( true );
     emit entrySelected( iter.value() );
 }

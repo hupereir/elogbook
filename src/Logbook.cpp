@@ -508,7 +508,7 @@ Logbook* Logbook::latestChild( void )
         BASE::KeySet<FileCheck> fileChecks( this );
         if( !fileChecks.empty() )
         {
-            assert( fileChecks.size() == 1 );
+            Q_ASSERT( fileChecks.size() == 1 );
             (*fileChecks.begin())->registerLogbook( dest );
         }
 

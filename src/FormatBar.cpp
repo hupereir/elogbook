@@ -123,7 +123,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 {
 
     Debug::Throw( "FormatBar::loadFormats.\n" );
-    assert( editor_ );
+    Q_CHECK_PTR( editor_ );
     QTextCursor cursor( editor_->document() );
     cursor.beginEditBlock();
     foreach( const FORMAT::TextFormatBlock& block, formatList )
@@ -160,7 +160,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 FORMAT::TextFormatBlock::List FormatBar::get( void ) const
 {
     Debug::Throw( "FormatBar::get.\n" );
-    assert( editor_ );
+    Q_CHECK_PTR( editor_ );
 
     FORMAT::TextFormatBlock::List out;
 

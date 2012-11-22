@@ -38,7 +38,7 @@ void LogEntryHtmlHelper::print( QIODevice* device )
     Debug::Throw( "LogEntryHtmlHelper::print.\n" );
 
     // check entry
-    assert( entry_ );
+    Q_CHECK_PTR( entry_ );
 
     // do nothing if mask is empty
     if( !mask_ ) return;
@@ -68,7 +68,7 @@ void LogEntryHtmlHelper::appendEntry( QDomDocument& document, QDomElement& paren
     Debug::Throw( "LogEntryHtmlHelper::appendEntry.\n" );
 
     // check entry
-    assert( entry_ );
+    Q_CHECK_PTR( entry_ );
 
     // do nothing if mask is empty
     if( !mask_ ) return;

@@ -41,7 +41,7 @@ void LogbookPrintHelper::print( QPrinter* printer )
     Debug::Throw( "LogbookPrintHelper::print.\n" );
 
     // check logbook
-    assert( logbook_ );
+    Q_CHECK_PTR( logbook_ );
 
     // do nothing if mask is empty
     if( !mask_ ) return;

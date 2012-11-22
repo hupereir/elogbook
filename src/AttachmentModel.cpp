@@ -156,14 +156,13 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
     switch( type_ )
     {
 
-        // check if column is a TimeStamp
+        default:
         case FILE: return first->shortFile() < second->shortFile();
         case ICON: return first->type().name() < second->type().name();
         case TYPE: return first->type().name() < second->type().name();
         case SIZE: return  first->size() < second->size();
         case CREATION: return first->creation() < second->creation();
         case MODIFICATION: return first->modification() < second->modification();
-        default: assert(0);
 
     }
 

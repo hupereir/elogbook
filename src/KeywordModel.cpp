@@ -21,14 +21,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file    KeywordModel.cpp
-\brief   keyword model
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 #include "KeywordModel.h"
 #include "LogEntryModel.h"
 
@@ -117,8 +109,6 @@ QStringList KeywordModel::mimeTypes( void ) const
 //______________________________________________________________________
 QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 {
-
-    assert( !indexes.empty() );
 
     // create mime data
     QMimeData *mime = new QMimeData();

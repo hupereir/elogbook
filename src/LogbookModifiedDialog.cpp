@@ -41,7 +41,7 @@ Counter( "LogbookModifiedDialog" )
     Debug::Throw( "LogbookModifiedDialog::LogbookModifiedDialog.\n" );
     setOptionName( "LOGBOOK_MODIFIED_DIALOG" );
 
-    assert( !files.empty() );
+    Q_ASSERT( !files.empty() );
 
     // create vbox layout
     QVBoxLayout* layout=new QVBoxLayout();

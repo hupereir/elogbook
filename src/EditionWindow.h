@@ -87,7 +87,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     LogEntry* entry( void ) const
     {
         BASE::KeySet<LogEntry> entries( this );
-        assert( entries.size() <= 1 );
+        Q_ASSERT( entries.size() <= 1 );
         return( entries.size() ) ? *entries.begin():0;
     }
 
@@ -95,16 +95,13 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     AttachmentFrame& attachmentFrame( void )
     {
         BASE::KeySet<AttachmentFrame> frames( this );
-        assert( frames.size() == 1 );
+        Q_ASSERT( frames.size() == 1 );
         return **frames.begin();
     }
 
     //! status bar
     BaseStatusBar& statusBar( void )
-    {
-        assert( statusBar_ );
-        return *statusBar_;
-    }
+    { return *statusBar_; }
 
     //!@name active editor
     //@{
@@ -355,10 +352,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! menu
     Menu& _menu( void ) const
-    {
-        assert( menu_ );
-        return *menu_;
-    }
+    { return *menu_; }
 
     //! update text Widget from current entry
     void _displayText( void );

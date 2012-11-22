@@ -22,19 +22,8 @@
 *
 *******************************************************************************/
 
-/*!
-  \file Keyword.cpp
-  \brief log entry keyword
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
-#include <cassert>
 #include "Debug.h"
 #include "Keyword.h"
-
-
 
 //_________________________________________________________________
 const Keyword Keyword::NO_KEYWORD( "/" );
@@ -70,7 +59,7 @@ Keyword Keyword::parent( void ) const
 {
 
   int pos = value_.lastIndexOf( "/" );
-  assert( pos >= 0 );
+  Q_ASSERT( pos >= 0 );
   return Keyword( value_.left( pos ) );
 
 }

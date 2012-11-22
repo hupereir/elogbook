@@ -45,7 +45,7 @@ void LogEntryPrintHelper::print( QPrinter* printer )
     Debug::Throw( "LogEntryPrintHelper::print.\n" );
 
     // check entry
-    assert( entry_ );
+    Q_CHECK_PTR( entry_ );
 
     // do nothing if mask is empty
     if( !mask_ ) return;
@@ -78,7 +78,7 @@ void LogEntryPrintHelper::printEntry( QPrinter* printer, QPainter* painter, QPoi
     Debug::Throw( "LogEntryPrintHelper::printEntry.\n" );
 
     // check entry
-    assert( entry_ );
+    Q_CHECK_PTR( entry_ );
 
     // do nothing if mask is empty
     if( !mask_ ) return;

@@ -29,7 +29,6 @@
 
 #include <QtGui/QMenuBar>
 #include <QtCore/QHash>
-#include <cassert>
 
 class LogEntry;
 class MainWindow;

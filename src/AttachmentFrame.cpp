@@ -126,7 +126,7 @@ void AttachmentFrame::update( Attachment& attachment )
 {
 
     Debug::Throw( 0, "AttachmentFrame::update.\n" );
-    assert( attachment.isAssociated( this ) );
+    Q_ASSERT( attachment.isAssociated( this ) );
     model_.add( &attachment );
     list_->resizeColumns();
     Debug::Throw( 0, "AttachmentFrame::update - done.\n" );
@@ -138,7 +138,7 @@ void AttachmentFrame::select( Attachment& attachment )
 {
 
     Debug::Throw( "AttachmentFrame::select.\n" );
-    assert( attachment.isAssociated( this ) );
+    Q_ASSERT( attachment.isAssociated( this ) );
 
     // get matching model index
     QModelIndex index( model_.index( &attachment ) );
@@ -161,7 +161,7 @@ void AttachmentFrame::_new( void )
 
     // retrieve/check associated EditionWindow/LogEntry
     BASE::KeySet<EditionWindow> windows( this );
-    assert( windows.size() == 1 );
+    Q_ASSERT( windows.size() == 1 );
 
     EditionWindow &window( **windows.begin() );
 
@@ -389,7 +389,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
 
             // get associated entry
             BASE::KeySet<LogEntry> entries( attachment );
-            assert( entries.size() == 1 );
+            Q_ASSERT( entries.size() == 1 );
             LogEntry& entry( **entries.begin() );
             entry.modified();
 
@@ -578,7 +578,7 @@ void AttachmentFrame::_delete( void )
 
     // retrieve/check associated EditionWindow/LogEntry
     BASE::KeySet<EditionWindow> windows( this );
-    assert( windows.size() == 1 );
+    Q_ASSERT( windows.size() == 1 );
     EditionWindow &window( **windows.begin() );
 
     // loop over attachments
@@ -602,7 +602,7 @@ void AttachmentFrame::_delete( void )
 
             // retrieve associated entries
             BASE::KeySet<LogEntry> entries( attachment );
-            assert( entries.size() == 1 );
+            Q_ASSERT( entries.size() == 1 );
             LogEntry& entry( **entries.begin() );
             entry.modified();
 
@@ -756,7 +756,7 @@ void AttachmentFrame::_clean( void )
 
         // retrieve associated entries
         BASE::KeySet<LogEntry> entries( attachment );
-        assert( entries.size() == 1 );
+        Q_ASSERT( entries.size() == 1 );
         LogEntry& entry( **entries.begin() );
         entry.modified();
 
