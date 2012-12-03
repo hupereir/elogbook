@@ -140,6 +140,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordContainer_->setLayout( vLayout );
 
     keywordToolBar_ = new CustomToolBar( "Keywords Toolbar", keywordContainer_, "KEYWORD_TOOLBAR" );
+    keywordToolBar_->setTransparent( true );
     keywordToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( keywordToolBar_ );
 
@@ -207,6 +208,7 @@ MainWindow::MainWindow( QWidget *parent ):
     right->setLayout( vLayout );
 
     entryToolBar_ = new CustomToolBar( "Entries Toolbar", right, "ENTRY_TOOLBAR" );
+    entryToolBar_->setTransparent( true );
     entryToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( entryToolBar_ );
 
