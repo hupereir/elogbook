@@ -1203,7 +1203,7 @@ void MainWindow::_resetKeywordList( void )
         if( entry->isFindSelected() )
         {
             Keyword keyword( entry->keyword() );
-            while( keyword != Keyword::NO_KEYWORD )
+            while( keyword != Keyword::NoKeyword )
             {
                 if( !newKeywords.contains( keyword ) ) newKeywords << keyword;
                 keyword = keyword.parent();
@@ -2616,7 +2616,7 @@ void MainWindow::_newKeyword( void )
 
     // retrieve keyword from line_edit
     Keyword keyword( dialog.keyword() );
-    if( keyword != Keyword::NO_KEYWORD )
+    if( keyword != Keyword::NoKeyword )
     {
         keywordModel_.add( keyword );
         QModelIndex index( keywordModel_.index( keyword ) );

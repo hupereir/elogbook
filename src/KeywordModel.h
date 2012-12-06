@@ -39,9 +39,6 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
 
     public:
 
-    //! used to tag Keyword drags
-    static const QString DRAG;
-
     //! constructor
     KeywordModel( QObject* = 0 );
 

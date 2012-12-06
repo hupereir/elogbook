@@ -40,9 +40,6 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
 
     public:
 
-    //! used to tag Keyword drags
-    static const QString DRAG;
-
     //! constructor
     LogEntryModel(QObject *parent = 0);
 

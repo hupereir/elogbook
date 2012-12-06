@@ -22,11 +22,10 @@
 *******************************************************************************/
 
 #include "KeywordModel.h"
-#include "LogEntryModel.h"
+#include "LogEntry.h"
 
 //______________________________________________________________
 const QString KeywordModel::columnTitles_[ KeywordModel::nColumns ] = { "Keywords" };
-const QString KeywordModel::DRAG = "elogbook/keywordmodel/drag";
 
 //______________________________________________________________
 KeywordModel::KeywordModel( QObject* parent ):
@@ -102,7 +101,7 @@ QVariant KeywordModel::headerData(int section, Qt::Orientation orientation, int 
 QStringList KeywordModel::mimeTypes( void ) const
 {
     QStringList types;
-    types << DRAG << "text/plain";
+    types << Keyword::MimeType << "text/plain";
     return types;
 }
 
@@ -113,9 +112,9 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     // create mime data
     QMimeData *mime = new QMimeData();
 
-    // set DRAG type
+    // set drag type
     foreach( const QModelIndex& index, indexes )
-    { if( index.isValid() ) mime->setData( DRAG, get( index ).get().toAscii() ); }
+    { if( index.isValid() ) mime->setData( Keyword::MimeType, get( index ).get().toAscii() ); }
 
     // retrieve associated entry
     QString buffer;
@@ -143,11 +142,11 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
     if( action == Qt::IgnoreAction) return true;
 
     // Drag from Keyword model
-    if( data->hasFormat( DRAG ) )
+    if( data->hasFormat( Keyword::MimeType ) )
     {
 
         // retrieve/check string
-        QString keyword_string( data->data( DRAG ) );
+        QString keyword_string( data->data( Keyword::MimeType ) );
         if( keyword_string.isNull() || keyword_string.isEmpty() ) return false;
 
         // retrieve old keyword
@@ -169,9 +168,8 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
     }
 
     // drag from LogEntryModel
-    if( data->hasFormat( LogEntryModel::DRAG ) )
+    if( data->hasFormat( LogEntry::MimeType ) )
     {
-        Debug::Throw( "KeywordModel::dropMimeData - LogEntryModel::DRAG.\n" );
 
         // no drag if parent is invalid
         if( !parent.isValid() ) return false;

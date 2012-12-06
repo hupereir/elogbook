@@ -41,7 +41,7 @@
 // public methods
 
 const QString Logbook::LOGBOOK_NO_TITLE = "untitled";
-const QString Logbook::LOGBOOK_NO_AUTHOR = "anonymous";
+const QString Logbook::LOGBOOK_NoAuthor = "anonymous";
 const QString Logbook::LOGBOOK_NO_FILE = "";
 const QString Logbook::LOGBOOK_NO_DIRECTORY = "";
 
@@ -53,7 +53,7 @@ Logbook::Logbook( const File& file ):
     parentFile_( "" ),
     directory_( LOGBOOK_NO_DIRECTORY ),
     title_( LOGBOOK_NO_TITLE ),
-    author_( LOGBOOK_NO_AUTHOR ),
+    author_( LOGBOOK_NoAuthor ),
     creation_( TimeStamp::now() ),
     sortMethod_( Logbook::SORT_CREATION ),
     sortOrder_( 0 ),

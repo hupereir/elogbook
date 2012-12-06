@@ -33,10 +33,10 @@
 #include "XmlString.h"
 
 //__________________________________
-const QString LogEntry::DRAG = "logEntry_drag";
-const QString LogEntry::UNTITLED = "untitled";
-const QString LogEntry::NO_AUTHOR = "anonymous";
-const QString LogEntry::NO_TEXT = "";
+const QString LogEntry::MimeType = "logbook/log-entry-list";
+const QString LogEntry::Untitled = "untitled";
+const QString LogEntry::NoAuthor = "anonymous";
+const QString LogEntry::NoText = "";
 
 //__________________________________
 LogEntry::LogEntry( void ):
@@ -209,10 +209,10 @@ void LogEntry::_init( void )
     keywordSelected_ = false;
     creation_ = TimeStamp::now();
     modification_ = TimeStamp::now();
-    title_ = UNTITLED;
-    keyword_ = Keyword::NO_KEYWORD;
-    author_ = NO_AUTHOR;
-    text_ = NO_TEXT;
+    title_ = Untitled;
+    keyword_ = Keyword::NoKeyword;
+    author_ = NoAuthor;
+    text_ = NoText;
     color_ = "None";
 }
 

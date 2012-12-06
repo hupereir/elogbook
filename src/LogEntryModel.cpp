@@ -44,7 +44,6 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
 }
 
 //_______________________________________________
-const QString LogEntryModel::DRAG = "elogbook/logentrymodel/drag";
 const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 {
     "",
@@ -204,7 +203,7 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
 QStringList LogEntryModel::mimeTypes( void ) const
 {
     QStringList types;
-    types << DRAG << "text/plain";
+    types << LogEntry::MimeType << "text/plain";
     return types;
 }
 
@@ -217,8 +216,8 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     // create mime data
     QMimeData *mime = new QMimeData();
 
-    // set DRAG type
-    mime->setData( DRAG, 0 );
+    // set drag type
+    mime->setData( LogEntry::MimeType, 0 );
 
     // retrieve associated entry
     QString buffer;

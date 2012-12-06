@@ -430,7 +430,7 @@ void EditionWindow::displayKeyword( void )
     Debug::Throw( "EditionWindow::displayKeyword.\n" );
 
     LogEntry* entry( EditionWindow::entry() );
-    keywordEditor_->setText( ( entry && entry->keyword().get().size() ) ? entry->keyword().get(): LogEntry::UNTITLED  );
+    keywordEditor_->setText( ( entry && entry->keyword().get().size() ) ? entry->keyword().get(): LogEntry::Untitled  );
     keywordEditor_->setCursorPosition( 0 );
     return;
 }
@@ -441,7 +441,7 @@ void EditionWindow::displayTitle( void )
     Debug::Throw( "EditionWindow::displayTitle.\n" );
 
     LogEntry* entry( this->entry() );
-    titleEditor_->setText( ( entry && entry->title().size() ) ? entry->title(): LogEntry::UNTITLED  );
+    titleEditor_->setText( ( entry && entry->title().size() ) ? entry->title(): LogEntry::Untitled  );
     titleEditor_->setCursorPosition( 0 );
     return;
 }

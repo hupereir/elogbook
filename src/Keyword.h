@@ -36,7 +36,8 @@ class Keyword: public Counter
     public:
 
     //! used when LogEntry keyword is not defined
-    static const Keyword NO_KEYWORD;
+    static const Keyword NoKeyword;
+    static const QString MimeType;
 
     //! constructor
     Keyword( const QString& value = QString("")):

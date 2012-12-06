@@ -75,17 +75,17 @@ class LogEntry:public Counter, public BASE::Key
     //! return a new entry cloned from this
     LogEntry *clone( void ) const;
 
-    //! used to tag LogEntry drag from LogEntryList
-    static const QString DRAG;
+    //! mime type (for drag and drop)
+    static const QString MimeType;
 
     //! used when LogEntry title is not defined
-    static const QString UNTITLED;
+    static const QString Untitled;
 
     //! used when LogEntry keyword is not defined
-    static const QString NO_AUTHOR;
+    static const QString NoAuthor;
 
     //! used when LogEntry keyword is not defined
-    static const QString NO_TEXT;
+    static const QString NoText;
 
     //!@name attributes
     //@{
@@ -113,7 +113,7 @@ class LogEntry:public Counter, public BASE::Key
     void setTitle( const QString& title )
     {
         title_ = title;
-        if( !title_.size() ) title_ = UNTITLED;
+        if( !title_.size() ) title_ = Untitled;
     }
 
     //! LogEntry title
