@@ -92,7 +92,7 @@ SET( elogbook_SOURCES
   OpenAttachmentDialog.cpp
   SearchPanel.cpp
   OpenLinkDialog.cpp
-  elogbook.cpp
+  main.cpp
 )
 
 SET( elogbook_HEADERS

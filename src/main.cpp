@@ -27,10 +27,11 @@
 #include "SystemOptions.h"
 #include "ErrorHandler.h"
 #include "Singleton.h"
+#include "XmlFileRecord.h"
+#include "XmlMigration.h"
 #include "XmlOptions.h"
 
 #include <QtGui/QApplication>
-
 #include <signal.h>
 #include <unistd.h>
 
@@ -69,6 +70,8 @@ int main (int argc, char *argv[])
     // set debug level
     Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
     if( Debug::level() ) XmlOptions::get().print();
+
+    XmlMigration( File(".elogbook_db").addPath(Util::home() ), "DB_FILE", FILERECORD::XML::FILE_LIST ).run();
 
     // initialize main frame and run loop
     Q_INIT_RESOURCE( basePixmaps );
