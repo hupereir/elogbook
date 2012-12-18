@@ -60,20 +60,17 @@ int main (int argc, char *argv[])
     QString host( Util::host() );
     XmlOptions::get().set( "USER", Option( user+"@"+host, Option::None ) );
 
-    // install default options
+    // options
     installDefaultOptions();
-
-    // load user resource file
-    QString rcfile = Util::env( "HOME", "." ) + "/.eLogbookrc";
-    XmlOptions::read( rcfile );
+    XmlOptions::setFile( Util::env( "HOME", "." ) + "/.eLogbookrc" );
+    XmlOptions::read();
 
     // force debug level to 0
     XmlOptions::get().set<int>("DEBUG_LEVEL", 0 );
 
-    // set debug level
-    int debug_level( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
-    Debug::setLevel( debug_level );
-    if( debug_level ) XmlOptions::get().print();
+    // debug level
+    Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
+    if( Debug::level() ) XmlOptions::get().print();
 
     // the core application is needed to have locale, fonts, etc. set properly, notably for QSting
     // not having it might result in lost accents and special characters.

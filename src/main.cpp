@@ -60,20 +60,20 @@ int main (int argc, char *argv[])
         return 0;
     }
 
-    // install default options
+    // options
     installDefaultOptions();
     installSystemOptions();
+    XmlOptions::setFile( XmlOptions::get().raw( "RC_FILE" ) );
+    XmlOptions::read();
 
-    // customize options
-    XmlOptions::read( XmlOptions::get().raw( "RC_FILE" ) );
-
-    // set debug level
+    // debug level
     Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
     if( Debug::level() ) XmlOptions::get().print();
 
+    // migration
     XmlMigration( File(".elogbook_db").addPath(Util::home() ), "DB_FILE", FILERECORD::XML::FILE_LIST ).run();
 
-    // initialize main frame and run loop
+    // resources
     Q_INIT_RESOURCE( basePixmaps );
     Q_INIT_RESOURCE( pixmaps );
 
