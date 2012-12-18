@@ -21,17 +21,10 @@
 *
 *******************************************************************************/
 
-/*!
-\file ConfigurationDialog.cpp
-\brief configuration dialog
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "Application.h"
 #include "AttachmentWindow.h"
 #include "ConfigurationDialog.h"
+#include "Config.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
 #include "FileList.h"
@@ -47,11 +40,9 @@
 #include "OptionListBox.h"
 #include "Options.h"
 #include "RecentFilesConfiguration.h"
-#include "ServerConfiguration.h"
 #include "Singleton.h"
 #include "TreeViewConfiguration.h"
 
-#include "Config.h"
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QGroupBox>
