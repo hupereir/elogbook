@@ -18,7 +18,6 @@
 * software; if not, write to the Free Software Foundation, Inc., 59 Temple
 * Place, Suite 330, Boston, MA  02111-1307 USA
 *
-*
 *******************************************************************************/
 
 #include "Logbook.h"
@@ -30,6 +29,7 @@
 #include "XmlOptions.h"
 #include "Str.h"
 #include "Util.h"
+#include "XmlDocument.h"
 #include "XmlDef.h"
 #include "XmlString.h"
 #include "XmlTimeStamp.h"
@@ -117,14 +117,8 @@ bool Logbook::read( void )
     }
 
     // create document
-    QDomDocument document;
-    error_ = XmlError( Logbook::file() );
-    if ( !document.setContent( &file, &error_.error(), &error_.line(), &error_.column() ) )
-    {
-        file.close();
-        Debug::Throw( "Logbook::read - cannot read file.\n" );
-        return false;
-    }
+    XmlDocument document;
+    if( !document.setContent( &file, error_ ) ) return false;
 
     // read first child
     QDomElement docElement = document.documentElement();
@@ -267,7 +261,7 @@ bool Logbook::write( File file )
         }
 
         // create document
-        QDomDocument document;
+        XmlDocument document;
 
         // create main element
         QDomElement top = document.createElement( XML::LOGBOOK );
@@ -445,12 +439,10 @@ XmlError::List Logbook::xmlErrors( void ) const
 {
     Debug::Throw( "Logbook::xmlErrors.\n" );
     XmlError::List out;
-    if( error_ ) out << error_;
+    if( error_ ) out.append( error_ );
     foreach( Logbook* logbook, children_ )
-    {
-        XmlError::List tmp( logbook->xmlErrors() );
-        out << tmp;
-    }
+    { out <<  logbook->xmlErrors(); }
+
     return out;
 }
 
