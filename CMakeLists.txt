@@ -35,16 +35,8 @@ FIND_PROGRAM( OKULAR okular )
 FIND_PROGRAM( GWENVIEW gwenview )
 
 ########### aspell ###############
-IF( DISABLE_ASPELL )
-
-  SET( ASPELL_FOUND 0 )
-
-ELSE()
-
-  FIND_PROGRAM( ASPELL aspell )
-  FIND_PACKAGE( ASPELL )
-
-ENDIF()
+FIND_PROGRAM( ASPELL aspell )
+FIND_PACKAGE( ASPELL )
 
 ########### subdirectories ###############
 IF( ENABLE_SHARED )
