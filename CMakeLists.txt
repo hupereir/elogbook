@@ -29,14 +29,22 @@ INCLUDE( CPack )
 CONFIGURE_FILE( elogbook.spec.cmake ${CMAKE_SOURCE_DIR}/elogbook.spec )
 
 ########### external applications ###############
-FIND_PROGRAM( ASPELL aspell )
 FIND_PROGRAM( FIREFOX firefox )
 FIND_PROGRAM( QEDIT qedit )
 FIND_PROGRAM( OKULAR okular )
 FIND_PROGRAM( GWENVIEW gwenview )
 
 ########### aspell ###############
-FIND_PACKAGE( ASPELL )
+IF( DISABLE_ASPELL )
+
+  SET( ASPELL_FOUND 0 )
+
+ELSE()
+
+  FIND_PROGRAM( ASPELL aspell )
+  FIND_PACKAGE( ASPELL )
+
+ENDIF()
 
 ########### subdirectories ###############
 IF( ENABLE_SHARED )
