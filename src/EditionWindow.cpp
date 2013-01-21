@@ -239,7 +239,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" );
 
     #if WITH_ASPELL
-    toolbar->addAction( &spellCheckAction() );
+    toolbar->addAction( &spellcheckAction() );
     #endif
 
     toolbar->addAction( &printAction() );
@@ -681,6 +681,9 @@ void EditionWindow::_installActions( void )
     addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck...", this ) );
     spellcheckAction_->setToolTip( "Check spelling of current entry" );
     connect( spellcheckAction_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
+
+    // disable action if there is no dictionary
+    spellcheckAction_->setEnabled( !SPELLCHECK::SpellInterface().dictionaries().empty() );
     #endif
 
     // entry_info
