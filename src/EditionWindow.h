@@ -47,6 +47,7 @@
 #include <QtCore/QList>
 
 class Attachment;
+class BaseContextMenu;
 class ColorMenu;
 class CustomToolBar;
 class FormatBar;
@@ -135,8 +136,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
         protected:
 
-        //! put actions in context menu
-        virtual void installContextMenuActions( QMenu& menu, const bool& = true );
+        //! install actions in context menu
+        virtual void installContextMenuActions( BaseContextMenu*, const bool& = true );
 
         private:
 

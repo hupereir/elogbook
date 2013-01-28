@@ -26,6 +26,7 @@
 #include "Application.h"
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
+#include "BaseContextMenu.h"
 #include "BaseIcons.h"
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
@@ -1588,20 +1589,20 @@ void EditionWindow::LocalTextEditor::_installActions( void )
 }
 
 //___________________________________________________________________________________
-void EditionWindow::LocalTextEditor::installContextMenuActions( QMenu& menu, const bool& allActions )
+void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, const bool& allActions )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::installContextMenuActions.\n" );
     AnimatedTextEditor::installContextMenuActions( menu, allActions );
 
     // insert link
-    menu.insertAction( &showLineNumberAction(), &insertLinkAction() );
+    menu->insertAction( &showLineNumberAction(), &insertLinkAction() );
 
     // open link
     if( !anchorAt( _contextMenuPosition() ).isEmpty() )
-    { menu.insertAction( &showLineNumberAction(), &openLinkAction() ); }
+    { menu->insertAction( &showLineNumberAction(), &openLinkAction() ); }
 
     // separator
-    menu.insertSeparator( &showLineNumberAction() );
+    menu->insertSeparator( &showLineNumberAction() );
 
 }
 

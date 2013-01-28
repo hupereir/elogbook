@@ -184,9 +184,10 @@ MainWindow::MainWindow( QWidget *parent ):
 
     {
         // popup menu for keyword list
-        QMenu* menu = new ContextMenu( keywordList_ );
+        ContextMenu* menu = new ContextMenu( keywordList_ );
         menu->addAction( &newEntryAction() );
         menu->addAction( &newKeywordAction() );
+        menu->addSeparator();
         menu->addAction( &deleteKeywordAction() );
         menu->addAction( &editKeywordAction() );
     }
@@ -263,8 +264,9 @@ MainWindow::MainWindow( QWidget *parent ):
 
     {
         // popup menu for list
-        QMenu* menu = new ContextMenu( &logEntryList() );
+        ContextMenu* menu = new ContextMenu( &logEntryList() );
         menu->addAction( &newEntryAction() );
+        menu->addSeparator();
         menu->addAction( &editEntryTitleAction() );
         menu->addAction( &editEntryAction() );
         menu->addAction( &entryKeywordAction() );
