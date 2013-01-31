@@ -124,6 +124,10 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 
     Debug::Throw( "FormatBar::loadFormats.\n" );
     Q_CHECK_PTR( editor_ );
+
+    // get base text color name
+    const QString baseTextColor( editor_->palette().color( QPalette::Text ).name() );
+
     QTextCursor cursor( editor_->document() );
     cursor.beginEditBlock();
     foreach( const FORMAT::TextFormatBlock& block, formatList )
@@ -142,7 +146,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
         textFormat.setFontOverline( block.format() & FORMAT::Overline );
 
         // load color
-        if( block.color() != ColorMenu::NONE )
+        if( !( block.color() == ColorMenu::NONE || block.color() == baseTextColor ) )
         { textFormat.setForeground( QColor( block.color() ) ); }
 
         // load href
