@@ -149,7 +149,7 @@ class LogEntry:public Counter, public BASE::Key
 
     //! add TextFormatBlock
     void addFormat( const FORMAT::TextFormatBlock& format )
-    { formats_ << format; }
+    { formats_.append(format); }
 
     //! entry text format
     void setFormats( const FORMAT::TextFormatBlock::List& formats )
