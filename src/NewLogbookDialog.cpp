@@ -42,36 +42,42 @@ CustomDialog( parent )
     mainLayout().addLayout( gridLayout, 0 );
 
     // title
-    gridLayout->addWidget( new QLabel( "Title: ", this ), 0, 0 );
+    QLabel* label;
+    gridLayout->addWidget( label = new QLabel( "Title:", this ), 0, 0 );
     gridLayout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
     title_->setToolTip( "Logbook title" );
+    label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
+    label->setBuddy( title_ );
 
     // logbook author
-    gridLayout->addWidget( new QLabel( "Author: ", this ), 1, 0 );
+    gridLayout->addWidget( label = new QLabel( "Author:", this ), 1, 0 );
     gridLayout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
     author_->setToolTip( "Logbook author." );
+    label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
+    label->setBuddy( author_ );
 
     // attachment directory
-    gridLayout->addWidget( new QLabel( "File: ", this ), 2, 0 );
-    gridLayout->addWidget( file_ = new BrowsedLineEditor( this ), 2, 1 );
-    file_->setFileMode( QFileDialog::AnyFile );
-    file_->setAcceptMode( QFileDialog::AcceptSave );
-    file_->setToolTip( "File to which logbook entries are saved." );
-
-    // attachment directory
-    gridLayout->addWidget( new QLabel( "Attachment directory: ", this ), 3, 0 );
+    gridLayout->addWidget( label = new QLabel( "Attachment directory:", this ), 3, 0 );
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 3, 1 );
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
     attachmentDirectory_->setAcceptMode( QFileDialog::AcceptSave );
     attachmentDirectory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );
+    label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
+    label->setBuddy( attachmentDirectory_ );
 
     gridLayout->setColumnStretch( 1, 1 );
 
+    // separator
+    QFrame* frame;
+    mainLayout().addWidget( frame = new QFrame() );
+    frame->setFrameStyle( QFrame::HLine );
+
     // comments
-    mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );
+    mainLayout().addWidget( label = new QLabel( "Comments:", this ), 0 );
     mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
     comments_->setToolTip( "Logbook comments." );
     Debug::Throw( "NewLogbookDialog::NewLogbookDialog - done.\n" );
+    label->setBuddy( comments_ );
 
     adjustSize();
 

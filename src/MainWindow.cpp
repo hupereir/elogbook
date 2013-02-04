@@ -304,6 +304,29 @@ MainWindow::~MainWindow( void )
     if( logbook_ ) delete logbook_;
 }
 
+//___________________________________________________________
+void MainWindow::createDefaultLogbook( void )
+{
+
+    Debug::Throw( "MainWindow::_newLogbook.\n" );
+
+    // check current logbook
+    if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+
+    // create a new logbook, with no file
+    setLogbook( File() );
+    Q_CHECK_PTR( logbook_ );
+
+    logbook_->setTitle(  Logbook::LOGBOOK_NO_TITLE );
+    logbook_->setAuthor( XmlOptions::get().raw( "USER" ) );
+    logbook_->setDirectory( workingDirectory() );
+
+    QString comments;
+    QTextStream( &comments ) << "Default logbook created automatically on " << TimeStamp::now().toString( TimeStamp::LONG );
+    logbook_->setComments( comments );
+
+}
+
 //_______________________________________________
 bool MainWindow::setLogbook( File file )
 {
@@ -337,7 +360,7 @@ bool MainWindow::setLogbook( File file )
     }
 
     // set file
-    logbook()->setFile( file );
+    logbook_->setFile( file );
     if( !file.exists() )
     {
         // update listView with new entries
@@ -355,7 +378,7 @@ bool MainWindow::setLogbook( File file )
     // one need to disable everything in the window
     // to prevent user to interact with the application while loading
     _setEnabled( false );
-    logbook()->read();
+    logbook_->read();
     _setEnabled( true );
 
     Debug::Throw( "MainWindow::setLogbook - finished reading.\n" );
@@ -368,10 +391,10 @@ bool MainWindow::setLogbook( File file )
     Debug::Throw( "MainWindow::setLogbook - lists set.\n" );
 
     // change sorting
-    Qt::SortOrder sort_order( (Qt::SortOrder) logbook()->sortOrder() );
+    Qt::SortOrder sort_order( (Qt::SortOrder) logbook_->sortOrder() );
     Debug::Throw( "MainWindow::setLogbook - got sort order.\n" );
 
-    switch( logbook()->sortMethod() )
+    switch( logbook_->sortMethod() )
     {
         case Logbook::SORT_COLOR: entryList_->sortByColumn( LogEntryModel::COLOR, sort_order ); break;
         case Logbook::SORT_TITLE: entryList_->sortByColumn( LogEntryModel::TITLE, sort_order ); break;
@@ -388,7 +411,7 @@ bool MainWindow::setLogbook( File file )
     Debug::Throw( "MainWindow::setLogbook - attachment frame reset.\n" );
 
     // retrieve last modified entry
-    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry> entries( logbook_->entries() );
     BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
@@ -396,24 +419,24 @@ bool MainWindow::setLogbook( File file )
     Debug::Throw( "MainWindow::setLogbook - entry selected.\n" );
 
     // see if logbook has parent file
-    if( logbook()->parentFile().size() ) {
+    if( logbook_->parentFile().size() ) {
         QString buffer;
-        QTextStream(&buffer ) << "Warning: this logbook should be oppened via \"" << logbook()->parentFile() << "\" only.";
+        QTextStream(&buffer ) << "Warning: this logbook should be oppened via \"" << logbook_->parentFile() << "\" only.";
         InformationDialog( this, buffer ).exec();
     }
 
     // store logbook directory for next open, save comment
-    workingDirectory_ = File( logbook()->file() ).path();
+    workingDirectory_ = File( logbook_->file() ).path();
     statusbar_->label().setText( "" );
     statusbar_->showLabel();
 
     // register logbook to fileCheck
-    fileCheck().registerLogbook( logbook() );
+    fileCheck().registerLogbook( logbook_ );
 
     emit ready();
 
     // check errors
-    XmlError::List errors( logbook()->xmlErrors() );
+    XmlError::List errors( logbook_->xmlErrors() );
     if( errors.size() )
     {
         QString buffer;
@@ -425,8 +448,8 @@ bool MainWindow::setLogbook( File file )
     }
 
     // add opened file to OpenPrevious mennu.
-    if( !logbook()->file().isEmpty() )
-    { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
+    if( !logbook_->file().isEmpty() )
+    { Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
 
     ignoreWarnings_ = false;
 
@@ -449,8 +472,8 @@ void MainWindow::checkLogbookBackup( void )
     // check if oppened logbook needs backup
     if(
         XmlOptions::get().get<bool>( "AUTO_BACKUP" ) &&
-        !logbook()->file().isEmpty() &&
-        logbook()->needsBackup() )
+        !logbook_->file().isEmpty() &&
+        logbook_->needsBackup() )
     {
 
         // ask if backup needs to be saved; save if yes
@@ -610,7 +633,7 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
     delete entry;
 
     //! save
-    if( save && !logbook()->file().isEmpty() )
+    if( save && !logbook_->file().isEmpty() )
         MainWindow::save();
 
     return;
@@ -685,7 +708,7 @@ void MainWindow::resetAttachmentWindow( void ) const
     if( !logbook_ ) return;
 
     // retrieve logbook attachments, adds to AttachmentWindow
-    BASE::KeySet<Attachment> attachments( logbook()->attachments() );
+    BASE::KeySet<Attachment> attachments( logbook_->attachments() );
     attachmentWindow.frame().add( attachments.toList() );
 
     return;
@@ -718,13 +741,13 @@ void MainWindow::save( const bool& confirmEntries )
     if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
 
     // check logbook filename, go to Save As if no file is given and redirect is true
-    if( logbook()->file().isEmpty() ) {
+    if( logbook_->file().isEmpty() ) {
         _saveAs();
         return;
     }
 
     // check logbook filename is writable
-    File fullname = File( logbook()->file() ).expand();
+    File fullname = File( logbook_->file() ).expand();
     if( fullname.exists() ) {
 
         // check file is not a directory
@@ -756,9 +779,9 @@ void MainWindow::save( const bool& confirmEntries )
     Singleton::get().application<Application>()->busy();
     _setEnabled( false );
 
-    logbook()->truncateRecentEntriesList( maxRecentEntries_ );
+    logbook_->truncateRecentEntriesList( maxRecentEntries_ );
 
-    bool written( logbook()->write() );
+    bool written( logbook_->write() );
     Singleton::get().application<Application>()->idle();
     _setEnabled( true );
 
@@ -769,7 +792,7 @@ void MainWindow::save( const bool& confirmEntries )
     statusbar_->showLabel();
 
     // add new file to openPreviousMenu
-    if( !logbook()->file().isEmpty() ) Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+    if( !logbook_->file().isEmpty() ) Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
 
     // reset ignore_warning flag
     ignoreWarnings_ = false;
@@ -817,7 +840,7 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
 
     // retrieve all logbook entries
     BASE::KeySet<LogEntry> turnedOffEntries;
-    foreach( LogEntry* entry, logbook()->entries() )
+    foreach( LogEntry* entry, logbook_->entries() )
     {
 
         total++;
@@ -892,7 +915,7 @@ void MainWindow::showAllEntries( void )
     LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
 
     // set all logbook entries to find_visible
-    foreach( LogEntry* entry, logbook()->entries() )
+    foreach( LogEntry* entry, logbook_->entries() )
     { entry->setFindSelected( true ); }
 
     // reinitialize logEntry list
@@ -1155,7 +1178,7 @@ void MainWindow::_resetLogEntryList( void )
     {
 
         LogEntryModel::List modelEntries;
-        foreach( LogEntry* entry, logbook()->entries() )
+        foreach( LogEntry* entry, logbook_->entries() )
         {
             if( (!treeModeAction().isChecked() && entry->isFindSelected()) || entry->isSelected() )
             { modelEntries << entry; }
@@ -1200,7 +1223,7 @@ void MainWindow::_resetKeywordList( void )
 
     // retrieve new list of keywords (from logbook)
     KeywordModel::List newKeywords;
-    foreach( LogEntry* entry, logbook()->entries() )
+    foreach( LogEntry* entry, logbook_->entries() )
     {
         if( entry->isFindSelected() )
         {
@@ -1230,7 +1253,7 @@ void MainWindow::_loadColors( void )
     if( !logbook_ ) return;
 
     //! retrieve all entries
-    foreach( LogEntry* entry, logbook()->entries() )
+    foreach( LogEntry* entry, logbook_->entries() )
     { colorMenu_->add( entry->color() ); }
 
 }
@@ -1263,7 +1286,7 @@ bool MainWindow::_hasModifiedEntries( void ) const
 void MainWindow::_autoSave( void )
 {
 
-    if( logbook_ && !logbook()->file().isEmpty() )
+    if( logbook_ && !logbook_->file().isEmpty() )
     {
 
         statusbar_->label().setText( "performing autoSave" );
@@ -1348,7 +1371,7 @@ void MainWindow::_filesModified( FileCheck::DataSet files )
     else if( state == LogbookModifiedDialog::RELOAD )
     {
 
-        logbook()->setModifiedRecursive( false );
+        logbook_->setModifiedRecursive( false );
         _revertToSaved();
 
     } else if( state == LogbookModifiedDialog::IGNORE ) { ignoreWarnings_ = true; }
@@ -1369,24 +1392,22 @@ void MainWindow::_newLogbook( void )
     Debug::Throw( "MainWindow::_newLogbook.\n" );
 
     // check current logbook
-    if( logbook_ && logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // new logbook
     NewLogbookDialog dialog( this );
     dialog.setTitle( Logbook::LOGBOOK_NO_TITLE );
     dialog.setAuthor( XmlOptions::get().raw( "USER" ) );
-    File file = File( "log.xml" ).addPath( workingDirectory() );
-    dialog.setFile( file );
     dialog.setAttachmentDirectory( workingDirectory() );
     if( !dialog.centerOnParent().exec() ) return;
 
     // create a new logbook, with no file
-    setLogbook( dialog.file() );
+    setLogbook( File() );
     Q_CHECK_PTR( logbook_ );
 
-    logbook()->setTitle( dialog.title() );
-    logbook()->setAuthor( dialog.author() );
-    logbook()->setComments( dialog.comments() );
+    logbook_->setTitle( dialog.title() );
+    logbook_->setAuthor( dialog.author() );
+    logbook_->setComments( dialog.comments() );
 
     // attachment directory
     File directory( dialog.attachmentDirectory() );
@@ -1399,15 +1420,7 @@ void MainWindow::_newLogbook( void )
         QTextStream(&buffer ) << "File \"" << directory << "\" is not a directory.";
         InformationDialog( this, buffer ).exec();
 
-    } else logbook()->setDirectory( directory );
-
-    // add new file to openPreviousMenu
-    if( !logbook()->file().isEmpty() )
-    {
-        Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
-        logbook()->setModified( true );
-        save();
-    }
+    } else logbook_->setDirectory( directory );
 
 }
 
@@ -1419,14 +1432,20 @@ void MainWindow::setModified( bool value )
 
     QString buffer;
     QTextStream what( &buffer );
-    if( logbook() && !logbook()->file().isEmpty() )
+    if( logbook_ && !logbook_->file().isEmpty() )
     {
-        what << logbook()->file().localName();
+
+        what << logbook_->file().localName();
         if( value ) what << " (modified)";
-        what << " - ";
+        what << " - Elogbook";
+
+    } else {
+
+        what << "Elogbook";
+        if( value ) what << " (modified)";
+
     }
 
-    what << "Elogbook";
     setWindowTitle( buffer );
 
 }
@@ -1439,7 +1458,7 @@ void MainWindow::open( FileRecord record )
 
     // check if current logbook needs save
     if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
-    if( logbook_ && logbook()->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_ && logbook_->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // open file from dialog if not set as argument
     if( record.file().isEmpty() )
@@ -1474,7 +1493,7 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
     }
 
     // check default filename
-    if( defaultFile.isEmpty() ) defaultFile = logbook()->file();
+    if( defaultFile.isEmpty() ) defaultFile = logbook_->file();
     if( defaultFile.isEmpty() ) defaultFile = File( "log.xml" ).addPath( workingDirectory() );
 
     // create file dialog
@@ -1492,8 +1511,8 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
     workingDirectory_ = fullname.path();
 
     // change logbook filename and save
-    logbook()->setFile( fullname );
-    logbook()->setModifiedRecursive( true );
+    logbook_->setFile( fullname );
+    logbook_->setModifiedRecursive( true );
     save();
 
     // update current file in menu
@@ -1503,17 +1522,17 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
     force logbook state to unmodified since
     some children state may not have been reset properly
     */
-    logbook()->setModifiedRecursive( false );
+    logbook_->setModifiedRecursive( false );
 
     // add new file to openPreviousMenu
-    if( !logbook()->file().isEmpty() )
-    { Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() ); }
+    if( !logbook_->file().isEmpty() )
+    { Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
 
     // redo file check registration
     if( registerLogbook )
     {
         fileCheck().clear();
-        fileCheck().registerLogbook( logbook() );
+        fileCheck().registerLogbook( logbook_ );
     }
 
     // reset ignore_warning flag
@@ -1535,7 +1554,7 @@ void MainWindow::_saveForced( void )
     }
 
     // set all logbooks as modified
-    logbook()->setModifiedRecursive( true );
+    logbook_->setModifiedRecursive( true );
     save();
 
 }
@@ -1551,17 +1570,17 @@ void MainWindow::_saveBackup( void )
         return;
     }
 
-    QString filename( logbook()->backupFilename( ) );
+    QString filename( logbook_->backupFilename( ) );
     if( filename.isEmpty() ) {
         InformationDialog( this, "no valid filename. Use <Save As> first." ).exec();
         return;
     }
 
     // store last backup time and update
-    TimeStamp lastBackup( logbook()->backup() );
+    TimeStamp lastBackup( logbook_->backup() );
 
     // stores current logbook filename
-    QString currentFilename( logbook()->file() );
+    QString currentFilename( logbook_->file() );
 
     // save logbook as backup
     bool saved( _saveAs( filename, false ) );
@@ -1571,16 +1590,16 @@ void MainWindow::_saveBackup( void )
     Singleton::get().application<Application>()->recentFiles().remove( File(filename).expand() );
 
     // restore initial filename
-    logbook()->setFile( currentFilename );
+    logbook_->setFile( currentFilename );
 
     if( saved ) {
 
-        logbook()->addBackup( filename );
-        logbook()->setModified( true );
+        logbook_->addBackup( filename );
+        logbook_->setModified( true );
         setModified( true );
 
         // Save logbook if needed (to make sure the backup stamp is updated)
-        if( !logbook()->file().isEmpty() ) save();
+        if( !logbook_->file().isEmpty() ) save();
     }
 
 }
@@ -1591,7 +1610,7 @@ void MainWindow::_manageBackups( void )
     Debug::Throw( "MainWindow::_manageBackups.\n");
 
     BackupManagerDialog dialog( this );
-    Key::associate( &dialog.managerWidget(), logbook() );
+    Key::associate( &dialog.managerWidget(), logbook_ );
     dialog.managerWidget().updateBackups();
 
     // connections
@@ -1617,13 +1636,13 @@ void MainWindow::_revertToSaved( void )
 
     // ask for confirmation
     QString buffer;
-    QTextStream( &buffer ) << "Discard changes to " << logbook()->file().localName() << " ?";
-    if( ( _hasModifiedEntries() || logbook()->modified() ) && !QuestionDialog( this, buffer ).exec() )
+    QTextStream( &buffer ) << "Discard changes to " << logbook_->file().localName() << " ?";
+    if( ( _hasModifiedEntries() || logbook_->modified() ) && !QuestionDialog( this, buffer ).exec() )
     { return; }
 
     // reinit MainWindow
     Singleton::get().application<Application>()->busy();
-    setLogbook( logbook()->file() );
+    setLogbook( logbook_->file() );
     Singleton::get().application<Application>()->idle();
 
     checkLogbookBackup();
@@ -1640,7 +1659,7 @@ void MainWindow::_print( void )
     if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
-    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // create printer
     QPrinter printer( QPrinter::HighResolution );
@@ -1652,9 +1671,9 @@ void MainWindow::_print( void )
 
     // create helper
     LogbookPrintHelper helper( this );
-    helper.setLogbook( logbook() );
+    helper.setLogbook( logbook_ );
     helper.setEntries(
-        BASE::KeySet<LogEntry>( logbook()->entries() ).toList(),
+        BASE::KeySet<LogEntry>( logbook_->entries() ).toList(),
         entryModel_.get(),
         entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
@@ -1721,13 +1740,13 @@ void MainWindow::_printPreview( void )
     if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
-    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // create helper
     LogbookPrintHelper helper( this );
-    helper.setLogbook( logbook() );
+    helper.setLogbook( logbook_ );
     helper.setEntries(
-        BASE::KeySet<LogEntry>( logbook()->entries() ).toList(),
+        BASE::KeySet<LogEntry>( logbook_->entries() ).toList(),
         entryModel_.get(),
         entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
@@ -1758,7 +1777,7 @@ void MainWindow::_toHtml( void )
     if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
-    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // create options widget
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
@@ -1811,7 +1830,7 @@ void MainWindow::_toHtml( void )
 
     // create print helper
     LogbookHtmlHelper helper( this );
-    helper.setLogbook( logbook() );
+    helper.setLogbook( logbook_ );
 
     // select entries
     helper.setEntries( _entries( logEntrySelectionWidget->mode() ) );
@@ -1846,15 +1865,15 @@ void MainWindow::_synchronize( void )
     if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
-    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // create file dialog
     File remoteFile( FileDialog(this).getFile() );
     if( remoteFile.isNull() ) return;
 
     // debug
-    Debug::Throw() << "MainWindow::_synchronize - number of local files: " << logbook()->children().size() << endl;
-    Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << logbook()->entries().size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of local files: " << logbook_->children().size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << logbook_->entries().size() << endl;
 
     // set busy flag
     Singleton::get().application<Application>()->busy();
@@ -1892,7 +1911,7 @@ void MainWindow::_synchronize( void )
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    QHash<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( remoteLogbook ) );
+    QHash<LogEntry*,LogEntry*> duplicates( logbook_->synchronize( remoteLogbook ) );
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
@@ -1919,17 +1938,17 @@ void MainWindow::_synchronize( void )
     resetAttachmentWindow();
 
     // retrieve last modified entry
-    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry> entries( logbook_->entries() );
     BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
     // write local logbook
-    if( !logbook()->file().isEmpty() ) save();
+    if( !logbook_->file().isEmpty() ) save();
 
     // synchronize remove with local
     Debug::Throw() << "MainWindow::_synchronize - updating remote from local" << endl;
-    unsigned int nDuplicated = remoteLogbook.synchronize( *logbook() ).size();
+    unsigned int nDuplicated = remoteLogbook.synchronize( *logbook_ ).size();
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << nDuplicated << endl;
 
     // save remote logbook
@@ -1970,13 +1989,13 @@ void MainWindow::_removeBackup( Logbook::Backup backup )
     { logbook->file().remove(); }
 
     // clean logbook backups
-    Logbook::Backup::List backups( logbook()->backupFiles() );
+    Logbook::Backup::List backups( logbook_->backupFiles() );
     Logbook::Backup::List::iterator iter = std::find( backups.begin(), backups.end(), backup );
     if( iter != backups.end() )
     {
         backups.erase( iter );
-        logbook()->setBackupFiles( backups );
-        if( !logbook()->file().isEmpty() )
+        logbook_->setBackupFiles( backups );
+        if( !logbook_->file().isEmpty() )
         { save(); }
     }
 
@@ -1995,13 +2014,13 @@ void MainWindow::_restoreBackup( Logbook::Backup backup )
     }
 
     // store old filename
-    File oldName( logbook()->file() );
+    File oldName( logbook_->file() );
 
     // store old backups
-    Logbook::Backup::List backups( logbook()->backupFiles() );
+    Logbook::Backup::List backups( logbook_->backupFiles() );
 
     // store associated backup manager Widget
-    BASE::KeySet<BackupManagerWidget> widgets( logbook() );
+    BASE::KeySet<BackupManagerWidget> widgets( logbook_ );
 
     // replace logbook with backup
     setLogbook( backup.file() );
@@ -2011,20 +2030,20 @@ void MainWindow::_restoreBackup( Logbook::Backup backup )
     Singleton::get().application<Application>()->recentFiles().remove( backup.file().expand() );
 
     // change filename
-    logbook()->setFile( oldName );
+    logbook_->setFile( oldName );
 
     // reassign backups
-    logbook()->setBackupFiles( backups );
+    logbook_->setBackupFiles( backups );
 
     // re-associate
     foreach( BackupManagerWidget* widget, widgets )
-    { BASE::Key::associate( widget, logbook() ); }
+    { BASE::Key::associate( widget, logbook_ ); }
 
     // and save
-    if( !logbook()->file().isEmpty() )
+    if( !logbook_->file().isEmpty() )
     {
         save();
-        Singleton::get().application<Application>()->recentFiles().add( logbook()->file().expand() );
+        Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
     }
 
 }
@@ -2052,11 +2071,11 @@ void MainWindow::_mergeBackup( Logbook::Backup backup )
     if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
-    if( logbook()->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // debug
-    Debug::Throw() << "MainWindow::_mergeBackup - number of local files: " << logbook()->children().size() << endl;
-    Debug::Throw() << "MainWindow::_mergeBackup - number of local entries: " << logbook()->entries().size() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of local files: " << logbook_->children().size() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of local entries: " << logbook_->entries().size() << endl;
 
     // set busy flag
     Singleton::get().application<Application>()->busy();
@@ -2094,7 +2113,7 @@ void MainWindow::_mergeBackup( Logbook::Backup backup )
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    QHash<LogEntry*,LogEntry*> duplicates( logbook()->synchronize( backupLogbook ) );
+    QHash<LogEntry*,LogEntry*> duplicates( logbook_->synchronize( backupLogbook ) );
     Debug::Throw() << "MainWindow::_mergeBackup - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
@@ -2121,13 +2140,13 @@ void MainWindow::_mergeBackup( Logbook::Backup backup )
     resetAttachmentWindow();
 
     // retrieve last modified entry
-    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry> entries( logbook_->entries() );
     BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
     // write local logbook
-    if( !logbook()->file().isEmpty() ) save();
+    if( !logbook_->file().isEmpty() ) save();
 
     // idle
     Singleton::get().application<Application>()->idle();
@@ -2149,7 +2168,7 @@ void MainWindow::_reorganize( void )
     }
 
     // retrieve all entries
-    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry> entries( logbook_->entries() );
     foreach( LogEntry* entry, entries )
     {
 
@@ -2169,21 +2188,21 @@ void MainWindow::_reorganize( void )
     // put entries in logbook
     foreach( LogEntry* entry, entryList )
     {
-        Logbook *logbook( MainWindow::logbook()->latestChild() );
+        Logbook *logbook( MainWindow::logbook_->latestChild() );
         Key::associate( entry, logbook );
         logbook->setModified( true );
     }
 
     // remove empty logbooks
-    logbook()->removeEmptyChildren();
+    logbook_->removeEmptyChildren();
 
     // redo fileChecker registration
     fileCheck().clear();
-    fileCheck().registerLogbook( logbook() );
+    fileCheck().registerLogbook( logbook_ );
 
     // save
-    logbook()->setModified( true );
-    if( !logbook()->file().isEmpty() ) save();
+    logbook_->setModified( true );
+    if( !logbook_->file().isEmpty() ) save();
 
 }
 
@@ -2203,7 +2222,7 @@ void MainWindow::_showDuplicatedEntries( void )
     int found( 0 );
 
     // retrieve all logbook entries
-    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry> entries( logbook_->entries() );
     BASE::KeySet<LogEntry> turnedOffEntries;
     foreach( LogEntry* entry, entries )
     {
@@ -2283,9 +2302,9 @@ void MainWindow::_editLogbookInformations( void )
     // keep track of logbook modifications
     bool modified( false );
 
-    modified |= logbook()->setTitle( dialog.title() );
-    modified |= logbook()->setAuthor( dialog.author() );
-    modified |= logbook()->setComments( dialog.comments() );
+    modified |= logbook_->setTitle( dialog.title() );
+    modified |= logbook_->setAuthor( dialog.author() );
+    modified |= logbook_->setComments( dialog.comments() );
 
     // retrieve logbook directory
     File directory = dialog.AttachmentDirectory();
@@ -2298,12 +2317,13 @@ void MainWindow::_editLogbookInformations( void )
         QTextStream(&buffer ) << "File \"" << directory << "\" is not a directory.";
         InformationDialog( this, buffer ).exec();
 
-    } else modified |= logbook()->setDirectory( directory );
+    } else modified |= logbook_->setDirectory( directory );
 
 
     // save Logbook, if needed
-    if( modified ) logbook()->setModified( true );
-    if( !logbook()->file().isEmpty() ) save();
+    if( modified ) logbook_->setModified( true );
+    if( !logbook_->file().isEmpty() ) save();
+    else setModified( true );
 
 }
 
@@ -2443,7 +2463,7 @@ void MainWindow::_deleteEntries( void )
     { deleteEntry( entry, false ); }
 
     // Save logbook if needed
-    if( !logbook()->file().isEmpty() ) save();
+    if( !logbook_->file().isEmpty() ) save();
 
     return;
 
@@ -2555,7 +2575,7 @@ void MainWindow::_changeEntryTitle( LogEntry* entry, QString newTitle )
     foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
     // save Logbook
-    if( logbook() && !logbook()->file().isEmpty() ) save();
+    if( logbook_ && !logbook_->file().isEmpty() ) save();
 
 }
 
@@ -2594,7 +2614,7 @@ void MainWindow::_changeEntryColor( QColor color )
     entryModel_.add( selection );
 
     // save Logbook
-    if( !logbook()->file().isEmpty() ) save();
+    if( !logbook_->file().isEmpty() ) save();
 
 }
 
@@ -2647,7 +2667,7 @@ void MainWindow::_deleteKeyword( void )
     { if( index.isValid() ) keywords << keywordModel_.get( index ); }
 
     // retrieve associated entries
-    BASE::KeySet<LogEntry> entries( logbook()->entries() );
+    BASE::KeySet<LogEntry> entries( logbook_->entries() );
     BASE::KeySet<LogEntry> associatedEntries;
     foreach( const Keyword& keyword, keywords )
     {
@@ -2700,7 +2720,7 @@ void MainWindow::_deleteKeyword( void )
     }
 
     // Save logbook
-    if( !logbook()->file().isEmpty() ) save();
+    if( !logbook_->file().isEmpty() ) save();
 
     return;
 
@@ -2734,7 +2754,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
     if( keyword == newKeyword ) return;
 
     // get entries matching the oldKeyword, change the keyword
-    foreach( LogEntry* entry, logbook()->entries() )
+    foreach( LogEntry* entry, logbook_->entries() )
     {
 
         /*
@@ -2781,7 +2801,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
     _resetLogEntryList();
 
     // Save logbook if needed
-    if( !logbook()->file().isEmpty() ) save();
+    if( !logbook_->file().isEmpty() ) save();
 
 }
 
@@ -2915,7 +2935,7 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
     }
 
     // Save logbook if needed
-    if( !logbook()->file().isEmpty() ) save();
+    if( !logbook_->file().isEmpty() ) save();
 
     return;
 
@@ -2938,7 +2958,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
 
     // retrieve all logbook entries
     BASE::KeySet<LogEntry> turnedOffEntries;
-    foreach( LogEntry* entry, logbook()->entries() )
+    foreach( LogEntry* entry, logbook_->entries() )
     { entry->setKeywordSelected( entry->keyword() == keyword ); }
 
     // reinitialize logEntry list
@@ -3003,18 +3023,18 @@ void MainWindow::_storeSortMethod( int column, Qt::SortOrder order  )
     bool changed( false );
     switch( column ) {
 
-        case LogEntryModel::COLOR: changed = logbook()->setSortMethod( Logbook::SORT_COLOR ); break;
-        case LogEntryModel::TITLE: changed = logbook()->setSortMethod( Logbook::SORT_TITLE ); break;
-        case LogEntryModel::CREATION: changed = logbook()->setSortMethod( Logbook::SORT_CREATION ); break;
-        case LogEntryModel::MODIFICATION: changed = logbook()->setSortMethod( Logbook::SORT_MODIFICATION ); break;
-        case LogEntryModel::AUTHOR: changed = logbook()->setSortMethod( Logbook::SORT_AUTHOR ); break;
+        case LogEntryModel::COLOR: changed = logbook_->setSortMethod( Logbook::SORT_COLOR ); break;
+        case LogEntryModel::TITLE: changed = logbook_->setSortMethod( Logbook::SORT_TITLE ); break;
+        case LogEntryModel::CREATION: changed = logbook_->setSortMethod( Logbook::SORT_CREATION ); break;
+        case LogEntryModel::MODIFICATION: changed = logbook_->setSortMethod( Logbook::SORT_MODIFICATION ); break;
+        case LogEntryModel::AUTHOR: changed = logbook_->setSortMethod( Logbook::SORT_AUTHOR ); break;
         default: return;
 
     }
 
     // Save logbook if needed
-    changed |= logbook()->setSortOrder( int( order ) );
-    if( changed && !logbook()->file().isEmpty() ) save();
+    changed |= logbook_->setSortOrder( int( order ) );
+    if( changed && !logbook_->file().isEmpty() ) save();
 
 }
 
@@ -3067,7 +3087,7 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
     foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
     // save Logbook
-    if( logbook() && !logbook()->file().isEmpty() ) save();
+    if( logbook_ && !logbook_->file().isEmpty() ) save();
 
 }
 
@@ -3221,7 +3241,7 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     {
         default:
         case LogEntryPrintSelectionWidget::ALL_ENTRIES:
-        { BASE::KeySet<LogEntry>( logbook()->entries() ).toList(); }
+        { BASE::KeySet<LogEntry>( logbook_->entries() ).toList(); }
 
         case LogEntryPrintSelectionWidget::VISIBLE_ENTRIES:
         return entryModel_.get();

@@ -62,14 +62,6 @@ class NewLogbookDialog: public CustomDialog
     QString author( void ) const
     { return author_->text(); }
 
-    //! filename
-    void setFile( const File& file )
-    { file_->setFile( file ); }
-
-    //! filename
-    File file( void ) const
-    { return File( file_->editor().text() ).expand(); }
-
     //! attachment directory
     void setAttachmentDirectory( const File& file )
     { attachmentDirectory_->setFile( file ); }
@@ -96,9 +88,6 @@ class NewLogbookDialog: public CustomDialog
 
     //! author line edit
     AnimatedLineEditor *author_;
-
-    //! filename browsed line editor
-    BrowsedLineEditor *file_;
 
     //! destination directory browsed line edti
     BrowsedLineEditor *attachmentDirectory_;

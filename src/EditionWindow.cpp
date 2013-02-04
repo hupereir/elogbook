@@ -289,8 +289,8 @@ void EditionWindow::displayEntry( LogEntry *entry )
     clearAssociations<LogEntry>();
 
     // retrieve selection frame
-    MainWindow &mainwindow( _mainWindow() );
-    _menu().recentFilesMenu().setCurrentFile( mainwindow.menu().recentFilesMenu().currentFile() );
+    MainWindow &mainWindow( _mainWindow() );
+    _menu().recentFilesMenu().setCurrentFile( mainWindow.menu().recentFilesMenu().currentFile() );
 
     // check entry
     if( !entry ) return;
@@ -307,8 +307,8 @@ void EditionWindow::displayEntry( LogEntry *entry )
 
     // update previous and next action states
     Debug::Throw( "EditionWindow::displayEntry - setting button states.\n" );
-    previousEntryAction().setEnabled( mainwindow.previousEntry(entry, false) );
-    nextEntryAction().setEnabled( mainwindow.nextEntry(entry, false) );
+    previousEntryAction().setEnabled( mainWindow.previousEntry(entry, false) );
+    nextEntryAction().setEnabled( mainWindow.nextEntry(entry, false) );
 
     // reset modify flag; change title accordingly
     setModified( false );
@@ -927,9 +927,9 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
 MainWindow& EditionWindow::_mainWindow( void ) const
 {
     Debug::Throw( "EditionWindow::_mainWindow.\n" );
-    BASE::KeySet<MainWindow> mainwindows( this );
-    Q_ASSERT( mainwindows.size()==1 );
-    return **mainwindows.begin();
+    BASE::KeySet<MainWindow> mainWindows( this );
+    Q_ASSERT( mainWindows.size()==1 );
+    return **mainWindows.begin();
 }
 
 //_____________________________________________
@@ -1009,8 +1009,8 @@ void EditionWindow::_save( bool updateSelection )
     if( !entry ) entry = new LogEntry();
 
     // check logbook
-    MainWindow &mainwindow( _mainWindow() );
-    Logbook *logbook( mainwindow.logbook() );
+    MainWindow &mainWindow( _mainWindow() );
+    Logbook *logbook( mainWindow.logbook() );
     if( !logbook ) {
         InformationDialog( this, "No logbook opened. <Save> canceled." ).exec();
         return;
@@ -1035,7 +1035,6 @@ void EditionWindow::_save( bool updateSelection )
 
     // status bar
     statusBar().label().setText(  "writting entry to logbook..." );
-    Debug::Throw( "EditionWindow::_save - statusbar set.\n" );
 
     // add entry to logbook, if needed
     if( entryIsNew ) Key::associate( entry, logbook->latestChild() );
@@ -1043,7 +1042,6 @@ void EditionWindow::_save( bool updateSelection )
     // update this window title, set unmodified.
     setModified( false );
     updateWindowTitle();
-    Debug::Throw( "EditionWindow::_save - modified state saved.\n" );
 
     // update associated EditionWindows
     BASE::KeySet<EditionWindow> windows( entry );
@@ -1052,31 +1050,23 @@ void EditionWindow::_save( bool updateSelection )
         Q_ASSERT( window == this || window->isReadOnly() || window->isClosed() );
         if( window != this ) window->displayEntry( entry );
     }
-    Debug::Throw( "EditionWindow::_save - editFrames updated.\n" );
 
-    // update selection frame
-    mainwindow.updateEntry( entry, updateSelection );
-    mainwindow.setModified( true );
-    Debug::Throw( "EditionWindow::_save - mainWindow updated.\n" );
+    // update main window
+    mainWindow.updateEntry( entry, updateSelection );
+    mainWindow.setModified( true );
 
     // set logbook as modified
     BASE::KeySet<Logbook> logbooks( entry );
     foreach( Logbook* logbook, logbooks )
     { logbook->setModified( true ); }
 
-    Debug::Throw( "EditionWindow::_save - loogbook modified state updated.\n" );
-
     // add to main logbook recent entries
-    mainwindow.logbook()->addRecentEntry( entry );
+    mainWindow.logbook()->addRecentEntry( entry );
 
     // Save logbook
-    if( mainwindow.logbook()->file().size() )
-    { mainwindow.save(); }
-
-    Debug::Throw( "EditionWindow::_save - mainWindow saved.\n" );
+    if( !mainWindow.logbook()->file().isEmpty() ) mainWindow.save();
 
     statusBar().label().setText( "" );
-    Debug::Throw( "EditionWindow::_save - done.\n" );
 
     return;
 
@@ -1254,9 +1244,9 @@ void EditionWindow::_previousEntry( void )
 {
     Debug::Throw( "EditionWindow::_previousEntry.\n" );
 
-    MainWindow &mainwindow( _mainWindow() );
-    LogEntry* entry( mainwindow.previousEntry( EditionWindow::entry(), true ) );
-    if( !( entry  && mainwindow.lockEntry( entry ) ) ) return;
+    MainWindow &mainWindow( _mainWindow() );
+    LogEntry* entry( mainWindow.previousEntry( EditionWindow::entry(), true ) );
+    if( !( entry  && mainWindow.lockEntry( entry ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
 
@@ -1267,9 +1257,9 @@ void EditionWindow::_nextEntry( void )
 {
     Debug::Throw( "EditionWindow::_nextEntry.\n" );
 
-    MainWindow &mainwindow( _mainWindow() );
-    LogEntry* entry( mainwindow.nextEntry( EditionWindow::entry(), true ) );
-    if( !( entry && mainwindow.lockEntry( entry ) ) ) return;
+    MainWindow &mainWindow( _mainWindow() );
+    LogEntry* entry( mainWindow.nextEntry( EditionWindow::entry(), true ) );
+    if( !( entry && mainWindow.lockEntry( entry ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
 
@@ -1493,11 +1483,11 @@ void EditionWindow::_cloneWindow( void )
     }
 
     // retrieve selection frame
-    MainWindow &mainwindow( _mainWindow() );
+    MainWindow &mainWindow( _mainWindow() );
 
     // create new EditionWindow
-    EditionWindow *edition_window( new EditionWindow( &mainwindow ) );
-    Key::associate( edition_window, &mainwindow );
+    EditionWindow *edition_window( new EditionWindow( &mainWindow ) );
+    Key::associate( edition_window, &mainWindow );
     edition_window->displayEntry( entry );
 
     // raise EditionWindow

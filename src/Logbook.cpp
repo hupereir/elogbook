@@ -40,7 +40,7 @@
 //________________________________
 // public methods
 
-const QString Logbook::LOGBOOK_NO_TITLE = "untitled";
+const QString Logbook::LOGBOOK_NO_TITLE = "My electronic logbook";
 const QString Logbook::LOGBOOK_NoAuthor = "anonymous";
 const QString Logbook::LOGBOOK_NO_FILE = "";
 const QString Logbook::LOGBOOK_NO_DIRECTORY = "";

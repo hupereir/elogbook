@@ -56,21 +56,21 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     gridLayout->setSpacing(5);
     hLayout->addLayout( gridLayout, 0 );
 
-    gridLayout->addWidget( label = new QLabel( "Title: ", this ), 0, 0 );
+    gridLayout->addWidget( label = new QLabel( "Title:", this ), 0, 0 );
     gridLayout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
     title_->setText( logbook->title().isEmpty() ?   Logbook::LOGBOOK_NO_TITLE:logbook->title()  );
     title_->setToolTip( "Logbook title" );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     // logbook author
-    gridLayout->addWidget( label = new QLabel( "Author: ", this ), 1, 0 );
+    gridLayout->addWidget( label = new QLabel( "Author:", this ), 1, 0 );
     gridLayout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
     author_->setText( logbook->author().isEmpty() ? Logbook::LOGBOOK_NoAuthor:logbook->author() );
     author_->setToolTip( "Logbook author." );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
 
     // attachment directory
-    gridLayout->addWidget( label = new QLabel( "Directory: ", this ), 2, 0 );
+    gridLayout->addWidget( label = new QLabel( "Directory:", this ), 2, 0 );
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 2, 1 );
     attachmentDirectory_->setFile( logbook->directory().isEmpty() ? File(Util::workingDirectory()) : logbook->directory() );
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );

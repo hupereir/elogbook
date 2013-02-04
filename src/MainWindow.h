@@ -77,6 +77,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     ProgressStatusBar& statusBar( void ) const
     { return *statusbar_; }
 
+    //! creates a new default logbook
+    virtual void createDefaultLogbook( void );
+
     //! deletes old logbook, if any. Set the new one an display
     /*
     note: don't pass a const File& here cause it crashes the application

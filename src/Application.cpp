@@ -21,15 +21,8 @@
 *
 *******************************************************************************/
 
-/*!
-\file Application.cpp
-\brief application Main Window singleton object
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "Application.h"
+
 #include "AttachmentWindow.h"
 #include "AttachmentType.h"
 #include "Config.h"
@@ -39,6 +32,7 @@
 #include "File.h"
 #include "IconEngine.h"
 #include "Icons.h"
+#include "InformationDialog.h"
 #include "Logbook.h"
 #include "MainWindow.h"
 #include "Menu.h"
@@ -123,27 +117,43 @@ bool Application::realizeWidget( void )
 
     // create selection frame
     mainWindow_ = new MainWindow();
-    connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), &mainWindow(), SLOT( selectEntry( LogEntry* ) ) );
+    connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), mainWindow_, SLOT( selectEntry( LogEntry* ) ) );
 
     // update configuration
     emit configurationChanged();
 
-    mainWindow().centerOnDesktop();
-    mainWindow().show();
+    mainWindow_->centerOnDesktop();
+    mainWindow_->show();
 
     // scratch files
     scratchFileMonitor_ = new ScratchFileMonitor( this );
     connect( qApp, SIGNAL( aboutToQuit( void ) ), scratchFileMonitor_, SLOT( deleteScratchFiles( void ) ) );
-    connect( &mainWindow(), SIGNAL( scratchFileCreated( const File& ) ), scratchFileMonitor_, SLOT( add( const File& ) ) );
+    connect( mainWindow_, SIGNAL( scratchFileCreated( const File& ) ), scratchFileMonitor_, SLOT( add( const File& ) ) );
 
     // update
     qApp->processEvents();
 
     // load file from arguments or recent files
     QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
-    File file( filenames.empty() ? recentFiles().lastValidFile().file():File( filenames.front() ).expand() );
-    if( mainWindow().setLogbook( file ) ) mainWindow().checkLogbookBackup();
-    else mainWindow().newLogbookAction().trigger();
+    const File file = filenames.empty() ?
+        recentFiles_->lastValidFile().file():
+        File( filenames.front() );
+
+    if( mainWindow_->setLogbook( file ) ) mainWindow_->checkLogbookBackup();
+    else {
+
+        // show information dialog, provided that fileList is not empty
+        if( !file.isEmpty() )
+        {
+            QString buffer;
+            QTextStream( &buffer ) << "Unable to open " << file << ".\nCreating a default new logbook with default parameters.";
+            InformationDialog( mainWindow_, buffer ).exec();
+        }
+
+        // create a default, empty logbook
+        mainWindow_->createDefaultLogbook();
+
+    }
 
     return true;
 
@@ -183,9 +193,9 @@ void Application::_exit( void )
 
         // check if current logbook is modified
         if(
-            mainWindow().logbook() &&
-            mainWindow().logbook()->modified() &&
-            mainWindow().askForSave() == AskForSaveDialog::CANCEL )
+            mainWindow_->logbook() &&
+            mainWindow_->logbook()->modified() &&
+            mainWindow_->askForSave() == AskForSaveDialog::CANCEL )
         { return; }
     }
 
@@ -201,7 +211,7 @@ bool Application::_processCommand( SERVER::ServerCommand command )
     if( BaseApplication::_processCommand( command ) ) return true;
     if( command.command() == SERVER::ServerCommand::RAISE )
     {
-        if( mainWindow_ ) mainWindow().uniconifyAction().trigger();
+        if( mainWindow_ ) mainWindow_->uniconifyAction().trigger();
         QStringList filenames( SERVER::ApplicationManager::commandLineParser( command.arguments() ).orphans() );
         if( !filenames.isEmpty() )
         {
@@ -209,7 +219,7 @@ bool Application::_processCommand( SERVER::ServerCommand command )
             QString buffer;
             QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
             if( QuestionDialog( mainWindow_, buffer ).centerOnParent().exec() )
-            { mainWindow().setLogbook( File( filenames.front() ) ); }
+            { mainWindow_->setLogbook( File( filenames.front() ) ); }
 
         }
 
