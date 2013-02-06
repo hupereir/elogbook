@@ -190,6 +190,7 @@ MainWindow::MainWindow( QWidget *parent ):
         menu->addSeparator();
         menu->addAction( &deleteKeywordAction() );
         menu->addAction( &editKeywordAction() );
+        menu->setHideDisabledActions( true );
     }
 
     /*
@@ -272,6 +273,7 @@ MainWindow::MainWindow( QWidget *parent ):
         menu->addAction( &entryKeywordAction() );
         menu->addAction( &deleteEntryAction() );
         menu->addAction( &entryColorAction() );
+        menu->setHideDisabledActions( true );
     }
 
     // add widgets to Hs
