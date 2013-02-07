@@ -168,6 +168,7 @@ MainWindow::MainWindow( QWidget *parent ):
     // the use of a custom delegate unfortunately disable the
     // nice selection appearance of the oxygen style.
     keywordList_->setItemDelegate( new TextEditionDelegate( this ) );
+    keywordList_->setItemMargin( 2 );
 
     // update LogEntryList when keyword selection change
     connect( keywordList_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );
@@ -238,13 +239,13 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->setDragEnabled(true);
     entryList_->setOptionName( "ENTRY_LIST" );
     entryList_->lockColumnVisibility( LogEntryModel::KEYWORD );
-
     entryList_->setColumnHidden( LogEntryModel::TITLE, false );
     entryList_->lockColumnVisibility( LogEntryModel::TITLE );
 
     // the use of a custom delegate unfortunately disable the
     // nice selection appearance of the oxygen style.
     entryList_->setItemDelegate( new TextEditionDelegate( this ) );
+    entryList_->setItemMargin( 2 );
 
     connect( entryList_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
     connect( entryList_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
