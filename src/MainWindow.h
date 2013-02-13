@@ -560,12 +560,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
         {}
 
         //! default size
-        void setDefaultWidth( const int& );
-
-        //! default width
-        const int& defaultWidth( void ) const
-        { return defaultWidth_; }
-
+        void setDefaultWidth( int );
 
         //! size
         QSize sizeHint( void ) const;

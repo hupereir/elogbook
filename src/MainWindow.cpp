@@ -3229,7 +3229,7 @@ void MainWindow::_updateConfiguration( void )
 }
 
 //______________________________________________________________________
-void MainWindow::KeywordList::setDefaultWidth( const int& value )
+void MainWindow::KeywordList::setDefaultWidth( int value )
 { defaultWidth_ = value; }
 
 //____________________________________________
