@@ -114,7 +114,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 
     // set drag type
     foreach( const QModelIndex& index, indexes )
-    { if( index.isValid() ) mime->setData( Keyword::MimeType, get( index ).get().toAscii() ); }
+    { if( index.isValid() ) mime->setData( Keyword::MimeType, get( index ).get().toLatin1() ); }
 
     // retrieve associated entry
     QString buffer;
@@ -126,7 +126,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     }
 
     // set plain text data
-    mime->setData( "text/plain", buffer.toAscii() );
+    mime->setData( "text/plain", buffer.toLatin1() );
 
     return mime;
 

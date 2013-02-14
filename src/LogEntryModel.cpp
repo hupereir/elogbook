@@ -230,7 +230,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     }
 
     // set plain text data
-    mime->setData( "text/plain", buffer.toAscii() );
+    mime->setData( "text/plain", buffer.toLatin1() );
 
     return mime;
 
