@@ -34,7 +34,9 @@
 #include "XmlOptions.h"
 
 #include <QIcon>
+#include <QMimeData>
 #include <QPainter>
+#include <QPixmap>
 
 //_______________________________________________
 LogEntryModel::IconCache& LogEntryModel::_icons()

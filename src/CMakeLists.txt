@@ -9,12 +9,19 @@ IF( UNIX )
 ENDIF()
 
 ########### Qt4 configuration #########
-FIND_PACKAGE( Qt4 REQUIRED )
-SET( QT_USE_QTXML TRUE )
-SET( QT_USE_QTNETWORK TRUE )
+IF( USE_QT5 )
 
-INCLUDE( ${QT_USE_FILE} )
-ADD_DEFINITIONS( ${QT_DEFINITIONS} )
+  FIND_PACKAGE( Qt5Widgets REQUIRED )
+
+ELSE()
+
+  FIND_PACKAGE( Qt4 REQUIRED )
+  SET( QT_USE_QTXML TRUE )
+  SET( QT_USE_QTNETWORK TRUE )
+  INCLUDE( ${QT_USE_FILE} )
+  ADD_DEFINITIONS( ${QT_DEFINITIONS} )
+
+ENDIF()
 
 ########### includes #########
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
@@ -48,12 +55,26 @@ SET( elogbook_lib_HEADERS
   Logbook.h
 )
 
-QT4_WRAP_CPP( elogbook_lib_HEADERS_MOC ${elogbook_lib_HEADERS} )
+IF( USE_QT5 )
+
+  QT5_WRAP_CPP( elogbook_lib_HEADERS_MOC ${elogbook_lib_HEADERS} )
+
+ELSE()
+
+  QT4_WRAP_CPP( elogbook_lib_HEADERS_MOC ${elogbook_lib_HEADERS} )
+
+ENDIF()
 
 ADD_LIBRARY( elogbook_lib STATIC
   ${elogbook_lib_SOURCES}
   ${elogbook_lib_HEADERS_MOC}
 )
+
+IF( USE_QT5 )
+
+  QT5_USE_MODULES( elogbook_lib Widgets Xml )
+
+ENDIF()
 
 ########### next target ###############
 SET( elogbook_SOURCES
@@ -126,8 +147,17 @@ SET( elogbook_HEADERS
 
 SET( elogbook_RESOURCES pixmaps.qrc)
 
-QT4_WRAP_CPP( elogbook_HEADERS_MOC ${elogbook_HEADERS} )
-QT4_ADD_RESOURCES( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
+IF( USE_QT5 )
+
+  QT5_WRAP_CPP( elogbook_HEADERS_MOC ${elogbook_HEADERS} )
+  QT5_ADD_RESOURCES( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
+
+ELSE()
+
+  QT4_WRAP_CPP( elogbook_HEADERS_MOC ${elogbook_HEADERS} )
+  QT4_ADD_RESOURCES( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
+
+ENDIF()
 
 ADD_APPLICATION_ICON( elogbook_SOURCES ${CMAKE_SOURCE_DIR}/icon )
 ADD_PLATFORM_EXECUTABLE( elogbook
@@ -152,6 +182,13 @@ ENDIF()
 TARGET_LINK_LIBRARIES( elogbook elogbook_lib )
 INSTALL( TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR} )
 
+IF( USE_QT5 )
+
+  QT5_USE_MODULES( elogbook Widgets Network PrintSupport Xml )
+
+ENDIF()
+
+
 ########### next target ###############
 IF( UNIX )
 
@@ -167,6 +204,12 @@ IF( UNIX )
   )
 
   INSTALL( TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR} )
+
+  IF( USE_QT5 )
+
+    QT5_USE_MODULES( copy-logbook Widgets Xml )
+
+  ENDIF()
 
 ENDIF()
 
@@ -185,5 +228,11 @@ IF( UNIX )
   )
 
   INSTALL( TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR} )
+
+  IF( USE_QT5 )
+
+    QT5_USE_MODULES( synchronize-logbook Widgets Xml )
+
+  ENDIF()
 
 ENDIF()

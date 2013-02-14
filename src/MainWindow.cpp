@@ -1272,7 +1272,7 @@ void MainWindow::_setEnabled( bool value )
     menu().setEnabled( value );
 
     // toolbars
-    foreach( QToolBar* toolbar, qFindChildren<QToolBar*>( this ) )
+    foreach( QToolBar* toolbar, findChildren<QToolBar*>() )
     { toolbar->setEnabled( value ); }
 
 }
