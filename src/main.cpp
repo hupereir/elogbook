@@ -49,7 +49,7 @@ int main (int argc, char *argv[])
     signal(SIGTERM, interrupt);
 
     // install error handler
-    qInstallMsgHandler( ErrorHandler::Throw );
+    ErrorHandler::initialize();
 
     // load possible command file
     // load possible command file (supposibly last argument, not starting with a "-"=
