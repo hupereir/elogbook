@@ -67,10 +67,10 @@
 #include "Util.h"
 #include "XmlOptions.h"
 
-#include <QtGui/QHeaderView>
-#include <QtGui/QMenu>
-#include <QtGui/QPrintDialog>
-#include <QtGui/QSplitter>
+#include <QHeaderView>
+#include <QMenu>
+#include <QPrintDialog>
+#include <QSplitter>
 
 //_____________________________________________
 MainWindow::MainWindow( QWidget *parent ):

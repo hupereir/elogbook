@@ -31,7 +31,7 @@
 #include "File.h"
 #include "Debug.h"
 
-#include <QtCore/QString>
+#include <QString>
 
 //! new attachment popup dialog
 class NewLogbookDialog: public CustomDialog

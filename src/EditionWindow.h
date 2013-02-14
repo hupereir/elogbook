@@ -37,14 +37,14 @@
 #include "LogEntry.h"
 #include "TextPosition.h"
 
-#include <QtCore/QBasicTimer>
-#include <QtCore/QTimerEvent>
-#include <QtGui/QLabel>
-#include <QtGui/QPrinter>
-#include <QtGui/QPushButton>
-#include <QtGui/QSplitter>
-#include <QtGui/QToolButton>
-#include <QtCore/QList>
+#include <QBasicTimer>
+#include <QTimerEvent>
+#include <QLabel>
+#include <QPrinter>
+#include <QPushButton>
+#include <QSplitter>
+#include <QToolButton>
+#include <QList>
 
 class Attachment;
 class BaseContextMenu;

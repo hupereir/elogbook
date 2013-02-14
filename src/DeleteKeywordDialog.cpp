@@ -27,9 +27,9 @@
 #include "Icons.h"
 #include "IconEngine.h"
 
-#include <QtGui/QButtonGroup>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
+#include <QButtonGroup>
+#include <QLabel>
+#include <QLayout>
 
 //_____________________________________________________
 DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, const bool& hasEntries ):

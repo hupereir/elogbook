@@ -26,7 +26,7 @@
 #include "Logbook.h"
 #include "XmlOptions.h"
 
-#include <QtGui/QLayout>
+#include <QLayout>
 
 //_________________________________________________________________
 LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):

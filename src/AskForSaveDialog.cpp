@@ -26,10 +26,10 @@
 #include "XmlOptions.h"
 #include "QtUtil.h"
 
-#include <QtGui/QFrame>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QPushButton>
+#include <QFrame>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 
 //________________________________________________________
 AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons ):

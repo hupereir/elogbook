@@ -35,7 +35,7 @@
 #include "CustomDialog.h"
 #include "Keyword.h"
 
-#include <QtGui/QRadioButton>
+#include <QRadioButton>
 
 //! delete keyword popup dialog
 class DeleteKeywordDialog: public CustomDialog

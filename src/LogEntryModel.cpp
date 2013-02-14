@@ -33,8 +33,8 @@
 #include "TimeStamp.h"
 #include "XmlOptions.h"
 
-#include <QtGui/QIcon>
-#include <QtGui/QPainter>
+#include <QIcon>
+#include <QPainter>
 
 //_______________________________________________
 LogEntryModel::IconCache& LogEntryModel::_icons()

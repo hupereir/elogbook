@@ -32,8 +32,8 @@
 #include "TimeStamp.h"
 #include "XmlOptions.h"
 
-#include <QtXml/QDomElement>
-#include <QtXml/QDomDocument>
+#include <QDomElement>
+#include <QDomDocument>
 
 class Logbook;
 

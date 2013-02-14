@@ -27,7 +27,7 @@
 #include "Attachment.h"
 #include "CustomDialog.h"
 
-#include <QtGui/QRadioButton>
+#include <QRadioButton>
 
 //! delete attachment popup dialog
 class DeleteAttachmentDialog: public CustomDialog

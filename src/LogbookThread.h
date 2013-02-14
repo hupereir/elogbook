@@ -24,7 +24,7 @@
 
 #include "Counter.h"
 
-#include <QtCore/QThread>
+#include <QThread>
 
 class Logbook;
 

@@ -46,8 +46,8 @@
 #include "TreeView.h"
 #include "InformationDialog.h"
 
-#include <QtGui/QHeaderView>
-#include <QtGui/QShortcut>
+#include <QHeaderView>
+#include <QShortcut>
 
 //_____________________________________________
 AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):

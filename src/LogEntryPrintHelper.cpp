@@ -30,14 +30,14 @@
 #include "TextFormat.h"
 #include "TextPosition.h"
 
-#include <QtCore/QList>
-#include <QtCore/QPair>
+#include <QList>
+#include <QPair>
 
-#include <QtGui/QAbstractTextDocumentLayout>
-#include <QtGui/QTextCursor>
-#include <QtGui/QTextDocument>
-#include <QtGui/QTextTable>
-#include <QtGui/QTextTableFormat>
+#include <QAbstractTextDocumentLayout>
+#include <QTextCursor>
+#include <QTextDocument>
+#include <QTextTable>
+#include <QTextTableFormat>
 
 //__________________________________________________________________________________
 void LogEntryPrintHelper::print( QPrinter* printer )

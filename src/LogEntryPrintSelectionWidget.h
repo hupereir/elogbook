@@ -26,9 +26,9 @@
 
 #include "OptionWidget.h"
 
-#include <QtCore/QMap>
-#include <QtGui/QWidget>
-#include <QtGui/QRadioButton>
+#include <QMap>
+#include <QWidget>
+#include <QRadioButton>
 
 class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 {

@@ -38,9 +38,9 @@
 
 #include "AnimatedTreeView.h"
 
-#include <QtCore/QBasicTimer>
-#include <QtCore/QTimerEvent>
-#include <QtGui/QContextMenuEvent>
+#include <QBasicTimer>
+#include <QTimerEvent>
+#include <QContextMenuEvent>
 
 class ColorMenu;
 class CustomToolBar;

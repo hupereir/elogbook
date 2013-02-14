@@ -36,11 +36,11 @@
 #include "TextFormatBlock.h"
 #include "TextFormat.h"
 
-#include <QtGui/QAction>
-#include <QtGui/QFont>
-#include <QtGui/QTextCharFormat>
-#include <QtGui/QToolButton>
-#include <QtCore/QMap>
+#include <QAction>
+#include <QFont>
+#include <QTextCharFormat>
+#include <QToolButton>
+#include <QMap>
 
 class ColorMenu;
 class TextEditor;

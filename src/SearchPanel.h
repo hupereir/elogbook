@@ -27,9 +27,9 @@
 #include "CustomToolBar.h"
 #include "IconSize.h"
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QContextMenuEvent>
-#include <QtCore/QHash>
+#include <QCheckBox>
+#include <QContextMenuEvent>
+#include <QHash>
 
 class CustomComboBox;
 class TransitionWidget;

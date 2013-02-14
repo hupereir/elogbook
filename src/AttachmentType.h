@@ -25,7 +25,7 @@
 
 #include "Counter.h"
 
-#include <QtCore/QMap>
+#include <QMap>
 
 //! Attached file types for file manipulations
 class AttachmentType: public Counter{

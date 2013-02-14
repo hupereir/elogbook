@@ -63,13 +63,13 @@
 #include "SpellDialog.h"
 #endif
 
-#include <QtGui/QApplication>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QPrintDialog>
-#include <QtGui/QStylePainter>
-#include <QtGui/QStyleOptionToolButton>
-#include <QtGui/QTextLayout>
+#include <QApplication>
+#include <QLabel>
+#include <QLayout>
+#include <QPrintDialog>
+#include <QStylePainter>
+#include <QStyleOptionToolButton>
+#include <QTextLayout>
 
 //_______________________________________________
 EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):

@@ -34,8 +34,8 @@
 #include "XmlString.h"
 #include "XmlTimeStamp.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QTextStream>
+#include <QFile>
+#include <QTextStream>
 
 //________________________________
 // public methods

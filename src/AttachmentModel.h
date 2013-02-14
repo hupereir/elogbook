@@ -27,7 +27,7 @@
 #include "Counter.h"
 #include "ListModel.h"
 
-#include <QtCore/QHash>
+#include <QHash>
 
 class Attachment;
 
@@ -122,4 +122,3 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
 };
 
 #endif
-

@@ -27,10 +27,10 @@
 #include "Debug.h"
 #include "LogEntry.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QIODevice>
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomElement>
+#include <QObject>
+#include <QIODevice>
+#include <QDomDocument>
+#include <QDomElement>
 
 //! printing utility
 class LogEntryHtmlHelper: public QObject, public Counter

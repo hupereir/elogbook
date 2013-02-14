@@ -27,10 +27,10 @@
 #include "Icons.h"
 #include "IconEngine.h"
 
-#include <QtGui/QButtonGroup>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
+#include <QButtonGroup>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
 
 //_____________________________________________________
 DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachment& attachment ):

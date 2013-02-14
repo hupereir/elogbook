@@ -161,13 +161,12 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     // debug menu
     #ifdef DEBUG
     menu->addSeparator();
-    DebugMenu *debug_menu( new DebugMenu( this ) );
-    debug_menu->setTitle( "Debug" );
-    menu->addMenu( debug_menu );
-    debug_menu->addAction( &mainWindow->saveForcedAction() );
-    debug_menu->addAction( &mainWindow->showDuplicatesAction() );
-    debug_menu->addAction( &help->dumpAction() );
-    debug_menu->addAction( &mainWindow->monitoredFilesAction() );
+    DebugMenu *debugMenu( new DebugMenu( this ) );
+    debugMenu->setTitle( "Debug" );
+    menu->addMenu( debugMenu );
+    debugMenu->addAction( &mainWindow->saveForcedAction() );
+    debugMenu->addAction( &mainWindow->showDuplicatesAction() );
+    debugMenu->addAction( &mainWindow->monitoredFilesAction() );
     #endif
 
 }

@@ -26,8 +26,8 @@
 
 #include "Counter.h"
 
-#include <QtCore/QString>
-#include <QtCore/QTextStream>
+#include <QString>
+#include <QTextStream>
 
 //! log entry keyword
 class Keyword: public Counter

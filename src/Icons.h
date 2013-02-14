@@ -25,7 +25,7 @@
 *******************************************************************************/
 
 #include "BaseIcons.h"
-#include <QtCore/QString>
+#include <QString>
 
 //! namespace for icon static name wrappers
 namespace ICONS

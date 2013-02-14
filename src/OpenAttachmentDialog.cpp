@@ -29,11 +29,11 @@
 #include "File.h"
 #include "OpenAttachmentDialog.h"
 
-#include <QtGui/QButtonGroup>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtCore/QTextStream>
+#include <QButtonGroup>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QTextStream>
 
 //_____________________________________________________
 OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& attachment ):

@@ -25,8 +25,8 @@
 #include "LogEntryPrintSelectionWidget.h"
 #include "XmlOptions.h"
 
-#include <QtGui/QLayout>
-#include <QtGui/QButtonGroup>
+#include <QLayout>
+#include <QButtonGroup>
 
 //_________________________________________________________________
 LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):

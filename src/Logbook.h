@@ -31,12 +31,12 @@
 #include "TimeStamp.h"
 #include "XmlError.h"
 
-#include <QtXml/QDomElement>
-#include <QtXml/QDomDocument>
+#include <QDomElement>
+#include <QDomDocument>
 
-#include <QtCore/QHash>
-#include <QtCore/QList>
-#include <QtCore/QObject>
+#include <QHash>
+#include <QList>
+#include <QObject>
 
 class LogEntry;
 class Attachment;

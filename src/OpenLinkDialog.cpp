@@ -30,10 +30,10 @@
 #include "IconEngine.h"
 #include "Icons.h"
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QToolButton>
-#include <QtGui/QLabel>
+#include <QGridLayout>
+#include <QButtonGroup>
+#include <QToolButton>
+#include <QLabel>
 
 //___________________________________________________________________________
 OpenLinkDialog::OpenLinkDialog( QWidget* parent, const QString& file ):

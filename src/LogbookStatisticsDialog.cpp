@@ -34,9 +34,9 @@
 #include "TreeView.h"
 #include "Util.h"
 
-#include <QtGui/QLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
+#include <QLayout>
+#include <QLabel>
+#include <QPushButton>
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):

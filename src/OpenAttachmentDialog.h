@@ -28,7 +28,7 @@
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 
-#include <QtGui/QRadioButton>
+#include <QRadioButton>
 
 //! open attachment popup dialog
 class OpenAttachmentDialog: public CustomDialog

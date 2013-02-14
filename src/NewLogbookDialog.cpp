@@ -26,8 +26,8 @@
 #include "NewLogbookDialog.h"
 #include "QtUtil.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
+#include <QLabel>
+#include <QLayout>
 
 //_______________________________________________________
 NewLogbookDialog::NewLogbookDialog( QWidget* parent ):

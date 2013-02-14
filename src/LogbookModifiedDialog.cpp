@@ -28,9 +28,9 @@
 #include "QtUtil.h"
 #include "XmlOptions.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QPushButton>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 
 //________________________________________________________
 LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files ):

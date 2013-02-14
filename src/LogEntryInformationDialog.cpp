@@ -33,9 +33,9 @@
 #include "Options.h"
 #include "QtUtil.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QPushButton>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 
 //_________________________________________________________
 LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):

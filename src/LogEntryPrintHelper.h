@@ -28,9 +28,9 @@
 #include "BasePrintHelper.h"
 #include "LogEntry.h"
 
-#include <QtCore/QObject>
-#include <QtGui/QPainter>
-#include <QtGui/QPrinter>
+#include <QObject>
+#include <QPainter>
+#include <QPrinter>
 
 //! printing utility
 class LogEntryPrintHelper: public BasePrintHelper, public Counter

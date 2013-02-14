@@ -26,9 +26,9 @@
 
 #include "OptionWidget.h"
 
-#include <QtCore/QMap>
-#include <QtGui/QWidget>
-#include <QtGui/QCheckBox>
+#include <QMap>
+#include <QWidget>
+#include <QCheckBox>
 
 class LogbookPrintOptionWidget: public QWidget, public OptionWidget
 {

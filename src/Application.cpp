@@ -43,7 +43,7 @@
 #include "XmlFileList.h"
 #include "XmlOptions.h"
 
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 
 //____________________________________________
 void Application::usage( void )

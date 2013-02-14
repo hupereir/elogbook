@@ -27,7 +27,7 @@
 #include "Counter.h"
 #include "ListModel.h"
 
-#include <QtCore/QHash>
+#include <QHash>
 
 class LogEntry;
 

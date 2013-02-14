@@ -26,7 +26,7 @@
 
 #include "CustomDialog.h"
 
-#include <QtGui/QRadioButton>
+#include <QRadioButton>
 
 class CustomComboBox;
 

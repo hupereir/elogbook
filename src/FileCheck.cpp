@@ -26,7 +26,7 @@
 #include "FileCheck.h"
 #include "Logbook.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 #include <algorithm>
 
 //____________________________________________________

@@ -24,8 +24,8 @@
 #include "InsertLinkDialog.h"
 #include "Debug.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
+#include <QLabel>
+#include <QLayout>
 
 //_________________________________________________________
 InsertLinkDialog::InsertLinkDialog( QWidget* parent, QString value ):

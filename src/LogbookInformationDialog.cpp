@@ -30,8 +30,8 @@
 #include "TextEditor.h"
 #include "Util.h"
 
-#include <QtGui/QLayout>
-#include <QtGui/QLabel>
+#include <QLayout>
+#include <QLabel>
 
 //_________________________________________________________
 LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* logbook ):

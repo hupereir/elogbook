@@ -26,7 +26,7 @@
 #include "LogEntry.h"
 #include "XmlOptions.h"
 
-#include <QtGui/QLayout>
+#include <QLayout>
 
 //_________________________________________________________________
 LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):

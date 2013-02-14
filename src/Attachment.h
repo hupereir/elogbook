@@ -30,8 +30,8 @@
 #include "Key.h"
 #include "TimeStamp.h"
 
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomElement>
+#include <QDomDocument>
+#include <QDomElement>
 
 class LogEntry;
 

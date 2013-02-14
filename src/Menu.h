@@ -27,8 +27,8 @@
 #include "Debug.h"
 #include "Counter.h"
 
-#include <QtGui/QMenuBar>
-#include <QtCore/QHash>
+#include <QMenuBar>
+#include <QHash>
 
 class LogEntry;
 class MainWindow;

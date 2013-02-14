@@ -27,8 +27,8 @@
 #include "Options.h"
 #include "Util.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QString>
+#include <QCoreApplication>
+#include <QString>
 #include <signal.h>
 #include <unistd.h>
 

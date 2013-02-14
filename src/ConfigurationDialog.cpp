@@ -43,9 +43,9 @@
 #include "Singleton.h"
 #include "TreeViewConfiguration.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QGroupBox>
 
 //_________________________________________________________
 ConfigurationDialog::ConfigurationDialog( QWidget* parent ):

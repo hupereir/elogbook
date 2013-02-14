@@ -28,9 +28,9 @@
 #include "Logbook.h"
 #include "ListModel.h"
 
-#include <QtGui/QWidget>
-#include <QtGui/QPushButton>
-#include <QtGui/QLayout>
+#include <QWidget>
+#include <QPushButton>
+#include <QLayout>
 
 class TreeView;
 

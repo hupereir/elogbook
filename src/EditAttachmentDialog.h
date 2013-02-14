@@ -29,8 +29,8 @@
 #include "TextEditor.h"
 #include "CustomDialog.h"
 
-#include <QtGui/QComboBox>
-#include <QtCore/QString>
+#include <QComboBox>
+#include <QString>
 
 //! edit attachment popup dialog
 class EditAttachmentDialog: public CustomDialog

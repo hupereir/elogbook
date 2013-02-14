@@ -31,8 +31,8 @@
 #include "LogEntry.h"
 #include "TreeView.h"
 
-#include <QtGui/QShortcut>
-#include <QtGui/QLayout>
+#include <QShortcut>
+#include <QLayout>
 
 //________________________________________
 AttachmentWindow::AttachmentWindow( QWidget* parent ):

@@ -30,8 +30,8 @@
 #include "Key.h"
 #include "ValidFileThread.h"
 
-#include <QtGui/QWidget>
-#include <QtGui/QMenu>
+#include <QWidget>
+#include <QMenu>
 
 class TreeView;
 

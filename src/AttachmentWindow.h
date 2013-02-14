@@ -29,7 +29,7 @@
 #include "AttachmentFrame.h"
 #include "Debug.h"
 
-#include <QtCore/QEvent>
+#include <QEvent>
 
 class Attachment;
 
@@ -81,4 +81,3 @@ class AttachmentWindow: public CustomDialog
 };
 
 #endif
-

@@ -28,7 +28,7 @@
 #include "Keyword.h"
 #include "TreeModel.h"
 
-#include <QtCore/QMimeData>
+#include <QMimeData>
 
 //! Job model. Stores job information for display in lists
 class KeywordModel : public TreeModel<Keyword>, public Counter

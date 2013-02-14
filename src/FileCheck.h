@@ -28,11 +28,11 @@
 #include "ListModel.h"
 #include "TimeStamp.h"
 
-#include <QtCore/QBasicTimer>
-#include <QtCore/QFileSystemWatcher>
-#include <QtCore/QObject>
-#include <QtCore/QTimerEvent>
-#include <QtCore/QSet>
+#include <QBasicTimer>
+#include <QFileSystemWatcher>
+#include <QObject>
+#include <QTimerEvent>
+#include <QSet>
 
 class Logbook;
 

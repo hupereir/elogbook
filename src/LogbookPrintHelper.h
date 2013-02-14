@@ -31,10 +31,10 @@
 #include "LogEntry.h"
 #include "LogEntryPrintSelectionWidget.h"
 
-#include <QtCore/QObject>
-#include <QtGui/QPainter>
-#include <QtGui/QPrinter>
-#include <QtGui/QProgressDialog>
+#include <QObject>
+#include <QPainter>
+#include <QPrinter>
+#include <QProgressDialog>
 
 //! printing utilityclass
 class LogbookPrintHelper: public BasePrintHelper, public Counter
