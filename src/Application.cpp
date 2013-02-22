@@ -146,7 +146,7 @@ bool Application::realizeWidget( void )
         if( !file.isEmpty() )
         {
             QString buffer;
-            QTextStream( &buffer ) << "Unable to open " << file << ".\nCreating a new logbook with default parameters.";
+            QTextStream( &buffer ) << "Unable to open " << file << ".";
             InformationDialog( mainWindow_, buffer ).exec();
         }
 
