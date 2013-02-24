@@ -145,9 +145,9 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->addWidget( keywordToolBar_ );
 
     // keyword actions
-    keywordToolBar_->addAction( &newKeywordAction() );
-    keywordToolBar_->addAction( &deleteKeywordAction() );
-    keywordToolBar_->addAction( &editKeywordAction() );
+    keywordToolBar_->addAction( newKeywordAction_ );
+    keywordToolBar_->addAction( deleteKeywordAction_ );
+    keywordToolBar_->addAction( editKeywordAction_ );
     Debug::Throw() << "MainWindow::MainWindow - keyword toolbar created." << endl;
 
     // create keyword list
@@ -186,11 +186,11 @@ MainWindow::MainWindow( QWidget *parent ):
     {
         // popup menu for keyword list
         ContextMenu* menu = new ContextMenu( keywordList_ );
-        menu->addAction( &newEntryAction() );
-        menu->addAction( &newKeywordAction() );
+        menu->addAction( newEntryAction_ );
+        menu->addAction( newKeywordAction_ );
         menu->addSeparator();
-        menu->addAction( &deleteKeywordAction() );
-        menu->addAction( &editKeywordAction() );
+        menu->addAction( deleteKeywordAction_ );
+        menu->addAction( editKeywordAction_ );
         menu->setHideDisabledActions( true );
     }
 
@@ -199,8 +199,8 @@ MainWindow::MainWindow( QWidget *parent ):
     so that the corresponding shortcut gets activated whenever it is pressed
     while the list has focus
     */
-    keywordList_->addAction( &deleteKeywordAction() );
-    keywordList_->addAction( &editKeywordAction() );
+    keywordList_->addAction( deleteKeywordAction_ );
+    keywordList_->addAction( editKeywordAction_ );
 
     // right box for entries and buttons
     QWidget* right = new QWidget();
@@ -216,8 +216,8 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->addWidget( entryToolBar_ );
 
     // entry actions
-    entryToolBar_->addAction( &newEntryAction() );
-    entryToolBar_->addAction( &editEntryAction() );
+    entryToolBar_->addAction( newEntryAction_ );
+    entryToolBar_->addAction( editEntryAction_ );
 
     // need to use a button to be able to set the popup mode
     QToolButton *button = new QToolButton(0);
@@ -227,9 +227,9 @@ MainWindow::MainWindow( QWidget *parent ):
     button->setMenu( colorMenu_ );
     entryToolBar_->addWidget( button );
 
-    entryToolBar_->addAction( &deleteEntryAction() );
-    entryToolBar_->addAction( &saveAction() );
-    entryToolBar_->addAction( &printAction() );
+    entryToolBar_->addAction( deleteEntryAction_ );
+    entryToolBar_->addAction( saveAction_ );
+    entryToolBar_->addAction( printAction_ );
 
     // create logEntry list
     vLayout->addWidget( entryList_ = new AnimatedTreeView( right ), 1 );
@@ -261,19 +261,19 @@ MainWindow::MainWindow( QWidget *parent ):
     so that the corresponding shortcut gets activated whenever it is pressed
     while the list has focus
     */
-    entryList_->addAction( &deleteEntryAction() );
-    entryList_->addAction( &editEntryTitleAction() );
+    entryList_->addAction( deleteEntryAction_ );
+    entryList_->addAction( editEntryTitleAction_ );
 
     {
         // popup menu for list
-        ContextMenu* menu = new ContextMenu( &logEntryList() );
-        menu->addAction( &newEntryAction() );
+        ContextMenu* menu = new ContextMenu( entryList_ );
+        menu->addAction( newEntryAction_ );
         menu->addSeparator();
-        menu->addAction( &editEntryTitleAction() );
-        menu->addAction( &editEntryAction() );
-        menu->addAction( &entryKeywordAction() );
-        menu->addAction( &deleteEntryAction() );
-        menu->addAction( &entryColorAction() );
+        menu->addAction( editEntryTitleAction_ );
+        menu->addAction( editEntryAction_ );
+        menu->addAction( entryKeywordAction_ );
+        menu->addAction( deleteEntryAction_ );
+        menu->addAction( entryColorAction_ );
         menu->setHideDisabledActions( true );
     }
 
