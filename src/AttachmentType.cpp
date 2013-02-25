@@ -35,7 +35,7 @@
 //___________________________________________________________________________________
 AttachmentType AttachmentType::UNKNOWN( "UNKNOWN", "Unknown", "unknown.png", "EDIT_UNKNOWN_ATC" );
 AttachmentType AttachmentType::POSTSCRIPT( "POSTSCRIPT", "Postscript", "application-postscript.png", "EDIT_POSTSCRIPT_ATC" );
-AttachmentType AttachmentType::IMAGE( "IMAGE", "Image", "image-png.png", "EDIT_IMAGE_ATC" );
+AttachmentType AttachmentType::IMAGE( "IMAGE", "Image", "image-x-generic.png", "EDIT_IMAGE_ATC" );
 AttachmentType AttachmentType::PLAIN_TEXT( "PLAIN_TEXT", "Plain Text", "text-plain.png", "EDIT_PLAIN_TEXT_ATC" );
 AttachmentType AttachmentType::HTML( "HTML", "HTML", "text-html.png", "EDIT_HTML_ATC" );
 AttachmentType AttachmentType::URL( "URL",  "URL", "text-html.png", "EDIT_URL_ATC" );
