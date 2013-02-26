@@ -50,7 +50,7 @@ const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 {
     "",
     "Keyword",
-    "Title",
+    "Subject",
     "",
     "Creation",
     "Modification",
@@ -106,7 +106,15 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case KEYWORD: return entry->keyword().get();
+            case KEYWORD:
+            {
+                QString keyword( entry->keyword().get() );
+                if( keyword.size() > 1 && keyword[0] == '/' )
+                { keyword = keyword.mid( 1 ); }
+
+                return keyword;
+            }
+
             case TITLE: return entry->title();
             case CREATION: return entry->creation().toString();
             case MODIFICATION: return entry->modification().toString();

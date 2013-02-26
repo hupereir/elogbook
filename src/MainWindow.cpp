@@ -3150,13 +3150,8 @@ void MainWindow::_toggleTreeMode( bool value )
     // update log entry list
     _resetLogEntryList();
 
-    // update log entry mask
-    unsigned int mask( entryList_->mask() );
-    if( value ) mask &= ~(1<<LogEntryModel::KEYWORD);
-    else mask |= 1<<LogEntryModel::KEYWORD;
-    entryList_->setMask( mask );
-    entryList_->saveMask();
-
+    // change keyword column visibility
+    entryList_->setColumnHidden( LogEntryModel::KEYWORD, value );
     entryList_->resizeColumns();
 
     // keyword toolbar visibility action

@@ -107,11 +107,13 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     gridLayout->addWidget( keywordLabel_ = new QLabel( " Keyword: ", main ), 0, 0, 1, 1 );
     gridLayout->addWidget( keywordEditor_ = new Editor( main ), 0, 1, 1, 2 );
     keywordLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
+    keywordLabel_->setBuddy( keywordEditor_ );
 
     // title label and editor
-    gridLayout->addWidget( titleLabel_ = new QLabel( " Title: ", main ), 1, 0, 1, 1 );
+    gridLayout->addWidget( titleLabel_ = new QLabel( " Subject: ", main ), 1, 0, 1, 1 );
     gridLayout->addWidget( titleEditor_ = new Editor( main ), 1, 1, 1, 1 );
     titleLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
+    titleLabel_->setBuddy( titleEditor_ );
 
     // colorWidget
     gridLayout->addWidget( colorWidget_ = new ColorWidget( main ), 1, 2, 1, 1 );
