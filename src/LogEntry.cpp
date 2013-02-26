@@ -34,9 +34,6 @@
 
 //__________________________________
 const QString LogEntry::MimeType = "logbook/log-entry-list";
-const QString LogEntry::Untitled = "untitled";
-const QString LogEntry::NoAuthor = "anonymous";
-const QString LogEntry::NoText = "";
 
 //__________________________________
 LogEntry::LogEntry( void ):
@@ -209,10 +206,10 @@ void LogEntry::_init( void )
     keywordSelected_ = false;
     creation_ = TimeStamp::now();
     modification_ = TimeStamp::now();
-    title_ = Untitled;
-    keyword_ = Keyword::NoKeyword;
-    author_ = NoAuthor;
-    text_ = NoText;
+    title_.clear();
+    keyword_.clear();
+    author_.clear();
+    text_.clear();
     color_ = "None";
 }
 

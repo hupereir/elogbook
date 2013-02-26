@@ -106,12 +106,14 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // keywoard label and editor
     gridLayout->addWidget( keywordLabel_ = new QLabel( " Keyword: ", main ), 0, 0, 1, 1 );
     gridLayout->addWidget( keywordEditor_ = new Editor( main ), 0, 1, 1, 2 );
+    keywordEditor_->setPlaceholderText( "Entry keyword" );
     keywordLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     keywordLabel_->setBuddy( keywordEditor_ );
 
     // title label and editor
     gridLayout->addWidget( titleLabel_ = new QLabel( " Subject: ", main ), 1, 0, 1, 1 );
     gridLayout->addWidget( titleEditor_ = new Editor( main ), 1, 1, 1, 1 );
+    titleEditor_->setPlaceholderText( "Entry subject" );
     titleLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     titleLabel_->setBuddy( titleEditor_ );
 
@@ -433,7 +435,7 @@ void EditionWindow::displayKeyword( void )
     Debug::Throw( "EditionWindow::displayKeyword.\n" );
 
     LogEntry* entry( EditionWindow::entry() );
-    keywordEditor_->setText( ( entry && entry->keyword().get().size() ) ? entry->keyword().get(): LogEntry::Untitled  );
+    if( entry ) keywordEditor_->setText( entry->keyword().get() );
     keywordEditor_->setCursorPosition( 0 );
     return;
 }
@@ -444,7 +446,7 @@ void EditionWindow::displayTitle( void )
     Debug::Throw( "EditionWindow::displayTitle.\n" );
 
     LogEntry* entry( this->entry() );
-    titleEditor_->setText( ( entry && entry->title().size() ) ? entry->title(): LogEntry::Untitled  );
+    if( entry ) titleEditor_->setText( entry->title() );
     titleEditor_->setCursorPosition( 0 );
     return;
 }

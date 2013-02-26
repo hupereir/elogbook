@@ -78,15 +78,6 @@ class LogEntry:public Counter, public BASE::Key
     //! mime type (for drag and drop)
     static const QString MimeType;
 
-    //! used when LogEntry title is not defined
-    static const QString Untitled;
-
-    //! used when LogEntry keyword is not defined
-    static const QString NoAuthor;
-
-    //! used when LogEntry keyword is not defined
-    static const QString NoText;
-
     //!@name attributes
     //@{
 
@@ -111,10 +102,7 @@ class LogEntry:public Counter, public BASE::Key
 
     //! Log entry title
     void setTitle( const QString& title )
-    {
-        title_ = title;
-        if( !title_.size() ) title_ = Untitled;
-    }
+    { title_ = title; }
 
     //! LogEntry title
     QString title( void ) const

@@ -26,7 +26,6 @@
 #include "Keyword.h"
 
 //_________________________________________________________________
-const Keyword Keyword::NoKeyword( "/" );
 const QString Keyword::MimeType( "logbook/keyword-list" );
 
 //_________________________________________________________________
@@ -36,7 +35,7 @@ Keyword& Keyword::append( const QString& value )
   if( value.isEmpty() || ( value.size() == 1 && value[0] == '/' ) ) return *this;
 
   // make sure leading "/" is added
-  if( value[0] == '/' || *this == NoKeyword ) value_ += value;
+  if( value[0] == '/' ) value_ += value;
   else value_ += QString( "/" ) + value;
 
   // reformat
@@ -86,8 +85,7 @@ QString Keyword::_format( const QString& value )
 {
 
   // make sure value is not empty
-  if( value.isEmpty() )
-  { return NoKeyword.get(); }
+  if( value.isEmpty() ) return QString('/');
 
   QString out( value );
 

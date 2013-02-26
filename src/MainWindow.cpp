@@ -1226,12 +1226,13 @@ void MainWindow::_resetKeywordList( void )
 
     // retrieve new list of keywords (from logbook)
     KeywordModel::List newKeywords;
+    Keyword root;
     foreach( LogEntry* entry, logbook_->entries() )
     {
         if( entry->isFindSelected() )
         {
             Keyword keyword( entry->keyword() );
-            while( keyword != Keyword::NoKeyword )
+            while( keyword != root )
             {
                 if( !newKeywords.contains( keyword ) ) newKeywords << keyword;
                 keyword = keyword.parent();
@@ -2641,7 +2642,7 @@ void MainWindow::_newKeyword( void )
 
     // retrieve keyword from line_edit
     Keyword keyword( dialog.keyword() );
-    if( keyword != Keyword::NoKeyword )
+    if( keyword != Keyword() )
     {
         keywordModel_.add( keyword );
         QModelIndex index( keywordModel_.index( keyword ) );

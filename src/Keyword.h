@@ -36,7 +36,6 @@ class Keyword: public Counter
     public:
 
     //! used when LogEntry keyword is not defined
-    static const Keyword NoKeyword;
     static const QString MimeType;
 
     //! constructor
@@ -56,12 +55,8 @@ class Keyword: public Counter
     bool operator < (const Keyword& keyword ) const
     { return get() < keyword.get(); }
 
-    //! set full keyword
-    void set( const QString& value )
-    { value_ = _format( value ); }
-
-    //! append
-    Keyword& append( const QString& value );
+    //!@name accessors
+    //@{
 
     //! full keyword
     const QString& get( void ) const
@@ -78,6 +73,24 @@ class Keyword: public Counter
 
     //! true if this keyword in descendance of argument
     bool inherits( const Keyword& keyword ) const;
+
+    //@}
+
+    //!@name modifiers
+    //@{
+
+    //! clear
+    void clear( void )
+    { value_ = _format( QString() ); }
+
+    //! set full keyword
+    void set( const QString& value )
+    { value_ = _format( value ); }
+
+    //! append
+    Keyword& append( const QString& value );
+
+    //@}
 
     private:
 
