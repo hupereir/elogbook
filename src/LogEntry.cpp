@@ -75,7 +75,7 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( tagName == XML::TEXT ) setText( XmlString( childElement.text() ).toText() );
         else if( tagName == XML::CREATION ) setCreation( XmlTimeStamp( childElement ) );
         else if( tagName == XML::MODIFICATION ) setModification( XmlTimeStamp( childElement ) );
-        else if( tagName == FORMAT::XmlTextFormatBlock::XML_TAG ) addFormat( FORMAT::XmlTextFormatBlock( childElement ) );
+        else if( tagName == FORMAT::XML::TAG ) addFormat( FORMAT::XmlTextFormatBlock( childElement ) );
         else if( tagName == XML::ATTACHMENT ) Key::associate( this, new Attachment( childElement ) );
         else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized child " << childElement.tagName() << endl;
     }
