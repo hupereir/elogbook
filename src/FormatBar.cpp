@@ -199,7 +199,7 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
             const QString href( textFormat.anchorHref() );
 
             // skip format if corresponds to default
-            if( format == FORMAT::Default && color == editor_->palette().color( QPalette::Text ) && href.isEmpty() ) continue;
+            if( format == FORMAT::Default && !color.isValid() && href.isEmpty() ) continue;
 
             // store new TextFormatBlock
             FORMAT::TextFormatBlock textFormatBlock( begin, end, format, color );

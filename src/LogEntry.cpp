@@ -131,7 +131,10 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 
     // dump text format
     foreach( const FORMAT::TextFormatBlock& format, formats() )
-    { if( !format.isEmpty() ) out.appendChild( FORMAT::XmlTextFormatBlock( format ).domElement( parent ) ); }
+    {
+        if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != FORMAT::Default ) )
+        { out.appendChild( FORMAT::XmlTextFormatBlock( format ).domElement( parent ) ); }
+     }
 
     // dump attachments
     foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
