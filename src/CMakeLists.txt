@@ -70,6 +70,8 @@ ADD_LIBRARY( elogbook_lib STATIC
   ${elogbook_lib_HEADERS_MOC}
 )
 
+TARGET_LINK_LIBRARIES( elogbook_lib ${QT_LIBRARIES} )
+
 IF( USE_QT5 )
 
   QT5_USE_MODULES( elogbook_lib Widgets Xml )
@@ -194,7 +196,6 @@ IF( UNIX )
 
   SET( copy_logbook_SOURCES copy-logbook.cpp )
   ADD_EXECUTABLE( copy-logbook ${copy_logbook_SOURCES} )
-  TARGET_LINK_LIBRARIES( copy-logbook ${X11_X11_LIB} )
   TARGET_LINK_LIBRARIES( copy-logbook ${QT_LIBRARIES} )
   TARGET_LINK_LIBRARIES( copy-logbook
     base
