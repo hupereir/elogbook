@@ -217,10 +217,10 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
             if( iter->format() & FORMAT::Italic ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
             if( iter->format() & FORMAT::Bold ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
             if( iter->format() & FORMAT::Strike ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
-            if( !( iter->color().isEmpty() || iter->color().compare( ColorMenu::NONE, Qt::CaseInsensitive ) == 0 ) )
+            if( iter->color().isValid() )
             {
                 localNode = localNode.appendChild( document.createElement( "font" ) ).toElement();
-                localNode.setAttribute( "color", iter->color() );
+                localNode.setAttribute( "color", iter->color().name() );
             }
 
             while( index < text.size() && (int)index < iter->end() )

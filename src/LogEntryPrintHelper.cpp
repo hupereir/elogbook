@@ -203,8 +203,8 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
         textFormat.setFontOverline( format.format() & FORMAT::Overline );
 
         // load color
-        if( format.color() != ColorMenu::NONE )
-        { textFormat.setForeground( QColor( format.color() ) ); }
+        if( format.color().isValid() )
+        { textFormat.setForeground( format.color() ); }
 
         cursor.setCharFormat( textFormat );
 

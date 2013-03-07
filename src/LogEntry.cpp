@@ -27,6 +27,7 @@
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "TextFormat.h"
+#include "XmlColor.h"
 #include "XmlDef.h"
 #include "XmlTextFormatBlock.h"
 #include "XmlTimeStamp.h"
@@ -61,7 +62,9 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( name == XML::TITLE ) setTitle( XmlString( value ).toText() );
         else if( name == XML::KEYWORD ) setKeyword( Keyword( XmlString( value ).toText() ) );
         else if( name == XML::AUTHOR ) setAuthor( XmlString( value ).toText() );
-        else if( name == XML::COLOR ) setColor( XmlString( value ).toText() );
+
+        // kept for backward compatibility
+        else if( name == XML::COLOR ) setColor( QColor( value ) );
         else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized entry attribute: \"" << name << "\"\n";
     }
 
@@ -72,7 +75,13 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( childElement.isNull() ) continue;
 
         QString tagName( childElement.tagName() );
-        if( tagName == XML::TEXT ) setText( XmlString( childElement.text() ).toText() );
+        if( tagName == BASE::XML::COLOR )
+        {
+
+            XmlColor color( childElement );
+            if( color.isValid() ) setColor( color );
+
+        } else if( tagName == XML::TEXT ) setText( XmlString( childElement.text() ).toText() );
         else if( tagName == XML::CREATION ) setCreation( XmlTimeStamp( childElement ) );
         else if( tagName == XML::MODIFICATION ) setModification( XmlTimeStamp( childElement ) );
         else if( tagName == FORMAT::XML::TAG ) addFormat( FORMAT::XmlTextFormatBlock( childElement ) );
@@ -103,8 +112,7 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
     if( !author().isEmpty() ) out.setAttribute( XML::AUTHOR, XmlString( author() ).toXml() );
 
     // color
-    bool color_valid( (!color().isEmpty()) && color().compare( ColorMenu::NONE, Qt::CaseInsensitive ) != 0 && QColor( color() ).isValid() );
-    if( color_valid ) out.setAttribute( XML::COLOR, XmlString( color() ).toXml() );
+    if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( parent ) );
 
     // dump timeStamp
     if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( XML::CREATION, parent ) );
@@ -172,9 +180,9 @@ bool LogEntry::matchText(  const QString& buffer ) const
 //__________________________________
 bool LogEntry::matchColor( const QString& buffer ) const
 {
-    if( color_.contains( buffer, Qt::CaseInsensitive ) ) return true;
-    if( color_ == ColorMenu::NONE ) return false;
-    return QColor( buffer ) == QColor( color_ );
+    if( !color_.isValid() && !QColor( buffer ).isValid() ) return true;
+    else if( !color_.isValid() ) return false;
+    else return QColor( buffer ) == color_;
 }
 
 //__________________________________
@@ -210,7 +218,7 @@ void LogEntry::_init( void )
     keyword_.clear();
     author_.clear();
     text_.clear();
-    color_ = "None";
+    color_ = BASE::Color();
 }
 
 //________________________________________________________

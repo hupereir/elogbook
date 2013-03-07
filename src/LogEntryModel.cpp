@@ -127,12 +127,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 
     // return icon associated to file
     if( role == Qt::DecorationRole && index.column() == COLOR )
-    {
-
-        QColor color( entry->color() != ColorMenu::NONE ? entry->color():QColor() );
-        return _icon( color );
-
-    }
+    { return _icon( entry->color() ); }
 
     // return icon associated to file
     if( role == Qt::DecorationRole && index.column() == ATTACHMENT && !BASE::KeySet<Attachment>(entry).empty() )
@@ -272,7 +267,7 @@ void LogEntryModel::_resetIcons( void )
 }
 
 //________________________________________________________
-const QIcon& LogEntryModel::_icon( const QColor& color )
+const QIcon& LogEntryModel::_icon( const BASE::Color& color )
 {
 
     IconCache::iterator iter( _icons().find( color.name() ) );
@@ -298,7 +293,7 @@ const QIcon& LogEntryModel::_icon( const QColor& color )
 
     }
 
-    return _icons().insert( color.name(), QIcon( pixmap ) ).value();
+    return _icons().insert( color, QIcon( pixmap ) ).value();
 
 }
 

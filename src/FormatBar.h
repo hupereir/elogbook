@@ -23,14 +23,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file FormatBar.h
-\brief text formating bar
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "Counter.h"
 #include "CustomToolBar.h"
 #include "TextFormatBlock.h"

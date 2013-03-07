@@ -839,7 +839,7 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
     LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
 
     // check is selection is a valid color when Color search is requested.
-    bool colorValid = ( mode&SearchPanel::COLOR && ( selection.compare( ColorMenu::NONE, Qt::CaseInsensitive ) == 0 || QColor( selection ).isValid() ) );
+    bool colorValid = ( mode&SearchPanel::COLOR && QColor( selection ).isValid() );
 
     // retrieve all logbook entries
     BASE::KeySet<LogEntry> turnedOffEntries;
@@ -2600,7 +2600,7 @@ void MainWindow::_changeEntryColor( QColor color )
     foreach( LogEntry* entry, selection )
     {
 
-        entry->setColor( color.isValid() ? color.name():ColorMenu::NONE );
+        entry->setColor( color );
         entry->setModification( entry->modification()+1 );
 
         // update EditionWindow color
@@ -3214,7 +3214,7 @@ void MainWindow::_updateConfiguration( void )
 
     // colors
     foreach( const Option& color, XmlOptions::get().specialOptions( "COLOR" ) )
-    { colorMenu_->add( color.raw() ); }
+    { colorMenu_->add( color.get<BASE::Color>() ); }
 
     // max number of recent entries
     maxRecentEntries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );

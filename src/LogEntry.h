@@ -24,10 +24,10 @@
 *
 *******************************************************************************/
 
+#include "Color.h"
 #include "Counter.h"
 #include "Key.h"
 #include "Keyword.h"
-#include "Str.h"
 #include "TextFormatBlock.h"
 #include "TimeStamp.h"
 #include "XmlOptions.h"
@@ -128,11 +128,11 @@ class LogEntry:public Counter, public BASE::Key
     { return author_; }
 
     //! LogEntry color
-    void setColor(  const QString& color )
+    void setColor(  QColor color )
     { color_ = color; }
 
     //! LogEntry color
-    const QString& color( void ) const
+    BASE::Color color( void ) const
     { return color_; }
 
     //! add TextFormatBlock
@@ -284,6 +284,9 @@ class LogEntry:public Counter, public BASE::Key
 
     private:
 
+    //! LogEntry color
+    void setColor( QString );
+
     //! initialize fields (default values)
     void _init( void );
 
@@ -309,7 +312,7 @@ class LogEntry:public Counter, public BASE::Key
     QString text_;
 
     //! LogEntry color
-    QString color_;
+    BASE::Color color_;
 
     //! set to true if entry is said visible by the selection bar
     bool findSelected_;

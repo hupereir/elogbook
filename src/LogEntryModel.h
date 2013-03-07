@@ -25,9 +25,10 @@
 *******************************************************************************/
 
 #include "Counter.h"
+#include "Color.h"
 #include "ListModel.h"
 
-#include <QHash>
+#include <QMap>
 
 class LogEntry;
 
@@ -131,7 +132,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     private:
 
     //! color icon cache
-    typedef QHash<QString, QIcon> IconCache;
+    typedef QMap<BASE::Color, QIcon> IconCache;
 
     //! color icon cache
     static IconCache& _icons( void );
@@ -140,7 +141,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     void _resetIcons( void );
 
     //! create icon for a given color
-    static const QIcon& _icon( const QColor& );
+    static const QIcon& _icon( const BASE::Color& );
 
     //! attachment icon
     static const QIcon& _attachmentIcon( void );

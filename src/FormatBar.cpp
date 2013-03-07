@@ -126,7 +126,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
     Q_CHECK_PTR( editor_ );
 
     // get base text color name
-    const QString baseTextColor( editor_->palette().color( QPalette::Text ).name() );
+    const QColor baseTextColor( editor_->palette().color( QPalette::Text ) );
 
     QTextCursor cursor( editor_->document() );
     cursor.beginEditBlock();
@@ -146,8 +146,8 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
         textFormat.setFontOverline( block.format() & FORMAT::Overline );
 
         // load color
-        if( !( block.color() == ColorMenu::NONE || block.color() == baseTextColor ) )
-        { textFormat.setForeground( QColor( block.color() ) ); }
+        if( block.color().isValid() && !(block.color() == baseTextColor) )
+        { textFormat.setForeground( block.color() ); }
 
         // load href
         if( !block.href().isEmpty() )
@@ -194,7 +194,7 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
 
             // retrieve text color
             QColor color( textFormat.foreground().color() );
-            QString colorname = (color == editor_->palette().color( QPalette::Text ) ) ? ColorMenu::NONE : color.name();
+            if( color == editor_->palette().color( QPalette::Text ) ) color = QColor();
 
             const QString href( textFormat.anchorHref() );
 
@@ -202,7 +202,7 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
             if( format == FORMAT::Default && color == editor_->palette().color( QPalette::Text ) && href.isEmpty() ) continue;
 
             // store new TextFormatBlock
-            FORMAT::TextFormatBlock textFormatBlock( begin, end, format, colorname );
+            FORMAT::TextFormatBlock textFormatBlock( begin, end, format, color );
             if( !href.isEmpty() ) textFormatBlock.setHRef( href );
 
             out << textFormatBlock;
@@ -224,28 +224,25 @@ void FormatBar::_updateConfiguration( void )
     {
 
         // add default colors
-        QString defaultColors[] =
-        {
-            "None",
-            "#aa0000",
-            "green",
-            "blue",
-            "grey",
-            "black",
-            ""
-        };
+        QList<QColor> defaultColors;
+        defaultColors
+            << "#aa0000"
+            << "green"
+            << "blue"
+            << "grey"
+            << "black";
 
         XmlOptions::get().keep( "TEXT_COLOR" );
-        for( unsigned int i=0; defaultColors[i].size(); i++ )
+        foreach( const QColor& color, defaultColors )
         {
-            XmlOptions::get().add( "TEXT_COLOR", Option( defaultColors[i] ) );
-            colorMenu_->add( defaultColors[i] );
+            XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( color ) );
+            colorMenu_->add( color );
         }
 
     } else {
 
         foreach( const Option& color, colors )
-        { colorMenu_->add( color.raw() ); }
+        { colorMenu_->add( color.get<BASE::Color>() ); }
 
     }
 }
@@ -258,8 +255,8 @@ void FormatBar::_saveConfiguration( void )
     XmlOptions::get().keep( "TEXT_COLOR" );
 
     const ColorMenu::ColorSet colors( colorMenu_->colors() );
-    foreach( const QString& color, colors )
-    { XmlOptions::get().add( "TEXT_COLOR", Option( color ) ); }
+    foreach( const BASE::Color& color, colors )
+    { XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( color ) ); }
 
     return;
 }

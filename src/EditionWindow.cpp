@@ -54,7 +54,7 @@
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
 #include "Singleton.h"
-#include "Str.h"
+// #include "Str.h"
 #include "OpenLinkDialog.h"
 #include "Util.h"
 
@@ -457,9 +457,8 @@ void EditionWindow::displayColor( void )
     Debug::Throw( "EditionWindow::DisplayColor.\n" );
 
     // try load entry color
-    QColor color;
-    Str colorname( entry()->color() );
-    if( colorname.compare( ColorMenu::NONE, Qt::CaseInsensitive ) == 0 || !( color = QColor( colorname ) ).isValid() )
+    const QColor color( entry()->color() );
+    if( !color.isValid() )
     {
 
         colorWidget_->hide();
