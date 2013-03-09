@@ -22,26 +22,33 @@
 *
 *******************************************************************************/
 
-#include "Debug.h"
 #include "Keyword.h"
+#include "Debug.h"
 
 //_________________________________________________________________
 const QString Keyword::MimeType( "logbook/keyword-list" );
 
 //_________________________________________________________________
+Keyword::Keyword( const QString& value):
+    Counter( "Keyword" ),
+    value_( _format( value ) )
+{}
+
+//_________________________________________________________________
 Keyword& Keyword::append( const QString& value )
 {
-  // check string to append
-  if( value.isEmpty() || ( value.size() == 1 && value[0] == '/' ) ) return *this;
 
-  // make sure leading "/" is added
-  if( value[0] == '/' ) value_ += value;
-  else value_ += QString( "/" ) + value;
+    // check string to append
+    if( value.isEmpty() || value == "/" ) return *this;
 
-  // reformat
-  value_ = _format( value_ );
+    // make sure leading "/" is added
+    if( value.startsWith( '/' ) || value_.endsWith( '/' ) ) value_ += value;
+    else value_ += QString( '/' ) + value;
 
-  return *this;
+    // reformat
+    value_ = _format( value_ );
+
+    return *this;
 
 }
 
@@ -49,19 +56,16 @@ Keyword& Keyword::append( const QString& value )
 QString Keyword::current( void ) const
 {
 
-  int pos = value_.lastIndexOf( "/" );
-  return ( pos < 0 ) ? value_:value_.mid( pos+1 );
+    int pos = value_.lastIndexOf( '/' );
+    return ( pos >= 0 ) ? value_.mid( pos+1 ):value_;
 
 }
 
 //_________________________________________________________________
 Keyword Keyword::parent( void ) const
 {
-
-  int pos = value_.lastIndexOf( "/" );
-  Q_ASSERT( pos >= 0 );
-  return Keyword( value_.left( pos ) );
-
+    int pos = value_.lastIndexOf( '/' );
+    return Keyword( value_.left( pos ) );
 }
 
 //_______________________________________________
@@ -72,41 +76,41 @@ bool Keyword::isChild( const Keyword& keyword ) const
 bool Keyword::inherits( const Keyword& keyword ) const
 {
 
-  if( *this == keyword ) return true;
-  if( get().size() < keyword.get().size() ) return false;
-  int pos( get().indexOf( keyword.get() ) );
-  return pos == 0 && get()[keyword.get().size()]=='/';
+    if( *this == keyword ) return true;
+    if( get().size() < keyword.get().size() ) return false;
+    int pos( get().indexOf( keyword.get() ) );
+    return pos == 0 && get()[keyword.get().size()]=='/';
 
 }
 
 
 //_________________________________________________________________
-QString Keyword::_format( const QString& value )
+QString Keyword::_format( const QString& value ) const
 {
 
-  // make sure value is not empty
-  if( value.isEmpty() ) return QString('/');
+    // make sure value is not empty
+    if( value.isEmpty() ) return QString('/');
 
-  QString out( value );
+    QString out( value );
 
-  // add leading "/"
-  if( out[0] != '/' ) out = QString( "/" ) + out;
+    // add leading "/"
+    if( !out.startsWith( '/' ) ) out.prepend( '/' );
 
-  // look for "/"
-  // replace next character by uppercase
-  int pos(0);
-  while( ( pos = out.indexOf( "/", pos ) ) >= 0 )
-  {
-    if( pos+1 < out.length() )
+    // look for "/"
+    // replace next character by uppercase
+    int pos(0);
+    while( ( pos = out.indexOf( "/", pos ) ) >= 0 )
     {
-      out[pos+1] = out[pos+1].toUpper();
-      pos++;
-    } else break;
-  }
+        if( pos+1 < out.length() )
+        {
+            out[pos+1] = out[pos+1].toUpper();
+            pos++;
+        } else break;
+    }
 
-  // remove trailing "/" if any
-  if( out.length() && out[out.length()-1] == '/' )
-  { out = out.left(out.length()-1); }
+    // remove trailing "/" if any
+    if( out.endsWith( '/' ) )
+    { out.truncate(out.length()-1); }
 
-  return out;
+    return out;
 }

@@ -23,6 +23,7 @@
 
 #include "Application.h"
 #include "AttachmentWindow.h"
+#include "ColorOptionModel.h"
 #include "ConfigurationDialog.h"
 #include "Config.h"
 #include "CustomToolBar.h"
@@ -109,91 +110,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     spinbox->setToolTip( "Icon size in attachment lists" );
     addOptionWidget( spinbox );
 
-    // listview configuration
-    if( false )
-    {
-        page = &addPage( IconEngine::get( ICONS::PREFERENCE_LISTS ), "Lists", "Visible columns in logbook keywords and entries lists" );
-        TreeViewConfiguration *listview_config = new TreeViewConfiguration(
-            page,
-            &Singleton::get().application<Application>()->mainWindow().logEntryList(),
-            Singleton::get().application<Application>()->mainWindow().logEntryList().maskOptionName() );
-
-        listview_config->setTitle( "Logbook entries list" );
-        addOptionWidget( listview_config );
-        page->layout()->addWidget( listview_config );
-
-        // attachment configuration
-        listview_config = new TreeViewConfiguration(
-            page,
-            &Singleton::get().application<Application>()->attachmentWindow().frame().list(),
-            Singleton::get().application<Application>()->attachmentWindow().frame().list().maskOptionName() );
-        listview_config->setTitle( "Attachments list" );
-        addOptionWidget( listview_config );
-        page->layout()->addWidget( listview_config );
-
-    }
-
-    // toolbars
-    if( false )
-    {
-        page = &addPage( IconEngine::get( ICONS::PREFERENCE_TOOLBARS ), "Toolbars", "Toolbars visibility and location" );
-        box = new QGroupBox( "Toolbars", page );
-        page->layout()->addWidget( box );
-
-        gridLayout = new GridLayout();
-        gridLayout->setSpacing(5);
-        gridLayout->setMargin(5);
-        gridLayout->setMaxCount(2);
-        box->setLayout( gridLayout );
-
-        gridLayout->addWidget( new QLabel( "Visibility", box ) );
-        gridLayout->addWidget( new QLabel( "Location", box ) );
-
-        OptionComboBox* combobox;
-
-        gridLayout->addWidget( checkbox = new OptionCheckBox( "Main Toolbar", box, "MAIN_TOOLBAR" ));
-        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MAIN_TOOLBAR_LOCATION" ) );
-        addOptionWidget( checkbox );
-        addOptionWidget( combobox );
-
-        gridLayout->addWidget( checkbox = new OptionCheckBox( "Undo History Toolbar", box, "EDITION_TOOLBAR" ));
-        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EDITION_TOOLBAR_LOCATION" ));
-        addOptionWidget( checkbox );
-        addOptionWidget( combobox );
-
-        gridLayout->addWidget( checkbox = new OptionCheckBox( "Format Toolbar", box, "FORMAT_TOOLBAR" ));
-        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "FORMAT_TOOLBAR_LOCATION" ));
-        addOptionWidget( checkbox );
-        addOptionWidget( combobox );
-
-        gridLayout->addWidget( checkbox = new OptionCheckBox( "Tools", box, "EXTRA_TOOLBAR" ));
-        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "EXTRA_TOOLBAR_LOCATION" ));
-        addOptionWidget( checkbox );
-        addOptionWidget( combobox );
-
-        gridLayout->addWidget( checkbox = new OptionCheckBox( "Navigation Toolbar", box, "NAVIGATION_TOOLBAR" ));
-        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "NAVIGATION_TOOLBAR_LOCATION" ));
-        addOptionWidget( checkbox );
-        addOptionWidget( combobox );
-
-        gridLayout->addWidget( checkbox = new OptionCheckBox( "Multiple Views Toolbar", box, "MULTIPLE_VIEW_TOOLBAR" ));
-        gridLayout->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "MULTIPLE_VIEW_TOOLBAR_LOCATION" ));
-        addOptionWidget( checkbox );
-        addOptionWidget( combobox );
-
-        box = new QGroupBox( page );
-        page->layout()->addWidget( box );
-
-        box->setLayout( new QHBoxLayout() );
-        box->layout()->setSpacing( 5 );
-        box->layout()->setMargin( 5 );
-
-        box->layout()->addWidget( new QLabel( "Lock position: ", box ));
-        box->layout()->addWidget( combobox = new CustomToolBar::LocationComboBox( box, "LOCK_TOOLBAR_LOCATION" ) );
-        addOptionWidget( combobox );
-
-    }
-
     // colors
     page = &addPage( IconEngine::get( ICONS::PREFERENCE_COLORS ), "Colors", "Color settings for entry tagging and text highlighting" );
     box = new QGroupBox( "Logbook Entry Colors", page );
@@ -204,6 +120,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     OptionListBox* listbox;
     box->layout()->addWidget( listbox = new OptionListBox( box, "COLOR" ) );
+    listbox->setModel( new ColorOptionModel( this ) );
     listbox->setToolTip( "Colors used for logbook entry display" );
     addOptionWidget( listbox );
 
@@ -214,6 +131,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page->layout()->addWidget( box );
 
     box->layout()->addWidget( listbox = new OptionListBox( box, "TEXT_COLOR" ) );
+    listbox->setModel( new ColorOptionModel( this ) );
     listbox->setToolTip( "Colors used for text formatting" );
     addOptionWidget( listbox );
 

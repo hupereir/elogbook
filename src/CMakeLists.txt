@@ -87,6 +87,7 @@ SET( elogbook_SOURCES
   AttachmentWindow.cpp
   BackupManagerDialog.cpp
   BackupManagerWidget.cpp
+  ColorOptionModel.cpp
   ConfigurationDialog.cpp
   DeleteAttachmentDialog.cpp
   DeleteKeywordDialog.cpp

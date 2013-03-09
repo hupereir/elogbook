@@ -3213,6 +3213,7 @@ void MainWindow::_updateConfiguration( void )
     else autosaveTimer_.stop();
 
     // colors
+    colorMenu_->reset();
     foreach( const Option& color, XmlOptions::get().specialOptions( "COLOR" ) )
     { colorMenu_->add( color.get<BASE::Color>() ); }
 

@@ -27,6 +27,7 @@
 #include "LogEntryModel.h"
 #include "AttachmentModel.h"
 #include "XmlOptions.h"
+#include "Color.h"
 #include "Config.h"
 #include "File.h"
 #include "Util.h"
@@ -34,6 +35,8 @@
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryPrintSelectionWidget.h"
+
+#include <QString>
 
 //_____________________________________________________
 //! Default options installer
@@ -46,21 +49,21 @@ void installDefaultOptions( void )
 
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( "COLOR" );
-    XmlOptions::get().add( "COLOR", Option( "#aa0000" , "entry display color"  ) );
-    XmlOptions::get().add( "COLOR", Option( "#FF9900" , "entry display color"  ) );
-    XmlOptions::get().add( "COLOR", Option( "#FF8C00" , "entry display color"  ) );
-    XmlOptions::get().add( "COLOR", Option( "#009900" , "entry display color"  ) );
-    XmlOptions::get().add( "COLOR", Option( "#3333FF" , "entry display color"  ) );
-    XmlOptions::get().add( "COLOR", Option( "#993399" , "entry display color"  ) );
+    XmlOptions::get().add( "COLOR", Option().set<BASE::Color>( QColor( "#aa0000" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set<BASE::Color>( QColor( "#FF9900" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set<BASE::Color>( QColor( "#FF8C00" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set<BASE::Color>( QColor( "#009900" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set<BASE::Color>( QColor( "#3333FF" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set<BASE::Color>( QColor( "#993399" ) ) );
 
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( "TEXT_COLOR" );
-    XmlOptions::get().add( "TEXT_COLOR", Option( "#aa0000" , "entry display color"  ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option( "#FF9900" , "entry display color"  ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option( "#FF8C00" , "entry display color"  ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option( "#009900" , "entry display color"  ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option( "#3333FF" , "entry display color"  ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option( "#993399" , "entry display color"  ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#aa0000" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#FF9900" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#FF8C00" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#009900" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#3333FF" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#993399" ) ) );
 
     // icon
     XmlOptions::get().set( "ICON_PIXMAP", Option( ":/icon.png" , "application icon"  ) );

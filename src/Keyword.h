@@ -39,21 +39,23 @@ class Keyword: public Counter
     static const QString MimeType;
 
     //! constructor
-    Keyword( const QString& value = QString("")):
-        Counter( "Keyword" )
-    { value_ = _format( value ); }
+    Keyword( const QString& = QString() );
+
+    //! destructor
+    virtual ~Keyword( void )
+    {}
 
     //! equal to operator
-    bool operator == (const Keyword& keyword ) const
-    { return get() == keyword.get(); }
+    bool operator == (const Keyword& other ) const
+    { return get() == other.get(); }
 
     //! equal to operator
-    bool operator != (const Keyword& keyword ) const
-    { return !( *this == keyword ); }
+    bool operator != (const Keyword& other ) const
+    { return !( *this == other ); }
 
     //! less than operator
-    bool operator < (const Keyword& keyword ) const
-    { return get() < keyword.get(); }
+    bool operator < (const Keyword& other ) const
+    { return get() < other.get(); }
 
     //!@name accessors
     //@{
@@ -95,7 +97,7 @@ class Keyword: public Counter
     private:
 
     //! format keyword
-    static QString _format( const QString& );
+    QString _format( const QString& ) const;
 
     //! full value
     QString value_;
