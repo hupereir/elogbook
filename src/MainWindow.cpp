@@ -1957,7 +1957,7 @@ void MainWindow::_removeBackup( Logbook::Backup backup )
     Debug::Throw( "MainWindow::_removeBackup.\n" );
     if( !backup.file().exists() )
     {
-        const QString buffer = QString( tr( "Unable to open file named '%1'. <Remove Backup> canceled" ) ).arg( backup.file() );
+        const QString buffer = QString( tr( "Unable to open file named '%1'. <Remove Backup> canceled." ) ).arg( backup.file() );
         InformationDialog( this, buffer ).exec();
         return;
     }
@@ -1994,7 +1994,7 @@ void MainWindow::_restoreBackup( Logbook::Backup backup )
     Debug::Throw( "MainWindow::_restoreBackup.\n" );
     if( !backup.file().exists() )
     {
-        const QString buffer = QString( tr( "Unable to open file named '%1'. <Restore Backup> canceled" ) ).arg( backup.file() );
+        const QString buffer = QString( tr( "Unable to open file named '%1'. <Restore Backup> canceled." ) ).arg( backup.file() );
         InformationDialog( this, buffer ).exec();
         return;
     }
@@ -2047,7 +2047,7 @@ void MainWindow::_mergeBackup( Logbook::Backup backup )
 
     if( !backup.file().exists() )
     {
-        const QString buffer = QString( tr( "Unable to open file named '%1'. <Merge Backup> canceled" ) ).arg( backup.file() );
+        const QString buffer = QString( tr( "Unable to open file named '%1'. <Merge Backup> canceled." ) ).arg( backup.file() );
         return;
     }
 
