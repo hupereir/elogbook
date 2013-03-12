@@ -21,28 +21,19 @@
 *
 *******************************************************************************/
 
-/*!
-\file EditAttachmentDialog.cpp
-\brief open attachment popup dialog
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
+#include "EditAttachmentDialog.h"
+
+#include "AnimatedLineEditor.h"
+#include "Debug.h"
+#include "File.h"
+#include "GridLayout.h"
 
 #include <QLayout>
 #include <QLabel>
 
-#include "GridLayout.h"
-#include "AnimatedLineEditor.h"
-#include "Debug.h"
-#include "EditAttachmentDialog.h"
-#include "File.h"
-
-
-
 //_____________________________________________________
 EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& attachment ):
-CustomDialog( parent )
+    CustomDialog( parent )
 {
 
     Debug::Throw( "EditAttachmentDialog::EditAttachmentDialog.\n" );
@@ -55,23 +46,25 @@ CustomDialog( parent )
     mainLayout().addLayout( gridLayout );
 
     // file name
-    gridLayout->addWidget( new QLabel( "File:", this ) );
-    AnimatedLineEditor *file_line_edit( new AnimatedLineEditor( this ) );
-    file_line_edit->setReadOnly( true );
-    file_line_edit->setToolTip( "Attachment file/URL. (read-only)" );
-    gridLayout->addWidget( file_line_edit );
+    QLabel* label;
+    gridLayout->addWidget( label = new QLabel( tr( "File:" ), this ) );
+    AnimatedLineEditor *fileLineEdit( new AnimatedLineEditor( this ) );
+    fileLineEdit->setReadOnly( true );
+    fileLineEdit->setToolTip( tr( "Attachment file/URL. (read-only)" ) );
+    gridLayout->addWidget( fileLineEdit );
+    label->setBuddy( fileLineEdit );
 
     AttachmentType type( attachment.type() );
     File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
-    file_line_edit->setText( fullname );
+    fileLineEdit->setText( fullname );
 
     // type
-    gridLayout->addWidget( new QLabel( "Type:", this ) );
+    gridLayout->addWidget( label = new QLabel( tr( "Type:" ), this ) );
     gridLayout->addWidget( fileTypeComboBox_ = new QComboBox( this ) );
     for(
         AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
-    iter != AttachmentType::types().end();
-    iter ++ )
+        iter != AttachmentType::types().end();
+        iter ++ )
     {
 
         if( type == AttachmentType::URL && !( iter.value() == AttachmentType::URL ) ) continue;
@@ -80,15 +73,22 @@ CustomDialog( parent )
 
     }
     fileTypeComboBox_->setCurrentIndex( fileTypeComboBox_->findText( type.name() ) );
-    fileTypeComboBox_->setToolTip( "Attachment type. Defines the default application used to display the attachment." );
+    fileTypeComboBox_->setToolTip( tr( "Attachment type. Defines the default application used to display the attachment" ) );
+    label->setBuddy( fileTypeComboBox_ );
 
     // creation
-    gridLayout->addWidget( new QLabel( "Created: ", this ) );
-    gridLayout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():"-", this ) );
+    if( attachment.creation().isValid() )
+    {
+        gridLayout->addWidget( new QLabel( tr( "Created:" ), this ) );
+        gridLayout->addWidget( new QLabel( attachment.creation().toString(), this ) );
+    }
 
     // modification
-    gridLayout->addWidget( new QLabel( "Modified: ", this ) );
-    gridLayout->addWidget( new QLabel( attachment.modification().isValid() ? attachment.modification().toString():"-", this ) );
+    if( attachment.modification().isValid() )
+    {
+        gridLayout->addWidget( new QLabel( tr( "Modified:" ), this ) );
+        gridLayout->addWidget( new QLabel( attachment.modification().toString(), this ) );
+    }
 
     gridLayout->setColumnStretch( 1, 1 );
 
@@ -97,11 +97,11 @@ CustomDialog( parent )
     boxLayout->setSpacing(5);
     mainLayout().addLayout( boxLayout, 1 );
 
-    boxLayout->addWidget( new QLabel( "Comments:", this ), 0 );
+    boxLayout->addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );
     boxLayout->addWidget( commentsEditor_ = new TextEditor( this ), 1 );
     commentsEditor_->setPlainText( attachment.comments() );
-    commentsEditor_->setToolTip( "Attachment comments." );
-
+    commentsEditor_->setToolTip( tr( "Attachment comments." ) );
+    label->setBuddy( commentsEditor_ );
 }
 
 //____________________________________________
@@ -112,8 +112,8 @@ AttachmentType EditAttachmentDialog::type( void ) const
     QString type_string( fileTypeComboBox_->currentText() );
     for(
         AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
-    iter != AttachmentType::types().end();
-    ++iter )
+        iter != AttachmentType::types().end();
+        ++iter )
     { if( iter.value().name() == type_string ) return iter.value(); }
     return AttachmentType::UNKNOWN;
 

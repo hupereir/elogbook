@@ -912,7 +912,7 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
     if( !_hasStatusBar() ) return;
 
     statusBar().label(2).setText( QString( tr( "Line: %1" ) ).arg( position.paragraph()+1 ), false );
-    statusBar().label(3).setText( QString( tr( "Column: %i" ) ).arg( position.index()+1 ), true );
+    statusBar().label(3).setText( QString( tr( "Column: %1" ) ).arg( position.index()+1 ), true );
 
     return;
 }
@@ -1132,7 +1132,7 @@ void EditionWindow::_printPreview( void )
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );
-    dialog.setWindowTitle( tr( "Print Preview - elogbook" ) );
+    dialog.setWindowTitle( tr( "Print Preview - Elogbook" ) );
     dialog.setHelper( &helper );
     dialog.exec();
 
@@ -1153,7 +1153,7 @@ void EditionWindow::_toHtml( void )
     // create dialog
     HtmlDialog dialog( this );
     dialog.setOptionWidgets( QList<QWidget *>() << optionWidget );
-    dialog.setWindowTitle( tr( "Export to HTML - elogbook" ) );
+    dialog.setWindowTitle( tr( "Export to HTML - Elogbook" ) );
 
     // generate file name
     QString buffer;
@@ -1329,7 +1329,7 @@ void EditionWindow::_openLink( void )
     if( anchor.isEmpty() ) return;
 
     OpenLinkDialog dialog( this, anchor );
-    dialog.setWindowTitle( tr( "Open Link - elogbook" ) );
+    dialog.setWindowTitle( tr( "Open Link - Elogbook" ) );
 
     // retrieve applications from options
     Options::List applications( XmlOptions::get().specialOptions( "OPEN_LINK_APPLICATIONS" ) );

@@ -49,12 +49,12 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
 const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 {
     "",
-    "Keyword",
-    "Subject",
+    tr( "Keyword" ),
+    tr( "Subject" ),
     "",
-    "Creation",
-    "Modification",
-    "Author"
+    tr( "Creation" ),
+    tr( "Modification" ),
+    tr( "Author" )
 };
 
 //_______________________________________________________________
@@ -177,8 +177,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
 
     }
 
-    Debug::Throw( "LogEntryModel::setData - done. \n" );
-    return true;
+     return true;
 
 }
 

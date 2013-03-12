@@ -48,7 +48,7 @@ OpenLinkDialog::OpenLinkDialog( QWidget* parent, const QString& file ):
     mainLayout().addLayout( gridLayout );
 
     QLabel* label;
-    gridLayout->addWidget( label = new QLabel( "Opening link: ", this ), 0, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( tr( "Opening link:" ), this ), 0, 0, 1, 1 );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
 
     gridLayout->addWidget( label = new ElidedLabel( file, this ), 0, 1, 1, 2 );
@@ -58,7 +58,7 @@ OpenLinkDialog::OpenLinkDialog( QWidget* parent, const QString& file ):
     font.setStyle( QFont::StyleItalic );
     label->setFont( font );
 
-    gridLayout->addWidget( label = new QLabel( "Command: ", this ), 1, 0, 1, 1 );
+    gridLayout->addWidget( label = new QLabel( tr( "Command:" ), this ), 1, 0, 1, 1 );
     gridLayout->addWidget( actionComboBox_ = new CustomComboBox( this ), 1, 1, 1, 1 );
     actionComboBox_->setEditable( true );
     actionComboBox_->setAutoCompletion( true );

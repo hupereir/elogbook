@@ -35,7 +35,7 @@ FileCheckDialog::FileCheckDialog( QWidget* parent ):
    CustomDialog( parent, CloseButton )
 {
     Debug::Throw( "FileCheckDialog::FileCheckDialog.\n" );
-    setWindowTitle( "Monitored Files" );
+    setWindowTitle( tr( "Monitored Files - Elogbook" ) );
     setOptionName( "FILE_CHECK_DIALOG" );
 
     layout()->setMargin(0);

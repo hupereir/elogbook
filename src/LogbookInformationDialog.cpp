@@ -39,7 +39,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
 {
     Debug::Throw( "LogbookInformationDialog::LogbookInformationDialog.\n" );
 
-    setWindowTitle( "Logbook Informations - Elogbook" );
+    setWindowTitle( tr( "Logbook Informations - Elogbook" ) );
     setOptionName( "LOGBOOK_INFORMATION_DIALOG" );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
@@ -56,33 +56,37 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     gridLayout->setSpacing(5);
     hLayout->addLayout( gridLayout, 0 );
 
-    gridLayout->addWidget( label = new QLabel( "Title:", this ), 0, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( "Title:" ), this ), 0, 0 );
     gridLayout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
     title_->setText( logbook->title().isEmpty() ?   Logbook::LOGBOOK_NO_TITLE:logbook->title()  );
-    title_->setToolTip( "Logbook title" );
+    title_->setToolTip( tr( "Logbook title" ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    label->setBuddy( title_ );
 
     // logbook author
-    gridLayout->addWidget( label = new QLabel( "Author:", this ), 1, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( "Author:" ), this ), 1, 0 );
     gridLayout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
     author_->setText( logbook->author().isEmpty() ? Logbook::LOGBOOK_NoAuthor:logbook->author() );
-    author_->setToolTip( "Logbook author." );
+    author_->setToolTip( tr( "Logbook author" ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    label->setBuddy( author_ );
 
     // attachment directory
-    gridLayout->addWidget( label = new QLabel( "Directory:", this ), 2, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( "Directory:" ), this ), 2, 0 );
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 2, 1 );
     attachmentDirectory_->setFile( logbook->directory().isEmpty() ? File(Util::workingDirectory()) : logbook->directory() );
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
-    attachmentDirectory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );
+    attachmentDirectory_->setToolTip( tr( "Default directory where attached files are stored (either copied or linked)." ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    label->setBuddy( attachmentDirectory_ );
 
     gridLayout->setColumnStretch( 1, 1 );
 
     // comments
-    mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );
+    mainLayout().addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );
     mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
     comments_->setPlainText( logbook->comments() );
-    comments_->setToolTip( "Logbook comments." );
+    comments_->setToolTip( tr( "Logbook comments." ) );
+    label->setBuddy( comments_ );
 
 }

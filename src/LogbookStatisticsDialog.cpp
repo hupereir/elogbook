@@ -44,7 +44,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 {
     Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
-    setWindowTitle( "Logbook Statistics - Elogbook" );
+    setWindowTitle( tr( "Logbook Statistics - Elogbook" ) );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
@@ -71,38 +71,38 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     {
         // file
         item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::All );
-        item->setKey( "File name" );
+        item->setKey( tr( "File name" ) );
         item->setValue( logbook->file().localName() );
 
         // path
         item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Selectable|BaseFileInformationDialog::Elide );
-        item->setKey( "Path" );
+        item->setKey( tr( "Path" ) );
         item->setValue( logbook->file().path() );
     }
 
     // creation
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Created:" );
+    item->setKey( tr( "Created:" ) );
     item->setValue( logbook->creation().isValid() ? logbook->creation().toString():QString() );
 
     // modification
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Modified:" );
+    item->setKey( tr( "Modified:" ) );
     item->setValue( logbook->modification().isValid() ? logbook->modification().toString():QString() );
 
     // backup
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Last backup:" );
+    item->setKey( tr( "Last backup:" ) );
     item->setValue( logbook->backup().isValid() ? logbook->backup().toString():QString() );
 
     // entries
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Entries:" );
+    item->setKey( tr( "Entries:" ) );
     item->setValue( QString().setNum( logbook->entries().size() ) );
 
     // attachments
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Attachments:" );
+    item->setKey( tr( "Attachments:" ) );
     item->setValue( QString().setNum( logbook->attachments().size() ) );
 
     gridLayout->setColumnStretch( 1, 1 );
@@ -125,10 +125,10 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 //_______________________________________________
 const QString LogbookStatisticsDialog::Model::columnTitles_[ LogbookStatisticsDialog::Model::nColumns ] =
 {
-    "File",
-    "Entries",
-    "Created",
-    "Modified"
+    tr( "File" ),
+    tr( "Entries" ),
+    tr( "Created" ),
+    tr( "Modified" )
 };
 
 

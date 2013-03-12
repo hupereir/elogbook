@@ -155,7 +155,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( tr( "Last Modified:" ) ) );
+            appendChild( document.createTextNode( tr( "Modified:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( logbook_->modification().toString() ) );
     }
@@ -165,7 +165,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( tr( "Last Backup:" ) ) );
+            appendChild( document.createTextNode( tr( "Backup:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( logbook_->modification().toString() ) );
     }

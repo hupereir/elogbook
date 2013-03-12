@@ -34,7 +34,7 @@
 
 //________________________________________________________
 LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files ):
-BaseDialog( parent ),
+  BaseDialog( parent ),
 Counter( "LogbookModifiedDialog" )
 {
 
@@ -50,12 +50,7 @@ Counter( "LogbookModifiedDialog" )
     setLayout( layout );
 
     // create message
-    QString buffer;
-    QTextStream what( &buffer );
-    what
-        << "Following files have been modified"
-        << " been modified by by another application: "
-        << endl;
+    QString buffer( tr( "Following files have been modified by another application: \n" ) );
 
     QHBoxLayout *hLayout( new QHBoxLayout() );
     layout->addLayout( hLayout, 0 );
@@ -81,23 +76,23 @@ Counter( "LogbookModifiedDialog" )
 
     // resave button
     QPushButton* button;
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE ), "&Save Again", this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE ), tr( "Save Again" ), this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _reSave() ) );
-    button->setToolTip( "Save file again. Disc modifications will be lost" );
+    button->setToolTip( tr( "Save file again. Disc modifications will be lost" ) );
 
     // save as button
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE_AS ), "Save &As", this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE_AS ), tr( "Save As" ), this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _saveAs() ) );
-    button->setToolTip( "Save file with a different name" );
+    button->setToolTip( tr( "Save file with a different name" ) );
 
     // reload button.
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::RELOAD ), "&Reload", this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::RELOAD ), tr( "Reload" ), this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _reLoad() ) );
-    button->setToolTip( "Reload file from disc. Modifications will be lost" );
+    button->setToolTip( tr( "Reload file from disc. Modifications will be lost" ) );
 
     // ignore button.
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), "&Ignore", this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Ignore" ), this ) );
     connect( button, SIGNAL( clicked() ), SLOT( _ignore() ) );
-    button->setToolTip( "Ignore warning" );
+    button->setToolTip( tr( "Ignore warning" ) );
 
 }

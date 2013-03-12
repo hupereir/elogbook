@@ -38,7 +38,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     mainLayout().addLayout( hLayout );
     QLabel* label;
 
-    hLayout->addWidget( label = new QLabel( "Link:", this ) );
+    hLayout->addWidget( label = new QLabel( tr( "Link:" ), this ) );
     hLayout->addWidget( editor_ = new BrowsedLineEditor( this ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( editor_ );

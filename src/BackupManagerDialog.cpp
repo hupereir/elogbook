@@ -31,7 +31,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
    BaseDialog( parent )
 {
     Debug::Throw( "BackupManagerDialog::BackupManagerDialog.\n" );
-    setWindowTitle( "Backup Manager - Elogbook" );
+    setWindowTitle( tr( "Backup Manager - Elogbook" ) );
     setOptionName( "BACKUP_MANAGER_DIALOG" );
 
     setLayout( new QVBoxLayout() );
@@ -39,7 +39,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
     layout()->addWidget( managerWidget_ = new BackupManagerWidget( this ) );
 
     // add close button
-    QPushButton* closeButton = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), "Close", managerWidget_ );
+    QPushButton* closeButton = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), managerWidget_ );
     connect( closeButton, SIGNAL( clicked() ), this, SLOT( close() ) );
     managerWidget_->buttonLayout().addWidget( closeButton );
 

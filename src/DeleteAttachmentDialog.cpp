@@ -51,7 +51,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     QLabel* label = new QLabel( this );
     label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignHCenter );
-    hLayout->addWidget( new QLabel( "Delete attachment ?", this ) );
+    hLayout->addWidget( new QLabel( tr( "Delete attachment ?" ), this ) );
 
     QWidget *groupBox = new QWidget( this );
     mainLayout().addWidget( groupBox );
@@ -59,19 +59,19 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     groupBox->layout()->setMargin(5);
     groupBox->layout()->setSpacing(5);
 
-    groupBox->layout()->addWidget( fromDiskButton_ = new QRadioButton( "From disk", groupBox ) );
+    groupBox->layout()->addWidget( fromDiskButton_ = new QRadioButton( tr( "From disk" ), groupBox ) );
     fromDiskButton_->setChecked( true );
-    fromDiskButton_->setToolTip( "Select this button to remove attachment file from disk and logbook." );
+    fromDiskButton_->setToolTip( tr( "Select this button to remove attachment file from disk and logbook." ) );
     group->addButton( fromDiskButton_ );
 
     groupBox->layout()->addWidget( fromLogbookButton_ = new QRadioButton( "From frame", groupBox ) );
-    fromLogbookButton_->setToolTip( "Select this button to remove attachment file from logbook only (attachment is kept on disk)." );
+    fromLogbookButton_->setToolTip( tr( "Select this button to remove attachment file from logbook only (attachment is kept on disk)." ) );
     group->addButton( fromLogbookButton_ );
 
     if( attachment.type() == AttachmentType::URL )
     { groupBox->setEnabled( false ); }
 
-    okButton().setText( "Delete" );
+    okButton().setText( tr( "Delete" ) );
     okButton().setIcon( IconEngine::get( ICONS::DELETE ) );
 
     adjustSize();

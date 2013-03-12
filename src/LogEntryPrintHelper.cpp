@@ -113,11 +113,11 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     typedef QPair<QString, QString> StringPair;
     typedef QList<StringPair> StringList;
     StringList values;
-    if( mask_&LogEntry::ENTRY_KEYWORD ) values << StringPair( "Keyword: ", entry_->keyword().get() );
-    if( mask_&LogEntry::ENTRY_TITLE ) values << StringPair( "Title: ", entry_->title() );
-    if( mask_&LogEntry::ENTRY_AUTHOR ) values << StringPair( "Author: ", entry_->author() );
-    if( mask_&LogEntry::ENTRY_CREATION ) values << StringPair( "Created: ", entry_->creation().toString() );
-    if( mask_&LogEntry::ENTRY_MODIFICATION ) values << StringPair( "Last Modified: ", entry_->modification().toString() );
+    if( mask_&LogEntry::ENTRY_KEYWORD ) values << StringPair( tr( "Keyword:" ), entry_->keyword().get() );
+    if( mask_&LogEntry::ENTRY_TITLE ) values << StringPair( tr( "Title:" ), entry_->title() );
+    if( mask_&LogEntry::ENTRY_AUTHOR ) values << StringPair( tr( "Author:" ), entry_->author() );
+    if( mask_&LogEntry::ENTRY_CREATION ) values << StringPair( tr( "Created:" ), entry_->creation().toString() );
+    if( mask_&LogEntry::ENTRY_MODIFICATION ) values << StringPair( tr( "Modified:" ), entry_->modification().toString() );
     const int nRows( values.size() );
 
     // create table
@@ -320,17 +320,17 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     cellFormat.setFontWeight( QFont::Bold );
     QTextTableCell cell;
     ( cell = table->cellAt( row, 0 ) ).setFormat( cellFormat );
-    cell.firstCursorPosition().insertText( "Attachments: " );
+    cell.firstCursorPosition().insertText( tr( "Attachments:" ) );
     row++;
 
     ( cell = table->cellAt( row, 0 ) ).setFormat( cellFormat );
-    cell.firstCursorPosition().insertText( "Location " );
+    cell.firstCursorPosition().insertText( tr( "Location" ) );
 
     ( cell = table->cellAt( row, 1 ) ).setFormat( cellFormat );
-    cell.firstCursorPosition().insertText( "Type " );
+    cell.firstCursorPosition().insertText( tr( "Type" ) );
 
     ( cell = table->cellAt( row, 2 ) ).setFormat( cellFormat );
-    cell.firstCursorPosition().insertText( "Comments " );
+    cell.firstCursorPosition().insertText( tr( "Comments" ) );
     row++;
 
     // loop over attachments

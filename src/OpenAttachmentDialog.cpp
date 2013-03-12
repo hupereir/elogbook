@@ -54,22 +54,22 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
 
     // file name
     QLabel* label;
-    gridLayout->addWidget( label = new QLabel( "File:", this ) );
+    gridLayout->addWidget( label = new QLabel( tr( "File:" ), this ) );
     gridLayout->addWidget( label = new ElidedLabel( fullname, this ) );
     label->setTextInteractionFlags( Qt::TextSelectableByMouse|Qt::TextSelectableByKeyboard );
 
     // attachment type
-    gridLayout->addWidget(new QLabel( "Type:", this ) );
+    gridLayout->addWidget(new QLabel( tr( "Type:" ), this ) );
     gridLayout->addWidget( new QLabel( attachment.type().name(), this ) );
 
     // creation
-    gridLayout->addWidget( new QLabel( "Created:", this ) );
+    gridLayout->addWidget( new QLabel( tr( "Created:" ), this ) );
     gridLayout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():"-", this ) );
 
     // modification
     if( attachment.modification().isValid() )
     {
-        gridLayout->addWidget( new QLabel( "Modified:", this ) );
+        gridLayout->addWidget( new QLabel( tr( "Modified:" ), this ) );
         gridLayout->addWidget( new QLabel( attachment.modification().toString(), this ) );
     }
 
@@ -87,16 +87,16 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);
 
-    gridLayout->addWidget( openRadioButton_ = new QRadioButton( "Open using:", this ) );
-    openRadioButton_->setToolTip( "Select this button to open attachment using the selected application." );
+    gridLayout->addWidget( openRadioButton_ = new QRadioButton( tr( "Open using:" ), this ) );
+    openRadioButton_->setToolTip( tr( "Select this button to open attachment using the selected application" ) );
     group->addButton( openRadioButton_ );
 
     gridLayout->addWidget( commandEditor_ = new BrowsedLineEditor( this ) );
     commandEditor_->setFile( attachment.type().editCommand() );
-    commandEditor_->setToolTip( "Application to be used to display the attachment." );
+    commandEditor_->setToolTip( tr( "Application to be used to display the attachment" ) );
 
-    gridLayout->addWidget( saveRadioButton_ = new QRadioButton( "save to disk ", this ) );
-    saveRadioButton_->setToolTip( "Select this button to save a copy of the attachment on disk." );
+    gridLayout->addWidget( saveRadioButton_ = new QRadioButton( tr( "Save to disk" ), this ) );
+    saveRadioButton_->setToolTip( tr( "Select this button to save a copy of the attachment on disk" ) );
     group->addButton( saveRadioButton_ );
 
     if( attachment.type() == AttachmentType::URL )
@@ -116,12 +116,12 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     // comments
     if( !( attachment.comments().isEmpty() || attachment.comments()== Attachment::NO_COMMENTS ) )
     {
-        mainLayout().addWidget( new QLabel( "Comments:", this ), 0 );
-        TextEditor* comments_text_edit = new TextEditor( this );
-        mainLayout().addWidget( comments_text_edit, 1 );
-        comments_text_edit->setReadOnly( true );
-        comments_text_edit->setPlainText( attachment.comments() );
-        comments_text_edit->setToolTip( "Attachment comments. (read-only)" );
+        mainLayout().addWidget( new QLabel( tr( "Comments:" ), this ), 0 );
+        TextEditor* commentsTextEdit = new TextEditor( this );
+        mainLayout().addWidget( commentsTextEdit, 1 );
+        commentsTextEdit->setReadOnly( true );
+        commentsTextEdit->setPlainText( attachment.comments() );
+        commentsTextEdit->setToolTip( tr( "Attachment comments. (read-only)" ) );
     }
 
     adjustSize();

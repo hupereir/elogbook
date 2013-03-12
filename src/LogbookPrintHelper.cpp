@@ -67,8 +67,8 @@ void LogbookPrintHelper::print( QPrinter* printer )
     if( maxValue )
     {
         progress_ = 0;
-        progressDialog_ = new QProgressDialog( "Generating print output...", "Cancel", 0, maxValue );
-        progressDialog_->setWindowTitle( "Print Logbook - Elogbook" );
+        progressDialog_ = new QProgressDialog( tr( "Generating print output..." ), tr( "Cancel" ), 0, maxValue );
+        progressDialog_->setWindowTitle( tr( "Print Logbook - Elogbook" ) );
         progressDialog_->setWindowModality(Qt::WindowModal);
     }
 
@@ -135,24 +135,20 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     typedef QPair<QString, QString> StringPair;
     typedef QList<StringPair> StringList;
     StringList values;
-    if( mask_&Logbook::LOGBOOK_TITLE ) values << StringPair( "Title: ", logbook_->title() );
-    if( mask_&Logbook::LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() ) values << StringPair( "Comments: ", logbook_->comments() );
-    if( mask_&Logbook::LOGBOOK_AUTHOR ) values << StringPair( "Author: ", logbook_->author() );
+    if( mask_&Logbook::LOGBOOK_TITLE ) values << StringPair( tr( "Title:" ), logbook_->title() );
+    if( mask_&Logbook::LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() ) values << StringPair( tr( "Comments:" ), logbook_->comments() );
+    if( mask_&Logbook::LOGBOOK_AUTHOR ) values << StringPair( tr( "Author:" ), logbook_->author() );
 
-    if( mask_&Logbook::LOGBOOK_FILE ) values << StringPair( "File: ", logbook_->file() );
+    if( mask_&Logbook::LOGBOOK_FILE ) values << StringPair( tr( "File:" ), logbook_->file() );
     if( mask_&Logbook::LOGBOOK_DIRECTORY && !logbook_->directory().isEmpty() )
     {
-        QString buffer;
-        QTextStream what( &buffer );
-        what << logbook_->directory();
-        if( !logbook_->checkDirectory() ) what << " (not found)";
-
-        values << StringPair( "Attachments directory: ", buffer );
+        const QString buffer = logbook_->checkDirectory() ? QString(logbook_->directory()) : QString( tr( "%1 (not found)" ) ).arg( logbook_->directory() );
+        values << StringPair( tr( "Attachments directory:" ), buffer );
     }
 
-    if( mask_&Logbook::LOGBOOK_CREATION ) values << StringPair( "Created: ", logbook_->creation().toString() );
-    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values << StringPair( "Last Modified: ", logbook_->modification().toString() );
-    if( mask_&Logbook::LOGBOOK_BACKUP ) values << StringPair( "Last backup: ", logbook_->backup().toString() );
+    if( mask_&Logbook::LOGBOOK_CREATION ) values << StringPair( tr( "Created:" ), logbook_->creation().toString() );
+    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values << StringPair( tr( "Modified:" ), logbook_->modification().toString() );
+    if( mask_&Logbook::LOGBOOK_BACKUP ) values << StringPair( tr( "Backup:" ), logbook_->backup().toString() );
     const int nRows( values.size() );
 
     // create table
@@ -247,10 +243,10 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
         QTextTableCellFormat cellFormat;
         cellFormat.setFontWeight( QFont::Bold );
         QTextTableCell cell;
-        (cell = table->cellAt(0,0)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Keyword" );
-        (cell = table->cellAt(0,1)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Title" );
-        (cell = table->cellAt(0,2)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Created" );
-        (cell = table->cellAt(0,3)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( "Last modified" );
+        (cell = table->cellAt(0,0)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Keyword" ) );
+        (cell = table->cellAt(0,1)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Title" ) );
+        (cell = table->cellAt(0,2)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Created" ) );
+        (cell = table->cellAt(0,3)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Modified" ) );
 
         int row(1);
         for( ;iter != entries_.end() && row < nRows; ++iter, ++row )

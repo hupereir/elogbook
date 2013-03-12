@@ -57,31 +57,31 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
 
     // bold
     QAction* action;
-    addAction( action = new QAction( IconEngine::get( BOLD_ICON ), "&Bold", this ) );
+    addAction( action = new QAction( IconEngine::get( BOLD_ICON ), tr( "Bold" ), this ) );
     action->setCheckable( true );
     actions_.insert( Bold, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _bold( bool ) ) );
 
     // underline
-    addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), "&Italic", this ) );
+    addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), tr( "Italic" ), this ) );
     action->setCheckable( true );
     actions_.insert( Italic, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _italic( bool ) ) );
 
     // underline
-    addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), "&Underline", this ) );
+    addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), tr( "Underline" ), this ) );
     action->setCheckable( true );
     actions_.insert( Underline, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _underline( bool ) ) );
 
     // strike
-    addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), "&Strike", this ) );
+    addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), tr( "Strike" ), this ) );
     action->setCheckable( true );
     actions_.insert( Strike, action );
     connect( action, SIGNAL( toggled( bool ) ), SLOT( _strike( bool ) ) );
 
     // color
-    action = new QAction( IconEngine::get( ICONS::COLOR ), "&Color", this );
+    action = new QAction( IconEngine::get( ICONS::COLOR ), tr( "Color" ), this );
     connect( action, SIGNAL( triggered() ), SLOT( _lastColor() ) );
     actions_.insert( Color, action );
 
@@ -114,7 +114,6 @@ void FormatBar::setTarget( TextEditor& editor )
 
     // first update
     updateState( editor_->currentCharFormat() );
-    Debug::Throw( "FormatBar::setTarget - done.\n" );
 
 }
 

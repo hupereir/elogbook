@@ -40,16 +40,16 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_.insert( Logbook::LOGBOOK_TITLE, new QCheckBox( "Title", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_COMMENTS, new QCheckBox( "Comments", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_AUTHOR, new QCheckBox( "Author", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_FILE, new QCheckBox( "File name", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_DIRECTORY, new QCheckBox( "Attachments directory name", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_CREATION, new QCheckBox( "Creation time", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_MODIFICATION, new QCheckBox( "Last modificaion time", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_BACKUP, new QCheckBox( "Last backup time", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_TABLE, new QCheckBox( "Table of contents", this ) );
-    checkBoxes_.insert( Logbook::LOGBOOK_CONTENT, new QCheckBox( "Selected logbook entries", this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_TITLE, new QCheckBox( tr( "Title" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_COMMENTS, new QCheckBox( tr( "Comments" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_AUTHOR, new QCheckBox( tr( "Author" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_FILE, new QCheckBox( tr( "File name" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_DIRECTORY, new QCheckBox( tr( "Attachments directory name" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_CREATION, new QCheckBox( tr( "Creation time" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_MODIFICATION, new QCheckBox( tr( "Modificaion time" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_BACKUP, new QCheckBox( tr( "Backup time" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_TABLE, new QCheckBox( tr( "Table of contents" ), this ) );
+    checkBoxes_.insert( Logbook::LOGBOOK_CONTENT, new QCheckBox( tr( "Selected logbook entries" ), this ) );
 
     // insert in layout
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

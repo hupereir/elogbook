@@ -21,24 +21,16 @@
 *
 *******************************************************************************/
 
-/*!
-\file    AttachmentType.cpp
-\brief   Attached file types for file manipulations
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 #include "AttachmentType.h"
 #include "XmlOptions.h"
 
 //___________________________________________________________________________________
-AttachmentType AttachmentType::UNKNOWN( "UNKNOWN", "Unknown", "unknown.png", "EDIT_UNKNOWN_ATC" );
-AttachmentType AttachmentType::POSTSCRIPT( "POSTSCRIPT", "Postscript", "application-postscript.png", "EDIT_POSTSCRIPT_ATC" );
-AttachmentType AttachmentType::IMAGE( "IMAGE", "Image", "image-x-generic.png", "EDIT_IMAGE_ATC" );
-AttachmentType AttachmentType::PLAIN_TEXT( "PLAIN_TEXT", "Plain Text", "text-plain.png", "EDIT_PLAIN_TEXT_ATC" );
-AttachmentType AttachmentType::HTML( "HTML", "HTML", "text-html.png", "EDIT_HTML_ATC" );
-AttachmentType AttachmentType::URL( "URL",  "URL", "text-html.png", "EDIT_URL_ATC" );
+AttachmentType AttachmentType::UNKNOWN( "UNKNOWN", QObject::tr( "Unknown" ), "unknown.png", "EDIT_UNKNOWN_ATC" );
+AttachmentType AttachmentType::POSTSCRIPT( "POSTSCRIPT", QObject::tr( "Postscript" ), "application-postscript.png", "EDIT_POSTSCRIPT_ATC" );
+AttachmentType AttachmentType::IMAGE( "IMAGE", QObject::tr( "Image" ), "image-x-generic.png", "EDIT_IMAGE_ATC" );
+AttachmentType AttachmentType::PLAIN_TEXT( "PLAIN_TEXT", QObject::tr( "Plain Text" ), "text-plain.png", "EDIT_PLAIN_TEXT_ATC" );
+AttachmentType AttachmentType::HTML( "HTML", QObject::tr( "HTML" ), "text-html.png", "EDIT_HTML_ATC" );
+AttachmentType AttachmentType::URL( "URL",  QObject::tr( "URL" ), "text-html.png", "EDIT_URL_ATC" );
 
 //___________________________________________________________________________________
 const AttachmentType::Map& AttachmentType::types()

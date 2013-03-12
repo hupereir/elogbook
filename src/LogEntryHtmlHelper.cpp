@@ -116,7 +116,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Keyword: " ) );
+            appendChild( document.createTextNode( tr( "Keyword:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( entry_->keyword().get() ) );
 
@@ -127,7 +127,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Title: " ) );
+            appendChild( document.createTextNode( tr( "Title:" ) ) );
 
         QDomElement ref = row.
             appendChild( document.createElement( "td" ) ).
@@ -142,7 +142,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Author: " ) );
+            appendChild( document.createTextNode( tr( "Author:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( entry_->author() ) );
 
@@ -153,7 +153,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Created: " ) );
+            appendChild( document.createTextNode( tr( "Created:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( entry_->creation().toString() ) );
 
@@ -164,7 +164,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Last Modified: " ) );
+            appendChild( document.createTextNode( tr( "Modified:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( entry_->modification().toString() ) );
 
@@ -259,7 +259,7 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
     QDomElement par = parent.
         appendChild( document.createElement("p") ).
         appendChild( document.createElement( "b" ) ).toElement();
-    HtmlTextNode( "Attachments:", par, document );
+    HtmlTextNode( tr( "Attachments:" ), par, document );
 
     // table
     QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
@@ -269,15 +269,15 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
     QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( "Location" ) );
+        appendChild( document.createTextNode( tr( "Location" ) ) );
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( "Type" ) );
+        appendChild( document.createTextNode( tr( "Type" ) ) );
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( "Comments" ) );
+        appendChild( document.createTextNode( tr( "Comments" ) ) );
 
     // attachments
     foreach( Attachment* attachment, attachments )

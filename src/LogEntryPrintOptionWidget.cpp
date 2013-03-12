@@ -34,19 +34,19 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     OptionWidget( "LOGENTRY_PRINT_OPTION_MASK" )
 {
 
-    setWindowTitle( "Logbook Entry Configuration - Elogbook" );
+    setWindowTitle( tr( "Logbook Entry Configuration - Elogbook" ) );
 
     QVBoxLayout* layout = new QVBoxLayout();
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_.insert( LogEntry::ENTRY_KEYWORD, new QCheckBox( "Keyword", this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_TITLE, new QCheckBox( "Title", this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_AUTHOR, new QCheckBox( "Author", this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_CREATION, new QCheckBox( "Creation time", this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_MODIFICATION, new QCheckBox( "Last modificaion time", this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_TEXT, new QCheckBox( "Contents", this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_ATTACHMENTS, new QCheckBox( "Attachments", this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_KEYWORD, new QCheckBox( tr( "Keyword" ), this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_TITLE, new QCheckBox( tr( "Title" ), this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_AUTHOR, new QCheckBox( tr( "Author" ), this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_CREATION, new QCheckBox( tr( "Creation time" ), this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_MODIFICATION, new QCheckBox( tr( "Last modificaion time" ), this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_TEXT, new QCheckBox( tr( "Contents" ), this ) );
+    checkBoxes_.insert( LogEntry::ENTRY_ATTACHMENTS, new QCheckBox( tr( "Attachments" ), this ) );
 
     // insert in layout
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

@@ -71,28 +71,28 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     QPushButton* button;
     if( buttons & YES )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), "&Yes", this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), tr( "Yes" ), this ) );
         connect( button, SIGNAL( clicked() ), SLOT( _yes() ) );
     }
 
     // yes to all button
     if( buttons & ALL )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), "Yes to &All", this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), tr( "Yes to All" ), this ) );
         connect( button, SIGNAL( clicked() ), SLOT( _all() ) );
     }
 
     // no button
     if( buttons & NO )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), "&No", this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "No" ), this ) );
         connect( button, SIGNAL( clicked() ), SLOT( _no() ) );
     }
 
     // cancel button
     if( buttons & CANCEL )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CANCEL ), "&Cancel", this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CANCEL ), tr( "Cancel" ), this ) );
         connect( button, SIGNAL( clicked() ), SLOT( _cancel() ) );
     }
 

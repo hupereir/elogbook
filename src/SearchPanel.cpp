@@ -50,42 +50,42 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
 
   // find selection button
   QPushButton* button;
-  addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), "&Find", this ) );
+  addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), tr( "Find" ), this ) );
   connect( button, SIGNAL( clicked() ), SLOT( _selectionRequest() ) );
-  button->setToolTip( "Find logbook entries matching selected text" );
+  button->setToolTip( tr( "Find logbook entries matching selected text" ) );
 
   // selection text
   editor_ = new CustomComboBox( this );
   editor_->setEditable( true );
   editor_->setAutoCompletion( true );
-  editor_->setToolTip( "Text to be found in logbook" );
+  editor_->setToolTip( tr( "Text to be found in logbook" ) );
   editor_->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
   addWidget( editor_ );
   connect( editor_, SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest() ) );
 
   addWidget( new QLabel( " in ", this ) );
 
-  addWidget( checkboxes_[TITLE] = new QCheckBox( "&Title", this ) );
-  addWidget( checkboxes_[KEYWORD] = new QCheckBox( "&Keyword", this ) );
-  addWidget( checkboxes_[TEXT]  = new QCheckBox( "&Text", this ) );
-  addWidget( checkboxes_[ATTACHMENT] = new QCheckBox( "&Attachment", this ) );
-  addWidget( checkboxes_[COLOR] = new QCheckBox( "&Color", this ) );
+  addWidget( checkboxes_[TITLE] = new QCheckBox( tr( "Title" ), this ) );
+  addWidget( checkboxes_[KEYWORD] = new QCheckBox( tr( "Keyword" ), this ) );
+  addWidget( checkboxes_[TEXT]  = new QCheckBox( tr( "Text" ), this ) );
+  addWidget( checkboxes_[ATTACHMENT] = new QCheckBox( tr( "Attachment" ), this ) );
+  addWidget( checkboxes_[COLOR] = new QCheckBox( tr( "Color" ), this ) );
   checkboxes_[TEXT]->setChecked( true );
 
   for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
   { connect( iter.value(), SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
 
   // show_all button
-  addWidget( button = new QPushButton( "&Show All", this ) );
+  addWidget( button = new QPushButton( tr( "Show All" ), this ) );
   connect( button, SIGNAL( clicked() ), this, SIGNAL( showAllEntries() ) );
-  button->setToolTip( "Show all logbook entries" );
+  button->setToolTip( tr( "Show all logbook entries" ) );
 
   // close button
   QAction* hide_action;
-  addAction( hide_action = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), "&Close", this ) );
+  addAction( hide_action = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), this ) );
   connect( hide_action, SIGNAL( triggered() ), SLOT( hide() ) );
   connect( hide_action, SIGNAL( triggered() ), this, SIGNAL( showAllEntries() ) );
-  hide_action->setToolTip( "Show all entries and hide search bar." );
+  hide_action->setToolTip( tr( "Show all entries and hide search bar" ) );
 
   // configuration
   connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );

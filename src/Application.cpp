@@ -99,13 +99,13 @@ bool Application::realizeWidget( void )
     if( !BaseApplication::realizeWidget() ) return false;
 
     // rename about action
-    aboutAction().setText( "About Elogbook" );
+    aboutAction().setText( tr( "About Elogbook" ) );
 
     // need to redirect closeAction to proper exit
     closeAction().disconnect();
     connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
 
-    configurationAction().setText( "Configure Elogbook..." );
+    configurationAction().setText( tr( "Configure Elogbook..." ) );
 
     // recent files
     recentFiles_ = new XmlFileList();
@@ -145,8 +145,7 @@ bool Application::realizeWidget( void )
         // show information dialog, provided that fileList is not empty
         if( !file.isEmpty() )
         {
-            QString buffer;
-            QTextStream( &buffer ) << "Unable to open " << file << ".";
+            const QString buffer = QString( tr( "Unable to open file '%1'." ) ).arg( file );
             InformationDialog( mainWindow_, buffer ).exec();
         }
 
@@ -216,8 +215,7 @@ bool Application::_processCommand( SERVER::ServerCommand command )
         if( !filenames.isEmpty() )
         {
 
-            QString buffer;
-            QTextStream( &buffer ) << "Accept request for file \"" << filenames.front() << "\" ?";
+            const QString buffer = QString( tr( "Accept request for file '%1'?" ) ).arg( filenames.front() );
             if( QuestionDialog( mainWindow_, buffer ).centerOnParent().exec() )
             { mainWindow_->setLogbook( File( filenames.front() ) ); }
 
