@@ -67,27 +67,27 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     // title
     item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Bold );
-    item->setKey( "Title:" );
+    item->setKey( tr( "Title:" ) );
     item->setValue( entry->title() );
 
     // keyword
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Keyword:" );
+    item->setKey( tr( "Keyword:" ) );
     item->setValue( entry->keyword().get() );
 
     // author
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Author:" );
+    item->setKey( tr( "Author:" ) );
     item->setValue( entry->author() );
 
     // creation
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Created:" );
+    item->setKey( tr( "Created:" ) );
     item->setValue( entry->creation().toString() );
 
     // modified
     item = new BaseFileInformationDialog::Item( this, gridLayout );
-    item->setKey( "Modified:" );
+    item->setKey( tr( "Modified:" ) );
     item->setValue( entry->modification().toString() );
 
     // retrieve associated logbook
@@ -96,7 +96,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     {
 
         item = new BaseFileInformationDialog::Item( this, gridLayout );
-        item->setKey( "File:" );
+        item->setKey( tr( "File:" ) );
         item->setValue( File( (*logbooks.begin())->file() ).localName() );
 
     }

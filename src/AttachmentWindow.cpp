@@ -40,7 +40,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 {
 
     Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
-    setWindowTitle( "Attachments - Elogbook" );
+    setWindowTitle( tr( "Attachments - Elogbook" ) );
     setOptionName( "ATTACHMENT_WINDOW" );
 
     mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
@@ -52,8 +52,8 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
     connect( new QShortcut( QKeySequence::Close, this ), SIGNAL( activated() ), SLOT( close() ) );
 
-    uniconifyAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), "&Attachments", this );
-    uniconifyAction_->setToolTip( "Raise application main window" );
+    uniconifyAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "Attachments" ), this );
+    uniconifyAction_->setToolTip( tr( "Raise application main window" ) );
     connect( uniconifyAction_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
 };

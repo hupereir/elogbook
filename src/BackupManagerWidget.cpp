@@ -50,16 +50,16 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     buttonLayout_->setMargin(0);
     hLayout->addLayout( buttonLayout_ );
 
-    buttonLayout_->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), "New", this ) );
-    buttonLayout_->addWidget( removeButton_ = new QPushButton( IconEngine::get( ICONS::REMOVE ), "Remove", this ) );
-    buttonLayout_->addWidget( restoreButton_ = new QPushButton( IconEngine::get( ICONS::UNDO ), "Restore", this ) );
-    buttonLayout_->addWidget( mergeButton_ = new QPushButton( IconEngine::get( ICONS::MERGE ), "Merge", this ) );
+    buttonLayout_->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), tr( "New" ), this ) );
+    buttonLayout_->addWidget( removeButton_ = new QPushButton( IconEngine::get( ICONS::REMOVE ), tr( "Remove" ), this ) );
+    buttonLayout_->addWidget( restoreButton_ = new QPushButton( IconEngine::get( ICONS::UNDO ), tr( "Restore" ), this ) );
+    buttonLayout_->addWidget( mergeButton_ = new QPushButton( IconEngine::get( ICONS::MERGE ), tr( "Merge" ), this ) );
 
     QFrame* frame = new QFrame( this );
     frame->setFrameStyle( QFrame::HLine );
     buttonLayout_->addWidget( frame );
 
-    buttonLayout_->addWidget( cleanButton_ = new QPushButton( IconEngine::get( ICONS::DELETE ), "Clean", this ) );
+    buttonLayout_->addWidget( cleanButton_ = new QPushButton( IconEngine::get( ICONS::DELETE ), tr( "Clean" ), this ) );
 
     buttonLayout_->addStretch( 1 );
 
@@ -136,10 +136,11 @@ void BackupManagerWidget::_remove( void )
     const Logbook::Backup& backup( model_.get( index ) );
 
     // ask confirmation
-    QString buffer;
-    QTextStream( &buffer )
-        << "Remove backup file named " << backup.file().localName() << " ?" << endl
-        << "Warning: this will permanently delete the files on disk and the corresponding data.";
+    QString buffer = QString(
+        tr( "Remove backup file named '%1' ?\n"
+        "Warning: this will permanently delete the files on disk and the corresponding data." ) )
+        .arg( backup.file().localName() );
+
     if( !QuestionDialog( this, buffer ).exec() ) return;
     emit removeBackupRequested( backup );
 }
@@ -154,10 +155,10 @@ void BackupManagerWidget::_restore( void )
     const Logbook::Backup& backup( model_.get( index ) );
 
     // ask confirmation
-    QString buffer;
-    QTextStream( &buffer )
-        << "Restore data from backup file named " << backup.file().localName() << " ?" << endl
-        << "Warning: this will permanently erase all data from the current logbook.";
+    QString buffer = QString(
+        tr( "Restore data from backup file named '%1' ?\n"
+        "Warning: this will permanently erase all data from the current logbook." ) )
+        .arg( backup.file().localName() );
     if( !QuestionDialog( this, buffer ).exec() ) return;
     emit restoreBackupRequested( backup );
 }
@@ -172,10 +173,10 @@ void BackupManagerWidget::_merge( void )
     const Logbook::Backup& backup( model_.get( index ) );
 
     // ask confirmation
-    QString buffer;
-    QTextStream( &buffer )
-        << "Merge backup file named " << backup.file().localName() << " to current logbook ?" << endl
-        << "Warning: this will add all unmatched entry in the backup to the current logbook.";
+    QString buffer = QString(
+        tr( "Merge backup file named '%1' to current logbook ?\n"
+        "Warning: this will add all unmatched entry in the backup to the current logbook." ) )
+        .arg( backup.file().localName()  );
     if( !QuestionDialog( this, buffer ).exec() ) return;
     emit mergeBackupRequested( backup );
 }
@@ -193,9 +194,9 @@ void BackupManagerWidget::_updateActions( void )
 //_______________________________________________
 const QString BackupManagerWidget::Model::columnTitles_[ BackupManagerWidget::Model::nColumns ] =
 {
-    "File",
-    "Path",
-    "Created"
+    tr( "File" ),
+    tr( "Path" ),
+    tr( "Created" )
 };
 
 //__________________________________________________________________

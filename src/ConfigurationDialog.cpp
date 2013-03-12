@@ -64,8 +64,8 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     OptionSpinBox* spinbox;
 
     // attachment editors
-    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), "Applications", "Third-party applications used to edit attachments" );
-    page->layout()->addWidget( box = new QGroupBox( "Attachment Editors", page ));
+    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), tr( "Applications" ), tr( "Third-party applications used to edit attachments" ) );
+    page->layout()->addWidget( box = new QGroupBox( tr( "Attachment Editors" ), page ));
 
     GridLayout* gridLayout = new GridLayout();
     gridLayout->setSpacing(5);
@@ -76,43 +76,43 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     OptionBrowsedLineEditor *editor;
 
-    gridLayout->addWidget( new QLabel( "Default: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "Default:" ), box ) );
     gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_UNKNOWN_ATC" ) );
     addOptionWidget( editor );
 
-    gridLayout->addWidget( new QLabel( "HTML: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "HTML:" ), box ) );
     gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_HTML_ATC" ) );
     addOptionWidget( editor );
 
-    gridLayout->addWidget( new QLabel( "URL: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "URL:" ), box ) );
     gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_URL_ATC" ) );
     addOptionWidget( editor );
 
-    gridLayout->addWidget( new QLabel( "Text: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "Text:" ), box ) );
     gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_PLAIN_TEXT_ATC" ) );
     addOptionWidget( editor );
 
-    gridLayout->addWidget( new QLabel( "Postscript: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "Postscript:" ), box ) );
     gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_POSTSCRIPT_ATC" ) );
     addOptionWidget( editor );
 
-    gridLayout->addWidget( new QLabel( "Image: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "Image:" ), box ) );
     gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_IMAGE_ATC" ) );
     addOptionWidget( editor );
 
     gridLayout->setColumnStretch( 1, 1 );
 
-    gridLayout->addWidget( new QLabel( "Icon size: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "Icon size:" ), box ) );
     gridLayout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
-    spinbox->setSuffix( "px" );
+    spinbox->setSuffix( tr( "px" ) );
     spinbox->setMinimum( 8 );
     spinbox->setMaximum( 96 );
-    spinbox->setToolTip( "Icon size in attachment lists" );
+    spinbox->setToolTip( tr( "Icon size in attachment lists" ) );
     addOptionWidget( spinbox );
 
     // colors
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_COLORS ), "Colors", "Color settings for entry tagging and text highlighting" );
-    box = new QGroupBox( "Logbook Entry Colors", page );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_COLORS ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
+    box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
     box->layout()->setSpacing(5);
@@ -121,10 +121,10 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     OptionListBox* listbox;
     box->layout()->addWidget( listbox = new OptionListBox( box, "COLOR" ) );
     listbox->setModel( new ColorOptionModel( this ) );
-    listbox->setToolTip( "Colors used for logbook entry display" );
+    listbox->setToolTip( tr( "Colors used for logbook entry display" ) );
     addOptionWidget( listbox );
 
-    box = new QGroupBox( "Text Colors", page );
+    box = new QGroupBox( tr( "Text Colors" ), page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
     box->layout()->setSpacing(5);
@@ -132,25 +132,25 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     box->layout()->addWidget( listbox = new OptionListBox( box, "TEXT_COLOR" ) );
     listbox->setModel( new ColorOptionModel( this ) );
-    listbox->setToolTip( "Colors used for text formatting" );
+    listbox->setToolTip(tr(  "Colors used for text formatting" ) );
     addOptionWidget( listbox );
 
     // auto save
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_BACKUP ), "Backup", "Logbook backup configuration" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_BACKUP ), tr( "Backup" ), tr( "Logbook backup configuration" ) );
     gridLayout = new GridLayout();
     gridLayout->setSpacing(5);
     gridLayout->setMargin(0);
     page->layout()->addItem( gridLayout );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Make backup of files when saving modifications", page, "FILE_BACKUP" ), 0, 0, 1, 2 );
-    checkbox->setToolTip( "Make backup of the file prior to saving modifications" );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Make backup of files when saving modifications" ), page, "FILE_BACKUP" ), 0, 0, 1, 2 );
+    checkbox->setToolTip( tr( "Make backup of the file prior to saving modifications" ) );
     addOptionWidget( checkbox );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Automatically save logbook every ", page, "AUTO_SAVE" ), 1, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Automatically save logbook every" ), page, "AUTO_SAVE" ), 1, 0, 1, 1 );
     addOptionWidget( checkbox );
 
     gridLayout->addWidget( spinbox = new OptionSpinBox( page, "AUTO_SAVE_ITV" ), 1, 1, 1, 1 );
-    spinbox->setSuffix( "s" );
+    spinbox->setSuffix( tr( "s" ) );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 3600 );
     addOptionWidget( spinbox );
@@ -159,11 +159,11 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     spinbox->setEnabled( false );
     connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Backup logbook every ", page, "AUTO_BACKUP" ), 2, 0, 1, 1 );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Backup logbook every" ), page, "AUTO_BACKUP" ), 2, 0, 1, 1 );
     addOptionWidget( checkbox );
 
     gridLayout->addWidget( spinbox = new OptionSpinBox( page, "BACKUP_ITV" ), 2, 1, 1, 1 );
-    spinbox->setSuffix( "days" );
+    spinbox->setSuffix( tr( "days" ) );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 365 );
     addOptionWidget( spinbox );
@@ -176,33 +176,33 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     textEditConfiguration();
 
     // printing
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_PRINTING ), "Printing", "Logbook and logbook entries printing configuration" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_PRINTING ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
     hLayout->setSpacing(5);
     page->layout()->addItem( hLayout );
 
-    hLayout->addWidget( box = new QGroupBox( "Logbook", page ) );
+    hLayout->addWidget( box = new QGroupBox( tr( "Logbook" ), page ) );
     box->setLayout( new QVBoxLayout() );
     LogbookPrintOptionWidget* logbookPrintOptionWidget = new LogbookPrintOptionWidget( box );
     box->layout()->addWidget( logbookPrintOptionWidget );
     addOptionWidget( logbookPrintOptionWidget );
 
-    hLayout->addWidget( box = new QGroupBox( "Logbook Entries", page ) );
+    hLayout->addWidget( box = new QGroupBox( tr( "Logbook Entries" ), page ) );
     box->setLayout( new QVBoxLayout() );
     LogEntryPrintOptionWidget* logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
     box->layout()->addWidget( logEntryPrintOptionWidget );
     addOptionWidget( logEntryPrintOptionWidget );
 
     // recent files
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_RECENT_FILES ), "Recent Files", "Recent files list settings", true );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_RECENT_FILES ), tr( "Recent Files" ), tr( "Recent files list settings" ), true );
     RecentFilesConfiguration* recentFilesConfiguration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
     page->layout()->addWidget( recentFilesConfiguration );
     addOptionWidget( recentFilesConfiguration );
 
     // misc
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_UNSORTED ), "Unsorted", "Additional unsorted settings" );
+    page = &addPage( IconEngine::get( ICONS::PREFERENCE_UNSORTED ), tr( "Unsorted" ), tr( "Additional unsorted settings" ) );
 
     box = new QWidget( page );
     gridLayout = new GridLayout();
@@ -212,13 +212,13 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     box->setLayout( gridLayout );
     page->layout()->addWidget( box );
 
-    gridLayout->addWidget( new QLabel( "Maximum number of stored recent entries: ", box ) );
+    gridLayout->addWidget( new QLabel( tr( "Maximum number of stored recent entries:" ), box ) );
     gridLayout->addWidget( spinbox = new OptionSpinBox( box, "MAX_RECENT_ENTRIES" ) );
-    spinbox->setToolTip( "Maximum number of entries that appear in the <i>Recent Entries</i> menu." );
+    spinbox->setToolTip( tr( "Maximum number of entries that appear in the <i>Recent Entries</i> menu" ) );
     addOptionWidget( spinbox );
 
-    gridLayout->addWidget( checkbox = new OptionCheckBox( "Case sensitive text/entry finding", box, "CASE_SENSITIVE" ), 1, 0, 1, 2 );
-    checkbox->setToolTip( "Toggle case sensitive text search" );
+    gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Case sensitive text/entry finding" ), box, "CASE_SENSITIVE" ), 1, 0, 1, 2 );
+    checkbox->setToolTip( tr( "Toggle case sensitive text search" ) );
     addOptionWidget( checkbox );
 
     // load initial configuration

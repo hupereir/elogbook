@@ -21,57 +21,47 @@
 *
 *******************************************************************************/
 
-/*!
-\file    HtmlHeaderNode.cpp
-\brief  Some Html utilities
-\author  Hugo Pereira
-\version $Revision$
-\date    $Date$
-*/
-
 #include "HtmlHeaderNode.h"
 #include "Debug.h"
-
-
 
 //_________________________________________
 HtmlHeaderNode::HtmlHeaderNode( QDomElement& parent, QDomDocument& document )
 {
-  Debug::Throw( "HtmlHeaderNode::Header.\n" );
-  QDomElement head = parent.appendChild( document.createElement( "head" ) ).toElement();
-  QDomElement meta = head.appendChild( document.createElement( "meta" ) ).toElement();
-  meta.setAttribute( "content", "text/html; charset=iso-8859-1" );
-  meta.setAttribute( "http-equiv", "Content-Type" );
+    Debug::Throw( "HtmlHeaderNode::Header.\n" );
+    QDomElement head = parent.appendChild( document.createElement( "head" ) ).toElement();
+    QDomElement meta = head.appendChild( document.createElement( "meta" ) ).toElement();
+    meta.setAttribute( "content", "text/html; charset=iso-8859-1" );
+    meta.setAttribute( "http-equiv", "Content-Type" );
 
-  meta = head.appendChild( document.createElement( "meta" ) ).toElement();
-  meta.setAttribute( "content", "eLogbook" );
-  meta.setAttribute( "name", "Generator" );
+    meta = head.appendChild( document.createElement( "meta" ) ).toElement();
+    meta.setAttribute( "content", "eLogbook" );
+    meta.setAttribute( "name", "Generator" );
 
-  head.
-    appendChild( document.createElement( "title" ) ).
-    appendChild( document.createTextNode( "Electronic Logbook" ) );
+    head.
+        appendChild( document.createElement( "title" ) ).
+        appendChild( document.createTextNode( "Electronic Logbook" ) );
 
-  QDomElement style = head.appendChild( document.createElement( "style" ) ).toElement();
-  style.setAttribute( "type", "text/css" );
-  style.appendChild( document.createTextNode(
-    "body { \n"
-    "  background: white; color: black; \n "
-    "  margin-right: 20px; margin-left: 20px; \n"
-    "} \n"
-    "\n"
-    ".header_outer_table {\n"
-    "  width: 100%; \n"
-    "  border: 1px solid #888888; \n"
-    "  background-color: white; \n"
-    "  cellspacing: 0;\n"
-    "} \n"
-    "\n"
-    ".header_inner_table {"
-    "  border: 0; \n"
-    "  cellpadding: 0; \n"
-    "  cellspacing: 0; \n"
-    "} \n"
-    "\n"
-    ".header_column { padding: 8px 20px; }\n "
-    "\n" ) );
+    QDomElement style = head.appendChild( document.createElement( "style" ) ).toElement();
+    style.setAttribute( "type", "text/css" );
+    style.appendChild( document.createTextNode(
+        "body { \n"
+        "  background: white; color: black; \n "
+        "  margin-right: 20px; margin-left: 20px; \n"
+        "} \n"
+        "\n"
+        ".header_outer_table {\n"
+        "  width: 100%; \n"
+        "  border: 1px solid #888888; \n"
+        "  background-color: white; \n"
+        "  cellspacing: 0;\n"
+        "} \n"
+        "\n"
+        ".header_inner_table {"
+        "  border: 0; \n"
+        "  cellpadding: 0; \n"
+        "  cellspacing: 0; \n"
+        "} \n"
+        "\n"
+        ".header_column { padding: 8px 20px; }\n "
+        "\n" ) );
 }

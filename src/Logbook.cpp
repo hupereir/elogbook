@@ -40,17 +40,15 @@
 //________________________________
 // public methods
 
-const QString Logbook::LOGBOOK_NO_TITLE = "My electronic logbook";
-const QString Logbook::LOGBOOK_NoAuthor = "anonymous";
-const QString Logbook::LOGBOOK_NO_FILE = "";
-const QString Logbook::LOGBOOK_NO_DIRECTORY = "";
+const QString Logbook::LOGBOOK_NO_TITLE( tr( "My electronic logbook" ) );
+const QString Logbook::LOGBOOK_NoAuthor( tr( "anonymous" ) );
+const QString Logbook::LOGBOOK_NO_FILE;
+const QString Logbook::LOGBOOK_NO_DIRECTORY;
 
 //________________________________
 Logbook::Logbook( const File& file ):
     Counter( "Logbook" ),
     modified_( false ),
-    file_( "" ),
-    parentFile_( "" ),
     directory_( LOGBOOK_NO_DIRECTORY ),
     title_( LOGBOOK_NO_TITLE ),
     author_( LOGBOOK_NoAuthor ),
@@ -94,9 +92,7 @@ bool Logbook::read( void )
     }
 
     // update StateFrame
-    QString buffer;
-    QTextStream( &buffer ) << "Reading " << file().localName();
-    emit messageAvailable( buffer );
+    emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( file().localName() ) );
 
     // check input file
     if( !file().exists() ) {
@@ -200,7 +196,7 @@ bool Logbook::read( void )
 
             QString buffer;
             QTextStream( &buffer ) << "Reading " << child->file().localName();
-            emit messageAvailable( buffer );
+            emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( child->file().localName() ) );
 
             child->read();
             children_ << child;
@@ -231,7 +227,10 @@ bool Logbook::write( File file )
     Debug::Throw( ) << "Logbook::write - \"" << file << "\".\n";
     bool completed = true;
 
-    // check number of entries and children to save in header
+    // update stateFrame
+    emit messageAvailable( QString( tr( "Writing '%1'" ) ).arg( file.localName() ) );
+
+        // check number of entries and children to save in header
     if( setXmlEntries( entries().size() ) || setXmlChildren( children().size() ) )
     { setModified( true ); }
 
@@ -331,13 +330,7 @@ bool Logbook::write( File file )
         // gets/check new saved timestamp
         TimeStamp savedNew( file.lastModified() );
         if( !( lastSaved < savedNew ) ) completed = false;
-        else if( file == Logbook::file() ) {
-
-            // change logbook state if saved in nominal file
-            // stores now as last save time
-            modified_ = false;
-
-        }
+        else if( file == Logbook::file() )  modified_ = false;
 
         // assign new filename
         if( file != Logbook::file() ) setFile( file );
@@ -356,9 +349,7 @@ bool Logbook::write( File file )
         File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
 
         // update stateFrame
-        QString buffer;
-        QTextStream( &buffer ) << "Writing " << childFilename.localName();
-        emit messageAvailable( buffer );
+        emit messageAvailable( QString( tr( "Writing '%1'" ) ).arg( childFilename.localName() ) );
 
         logbook->setParentFile( file );
         completed &= logbook->write( childFilename );
@@ -367,8 +358,8 @@ bool Logbook::write( File file )
 
     }
 
-    Debug::Throw( ) << "Logbook::write - \"" << file << "\". Done.\n";
     return completed;
+
 }
 
 //_________________________________

@@ -39,12 +39,12 @@ AttachmentModel::IconCache& AttachmentModel::_icons()
 //_______________________________________________
 const QString AttachmentModel::columnTitles_[ AttachmentModel::nColumns ] =
 {
-    "",
-    "File",
-    "Type",
-    "Size",
-    "Creation",
-    "Modification"
+    QString(),
+    tr( "File" ),
+    tr( "Type" ),
+    tr( "Size" ),
+    tr( "Creation" ),
+    tr( "Modification" )
 };
 
 //_______________________________________________________________

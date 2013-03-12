@@ -21,10 +21,11 @@
 *
 *******************************************************************************/
 
+#include "AttachmentFrame.h"
+
 #include "Application.h"
 #include "Attachment.h"
 #include "AttachmentWindow.h"
-#include "AttachmentFrame.h"
 #include "Command.h"
 #include "ContextMenu.h"
 #include "Debug.h"
@@ -125,11 +126,10 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
 void AttachmentFrame::update( Attachment& attachment )
 {
 
-    Debug::Throw( 0, "AttachmentFrame::update.\n" );
+    Debug::Throw( "AttachmentFrame::update.\n" );
     Q_ASSERT( attachment.isAssociated( this ) );
     model_.add( &attachment );
     list_->resizeColumns();
-    Debug::Throw( 0, "AttachmentFrame::update - done.\n" );
 
 }
 
@@ -168,7 +168,7 @@ void AttachmentFrame::_new( void )
     BASE::KeySet<LogEntry> entries( window );
     if( entries.size() != 1 )
     {
-        InformationDialog( this, "No valid entry found. <New Attachment> canceled." ).exec();
+        InformationDialog( this, tr( "No valid entry found. <New Attachment> canceled." ) ).exec();
         return;
     }
 
@@ -196,37 +196,29 @@ void AttachmentFrame::_new( void )
     AttachmentType type( dialog.type() );
 
     // retrieve destination directory
-    File full_directory = dialog.destinationDirectory();
+    File fullDirectory = dialog.destinationDirectory();
 
     // check destination directory (if file is not URL)
     if( !(type == AttachmentType::URL) )
     {
         // check if destination directory is not a non directory existsing file
-        if( full_directory.exists() && !full_directory.isDirectory() )
+        if( fullDirectory.exists() && !fullDirectory.isDirectory() )
         {
 
-            QString buffer;
-            QTextStream( &buffer ) << "File \"" << full_directory << "\" is not a directory.";
-            InformationDialog( this, buffer ).exec();
+            InformationDialog( this, QString( tr( "File '%1' is not a directory." ) ).arg( fullDirectory ) ).exec();
 
-        } else {
+        } else if( !fullDirectory.exists() && QuestionDialog( this, QString( tr( "Directory '%1' does not exist. Create ?" ) ).arg( fullDirectory ) ).exec() ) {
 
-            // check destination directory
-            if( !full_directory.exists() )
-            {
-                QString buffer;
-                QTextStream( &buffer ) << "Directory \"" << full_directory << "\" does not exists. Create ?";
-                if( QuestionDialog( this, buffer ).exec() )
-                { ( Command( "mkdir" ) << full_directory ).run(); }
-            }
+            ( Command( "mkdir" ) << fullDirectory ).run();
         }
+
     }
 
     // retrieve check attachment filename
     File file( dialog.file() );
     if( file.isEmpty() )
     {
-        InformationDialog( this, "Invalid name. <New Attachment> canceled." ).exec();
+        InformationDialog( this, tr( "Invalid name. <New Attachment> canceled." ) ).exec();
         return;
     }
 
@@ -240,32 +232,28 @@ void AttachmentFrame::_new( void )
     Attachment::Command command( dialog.action() );
 
     // process attachment command
-    Attachment::ErrorCode error = attachment->copy( command, full_directory );
+    Attachment::ErrorCode error = attachment->copy( command, fullDirectory );
     QString buffer;
     switch (error)
     {
 
         case Attachment::SOURCE_NOT_FOUND:
-        QTextStream( &buffer ) << "Cannot find file \"" << file << "\" - <Add Attachment> canceled.";
-        InformationDialog( this, buffer ).exec();
+        InformationDialog( this, QString( tr( "Cannot find file '%1'. <Add Attachment> canceled." ) ).arg( file ) ).exec();
         delete attachment;
         break;
 
         case Attachment::DEST_NOT_FOUND:
-        QTextStream( &buffer ) << "Cannot find directory \"" << full_directory << "\" - <Add Attachment> canceled.";
-        InformationDialog( this, buffer ).exec();
+        InformationDialog( this, QString( tr( "Cannot find directory '%1'. <Add Attachment> canceled." ) ).arg( fullDirectory ) ).exec();
         delete attachment;
         break;
 
         case Attachment::SOURCE_IS_DIR:
-        QTextStream( &buffer ) << "File \"" << file << "\" is a directory - <Add Attachment> canceled.";
-        InformationDialog( this, buffer ).exec();
+        InformationDialog( this, QString( tr( "File '%1' is a directory. <Add Attachment> canceled." ) ).arg( file ) ).exec();
         delete attachment;
         break;
 
         case Attachment::DEST_EXIST:
-        QTextStream( &buffer ) << "File \"" << file << "\" is allready in list.";
-        InformationDialog( this, buffer ).exec();
+        InformationDialog( this, QString( tr( "File '%1' is already in list." ) ).arg( file ) ).exec();
         delete attachment;
         break;
 
@@ -291,7 +279,7 @@ void AttachmentFrame::_new( void )
         foreach( Logbook* logbook, logbooks )
         {
             logbook->setModified( true );
-            logbook->setDirectory( full_directory );
+            logbook->setDirectory( fullDirectory );
         }
 
         // change Application window title
@@ -458,7 +446,7 @@ void AttachmentFrame::_open( void )
     // check items
     if( selection.empty() )
     {
-        InformationDialog( this, "No attachment selected. <Open> canceled.\n" ).exec();
+        InformationDialog( this, tr( "No attachment selected. <Open Attachment> canceled." ) ).exec();
         return;
     }
 
@@ -473,9 +461,7 @@ void AttachmentFrame::_open( void )
         File fullname( ( type == AttachmentType::URL ) ? attachment->file():attachment->file().expand() );
         if( !( type == AttachmentType::URL || fullname.exists() ) )
         {
-            QString buffer;
-            QTextStream( &buffer ) << "Cannot find file \"" << fullname << "\". <Open> canceled.";
-            InformationDialog( this, buffer ).exec();
+            InformationDialog( this, QString( tr( "Cannot find file '%1'. <Open Attachment> canceled." ) ).arg( fullname ) ).exec();
             continue;
         }
 
@@ -493,7 +479,7 @@ void AttachmentFrame::_open( void )
                 File destname( dialog.getFile() );
 
                 // check filename and copy if accepted
-                if( destname.isNull() || (destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) ) return;
+                if( destname.isNull() || (destname.exists() && !QuestionDialog( this, tr( "Selected file already exists. Overwrite ?" ) ).exec() ) ) return;
                 else ( Command("cp") << fullname << destname ).run();
 
             }
@@ -521,7 +507,7 @@ void AttachmentFrame::_edit( void )
     // check items
     if( selection.empty() )
     {
-        InformationDialog( this, "No attachment selected. <Edit Attachment> canceled.\n" ).exec();
+        InformationDialog( this, tr( "No attachment selected. <Edit Attachment> canceled." ) ).exec();
         return;
     }
 
@@ -572,7 +558,7 @@ void AttachmentFrame::_delete( void )
     // check items
     if( selection.empty() )
     {
-        InformationDialog( this, "No attachment selected. <Delete Attachment> canceled.\n" ).exec();
+        InformationDialog( this, tr( "No attachment selected. <Delete Attachment> canceled." ) ).exec();
         return;
     }
 
@@ -617,7 +603,7 @@ void AttachmentFrame::_delete( void )
                 unsigned int n_share = std::count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) );
                 if( n_share > 1 ) {
 
-                    InformationDialog( this, "Attachment still in use by other entries. Kept on disk." ).exec();
+                    InformationDialog( this, tr( "Attachment still in use by other entries. Kept on disk." ) ).exec();
                     fromDisk = false;
 
                 }
@@ -660,7 +646,7 @@ void AttachmentFrame::_reload( void )
     // check items
     if( selection.empty() )
     {
-        InformationDialog( this, "No attachment selected. <Save As> canceled.\n" ).exec();
+        InformationDialog( this, tr( "No attachment selected. <Save Attachment As> canceled." ) ).exec();
         return;
     }
 
@@ -684,7 +670,7 @@ void AttachmentFrame::_saveAs( void )
     // check items
     if( selection.empty() )
     {
-        InformationDialog( this, "No attachment selected. <Save As> canceled.\n" ).exec();
+        InformationDialog( this, tr( "No attachment selected. <Save Attachment As> canceled." ) ).exec();
         return;
     }
 
@@ -697,16 +683,13 @@ void AttachmentFrame::_saveAs( void )
         if( type == AttachmentType::URL )
         {
 
-            QString buffer;
-            QTextStream( &buffer ) << "Selected attachement is URL. <Save As> canceled.";
-            InformationDialog( this, buffer ).exec();
+            InformationDialog( this, QString( tr( "Selected attachement is URL. <Save Attachment As> canceled." ) ) ).exec();
             continue;
 
         } else if( !fullname.exists() ) {
 
             QString buffer;
-            QTextStream( &buffer ) << "Cannot find file \"" << fullname << "\". <Save As> canceled.";
-            InformationDialog( this, buffer ).exec();
+            InformationDialog( this, QString( tr( "Cannot find file '%1'. <Save Attachment As> canceled." ) ).arg( fullname ) ).exec();
             continue;
 
         } else {
@@ -719,7 +702,7 @@ void AttachmentFrame::_saveAs( void )
             File destname( dialog.getFile() );
 
             // check filename and copy if accepted
-            if( destname.isNull() || (destname.exists() && !QuestionDialog( this, "selected file already exists. Overwrite ?" ).exec() ) ) return;
+            if( destname.isNull() || (destname.exists() && !QuestionDialog( this, tr( "selected file already exists. Overwrite ?" ) ).exec() ) ) return;
             else ( Command("cp") << fullname << destname ).run();
 
         }
@@ -737,7 +720,7 @@ void AttachmentFrame::_clean( void )
     Debug::Throw( "AttachmentFrame::clean.\n" );
 
     // ask for confirmation
-    if( !QuestionDialog( this, "Remove all invalid attachments ?" ).exec() ) return;
+    if( !QuestionDialog( this, tr( "Remove all invalid attachments ?" ) ).exec() ) return;
 
     // retrieve all attachments from model
     // true if some modifications are to be saved
@@ -797,41 +780,41 @@ void AttachmentFrame::_installActions( void )
 {
     Debug::Throw( "AttachmentFrame::_installActions.\n" );
 
-    addAction( visibilityAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), "Show &Attachment List", this ) );
-    visibilityAction().setToolTip( "Show/hide attachment list" );
+    addAction( visibilityAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "Show &Attachment List" ), this ) );
+    visibilityAction().setToolTip( tr( "Show/hide attachment list" ) );
     visibilityAction().setCheckable( true );
     visibilityAction().setChecked( true );
     connect( &visibilityAction(), SIGNAL( toggled( bool ) ), SLOT( setVisible( bool ) ) );
 
-    addAction( newAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), "New", this ) );
-    newAction().setToolTip( "Attach a file/URL to the current entry" );
+    addAction( newAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "New" ), this ) );
+    newAction().setToolTip( tr( "Attach a file/URL to the current entry" ) );
     connect( &newAction(), SIGNAL( triggered() ), SLOT( _new() ) );
 
-    addAction( openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), "Open", this ) );
-    openAction().setToolTip( "Open selected attachments" );
+    addAction( openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), tr( "Open" ), this ) );
+    openAction().setToolTip( tr( "Open selected attachments" ) );
     connect( &openAction(), SIGNAL( triggered() ), SLOT( _open() ) );
 
-    addAction( editAction_ = new QAction( IconEngine::get( ICONS::EDIT ), "Edit", this ) );
-    editAction().setToolTip( "Edit selected attachments informations" );
+    addAction( editAction_ = new QAction( IconEngine::get( ICONS::EDIT ), tr( "Edit" ), this ) );
+    editAction().setToolTip( tr( "Edit selected attachments informations" ) );
     connect( &editAction(), SIGNAL( triggered() ), SLOT( _edit() ) );
 
-    addAction( deleteAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "Delete", this ) );
+    addAction( deleteAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete" ), this ) );
     deleteAction().setShortcut( QKeySequence::Delete );
-    deleteAction().setToolTip( "Delete selected attachments" );
+    deleteAction().setToolTip( tr( "Delete selected attachments" ) );
     connect( &deleteAction(), SIGNAL( triggered() ), SLOT( _delete() ) );
 
-    addAction( reloadAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), "Reload", this ) );
+    addAction( reloadAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), tr( "Reload" ), this ) );
     reloadAction().setShortcut( QKeySequence::Refresh );
-    reloadAction().setToolTip( "Reload attachments timestamps" );
+    reloadAction().setToolTip( tr( "Reload attachments timestamps" ) );
     connect( &reloadAction(), SIGNAL( triggered() ), SLOT( _reload() ) );
 
-    addAction( saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), "Save As", this ) );
-    saveAsAction().setToolTip( "Save selected attachment with a different filename" );
+    addAction( saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), tr( "Save As" ), this ) );
+    saveAsAction().setToolTip( tr( "Save selected attachment with a different filename" ) );
     connect( &saveAsAction(), SIGNAL( triggered() ), SLOT( _saveAs() ) );
 
 
-    cleanAction_ = new QAction( IconEngine::get( ICONS::DELETE ), "Clean", this );
-    cleanAction().setToolTip( "Delete selected attachments" );
+    cleanAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Clean" ), this );
+    cleanAction().setToolTip( tr( "Delete selected attachments" ) );
     connect( &cleanAction(), SIGNAL( triggered() ), SLOT( _clean() ) );
 }
 

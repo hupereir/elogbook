@@ -37,29 +37,26 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
 {
 
     Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
-    setWindowTitle( "Delete Keyword - Elogbook" );
+    setWindowTitle( tr( "Delete Keyword - Elogbook" ) );
 
     // create label
     QString buffer;
-    QTextStream what( &buffer );
-    if( keywords.size() == 1 ) what << "Delete keyword " << keywords.front() << " ?";
+    if( keywords.size() == 1 ) buffer = QString( tr( "Delete keyword '%1' ?" ) ).arg( keywords.front().get() );
     else {
 
-        what << "Delete keywords " << endl << "  ";
-
+        buffer = QString( tr( "Delete following keywords ?\n  " ) );
         unsigned int max_keywords = 10;
         unsigned int index(0);
         foreach( const Keyword& keyword, keywords )
         {
-            what << keyword << " ";
+            buffer += keyword.get() + " ";
             index++;
             if( index >= max_keywords )
             {
                 index = 0;
-                what << endl << "  ";
+                buffer += "\n ";
             }
         }
-        what << "?";
 
     }
 
@@ -84,12 +81,12 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     // radio buttons
     QButtonGroup* group = new QButtonGroup( this );
 
-    box->layout()->addWidget( moveRadioButton_ = new QRadioButton( "Move entries to parent keyword", box ) );
-    moveRadioButton_->setToolTip( "Select this button to move entries associated to this keyword to the parent keyword." );
+    box->layout()->addWidget( moveRadioButton_ = new QRadioButton( tr( "Move entries to parent keyword" ), box ) );
+    moveRadioButton_->setToolTip( tr( "Select this button to move entries associated to this keyword to the parent keyword" ) );
     group->addButton( moveRadioButton_ );
 
-    box->layout()->addWidget( deleteRadioButton_ = new QRadioButton( "Delete entries", box ) );
-    deleteRadioButton_->setToolTip( "Select this button to delete entries associated to this keyword." );
+    box->layout()->addWidget( deleteRadioButton_ = new QRadioButton( tr( "Delete entries" ), box ) );
+    deleteRadioButton_->setToolTip( tr( "Select this button to delete entries associated to this keyword" ) );
     group->addButton( deleteRadioButton_ );
 
     group->setExclusive( true );
@@ -97,7 +94,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
 
     if( !hasEntries ) box->setEnabled( false );
 
-    okButton().setText( "Delete" );
+    okButton().setText( tr( "Delete" ) );
     okButton().setIcon( IconEngine::get( ICONS::DELETE ) );
 
     adjustSize();

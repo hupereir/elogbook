@@ -22,30 +22,23 @@
 *
 *******************************************************************************/
 
-/*!
-\file EditKeywordDialog.cpp
-\brief Edit/create keyword popup dialog
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
+#include "EditKeywordDialog.h"
+#include "Debug.h"
 
 #include <QLabel>
 
-#include "Debug.h"
-#include "EditKeywordDialog.h"
-
 //_____________________________________________________
 EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
-CustomDialog( parent, OkButton|CancelButton|Separator )
+    CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
     Debug::Throw( "EditKeywordDialog::EditKeywordDialog.\n" );
 
+    setWindowTitle( tr( "Edit Keyword - Elogbook" ) );
     mainLayout().addWidget( combobox_ = new CustomComboBox( this ) );
     combobox_->setEditable( true );
     combobox_->setAutoCompletion( true );
 
-    mainLayout().addWidget( new QLabel( "use \"/\" characters to add keyword to a specific branch", this ) );
+    mainLayout().addWidget( new QLabel( tr( "use \"/\" characters to add keyword to a specific branch" ), this ) );
 
 }

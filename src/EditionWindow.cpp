@@ -104,22 +104,22 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     layout->addLayout( gridLayout );
 
     // keywoard label and editor
-    gridLayout->addWidget( keywordLabel_ = new QLabel( " Keyword: ", main ), 0, 0, 1, 1 );
+    gridLayout->addWidget( keywordLabel_ = new QLabel( tr( " Keyword:" ), main ), 0, 0, 1, 1 );
     gridLayout->addWidget( keywordEditor_ = new Editor( main ), 0, 1, 1, 2 );
-    keywordEditor_->setPlaceholderText( "Entry keyword" );
+    keywordEditor_->setPlaceholderText( tr( "Entry keyword" ) );
     keywordLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     keywordLabel_->setBuddy( keywordEditor_ );
 
     // title label and editor
-    gridLayout->addWidget( titleLabel_ = new QLabel( " Subject: ", main ), 1, 0, 1, 1 );
+    gridLayout->addWidget( titleLabel_ = new QLabel( tr( "Subject:" ), main ), 1, 0, 1, 1 );
     gridLayout->addWidget( titleEditor_ = new Editor( main ), 1, 1, 1, 1 );
-    titleEditor_->setPlaceholderText( "Entry subject" );
+    titleEditor_->setPlaceholderText( tr( "Entry subject" ) );
     titleLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     titleLabel_->setBuddy( titleEditor_ );
 
     // colorWidget
     gridLayout->addWidget( colorWidget_ = new ColorWidget( main ), 1, 2, 1, 1 );
-    colorWidget_->setToolTip( "Change entry color.\nThis is used to tag entries in the main window list." );
+    colorWidget_->setToolTip( tr( "Change entry color.\nThis is used to tag entries in the main window list." ) );
     colorWidget_->setAutoRaise( true );
     colorWidget_->setPopupMode( QToolButton::InstantPopup );
 
@@ -178,27 +178,27 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // toolbars
     // lock toolbar is visible only when window is not editable
-    lock_ = new CustomToolBar( "Lock", this, "LOCK_TOOLBAR" );
+    lock_ = new CustomToolBar( tr( "Lock" ), this, "LOCK_TOOLBAR" );
     lock_->setMovable( false );
 
     // hide lock_ visibility action because the latter should not be checkable in any menu
     lock_->visibilityAction().setVisible( false );
 
     QAction *action;
-    lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), "Unlock", this ) );
+    lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), tr( "Unlock" ), this ) );
     connect( action, SIGNAL( triggered() ), SLOT( _unlock() ) );
-    action->setToolTip( "Remove read-only lock for current editor." );
+    action->setToolTip( tr( "Remove read-only lock for current editor." ) );
 
     // main toolbar
     CustomToolBar* toolbar;
-    toolbar = new CustomToolBar( "Main", this, "MAIN_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Main" ), this, "MAIN_TOOLBAR" );
 
     // new entry
     toolbar->addAction( &newEntryAction() );
     toolbar->addAction( &saveAction() );
 
     // delete_entry button
-    toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), "Delete Entry", this ) );
+    toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete Entry" ), this ) );
     connect( action, SIGNAL( triggered() ), SLOT( _deleteEntry() ) );
     readOnlyActions_ << action;
 
@@ -222,7 +222,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
         formatBar_, SLOT( updateState( const QTextCharFormat& ) ) );
 
     // edition toolbars
-    toolbar = new CustomToolBar( "History", this, "EDITION_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "History" ), this, "EDITION_TOOLBAR" );
     toolbar->addAction( undoAction_ );
     toolbar->addAction( redoAction_ );
     readOnlyActions_ << undoAction_;
@@ -241,7 +241,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
 
     // extra toolbar
-    toolbar = new CustomToolBar( "Tools", this, "EXTRA_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Tools" ), this, "EXTRA_TOOLBAR" );
 
     #if WITH_ASPELL
     toolbar->addAction( &spellcheckAction() );
@@ -251,14 +251,14 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( &entryInfoAction() );
 
     // extra toolbar
-    toolbar = new CustomToolBar( "Multiple Views", this, "MULTIPLE_VIEW_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Multiple Views" ), this, "MULTIPLE_VIEW_TOOLBAR" );
     toolbar->addAction( &splitViewHorizontalAction() );
     toolbar->addAction( &splitViewVerticalAction() );
     toolbar->addAction( &cloneWindowAction() );
     toolbar->addAction( &closeAction() );
 
     // extra toolbar
-    toolbar = new CustomToolBar( "Navigation", this, "NAVIGATION_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Navigation" ), this, "NAVIGATION_TOOLBAR" );
     toolbar->addAction( &application.mainWindow().uniconifyAction() );
     toolbar->addAction( &previousEntryAction() );
     toolbar->addAction( &nextEntryAction() );
@@ -276,7 +276,6 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // configuration
     connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
     _updateConfiguration();
-    Debug::Throw("EditionWindow::EditionWindow - done.\n" );
 
 }
 
@@ -378,16 +377,15 @@ QString EditionWindow::windowTitle( void ) const
     LogEntry* entry( EditionWindow::entry() );
 
     QString buffer;
-    QTextStream what( &buffer );
     if( entry )
     {
-        what << entry->title();
-        if( isReadOnly() ) what << " (read only)";
-        else if( modified()  ) what << " (modified)";
-        what << " - ";
-    }
 
-    what << "Elogbook";
+        if( isReadOnly() ) buffer = QString( tr( "%1 (read only) - Elogbook" ) ).arg( entry->title() );
+        else if( modified()  ) buffer = QString( tr( "%1 (modified) - Elogbook" ) ).arg( entry->title() );
+        else buffer = QString( "%1 - Elogbook" ).arg( entry->title() );
+
+    } else buffer = "Elogbook";
+
     return buffer;
 
 }
@@ -406,7 +404,7 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( bool enableCancel )
     unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
     if( enableCancel ) buttons |= AskForSaveDialog::CANCEL;
     if( count > 1 ) buttons |= AskForSaveDialog::ALL;
-    AskForSaveDialog dialog( this, "Entry has been modified. Save ?", buttons );
+    AskForSaveDialog dialog( this, tr( "Entry has been modified. Save ?" ), buttons );
 
     // exec and check return code
     int state = dialog.centerOnParent().exec();
@@ -533,21 +531,21 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
         Debug::Throw( "EditionWindow::closeEditor - found child.\n" );
 
         // retrieve splitter parent
-        QWidget* grand_parent( parentSplitter->parentWidget() );
+        QWidget* grandParent( parentSplitter->parentWidget() );
 
         // try cast to a splitter
-        QSplitter* grand_parentSplitter( qobject_cast<QSplitter*>( grand_parent ) );
+        QSplitter* grandParentSplitter( qobject_cast<QSplitter*>( grandParent ) );
 
-        // move child to grand_parentSplitter if any
-        if( grand_parentSplitter )
+        // move child to grandParentSplitter if any
+        if( grandParentSplitter )
         {
 
-            grand_parentSplitter->insertWidget( grand_parentSplitter->indexOf( parentSplitter ), child );
+            grandParentSplitter->insertWidget( grandParentSplitter->indexOf( parentSplitter ), child );
 
         }  else {
 
-            child->setParent( grand_parent );
-            grand_parent->layout()->addWidget( child );
+            child->setParent( grandParent );
+            grandParent->layout()->addWidget( child );
 
         }
 
@@ -606,8 +604,6 @@ void EditionWindow::setActiveEditor( LocalTextEditor& editor )
     // associate with toolbar
     if( formatBar_ ) formatBar_->setTarget( activeEditor() );
 
-    Debug::Throw( "EditionWindow::setActiveEditor - done.\n" );
-
 }
 
 //____________________________________________
@@ -650,40 +646,40 @@ void EditionWindow::_installActions( void )
     Debug::Throw( "EditionWindow::_installActions.\n" );
 
     // undo action
-    addAction( undoAction_ = new QAction( IconEngine::get( ICONS::UNDO ), "Undo", this ) );
-    undoAction_->setToolTip( "Undo last modification" );
+    addAction( undoAction_ = new QAction( IconEngine::get( ICONS::UNDO ), tr( "Undo" ), this ) );
+    undoAction_->setToolTip( tr( "Undo last modification" ) );
     connect( undoAction_, SIGNAL( triggered() ), SLOT( _undo() ) );
 
     // redo action
-    addAction( redoAction_ = new QAction( IconEngine::get( ICONS::REDO ), "Redo", this ) );
-    redoAction_->setToolTip( "Redo last undone modification" );
+    addAction( redoAction_ = new QAction( IconEngine::get( ICONS::REDO ), tr( "Redo" ), this ) );
+    redoAction_->setToolTip( tr( "Redo last undone modification" ) );
     connect( redoAction_, SIGNAL( triggered() ), SLOT( _redo() ) );
 
     // new entry
-    addAction( newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), "New Entry", this ) );
+    addAction( newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Entry" ), this ) );
     newEntryAction_->setShortcut( QKeySequence::New );
-    newEntryAction_->setToolTip( "Create new entry in current editor" );
+    newEntryAction_->setToolTip( tr( "Create new entry in current editor" ) );
     connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
 
     // previous entry action
-    addAction( previousEntryAction_ = new QAction( IconEngine::get( ICONS::PREVIOUS ), "Previous Entry", this ) );
-    previousEntryAction_->setToolTip( "Display previous entry in current list" );
+    addAction( previousEntryAction_ = new QAction( IconEngine::get( ICONS::PREVIOUS ), tr( "Previous Entry" ), this ) );
+    previousEntryAction_->setToolTip( tr( "Display previous entry in current list" ) );
     connect( previousEntryAction_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
 
     // next entry action
-    addAction( nextEntryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), "Next Entry", this ) );
-    nextEntryAction_->setToolTip( "Display next entry in current list" );
+    addAction( nextEntryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), tr( "Next Entry" ), this ) );
+    nextEntryAction_->setToolTip( tr( "Display next entry in current list" ) );
     connect( nextEntryAction_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
 
     // save
-    addAction( saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), "Save Entry", this ) );
-    saveAction_->setToolTip( "Save current entry" );
+    addAction( saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), tr( "Save Entry" ), this ) );
+    saveAction_->setToolTip( tr( "Save current entry" ) );
     connect( saveAction_, SIGNAL( triggered() ), SLOT( _save() ) );
     saveAction_->setShortcut( QKeySequence::Save );
 
     #if WITH_ASPELL
-    addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), "Spellcheck...", this ) );
-    spellcheckAction_->setToolTip( "Check spelling of current entry" );
+    addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), tr( "Spellcheck..." ), this ) );
+    spellcheckAction_->setToolTip( tr( "Check spelling of current entry" ) );
     connect( spellcheckAction_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
 
     // disable action if there is no dictionary
@@ -691,57 +687,57 @@ void EditionWindow::_installActions( void )
     #endif
 
     // entry_info
-    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), "Entry Properties...", this ) );
-    entryInfoAction_->setToolTip( "Show current entry properties" );
+    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), tr( "Entry Properties..." ), this ) );
+    entryInfoAction_->setToolTip( tr( "Show current entry properties" ) );
     connect( entryInfoAction_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
 
     // print
-    addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), "Print...", this ) );
-    printAction_->setToolTip( "Print current logbook entry" );
+    addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), tr( "Print..." ), this ) );
+    printAction_->setToolTip( tr( "Print current logbook entry" ) );
     printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
 
     // print preview
-    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), "Print Preview...", this ) );
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), tr( "Print Preview..." ), this ) );
     connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
 
     // print
-    addAction( htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), "Export to HTML...", this ) );
-    htmlAction_->setToolTip( "Export current logbook entry to HTML" );
+    addAction( htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), tr( "Export to HTML..." ), this ) );
+    htmlAction_->setToolTip( tr( "Export current logbook entry to HTML" ) );
     connect( htmlAction_, SIGNAL( triggered() ), SLOT( _toHtml() ) );
 
     // split action
-    addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), "Split View Top/Bottom", this ) );
-    splitViewHorizontalAction_->setToolTip( "Split current text editor vertically" );
+    addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), tr( "Split View Top/Bottom" ), this ) );
+    splitViewHorizontalAction_->setToolTip( tr( "Split current text editor vertically" ) );
     connect( splitViewHorizontalAction_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
 
-    addAction( splitViewVerticalAction_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), "Split View Left/Right", this ) );
-    splitViewVerticalAction_->setToolTip( "Split current text editor horizontally" );
+    addAction( splitViewVerticalAction_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), tr( "Split View Left/Right" ), this ) );
+    splitViewVerticalAction_->setToolTip( tr( "Split current text editor horizontally" ) );
     connect( splitViewVerticalAction_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
 
     // clone window action
-    addAction( cloneWindowAction_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), "Clone Window", this ) );
-    cloneWindowAction_->setToolTip( "Create a new edition window displaying the same entry" );
+    addAction( cloneWindowAction_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), tr( "Clone Window" ), this ) );
+    cloneWindowAction_->setToolTip( tr( "Create a new edition window displaying the same entry" ) );
     connect( cloneWindowAction_, SIGNAL( triggered() ), SLOT( _cloneWindow() ) );
 
     // close window action
-    addAction( closeAction_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), "Close View", this ) );
+    addAction( closeAction_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), tr( "Close View" ), this ) );
     closeAction_->setShortcut( QKeySequence::Close );
-    closeAction_->setToolTip( "Close current view" );
+    closeAction_->setToolTip( tr( "Close current view" ) );
     connect( closeAction_, SIGNAL( triggered() ), SLOT( _close() ) );
 
     // uniconify
-    addAction( uniconifyAction_ = new QAction( "Uniconify", this ) );
+    addAction( uniconifyAction_ = new QAction( tr( "Uniconify" ), this ) );
     connect( uniconifyAction_, SIGNAL( triggered() ), SLOT( uniconify() ) );
 
     // show/hide keyword
-    addAction( showKeywordAction_ = new QAction( "Show Keyword", this ) );
+    addAction( showKeywordAction_ = new QAction( tr( "Show Keyword" ), this ) );
     showKeywordAction_->setCheckable( true );
     showKeywordAction_->setChecked( false );
     connect( showKeywordAction_, SIGNAL( toggled( bool ) ), SLOT( _toggleShowKeyword( bool ) ) );
 
     // insert link
-    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), "Insert Link", this ) );
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), tr( "Insert Link" ), this ) );
     connect( insertLinkAction_, SIGNAL( triggered( void ) ), SLOT( _insertLink( void ) ) );
     insertLinkAction_->setEnabled( false );
 }
@@ -915,13 +911,8 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
     Debug::Throw( "EditionWindow::_DisplayCursorPosition.\n" );
     if( !_hasStatusBar() ) return;
 
-    QString buffer;
-    QTextStream( &buffer ) << "Line: " << position.paragraph()+1;
-    statusBar().label(2).setText( buffer, false );
-
-    buffer.clear();
-    QTextStream( &buffer )  << "Column: " << position.index()+1;
-    statusBar().label(3).setText( buffer, true );
+    statusBar().label(2).setText( QString( tr( "Line: %1" ) ).arg( position.paragraph()+1 ), false );
+    statusBar().label(3).setText( QString( tr( "Column: %i" ) ).arg( position.index()+1 ), true );
 
     return;
 }
@@ -943,7 +934,7 @@ void EditionWindow::_displayText( void )
 
     LogEntry* entry( EditionWindow::entry() );
     activeEditor().setCurrentCharFormat( QTextCharFormat() );
-    activeEditor().setPlainText( (entry) ? entry->text() : "" );
+    activeEditor().setPlainText( (entry) ? entry->text() : QString() );
     formatBar_->load( entry->formats() );
 
     // reset undo/redo stack
@@ -1015,7 +1006,7 @@ void EditionWindow::_save( bool updateSelection )
     MainWindow &mainWindow( _mainWindow() );
     Logbook *logbook( mainWindow.logbook() );
     if( !logbook ) {
-        InformationDialog( this, "No logbook opened. <Save> canceled." ).exec();
+        InformationDialog( this, tr( "No logbook opened. <Save> canceled." ) ).exec();
         return;
     }
     Debug::Throw( "EditionWindow::_save - logbook checked.\n" );
@@ -1037,7 +1028,7 @@ void EditionWindow::_save( bool updateSelection )
     entry->modified();
 
     // status bar
-    statusBar().label().setText(  "writting entry to logbook..." );
+    statusBar().label().setText( tr( "writting entry to logbook..." ) );
 
     // add entry to logbook, if needed
     if( entryIsNew ) Key::associate( entry, logbook->latestChild() );
@@ -1109,7 +1100,7 @@ void EditionWindow::_print( void )
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
     dialog.setOptionTabs( QList<QWidget *>() << optionWidget << logEntryOptionWidget );
-    dialog.setWindowTitle( "Print Logbook Entry - Elogbook" );
+    dialog.setWindowTitle( tr( "Print Logbook Entry - Elogbook" ) );
     if( !dialog.exec() ) return;
 
     // add output file to scratch files, if any
@@ -1141,7 +1132,7 @@ void EditionWindow::_printPreview( void )
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );
-    dialog.setWindowTitle( "Print Preview - elogbook" );
+    dialog.setWindowTitle( tr( "Print Preview - elogbook" ) );
     dialog.setHelper( &helper );
     dialog.exec();
 
@@ -1162,7 +1153,7 @@ void EditionWindow::_toHtml( void )
     // create dialog
     HtmlDialog dialog( this );
     dialog.setOptionWidgets( QList<QWidget *>() << optionWidget );
-    dialog.setWindowTitle( "Export to HTML - elogbook" );
+    dialog.setWindowTitle( tr( "Export to HTML - elogbook" ) );
 
     // generate file name
     QString buffer;
@@ -1175,16 +1166,14 @@ void EditionWindow::_toHtml( void )
     // retrieve/check file
     File file( dialog.file() );
     if( file.isEmpty() ) {
-        InformationDialog(this, "No output file specified. <View HTML> canceled." ).exec();
+        InformationDialog(this, tr( "No output file specified. <View HTML> canceled." ) ).exec();
         return;
     }
 
     QFile out( file );
     if( !out.open( QIODevice::WriteOnly ) )
     {
-        QString buffer;
-        QTextStream( &buffer ) << "Cannot write to file \"" << file << "\". <View HTML> canceled.";
-        InformationDialog( this, buffer ).exec();
+        InformationDialog( this, QString( tr( "Cannot write to file '%1'. <View HTML> canceled." ) ).arg( file ) ).exec();
         return;
     }
 
@@ -1277,7 +1266,7 @@ void EditionWindow::_entryInfo( void )
     // check entry
     LogEntry *entry( EditionWindow::entry() );
     if( !entry ) {
-        InformationDialog( this, "No valid entry."  ).exec();
+        InformationDialog( this, tr( "No valid entry." ) ).exec();
         return;
     }
 
@@ -1340,7 +1329,7 @@ void EditionWindow::_openLink( void )
     if( anchor.isEmpty() ) return;
 
     OpenLinkDialog dialog( this, anchor );
-    dialog.setWindowTitle( "Open Link - elogbook" );
+    dialog.setWindowTitle( tr( "Open Link - elogbook" ) );
 
     // retrieve applications from options
     Options::List applications( XmlOptions::get().specialOptions( "OPEN_LINK_APPLICATIONS" ) );
@@ -1353,7 +1342,7 @@ void EditionWindow::_openLink( void )
     QString command( dialog.actionComboBox().currentText() );
     if( command.isEmpty() )
     {
-        InformationDialog( this, "No command specified to open the selected files. <Open> canceled." ).exec();
+        InformationDialog( this, tr( "No command specified to open the selected files. <Open> canceled." ) ).exec();
         return;
     }
 
@@ -1436,13 +1425,14 @@ void EditionWindow::_deleteEntry( void )
     // check current entry
     LogEntry *entry( EditionWindow::entry() );
 
-    if( !entry ) {
-        InformationDialog( this, "No entry selected. <Delete Entry> canceled." ).exec();
+    if( !entry )
+    {
+        InformationDialog( this, tr( "No entry selected. <Delete Entry> canceled." ) ).exec();
         return;
     }
 
     // ask confirmation
-    if( !QuestionDialog( this, "Delete current entry ?" ).exec() ) return;
+    if( !QuestionDialog( this, tr( "Delete current entry ?" ) ).exec() ) return;
 
     // get associated attachments
     _mainWindow().deleteEntry( entry );
@@ -1481,7 +1471,7 @@ void EditionWindow::_cloneWindow( void )
     Debug::Throw( "EditionWindow::_cloneWindow.\n" );
     LogEntry *entry( EditionWindow::entry() );
     if( !entry ) {
-        InformationDialog( this, "No valid entry found. <New window> canceled." ).exec();
+        InformationDialog( this, tr( "No valid entry found. <New window> canceled." ) ).exec();
         return;
     }
 
@@ -1573,8 +1563,8 @@ void EditionWindow::_updateConfiguration( void )
 void EditionWindow::LocalTextEditor::_installActions( void )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
-    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), "Insert Link...", this ) );
-    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), "View Link...", this ) );
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), tr( "Insert Link..." ), this ) );
+    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), tr( "View Link..." ), this ) );
 
     // disable insert link action by default
     insertLinkAction_->setEnabled( false );

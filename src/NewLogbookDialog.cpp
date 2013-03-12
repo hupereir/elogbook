@@ -35,7 +35,7 @@ CustomDialog( parent )
 {
 
     Debug::Throw( "NewLogbookDialog::NewLogbookDialog.\n" );
-    setWindowTitle( "New Logbook - Elogbook" );
+    setWindowTitle( tr( "New Logbook - Elogbook" ) );
     QGridLayout *gridLayout( new QGridLayout() );
     gridLayout->setMargin(0);
     gridLayout->setSpacing(5);
@@ -43,25 +43,25 @@ CustomDialog( parent )
 
     // title
     QLabel* label;
-    gridLayout->addWidget( label = new QLabel( "Title:", this ), 0, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( "Title:" ), this ), 0, 0 );
     gridLayout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
-    title_->setToolTip( "Logbook title" );
+    title_->setToolTip( tr( "Logbook title" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( title_ );
 
     // logbook author
-    gridLayout->addWidget( label = new QLabel( "Author:", this ), 1, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( "Author:" ), this ), 1, 0 );
     gridLayout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
-    author_->setToolTip( "Logbook author." );
+    author_->setToolTip( tr("Logbook author" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( author_ );
 
     // attachment directory
-    gridLayout->addWidget( label = new QLabel( "Attachment directory:", this ), 3, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( "Attachment directory:" ), this ), 3, 0 );
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 3, 1 );
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
     attachmentDirectory_->setAcceptMode( QFileDialog::AcceptSave );
-    attachmentDirectory_->setToolTip( "Default directory where attached files are stored (either copied or linked)." );
+    attachmentDirectory_->setToolTip( tr( "Default directory where attached files are stored (either copied or linked)" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( attachmentDirectory_ );
 
@@ -73,10 +73,9 @@ CustomDialog( parent )
     frame->setFrameStyle( QFrame::HLine );
 
     // comments
-    mainLayout().addWidget( label = new QLabel( "Comments:", this ), 0 );
+    mainLayout().addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );
     mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
-    comments_->setToolTip( "Logbook comments." );
-    Debug::Throw( "NewLogbookDialog::NewLogbookDialog - done.\n" );
+    comments_->setToolTip( tr( "Logbook comments" ) );
     label->setBuddy( comments_ );
 
     adjustSize();

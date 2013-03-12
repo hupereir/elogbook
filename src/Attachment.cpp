@@ -21,14 +21,6 @@
 *
 *******************************************************************************/
 
-/*!
-  \file Attachment.cpp
-  \brief Attached file object
-  \author Hugo Pereira
-  \version $Revision$
-  \date $Date$
-*/
-
 #include "Attachment.h"
 #include "Command.h"
 #include "Debug.h"
@@ -40,14 +32,12 @@
 #include "XmlString.h"
 #include "XmlTimeStamp.h"
 
-#include <stdio.h>
-#include <string.h>
-
-
+#include <cstdio>
+#include <cstring>
 
 //_______________________________________
-const QString Attachment::NO_FILE( "" );
-const QString Attachment::NO_COMMENTS( "no comments" );
+const QString Attachment::NO_FILE;
+const QString Attachment::NO_COMMENTS( QObject::tr( "no comments" ) );
 const QString Attachment::NO_SIZE( " - " );
 
 //_______________________________________

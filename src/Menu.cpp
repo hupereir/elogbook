@@ -63,7 +63,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     QMenu *menu;
 
     // file menu
-    menu = addMenu( "File" );
+    menu = addMenu( tr( "File" ) );
     menu->addAction( &mainWindow->newLogbookAction() );
 
     if( editionWindow )
@@ -116,7 +116,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     // edition menu
     if( parent == mainWindow )
     {
-        menu = addMenu( "Edit" );
+        menu = addMenu( tr( "Edit" ) );
         menu->addAction( &mainWindow->findEntriesAction() );
         menu->addSeparator();
         menu->addAction( &mainWindow->newKeywordAction() );
@@ -127,7 +127,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
         menu->addAction( &mainWindow->editEntryAction() );
         menu->addAction( &mainWindow->deleteEntryAction() );
 
-        menu->addMenu( recentEntriesMenu_ = new QMenu( "Recent Entries" ) );
+        menu->addMenu( recentEntriesMenu_ = new QMenu( tr( "Recent Entries" ) ) );
         connect( recentEntriesMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updateRecentEntriesMenu() ) );
         connect( recentEntriesMenu_, SIGNAL( triggered( QAction* ) ), SLOT( _selectEntry( QAction* ) ) );
 
@@ -138,21 +138,21 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     actionGroup_ = new QActionGroup( this );
     actionGroup_->setExclusive( true );
 
-    windowsMenu_ = addMenu( "Windows" );
+    windowsMenu_ = addMenu( tr( "Windows" ) );
     connect( windowsMenu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
 
     // Settings
-    preferenceMenu_ = addMenu( "Settings" );
+    preferenceMenu_ = addMenu( tr( "Settings" ) );
     connect( preferenceMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updatePreferenceMenu() ) );
 
     // help manager
     BASE::HelpManager* help( new BASE::HelpManager( this ) );
-    help->setWindowTitle( "Elogbook Handbook" );
+    help->setWindowTitle( tr( "Elogbook Handbook" ) );
     help->install( helpText );
     help->install( BASE::helpText, false );
 
     // help menu
-    menu = addMenu( "&Help" );
+    menu = addMenu( tr( "Help" ) );
     menu->addAction( &help->displayAction() );
     menu->addSeparator();
     menu->addAction( &application.aboutAction() );
@@ -184,9 +184,7 @@ void Menu::_updateRecentEntriesMenu( void )
 
     foreach( LogEntry* entry, mainWindow.logbook()->recentEntries() )
     {
-        QString buffer;
-        QTextStream( &buffer ) << entry->title() << " (" << entry->keyword() << ")";
-        QAction* action = recentEntriesMenu_->addAction( buffer );
+        QAction* action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title() ).arg( entry->keyword().get() ) );
         actions_.insert( action, entry );
     }
 

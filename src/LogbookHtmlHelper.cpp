@@ -86,7 +86,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Title: " ) );
+            appendChild( document.createTextNode( tr( "Title:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( logbook_->title() ) );
     }
@@ -96,7 +96,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Comments: " ) );
+            appendChild( document.createTextNode( tr( "Comments:" ) ) );
 
         QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
         HtmlTextNode( logbook_->comments(), column, document );
@@ -107,7 +107,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Author: " ) );
+            appendChild( document.createTextNode( tr( "Author:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( logbook_->author() ) );
     }
@@ -117,7 +117,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "File: " ) );
+            appendChild( document.createTextNode( tr( "File:" ) ) );
         QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
         QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", logbook_->file() );
@@ -129,14 +129,14 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Directory: " ) );
+            appendChild( document.createTextNode( tr( "Directory:" ) ) );
         QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
         QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", logbook_->directory() );
         ref.appendChild( document.createTextNode( logbook_->directory() ) );
 
         if( !logbook_->checkDirectory() )
-        { column.appendChild( document.createTextNode( " (not found)" ) ); }
+        { column.appendChild( document.createTextNode( tr( " (not found)" ) ) ); }
 
    }
 
@@ -145,7 +145,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Created: " ) );
+            appendChild( document.createTextNode( tr( "Created:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( logbook_->creation().toString() ) );
     }
@@ -155,7 +155,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Last Modified: " ) );
+            appendChild( document.createTextNode( tr( "Last Modified:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( logbook_->modification().toString() ) );
     }
@@ -165,7 +165,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( "Last Backup: " ) );
+            appendChild( document.createTextNode( tr( "Last Backup:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( logbook_->modification().toString() ) );
     }
@@ -195,19 +195,19 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
     QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( "Keyword" ) );
+        appendChild( document.createTextNode( tr( "Keyword" ) ) );
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( "Title" ) );
+        appendChild( document.createTextNode( tr( "Title" ) ) );
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( "Created" ) );
+        appendChild( document.createTextNode( tr( "Created" ) ) );
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( "Last Modified" ) );
+        appendChild( document.createTextNode( tr( "Last Modified" ) ) );
 
     // loop over entries
     foreach( LogEntry* entry, entries_ )
