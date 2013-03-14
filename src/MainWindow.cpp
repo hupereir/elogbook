@@ -1426,15 +1426,11 @@ void MainWindow::setModified( bool value )
     if( logbook_ && !logbook_->file().isEmpty() )
     {
 
-        buffer = QString( tr( "%1 (modified) - Elogbook" ) ).arg( logbook_->file().localName() );
+        buffer = QString( value ? tr( "%1 (modified) - Elogbook" ): tr( "%1 - Elogbook" ) ).arg( logbook_->file().localName() );
 
-    } else if( value ) {
+    } else  {
 
-        buffer = QString( tr( "Elogbook (modified)" ) );
-
-    } else {
-
-        buffer = "Elogbook";
+        buffer = QString( value ? tr( "Elogbook (modified)" ):tr( "Elogbook" ) );
 
     }
 
