@@ -33,6 +33,8 @@
 class DeleteAttachmentDialog: public CustomDialog
 {
 
+    Q_OBJECT
+
     public:
 
     //! constructor

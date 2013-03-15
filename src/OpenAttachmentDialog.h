@@ -34,6 +34,8 @@
 class OpenAttachmentDialog: public CustomDialog
 {
 
+    Q_OBJECT
+
     public:
 
     //! constructor

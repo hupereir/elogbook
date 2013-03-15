@@ -34,6 +34,8 @@ class Logbook;
 class LogbookInformationDialog: public CustomDialog
 {
 
+    Q_OBJECT
+
     public:
 
     //! constructor

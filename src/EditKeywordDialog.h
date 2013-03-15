@@ -24,16 +24,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file EditKeywordDialog.h
-\brief Edit/create keyword popup dialog
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
-
-
 #include "CustomComboBox.h"
 #include "CustomDialog.h"
 #include "Keyword.h"
@@ -41,6 +31,8 @@
 //! Edit/create keyword popup dialog
 class EditKeywordDialog: public CustomDialog
 {
+    
+    Q_OBJECT
 
     public:
 

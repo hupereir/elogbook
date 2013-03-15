@@ -24,14 +24,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file DeleteKeywordDialog.h
-\brief Delete keyword popup dialog
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "CustomDialog.h"
 #include "Keyword.h"
 
@@ -40,6 +32,8 @@
 //! delete keyword popup dialog
 class DeleteKeywordDialog: public CustomDialog
 {
+
+    Q_OBJECT
 
     public:
 

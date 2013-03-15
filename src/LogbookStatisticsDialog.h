@@ -25,12 +25,14 @@
 
 #include "Counter.h"
 #include "CustomDialog.h"
-#include "ListModel.h"
+#include "LogbookModel.h"
 
 class Logbook;
 
 class LogbookStatisticsDialog: public CustomDialog
 {
+
+    Q_OBJECT
 
     public:
 
@@ -43,69 +45,8 @@ class LogbookStatisticsDialog: public CustomDialog
 
     private:
 
-    //! logbook information model
-    class Model: public ListModel<Logbook*>, public Counter
-    {
-
-        public:
-
-        //! number of columns
-        enum { nColumns = 4 };
-
-        //! column type enumeration
-        enum ColumnType {
-            FILE,
-            ENTRIES,
-            CREATED,
-            MODIFIED
-        };
-
-        //! constructor
-        Model( QObject* parent = 0 ):
-            ListModel<Logbook*>( parent ),
-            Counter( "LogbookStatisticsDialog::Model" )
-        {}
-
-        //!@name methods reimplemented from base class
-        //@{
-
-        //! flags
-        virtual Qt::ItemFlags flags( const QModelIndex& ) const
-        { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
-
-        //! return data
-        virtual QVariant data( const QModelIndex&, int ) const;
-
-        //! header data
-        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
-        {
-            if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < nColumns )
-            { return columnTitles_[section]; }
-
-            // return empty
-            return QVariant();
-
-        }
-
-        //! number of columns for a given index
-        virtual int columnCount( const QModelIndex& = QModelIndex() ) const
-        { return nColumns; }
-
-        //@}
-
-        protected:
-
-        //! sort
-        virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder )
-        {}
-
-        //! list column names
-        static const QString columnTitles_[nColumns];
-
-    };
-
     //! model
-    Model model_;
+    LogbookModel model_;
 
 };
 

@@ -53,11 +53,12 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     public:
 
+
     //! default string when no title given
     static const QString LOGBOOK_NO_TITLE;
 
     //! default string when no author given
-    static const QString LOGBOOK_NoAuthor;
+    static const QString LOGBOOK_NO_AUTHOR;
 
     //! default string when no file given
     static const QString LOGBOOK_NO_FILE;

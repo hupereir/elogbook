@@ -32,6 +32,8 @@ class LogEntry;
 class LogEntryInformationDialog: public CustomDialog
 {
 
+    Q_OBJECT
+
     public:
 
     //! constructor

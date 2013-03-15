@@ -32,6 +32,8 @@ class BackupManagerWidget;
 class BackupManagerDialog: public BaseDialog
 {
 
+    Q_OBJECT
+
     public:
 
     //! constructor

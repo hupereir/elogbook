@@ -101,6 +101,7 @@ SET( elogbook_SOURCES
   KeywordModel.cpp
   LogbookHtmlHelper.cpp
   LogbookInformationDialog.cpp
+  LogbookModel.cpp
   LogbookModifiedDialog.cpp
   LogbookPrintHelper.cpp
   LogbookPrintOptionWidget.cpp
@@ -127,15 +128,27 @@ SET( elogbook_HEADERS
   AttachmentFrame.h
   AttachmentModel.h
   AttachmentWindow.h
+  BackupManagerDialog.h
   BackupManagerWidget.h
+  ConfigurationDialog.h
+  DeleteAttachmentDialog.h
+  DeleteKeywordDialog.h
+  EditAttachmentDialog.h
   EditionWindow.h
+  EditKeywordDialog.h
+  FileCheckDialog.h
   FormatBar.h
+  InsertLinkDialog.h
   KeywordModel.h
   LogbookHtmlHelper.h
+  LogbookInformationDialog.h
+  LogbookModel.h
   LogbookModifiedDialog.h
   LogbookPrintHelper.h
   LogbookPrintOptionWidget.h
+  LogbookStatisticsDialog.h
   LogEntryHtmlHelper.h
+  LogEntryInformationDialog.h
   LogEntryModel.h
   LogEntryPrintHelper.h
   LogEntryPrintSelectionWidget.h
@@ -143,6 +156,8 @@ SET( elogbook_HEADERS
   MainWindow.h
   Menu.h
   NewAttachmentDialog.h
+  NewLogbookDialog.h
+  OpenAttachmentDialog.h
   ProgressBar.h
   SearchPanel.h
   OpenLinkDialog.h

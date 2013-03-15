@@ -66,7 +66,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     // logbook author
     gridLayout->addWidget( label = new QLabel( tr( "Author:" ), this ), 1, 0 );
     gridLayout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
-    author_->setText( logbook->author().isEmpty() ? Logbook::LOGBOOK_NoAuthor:logbook->author() );
+    author_->setText( logbook->author().isEmpty() ? Logbook::LOGBOOK_NO_AUTHOR:logbook->author() );
     author_->setToolTip( tr( "Logbook author" ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     label->setBuddy( author_ );
