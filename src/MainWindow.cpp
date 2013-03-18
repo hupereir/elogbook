@@ -1443,28 +1443,6 @@ void MainWindow::updateWindowTitle( void )
 
 }
 
-// //_______________________________________________
-// void MainWindow::setModified( bool value )
-// {
-//
-//     Debug::Throw() << "MainWindow::setModified - " << value << endl;
-//
-//     QString buffer;
-//     if( logbook_ && !logbook_->file().isEmpty() )
-//     {
-//
-//         buffer = QString( value ? tr( "%1 (modified) - Elogbook" ): tr( "%1 - Elogbook" ) ).arg( logbook_->file().localName() );
-//
-//     } else  {
-//
-//         buffer = QString( value ? tr( "Elogbook (modified)" ):tr( "Elogbook" ) );
-//
-//     }
-//
-//     setWindowTitle( buffer );
-//
-// }
-
 //_______________________________________________
 void MainWindow::open( FileRecord record )
 {

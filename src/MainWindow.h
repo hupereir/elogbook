@@ -282,9 +282,6 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! update window title
     void updateWindowTitle( void );
 
-//     //! set modified
-//     void setModified( bool );
-
     signals:
 
     //! emmited when new scratch file is created
