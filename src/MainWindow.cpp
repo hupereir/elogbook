@@ -86,7 +86,7 @@ MainWindow::MainWindow( QWidget *parent ):
 {
     Debug::Throw( "MainWindow::MainWindow.\n" );
     setOptionName( "MAIN_WINDOW" );
-    setModified( false );
+    updateWindowTitle();
 
     // file checker
     fileCheck_ = new FileCheck( this );
@@ -454,8 +454,7 @@ bool MainWindow::setLogbook( File file )
     _updateKeywordActions();
     _updateEntryActions();
 
-    setModified( false );
-
+    updateWindowTitle();
     return true;
 }
 
@@ -782,7 +781,7 @@ void MainWindow::save( const bool& confirmEntries )
     Singleton::get().application<Application>()->idle();
     _setEnabled( true );
 
-    if( written ) { setModified( false );}
+    updateWindowTitle();
 
     // update StateFrame
     statusbar_->label().clear();
@@ -1417,26 +1416,54 @@ void MainWindow::_newLogbook( void )
 }
 
 //_______________________________________________
-void MainWindow::setModified( bool value )
+void MainWindow::updateWindowTitle( void )
 {
 
-    Debug::Throw() << "MainWindow::setModified - " << value << endl;
+    Debug::Throw( "MainWindow::updateWindowTitle.\n" );
 
-    QString buffer;
-    if( logbook_ && !logbook_->file().isEmpty() )
+    if( logbook_ )
     {
 
-        buffer = QString( value ? tr( "%1 (modified) - Elogbook" ): tr( "%1 - Elogbook" ) ).arg( logbook_->file().localName() );
+        if( !logbook_->file().isEmpty() )
+        {
 
-    } else  {
+            if( logbook_->readOnly() ) setWindowTitle( QString( tr( "%1 (read-only) - Elogbook" ) ).arg( logbook_->file() ) );
+            else if( logbook_->modified() )setWindowTitle( QString( tr( "%1 (modified) - Elogbook" ) ).arg( logbook_->file() ) );
+            else setWindowTitle( QString( tr( "%1 - Elogbook" ) ).arg( logbook_->file() ) );
 
-        buffer = QString( value ? tr( "Elogbook (modified)" ):tr( "Elogbook" ) );
+        } else  {
 
-    }
+            if( logbook_->readOnly() ) setWindowTitle( tr( "ELogbook (read-only)" ) );
+            else if( logbook_->modified() ) setWindowTitle( tr( "ELogbook (modified)" ) );
+            else setWindowTitle( "Elogbook" );
 
-    setWindowTitle( buffer );
+        }
+
+    } else setWindowTitle( "Elogbook" );
 
 }
+
+// //_______________________________________________
+// void MainWindow::setModified( bool value )
+// {
+//
+//     Debug::Throw() << "MainWindow::setModified - " << value << endl;
+//
+//     QString buffer;
+//     if( logbook_ && !logbook_->file().isEmpty() )
+//     {
+//
+//         buffer = QString( value ? tr( "%1 (modified) - Elogbook" ): tr( "%1 - Elogbook" ) ).arg( logbook_->file().localName() );
+//
+//     } else  {
+//
+//         buffer = QString( value ? tr( "Elogbook (modified)" ):tr( "Elogbook" ) );
+//
+//     }
+//
+//     setWindowTitle( buffer );
+//
+// }
 
 //_______________________________________________
 void MainWindow::open( FileRecord record )
@@ -1585,7 +1612,7 @@ void MainWindow::_saveBackup( void )
 
         logbook_->addBackup( filename );
         logbook_->setModified( true );
-        setModified( true );
+        updateWindowTitle();
 
         // Save logbook if needed (to make sure the backup stamp is updated)
         if( !logbook_->file().isEmpty() ) save();
@@ -2282,9 +2309,10 @@ void MainWindow::_editLogbookInformations( void )
     modified |= logbook_->setTitle( dialog.title() );
     modified |= logbook_->setAuthor( dialog.author() );
     modified |= logbook_->setComments( dialog.comments() );
+    modified |= logbook_->setReadOnly( dialog.readOnly() );
 
     // retrieve logbook directory
-    File directory = dialog.AttachmentDirectory();
+    File directory = dialog.attachmentDirectory();
 
     // check if fulldir is not a non directory existsing file
     if( directory.exists() &&  !directory.isDirectory() )
@@ -2299,7 +2327,8 @@ void MainWindow::_editLogbookInformations( void )
     // save Logbook, if needed
     if( modified ) logbook_->setModified( true );
     if( !logbook_->file().isEmpty() ) save();
-    else setModified( true );
+
+    updateWindowTitle();
 
 }
 

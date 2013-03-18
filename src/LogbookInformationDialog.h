@@ -29,6 +29,8 @@
 #include "File.h"
 #include "TextEditor.h"
 
+#include <QCheckBox>
+
 class Logbook;
 
 class LogbookInformationDialog: public CustomDialog
@@ -50,8 +52,12 @@ class LogbookInformationDialog: public CustomDialog
     { return author_->text(); }
 
     //! attachment directory
-    File AttachmentDirectory( void ) const
+    File attachmentDirectory( void ) const
     { return attachmentDirectory_->editor().text(); }
+
+    //! read only
+    bool readOnly( void ) const
+    { return readOnlyCheckBox_->isChecked(); }
 
     //! comments
     QString comments( void ) const
@@ -67,6 +73,9 @@ class LogbookInformationDialog: public CustomDialog
 
     //! attachment directory
     BrowsedLineEditor* attachmentDirectory_;
+
+    //! read only checkbox
+    QCheckBox* readOnlyCheckBox_;
 
     //! comments
     TextEditor* comments_;

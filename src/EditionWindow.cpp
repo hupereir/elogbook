@@ -1047,7 +1047,7 @@ void EditionWindow::_save( bool updateSelection )
 
     // update main window
     mainWindow.updateEntry( entry, updateSelection );
-    mainWindow.setModified( true );
+    mainWindow.updateWindowTitle();
 
     // set logbook as modified
     BASE::KeySet<Logbook> logbooks( entry );

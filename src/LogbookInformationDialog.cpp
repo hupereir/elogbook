@@ -72,13 +72,17 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     label->setBuddy( author_ );
 
     // attachment directory
-    gridLayout->addWidget( label = new QLabel( tr( "Directory:" ), this ), 2, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( "Attachment Directory:" ), this ), 2, 0 );
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 2, 1 );
     attachmentDirectory_->setFile( logbook->directory().isEmpty() ? File(Util::workingDirectory()) : logbook->directory() );
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
     attachmentDirectory_->setToolTip( tr( "Default directory where attached files are stored (either copied or linked)." ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     label->setBuddy( attachmentDirectory_ );
+
+    // readonly
+    gridLayout->addWidget( readOnlyCheckBox_ = new QCheckBox( tr( "Read-only" ), this ), 3, 1 );
+    readOnlyCheckBox_->setToolTip( tr( "Mark logbook as read-only. Further write to the logbook will be forbidden." ) );
 
     gridLayout->setColumnStretch( 1, 1 );
 
@@ -88,5 +92,12 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     comments_->setPlainText( logbook->comments() );
     comments_->setToolTip( tr( "Logbook comments." ) );
     label->setBuddy( comments_ );
+
+    // connections
+    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), title_, SLOT( setDisabled( bool ) ) );
+    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), author_, SLOT( setDisabled( bool ) ) );
+    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), attachmentDirectory_, SLOT( setDisabled( bool ) ) );
+    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), comments_, SLOT( setDisabled( bool ) ) );
+    readOnlyCheckBox_->setChecked( logbook->readOnly() );
 
 }

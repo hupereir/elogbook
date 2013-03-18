@@ -329,8 +329,12 @@ class Logbook:public QObject, public Counter, public BASE::Key
         return true;
     }
 
+    //! set logbook as readonly [recursive]
+    //! returns true if changed
+    bool setReadOnly( bool value );
+
     //! sets logbook modified value
-    void setModified( const bool& value );
+    void setModified( bool value );
 
     //! sets logbook and children modified value [recursive]
     void setModifiedRecursive( bool value );

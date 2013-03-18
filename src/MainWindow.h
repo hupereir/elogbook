@@ -279,8 +279,11 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //@}
 
-    //! set modified
-    void setModified( bool );
+    //! update window title
+    void updateWindowTitle( void );
+
+//     //! set modified
+//     void setModified( bool );
 
     signals:
 

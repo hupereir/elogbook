@@ -27,7 +27,7 @@
 #include "FileCheck.h"
 #include "LogEntry.h"
 #include "XmlOptions.h"
-#include "Str.h"
+// #include "Str.h"
 #include "Util.h"
 #include "XmlDocument.h"
 #include "XmlDef.h"
@@ -143,6 +143,7 @@ bool Logbook::read( void )
         else if( name == XML::AUTHOR ) setAuthor( XmlString( value ).toText() );
         else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
         else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
+        else if( name == XML::READ_ONLY ) setReadOnly( value.toInt() );
         else if( name == XML::ENTRIES ) {
 
             setXmlEntries( value.toInt() );
@@ -269,12 +270,13 @@ bool Logbook::write( File file )
         if( !directory().isEmpty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory()) );
         if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlString( author() ).toXml() ) ;
 
-        top.setAttribute( XML::SORT_METHOD, Str().assign<unsigned int>(sortMethod_) );
-        top.setAttribute( XML::SORT_ORDER, Str().assign<int>(sortOrder_) );
+        top.setAttribute( XML::SORT_METHOD, QString().setNum( sortMethod_ ) );
+        top.setAttribute( XML::SORT_ORDER, QString().setNum( sortOrder_ ) );
+        top.setAttribute( XML::READ_ONLY, QString().setNum( readOnly_ ) );
 
         // update number of entries and children
-        top.setAttribute( XML::ENTRIES, Str().assign<int>(xmlEntries()) );
-        top.setAttribute( XML::CHILDREN, Str().assign<int>(xmlChildren()) );
+        top.setAttribute( XML::ENTRIES, QString().setNum(xmlEntries()) );
+        top.setAttribute( XML::CHILDREN, QString().setNum(xmlChildren()) );
 
         // append node
         document.appendChild( top );
@@ -638,7 +640,29 @@ QString Logbook::backupFilename( void ) const
 }
 
 //_________________________________
-void Logbook::setModified( const bool& value )
+bool Logbook::setReadOnly( bool value )
+{
+
+    Debug::Throw( "Logbook::setReadOnly.\n" );
+    bool changed( false );
+    if( readOnly_ != value )
+    {
+        // update value
+        readOnly_ = value;
+        changed = true;
+
+    }
+
+    // also change permission on children
+    foreach( Logbook* logbook, children_ )
+    { changed |= logbook->setReadOnly( value ); }
+
+    return changed;
+
+}
+
+//_________________________________
+void Logbook::setModified( bool value )
 {
     Debug::Throw( "Logbook::setModified.\n");
     modified_ = value;
