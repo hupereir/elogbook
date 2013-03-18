@@ -43,6 +43,7 @@ CONFIGURE_FILE( SystemOptions.h.cmake SystemOptions.h )
 SET( elogbook_lib_SOURCES
   Attachment.cpp
   AttachmentType.cpp
+  Backup.cpp
   FileCheck.cpp
   Keyword.cpp
   Logbook.cpp

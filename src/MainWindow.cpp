@@ -1605,9 +1605,9 @@ void MainWindow::_manageBackups( void )
     // connections
     connect( &dialog.managerWidget(), SIGNAL( saveLogbookRequested( void ) ), SLOT( save( void ) ) );
     connect( &dialog.managerWidget(), SIGNAL( backupRequested( void ) ), SLOT( _saveBackup( void ) ) );
-    connect( &dialog.managerWidget(), SIGNAL( removeBackupRequested( Logbook::Backup ) ), SLOT( _removeBackup( Logbook::Backup ) ) );
-    connect( &dialog.managerWidget(), SIGNAL( restoreBackupRequested( Logbook::Backup ) ), SLOT( _restoreBackup( Logbook::Backup ) ) );
-    connect( &dialog.managerWidget(), SIGNAL( mergeBackupRequested( Logbook::Backup ) ), SLOT( _mergeBackup( Logbook::Backup ) ) );
+    connect( &dialog.managerWidget(), SIGNAL( removeBackupRequested( Backup ) ), SLOT( _removeBackup( Backup ) ) );
+    connect( &dialog.managerWidget(), SIGNAL( restoreBackupRequested( Backup ) ), SLOT( _restoreBackup( Backup ) ) );
+    connect( &dialog.managerWidget(), SIGNAL( mergeBackupRequested( Backup ) ), SLOT( _mergeBackup( Backup ) ) );
 
     dialog.exec();
 }
@@ -1948,7 +1948,7 @@ void MainWindow::_synchronize( void )
 }
 
 //_______________________________________________
-void MainWindow::_removeBackup( Logbook::Backup backup )
+void MainWindow::_removeBackup( Backup backup )
 {
     Debug::Throw( "MainWindow::_removeBackup.\n" );
     if( !backup.file().exists() )
@@ -1972,8 +1972,8 @@ void MainWindow::_removeBackup( Logbook::Backup backup )
     { logbook->file().remove(); }
 
     // clean logbook backups
-    Logbook::Backup::List backups( logbook_->backupFiles() );
-    Logbook::Backup::List::iterator iter = std::find( backups.begin(), backups.end(), backup );
+    Backup::List backups( logbook_->backupFiles() );
+    Backup::List::iterator iter = std::find( backups.begin(), backups.end(), backup );
     if( iter != backups.end() )
     {
         backups.erase( iter );
@@ -1985,7 +1985,7 @@ void MainWindow::_removeBackup( Logbook::Backup backup )
 }
 
 //_______________________________________________
-void MainWindow::_restoreBackup( Logbook::Backup backup )
+void MainWindow::_restoreBackup( Backup backup )
 {
     Debug::Throw( "MainWindow::_restoreBackup.\n" );
     if( !backup.file().exists() )
@@ -1999,7 +1999,7 @@ void MainWindow::_restoreBackup( Logbook::Backup backup )
     File oldName( logbook_->file() );
 
     // store old backups
-    Logbook::Backup::List backups( logbook_->backupFiles() );
+    Backup::List backups( logbook_->backupFiles() );
 
     // store associated backup manager Widget
     BASE::KeySet<BackupManagerWidget> widgets( logbook_ );
@@ -2031,7 +2031,7 @@ void MainWindow::_restoreBackup( Logbook::Backup backup )
 }
 
 //_______________________________________________
-void MainWindow::_mergeBackup( Logbook::Backup backup )
+void MainWindow::_mergeBackup( Backup backup )
 {
     Debug::Throw( "MainWindow::_mergeBackup.\n" );
 

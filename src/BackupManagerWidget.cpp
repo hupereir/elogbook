@@ -96,7 +96,7 @@ void BackupManagerWidget::updateBackups( void )
     Logbook* logbook( _logbook() );
     if( !logbook ) return;
 
-    Logbook::Backup::List backups( logbook->backupFiles() );
+    Backup::List backups( logbook->backupFiles() );
     backups.checkValidity();
 
     // clear model
@@ -104,7 +104,7 @@ void BackupManagerWidget::updateBackups( void )
     list_->resizeColumns();
 
     // update clean button
-    cleanButton_->setEnabled( std::find_if( backups.begin(), backups.end(), Logbook::Backup::InvalidFTor() ) != backups.end() );
+    cleanButton_->setEnabled( std::find_if( backups.begin(), backups.end(), Backup::InvalidFTor() ) != backups.end() );
 
 }
 
@@ -116,8 +116,8 @@ void BackupManagerWidget::_clean( void )
     Logbook* logbook( _logbook() );
     if( !logbook ) return;
 
-    Logbook::Backup::List backups( model_.get() );
-    backups.erase( std::remove_if( backups.begin(), backups.end(), Logbook::Backup::InvalidFTor() ), backups.end() );
+    Backup::List backups( model_.get() );
+    backups.erase( std::remove_if( backups.begin(), backups.end(), Backup::InvalidFTor() ), backups.end() );
     logbook->setBackupFiles( backups );
 
     // notify logbook modification
@@ -133,7 +133,7 @@ void BackupManagerWidget::_remove( void )
     QModelIndex index( list_->selectionModel()->currentIndex() );
     if( !index.isValid() ) return;
 
-    const Logbook::Backup& backup( model_.get( index ) );
+    const Backup& backup( model_.get( index ) );
 
     // ask confirmation
     QString buffer = QString(
@@ -152,7 +152,7 @@ void BackupManagerWidget::_restore( void )
     QModelIndex index( list_->selectionModel()->currentIndex() );
     if( !index.isValid() ) return;
 
-    const Logbook::Backup& backup( model_.get( index ) );
+    const Backup& backup( model_.get( index ) );
 
     // ask confirmation
     QString buffer = QString(
@@ -170,7 +170,7 @@ void BackupManagerWidget::_merge( void )
     QModelIndex index( list_->selectionModel()->currentIndex() );
     if( !index.isValid() ) return;
 
-    const Logbook::Backup& backup( model_.get( index ) );
+    const Backup& backup( model_.get( index ) );
 
     // ask confirmation
     QString buffer = QString(
@@ -208,7 +208,7 @@ Qt::ItemFlags BackupManagerWidget::Model::flags(const QModelIndex &index) const
     if( !index.isValid() ) return flags;
 
     // check associated record validity
-    const Logbook::Backup& backup( get(index) );
+    const Backup& backup( get(index) );
     if( !backup.isValid() ) return flags;
 
     // default flags
@@ -225,7 +225,7 @@ QVariant BackupManagerWidget::Model::data( const QModelIndex& index, int role ) 
     // check index, role and column
     if( !index.isValid() ) return QVariant();
 
-    const Logbook::Backup backup( get( index ) );
+    const Backup backup( get( index ) );
     if( role == Qt::DisplayRole )
     {
         switch( index.column() )
@@ -264,7 +264,7 @@ void BackupManagerWidget::Model::_sort( int column, Qt::SortOrder order )
 { std::sort( _get().begin(), _get().end(), SortFTor( (ColumnType) column, order ) ); }
 
 //________________________________________________________
-bool BackupManagerWidget::Model::SortFTor::operator () ( Logbook::Backup first, Logbook::Backup second ) const
+bool BackupManagerWidget::Model::SortFTor::operator () ( Backup first, Backup second ) const
 {
 
     if( order_ == Qt::DescendingOrder ) std::swap( first, second );

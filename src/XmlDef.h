@@ -114,6 +114,8 @@ namespace XML {
     //! entry color
     static const QString COLOR( "color" );
 
+    //! true if logbook is read only
+    static const QString READ_ONLY( "ReadOnly" );
 };
 
 #endif

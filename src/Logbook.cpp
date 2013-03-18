@@ -48,10 +48,11 @@ const QString Logbook::LOGBOOK_NO_DIRECTORY;
 //________________________________
 Logbook::Logbook( const File& file ):
     Counter( "Logbook" ),
-    modified_( false ),
     directory_( LOGBOOK_NO_DIRECTORY ),
     title_( LOGBOOK_NO_TITLE ),
     author_( LOGBOOK_NO_AUTHOR ),
+    modified_( false ),
+    readOnly_( false ),
     creation_( TimeStamp::now() ),
     sortMethod_( Logbook::SORT_CREATION ),
     sortOrder_( 0 ),
@@ -808,33 +809,4 @@ File Logbook::_childFilename( const File& file, const int& childCount ) const
     Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
     return out;
 
-}
-
-//______________________________________________________________________
-Logbook::Backup::Backup( const QDomElement& element ):
-    Counter( "Logbook::Backup" ),
-    valid_( true )
-{
-    Debug::Throw( "Logbook::Backup::Backup.\n" );
-
-    // parse attributes
-    QDomNamedNodeMap attributes( element.attributes() );
-    for( unsigned int i=0; i<attributes.length(); i++ )
-    {
-        QDomAttr attribute( attributes.item( i ).toAttr() );
-        if( attribute.isNull() ) continue;
-        if( attribute.name() == XML::CREATION ) setCreation( attribute.value().toUInt() );
-        else if( attribute.name() == XML::FILE ) setFile( File( attribute.value() ) );
-        else Debug::Throw(0) << "Logbook::Backup::Backup - unknown attribute name: " << attribute.name() << endl;
-    }
-}
-
-//______________________________________________________________________
-QDomElement Logbook::Backup::domElement( QDomDocument& document ) const
-{
-    Debug::Throw( "Logbook::Backup::domElement.\n" );
-    QDomElement out( document.createElement( XML::LOGBOOK_BACKUP ) );
-    out.setAttribute( XML::CREATION, QString().setNum( creation() ) );
-    out.setAttribute( XML::FILE, file() );
-    return out;
 }

@@ -398,13 +398,13 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _synchronize( void );
 
     //! remove backup
-    void _removeBackup( Logbook::Backup );
+    void _removeBackup( Backup );
 
     //! restore backup
-    void _restoreBackup( Logbook::Backup );
+    void _restoreBackup( Backup );
 
     //! merge backup
-    void _mergeBackup( Logbook::Backup );
+    void _mergeBackup( Backup );
 
     //! reorganize logbook to entries associations
     void _reorganize( void );

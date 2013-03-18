@@ -58,13 +58,13 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
     void saveLogbookRequested( void );
 
     //! emitted when backup is remove
-    void removeBackupRequested( Logbook::Backup );
+    void removeBackupRequested( Backup );
 
     //! emitted when backup is restored
-    void restoreBackupRequested( Logbook::Backup );
+    void restoreBackupRequested( Backup );
 
     //! emmitted when backup is merged
-    void mergeBackupRequested( Logbook::Backup );
+    void mergeBackupRequested( Backup );
 
     //! emitted when backup is requested
     void backupRequested( void );
@@ -103,7 +103,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
     private:
 
     //! model
-    class Model: public ListModel< Logbook::Backup >, public Counter
+    class Model: public ListModel< Backup >, public Counter
     {
 
         public:
@@ -158,7 +158,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
             {}
 
             //! prediction
-            bool operator() ( Logbook::Backup, Logbook::Backup ) const;
+            bool operator() ( Backup, Backup ) const;
 
         };
 
