@@ -1,0 +1,9 @@
+[Desktop Entry]
+GenericName=Electronic Logbook
+Name=elogbook
+MimeType=text/plain;
+Exec=elogbook
+Icon=elogbook
+Type=Application
+Terminal=false
+Categories=Qt;Utility;TextEditor;
