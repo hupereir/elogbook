@@ -425,12 +425,12 @@ void AttachmentFrame::_updateActions( void )
 {
 
     bool hasSelection( !list_->selectionModel()->selectedRows().isEmpty() );
-    newAction().setEnabled( !readOnly() );
-    openAction().setEnabled( hasSelection );
-    saveAsAction().setEnabled( hasSelection );
-    reloadAction().setEnabled( hasSelection );
-    editAction().setEnabled( hasSelection );
-    deleteAction().setEnabled( hasSelection && !readOnly() );
+    newAction_->setEnabled( !readOnly_ );
+    openAction_->setEnabled( hasSelection );
+    saveAsAction_->setEnabled( hasSelection );
+    reloadAction_->setEnabled( hasSelection );
+    editAction_->setEnabled( hasSelection && !readOnly_ );
+    deleteAction_->setEnabled( hasSelection && !readOnly_ );
     return;
 
 }

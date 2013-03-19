@@ -299,7 +299,7 @@ MainWindow::MainWindow( QWidget *parent ):
     _updateConfiguration();
     _updateKeywordActions();
     _updateEntryActions();
-    _updateReadOnlyActions();
+    _updateReadOnlyState();
 }
 
 //___________________________________________________________
@@ -380,7 +380,7 @@ bool MainWindow::setLogbook( File file )
 
     connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateEntryActions() ) );
     connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateKeywordActions() ) );
-    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateReadOnlyActions() ) );
+    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateReadOnlyState() ) );
 
     // one need to disable everything in the window
     // to prevent user to interact with the application while loading
@@ -471,7 +471,7 @@ bool MainWindow::setLogbook( File file )
 
     _updateKeywordActions();
     _updateEntryActions();
-    _updateReadOnlyActions();
+    _updateReadOnlyState();
 
     updateWindowTitle();
     return true;
@@ -2390,12 +2390,7 @@ void MainWindow::_newEntry( void )
         editionWindow->setColorMenu( colorMenu_ );
         Key::associate( this, editionWindow );
         connect( editionWindow, SIGNAL( scratchFileCreated( const File& ) ), this, SIGNAL( scratchFileCreated( const File& ) ) );
-
-        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateReadOnlyActions() ) );
-        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateSaveAction() ) );
-        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateUndoRedoActions() ) );
-        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateInsertLinkActions() ) );
-        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateWindowTitle() ) );
+        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateReadOnlyState() ) );
 
     }
 
@@ -2559,6 +2554,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
         editionWindow->displayEntry( entry );
 
         connect( editionWindow, SIGNAL( scratchFileCreated( const File& ) ), this, SIGNAL( scratchFileCreated( const File& ) ) );
+        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateReadOnlyState() ) );
 
     }
 
@@ -3031,15 +3027,19 @@ void MainWindow::_updateEntryActions( void )
 }
 
 //_____________________________________________
-void MainWindow::_updateReadOnlyActions( void )
+void MainWindow::_updateReadOnlyState( void )
 {
-    Debug::Throw( "MainWindow::_updateReadOnlyActions.\n" );
+    Debug::Throw( "MainWindow::_updateReadOnlyState.\n" );
 
     const bool readOnly( logbook_ && logbook_->isReadOnly() );
     synchronizeAction_->setEnabled( !readOnly );
     reorganizeAction_->setEnabled( !readOnly );
     saveAction_->setEnabled( !readOnly );
     saveForcedAction_->setEnabled( !readOnly );
+
+    // clear the AttachmentWindow
+    AttachmentWindow &attachmentWindow( Singleton::get().application<Application>()->attachmentWindow() );
+    attachmentWindow.frame().setReadOnly( readOnly );
 
 }
 

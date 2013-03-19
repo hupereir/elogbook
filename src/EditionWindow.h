@@ -321,20 +321,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     public slots:
 
-    //! read only actions
-    void updateReadOnlyActions( void );
-
-    //! update (enable/disable) save action
-    void updateSaveAction( void );
-
-    //! update (enable/disable) redo action
-    void updateUndoRedoActions( void );
-
-    //! update (enable/disable) redo action
-    void updateUndoRedoActions( QWidget*, QWidget* );
-
-    //! update (enable/disable) insert link action
-    void updateInsertLinkActions( void );
+    //! update read-only state
+    void updateReadOnlyState( void );
 
     //! change window title
     void updateWindowTitle()
@@ -440,6 +428,21 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! view link
     void _openLink( void );
+
+    //! read only actions
+    void _updateReadOnlyActions( void );
+
+    //! update (enable/disable) save action
+    void _updateSaveAction( void );
+
+    //! update (enable/disable) redo action
+    void _updateUndoRedoActions( void );
+
+    //! update (enable/disable) redo action
+    void _updateUndoRedoActions( QWidget*, QWidget* );
+
+    //! update (enable/disable) insert link action
+    void _updateInsertLinkActions( void );
 
     //! Set entry as modified, change window title
     void _textModified( bool );
