@@ -192,10 +192,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! computes window title
     QString windowTitle() const;
 
-    //! change window title
-    void updateWindowTitle()
-    { setWindowTitle( windowTitle() ); }
-
     //! creates dialog to ask for LogEntry save.
     AskForSaveDialog::ReturnCode askForSave( bool = true );
 
@@ -323,6 +319,27 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! emmited when new scratch file is created
     void scratchFileCreated( const File& );
 
+    public slots:
+
+    //! read only actions
+    void updateReadOnlyActions( void );
+
+    //! update (enable/disable) save action
+    void updateSaveAction( void );
+
+    //! update (enable/disable) redo action
+    void updateUndoRedoActions( void );
+
+    //! update (enable/disable) redo action
+    void updateUndoRedoActions( QWidget*, QWidget* );
+
+    //! update (enable/disable) insert link action
+    void updateInsertLinkActions( void );
+
+    //! change window title
+    void updateWindowTitle()
+    { setWindowTitle( windowTitle() ); }
+
     protected:
 
     //! close window event handler
@@ -347,6 +364,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! display cursor position
     void _displayCursorPosition( const TextPosition& position );
+
+    //! true if has associated main window
+    bool _hasMainWindow( void ) const;
 
     //! retrieve associated MainWindow
     MainWindow& _mainWindow( void ) const;
@@ -420,24 +440,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! view link
     void _openLink( void );
-
-    //! update (enable/disable) insert link action
-    void _updateInsertLinkActions( void );
-
-    //! update (enable/disable) undo action
-    void _updateUndoAction( void );
-
-    //! update (enable/disable) redo action
-    void _updateRedoAction( void );
-
-    //! update (enable/disable) save action
-    void _updateSaveAction( void );
-
-    /*!
-    \brief update (enable/disable) undo/redo action
-    based on the widget that currently has focus
-    */
-    void _updateUndoRedoActions( QWidget* old, QWidget* current );
 
     //! Set entry as modified, change window title
     void _textModified( bool );

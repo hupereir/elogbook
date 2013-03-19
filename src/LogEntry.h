@@ -35,12 +35,7 @@
 #include <QDomElement>
 #include <QDomDocument>
 
-class Logbook;
-
-/*!
-\class  LogEntry
-\brief  log file entry manipulation object
-*/
+//! log file entry manipulation object
 class LogEntry:public Counter, public BASE::Key
 {
 

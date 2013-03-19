@@ -491,6 +491,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! update entry-list related actions
     void _updateEntryActions( void );
 
+    //! read-only actions
+    void _updateReadOnlyActions( void );
+
     //! store sorting method when changed via list header
     virtual void _storeSortMethod( void )
     { _storeSortMethod( entryModel_.sortColumn(), entryModel_.sortOrder() ); }
@@ -714,6 +717,9 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
 
     //! tree mode
     QAction* treeModeAction_;
+
+    //! entry color button
+    QToolButton* entryColorButton_;
 
     //@}
 

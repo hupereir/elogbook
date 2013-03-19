@@ -651,6 +651,9 @@ bool Logbook::setReadOnly( bool value )
         readOnly_ = value;
         changed = true;
 
+        // emit signal
+        emit readOnlyChanged( readOnly_ );
+
     }
 
     // also change permission on children

@@ -65,6 +65,7 @@
 #include "Singleton.h"
 #include "TextEditionDelegate.h"
 #include "Util.h"
+#include "WarningDialog.h"
 #include "XmlOptions.h"
 
 #include <QHeaderView>
@@ -220,12 +221,12 @@ MainWindow::MainWindow( QWidget *parent ):
     entryToolBar_->addAction( editEntryAction_ );
 
     // need to use a button to be able to set the popup mode
-    QToolButton *button = new QToolButton(0);
-    button->setText( tr( "Entry Color" ) );
-    button->setIcon( IconEngine::get( ICONS::COLOR ) );
-    button->setPopupMode( QToolButton::InstantPopup );
-    button->setMenu( colorMenu_ );
-    entryToolBar_->addWidget( button );
+    entryColorButton_ = new QToolButton(0);
+    entryColorButton_->setText( tr( "Entry Color" ) );
+    entryColorButton_->setIcon( IconEngine::get( ICONS::COLOR ) );
+    entryColorButton_->setPopupMode( QToolButton::InstantPopup );
+    entryColorButton_->setMenu( colorMenu_ );
+    entryToolBar_->addWidget( entryColorButton_ );
 
     entryToolBar_->addAction( deleteEntryAction_ );
     entryToolBar_->addAction( saveAction_ );
@@ -298,6 +299,7 @@ MainWindow::MainWindow( QWidget *parent ):
     _updateConfiguration();
     _updateKeywordActions();
     _updateEntryActions();
+    _updateReadOnlyActions();
 }
 
 //___________________________________________________________
@@ -376,6 +378,10 @@ bool MainWindow::setLogbook( File file )
     connect( logbook_, SIGNAL( progressAvailable( int ) ), &statusbar_->progressBar(), SLOT( addToProgress( int ) ) );
     connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
 
+    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateEntryActions() ) );
+    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateKeywordActions() ) );
+    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateReadOnlyActions() ) );
+
     // one need to disable everything in the window
     // to prevent user to interact with the application while loading
     _setEnabled( false );
@@ -423,7 +429,19 @@ bool MainWindow::setLogbook( File file )
     if( logbook_->parentFile().size() )
     {
         const QString buffer = QString( tr( "Warning: this logbook should be oppened via '%1' only." ) ).arg( logbook_->parentFile() );
-        InformationDialog( this, buffer ).exec();
+        WarningDialog( this, buffer ).exec();
+    }
+
+    // see if logbook is read-only
+    if( logbook_->isReadOnly() )
+    {
+        const QString buffer = QString( tr(
+            "Warning: this logbook is read-only.\n"
+            "All editing will be disabled until it is marked as writable again "
+            "in the Logbook Information dialog." ) );
+
+        WarningDialog( this, buffer ).exec();
+
     }
 
     // store logbook directory for next open, save comment
@@ -453,6 +471,7 @@ bool MainWindow::setLogbook( File file )
 
     _updateKeywordActions();
     _updateEntryActions();
+    _updateReadOnlyActions();
 
     updateWindowTitle();
     return true;
@@ -1427,13 +1446,13 @@ void MainWindow::updateWindowTitle( void )
         if( !logbook_->file().isEmpty() )
         {
 
-            if( logbook_->readOnly() ) setWindowTitle( QString( tr( "%1 (read-only) - Elogbook" ) ).arg( logbook_->file() ) );
+            if( logbook_->isReadOnly() ) setWindowTitle( QString( tr( "%1 (read-only) - Elogbook" ) ).arg( logbook_->file() ) );
             else if( logbook_->modified() )setWindowTitle( QString( tr( "%1 (modified) - Elogbook" ) ).arg( logbook_->file() ) );
             else setWindowTitle( QString( tr( "%1 - Elogbook" ) ).arg( logbook_->file() ) );
 
         } else  {
 
-            if( logbook_->readOnly() ) setWindowTitle( tr( "ELogbook (read-only)" ) );
+            if( logbook_->isReadOnly() ) setWindowTitle( tr( "ELogbook (read-only)" ) );
             else if( logbook_->modified() ) setWindowTitle( tr( "ELogbook (modified)" ) );
             else setWindowTitle( "Elogbook" );
 
@@ -2371,6 +2390,13 @@ void MainWindow::_newEntry( void )
         editionWindow->setColorMenu( colorMenu_ );
         Key::associate( this, editionWindow );
         connect( editionWindow, SIGNAL( scratchFileCreated( const File& ) ), this, SIGNAL( scratchFileCreated( const File& ) ) );
+
+        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateReadOnlyActions() ) );
+        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateSaveAction() ) );
+        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateUndoRedoActions() ) );
+        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateInsertLinkActions() ) );
+        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateWindowTitle() ) );
+
     }
 
     // force editionWindow show keyword flag
@@ -2963,8 +2989,10 @@ void MainWindow::_updateKeywordActions( void )
 {
     Debug::Throw( "MainWindow::_updateKeywordActions.\n" );
 
-    deleteKeywordAction().setEnabled( !keywordList_->selectionModel()->selectedRows().empty() );
-    editKeywordAction().setEnabled( keywordList_->selectionModel()->currentIndex().isValid() );
+    const bool readOnly( logbook_ && logbook_->isReadOnly() );
+    newKeywordAction_->setEnabled( !readOnly );
+    editKeywordAction_->setEnabled( !readOnly && keywordList_->selectionModel()->currentIndex().isValid() );
+    deleteKeywordAction_->setEnabled( !( readOnly || keywordList_->selectionModel()->selectedRows().empty() ) );
 
     return;
 }
@@ -2973,29 +3001,46 @@ void MainWindow::_updateKeywordActions( void )
 void MainWindow::_updateEntryActions( void )
 {
     Debug::Throw( "MainWindow::_updateEntryActions.\n" );
-    int selectedEntries( entryList_->selectionModel()->selectedRows().size() );
-    bool hasSelection( selectedEntries > 0 );
+    const bool readOnly( logbook_ && logbook_->isReadOnly() );
+    const int selectedEntries( entryList_->selectionModel()->selectedRows().size() );
+    const bool hasSelection( selectedEntries > 0 );
 
     if( selectedEntries > 1 )
     {
 
-        editEntryAction().setText( tr( "Edit Entries" ) );
-        deleteEntryAction().setText( tr( "Delete Entries" ) );
+        editEntryAction_->setText( tr( "Edit Entries" ) );
+        deleteEntryAction_->setText( tr( "Delete Entries" ) );
 
     } else {
 
-        editEntryAction().setText( tr( "Edit Entry" ) );
-        deleteEntryAction().setText( tr( "Delete Entry" ) );
+        editEntryAction_->setText( tr( "Edit Entry" ) );
+        deleteEntryAction_->setText( tr( "Delete Entry" ) );
 
     }
 
-    editEntryAction().setEnabled( hasSelection );
-    deleteEntryAction().setEnabled( hasSelection );
-    entryColorAction().setEnabled( hasSelection );
-    entryKeywordAction().setEnabled( hasSelection );
-    editEntryTitleAction().setEnabled( hasSelection );
+    editEntryAction_->setEnabled( hasSelection );
+    deleteEntryAction_->setEnabled( !readOnly && hasSelection );
+    entryColorAction_->setEnabled( !readOnly && hasSelection );
+    entryColorButton_->setEnabled( !readOnly && hasSelection );
+    entryKeywordAction_->setEnabled( !readOnly && hasSelection );
+    editEntryTitleAction_->setEnabled( !readOnly && hasSelection );
+    newEntryAction_->setEnabled( !readOnly );
+
 
     return;
+}
+
+//_____________________________________________
+void MainWindow::_updateReadOnlyActions( void )
+{
+    Debug::Throw( "MainWindow::_updateReadOnlyActions.\n" );
+
+    const bool readOnly( logbook_ && logbook_->isReadOnly() );
+    synchronizeAction_->setEnabled( !readOnly );
+    reorganizeAction_->setEnabled( !readOnly );
+    saveAction_->setEnabled( !readOnly );
+    saveForcedAction_->setEnabled( !readOnly );
+
 }
 
 //_______________________________________________

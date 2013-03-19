@@ -159,7 +159,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     connect( activeEditor().document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
 
     // create attachment list
-    AttachmentFrame *frame = new AttachmentFrame( 0, isReadOnly() );
+    AttachmentFrame *frame = new AttachmentFrame( 0, readOnly_ );
     frame->visibilityAction().setChecked( false );
     frame->setDefaultHeight( XmlOptions::get().get<int>( "ATTACHMENT_FRAME_HEIGHT" ) );
     splitter->addWidget( frame );
@@ -229,16 +229,14 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnlyActions_ << redoAction_;
 
     // undo/redo connections
-    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
-    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateRedoAction() ) );
-    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
+    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( updateUndoRedoActions() ) );
+    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( updateSaveAction() ) );
 
-    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoAction() ) );
-    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateRedoAction() ) );
-    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
+    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( updateUndoRedoActions() ) );
+    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( updateSaveAction() ) );
 
-    connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
-    connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
+    connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( updateUndoRedoActions( QWidget*, QWidget*) ) );
+    connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( updateUndoRedoActions( QWidget*, QWidget*) ) );
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Tools" ), this, "EXTRA_TOOLBAR" );
@@ -315,6 +313,9 @@ void EditionWindow::displayEntry( LogEntry *entry )
 
     // reset modify flag; change title accordingly
     setModified( false );
+
+    updateReadOnlyActions();
+    updateSaveAction();
     updateWindowTitle();
 
     Debug::Throw( "EditionWindow::displayEntry - done.\n" );
@@ -324,41 +325,10 @@ void EditionWindow::displayEntry( LogEntry *entry )
 //____________________________________________
 void EditionWindow::setReadOnly( bool value )
 {
-
-    Debug::Throw() << "EditionWindow::setReadOnly - " << (value ? "true":"false" ) << endl;
-
-    // update readOnly value
     readOnly_ = value;
-
-    // changes button state
-    foreach( QAction* action, readOnlyActions_ )
-    { action->setEnabled( !isReadOnly() ); }
-
-    // changes lock button state
-    if( isReadOnly() && lock_->isHidden() )
-    {
-
-        Qt::ToolBarArea current_location = toolBarArea( lock_ );
-        if( current_location == Qt::NoToolBarArea ) { addToolBar( Qt::LeftToolBarArea, lock_ ); }
-        lock_->show();
-
-    } else if( !(isReadOnly() || lock_->isHidden() ) ) { lock_->hide(); }
-
-    // changes TextEdit readOnly status
-    keywordEditor_->setReadOnly( isReadOnly() );
-    titleEditor_->setReadOnly( isReadOnly() );
-
-    // update editors
-    foreach( LocalTextEditor* editor, BASE::KeySet<LocalTextEditor>( this ) )
-    { editor->setReadOnly( isReadOnly() ); }
-
-    // changes attachment list status
-    attachmentFrame().setReadOnly( isReadOnly() );
-
-    // changes window title
-    _updateSaveAction();
+    updateReadOnlyActions();
+    updateSaveAction();
     updateWindowTitle();
-
 }
 
 //_____________________________________________
@@ -374,13 +344,16 @@ QString EditionWindow::windowTitle( void ) const
 {
 
     Debug::Throw( "EditionWindow::windowTitle.\n" );
-    LogEntry* entry( EditionWindow::entry() );
+    LogEntry* entry( this->entry() );
+
+    // read only flag
+    const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) );
 
     QString buffer;
     if( entry )
     {
 
-        if( isReadOnly() ) buffer = QString( tr( "%1 (read only) - Elogbook" ) ).arg( entry->title() );
+        if( readOnly ) buffer = QString( tr( "%1 (read only) - Elogbook" ) ).arg( entry->title() );
         else if( modified()  ) buffer = QString( tr( "%1 (modified) - Elogbook" ) ).arg( entry->title() );
         else buffer = QString( "%1 - Elogbook" ).arg( entry->title() );
 
@@ -606,13 +579,121 @@ void EditionWindow::setActiveEditor( LocalTextEditor& editor )
 
 }
 
+//_____________________________________________
+void EditionWindow::updateReadOnlyActions( void )
+{
+
+    Debug::Throw( "EditionWindow::updateReadOnlyActions.\n" );
+
+    // add flag from logbook read only
+    const bool logbookReadOnly( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() );
+    const bool readOnly( readOnly_ || logbookReadOnly );
+
+    // changes button state
+    foreach( QAction* action, readOnlyActions_ )
+    { action->setEnabled( !readOnly ); }
+
+    // changes lock button state
+    if( readOnly_ && lock_->isHidden() )
+    {
+
+        Qt::ToolBarArea currentLocation = toolBarArea( lock_ );
+        if( currentLocation == Qt::NoToolBarArea ) { addToolBar( Qt::LeftToolBarArea, lock_ ); }
+        lock_->show();
+
+    } else if( !(readOnly_ || lock_->isHidden() ) ) { lock_->hide(); }
+
+    // changes TextEdit readOnly status
+    keywordEditor_->setReadOnly( readOnly );
+    titleEditor_->setReadOnly( readOnly );
+
+    // update editors
+    foreach( LocalTextEditor* editor, BASE::KeySet<LocalTextEditor>( this ) )
+    { editor->setReadOnly( readOnly ); }
+
+    // changes attachment list status
+    attachmentFrame().setReadOnly( readOnly );
+
+    // new entry
+    newEntryAction_->setEnabled( !logbookReadOnly );
+
+}
+
+//_____________________________________________
+void EditionWindow::updateSaveAction( void )
+{ saveAction().setEnabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && modified() ); }
+
+//_____________________________________________
+void EditionWindow::updateUndoRedoActions( void )
+{
+
+    Debug::Throw( "EditionWindow::updateRedoAction.\n" );
+    if( keywordEditor_->hasFocus() )
+    {
+        undoAction_->setEnabled( keywordEditor_->isUndoAvailable() && !keywordEditor_->isReadOnly() );
+        redoAction_->setEnabled( keywordEditor_->isRedoAvailable() && !keywordEditor_->isReadOnly() );
+
+    } else if( titleEditor_->hasFocus() ) {
+
+        undoAction_->setEnabled( titleEditor_->isUndoAvailable() && !titleEditor_->isReadOnly() );
+        redoAction_->setEnabled( titleEditor_->isRedoAvailable() && !titleEditor_->isReadOnly() );
+
+    } else if( activeEditor().QWidget::hasFocus() ) {
+
+        undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() && !activeEditor().isReadOnly() );
+        redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() && !activeEditor().isReadOnly() );
+
+    }
+}
+
+//_____________________________________________
+void EditionWindow::updateUndoRedoActions( QWidget*, QWidget* current )
+{
+    Debug::Throw( "EditionWindow::updateUndoRedoAction.\n" );
+    if( current == keywordEditor_ )
+    {
+
+        undoAction_->setEnabled( keywordEditor_->isUndoAvailable() && !keywordEditor_->isReadOnly() );
+        redoAction_->setEnabled( keywordEditor_->isRedoAvailable() && !keywordEditor_->isReadOnly() );
+
+    } else if( current == titleEditor_ ) {
+
+        undoAction_->setEnabled( titleEditor_->isUndoAvailable() && !titleEditor_->isReadOnly() );
+        redoAction_->setEnabled( titleEditor_->isRedoAvailable() && !titleEditor_->isReadOnly() );
+
+    } else if( current == &activeEditor() ) {
+
+        undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() && !activeEditor().isReadOnly() );
+        redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() && !activeEditor().isReadOnly() );
+
+    }
+
+}
+
+//_____________________________________________
+void EditionWindow::updateInsertLinkActions( void )
+{
+    Debug::Throw( "EditionWindow::updateInsertLinkActions.\n" );
+    const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && activeEditor().textCursor().hasSelection() );
+
+    // disable main window action
+    if( hasInsertLinkAction() ) insertLinkAction().setEnabled( enabled );
+
+    // also disable editors action
+    BASE::KeySet<LocalTextEditor> editors( this );
+    foreach( LocalTextEditor* editor, editors )
+    { editor->insertLinkAction().setEnabled( enabled ); }
+
+}
+
+
 //____________________________________________
 void EditionWindow::closeEvent( QCloseEvent *event )
 {
     Debug::Throw( "EditionWindow::closeEvent.\n" );
 
     // ask for save if entry is modified
-    if( !(isReadOnly() || isClosed() ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
+    if( !(readOnly_ || closed_ ) && modified() && askForSave() == AskForSaveDialog::CANCEL ) event->ignore();
     else
     {
         setIsClosed( true );
@@ -877,10 +958,9 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
     connect( editor, SIGNAL( cursorPositionChanged( void ) ), SLOT( _displayCursorPosition( void ) ) );
     connect( editor, SIGNAL( modifiersChanged( TextEditor::Modifiers ) ), SLOT( _modifiersChanged( TextEditor::Modifiers ) ) );
-    connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoAction( void ) ) );
-    connect( editor, SIGNAL( redoAvailable( bool ) ), SLOT( _updateRedoAction( void ) ) );
-    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkActions( void ) ) );
-    connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction( void ) ) );
+    connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( updateUndoRedoActions( void ) ) );
+    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( updateInsertLinkActions( void ) ) );
+    connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( updateSaveAction( void ) ) );
 
     if( formatBar_ )
     {
@@ -899,7 +979,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     Debug::Throw( "EditionWindow::_newTextEditor - done.\n" );
 
     // update insert Link actions
-    _updateInsertLinkActions();
+    updateInsertLinkActions();
 
     return *editor;
 
@@ -916,6 +996,10 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
 
     return;
 }
+
+//_______________________________________________
+bool EditionWindow::_hasMainWindow( void ) const
+{ return BASE::KeySet<MainWindow>( this ).size() > 0; }
 
 //_______________________________________________
 MainWindow& EditionWindow::_mainWindow( void ) const
@@ -991,7 +1075,7 @@ void EditionWindow::_save( bool updateSelection )
 {
 
     Debug::Throw( "EditionWindow::_save.\n" );
-    if( isReadOnly() ) return;
+    if( readOnly_ ) return;
 
     // retrieve associated entry
     LogEntry *entry( this->entry() );
@@ -1302,7 +1386,7 @@ void EditionWindow::_insertLink( void )
 
     // check readonly and selection
     const QTextCursor cursor( activeEditor().textCursor() );
-    if( isReadOnly() || !cursor.hasSelection() ) return;
+    if( readOnly_ || !cursor.hasSelection() ) return;
 
     const QTextCharFormat format( cursor.charFormat() );
     const QString selection( format.anchorHref().isEmpty() ? cursor.selectedText() : format.anchorHref() );
@@ -1351,68 +1435,6 @@ void EditionWindow::_openLink( void )
 
     // execute
     ( Command( command ) << anchor ).run();
-
-}
-
-//_____________________________________________
-void EditionWindow::_updateInsertLinkActions( void )
-{
-    Debug::Throw( "EditionWindow::_updateInsertLinkActions.\n" );
-    const bool enabled( !isReadOnly() && activeEditor().textCursor().hasSelection() );
-
-    // disable main window action
-    if( hasInsertLinkAction() ) insertLinkAction().setEnabled( enabled );
-
-    // also disable editors action
-    BASE::KeySet<LocalTextEditor> editors( this );
-    foreach( LocalTextEditor* editor, editors )
-    { editor->insertLinkAction().setEnabled( enabled ); }
-
-}
-
-//_____________________________________________
-void EditionWindow::_updateUndoAction( void )
-{
-    Debug::Throw( "EditionWindow::_updateUndoAction.\n" );
-    if( keywordEditor_->hasFocus() ) undoAction_->setEnabled( keywordEditor_->isUndoAvailable() );
-    else if( titleEditor_->hasFocus() ) undoAction_->setEnabled( titleEditor_->isUndoAvailable() );
-    else if( activeEditor().QWidget::hasFocus() ) undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() );
-}
-
-//_____________________________________________
-void EditionWindow::_updateRedoAction( void )
-{
-    Debug::Throw( "EditionWindow::_updateRedoAction.\n" );
-    if( keywordEditor_->hasFocus() ) redoAction_->setEnabled( keywordEditor_->isRedoAvailable() );
-    else if( titleEditor_->hasFocus() ) redoAction_->setEnabled( titleEditor_->isRedoAvailable() );
-    else if( activeEditor().QWidget::hasFocus() ) redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() );
-}
-
-//_____________________________________________
-void EditionWindow::_updateSaveAction( void )
-{ saveAction().setEnabled( !isReadOnly() && modified() ); }
-
-//_____________________________________________
-void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
-{
-    Debug::Throw( "EditionWindow::_updateUndoRedoAction.\n" );
-    if( current == keywordEditor_ )
-    {
-
-        undoAction_->setEnabled( keywordEditor_->isUndoAvailable() );
-        redoAction_->setEnabled( keywordEditor_->isRedoAvailable() );
-
-    } else if( current == titleEditor_ ) {
-
-        undoAction_->setEnabled( titleEditor_->isUndoAvailable() );
-        redoAction_->setEnabled( titleEditor_->isRedoAvailable() );
-
-    } else if( current == &activeEditor() ) {
-
-        undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() );
-        redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() );
-
-    }
 
 }
 
@@ -1495,7 +1517,7 @@ void EditionWindow::_unlock( void )
 
     Debug::Throw( "EditionWindow::_unlock.\n" );
 
-    if( !isReadOnly() ) return;
+    if( !readOnly_ ) return;
     LogEntry *entry( EditionWindow::entry() );
 
     if( entry && ! _mainWindow().lockEntry( entry ) ) return;
@@ -1511,7 +1533,7 @@ void EditionWindow::_textModified( bool state )
     Debug::Throw() << "EditionWindow::_textModified - state: " << (state ? "true":"false" ) << endl;
 
     // check readonly status
-    if( isReadOnly() ) return;
+    if( readOnly_ ) return;
     updateWindowTitle();
 }
 

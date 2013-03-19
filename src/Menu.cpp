@@ -269,14 +269,7 @@ void Menu::_updatePreferenceMenu( void )
 
     // additional Settings in case parent is a selection frame
     MainWindow *mainWindow = qobject_cast<MainWindow*>( parentWidget() );
-    if( mainWindow )
-    {
-        preferenceMenu_->addAction( &mainWindow->treeModeAction() );
-        preferenceMenu_->addSeparator();
-        preferenceMenu_->addAction( &mainWindow->keywordToolBar().visibilityAction() );
-        preferenceMenu_->addAction( &mainWindow->entryToolBar().visibilityAction() );
-        preferenceMenu_->addAction( &mainWindow->searchPanel().visibilityAction() );
-    }
+    if( mainWindow ) preferenceMenu_->addAction( &mainWindow->treeModeAction() );
 
     // additional Settings in case parent is an edition frame
     EditionWindow *editionWindow = qobject_cast<EditionWindow*>( parentWidget() );

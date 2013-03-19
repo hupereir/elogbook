@@ -98,6 +98,6 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), author_, SLOT( setDisabled( bool ) ) );
     connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), attachmentDirectory_, SLOT( setDisabled( bool ) ) );
     connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), comments_, SLOT( setDisabled( bool ) ) );
-    readOnlyCheckBox_->setChecked( logbook->readOnly() );
+    readOnlyCheckBox_->setChecked( logbook->isReadOnly() );
 
 }

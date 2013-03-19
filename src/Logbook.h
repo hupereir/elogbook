@@ -156,7 +156,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     bool modified( void ) const;
 
     //! read only
-    bool readOnly( void ) const
+    bool isReadOnly( void ) const
     { return readOnly_; }
 
     //! creation TimeStamp
@@ -415,6 +415,9 @@ class Logbook:public QObject, public Counter, public BASE::Key
     //! emit progress when reading, saving
     /*! argument is the number of entries read since last signal */
     void progressAvailable( int );
+
+    //! read-only changed
+    void readOnlyChanged( bool );
 
     protected:
 

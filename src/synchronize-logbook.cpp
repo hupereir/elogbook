@@ -52,8 +52,8 @@ int main (int argc, char *argv[])
     }
 
     // load argument
-    QString local( argv[1] );
-    QString remote( argv[2] );
+    const QString local( argv[1] );
+    const QString remote( argv[2] );
 
     // load options
     QString user( Util::user( ) );
@@ -76,56 +76,74 @@ int main (int argc, char *argv[])
     // not having it might result in lost accents and special characters.
     QCoreApplication application( argc, argv );
 
-    // try open local_logbook
+    // try open localLogbook
     Debug::Throw(0) << "synchronize-logbook - reading local logbook from: " << local << endl;
-    Logbook local_logbook;
-    local_logbook.setFile( File( local ).expand() );
-    if( !local_logbook.read() )
+    Logbook localLogbook;
+    localLogbook.setFile( File( local ).expand() );
+    if( !localLogbook.read() )
     {
         Debug::Throw(0) << "synchronize-logbook - error reading local logbook" << endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "synchronize-logbook - number of local files: " << local_logbook.children().size() << endl;
-    Debug::Throw(0) << "synchronize-logbook - number of local entries: " << local_logbook.entries().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of local files: " << localLogbook.children().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of local entries: " << localLogbook.entries().size() << endl;
 
-    // try open local_logbook
+    // try open localLogbook
     Debug::Throw(0) << "synchronize-logbook - reading remote logbook from: " << remote << endl;
-    Logbook remote_logbook;
-    remote_logbook.setFile( File( remote ).expand() );
-    if( !remote_logbook.read() )
+    Logbook remoteLogbook;
+    remoteLogbook.setFile( File( remote ).expand() );
+    if( !remoteLogbook.read() )
     {
         Debug::Throw(0) << "synchronize-logbook - error reading remote logbook" << endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "synchronize-logbook - number of remote files: " << remote_logbook.children().size() << endl;
-    Debug::Throw(0) << "synchronize-logbook - number of remote entries: " << remote_logbook.entries().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of remote files: " << remoteLogbook.children().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of remote entries: " << remoteLogbook.entries().size() << endl;
 
-    Debug::Throw(0) << "synchronize-logbook - updating local from remote" << endl;
-    int n_duplicated = local_logbook.synchronize( remote_logbook ).size();
-
-    Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << n_duplicated << endl;
-
-    if( !local_logbook.write() )
+    // check whether local logbook is read-only
+    if( localLogbook.isReadOnly() )
     {
-        Debug::Throw(0) << "synchronize-logbook - error writing local logbook" << endl;
-        return 0;
+
+        Debug::Throw(0) << "synchronize-logbook - local logbook is read-only. It will not be synchronized to the remote logbook." << endl;
+
+    } else {
+
+        Debug::Throw(0) << "synchronize-logbook - updating local from remote" << endl;
+        const int nDuplicated( localLogbook.synchronize( remoteLogbook ).size() );
+        Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << endl;
+
+        if( !localLogbook.write() )
+        {
+            Debug::Throw(0) << "synchronize-logbook - error writing local logbook" << endl;
+            return 0;
+        }
+
     }
 
-    Debug::Throw(0) << "synchronize-logbook - updating remote from local" << endl;
-    n_duplicated = remote_logbook.synchronize( local_logbook ).size();
-
-    Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << n_duplicated << endl;
-
-    if( !remote_logbook.write() )
+    // check whether remote logbook is read-only
+    if( remoteLogbook.isReadOnly() )
     {
-        Debug::Throw(0) << "error writting to remote logbook" << endl;
-        return 0;
-    }
 
+        Debug::Throw(0) << "synchronize-logbook - remote logbook is read-only. It will not be synchronized to the local logbook." << endl;
+
+    } else {
+
+        Debug::Throw(0) << "synchronize-logbook - updating remote from local" << endl;
+        const int nDuplicated( remoteLogbook.synchronize( localLogbook ).size() );
+
+        Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << endl;
+
+        if( !remoteLogbook.write() )
+        {
+            Debug::Throw(0) << "error writting to remote logbook" << endl;
+            return 0;
+        }
+
+    }
     return 0;
 
 }
