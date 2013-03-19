@@ -1583,20 +1583,24 @@ void MainWindow::_saveBackup( void )
         return;
     }
 
+    // generate backup fileName
     QString filename( logbook_->backupFilename( ) );
     if( filename.isEmpty() ) {
         InformationDialog( this, tr( "No valid filename. Use <Save As> first." ) ).exec();
         return;
     }
 
-    // store last backup time and update
-    TimeStamp lastBackup( logbook_->backup() );
-
     // stores current logbook filename
-    QString currentFilename( logbook_->file() );
+    const QString currentFilename( logbook_->file() );
+    const bool readOnlyState( logbook_->isReadOnly() );
 
-    // save logbook as backup
+    // save logbook as backup.
+    // mark backups as read-only
+    logbook_->setReadOnly( true );
     bool saved( _saveAs( filename, false ) );
+
+    // restore old read-only state
+    logbook_->setReadOnly( readOnlyState );
 
     // remove the "backup" filename from the openPrevious list
     // to avoid confusion
