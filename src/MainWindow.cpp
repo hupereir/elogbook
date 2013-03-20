@@ -243,6 +243,9 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->setColumnHidden( LogEntryModel::TITLE, false );
     entryList_->lockColumnVisibility( LogEntryModel::TITLE );
 
+    entryList_->header()->setResizeMode(LogEntryModel::CREATION, QHeaderView::Stretch);
+    entryList_->header()->setResizeMode(LogEntryModel::MODIFICATION, QHeaderView::Stretch);
+
     // the use of a custom delegate unfortunately disable the
     // nice selection appearance of the oxygen style.
     entryList_->setItemDelegate( new TextEditionDelegate( this ) );

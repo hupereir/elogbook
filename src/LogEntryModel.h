@@ -141,10 +141,10 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     void _resetIcons( void );
 
     //! create icon for a given color
-    static const QIcon& _icon( const BASE::Color& );
+    const QIcon& _icon( const BASE::Color& ) const;
 
     //! attachment icon
-    static const QIcon& _attachmentIcon( void );
+    const QIcon& _attachmentIcon( void ) const;
 
     //! used to sort IconCaches
     class SortFTor: public ItemModel::SortFTor
@@ -168,6 +168,9 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     //! edition index
     /*! needs to be stored to start delayed edition */
     QModelIndex editionIndex_;
+
+    //! icon size
+    int iconSize_;
 
     //! list column names
     static const QString columnTitles_[nColumns];

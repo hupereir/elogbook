@@ -61,7 +61,8 @@ const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 LogEntryModel::LogEntryModel( QObject* parent ):
     ListModel<LogEntry*>( parent ),
     Counter( "LogEntryModel" ),
-    editionEnabled_( false )
+    editionEnabled_( false ),
+    iconSize_( 8 )
 {
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
 
@@ -123,18 +124,51 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
             default:
             return QVariant();
         }
+
+    } else if( role == Qt::DecorationRole ) {
+
+        switch( index.column() )
+        {
+            case COLOR:
+            return _icon( entry->color() );
+
+            case ATTACHMENT:
+            return BASE::KeySet<Attachment>(entry).empty() ? QVariant():_attachmentIcon();
+
+            default:
+            return QVariant();
+
+        }
+
+    } else if( role == Qt::TextAlignmentRole ) {
+
+        switch( index.column() )
+        {
+            case COLOR:
+            case CREATION:
+            case MODIFICATION:
+            case AUTHOR:
+            return Qt::AlignCenter;
+
+            default: return QVariant();
+
+        }
+
+    } else if( role == Qt::SizeHintRole ) {
+
+        switch( index.column() )
+        {
+
+            case ATTACHMENT:
+            case COLOR:
+            return QSize( iconSize_, iconSize_ );
+
+            default:
+            return QVariant();
+
+        }
+
     }
-
-    // return icon associated to file
-    if( role == Qt::DecorationRole && index.column() == COLOR )
-    { return _icon( entry->color() ); }
-
-    // return icon associated to file
-    if( role == Qt::DecorationRole && index.column() == ATTACHMENT && !BASE::KeySet<Attachment>(entry).empty() )
-    { return _attachmentIcon(); }
-
-    // alignment
-    if( role == Qt::TextAlignmentRole && index.column() == COLOR ) return Qt::AlignCenter;
 
     return QVariant();
 
@@ -185,18 +219,42 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
 QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
 
-    if(
-        orientation == Qt::Horizontal &&
-        role == Qt::DisplayRole &&
-        section >= 0 &&
-        section < nColumns )
-    { return columnTitles_[section]; }
+    if( role == Qt::DisplayRole )
+    {
+        switch( section )
+        {
+            case ATTACHMENT: return _attachmentIcon();
+            default: return columnTitles_[section];
+        }
 
-    if(
-        orientation == Qt::Horizontal &&
-        role == Qt::DecorationRole &&
-        section == ATTACHMENT )
-    { return _attachmentIcon(); }
+    } else if( role == Qt::TextAlignmentRole ) {
+
+        switch( section )
+        {
+            case COLOR:
+            case CREATION:
+            case MODIFICATION:
+            case AUTHOR:
+            return Qt::AlignCenter;
+
+            default: return QVariant();
+
+        }
+
+    } else if( role == Qt::SizeHintRole ) {
+
+        switch( section )
+        {
+            case ATTACHMENT:
+            case COLOR:
+            return QSize( iconSize_, iconSize_ );
+
+            default:
+            return QVariant();
+
+        }
+
+    }
 
     // return empty
     return QVariant();
@@ -253,6 +311,7 @@ void LogEntryModel::_sort( int column, Qt::SortOrder order )
 void LogEntryModel::_updateConfiguration( void )
 {
     Debug::Throw( "LogEntryModel::_updateConfiguration.\n" );
+    iconSize_ =XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
     _resetIcons();
 }
 
@@ -266,17 +325,16 @@ void LogEntryModel::_resetIcons( void )
 }
 
 //________________________________________________________
-const QIcon& LogEntryModel::_icon( const BASE::Color& color )
+const QIcon& LogEntryModel::_icon( const BASE::Color& color ) const
 {
 
     IconCache::iterator iter( _icons().find( color.name() ) );
     if( iter != _icons().end() ) return iter.value();
 
-    unsigned int iconSize =XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
-    double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
-    double offset = 0.5*( iconSize - pixmapSize );
+    const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
+    const double offset = 0.5*( iconSize_ - pixmapSize );
 
-    CustomPixmap pixmap( CustomPixmap().empty( QSize( iconSize, iconSize ) ) );
+    CustomPixmap pixmap( CustomPixmap().empty( QSize( iconSize_, iconSize_ ) ) );
 
     if( color.isValid() )
     {
@@ -297,7 +355,7 @@ const QIcon& LogEntryModel::_icon( const BASE::Color& color )
 }
 
 //________________________________________________________
-const QIcon& LogEntryModel::_attachmentIcon( void )
+const QIcon& LogEntryModel::_attachmentIcon( void ) const
 {
 
     Debug::Throw( "LogEntryModel::_attachmentIcon" );
