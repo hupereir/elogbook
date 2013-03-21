@@ -1,5 +1,5 @@
-#ifndef _BackupManagerWidget_h_
-#define _BackupManagerWidget_h_
+#ifndef BackupManagerWidget_h
+#define BackupManagerWidget_h
 // $Id$
 
 /******************************************************************************
@@ -54,7 +54,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
 
     signals:
 
-    //! emitted when backups are changed (from "clean" action)
+    //! emitted when backups are changed (from clean action)
     void saveLogbookRequested( void );
 
     //! emitted when backup is remove

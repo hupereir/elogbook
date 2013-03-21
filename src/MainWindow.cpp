@@ -1772,8 +1772,8 @@ void MainWindow::_printPreview( void )
     helper.setSelectionMode( (LogEntryPrintSelectionWidget::Mode) XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_SELECTION" ) );
 
     // masks
-    helper.setMask( XmlOptions::get().get<unsigned int>( "LOGBOOK_PRINT_OPTION_MASK" ) );
-    helper.setEntryMask( XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
+    helper.setMask( (Logbook::Mask) XmlOptions::get().get<int>( "LOGBOOK_PRINT_OPTION_MASK" ) );
+    helper.setEntryMask( (LogEntry::Mask) XmlOptions::get().get<int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );

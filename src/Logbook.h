@@ -71,7 +71,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     enum { MAX_ENTRIES = 50 };
 
     //! configuration mask
-    enum Mask
+    enum MaskFlag
     {
         LOGBOOK_TITLE = 1<<0,
         LOGBOOK_COMMENTS = 1<< 1,
@@ -89,6 +89,8 @@ class Logbook:public QObject, public Counter, public BASE::Key
             LOGBOOK_DIRECTORY|LOGBOOK_COMMENTS,
         LOGBOOK_ALL = LOGBOOK_HEADER|LOGBOOK_TABLE|LOGBOOK_CONTENT
     };
+
+    Q_DECLARE_FLAGS( Mask, MaskFlag )
 
     //! constructor from file
     Logbook( const File& file = File("") );
@@ -428,7 +430,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     QDomElement _recentEntriesElement( QDomDocument& ) const;
 
     //! generate tagged backup filename
-    File _childFilename( const File& file, const int& child_number ) const;
+    File _childFilename( const File& file, const int& ) const;
 
     private:
 
@@ -506,5 +508,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     XmlError error_;
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( Logbook::Mask )
 
 #endif

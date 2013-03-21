@@ -42,7 +42,7 @@ class LogEntry:public Counter, public BASE::Key
     public:
 
     //! configuration mask
-    enum Mask
+    enum MaskFlag
     {
         ENTRY_KEYWORD = 1<<0,
         ENTRY_TITLE = 1<<1,
@@ -54,6 +54,8 @@ class LogEntry:public Counter, public BASE::Key
         ENTRY_HEADER = ENTRY_TITLE | ENTRY_KEYWORD | ENTRY_CREATION | ENTRY_MODIFICATION | ENTRY_AUTHOR,
         ENTRY_ALL = ENTRY_HEADER | ENTRY_TEXT | ENTRY_ATTACHMENTS
     };
+
+    Q_DECLARE_FLAGS( Mask, MaskFlag )
 
     //! empty creator
     LogEntry( void );
@@ -105,10 +107,7 @@ class LogEntry:public Counter, public BASE::Key
 
     //! Log entry keyword
     void setKeyword( const Keyword& keyword )
-    {
-        keyword_ = keyword;
-        if( keyword_ == Keyword() ) keyword_ = Keyword( "No keyword" );
-    }
+    { keyword_ = keyword; }
 
     //! Log entry keyword
     const Keyword& keyword( void ) const
@@ -320,5 +319,6 @@ class LogEntry:public Counter, public BASE::Key
 
 };
 
+Q_DECLARE_OPERATORS_FOR_FLAGS( LogEntry::Mask )
 
 #endif

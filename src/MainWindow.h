@@ -374,7 +374,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     save current logbook with a given filename
     returns true if logbook was saved
     */
-    bool _saveAs( File defaultFile = File(""), bool registerLogbook = true );
+    bool _saveAs( File defaultFile = File(), bool registerLogbook = true );
 
     //! save current logbook with a given filename
     void _saveBackup( void );

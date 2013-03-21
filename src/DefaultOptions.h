@@ -71,73 +71,73 @@ void installDefaultOptions( void )
     // normal (overwritten) options
 
     // window sizes
-    XmlOptions::get().set( "ATTACHMENT_WINDOW_HEIGHT", Option( "400" , "requested AttachmentWindow height [pixels]"  ) );
-    XmlOptions::get().set( "ATTACHMENT_WINDOW_WIDTH", Option( "600" , "requested AttachmentWindow width [pixels]"  ) );
-    XmlOptions::get().set( "ATTACHMENT_FRAME_HEIGHT", Option( "150" , "requested height of attachment list in editor [pixels]"  ) );
+    XmlOptions::get().set<int>( "ATTACHMENT_WINDOW_HEIGHT",400 );
+    XmlOptions::get().set<int>( "ATTACHMENT_WINDOW_WIDTH", 600 );
+    XmlOptions::get().set<int>( "ATTACHMENT_FRAME_HEIGHT", 150 );
 
-    XmlOptions::get().set( "EDITION_WINDOW_HEIGHT", Option( "750" , "requested EditionWindow height [pixels]"  ) );
-    XmlOptions::get().set( "EDITION_WINDOW_WIDTH", Option( "700" , "requested EditionWindow width [pixels]"  ) );
+    XmlOptions::get().set<int>( "EDITION_WINDOW_HEIGHT", 750 );
+    XmlOptions::get().set<int>( "EDITION_WINDOW_WIDTH", 700 );
 
-    XmlOptions::get().set( "MAIN_WINDOW_HEIGHT", Option( "750" , "requested MainWindow height [pixels]"  ) );
-    XmlOptions::get().set( "MAIN_WINDOW_WIDTH", Option( "700" , "requested MainWindow width [pixels]"  ) );
-    XmlOptions::get().set( "LIST_ICON_SIZE", Option( "10", "default icon size in lists" ) );
-    XmlOptions::get().set( "ATTACHMENT_LIST_ICON_SIZE", Option( "22", "default icon size in lists" ) );
+    XmlOptions::get().set<int>( "MAIN_WINDOW_HEIGHT", 750 );
+    XmlOptions::get().set<int>( "MAIN_WINDOW_WIDTH", 700 );
+    XmlOptions::get().set<int>( "LIST_ICON_SIZE", 10 );
+    XmlOptions::get().set<int>( "ATTACHMENT_LIST_ICON_SIZE", 22 );
 
-    XmlOptions::get().set( "FILE_BACKUP", "0" );
-    XmlOptions::get().set( "AUTO_BACKUP", Option( "1" , "1 to make a backup of logbook file prior to any writting"  ) );
-    XmlOptions::get().set( "AUTO_SAVE", Option( "0" , "1 to save logbook automaticaly every given interval"  ) );
-    XmlOptions::get().set( "AUTO_SAVE_ITV", Option( "60" , "interval between two consecutive automatic save [seconds]"  ) );
-    XmlOptions::get().set( "BACKUP_ITV", Option( "30" , "interval between two consecutive auto backup [days]"  ) );
-    XmlOptions::get().set( "CASE_SENSITIVE", Option( "0" , "1 to distinguish upper and lower case when sorting/selecting text"  ) );
-    XmlOptions::get().set( "DB_SIZE", Option( "10" , "max number of files stored in the open previous menu"  ) );
+    XmlOptions::get().set<bool>( "FILE_BACKUP", false );
+    XmlOptions::get().set<bool>( "AUTO_BACKUP", true );
+    XmlOptions::get().set<bool>( "AUTO_SAVE", false );
+    XmlOptions::get().set<int>( "AUTO_SAVE_ITV", 60 );
+    XmlOptions::get().set<int>( "BACKUP_ITV", 30 );
+    XmlOptions::get().set<bool>( "CASE_SENSITIVE", false );
+    XmlOptions::get().set<int>( "DB_SIZE", 10 );
 
-    XmlOptions::get().set( "SIDE_EDITOR_TOOLBAR", Option( "1" , "if true, editor toolbar is on the left instead of top"  ) );
+    XmlOptions::get().set<bool>( "SIDE_EDITOR_TOOLBAR", true );
 
-    XmlOptions::get().set( "SEARCH_PANEL", Option( "0" , "toolbar visibility" ) );
-    XmlOptions::get().set( "SEARCH_PANEL_LOCATION", Option( "bottom" , "toolbar location" ) );
+    XmlOptions::get().set<bool>( "SEARCH_PANEL", false );
+    XmlOptions::get().set<int>( "SEARCH_PANEL_LOCATION", Qt::BottomToolBarArea );
 
-    XmlOptions::get().set( "SEARCH_PANEL_ICON_SIZE", "16" , "text label in tool buttons" );
-    XmlOptions::get().set( "SEARCH_PANEL_TEXT_POSITION", "0" , "text label in tool buttons" );
+    XmlOptions::get().set<int>( "SEARCH_PANEL_ICON_SIZE", 16 );
+    XmlOptions::get().set<int>( "SEARCH_PANEL_TEXT_POSITION", 0 );
 
-    XmlOptions::get().set( "MAIN_TOOLBAR", Option( "1" , "toolbar visibility" ) );
-    XmlOptions::get().set( "FORMAT_TOOLBAR", Option( "1" , "toolbar visibility" ) );
-    XmlOptions::get().set( "EDITION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
-    XmlOptions::get().set( "EXTRA_TOOLBAR", Option( "0" , "toolbar visibility" ) );
-    XmlOptions::get().set( "NAVIGATION_TOOLBAR", Option( "0" , "toolbar visibility" ) );
-    XmlOptions::get().set( "MULTIPLE_VIEW_TOOLBAR", Option( "1" , "toolbar visibility" ) );
+    XmlOptions::get().set<bool>( "MAIN_TOOLBAR", true );
+    XmlOptions::get().set<bool>( "FORMAT_TOOLBAR", true );
+    XmlOptions::get().set<bool>( "EDITION_TOOLBAR", false );
+    XmlOptions::get().set<bool>( "EXTRA_TOOLBAR", false );
+    XmlOptions::get().set<bool>( "NAVIGATION_TOOLBAR", false );
+    XmlOptions::get().set<bool>( "MULTIPLE_VIEW_TOOLBAR", true );
 
-    XmlOptions::get().set( "LOCK_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-    XmlOptions::get().set( "MAIN_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-    XmlOptions::get().set( "FORMAT_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-    XmlOptions::get().set( "EDITION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-    XmlOptions::get().set( "EXTRA_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-    XmlOptions::get().set( "NAVIGATION_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
-    XmlOptions::get().set( "MULTIPLE_VIEW_TOOLBAR_LOCATION", Option( "top" , "toolbar location" ) );
+    XmlOptions::get().set<int>( "LOCK_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
+    XmlOptions::get().set<int>( "MAIN_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
+    XmlOptions::get().set<int>( "FORMAT_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
+    XmlOptions::get().set<int>( "EDITION_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
+    XmlOptions::get().set<int>( "EXTRA_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
+    XmlOptions::get().set<int>( "NAVIGATION_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
+    XmlOptions::get().set<int>( "MULTIPLE_VIEW_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
 
-    XmlOptions::get().set( "LOCK_TOOLBAR", Option( "0" , "keywords toolbar visibility" ) );
-    XmlOptions::get().set( "ENTRY_TOOLBAR", Option( "1" , "entries toolbar visibility" ) );
-    XmlOptions::get().set( "KEYWORD_TOOLBAR", Option( "1" , "entries toolbar visibility" ) );
-    XmlOptions::get().set( "SHOW_SEARCHPANEL", Option( "1" , "search panel visibility" ) );
+    XmlOptions::get().set<bool>( "LOCK_TOOLBAR", false );
+    XmlOptions::get().set<bool>( "ENTRY_TOOLBAR", true );
+    XmlOptions::get().set<bool>( "KEYWORD_TOOLBAR", true );
+    XmlOptions::get().set<bool>( "SHOW_SEARCHPANEL", true );
 
-    XmlOptions::get().set( "MAX_RECENT_ENTRIES", Option( "30", "maximum number of recent entries stored in logbook" ) );
+    XmlOptions::get().set<int>( "MAX_RECENT_ENTRIES", 30 );
 
 
-    XmlOptions::get().set( "SHOW_KEYWORD", "0" );
-    XmlOptions::get().set( "USE_TREE", "1" );
+    XmlOptions::get().set<bool>( "SHOW_KEYWORD", false );
+    XmlOptions::get().set<bool>( "USE_TREE", true );
 
-    XmlOptions::get().set( "LOGENTRY_PRINT_OPTION_MASK", QString().setNum( LogEntry::ENTRY_ALL ) );
-    XmlOptions::get().set( "LOGENTRY_PRINT_SELECTION", QString().setNum( LogEntryPrintSelectionWidget::ALL_ENTRIES ) );
-    XmlOptions::get().set( "LOGBOOK_PRINT_OPTION_MASK", QString().setNum( Logbook::LOGBOOK_ALL ) );
+    XmlOptions::get().set<int>( "LOGENTRY_PRINT_OPTION_MASK", LogEntry::ENTRY_ALL );
+    XmlOptions::get().set<int>( "LOGENTRY_PRINT_SELECTION", LogEntryPrintSelectionWidget::ALL_ENTRIES );
+    XmlOptions::get().set<int>( "LOGBOOK_PRINT_OPTION_MASK", Logbook::LOGBOOK_ALL );
 
     // masks
-    XmlOptions::get().set<unsigned int>( "ENTRY_LIST_MASK",
+    XmlOptions::get().set<int>( "ENTRY_LIST_MASK",
         (1<< LogEntryModel::COLOR)|
         (1<< LogEntryModel::TITLE)|
         (1<< LogEntryModel::CREATION)|
         (1<< LogEntryModel::MODIFICATION)|
         (1<< LogEntryModel::AUTHOR) );
 
-    XmlOptions::get().set<unsigned int>( "ATTACHMENT_LIST_MASK",
+    XmlOptions::get().set<int>( "ATTACHMENT_LIST_MASK",
         (1<< AttachmentModel::FILE)|
         (1<< AttachmentModel::SIZE)|
         (1<< AttachmentModel::TYPE)|

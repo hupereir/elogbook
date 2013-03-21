@@ -72,9 +72,9 @@ void LogEntryPrintOptionWidget::write( void ) const
 { XmlOptions::get().set<unsigned int>( optionName(), mask() ); }
 
 //_________________________________________________________________
-unsigned int LogEntryPrintOptionWidget::mask( void ) const
+LogEntry::Mask LogEntryPrintOptionWidget::mask( void ) const
 {
-    unsigned int out(0);
+    LogEntry::Mask out(0);
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { if( iter.value()->isChecked() ) out |= iter.key(); }
 

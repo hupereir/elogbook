@@ -62,7 +62,7 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
     public slots:
 
     //! mask
-    void setMask( unsigned int value )
+    void setMask( LogEntry::Mask value )
     { mask_ = value; }
 
     //! print
@@ -82,7 +82,7 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
     private:
 
     //! mask
-    unsigned int mask_;
+    LogEntry::Mask mask_;
 
     //! log entry
     LogEntry* entry_;

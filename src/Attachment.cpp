@@ -48,9 +48,9 @@ Attachment::Attachment( const QString orig, const AttachmentType& type ):
     file_( NO_FILE ),
     comments_( NO_COMMENTS ),
     size_( 0 ),
-    size_str_( NO_SIZE ),
-    is_link_( UNKNOWN ),
-    is_valid_( false )
+    sizeString_( NO_SIZE ),
+    isLink_( UNKNOWN ),
+    valid_( false )
 {
     Debug::Throw( "Attachment::Attachment.\n" );
     setType( type );
@@ -64,9 +64,9 @@ Attachment::Attachment( const QDomElement& element):
     file_( NO_FILE ),
     comments_( NO_COMMENTS ),
     size_( 0 ),
-    size_str_( NO_SIZE ),
-    is_link_( UNKNOWN ),
-    is_valid_( false )
+    sizeString_( NO_SIZE ),
+    isLink_( UNKNOWN ),
+    valid_( false )
 {
     Debug::Throw() << "Attachment::Attachment.\n";
 
@@ -158,7 +158,7 @@ void Attachment::updateSize( void )
     // check type
     if( type() == AttachmentType::URL || size() != 0 || !isValid() ) return;
     size_ = file().fileSize();
-    size_str_ = file().sizeString();
+    sizeString_ = file().sizeString();
 
 }
 

@@ -23,18 +23,12 @@
 *
 *
 *******************************************************************************/
-/*!
-\file XmlDef.h
-\brief some Xml definitions
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
 
-
+#include <QString>
 
 //! Some Xml definitions
-namespace XML {
+namespace XML
+{
 
     //! logbook tag
     static const QString LOGBOOK( "Logbook" );

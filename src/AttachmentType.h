@@ -28,7 +28,8 @@
 #include <QMap>
 
 //! Attached file types for file manipulations
-class AttachmentType: public Counter{
+class AttachmentType: public Counter
+{
 
     public:
 
@@ -61,7 +62,11 @@ class AttachmentType: public Counter{
     { return key_ == type.key_; }
 
     //! creator
-    AttachmentType( const QString& key, const QString& name, const QString& icon, const QString& option = ""  );
+    AttachmentType(
+        const QString& key,
+        const QString& name,
+        const QString& icon,
+        const QString& options = QString()  );
 
     //! retrieves attachment key
     const QString& key( void ) const

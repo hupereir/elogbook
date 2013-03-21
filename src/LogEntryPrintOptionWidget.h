@@ -24,6 +24,7 @@
  *
  *******************************************************************************/
 
+#include "LogEntry.h"
 #include "OptionWidget.h"
 
 #include <QMap>
@@ -51,7 +52,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     virtual void write( void ) const;
 
     //! mask
-    unsigned int mask( void ) const;
+    LogEntry::Mask mask( void ) const;
 
     signals:
 
@@ -67,7 +68,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     private:
 
     //! checkboxes
-    typedef QMap<unsigned int, QCheckBox* > CheckBoxMap;
+    typedef QMap<LogEntry::MaskFlag, QCheckBox* > CheckBoxMap;
     CheckBoxMap checkBoxes_;
 
 };

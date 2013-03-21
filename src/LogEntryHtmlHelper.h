@@ -57,7 +57,7 @@ class LogEntryHtmlHelper: public QObject, public Counter
     { entry_ = entry; }
 
     //! mask
-    void setMask( unsigned int value )
+    void setMask( LogEntry::Mask value )
     { mask_ = value; }
 
     //! print header
@@ -82,7 +82,7 @@ class LogEntryHtmlHelper: public QObject, public Counter
     private:
 
     //! mask
-    unsigned int mask_;
+    LogEntry::Mask mask_;
 
     //! log entry
     LogEntry* entry_;

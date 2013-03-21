@@ -64,11 +64,11 @@ class LogbookHtmlHelper: public QObject, public Counter
     { entries_ = entries; }
 
     //! mask
-    void setMask( unsigned int value )
+    void setMask( Logbook::Mask value )
     { mask_ = value; }
 
     //! entry mask
-    void setEntryMask( unsigned int value )
+    void setEntryMask( LogEntry::Mask value )
     { entryMask_ = value; }
 
     public slots:
@@ -90,10 +90,10 @@ class LogbookHtmlHelper: public QObject, public Counter
     private:
 
     //! mask
-    unsigned int mask_;
+    Logbook::Mask mask_;
 
     //! entry mask
-    unsigned int entryMask_;
+    LogEntry::Mask entryMask_;
 
     //! logbook
     Logbook* logbook_;

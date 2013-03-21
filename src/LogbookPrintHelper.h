@@ -93,11 +93,11 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
 
 
     //! mask
-    void setMask( unsigned int value )
+    void setMask( Logbook::Mask value )
     { mask_ = value; }
 
     //! entry mask
-    void setEntryMask( unsigned int value )
+    void setEntryMask( LogEntry::Mask value )
     { entryMask_ = value; }
 
     //! set entry selection mode
@@ -127,10 +127,10 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     private:
 
     //! mask
-    unsigned int mask_;
+    Logbook::Mask mask_;
 
     //! entry mask
-    unsigned int entryMask_;
+    LogEntry::Mask entryMask_;
 
     //! selection mode
     LogEntryPrintSelectionWidget::Mode selectionMode_;

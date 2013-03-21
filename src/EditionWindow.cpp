@@ -1116,7 +1116,7 @@ void EditionWindow::_printPreview( void )
     // create helper
     LogEntryPrintHelper helper( this );
     helper.setEntry( entry() );
-    helper.setMask( XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
+    helper.setMask( (LogEntry::Mask) XmlOptions::get().get<int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this );

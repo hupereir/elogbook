@@ -54,7 +54,7 @@ class Attachment: public Counter, public BASE::Key
   static const QString NO_SIZE;
 
   //! contructor
-  Attachment( const QString orig = "", const AttachmentType& type = AttachmentType::UNKNOWN );
+  Attachment( const QString = QString(), const AttachmentType& = AttachmentType::UNKNOWN );
 
   //! creator from DomElement
   Attachment( const QDomElement& element );
@@ -103,14 +103,14 @@ class Attachment: public Counter, public BASE::Key
   //! validity
   bool setIsValid( const bool& value )
   {
-    if( is_valid_ == value ) return false;
-    is_valid_ = value;
+    if( valid_ == value ) return false;
+    valid_ = value;
     return true;
   }
 
   //! validity
   bool isValid( void ) const
-  { return is_valid_; }
+  { return valid_; }
 
   //! link state
   enum LinkState
@@ -123,14 +123,14 @@ class Attachment: public Counter, public BASE::Key
   //! link
   bool setIsLink( const LinkState& value )
   {
-    if( is_link_ == value ) return false;
-    is_link_ = value;
+    if( isLink_ == value ) return false;
+    isLink_ = value;
     return true;
   }
 
   //! link
   LinkState isLink( void ) const
-  { return is_link_; }
+  { return isLink_; }
 
   //! read file size
   void updateSize( void );
@@ -141,7 +141,7 @@ class Attachment: public Counter, public BASE::Key
 
   //! retrieves local file size
   QString sizeString( void ) const
-  { return size_str_; }
+  { return sizeString_; }
 
   //! retrieves associated entry
   LogEntry* entry() const;
@@ -259,7 +259,7 @@ class Attachment: public Counter, public BASE::Key
   double size_;
 
   //! corresponding size_string
-  QString size_str_;
+  QString sizeString_;
 
   //! creation
   TimeStamp creation_;
@@ -268,10 +268,10 @@ class Attachment: public Counter, public BASE::Key
   TimeStamp modification_;
 
   //! is link
-  LinkState is_link_;
+  LinkState isLink_;
 
   //! true for URL or if file exist
-  bool is_valid_;
+  bool valid_;
 
 };
 
