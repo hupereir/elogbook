@@ -27,7 +27,6 @@
 #include "FileCheck.h"
 #include "LogEntry.h"
 #include "XmlOptions.h"
-// #include "Str.h"
 #include "Util.h"
 #include "XmlDocument.h"
 #include "XmlDef.h"
@@ -266,9 +265,10 @@ bool Logbook::write( File file )
 
         // create main element
         QDomElement top = document.createElement( XML::LOGBOOK );
-        if( !title().isEmpty() ) top.setAttribute( XML::TITLE, XmlString( title() ).toXml() );
-        if( !directory().isEmpty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory()) );
-        if( !author().size() ) top.setAttribute( XML::AUTHOR, XmlString( author() ).toXml() ) ;
+        if( !title_.isEmpty() ) top.setAttribute( XML::TITLE, XmlString( title_ ).toXml() );
+        if( !directory_.isEmpty() ) top.setAttribute( XML::DIRECTORY, XmlString(directory_ ) );
+        if( !author_.isEmpty() ) top.setAttribute( XML::AUTHOR, XmlString( author_ ).toXml() ) ;
+        if( !parentFile_.isEmpty() ) top.setAttribute( XML::PARENT_FILE, XmlString( parentFile_ ).toXml() );
 
         top.setAttribute( XML::SORT_METHOD, QString().setNum( sortMethod_ ) );
         top.setAttribute( XML::SORT_ORDER, QString().setNum( sortOrder_ ) );
