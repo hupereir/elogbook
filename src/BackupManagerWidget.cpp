@@ -43,7 +43,6 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     list_->setModel( &model_ );
     list_->setSelectionMode( QAbstractItemView::ContiguousSelection );
     list_->setOptionName( "BACKUP_MANAGER_LIST" );
-    list_->setItemMargin( 2 );
 
     // buttons
     buttonLayout_ = new QVBoxLayout();

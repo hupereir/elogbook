@@ -65,15 +65,7 @@ class LogbookModel: public ListModel<Logbook*>, public Counter
     virtual QVariant data( const QModelIndex&, int ) const;
 
     //! header data
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
-    {
-        if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < nColumns )
-        { return columnTitles_[section]; }
-
-        // return empty
-        return QVariant();
-
-    }
+    virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole) const;
 
     //! number of columns for a given index
     virtual int columnCount( const QModelIndex& = QModelIndex() ) const

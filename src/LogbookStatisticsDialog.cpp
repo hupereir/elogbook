@@ -34,6 +34,7 @@
 #include "TreeView.h"
 #include "Util.h"
 
+#include <QHeaderView>
 #include <QLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -111,7 +112,12 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     TreeView *listView( new TreeView( this ) );
     listView->setModel( &model_ );
     listView->setSortingEnabled( false );
+    listView->setOptionName( "LOGBOOK_STATISTICS" );
     mainLayout().addWidget( listView, 1 );
+
+
+    listView->header()->setResizeMode( LogbookModel::CREATED, QHeaderView::Stretch);
+    listView->header()->setResizeMode( LogbookModel::MODIFIED, QHeaderView::Stretch);
 
     Logbook::List all( logbook->children() );
     all.prepend( logbook );

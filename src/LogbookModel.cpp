@@ -34,7 +34,6 @@ const QString LogbookModel::columnTitles_[ LogbookModel::nColumns ] =
     tr( "Modified" )
 };
 
-
 //_______________________________________________________________________________________
 QVariant LogbookModel::data( const QModelIndex& index, int role ) const
 {
@@ -57,9 +56,51 @@ QVariant LogbookModel::data( const QModelIndex& index, int role ) const
             case CREATED: return logbook.creation().toString();
             case MODIFIED: return logbook.modification().toString();
             default: return QVariant();
+
         }
+
+    } else if( role == Qt::TextAlignmentRole ) {
+
+        switch( index.column() )
+        {
+            case ENTRIES:
+            case CREATED:
+            case MODIFIED:
+            return Qt::AlignCenter;
+
+            default: return QVariant();
+
+        }
+
     }
 
+    return QVariant();
+
+}
+
+//_______________________________________________________________________________________
+QVariant LogbookModel::headerData(int section, Qt::Orientation orientation, int role ) const
+{
+    if( section >= 0 && section < nColumns )
+    {
+        if( role == Qt::DisplayRole ) return columnTitles_[section];
+        else if( role == Qt::TextAlignmentRole ) {
+
+            switch( section )
+            {
+                case ENTRIES:
+                case CREATED:
+                case MODIFIED:
+                return Qt::AlignCenter;
+
+                default: return QVariant();
+
+            }
+
+        }
+
+    }
+    // return empty
     return QVariant();
 
 }

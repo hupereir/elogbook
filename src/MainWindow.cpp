@@ -166,10 +166,9 @@ MainWindow::MainWindow( QWidget *parent ):
     if( XmlOptions::get().contains( "KEYWORD_LIST_WIDTH" ) )
     { keywordList_->setDefaultWidth( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) ); }
 
-    // the use of a custom delegate unfortunately disable the
-    // nice selection appearance of the oxygen style.
+    // replace item delegate
+    if( keywordList_->itemDelegate() ) keywordList_->itemDelegate()->deleteLater();
     keywordList_->setItemDelegate( new TextEditionDelegate( this ) );
-    keywordList_->setItemMargin( 2 );
 
     // update LogEntryList when keyword selection change
     connect( keywordList_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );
@@ -246,10 +245,9 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->header()->setResizeMode(LogEntryModel::CREATION, QHeaderView::Stretch);
     entryList_->header()->setResizeMode(LogEntryModel::MODIFICATION, QHeaderView::Stretch);
 
-    // the use of a custom delegate unfortunately disable the
-    // nice selection appearance of the oxygen style.
+    // replace item delegate
+    if( entryList_->itemDelegate() ) entryList_->itemDelegate()->deleteLater();
     entryList_->setItemDelegate( new TextEditionDelegate( this ) );
-    entryList_->setItemMargin( 2 );
 
     connect( entryList_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
     connect( entryList_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
