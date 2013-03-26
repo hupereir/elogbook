@@ -41,7 +41,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     // add tree
     hLayout->addWidget( list_ = new TreeView( this ) );
     list_->setModel( &model_ );
-    list_->setSelectionMode( QAbstractItemView::SingleSelection );
+    list_->setSelectionMode( QAbstractItemView::ContiguousSelection );
     list_->setOptionName( "BACKUP_MANAGER_LIST" );
     list_->setItemMargin( 2 );
 
@@ -130,19 +130,33 @@ void BackupManagerWidget::_clean( void )
 void BackupManagerWidget::_remove( void )
 {
     Debug::Throw( "BackupManagerWidget::_remove.\n" );
-    QModelIndex index( list_->selectionModel()->currentIndex() );
-    if( !index.isValid() ) return;
+    QModelIndexList selectedIndexes( list_->selectionModel()->selectedRows() );
+    if( selectedIndexes.isEmpty() ) return;
 
-    const Backup& backup( model_.get( index ) );
+    QString buffer;
+    if( selectedIndexes.size() == 1 )
+    {
 
-    // ask confirmation
-    QString buffer = QString(
-        tr( "Remove backup file named '%1' ?\n"
-        "Warning: this will permanently delete the files on disk and the corresponding data." ) )
-        .arg( backup.file().localName() );
+        buffer = QString(
+            tr( "Permanently delete the backup named '%1' ?\n"
+            "Warning: this will permanently delete the files on disk and the corresponding data." ) )
+            .arg( model_.get( selectedIndexes.front() ).file().localName() );
+
+    } else {
+
+        buffer = QString(
+            tr( "Permanently delete %1 backups ?\n"
+            "Warning: this will permanently delete the files on disk and the corresponding data." ) )
+            .arg( selectedIndexes.size() );
+
+    }
 
     if( !QuestionDialog( this, buffer ).exec() ) return;
-    emit removeBackupRequested( backup );
+
+    // ask for deletion of all selected backups
+    foreach( const QModelIndex& index, selectedIndexes )
+    { emit removeBackupRequested( model_.get( index ) ); }
+
 }
 
 //____________________________________________________________________________
@@ -189,94 +203,4 @@ void BackupManagerWidget::_updateActions( void )
     removeButton_->setEnabled( hasSelection );
     restoreButton_->setEnabled( hasSelection );
     mergeButton_->setEnabled( hasSelection );
-}
-
-//_______________________________________________
-const QString BackupManagerWidget::Model::columnTitles_[ BackupManagerWidget::Model::nColumns ] =
-{
-    tr( "File" ),
-    tr( "Path" ),
-    tr( "Created" )
-};
-
-//__________________________________________________________________
-Qt::ItemFlags BackupManagerWidget::Model::flags(const QModelIndex &index) const
-{
-
-    // default flags
-    Qt::ItemFlags flags;
-    if( !index.isValid() ) return flags;
-
-    // check associated record validity
-    const Backup& backup( get(index) );
-    if( !backup.isValid() ) return flags;
-
-    // default flags
-    flags |=  Qt::ItemIsEnabled |  Qt::ItemIsSelectable;
-
-    return flags;
-
-}
-
-//_______________________________________________
-QVariant BackupManagerWidget::Model::data( const QModelIndex& index, int role ) const
-{
-
-    // check index, role and column
-    if( !index.isValid() ) return QVariant();
-
-    const Backup backup( get( index ) );
-    if( role == Qt::DisplayRole )
-    {
-        switch( index.column() )
-        {
-            case FILE: return backup.file().localName();
-            case PATH: return backup.file().path();
-            case CREATION: return backup.creation().toString();
-
-            default:
-            return QVariant();
-        }
-    }
-
-    return QVariant();
-
-}
-
-//__________________________________________________________________
-QVariant BackupManagerWidget::Model::headerData(int section, Qt::Orientation orientation, int role) const
-{
-
-    if(
-        orientation == Qt::Horizontal &&
-        role == Qt::DisplayRole &&
-        section >= 0 &&
-        section < nColumns )
-    { return columnTitles_[section]; }
-
-    // return empty
-    return QVariant();
-
-}
-
-//____________________________________________________________
-void BackupManagerWidget::Model::_sort( int column, Qt::SortOrder order )
-{ std::sort( _get().begin(), _get().end(), SortFTor( (ColumnType) column, order ) ); }
-
-//________________________________________________________
-bool BackupManagerWidget::Model::SortFTor::operator () ( Backup first, Backup second ) const
-{
-
-    if( order_ == Qt::DescendingOrder ) std::swap( first, second );
-
-    switch( type_ )
-    {
-
-        case FILE: return first.file().localName() < second.file().localName();
-        case PATH: return first.file().path() < second.file().path();
-        case CREATION: return first.creation() < second.creation();
-        default: return true;
-
-    }
-
 }

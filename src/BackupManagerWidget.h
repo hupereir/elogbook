@@ -23,6 +23,8 @@
 *
 *******************************************************************************/
 
+#include "Backup.h"
+#include "BackupModel.h"
 #include "Counter.h"
 #include "Key.h"
 #include "Logbook.h"
@@ -103,69 +105,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
     private:
 
     //! model
-    class Model: public ListModel< Backup >, public Counter
-    {
-
-        public:
-
-        //! constructor
-        Model( void ):
-            Counter( "BackupManagerWidget::Model" )
-        {}
-
-        //! destructor
-        virtual ~Model( void )
-        {}
-
-        //! number of columns
-        enum { nColumns = 3 };
-
-        //! column type enumeration
-        enum ColumnType { FILE, PATH, CREATION };
-
-        //! flags
-        virtual Qt::ItemFlags flags( const QModelIndex& ) const;
-
-        //! return data
-        virtual QVariant data( const QModelIndex&, int ) const;
-
-        //! header data
-        virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
-
-        //! number of columns for a given index
-        virtual int columnCount( const QModelIndex& = QModelIndex() ) const
-        { return nColumns; }
-
-        protected:
-
-        //! sort
-        virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
-
-        private:
-
-        //! list column names
-        static const QString columnTitles_[nColumns];
-
-        //! used to sort IconCaches
-        class SortFTor: public ItemModel::SortFTor
-        {
-
-            public:
-
-            //! constructor
-            SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
-                ItemModel::SortFTor( type, order )
-            {}
-
-            //! prediction
-            bool operator() ( Backup, Backup ) const;
-
-        };
-
-    };
-
-    //! model
-    Model model_;
+    BackupModel model_;
 
     //! list
     TreeView* list_;
