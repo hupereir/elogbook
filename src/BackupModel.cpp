@@ -60,6 +60,7 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
     const Backup backup( get( index ) );
     if( role == Qt::DisplayRole )
     {
+
         switch( index.column() )
         {
             case FILE: return backup.file().localName();
@@ -69,6 +70,18 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
             default:
             return QVariant();
         }
+
+    } else if( role == Qt::TextAlignmentRole ) {
+
+        switch( index.column() )
+        {
+            case CREATION:
+            return Qt::AlignCenter;
+
+            default: return QVariant();
+
+        }
+
     }
 
     return QVariant();
@@ -79,12 +92,23 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
 QVariant BackupModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
 
-    if(
-        orientation == Qt::Horizontal &&
-        role == Qt::DisplayRole &&
-        section >= 0 &&
-        section < nColumns )
-    { return columnTitles_[section]; }
+    if( section >= 0 && section < nColumns )
+    {
+        if( role == Qt::DisplayRole ) return columnTitles_[section];
+        else if( role == Qt::TextAlignmentRole ) {
+
+            switch( section )
+            {
+                case CREATION:
+                return Qt::AlignCenter;
+
+                default: return QVariant();
+
+            }
+
+        }
+
+    }
 
     // return empty
     return QVariant();
