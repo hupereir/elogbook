@@ -52,6 +52,7 @@ Logbook::Logbook( const File& file ):
     author_( LOGBOOK_NO_AUTHOR ),
     modified_( false ),
     readOnly_( false ),
+    isBackup_( false ),
     creation_( TimeStamp::now() ),
     sortMethod_( Logbook::SORT_CREATION ),
     sortOrder_( 0 ),
@@ -143,6 +144,7 @@ bool Logbook::read( void )
         else if( name == XML::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
         else if( name == XML::SORT_ORDER ) setSortOrder( value.toInt() );
         else if( name == XML::READ_ONLY ) setReadOnly( value.toInt() );
+        else if( name == XML::LOGBOOK_BACKUP ) setIsBackup( value.toInt() );
         else if( name == XML::ENTRIES ) {
 
             setXmlEntries( value.toInt() );
@@ -273,6 +275,7 @@ bool Logbook::write( File file )
         top.setAttribute( XML::SORT_METHOD, QString().setNum( sortMethod_ ) );
         top.setAttribute( XML::SORT_ORDER, QString().setNum( sortOrder_ ) );
         top.setAttribute( XML::READ_ONLY, QString().setNum( readOnly_ ) );
+        top.setAttribute( XML::LOGBOOK_BACKUP, QString().setNum( isBackup_ ) );
 
         // update number of entries and children
         top.setAttribute( XML::ENTRIES, QString().setNum(xmlEntries()) );
@@ -665,6 +668,28 @@ bool Logbook::setReadOnly( bool value )
 }
 
 //_________________________________
+bool Logbook::setIsBackup( bool value )
+{
+
+    Debug::Throw( "Logbook::setIsBackup.\n" );
+    bool changed( false );
+    if( isBackup_ != value )
+    {
+        // update value
+        isBackup_ = value;
+        changed = true;
+
+    }
+
+    // also change permission on children
+    foreach( Logbook* logbook, children_ )
+    { changed |= logbook->setIsBackup( value ); }
+
+    return changed;
+
+}
+
+//_________________________________
 void Logbook::setModified( bool value )
 {
     Debug::Throw( "Logbook::setModified.\n");
@@ -704,19 +729,19 @@ bool Logbook::modified( void ) const
 }
 
 //______________________________________________________________________
-bool Logbook::setSortMethod( const Logbook::SortMethod& sort_method )
+bool Logbook::setSortMethod( Logbook::SortMethod sortMethod )
 {
     Debug::Throw( "Logbook::setSortMethod.\n" );
-    bool changed = ( sortMethod() != sort_method );
+    bool changed = ( this->sortMethod() != sortMethod );
     if( changed ) {
-        sortMethod_ = sort_method;
+        sortMethod_ = sortMethod;
         setModified( true );
     }
     return changed;
 }
 
 //______________________________________________________________________
-bool Logbook::setSortOrder( const int& order )
+bool Logbook::setSortOrder( int order )
 {
     Debug::Throw( "Logbook::setSortOrder.\n" );
     bool changed = (sortOrder() != order );
@@ -825,14 +850,18 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 }
 
 //______________________________________________________________________
-File Logbook::_childFilename( const File& file, const int& childCount ) const
+File Logbook::_childFilename( const File& file, int childCount ) const
 {
-    File head( file.localName().truncatedName() );
+
+    const File head( file.localName().truncatedName() );
     QString foot( file.extension() );
     if( !foot.isEmpty() ) foot = QString(".") + foot;
 
-    QString out;
-    QTextStream(&out) << head << "_include_" << childCount << foot;
+    const QString out = QString( "%1_include_%2%3" )
+        .arg( head )
+        .arg( childCount )
+        .arg( foot );
+
     Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
     return out;
 

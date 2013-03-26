@@ -436,10 +436,20 @@ bool MainWindow::setLogbook( File file )
     }
 
     // see if logbook is read-only
-    if( logbook_->isReadOnly() )
+    if( logbook_->isBackup() )
     {
-        const QString buffer = QString( tr(
-            "Warning: this logbook is read-only.\n"
+
+        const QString buffer = QString(
+            tr( "Warning: this logbook is a backup and is therefore read-only.\n"
+            "All editing will be disabled until it is marked as writable again "
+            "in the Logbook Information dialog." ) );
+
+        WarningDialog( this, buffer ).exec();
+
+    } else if( logbook_->isReadOnly() ) {
+
+        const QString buffer = QString(
+            tr( "Warning: this logbook is read-only.\n"
             "All editing will be disabled until it is marked as writable again "
             "in the Logbook Information dialog." ) );
 
@@ -1598,14 +1608,17 @@ void MainWindow::_saveBackup( void )
     // stores current logbook filename
     const QString currentFilename( logbook_->file() );
     const bool readOnlyState( logbook_->isReadOnly() );
+    const bool backupState( logbook_->isBackup() );
 
     // save logbook as backup.
     // mark backups as read-only
     logbook_->setReadOnly( true );
+    logbook_->setIsBackup( true );
     bool saved( _saveAs( filename, false ) );
 
     // restore old read-only state
     logbook_->setReadOnly( readOnlyState );
+    logbook_->setIsBackup( backupState );
 
     // remove the "backup" filename from the openPrevious list
     // to avoid confusion

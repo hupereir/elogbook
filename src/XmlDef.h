@@ -110,6 +110,7 @@ namespace XML
 
     //! true if logbook is read only
     static const QString READ_ONLY( "ReadOnly" );
+
 };
 
 #endif

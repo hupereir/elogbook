@@ -161,6 +161,10 @@ class Logbook:public QObject, public Counter, public BASE::Key
     bool isReadOnly( void ) const
     { return readOnly_; }
 
+    //! backup
+    bool isBackup( void ) const
+    { return isBackup_; }
+
     //! creation TimeStamp
     TimeStamp creation( void ) const
     { return creation_; }
@@ -181,14 +185,14 @@ class Logbook:public QObject, public Counter, public BASE::Key
     number of entries in logbook as read from xml
     it is not supposed to be synchronized with current list of entries
     */
-    const int& xmlEntries( void ) const
+    int xmlEntries( void ) const
     { return xmlEntries_; }
 
     /*! \brief
     number of children in logbook as read from xml
     it is not supposed to be synchronized with current list of children
     */
-    const int& xmlChildren( void ) const
+    int xmlChildren( void ) const
     { return xmlChildren_; }
 
     //! true if last backup is too old
@@ -214,7 +218,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     { return sortMethod_; }
 
     //! sort order
-    const int& sortOrder( void ) const
+    int sortOrder( void ) const
     { return sortOrder_; }
 
     //! backup files
@@ -312,7 +316,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     it is not supposed to be synchronized with current list of entries
     Returns true if changed.
     */
-    bool setXmlEntries( const int& value )
+    bool setXmlEntries( int value )
     {
         if( xmlEntries_ == value ) return false;
         xmlEntries_ = value ;
@@ -324,7 +328,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     it is not supposed to be synchronized with current list of children.
     Returns true if changed.
     */
-    bool setXmlChildren( const int& value )
+    bool setXmlChildren( int value )
     {
         if( xmlChildren_ == value ) return false;
         xmlChildren_ = value;
@@ -333,22 +337,27 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     //! set logbook as readonly [recursive]
     //! returns true if changed
-    bool setReadOnly( bool value );
+    bool setReadOnly( bool );
+
+
+    //! set logbook as backup [recursive]
+    //! returns true if changed
+    bool setIsBackup( bool );
 
     //! sets logbook modified value
-    void setModified( bool value );
+    void setModified( bool );
 
     //! sets logbook and children modified value [recursive]
-    void setModifiedRecursive( bool value );
+    void setModifiedRecursive( bool );
 
     /*!
     changes sort method associated to oldest parent
     returns true if changed
     */
-    bool setSortMethod( const SortMethod& sort_method );
+    bool setSortMethod( SortMethod );
 
     //! sort order
-    bool setSortOrder( const int& order );
+    bool setSortOrder( int order );
 
     //! add backup
     void addBackup( const File& );
@@ -365,8 +374,8 @@ class Logbook:public QObject, public Counter, public BASE::Key
         public:
 
         //! constructor
-        EntryLessFTor( const Logbook::SortMethod& sort_method, const int& order = 0 ):
-            sortMethod_( sort_method ),
+        EntryLessFTor( Logbook::SortMethod sortMethod, int order = 0 ):
+            sortMethod_( sortMethod ),
             order_(order)
         {}
 
@@ -430,7 +439,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
     QDomElement _recentEntriesElement( QDomDocument& ) const;
 
     //! generate tagged backup filename
-    File _childFilename( const File& file, const int& ) const;
+    File _childFilename( const File& file, int ) const;
 
     private:
 
@@ -460,6 +469,9 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     //! true if read only
     bool readOnly_;
+
+    //! true if this logbook is a backup
+    bool isBackup_;
 
     //! logbook creation time
     TimeStamp creation_;
