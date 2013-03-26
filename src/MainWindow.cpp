@@ -492,6 +492,7 @@ void MainWindow::checkLogbookBackup( void )
     if(
         XmlOptions::get().get<bool>( "AUTO_BACKUP" ) &&
         !logbook_->file().isEmpty() &&
+        !logbook_->isReadOnly() &&
         logbook_->needsBackup() )
     {
 
@@ -1491,6 +1492,7 @@ void MainWindow::open( FileRecord record )
     Singleton::get().application<Application>()->idle();
 
     // check if backup is needed
+    // no need to do that for read-only logbooks
     checkLogbookBackup();
 
     return;
@@ -1664,6 +1666,8 @@ void MainWindow::_revertToSaved( void )
     setLogbook( logbook_->file() );
     Singleton::get().application<Application>()->idle();
 
+    // check if backup is needed
+    // no need to do that for read-only logbooks
     checkLogbookBackup();
     ignoreWarnings_ = false;
 
@@ -2000,7 +2004,10 @@ void MainWindow::_removeBackup( Backup backup )
 
     // remove all files
     foreach( Logbook* logbook, all )
-    { logbook->file().remove(); }
+    {
+        emit messageAvailable( QString( tr( "Removing '%1'" ) ).arg( logbook->file() ) );
+        logbook->file().remove();
+    }
 
     // clean logbook backups
     Backup::List backups( logbook_->backupFiles() );

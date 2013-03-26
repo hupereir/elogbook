@@ -106,14 +106,6 @@ void installDefaultOptions( void )
     XmlOptions::get().set<bool>( "NAVIGATION_TOOLBAR", false );
     XmlOptions::get().set<bool>( "MULTIPLE_VIEW_TOOLBAR", true );
 
-    XmlOptions::get().set<int>( "LOCK_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
-    XmlOptions::get().set<int>( "MAIN_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
-    XmlOptions::get().set<int>( "FORMAT_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
-    XmlOptions::get().set<int>( "EDITION_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
-    XmlOptions::get().set<int>( "EXTRA_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
-    XmlOptions::get().set<int>( "NAVIGATION_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
-    XmlOptions::get().set<int>( "MULTIPLE_VIEW_TOOLBAR_LOCATION", Qt::BottomToolBarArea );
-
     XmlOptions::get().set<bool>( "LOCK_TOOLBAR", false );
     XmlOptions::get().set<bool>( "ENTRY_TOOLBAR", true );
     XmlOptions::get().set<bool>( "KEYWORD_TOOLBAR", true );
