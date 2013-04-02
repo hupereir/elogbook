@@ -59,15 +59,24 @@ QIcon ColorOptionModel::_icon( const BASE::Color& color )
     if( iter != _icons().end() ) return iter.value();
     else {
 
-        QPixmap pixmap( CustomPixmap().empty( IconSize( IconSize::Large ) ) );
-        QPainter painter( &pixmap );
-        painter.setPen( Qt::black );
-        painter.setBrush( color );
-        painter.setRenderHints(QPainter::Antialiasing );
 
+        QPixmap pixmap( CustomPixmap().empty( IconSize( IconSize::Large ) ) );
         QRect rect( pixmap.rect() );
         rect.adjust( 2, 2, -2, -2 );
 
+        QPainter painter( &pixmap );
+        painter.setRenderHints(QPainter::Antialiasing );
+
+//         painter.setPen( QPalette().color( QPalette::Text ) );
+//         painter.setBrush( color );
+//         painter.drawEllipse( rect );
+
+        painter.setPen( Qt::NoPen );
+        painter.setBrush( color );
+        painter.drawEllipse( rect );
+
+        painter.setPen( QPalette().color( QPalette::Text ) );
+        painter.setBrush( Qt::NoBrush );
         painter.drawEllipse( rect );
 
         QIcon icon( pixmap );
