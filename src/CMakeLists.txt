@@ -89,6 +89,7 @@ SET( elogbook_SOURCES
   BackupManagerDialog.cpp
   BackupManagerWidget.cpp
   BackupModel.cpp
+  ColorOptionListBox.cpp
   ColorOptionModel.cpp
   ConfigurationDialog.cpp
   DeleteAttachmentDialog.cpp
@@ -133,6 +134,7 @@ SET( elogbook_HEADERS
   BackupManagerDialog.h
   BackupManagerWidget.h
   BackupModel.h
+  ColorOptionListBox.h
   ConfigurationDialog.h
   DeleteAttachmentDialog.h
   DeleteKeywordDialog.h

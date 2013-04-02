@@ -23,7 +23,7 @@
 
 #include "Application.h"
 #include "AttachmentWindow.h"
-#include "ColorOptionModel.h"
+#include "ColorOptionListBox.h"
 #include "ConfigurationDialog.h"
 #include "Config.h"
 #include "CustomToolBar.h"
@@ -38,7 +38,6 @@
 #include "OptionBrowsedLineEditor.h"
 #include "OptionCheckBox.h"
 #include "OptionSpinBox.h"
-#include "OptionListBox.h"
 #include "Options.h"
 #include "RecentFilesConfiguration.h"
 #include "Singleton.h"
@@ -119,8 +118,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page->layout()->addWidget( box );
 
     OptionListBox* listbox;
-    box->layout()->addWidget( listbox = new OptionListBox( box, "COLOR" ) );
-    listbox->setModel( new ColorOptionModel( this ) );
+    box->layout()->addWidget( listbox = new ColorOptionListBox( box, "COLOR" ) );
     listbox->setToolTip( tr( "Colors used for logbook entry display" ) );
     addOptionWidget( listbox );
 
@@ -130,8 +128,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     box->layout()->setSpacing(5);
     page->layout()->addWidget( box );
 
-    box->layout()->addWidget( listbox = new OptionListBox( box, "TEXT_COLOR" ) );
-    listbox->setModel( new ColorOptionModel( this ) );
+    box->layout()->addWidget( listbox = new ColorOptionListBox( box, "TEXT_COLOR" ) );
     listbox->setToolTip(tr(  "Colors used for text formatting" ) );
     addOptionWidget( listbox );
 
