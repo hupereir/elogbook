@@ -33,11 +33,10 @@ KeywordModel::KeywordModel( QObject* parent ):
     Counter( "KeywordModel" )
 {}
 
-
 //__________________________________________________________________
 Qt::ItemFlags KeywordModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid()) return Qt::ItemIsDropEnabled;
+    if( !index.isValid() ) return Qt::ItemIsDropEnabled;
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled| Qt::ItemIsDragEnabled | Qt::ItemIsEditable;
 }
 
@@ -112,13 +111,12 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     // create mime data
     QMimeData *mime = new QMimeData();
 
-    // set drag type
+    // add keywords mimetype
     foreach( const QModelIndex& index, indexes )
     { if( index.isValid() ) mime->setData( Keyword::MimeType, get( index ).get().toLatin1() ); }
 
-    // retrieve associated entry
+    // add plain text mimetype
     QString buffer;
-    QTextStream what( &buffer );
     foreach( const QModelIndex& index, indexes )
     {
         if( !index.isValid() ) continue;
