@@ -120,7 +120,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     foreach( const QModelIndex& index, indexes )
     {
         if( !index.isValid() ) continue;
-        what << get(index) << endl;
+        buffer += get(index).get();
     }
 
     // set plain text data
