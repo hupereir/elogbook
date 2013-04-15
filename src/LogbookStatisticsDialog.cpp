@@ -115,9 +115,13 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     listView->setOptionName( "LOGBOOK_STATISTICS" );
     mainLayout().addWidget( listView, 1 );
 
-
+    #if QT_VERSION >= 0x050000
+    listView->header()->setSectionResizeMode( LogbookModel::CREATED, QHeaderView::Stretch);
+    listView->header()->setSectionResizeMode( LogbookModel::MODIFIED, QHeaderView::Stretch);
+    #else
     listView->header()->setResizeMode( LogbookModel::CREATED, QHeaderView::Stretch);
     listView->header()->setResizeMode( LogbookModel::MODIFIED, QHeaderView::Stretch);
+    #endif
 
     Logbook::List all( logbook->children() );
     all.prepend( logbook );

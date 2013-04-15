@@ -242,8 +242,13 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->setColumnHidden( LogEntryModel::TITLE, false );
     entryList_->lockColumnVisibility( LogEntryModel::TITLE );
 
+    #if QT_VERSION >= 0x050000
+    entryList_->header()->setSectionResizeMode(LogEntryModel::CREATION, QHeaderView::Stretch);
+    entryList_->header()->setSectionResizeMode(LogEntryModel::MODIFICATION, QHeaderView::Stretch);
+    #else
     entryList_->header()->setResizeMode(LogEntryModel::CREATION, QHeaderView::Stretch);
     entryList_->header()->setResizeMode(LogEntryModel::MODIFICATION, QHeaderView::Stretch);
+    #endif
 
     // replace item delegate
     if( entryList_->itemDelegate() ) entryList_->itemDelegate()->deleteLater();
