@@ -1910,7 +1910,7 @@ void MainWindow::_synchronize( void )
 
     // set busy flag
     Singleton::get().application<Application>()->busy();
-    statusbar_->label().setText( "reading remote logbook ... " );
+    statusbar_->label().setText( "Reading remote logbook ... " );
 
     // opens file in remote logbook
     Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remoteFile << endl;
