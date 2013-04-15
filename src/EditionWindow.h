@@ -177,8 +177,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     { return closed_; }
 
     //! closed flag
-    void setIsClosed( bool value )
-    { closed_ = value; }
+    void setIsClosed( bool );
 
     //! check if current entry has been modified or not
     bool modified( void ) const

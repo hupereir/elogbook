@@ -339,6 +339,24 @@ void EditionWindow::setColorMenu( ColorMenu* menu )
 }
 
 //_____________________________________________
+void EditionWindow::setIsClosed( bool value )
+{
+    closed_ = value;
+    if( closed_ )
+    {
+
+        // discard modifications, if any
+        setModified( false );
+
+        // delete associated entry if it is 'new'
+        LogEntry *entry( this->entry() );
+        if( entry && BASE::KeySet<Logbook>( entry ).empty() )
+        { delete entry; }
+
+    }
+}
+
+//_____________________________________________
 QString EditionWindow::windowTitle( void ) const
 {
 
@@ -985,7 +1003,7 @@ void EditionWindow::_save( bool updateSelection )
     LogEntry *entry( this->entry() );
 
     // see if entry is new
-    bool entryIsNew( !entry || BASE::KeySet<Logbook>( entry ).empty() );
+    const bool entryIsNew( !entry || BASE::KeySet<Logbook>( entry ).empty() );
 
     // create entry if none set
     if( !entry ) entry = new LogEntry();
@@ -1198,10 +1216,6 @@ void EditionWindow::_newEntry( void )
     LogEntry* entry = new LogEntry();
     entry->setAuthor( XmlOptions::get().raw( "USER" ) );
     entry->setKeyword( _mainWindow().currentKeyword() );
-
-    // add logbook parent if any
-    // Logbook *logbook( _mainWindow().logbook() );
-    // if( logbook ) Key::associate( entry, logbook->latestChild() );
 
     // display new entry
     displayEntry( entry );
