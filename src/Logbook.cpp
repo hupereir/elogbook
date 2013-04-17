@@ -175,7 +175,7 @@ bool Logbook::read( void )
         else if( tagName == XML::ENTRY ) {
 
             LogEntry* entry = new LogEntry( element );
-            Key::associate( latestChild(), entry );
+            Key::associate( this, entry );
             entryCount++;
             if( !(entryCount%progress) ) emit progressAvailable( progress );
 
