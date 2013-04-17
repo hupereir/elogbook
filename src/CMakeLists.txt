@@ -47,7 +47,6 @@ SET( elogbook_lib_SOURCES
   FileCheck.cpp
   Keyword.cpp
   Logbook.cpp
-  LogbookThread.cpp
   LogEntry.cpp
 )
 
