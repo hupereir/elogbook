@@ -206,7 +206,7 @@ bool Application::_processCommand( SERVER::ServerCommand command )
 
     Debug::Throw( "Application::_processCommand.\n" );
     if( BaseApplication::_processCommand( command ) ) return true;
-    if( command.command() == SERVER::ServerCommand::RAISE )
+    if( command.command() == SERVER::ServerCommand::Raise )
     {
         if( mainWindow_ ) mainWindow_->uniconifyAction().trigger();
         QStringList filenames( SERVER::ApplicationManager::commandLineParser( command.arguments() ).orphans() );

@@ -138,7 +138,7 @@ void installDefaultOptions( void )
     QString host( Util::host() );
     XmlOptions::get().set( "USER", Option( user+"@"+host, Option::None ) );
     XmlOptions::get().set( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::None ) );
-    XmlOptions::get().set( "APP_NAME", Option(  "ELOGBOOK", Option::None ) );
+    XmlOptions::get().set( "APP_NAME", Option(  "Elogbook", Option::None ) );
     XmlOptions::get().setAutoDefault( false );
 
 };
