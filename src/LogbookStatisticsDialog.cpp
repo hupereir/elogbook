@@ -70,12 +70,12 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     {
         // file
         item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::All );
-        item->setKey( tr( "File name" ) );
+        item->setKey( tr( "File name:" ) );
         item->setValue( logbook->file().localName() );
 
         // path
         item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Selectable|BaseFileInformationDialog::Elide );
-        item->setKey( tr( "Path" ) );
+        item->setKey( tr( "Path:" ) );
         item->setValue( logbook->file().path() );
     }
 
