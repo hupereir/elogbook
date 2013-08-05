@@ -1,24 +1,24 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
     <file alias="elogbook.png">../elogbook.png</file>
-    <file alias="pixmaps/attach.png">../pixmaps/attach.png</file>
-    <file alias="pixmaps/configure-backups.png">../pixmaps/configure-backups.png</file>
-    <file alias="pixmaps/document-close.png">../pixmaps/document-close.png</file>
-    <file alias="pixmaps/document-new.png">../pixmaps/document-new.png</file>
-    <file alias="pixmaps/document-save.png">../pixmaps/document-save.png</file>
-    <file alias="pixmaps/document-save-as.png">../pixmaps/document-save-as.png</file>
-    <file alias="pixmaps/tools-check-spelling.png">../pixmaps/tools-check-spelling.png</file>
-    <file alias="pixmaps/go-home.png">../pixmaps/go-home.png</file>
-    <file alias="pixmaps/insert-link.png">../pixmaps/insert-link.png</file>
-    <file alias="pixmaps/format-text-bold.png">../pixmaps/format-text-bold.png</file>
-    <file alias="pixmaps/format-text-italic.png">../pixmaps/format-text-italic.png</file>
-    <file alias="pixmaps/format-text-strikethrough.png">../pixmaps/format-text-strikethrough.png</file>
-    <file alias="pixmaps/format-text-underline.png">../pixmaps/format-text-underline.png</file>
-    <file alias="pixmaps/view-close.png">../pixmaps/view-close.png</file>
-    <file alias="pixmaps/view-fullscreen.png">../pixmaps/view-fullscreen.png</file>
-    <file alias="pixmaps/view-list-tree.png">../pixmaps/view-list-tree.png</file>
-    <file alias="pixmaps/view-split-left-right.png">../pixmaps/view-split-left-right.png</file>
-    <file alias="pixmaps/view-split-top-bottom.png">../pixmaps/view-split-top-bottom.png</file>
-    <file alias="pixmaps/merge.png">../pixmaps/merge.png</file>
+    <file alias="icons/32x32/attach.png">../pixmaps/attach.png</file>
+    <file alias="icons/32x32/configure-backups.png">../pixmaps/configure-backups.png</file>
+    <file alias="icons/32x32/document-close.png">../pixmaps/document-close.png</file>
+    <file alias="icons/32x32/document-new.png">../pixmaps/document-new.png</file>
+    <file alias="icons/32x32/document-save.png">../pixmaps/document-save.png</file>
+    <file alias="icons/32x32/document-save-as.png">../pixmaps/document-save-as.png</file>
+    <file alias="icons/32x32/tools-check-spelling.png">../pixmaps/tools-check-spelling.png</file>
+    <file alias="icons/32x32/go-home.png">../pixmaps/go-home.png</file>
+    <file alias="icons/32x32/insert-link.png">../pixmaps/insert-link.png</file>
+    <file alias="icons/32x32/format-text-bold.png">../pixmaps/format-text-bold.png</file>
+    <file alias="icons/32x32/format-text-italic.png">../pixmaps/format-text-italic.png</file>
+    <file alias="icons/32x32/format-text-strikethrough.png">../pixmaps/format-text-strikethrough.png</file>
+    <file alias="icons/32x32/format-text-underline.png">../pixmaps/format-text-underline.png</file>
+    <file alias="icons/32x32/view-close.png">../pixmaps/view-close.png</file>
+    <file alias="icons/32x32/view-fullscreen.png">../pixmaps/view-fullscreen.png</file>
+    <file alias="icons/32x32/view-list-tree.png">../pixmaps/view-list-tree.png</file>
+    <file alias="icons/32x32/view-split-left-right.png">../pixmaps/view-split-left-right.png</file>
+    <file alias="icons/32x32/view-split-top-bottom.png">../pixmaps/view-split-top-bottom.png</file>
+    <file alias="icons/32x32/merge.png">../pixmaps/merge.png</file>
   </qresource>
 </RCC>
