@@ -28,6 +28,7 @@
 #include <QCheckBox>
 #include <QContextMenuEvent>
 #include <QHash>
+#include <QPushButton>
 
 class CustomComboBox;
 class TransitionWidget;
@@ -92,6 +93,9 @@ class SearchPanel: public CustomToolBar
     //! toggle visibility [overloaded]
     virtual void _toggleVisibility( bool );
 
+    //! find button
+    virtual void _updateFindButton( const QString& );
+
     private slots:
 
     //! configuration
@@ -109,6 +113,14 @@ class SearchPanel: public CustomToolBar
     //! send SelectEntries request
     void _selectionRequest( void );
 
+    //! enable all entries button
+    void _enableAllEntriesButton( void )
+    { allEntriesButton_->setEnabled( true ); }
+
+    //! disable all entries button
+    void _disableAllEntriesButton( void )
+    { allEntriesButton_->setEnabled( false ); }
+
     private:
 
     //! checkboxes
@@ -116,6 +128,12 @@ class SearchPanel: public CustomToolBar
 
     //! transition widget
     TransitionWidget* transitionWidget_;
+
+    //! find button
+    QPushButton* findButton_;
+
+    //! show all entries button
+    QPushButton* allEntriesButton_;
 
     //! checkboxes
     CheckBoxMap checkboxes_;

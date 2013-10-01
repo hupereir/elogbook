@@ -1,3 +1,4 @@
+
 // $Id$
 
 /******************************************************************************
@@ -19,12 +20,6 @@
 *
 *******************************************************************************/
 
-#include <QApplication>
-#include <QGroupBox>
-#include <QLabel>
-#include <QPushButton>
-#include <QLayout>
-
 #include "TransitionWidget.h"
 #include "Debug.h"
 #include "Icons.h"
@@ -39,91 +34,103 @@
 #include "ToolButtonStyleMenu.h"
 #include "XmlOptions.h"
 
+#include <QApplication>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):
-  CustomToolBar( title, parent, option_name ),
-  transitionWidget_( new TransitionWidget(parent) )
+CustomToolBar( title, parent, option_name ),
+transitionWidget_( new TransitionWidget(parent) )
 {
-  Debug::Throw( "SearchPanel::SearchPanel.\n" );
+    Debug::Throw( "SearchPanel::SearchPanel.\n" );
 
-  // find selection button
-  QPushButton* button;
-  addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), tr( "Find" ), this ) );
-  connect( button, SIGNAL( clicked() ), SLOT( _selectionRequest() ) );
-  button->setToolTip( tr( "Find logbook entries matching selected text" ) );
+    // find selection button
+    QPushButton* button;
+    addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), tr( "Find" ), this ) );
+    connect( button, SIGNAL( clicked() ), SLOT( _selectionRequest() ) );
+    button->setToolTip( tr( "Find logbook entries matching selected text" ) );
+    button->setEnabled( false );
+    findButton_ = button;
 
-  // selection text
-  editor_ = new CustomComboBox( this );
-  editor_->setEditable( true );
-  editor_->setAutoCompletion( true );
-  editor_->setToolTip( tr( "Text to be found in logbook" ) );
-  editor_->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-  addWidget( editor_ );
-  connect( editor_, SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest() ) );
+    // selection text
+    editor_ = new CustomComboBox( this );
+    editor_->setEditable( true );
+    editor_->setAutoCompletion( true );
+    editor_->setToolTip( tr( "Text to be found in logbook" ) );
+    editor_->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    addWidget( editor_ );
+    connect( editor_, SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest( void ) ) );
+    connect( editor_, SIGNAL( editTextChanged( const QString& ) ), SLOT( _updateFindButton( const QString& ) ) );
 
-  addWidget( new QLabel( " in ", this ) );
+    addWidget( new QLabel( " in ", this ) );
 
-  addWidget( checkboxes_[TITLE] = new QCheckBox( tr( "Title" ), this ) );
-  addWidget( checkboxes_[KEYWORD] = new QCheckBox( tr( "Keyword" ), this ) );
-  addWidget( checkboxes_[TEXT]  = new QCheckBox( tr( "Text" ), this ) );
-  addWidget( checkboxes_[ATTACHMENT] = new QCheckBox( tr( "Attachment" ), this ) );
-  addWidget( checkboxes_[COLOR] = new QCheckBox( tr( "Color" ), this ) );
-  checkboxes_[TEXT]->setChecked( true );
+    addWidget( checkboxes_[TITLE] = new QCheckBox( tr( "Title" ), this ) );
+    addWidget( checkboxes_[KEYWORD] = new QCheckBox( tr( "Keyword" ), this ) );
+    addWidget( checkboxes_[TEXT]  = new QCheckBox( tr( "Text" ), this ) );
+    addWidget( checkboxes_[ATTACHMENT] = new QCheckBox( tr( "Attachment" ), this ) );
+    addWidget( checkboxes_[COLOR] = new QCheckBox( tr( "Color" ), this ) );
+    checkboxes_[TEXT]->setChecked( true );
 
-  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
-  { connect( iter.value(), SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
+    { connect( iter.value(), SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
 
-  // show_all button
-  addWidget( button = new QPushButton( tr( "Show All" ), this ) );
-  connect( button, SIGNAL( clicked() ), this, SIGNAL( showAllEntries() ) );
-  button->setToolTip( tr( "Show all logbook entries" ) );
+    // show_all button
+    addWidget( button = new QPushButton( tr( "Show All" ), this ) );
+    connect( button, SIGNAL( clicked( void ) ), this, SIGNAL( showAllEntries( void ) ) );
+    connect( button, SIGNAL( clicked( void ) ), this, SLOT( _disableAllEntriesButton( void ) ) );
+    button->setToolTip( tr( "Show all logbook entries" ) );
+    button->setEnabled( false );
+    allEntriesButton_ = button;
 
-  // close button
-  QAction* hide_action;
-  addAction( hide_action = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), this ) );
-  connect( hide_action, SIGNAL( triggered() ), SLOT( hide() ) );
-  connect( hide_action, SIGNAL( triggered() ), this, SIGNAL( showAllEntries() ) );
-  hide_action->setToolTip( tr( "Show all entries and hide search bar" ) );
+    connect( findButton_, SIGNAL( clicked( void ) ), this, SLOT( _enableAllEntriesButton( void ) ) );
 
-  // configuration
-  connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-  _updateConfiguration();
+    // close button
+    QAction* hideAction;
+    addAction( hideAction = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), this ) );
+    connect( hideAction, SIGNAL( triggered() ), SLOT( hide() ) );
+    connect( hideAction, SIGNAL( triggered() ), this, SIGNAL( showAllEntries() ) );
+    hideAction->setToolTip( tr( "Show all entries and hide search bar" ) );
 
-  // transition widget
-  _transitionWidget().setFlag( TransitionWidget::FROM_PARENT, true );
-  _transitionWidget().hide();
-  connect( &_transitionWidget().timeLine(), SIGNAL( finished() ),  &_transitionWidget(), SLOT( hide() ) );
+    // configuration
+    connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+    _updateConfiguration();
 
+    // transition widget
+    _transitionWidget().setFlag( TransitionWidget::FROM_PARENT, true );
+    _transitionWidget().hide();
+    connect( &_transitionWidget().timeLine(), SIGNAL( finished() ),  &_transitionWidget(), SLOT( hide() ) );
 
 }
 
 //_______________________________________________________________
 void SearchPanel::show( void )
 {
-  Debug::Throw( "SearchPanel::show.\n" );
+    Debug::Throw( "SearchPanel::show.\n" );
 
-  // check transition enability
-  if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) ) return CustomToolBar::show();
+    // check transition enability
+    if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) ) return CustomToolBar::show();
 
-  // transition
-  _transitionWidget().initialize();
-  CustomToolBar::show();
-  _transitionWidget().start();
+    // transition
+    _transitionWidget().initialize();
+    CustomToolBar::show();
+    _transitionWidget().start();
 
 }
 
 //_______________________________________________________________
 void SearchPanel::hide( void )
 {
-  Debug::Throw( "SearchPanel::hide.\n" );
+    Debug::Throw( "SearchPanel::hide.\n" );
 
-  // check transition enability
-  if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )  return CustomToolBar::hide();
+    // check transition enability
+    if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )  return CustomToolBar::hide();
 
-  // transition
-  _transitionWidget().initialize();
-  CustomToolBar::hide();
-  _transitionWidget().start();
+    // transition
+    _transitionWidget().initialize();
+    CustomToolBar::hide();
+    _transitionWidget().start();
 
 }
 
@@ -131,16 +138,16 @@ void SearchPanel::hide( void )
 void SearchPanel::setVisible( bool state )
 {
 
-  Debug::Throw( "SearchPanel::setVisible.\n" );
+    Debug::Throw( "SearchPanel::setVisible.\n" );
 
-  // check state and transition enability
-  if( state == isVisible() || !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )
-  { return CustomToolBar::setVisible( state ); }
+    // check state and transition enability
+    if( state == isVisible() || !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )
+    { return CustomToolBar::setVisible( state ); }
 
-  // transition
-  _transitionWidget().initialize();
-  CustomToolBar::setVisible( state );
-  _transitionWidget().start();
+    // transition
+    _transitionWidget().initialize();
+    CustomToolBar::setVisible( state );
+    _transitionWidget().start();
 
 }
 
@@ -148,36 +155,40 @@ void SearchPanel::setVisible( bool state )
 void SearchPanel::_toggleVisibility( bool state )
 {
 
-  Debug::Throw( "SearchPanel::_toggleVisibility.\n" );
-  CustomToolBar::_toggleVisibility( state );
-  if( state ) {
-    editor_->lineEdit()->selectAll();
-    editor_->setFocus();
-  }
+    Debug::Throw( "SearchPanel::_toggleVisibility.\n" );
+    CustomToolBar::_toggleVisibility( state );
+    if( state ) {
+        editor_->lineEdit()->selectAll();
+        editor_->setFocus();
+    }
 
 }
+
+//___________________________________________________________
+void SearchPanel::_updateFindButton( const QString& value )
+{ findButton_->setEnabled( !value.isEmpty() ); }
 
 //___________________________________________________________
 void SearchPanel::_updateConfiguration( void )
 {
 
-  Debug::Throw( "SearchPanel::_updateConfiguration.\n" );
+    Debug::Throw( "SearchPanel::_updateConfiguration.\n" );
 
-  // icon size
-  IconSize icon_size( IconSize( this, (IconSize::Size)XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) ) );
-  setIconSize( icon_size );
+    // icon size
+    IconSize icon_size( IconSize( this, (IconSize::Size)XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) ) );
+    setIconSize( icon_size );
 
-  // text label for toolbars
-  Qt::ToolButtonStyle style( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
-  setToolButtonStyle( style );
+    // text label for toolbars
+    Qt::ToolButtonStyle style( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
+    setToolButtonStyle( style );
 
-  // load mask
-  if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
-  {
-    unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
-    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
-    { iter.value()->setChecked( mask & iter.key() ); }
-  }
+    // load mask
+    if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
+    {
+        unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
+        for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+        { iter.value()->setChecked( mask & iter.key() ); }
+    }
 
 }
 
@@ -186,9 +197,9 @@ void SearchPanel::_updateConfiguration( void )
 void SearchPanel::_updateToolButtonStyle( Qt::ToolButtonStyle style )
 {
 
-  Debug::Throw( "SearchPanel::_updateToolButtonStyle.\n" );
-  XmlOptions::get().set<int>( "SEARCH_PANEL_TEXT_POSITION", (int)style );
-  _updateConfiguration();
+    Debug::Throw( "SearchPanel::_updateToolButtonStyle.\n" );
+    XmlOptions::get().set<int>( "SEARCH_PANEL_TEXT_POSITION", (int)style );
+    _updateConfiguration();
 
 }
 
@@ -196,9 +207,9 @@ void SearchPanel::_updateToolButtonStyle( Qt::ToolButtonStyle style )
 void SearchPanel::_updateToolButtonIconSize( IconSize::Size size )
 {
 
-  Debug::Throw( "SearchPanel::_updateToolButtonIconSize.\n" );
-  XmlOptions::get().set<int>( "SEARCH_PANEL_ICON_SIZE", size );
-  _updateConfiguration();
+    Debug::Throw( "SearchPanel::_updateToolButtonIconSize.\n" );
+    XmlOptions::get().set<int>( "SEARCH_PANEL_ICON_SIZE", size );
+    _updateConfiguration();
 
 }
 
@@ -206,29 +217,29 @@ void SearchPanel::_updateToolButtonIconSize( IconSize::Size size )
 void SearchPanel::_saveMask( void )
 {
 
-  Debug::Throw( "SearchPanel::_saveMask.\n" );
+    Debug::Throw( "SearchPanel::_saveMask.\n" );
 
-  // store mask
-  unsigned int mask(0);
-  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
-  { if( iter.value()->isChecked() ) mask |= iter.key(); }
+    // store mask
+    unsigned int mask(0);
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+    { if( iter.value()->isChecked() ) mask |= iter.key(); }
 
-  XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
+    XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
 
 }
 
 //___________________________________________________________
 void SearchPanel::_selectionRequest( void )
 {
-  Debug::Throw( "SearchPanel::_selectionRequest.\n" );
+    Debug::Throw( "SearchPanel::_selectionRequest.\n" );
 
-  // build mode
-  unsigned int mode = NONE;
-  for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
-  { if( iter.value()->isChecked() ) mode |= iter.key(); }
+    // build mode
+    unsigned int mode = NONE;
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+    { if( iter.value()->isChecked() ) mode |= iter.key(); }
 
-  // text selection
-  emit selectEntries( editor_->currentText(), mode );
+    // text selection
+    emit selectEntries( editor_->currentText(), mode );
 
 }
 
@@ -236,21 +247,21 @@ void SearchPanel::_selectionRequest( void )
 //______________________________________________________________________
 void SearchPanel::contextMenuEvent( QContextMenuEvent* event )
 {
-  Debug::Throw( "SearchPanel::_raiseMenu.\n" );
+    Debug::Throw( "SearchPanel::_raiseMenu.\n" );
 
-  MainWindow* mainwindow( qobject_cast<MainWindow*>( window() ) );
-  if( !mainwindow ) return;
-  ToolBarMenu& menu( mainwindow->toolBarMenu() );
+    MainWindow* mainwindow( qobject_cast<MainWindow*>( window() ) );
+    if( !mainwindow ) return;
+    ToolBarMenu& menu( mainwindow->toolBarMenu() );
 
-  menu.toolButtonStyleMenu().select( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
-  menu.iconSizeMenu().select( (IconSize::Size) XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) );
+    menu.toolButtonStyleMenu().select( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
+    menu.iconSizeMenu().select( (IconSize::Size) XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) );
 
-  CustomToolBar::connect( &menu.toolButtonStyleMenu(), SIGNAL( styleSelected( Qt::ToolButtonStyle ) ), SLOT( _updateToolButtonStyle( Qt::ToolButtonStyle ) ) );
-  CustomToolBar::connect( &menu.iconSizeMenu(), SIGNAL( iconSizeSelected( IconSize::Size ) ), SLOT( _updateToolButtonIconSize( IconSize::Size ) ) );
+    CustomToolBar::connect( &menu.toolButtonStyleMenu(), SIGNAL( styleSelected( Qt::ToolButtonStyle ) ), SLOT( _updateToolButtonStyle( Qt::ToolButtonStyle ) ) );
+    CustomToolBar::connect( &menu.iconSizeMenu(), SIGNAL( iconSizeSelected( IconSize::Size ) ), SLOT( _updateToolButtonIconSize( IconSize::Size ) ) );
 
-  // move and show menu
-  menu.adjustSize();
-  menu.exec( event->globalPos() );
-  menu.deleteLater();
+    // move and show menu
+    menu.adjustSize();
+    menu.exec( event->globalPos() );
+    menu.deleteLater();
 
 }
