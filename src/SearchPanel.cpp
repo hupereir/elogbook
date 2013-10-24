@@ -78,19 +78,20 @@ transitionWidget_( new TransitionWidget(parent) )
 
     // show_all button
     addWidget( button = new QPushButton( tr( "Show All" ), this ) );
-    connect( button, SIGNAL( clicked( void ) ), this, SIGNAL( showAllEntries( void ) ) );
-    connect( button, SIGNAL( clicked( void ) ), this, SLOT( _disableAllEntriesButton( void ) ) );
+    connect( button, SIGNAL( clicked( void ) ), SIGNAL( showAllEntries( void ) ) );
+    connect( button, SIGNAL( clicked( void ) ), SLOT( _disableAllEntriesButton( void ) ) );
     button->setToolTip( tr( "Show all logbook entries" ) );
     button->setEnabled( false );
     allEntriesButton_ = button;
 
-    connect( findButton_, SIGNAL( clicked( void ) ), this, SLOT( _enableAllEntriesButton( void ) ) );
+    connect( findButton_, SIGNAL( clicked( void ) ), SLOT( _enableAllEntriesButton( void ) ) );
+    connect( editor_, SIGNAL( activated( const QString& ) ), SLOT( _enableAllEntriesButton( void ) ) );
 
     // close button
     QAction* hideAction;
     addAction( hideAction = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), this ) );
     connect( hideAction, SIGNAL( triggered() ), SLOT( hide() ) );
-    connect( hideAction, SIGNAL( triggered() ), this, SIGNAL( showAllEntries() ) );
+    connect( hideAction, SIGNAL( triggered() ), SIGNAL( showAllEntries() ) );
     hideAction->setToolTip( tr( "Show all entries and hide search bar" ) );
 
     // configuration
