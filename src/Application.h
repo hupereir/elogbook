@@ -78,7 +78,7 @@ class Application: public BaseApplication, public Counter
     ScratchFileMonitor& scratchFileMonitor( void ) const
     { return *scratchFileMonitor_; }
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! about eLogbook
     virtual void _about( void )

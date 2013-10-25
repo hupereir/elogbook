@@ -60,7 +60,7 @@ class SearchPanel: public CustomToolBar
     CustomComboBox& editor( void ) const
     { return *editor_; }
 
-    signals:
+    Q_SIGNALS:
 
     //! emitted when the Find button is pressed
     void selectEntries( QString text, unsigned int mode );
@@ -68,7 +68,7 @@ class SearchPanel: public CustomToolBar
     //! emitted when the Show All button is pressed
     void showAllEntries( void );
 
-    public slots:
+    public Q_SLOTS:
 
     //! show
     virtual void show( void );
@@ -88,7 +88,7 @@ class SearchPanel: public CustomToolBar
     TransitionWidget& _transitionWidget( void ) const
     { return *transitionWidget_; }
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! toggle visibility [overloaded]
     virtual void _toggleVisibility( bool );
@@ -96,7 +96,7 @@ class SearchPanel: public CustomToolBar
     //! find button
     virtual void _updateFindButton( const QString& );
 
-    private slots:
+    private Q_SLOTS:
 
     //! configuration
     void _updateConfiguration( void );

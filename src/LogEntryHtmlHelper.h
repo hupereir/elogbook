@@ -61,7 +61,7 @@ class LogEntryHtmlHelper: public QObject, public Counter
     //! print header
     void appendEntry( QDomDocument&, QDomElement& );
 
-    public slots:
+    public Q_SLOTS:
 
     //! print
     void print( QIODevice* );

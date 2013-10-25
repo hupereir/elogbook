@@ -412,7 +412,7 @@ class Logbook:public QObject, public Counter, public BASE::Key
 
     };
 
-    signals:
+    Q_SIGNALS:
 
     //! message emission for logbook status during reading/writting
     void messageAvailable( const QString& message );

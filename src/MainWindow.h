@@ -280,7 +280,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! update window title
     void updateWindowTitle( void );
 
-    signals:
+    Q_SIGNALS:
 
     //! emmited when new scratch file is created
     void scratchFileCreated( const File& );
@@ -291,7 +291,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! emmited at the end of SetLogbook
     void ready( void );
 
-    public slots:
+    public Q_SLOTS:
 
     //! open existing logbook
     virtual void open( FileRecord file = FileRecord() );
@@ -354,7 +354,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! get entries matching a given entry selection mode
     LogEntryModel::List _entries( LogEntryPrintSelectionWidget::Mode mode );
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! files modified
     void _filesModified( FileCheck::DataSet );
@@ -517,7 +517,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! tree mode
     void _toggleTreeMode( bool );
 
-    private slots:
+    private Q_SLOTS:
 
     //! configuration
     void _updateConfiguration( void );

@@ -52,7 +52,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
     QVBoxLayout& buttonLayout( void )
     { return *buttonLayout_; }
 
-    signals:
+    Q_SIGNALS:
 
     //! emitted when backups are changed (from clean action)
     void saveLogbookRequested( void );
@@ -69,7 +69,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
     //! emitted when backup is requested
     void backupRequested( void );
 
-    public slots:
+    public Q_SLOTS:
 
     //! update
     void updateBackups( void );
@@ -83,7 +83,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
         return logbooks.empty() ? 0L:*logbooks.begin();
     }
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! update actions
     void _updateActions( void );

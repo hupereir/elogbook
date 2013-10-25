@@ -69,7 +69,7 @@ class AskForSaveDialog: public BaseDialog, public Counter
     //! constructor
     AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons = DEFAULT );
 
-    private slots:
+    private Q_SLOTS:
 
     //! save changes
     void _yes( void )

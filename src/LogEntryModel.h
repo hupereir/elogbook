@@ -118,7 +118,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     //! sort
     virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
 
-    private slots:
+    private Q_SLOTS:
 
     //! update configuration
     void _updateConfiguration( void );

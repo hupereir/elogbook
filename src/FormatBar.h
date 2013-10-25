@@ -49,7 +49,7 @@ class FormatColorButton: public QToolButton, public Counter
         Counter( "FormatColorButton" )
     {}
 
-    public slots:
+    public Q_SLOTS:
 
     //! set color
     void setColor( QColor color )
@@ -125,12 +125,12 @@ class FormatBar: public CustomToolBar
     const ActionMap& actions( void ) const
     { return actions_; }
 
-    public slots:
+    public Q_SLOTS:
 
     //! update button state
     void updateState( const QTextCharFormat& );
 
-    private slots:
+    private Q_SLOTS:
 
     //! update configuration
     void _updateConfiguration( void );

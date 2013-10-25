@@ -58,12 +58,12 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 
     Mode mode( void ) const;
 
-    signals:
+    Q_SIGNALS:
 
     //! emited when selection mode is changed
     void modeChanged( LogEntryPrintSelectionWidget::Mode );
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! update mode
     void _updateMode( void )

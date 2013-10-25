@@ -311,12 +311,12 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! change active display manualy
     void setActiveEditor( LocalTextEditor& );
 
-    signals:
+    Q_SIGNALS:
 
     //! emmited when new scratch file is created
     void scratchFileCreated( const File& );
 
-    public slots:
+    public Q_SLOTS:
 
     //! update read-only state
     void updateReadOnlyState( void );
@@ -373,7 +373,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! change keyword (and other widgets) visibility
     void _setKeywordVisible( bool );
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! Save Current entry
     void _save( bool updateSelection = true );
@@ -482,7 +482,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! toggle show keyword
     void _toggleShowKeyword( bool );
 
-    private slots:
+    private Q_SLOTS:
 
     //! configuration
     void _updateConfiguration( void );

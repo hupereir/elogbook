@@ -147,7 +147,7 @@ class AttachmentFrame: public QWidget, public BASE::Key
 
     //@}
 
-    signals:
+    Q_SIGNALS:
 
     //! emitted when an item is selected in list
     void attachmentSelected( Attachment& );
@@ -157,12 +157,12 @@ class AttachmentFrame: public QWidget, public BASE::Key
     //! enter event
     virtual void enterEvent( QEvent* );
 
-    protected slots:
+    protected Q_SLOTS:
     
     //! process records from thread
     void _processRecords( const FileRecord::List&, bool );
     
-    private slots:
+    private Q_SLOTS:
 
     //! update configuration
     void _updateConfiguration( void );

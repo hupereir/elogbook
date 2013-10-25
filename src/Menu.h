@@ -56,12 +56,12 @@ class Menu:public QMenuBar, public Counter
     RecentFilesMenu& recentFilesMenu( void ) const
     { return *recentFilesMenu_; }
 
-    signals:
+    Q_SIGNALS:
 
     //! triggered when an entry is selected in recent entries list
     void entrySelected( LogEntry* );
 
-    private slots:
+    private Q_SLOTS:
 
     //! recent entries
     void _updateRecentEntriesMenu( void );

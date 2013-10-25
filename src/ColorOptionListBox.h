@@ -39,7 +39,7 @@ class ColorOptionListBox: public OptionListBox
     virtual ~ColorOptionListBox( void )
     {}
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! add
     virtual void _add( void );

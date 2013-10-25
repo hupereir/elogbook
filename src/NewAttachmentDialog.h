@@ -85,7 +85,7 @@ class NewAttachmentDialog: public CustomDialog
   //! comments
   QString comments( void ) const;
 
-  private slots:
+  private Q_SLOTS:
 
   //! attachment type changed
   void _attachmentTypeChanged( int index );

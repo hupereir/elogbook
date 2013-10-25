@@ -69,7 +69,7 @@ class LogbookHtmlHelper: public QObject, public Counter
     void setEntryMask( LogEntry::Mask value )
     { entryMask_ = value; }
 
-    public slots:
+    public Q_SLOTS:
 
     //! print
     void print( QIODevice* );

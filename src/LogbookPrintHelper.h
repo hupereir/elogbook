@@ -87,7 +87,7 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     bool isAborted( void ) const
     { return aborted_; }
 
-    public slots:
+    public Q_SLOTS:
 
 
     //! mask

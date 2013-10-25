@@ -80,7 +80,7 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
 
     //@}
 
-    signals:
+    Q_SIGNALS:
 
     /*! \brief
     emitted when a logEntryList drag is accepted.

@@ -47,7 +47,7 @@ class OpenLinkDialog: public CustomDialog
     CustomComboBox& actionComboBox( void ) const
     { return *actionComboBox_; }
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! select action from fileSelection dialog.
     void _browse( void );

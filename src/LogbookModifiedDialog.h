@@ -56,7 +56,7 @@ class LogbookModifiedDialog: public BaseDialog, public Counter
   //! constructor
   LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files );
 
-  private slots:
+  private Q_SLOTS:
 
   //! re-saved removed file
   void _reLoad( void )

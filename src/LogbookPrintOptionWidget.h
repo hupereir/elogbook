@@ -52,12 +52,12 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
     //! mask
     Logbook::Mask mask( void ) const;
 
-    signals:
+    Q_SIGNALS:
 
     //! mask changed
     void maskChanged( unsigned int );
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! update mask
     void _updateMask( void )

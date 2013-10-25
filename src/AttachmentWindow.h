@@ -54,16 +54,16 @@ class AttachmentWindow: public CustomDialog
     QAction& uniconifyAction( void )
     { return *uniconifyAction_; }
 
-    signals:
+    Q_SIGNALS:
 
     void entrySelected( LogEntry* );
 
-    public slots:
+    public Q_SLOTS:
 
     //! uniconify
     void uniconify( void );
 
-    protected slots:
+    protected Q_SLOTS:
 
     //! display entry associated to selected attachment when selection changes
     void _displayEntry( Attachment& );

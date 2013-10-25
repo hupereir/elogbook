@@ -57,7 +57,7 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
     // print entry
     void printEntry( QPrinter*, QPainter*, QPointF& );
 
-    public slots:
+    public Q_SLOTS:
 
     //! mask
     void setMask( LogEntry::Mask value )
