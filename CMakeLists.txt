@@ -37,6 +37,7 @@ FIND_PROGRAM( GWENVIEW gwenview )
 ########### aspell ###############
 FIND_PROGRAM( ASPELL aspell )
 FIND_PACKAGE( ASPELL )
+ADD_DEFINITIONS( -DWITH_ASPELL=${ASPELL_FOUND} )
 
 ########### subdirectories ###############
 IF( ENABLE_SHARED )

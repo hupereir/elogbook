@@ -26,7 +26,6 @@
 #include "AttachmentModel.h"
 #include "XmlOptions.h"
 #include "Color.h"
-#include "Config.h"
 #include "File.h"
 #include "Util.h"
 

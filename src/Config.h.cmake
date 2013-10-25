@@ -24,7 +24,6 @@
 *
 *******************************************************************************/
 
-#define WITH_ASPELL @ASPELL_FOUND@
 #define VERSION "@ELOGBOOK_VERSION@"
 #define BUILD_TIMESTAMP "@TIMESTAMP@"
 

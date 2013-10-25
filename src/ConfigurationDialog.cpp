@@ -23,7 +23,6 @@
 #include "AttachmentWindow.h"
 #include "ColorOptionListBox.h"
 #include "ConfigurationDialog.h"
-#include "Config.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
 #include "FileList.h"

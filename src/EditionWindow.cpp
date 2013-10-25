@@ -52,11 +52,9 @@
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
 #include "Singleton.h"
-// #include "Str.h"
 #include "OpenLinkDialog.h"
 #include "Util.h"
 
-#include "Config.h"
 #if WITH_ASPELL
 #include "SpellDialog.h"
 #endif

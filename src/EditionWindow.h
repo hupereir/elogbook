@@ -29,8 +29,6 @@
 #include "BaseMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
-
-#include "Config.h"
 #include "Key.h"
 #include "LogEntry.h"
 #include "TextPosition.h"

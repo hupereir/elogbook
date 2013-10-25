@@ -23,7 +23,6 @@
 
 #include "AttachmentWindow.h"
 #include "AttachmentType.h"
-#include "Config.h"
 #include "ConfigurationDialog.h"
 #include "Debug.h"
 #include "EditionWindow.h"
