@@ -20,6 +20,7 @@
 *******************************************************************************/
 
 #include "FormatBar.h"
+#include "FormatBar.moc"
 #include "BaseIcons.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"

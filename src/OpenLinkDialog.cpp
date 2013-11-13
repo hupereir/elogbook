@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include "OpenLinkDialog.h"
+#include "OpenLinkDialog.moc"
 #include "CustomComboBox.h"
 #include "Debug.h"
 #include "ElidedLabel.h"

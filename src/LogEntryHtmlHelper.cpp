@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include "LogEntryHtmlHelper.h"
+#include "LogEntryHtmlHelper.moc"
 
 #include "Attachment.h"
 #include "Color.h"

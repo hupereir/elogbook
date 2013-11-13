@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include "MainWindow.h"
+#include "MainWindow.moc"
 
 #include "Application.h"
 #include "AttachmentWindow.h"

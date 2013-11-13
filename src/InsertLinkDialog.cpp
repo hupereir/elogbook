@@ -20,6 +20,7 @@
 *******************************************************************************/
 
 #include "InsertLinkDialog.h"
+#include "InsertLinkDialog.moc"
 #include "Debug.h"
 
 #include <QLabel>

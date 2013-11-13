@@ -23,6 +23,7 @@
 #include "Icons.h"
 #include "IconEngine.h"
 #include "LogbookModifiedDialog.h"
+#include "LogbookModifiedDialog.moc"
 #include "QtUtil.h"
 #include "XmlOptions.h"
 

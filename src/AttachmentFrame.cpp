@@ -20,6 +20,7 @@
 *******************************************************************************/
 
 #include "AttachmentFrame.h"
+#include "AttachmentFrame.moc"
 
 #include "Application.h"
 #include "Attachment.h"

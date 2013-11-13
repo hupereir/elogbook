@@ -20,6 +20,7 @@
 *******************************************************************************/
 
 #include "EditAttachmentDialog.h"
+#include "EditAttachmentDialog.moc"
 
 #include "AnimatedLineEditor.h"
 #include "Debug.h"

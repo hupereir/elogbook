@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include "LogEntryPrintHelper.h"
+#include "LogEntryPrintHelper.moc"
 
 #include "Attachment.h"
 #include "Color.h"

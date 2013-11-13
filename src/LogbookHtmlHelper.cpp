@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include "LogbookHtmlHelper.h"
+#include "LogbookHtmlHelper.moc"
 #include "LogEntryHtmlHelper.h"
 #include "HtmlHeaderNode.h"
 #include "HtmlTextNode.h"

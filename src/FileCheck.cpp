@@ -22,6 +22,7 @@
 #include "Debug.h"
 #include "File.h"
 #include "FileCheck.h"
+#include "FileCheck.moc"
 #include "Logbook.h"
 
 #include <QStringList>

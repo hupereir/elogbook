@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include "LogbookPrintHelper.h"
+#include "LogbookPrintHelper.moc"
 
 #include "LogEntryPrintHelper.h"
 

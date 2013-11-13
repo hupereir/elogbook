@@ -20,6 +20,7 @@
 *******************************************************************************/
 
 #include "Application.h"
+#include "Application.moc"
 
 #include "AttachmentWindow.h"
 #include "AttachmentType.h"

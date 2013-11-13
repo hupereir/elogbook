@@ -50,26 +50,7 @@ SET( elogbook_lib_SOURCES
   LogEntry.cpp
 )
 
-SET( elogbook_lib_HEADERS
-  FileCheck.h
-  Logbook.h
-)
-
-IF( USE_QT5 )
-
-  QT5_WRAP_CPP( elogbook_lib_HEADERS_MOC ${elogbook_lib_HEADERS} )
-
-ELSE()
-
-  QT4_WRAP_CPP( elogbook_lib_HEADERS_MOC ${elogbook_lib_HEADERS} )
-
-ENDIF()
-
-ADD_LIBRARY( elogbook_lib STATIC
-  ${elogbook_lib_SOURCES}
-  ${elogbook_lib_HEADERS_MOC}
-)
-
+ADD_LIBRARY( elogbook_lib STATIC ${elogbook_lib_SOURCES} )
 TARGET_LINK_LIBRARIES( elogbook_lib ${QT_LIBRARIES} )
 
 IF( USE_QT5 )
@@ -119,64 +100,20 @@ SET( elogbook_SOURCES
   NewAttachmentDialog.cpp
   NewLogbookDialog.cpp
   OpenAttachmentDialog.cpp
+  ProgressBar.cpp
   SearchPanel.cpp
   OpenLinkDialog.cpp
   main.cpp
-)
-
-SET( elogbook_HEADERS
-  Application.h
-  AskForSaveDialog.h
-  AttachmentFrame.h
-  AttachmentModel.h
-  AttachmentWindow.h
-  BackupManagerDialog.h
-  BackupManagerWidget.h
-  BackupModel.h
-  ColorOptionListBox.h
-  ConfigurationDialog.h
-  DeleteAttachmentDialog.h
-  DeleteKeywordDialog.h
-  EditAttachmentDialog.h
-  EditionWindow.h
-  EditKeywordDialog.h
-  FileCheckDialog.h
-  FormatBar.h
-  InsertLinkDialog.h
-  KeywordModel.h
-  LogbookHtmlHelper.h
-  LogbookInformationDialog.h
-  LogbookModel.h
-  LogbookModifiedDialog.h
-  LogbookPrintHelper.h
-  LogbookPrintOptionWidget.h
-  LogbookStatisticsDialog.h
-  LogEntryHtmlHelper.h
-  LogEntryInformationDialog.h
-  LogEntryModel.h
-  LogEntryPrintHelper.h
-  LogEntryPrintSelectionWidget.h
-  LogEntryPrintOptionWidget.h
-  MainWindow.h
-  Menu.h
-  NewAttachmentDialog.h
-  NewLogbookDialog.h
-  OpenAttachmentDialog.h
-  ProgressBar.h
-  SearchPanel.h
-  OpenLinkDialog.h
 )
 
 SET( elogbook_RESOURCES pixmaps.qrc)
 
 IF( USE_QT5 )
 
-  QT5_WRAP_CPP( elogbook_HEADERS_MOC ${elogbook_HEADERS} )
   QT5_ADD_RESOURCES( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
 
 ELSE()
 
-  QT4_WRAP_CPP( elogbook_HEADERS_MOC ${elogbook_HEADERS} )
   QT4_ADD_RESOURCES( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
 
 ENDIF()
@@ -186,7 +123,6 @@ ADD_DESKTOP_FILE( ${CMAKE_SOURCE_DIR}/elogbook )
 ADD_PLATFORM_EXECUTABLE( elogbook
   ${ELOGBOOK_VERSION}
   ${elogbook_SOURCES}
-  ${elogbook_HEADERS_MOC}
   ${elogbook_RESOURCES_RCC}
 )
 

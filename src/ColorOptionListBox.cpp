@@ -18,6 +18,7 @@
 *******************************************************************************/
 
 #include "ColorOptionListBox.h"
+#include "ColorOptionListBox.moc"
 
 #include "Color.h"
 #include "ColorDisplay.h"

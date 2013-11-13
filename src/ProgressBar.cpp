@@ -1,9 +1,7 @@
-
-// $Id$
-
+// : TreeViewItemDelegate.h,v 1.4 2013/04/29 07:18:58 hupereir Exp n
 /******************************************************************************
 *
-* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira.fr>
 *
 * This is free software; you can redistribute it and/or modify it under the
 * terms of the GNU General Public License as published by the Free Software
@@ -20,24 +18,5 @@
 *
 *******************************************************************************/
 
-#include "EditKeywordDialog.h"
-#include "EditKeywordDialog.moc"
-#include "Debug.h"
-
-#include <QLabel>
-
-//_____________________________________________________
-EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
-    CustomDialog( parent, OkButton|CancelButton|Separator )
-{
-
-    Debug::Throw( "EditKeywordDialog::EditKeywordDialog.\n" );
-
-    setWindowTitle( tr( "Edit Keyword - Elogbook" ) );
-    mainLayout().addWidget( combobox_ = new CustomComboBox( this ) );
-    combobox_->setEditable( true );
-    combobox_->setAutoCompletion( true );
-
-    mainLayout().addWidget( new QLabel( tr( "use \"/\" characters to add keyword to a specific branch" ), this ) );
-
-}
+#include "ProgressBar.h"
+#include "ProgressBar.moc"

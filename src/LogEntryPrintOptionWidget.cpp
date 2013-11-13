@@ -21,6 +21,7 @@
 
 
 #include "LogEntryPrintOptionWidget.h"
+#include "LogEntryPrintOptionWidget.moc"
 #include "LogEntry.h"
 #include "XmlOptions.h"
 

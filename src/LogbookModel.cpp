@@ -20,6 +20,7 @@
 *******************************************************************************/
 
 #include "LogbookModel.h"
+#include "LogbookModel.moc"
 #include "Logbook.h"
 #include "LogEntry.h"
 

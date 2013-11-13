@@ -26,6 +26,7 @@
 #include "ElidedLabel.h"
 #include "File.h"
 #include "OpenAttachmentDialog.h"
+#include "OpenAttachmentDialog.moc"
 
 #include <QButtonGroup>
 #include <QGroupBox>

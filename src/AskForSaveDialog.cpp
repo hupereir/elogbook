@@ -19,6 +19,7 @@
 *******************************************************************************/
 
 #include "AskForSaveDialog.h"
+#include "AskForSaveDialog.moc"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "XmlOptions.h"

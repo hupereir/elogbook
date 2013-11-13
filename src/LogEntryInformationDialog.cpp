@@ -20,6 +20,7 @@
 *******************************************************************************/
 
 #include "LogEntryInformationDialog.h"
+#include "LogEntryInformationDialog.moc"
 
 #include "BaseFileInformationDialog.h"
 #include "Debug.h"
