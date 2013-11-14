@@ -126,6 +126,7 @@ ADD_PLATFORM_EXECUTABLE( elogbook
   ${elogbook_RESOURCES_RCC}
 )
 
+TARGET_LINK_LIBRARIES( elogbook elogbook_lib )
 TARGET_LINK_LIBRARIES( elogbook ${QT_LIBRARIES} )
 TARGET_LINK_LIBRARIES( elogbook
   base
@@ -138,7 +139,6 @@ IF( ASPELL_FOUND )
   TARGET_LINK_LIBRARIES( elogbook base-spellcheck )
 ENDIF()
 
-TARGET_LINK_LIBRARIES( elogbook elogbook_lib )
 INSTALL( TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR} )
 
 IF( USE_QT5 )
