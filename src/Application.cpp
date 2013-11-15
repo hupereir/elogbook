@@ -101,7 +101,7 @@ bool Application::realizeWidget( void )
 
     // need to redirect closeAction to proper exit
     closeAction().disconnect();
-    connect( &closeAction(), SIGNAL( triggered() ), SLOT( _exit() ) );
+    connect( &closeAction(), SIGNAL(triggered()), SLOT(_exit()) );
 
     configurationAction().setText( tr( "Configure Elogbook..." ) );
 
@@ -115,7 +115,7 @@ bool Application::realizeWidget( void )
 
     // create selection frame
     mainWindow_ = new MainWindow();
-    connect( &attachmentWindow(), SIGNAL( entrySelected( LogEntry* ) ), mainWindow_, SLOT( selectEntry( LogEntry* ) ) );
+    connect( &attachmentWindow(), SIGNAL(entrySelected(LogEntry*)), mainWindow_, SLOT(selectEntry(LogEntry*)) );
 
     // update configuration
     emit configurationChanged();
@@ -125,8 +125,8 @@ bool Application::realizeWidget( void )
 
     // scratch files
     scratchFileMonitor_ = new ScratchFileMonitor( this );
-    connect( qApp, SIGNAL( aboutToQuit( void ) ), scratchFileMonitor_, SLOT( deleteScratchFiles( void ) ) );
-    connect( mainWindow_, SIGNAL( scratchFileCreated( const File& ) ), scratchFileMonitor_, SLOT( add( const File& ) ) );
+    connect( qApp, SIGNAL(aboutToQuit()), scratchFileMonitor_, SLOT(deleteScratchFiles()) );
+    connect( mainWindow_, SIGNAL(scratchFileCreated(File)), scratchFileMonitor_, SLOT(add(File)) );
 
     // update
     qApp->processEvents();
@@ -163,7 +163,7 @@ void Application::_configuration( void )
     Debug::Throw( "Application::_configuration" );
     emit saveConfiguration();
     ConfigurationDialog dialog;
-    connect( &dialog, SIGNAL( configurationChanged() ), SIGNAL( configurationChanged() ) );
+    connect( &dialog, SIGNAL(configurationChanged()), SIGNAL(configurationChanged()) );
     dialog.centerOnWidget( qApp->activeWindow() );
     dialog.exec();
 

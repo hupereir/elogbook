@@ -71,21 +71,21 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     if( buttons & YES )
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), tr( "Yes" ), this ) );
-        connect( button, SIGNAL( clicked() ), SLOT( _yes() ) );
+        connect( button, SIGNAL(clicked()), SLOT(_yes()) );
     }
 
     // yes to all button
     if( buttons & ALL )
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), tr( "Yes to All" ), this ) );
-        connect( button, SIGNAL( clicked() ), SLOT( _all() ) );
+        connect( button, SIGNAL(clicked()), SLOT(_all()) );
     }
 
     // no button
     if( buttons & NO )
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "No" ), this ) );
-        connect( button, SIGNAL( clicked() ), SLOT( _no() ) );
+        connect( button, SIGNAL(clicked()), SLOT(_no()) );
     }
 
     // cancel button
@@ -93,7 +93,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CANCEL ), tr( "Cancel" ), this ) );
         button->setShortcut( Qt::Key_Escape );
-        connect( button, SIGNAL( clicked() ), SLOT( _cancel() ) );
+        connect( button, SIGNAL(clicked()), SLOT(_cancel()) );
     }
 
     adjustSize();

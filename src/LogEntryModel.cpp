@@ -65,8 +65,8 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 {
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
 
-    connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-    connect( this, SIGNAL( layoutChanged() ), SLOT( _disableEdition() ) );
+    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( this, SIGNAL(layoutChanged()), SLOT(_disableEdition()) );
     _updateConfiguration();
 
 }

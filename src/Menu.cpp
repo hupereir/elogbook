@@ -75,7 +75,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 
     // file menu
     recentFilesMenu_ = new RecentFilesMenu( this, Singleton::get().application<Application>()->recentFiles() );
-    connect( recentFilesMenu_, SIGNAL( fileSelected( FileRecord ) ), mainWindow, SLOT( open( FileRecord ) ) );
+    connect( recentFilesMenu_, SIGNAL(fileSelected(FileRecord)), mainWindow, SLOT(open(FileRecord)) );
     menu->addMenu( recentFilesMenu_ );
 
     menu->addAction( &mainWindow->synchronizeAction() );
@@ -127,8 +127,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
         menu->addAction( &mainWindow->deleteEntryAction() );
 
         menu->addMenu( recentEntriesMenu_ = new QMenu( tr( "Recent Entries" ) ) );
-        connect( recentEntriesMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updateRecentEntriesMenu() ) );
-        connect( recentEntriesMenu_, SIGNAL( triggered( QAction* ) ), SLOT( _selectEntry( QAction* ) ) );
+        connect( recentEntriesMenu_, SIGNAL(aboutToShow()), this, SLOT(_updateRecentEntriesMenu()) );
+        connect( recentEntriesMenu_, SIGNAL(triggered(QAction*)), SLOT(_selectEntry(QAction*)) );
 
     }
 
@@ -138,11 +138,11 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     actionGroup_->setExclusive( true );
 
     windowsMenu_ = addMenu( tr( "Windows" ) );
-    connect( windowsMenu_, SIGNAL( aboutToShow() ), SLOT( _updateEditorMenu() ) );
+    connect( windowsMenu_, SIGNAL(aboutToShow()), SLOT(_updateEditorMenu()) );
 
     // Settings
     preferenceMenu_ = addMenu( tr( "Settings" ) );
-    connect( preferenceMenu_, SIGNAL( aboutToShow() ), this, SLOT( _updatePreferenceMenu() ) );
+    connect( preferenceMenu_, SIGNAL(aboutToShow()), this, SLOT(_updatePreferenceMenu()) );
 
     // help manager
     BASE::HelpManager* help( new BASE::HelpManager( this ) );
@@ -234,7 +234,7 @@ void Menu::_updateEditorMenu( void )
 
             // add menu entry for this frame
             QString title( window->windowTitle() );
-            QAction* action = windowsMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &window->uniconifyAction(), SLOT( trigger() ) );
+            QAction* action = windowsMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &window->uniconifyAction(), SLOT(trigger()) );
 
             if( editionWindow )
             {

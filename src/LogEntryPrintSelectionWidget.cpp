@@ -52,7 +52,7 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
         group->addButton( iter.value() );
     }
 
-    connect( group, SIGNAL( buttonClicked( int ) ), SLOT( _updateMode( void ) ) );
+    connect( group, SIGNAL(buttonClicked(int)), SLOT(_updateMode()) );
 
     layout->addStretch(1);
 

@@ -93,10 +93,10 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     label->setBuddy( comments_ );
 
     // connections
-    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), title_, SLOT( setDisabled( bool ) ) );
-    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), author_, SLOT( setDisabled( bool ) ) );
-    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), attachmentDirectory_, SLOT( setDisabled( bool ) ) );
-    connect( readOnlyCheckBox_, SIGNAL( toggled( bool ) ), comments_, SLOT( setDisabled( bool ) ) );
+    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), title_, SLOT(setDisabled(bool)) );
+    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), author_, SLOT(setDisabled(bool)) );
+    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), attachmentDirectory_, SLOT(setDisabled(bool)) );
+    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), comments_, SLOT(setDisabled(bool)) );
     readOnlyCheckBox_->setChecked( logbook->isReadOnly() );
 
 }

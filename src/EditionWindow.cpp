@@ -141,19 +141,19 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     splitter->setStretchFactor( 0, 1 );
     splitter->setStretchFactor( 1, 0 );
 
-    connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( _splitterMoved( void ) ) );
+    connect( splitter, SIGNAL(splitterMoved(int,int)), SLOT(_splitterMoved()) );
 
     // create editor
     LocalTextEditor& editor( _newTextEditor( main_ ) );
     main_->layout()->addWidget( &editor );
 
-    connect( keywordEditor_, SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
-    connect( keywordEditor_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
+    connect( keywordEditor_, SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
+    connect( keywordEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
 
-    connect( titleEditor_, SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
-    connect( titleEditor_, SIGNAL( cursorPositionChanged( int, int ) ), SLOT( _displayCursorPosition( int, int ) ) );
+    connect( titleEditor_, SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
+    connect( titleEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
 
-    connect( activeEditor().document(), SIGNAL( modificationChanged( bool ) ), SLOT( _textModified( bool ) ) );
+    connect( activeEditor().document(), SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
 
     // create attachment list
     AttachmentFrame *frame = new AttachmentFrame( 0, readOnly_ );
@@ -183,7 +183,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     QAction *action;
     lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), tr( "Unlock" ), this ) );
-    connect( action, SIGNAL( triggered() ), SLOT( _unlock() ) );
+    connect( action, SIGNAL(triggered()), SLOT(_unlock()) );
     action->setToolTip( tr( "Remove read-only lock for current editor." ) );
 
     // main toolbar
@@ -196,7 +196,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // delete_entry button
     toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete Entry" ), this ) );
-    connect( action, SIGNAL( triggered() ), SLOT( _deleteEntry() ) );
+    connect( action, SIGNAL(triggered()), SLOT(_deleteEntry()) );
     readOnlyActions_ << action;
 
     // add_attachment button
@@ -215,8 +215,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // set proper connection for first editor
     // (because it could not be performed in _newTextEditor)
     connect(
-        &editor, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ),
-        formatBar_, SLOT( updateState( const QTextCharFormat& ) ) );
+        &editor, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
+        formatBar_, SLOT(updateState(QTextCharFormat)) );
 
     // edition toolbars
     toolbar = new CustomToolBar( tr( "History" ), this, "EDITION_TOOLBAR" );
@@ -226,13 +226,13 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnlyActions_ << redoAction_;
 
     // undo/redo connections
-    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoRedoActions() ) );
-    connect( keywordEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
+    connect( keywordEditor_, SIGNAL(textChanged(QString)), SLOT(_updateUndoRedoActions()) );
+    connect( keywordEditor_, SIGNAL(textChanged(QString)), SLOT(_updateSaveAction()) );
 
-    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateUndoRedoActions() ) );
-    connect( titleEditor_, SIGNAL( textChanged( const QString& ) ), SLOT( _updateSaveAction() ) );
+    connect( titleEditor_, SIGNAL(textChanged(QString)), SLOT(_updateUndoRedoActions()) );
+    connect( titleEditor_, SIGNAL(textChanged(QString)), SLOT(_updateSaveAction()) );
 
-    connect( qApp, SIGNAL( focusChanged( QWidget*, QWidget* ) ), SLOT( _updateUndoRedoActions( QWidget*, QWidget*) ) );
+    connect( qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), SLOT(_updateUndoRedoActions(QWidget*,QWidget*)) );
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Tools" ), this, "EXTRA_TOOLBAR" );
@@ -268,7 +268,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     _modifiersChanged( activeEditor().modifiers() );
 
     // configuration
-    connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
 
 }
@@ -648,39 +648,39 @@ void EditionWindow::_installActions( void )
     // undo action
     addAction( undoAction_ = new QAction( IconEngine::get( ICONS::UNDO ), tr( "Undo" ), this ) );
     undoAction_->setToolTip( tr( "Undo last modification" ) );
-    connect( undoAction_, SIGNAL( triggered() ), SLOT( _undo() ) );
+    connect( undoAction_, SIGNAL(triggered()), SLOT(_undo()) );
 
     // redo action
     addAction( redoAction_ = new QAction( IconEngine::get( ICONS::REDO ), tr( "Redo" ), this ) );
     redoAction_->setToolTip( tr( "Redo last undone modification" ) );
-    connect( redoAction_, SIGNAL( triggered() ), SLOT( _redo() ) );
+    connect( redoAction_, SIGNAL(triggered()), SLOT(_redo()) );
 
     // new entry
     addAction( newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Entry" ), this ) );
     newEntryAction_->setShortcut( QKeySequence::New );
     newEntryAction_->setToolTip( tr( "Create new entry in current editor" ) );
-    connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
+    connect( newEntryAction_, SIGNAL(triggered()), SLOT(_newEntry()) );
 
     // previous entry action
     addAction( previousEntryAction_ = new QAction( IconEngine::get( ICONS::PREVIOUS ), tr( "Previous Entry" ), this ) );
     previousEntryAction_->setToolTip( tr( "Display previous entry in current list" ) );
-    connect( previousEntryAction_, SIGNAL( triggered() ), SLOT( _previousEntry() ) );
+    connect( previousEntryAction_, SIGNAL(triggered()), SLOT(_previousEntry()) );
 
     // next entry action
     addAction( nextEntryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), tr( "Next Entry" ), this ) );
     nextEntryAction_->setToolTip( tr( "Display next entry in current list" ) );
-    connect( nextEntryAction_, SIGNAL( triggered() ), SLOT( _nextEntry() ) );
+    connect( nextEntryAction_, SIGNAL(triggered()), SLOT(_nextEntry()) );
 
     // save
     addAction( saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), tr( "Save Entry" ), this ) );
     saveAction_->setToolTip( tr( "Save current entry" ) );
-    connect( saveAction_, SIGNAL( triggered() ), SLOT( _save() ) );
+    connect( saveAction_, SIGNAL(triggered()), SLOT(_save()) );
     saveAction_->setShortcut( QKeySequence::Save );
 
     #if WITH_ASPELL
     addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), tr( "Spellcheck..." ), this ) );
     spellcheckAction_->setToolTip( tr( "Check spelling of current entry" ) );
-    connect( spellcheckAction_, SIGNAL( triggered() ), SLOT( _spellCheck() ) );
+    connect( spellcheckAction_, SIGNAL(triggered()), SLOT(_spellCheck()) );
 
     // disable action if there is no dictionary
     spellcheckAction_->setEnabled( !SPELLCHECK::SpellInterface().dictionaries().empty() );
@@ -689,56 +689,56 @@ void EditionWindow::_installActions( void )
     // entry_info
     addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), tr( "Entry Properties..." ), this ) );
     entryInfoAction_->setToolTip( tr( "Show current entry properties" ) );
-    connect( entryInfoAction_, SIGNAL( triggered() ), SLOT( _entryInfo() ) );
+    connect( entryInfoAction_, SIGNAL(triggered()), SLOT(_entryInfo()) );
 
     // print
     addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), tr( "Print..." ), this ) );
     printAction_->setToolTip( tr( "Print current logbook entry" ) );
     printAction_->setShortcut( QKeySequence::Print );
-    connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
+    connect( printAction_, SIGNAL(triggered()), SLOT(_print()) );
 
     // print preview
     addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), tr( "Print Preview..." ), this ) );
-    connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
+    connect( printPreviewAction_, SIGNAL(triggered()), SLOT(_printPreview()) );
 
     // print
     addAction( htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), tr( "Export to HTML..." ), this ) );
     htmlAction_->setToolTip( tr( "Export current logbook entry to HTML" ) );
-    connect( htmlAction_, SIGNAL( triggered() ), SLOT( _toHtml() ) );
+    connect( htmlAction_, SIGNAL(triggered()), SLOT(_toHtml()) );
 
     // split action
     addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), tr( "Split View Top/Bottom" ), this ) );
     splitViewHorizontalAction_->setToolTip( tr( "Split current text editor vertically" ) );
-    connect( splitViewHorizontalAction_, SIGNAL( triggered() ), SLOT( _splitViewVertical() ) );
+    connect( splitViewHorizontalAction_, SIGNAL(triggered()), SLOT(_splitViewVertical()) );
 
     addAction( splitViewVerticalAction_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), tr( "Split View Left/Right" ), this ) );
     splitViewVerticalAction_->setToolTip( tr( "Split current text editor horizontally" ) );
-    connect( splitViewVerticalAction_, SIGNAL( triggered() ), SLOT( _splitViewHorizontal() ) );
+    connect( splitViewVerticalAction_, SIGNAL(triggered()), SLOT(_splitViewHorizontal()) );
 
     // clone window action
     addAction( cloneWindowAction_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), tr( "Clone Window" ), this ) );
     cloneWindowAction_->setToolTip( tr( "Create a new edition window displaying the same entry" ) );
-    connect( cloneWindowAction_, SIGNAL( triggered() ), SLOT( _cloneWindow() ) );
+    connect( cloneWindowAction_, SIGNAL(triggered()), SLOT(_cloneWindow()) );
 
     // close window action
     addAction( closeAction_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), tr( "Close View" ), this ) );
     closeAction_->setShortcut( QKeySequence::Close );
     closeAction_->setToolTip( tr( "Close current view" ) );
-    connect( closeAction_, SIGNAL( triggered() ), SLOT( _close() ) );
+    connect( closeAction_, SIGNAL(triggered()), SLOT(_close()) );
 
     // uniconify
     addAction( uniconifyAction_ = new QAction( tr( "Uniconify" ), this ) );
-    connect( uniconifyAction_, SIGNAL( triggered() ), SLOT( uniconify() ) );
+    connect( uniconifyAction_, SIGNAL(triggered()), SLOT(uniconify()) );
 
     // show/hide keyword
     addAction( showKeywordAction_ = new QAction( tr( "Show Keyword" ), this ) );
     showKeywordAction_->setCheckable( true );
     showKeywordAction_->setChecked( false );
-    connect( showKeywordAction_, SIGNAL( toggled( bool ) ), SLOT( _toggleShowKeyword( bool ) ) );
+    connect( showKeywordAction_, SIGNAL(toggled(bool)), SLOT(_toggleShowKeyword(bool)) );
 
     // insert link
     addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), tr( "Insert Link" ), this ) );
-    connect( insertLinkAction_, SIGNAL( triggered( void ) ), SLOT( _insertLink( void ) ) );
+    connect( insertLinkAction_, SIGNAL(triggered()), SLOT(_insertLink()) );
     insertLinkAction_->setEnabled( false );
 }
 
@@ -872,20 +872,20 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     LocalTextEditor* editor = new LocalTextEditor( parent );
 
     // connections
-    connect( &editor->insertLinkAction(), SIGNAL( triggered( void ) ), SLOT( _insertLink( void ) ) );
-    connect( &editor->openLinkAction(), SIGNAL( triggered( void ) ), SLOT( _openLink( void ) ) );
-    connect( editor, SIGNAL( hasFocus( TextEditor* ) ), SLOT( _displayFocusChanged( TextEditor* ) ) );
-    connect( editor, SIGNAL( cursorPositionChanged( void ) ), SLOT( _displayCursorPosition( void ) ) );
-    connect( editor, SIGNAL( modifiersChanged( TextEditor::Modifiers ) ), SLOT( _modifiersChanged( TextEditor::Modifiers ) ) );
-    connect( editor, SIGNAL( undoAvailable( bool ) ), SLOT( _updateUndoRedoActions( void ) ) );
-    connect( editor, SIGNAL( selectionChanged( void ) ), SLOT( _updateInsertLinkActions( void ) ) );
-    connect( editor->document(), SIGNAL( modificationChanged( bool ) ), SLOT( _updateSaveAction( void ) ) );
+    connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
+    connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
+    connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
+    connect( editor, SIGNAL(cursorPositionChanged()), SLOT(_displayCursorPosition()) );
+    connect( editor, SIGNAL(modifiersChanged(TextEditor::Modifiers)), SLOT(_modifiersChanged(TextEditor::Modifiers)) );
+    connect( editor, SIGNAL(undoAvailable(bool)), SLOT(_updateUndoRedoActions()) );
+    connect( editor, SIGNAL(selectionChanged()), SLOT(_updateInsertLinkActions()) );
+    connect( editor->document(), SIGNAL(modificationChanged(bool)), SLOT(_updateSaveAction()) );
 
     if( formatBar_ )
     {
         connect(
-            editor, SIGNAL( currentCharFormatChanged( const QTextCharFormat& ) ),
-            formatBar_, SLOT( updateState( const QTextCharFormat& ) ) );
+            editor, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
+            formatBar_, SLOT(updateState(QTextCharFormat)) );
     }
 
     // associate display to this editFrame
@@ -1093,11 +1093,11 @@ void EditionWindow::_print( void )
     PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
     optionWidget->setHelper( &helper );
 
-    connect( optionWidget, SIGNAL( orientationChanged( QPrinter::Orientation ) ), &helper, SLOT( setOrientation( QPrinter::Orientation ) ) );
-    connect( optionWidget, SIGNAL( pageModeChanged( BasePrintHelper::PageMode ) ), &helper, SLOT( setPageMode( BasePrintHelper::PageMode ) ) );
+    connect( optionWidget, SIGNAL(orientationChanged(QPrinter::Orientation)), &helper, SLOT(setOrientation(QPrinter::Orientation)) );
+    connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
-    connect( logEntryOptionWidget, SIGNAL( maskChanged( unsigned int ) ), &helper, SLOT( setMask( unsigned int ) ) );
+    connect( logEntryOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setMask(unsigned int)) );
     logEntryOptionWidget->read();
 
     // create prind dialog and run.

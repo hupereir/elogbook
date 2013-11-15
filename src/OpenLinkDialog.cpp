@@ -68,7 +68,7 @@ OpenLinkDialog::OpenLinkDialog( QWidget* parent, const QString& file ):
     gridLayout->addWidget( button = new QToolButton( this ), 1, 2, 1, 1 );
     button->setIcon( IconEngine::get( ICONS::OPEN ) );
     button->setAutoRaise( true );
-    connect( button, SIGNAL( clicked() ), SLOT( _browse() ) );
+    connect( button, SIGNAL(clicked()), SLOT(_browse()) );
     gridLayout->setColumnStretch( 1, 1 );
 
 }

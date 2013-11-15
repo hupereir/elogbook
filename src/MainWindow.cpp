@@ -90,7 +90,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // file checker
     fileCheck_ = new FileCheck( this );
-    connect( &fileCheck(), SIGNAL( filesModified( FileCheck::DataSet ) ), SLOT( _filesModified( FileCheck::DataSet ) ) );
+    connect( &fileCheck(), SIGNAL(filesModified(FileCheck::DataSet)), SLOT(_filesModified(FileCheck::DataSet)) );
 
     // main widget
     QWidget* main = new QWidget( this );
@@ -112,16 +112,16 @@ MainWindow::MainWindow( QWidget *parent ):
     searchPanel_->setAppearsInMenu( true );
     searchPanel_->hide();
 
-    connect( &searchPanel(), SIGNAL( selectEntries( QString, unsigned int ) ), SLOT( selectEntries( QString, unsigned int ) ) );
-    connect( &searchPanel(), SIGNAL( showAllEntries() ), SLOT( showAllEntries() ) );
+    connect( &searchPanel(), SIGNAL(selectEntries(QString,unsigned int)), SLOT(selectEntries(QString,unsigned int)) );
+    connect( &searchPanel(), SIGNAL(showAllEntries()), SLOT(showAllEntries()) );
     addAction( &searchPanel().visibilityAction() );
 
     // status bar
     setStatusBar( statusbar_ = new ProgressStatusBar( this ) );
     statusbar_->setProgressBar( new ProgressBar() );
     statusbar_->addClock();
-    connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusbar_->label(), SLOT( setTextAndUpdate( const QString& ) ) );
-    connect( this, SIGNAL( messageAvailable( const QString& ) ), &statusbar_->progressBar(), SLOT( setText( const QString& ) ) );
+    connect( this, SIGNAL(messageAvailable(QString)), &statusbar_->label(), SLOT(setTextAndUpdate(QString)) );
+    connect( this, SIGNAL(messageAvailable(QString)), &statusbar_->progressBar(), SLOT(setText(QString)) );
 
     // global scope actions
     _installActions();
@@ -170,17 +170,17 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList_->setItemDelegate( new TextEditionDelegate( this ) );
 
     // update LogEntryList when keyword selection change
-    connect( keywordList_->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _keywordSelectionChanged( const QModelIndex& ) ) );
-    connect( keywordList_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection& ) ), SLOT( _updateKeywordActions() ) );
+    connect( keywordList_->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(_keywordSelectionChanged(QModelIndex)) );
+    connect( keywordList_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateKeywordActions()) );
     _updateKeywordActions();
 
     // rename selected entries when KeywordChanged is emitted with a single argument.
     // this correspond to drag and drop action from the logEntryList in the KeywordList
-    connect( &keywordModel_, SIGNAL( entryKeywordChanged( Keyword ) ), SLOT( _renameEntryKeyword( Keyword ) ) );
+    connect( &keywordModel_, SIGNAL(entryKeywordChanged(Keyword)), SLOT(_renameEntryKeyword(Keyword)) );
 
     // rename all entries matching first keyword the second. This correspond to
     // drag and drop inside the keyword list, or to direct edition of a keyword list item.
-    connect( &keywordModel_, SIGNAL( keywordChanged( Keyword, Keyword ) ), SLOT( _renameKeyword( Keyword, Keyword ) ) );
+    connect( &keywordModel_, SIGNAL(keywordChanged(Keyword,Keyword)), SLOT(_renameKeyword(Keyword,Keyword)) );
 
     {
         // popup menu for keyword list
@@ -253,14 +253,14 @@ MainWindow::MainWindow( QWidget *parent ):
     if( entryList_->itemDelegate() ) entryList_->itemDelegate()->deleteLater();
     entryList_->setItemDelegate( new TextEditionDelegate( this ) );
 
-    connect( entryList_->header(), SIGNAL( sortIndicatorChanged( int, Qt::SortOrder ) ), SLOT( _storeSortMethod( int, Qt::SortOrder ) ) );
-    connect( entryList_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateEntryActions() ) );
-    connect( entryList_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _entryItemActivated( const QModelIndex& ) ) );
-    connect( entryList_, SIGNAL( clicked( const QModelIndex& ) ), SLOT( _entryItemClicked( const QModelIndex& ) ) );
+    connect( entryList_->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), SLOT(_storeSortMethod(int,Qt::SortOrder)) );
+    connect( entryList_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateEntryActions()) );
+    connect( entryList_, SIGNAL(activated(QModelIndex)), SLOT(_entryItemActivated(QModelIndex)) );
+    connect( entryList_, SIGNAL(clicked(QModelIndex)), SLOT(_entryItemClicked(QModelIndex)) );
     _updateEntryActions();
 
-    connect( &entryModel_, SIGNAL( layoutChanged() ), entryList_, SLOT( resizeColumns() ) );
-    connect( &entryModel_, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ), SLOT( _entryDataChanged( const QModelIndex& ) ) );
+    connect( &entryModel_, SIGNAL(layoutChanged()), entryList_, SLOT(resizeColumns()) );
+    connect( &entryModel_, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(_entryDataChanged(QModelIndex)) );
 
     /*
     add the deleteEntryAction to the list,
@@ -291,16 +291,16 @@ MainWindow::MainWindow( QWidget *parent ):
     splitter->setStretchFactor( 0, 0 );
     splitter->setStretchFactor( 1, 1 );
 
-    connect( splitter, SIGNAL( splitterMoved( int, int ) ), SLOT( _splitterMoved( void ) ) );
+    connect( splitter, SIGNAL(splitterMoved(int,int)), SLOT(_splitterMoved()) );
 
     // main menu
     menu_ = new Menu( this , this );
     setMenuBar( menu_ );
-    connect( menu_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( selectEntry( LogEntry* ) ) );
-    connect( menu_, SIGNAL( entrySelected( LogEntry* ) ), SLOT( _displayEntry( LogEntry* ) ) );
+    connect( menu_, SIGNAL(entrySelected(LogEntry*)), SLOT(selectEntry(LogEntry*)) );
+    connect( menu_, SIGNAL(entrySelected(LogEntry*)), SLOT(_displayEntry(LogEntry*)) );
 
     // configuration
-    connect( &application, SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+    connect( &application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
     _updateKeywordActions();
     _updateEntryActions();
@@ -378,14 +378,14 @@ bool MainWindow::setLogbook( File file )
         return false;
     }
 
-    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), statusbar_, SLOT( showProgressBar() ) );
-    connect( logbook_, SIGNAL( maximumProgressAvailable( int ) ), &statusbar_->progressBar(), SLOT( setMaximum( int ) ) );
-    connect( logbook_, SIGNAL( progressAvailable( int ) ), &statusbar_->progressBar(), SLOT( addToProgress( int ) ) );
-    connect( logbook_, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+    connect( logbook_, SIGNAL(maximumProgressAvailable(int)), statusbar_, SLOT(showProgressBar()) );
+    connect( logbook_, SIGNAL(maximumProgressAvailable(int)), &statusbar_->progressBar(), SLOT(setMaximum(int)) );
+    connect( logbook_, SIGNAL(progressAvailable(int)), &statusbar_->progressBar(), SLOT(addToProgress(int)) );
+    connect( logbook_, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
 
-    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateEntryActions() ) );
-    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateKeywordActions() ) );
-    connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), SLOT( _updateReadOnlyState() ) );
+    connect( logbook_, SIGNAL(readOnlyChanged(bool)), SLOT(_updateEntryActions()) );
+    connect( logbook_, SIGNAL(readOnlyChanged(bool)), SLOT(_updateKeywordActions()) );
+    connect( logbook_, SIGNAL(readOnlyChanged(bool)), SLOT(_updateReadOnlyState()) );
 
     // one need to disable everything in the window
     // to prevent user to interact with the application while loading
@@ -1035,17 +1035,17 @@ void MainWindow::_installActions( void )
     Debug::Throw( "MainWindow::_installActions.\n" );
     uniconifyAction_ = new QAction( IconEngine::get( ICONS::HOME ), tr( "Main Window" ), this );
     uniconifyAction_->setToolTip( tr( "Raise application main window" ) );
-    connect( uniconifyAction_, SIGNAL( triggered() ), SLOT( uniconify() ) );
+    connect( uniconifyAction_, SIGNAL(triggered()), SLOT(uniconify()) );
 
     newKeywordAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Keyword" ), this );
     newKeywordAction_->setToolTip( tr( "Create a new keyword" ) );
-    connect( newKeywordAction_, SIGNAL( triggered() ), SLOT( _newKeyword() ) );
+    connect( newKeywordAction_, SIGNAL(triggered()), SLOT(_newKeyword()) );
 
     addAction( editKeywordAction_ = new QAction( IconEngine::get( ICONS::RENAME ), tr( "Rename Keyword..." ), this ) );
     editKeywordAction_->setToolTip( tr( "Rename selected keyword" ) );
     editKeywordAction_->setShortcut( Qt::Key_F2 );
     editKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
-    connect( editKeywordAction_, SIGNAL( triggered() ), SLOT( _renameKeyword() ) );
+    connect( editKeywordAction_, SIGNAL(triggered()), SLOT(_renameKeyword()) );
 
     /*
     delete keyword action
@@ -1056,27 +1056,27 @@ void MainWindow::_installActions( void )
     deleteKeywordAction_->setToolTip( tr( "Delete selected keyword" ) );
     deleteKeywordAction_->setShortcut( QKeySequence::Delete );
     deleteKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
-    connect( deleteKeywordAction_, SIGNAL( triggered() ), SLOT( _deleteKeyword() ) );
+    connect( deleteKeywordAction_, SIGNAL(triggered()), SLOT(_deleteKeyword()) );
 
     findEntriesAction_ = new QAction( IconEngine::get( ICONS::FIND ), tr( "Find" ), this );
     findEntriesAction_->setShortcut( QKeySequence::Find );
     findEntriesAction_->setToolTip( tr( "Find entries matching specific criteria" ) );
-    connect( findEntriesAction_, SIGNAL( triggered() ), SLOT( _findEntries() ) );
+    connect( findEntriesAction_, SIGNAL(triggered()), SLOT(_findEntries()) );
 
     newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Entry..." ), this );
     newEntryAction_->setToolTip( tr( "Create a new entry" ) );
     newEntryAction_->setShortcut( QKeySequence::New );
-    connect( newEntryAction_, SIGNAL( triggered() ), SLOT( _newEntry() ) );
+    connect( newEntryAction_, SIGNAL(triggered()), SLOT(_newEntry()) );
 
     editEntryAction_ = new QAction( IconEngine::get( ICONS::EDIT ), tr( "Edit Entries..." ), this );
     editEntryAction_->setToolTip( tr( "Edit selected entries" ) );
-    connect( editEntryAction_, SIGNAL( triggered() ), SLOT( _editEntries() ) );
+    connect( editEntryAction_, SIGNAL(triggered()), SLOT(_editEntries()) );
 
     editEntryTitleAction_ = new QAction( IconEngine::get( ICONS::RENAME ), tr( "Rename Entry..." ), this );
     editEntryTitleAction_->setToolTip( tr( "Edit selected entry title" ) );
     editEntryTitleAction_->setShortcut( Qt::Key_F2 );
     editEntryTitleAction_->setShortcutContext( Qt::WidgetShortcut );
-    connect( editEntryTitleAction_, SIGNAL( triggered() ), SLOT( _startEntryEdition() ) );
+    connect( editEntryTitleAction_, SIGNAL(triggered()), SLOT(_startEntryEdition()) );
 
     /*
     delete entry action
@@ -1087,12 +1087,12 @@ void MainWindow::_installActions( void )
     deleteEntryAction_->setToolTip( tr( "Delete selected entries" ) );
     deleteEntryAction_->setShortcut( QKeySequence::Delete );
     deleteEntryAction_->setShortcutContext( Qt::WidgetShortcut );
-    connect( deleteEntryAction_, SIGNAL( triggered() ), SLOT( _deleteEntries() ) );
+    connect( deleteEntryAction_, SIGNAL(triggered()), SLOT(_deleteEntries()) );
 
     // color menu
     colorMenu_ = new ColorMenu( this );
     colorMenu_->setTitle( tr( "Change entry color" ) );
-    connect( colorMenu_, SIGNAL( selected( QColor ) ), SLOT( _changeEntryColor( QColor ) ) );
+    connect( colorMenu_, SIGNAL(selected(QColor)), SLOT(_changeEntryColor(QColor)) );
 
     entryColorAction_ = new QAction( IconEngine::get( ICONS::COLOR ), tr( "Entry Color" ), this );
     entryColorAction_->setToolTip( tr( "Change selected entries color" ) );
@@ -1100,91 +1100,91 @@ void MainWindow::_installActions( void )
 
     entryKeywordAction_ = new QAction( IconEngine::get( ICONS::EDIT ), tr( "Change Keyword..." ), this );
     entryKeywordAction_->setToolTip( tr( "Edit selected entries keyword" ) );
-    connect( entryKeywordAction_, SIGNAL( triggered() ), SLOT( _renameEntryKeyword() ) );
+    connect( entryKeywordAction_, SIGNAL(triggered()), SLOT(_renameEntryKeyword()) );
 
     newLogbookAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Logbook..." ), this );
     newLogbookAction_->setToolTip( tr( "Create a new logbook" ) );
-    connect( newLogbookAction_, SIGNAL( triggered() ), SLOT( _newLogbook() ) );
+    connect( newLogbookAction_, SIGNAL(triggered()), SLOT(_newLogbook()) );
 
     openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), tr( "Open..." ), this );
     openAction_->setToolTip( tr( "Open an existsing logbook" ) );
     openAction_->setShortcut( QKeySequence::Open );
-    connect( openAction_, SIGNAL( triggered() ), SLOT( open() ) );
+    connect( openAction_, SIGNAL(triggered()), SLOT(open()) );
 
     synchronizeAction_ = new QAction( IconEngine::get( ICONS::MERGE ), tr( "Synchronize..." ), this );
     synchronizeAction_->setToolTip( tr( "Synchronize current logbook with remote" ) );
-    connect( synchronizeAction_, SIGNAL( triggered() ), SLOT( _synchronize() ) );
+    connect( synchronizeAction_, SIGNAL(triggered()), SLOT(_synchronize()) );
 
     reorganizeAction_ = new QAction( tr( "Reorganize" ), this );
     reorganizeAction_->setToolTip( tr( "Reoganize logbook entries in files" ) );
-    connect( reorganizeAction_, SIGNAL( triggered() ), SLOT( _reorganize() ) );
+    connect( reorganizeAction_, SIGNAL(triggered()), SLOT(_reorganize()) );
 
     saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), tr( "Save" ), this );
     saveAction_->setToolTip( tr( "Save all edited entries" ) );
-    connect( saveAction_, SIGNAL( triggered() ), SLOT( save() ) );
+    connect( saveAction_, SIGNAL(triggered()), SLOT(save()) );
 
     saveForcedAction_ = new QAction( IconEngine::get( ICONS::SAVE ), tr( "Save (forced)" ), this );
     saveForcedAction_->setToolTip( tr( "Save all entries" ) );
-    connect( saveForcedAction_, SIGNAL( triggered() ), SLOT( _saveForced() ) );
+    connect( saveForcedAction_, SIGNAL(triggered()), SLOT(_saveForced()) );
 
     saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), tr( "Save As..." ), this );
     saveAsAction_->setToolTip( tr( "Save logbook with a different name" ) );
-    connect( saveAsAction_, SIGNAL( triggered() ), SLOT( _saveAs() ) );
+    connect( saveAsAction_, SIGNAL(triggered()), SLOT(_saveAs()) );
 
     saveBackupAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), tr( "Save Backup..." ), this );
     saveBackupAction_->setToolTip( tr( "Save logbook backup" ) );
-    connect( saveBackupAction_, SIGNAL( triggered() ), SLOT( _saveBackup() ) );
+    connect( saveBackupAction_, SIGNAL(triggered()), SLOT(_saveBackup()) );
 
     backupManagerAction_ = new QAction( IconEngine::get( ICONS::CONFIGURE_BACKUPS ), tr( "Manage Backups..." ), this );
     backupManagerAction_->setToolTip( tr( "Save logbook backup" ) );
-    connect( backupManagerAction_, SIGNAL( triggered() ), SLOT( _manageBackups() ) );
+    connect( backupManagerAction_, SIGNAL(triggered()), SLOT(_manageBackups()) );
 
     revertToSaveAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), tr( "Reload" ), this );
     revertToSaveAction_->setToolTip( tr( "Restore saved logbook" ) );
     revertToSaveAction_->setShortcut( QKeySequence::Refresh );
-    connect( revertToSaveAction_, SIGNAL( triggered() ), SLOT( _revertToSaved() ) );
+    connect( revertToSaveAction_, SIGNAL(triggered()), SLOT(_revertToSaved()) );
 
     // print
     printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), tr( "Print..." ), this );
     printAction_->setShortcut( QKeySequence::Print );
-    connect( printAction_, SIGNAL( triggered() ), SLOT( _print() ) );
+    connect( printAction_, SIGNAL(triggered()), SLOT(_print()) );
 
     // print preview
     addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), tr( "Print Preview..." ), this ) );
     printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
-    connect( printPreviewAction_, SIGNAL( triggered() ), SLOT( _printPreview() ) );
+    connect( printPreviewAction_, SIGNAL(triggered()), SLOT(_printPreview()) );
 
     // export to HTML
     htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), tr( "Export to HTML..." ), this );
-    connect( htmlAction_, SIGNAL( triggered() ), SLOT( _toHtml() ) );
+    connect( htmlAction_, SIGNAL(triggered()), SLOT(_toHtml()) );
 
     logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), tr( "Logbook Statistics..." ), this );
     logbookStatisticsAction_->setToolTip( tr( "View logbook statistics" ) );
-    connect( logbookStatisticsAction_, SIGNAL( triggered() ), SLOT( _viewLogbookStatistics() ) );
+    connect( logbookStatisticsAction_, SIGNAL(triggered()), SLOT(_viewLogbookStatistics()) );
 
     logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), tr( "Logbook Properties..." ), this );
     logbookInformationsAction_->setToolTip( tr( "Edit logbook properties" ) );
-    connect( logbookInformationsAction_, SIGNAL( triggered() ), SLOT( _editLogbookInformations() ) );
+    connect( logbookInformationsAction_, SIGNAL(triggered()), SLOT(_editLogbookInformations()) );
 
     closeFramesAction_ = new QAction( IconEngine::get( ICONS::CLOSE ), tr( "Close Editors" ), this );
     closeFramesAction_->setToolTip( tr( "Close all entry editors" ) );
-    connect( closeFramesAction_, SIGNAL( triggered() ), SLOT( _closeEditionWindows() ) );
+    connect( closeFramesAction_, SIGNAL(triggered()), SLOT(_closeEditionWindows()) );
 
     // show duplicated entries
     showDuplicatesAction_ = new QAction( tr( "Show Duplicated Entries..." ), this );
     showDuplicatesAction_->setToolTip( tr( "Show duplicated entries in logbook" ) );
-    connect( showDuplicatesAction_, SIGNAL( triggered() ), SLOT( _showDuplicatedEntries() ) );
+    connect( showDuplicatesAction_, SIGNAL(triggered()), SLOT(_showDuplicatedEntries()) );
 
     // view monitored files
     monitoredFilesAction_ = new QAction( tr( "Show Monitored Files..." ), this );
     monitoredFilesAction_->setToolTip( tr( "Show monitored files" ) );
-    connect( monitoredFilesAction_, SIGNAL( triggered() ), SLOT( _showMonitoredFiles() ) );
+    connect( monitoredFilesAction_, SIGNAL(triggered()), SLOT(_showMonitoredFiles()) );
 
     // tree mode
     treeModeAction_ = new QAction( tr( "Use Tree to Display Entries and Keywords" ), this );
     treeModeAction_->setCheckable( true );
     treeModeAction_->setChecked( true );
-    connect( treeModeAction_, SIGNAL( toggled( bool ) ), SLOT( _toggleTreeMode( bool ) ) );
+    connect( treeModeAction_, SIGNAL(toggled(bool)), SLOT(_toggleTreeMode(bool)) );
 
 }
 
@@ -1651,11 +1651,11 @@ void MainWindow::_manageBackups( void )
     dialog.managerWidget().updateBackups();
 
     // connections
-    connect( &dialog.managerWidget(), SIGNAL( saveLogbookRequested( void ) ), SLOT( save( void ) ) );
-    connect( &dialog.managerWidget(), SIGNAL( backupRequested( void ) ), SLOT( _saveBackup( void ) ) );
-    connect( &dialog.managerWidget(), SIGNAL( removeBackupRequested( Backup ) ), SLOT( _removeBackup( Backup ) ) );
-    connect( &dialog.managerWidget(), SIGNAL( restoreBackupRequested( Backup ) ), SLOT( _restoreBackup( Backup ) ) );
-    connect( &dialog.managerWidget(), SIGNAL( mergeBackupRequested( Backup ) ), SLOT( _mergeBackup( Backup ) ) );
+    connect( &dialog.managerWidget(), SIGNAL(saveLogbookRequested()), SLOT(save()) );
+    connect( &dialog.managerWidget(), SIGNAL(backupRequested()), SLOT(_saveBackup()) );
+    connect( &dialog.managerWidget(), SIGNAL(removeBackupRequested(Backup)), SLOT(_removeBackup(Backup)) );
+    connect( &dialog.managerWidget(), SIGNAL(restoreBackupRequested(Backup)), SLOT(_restoreBackup(Backup)) );
+    connect( &dialog.managerWidget(), SIGNAL(mergeBackupRequested(Backup)), SLOT(_mergeBackup(Backup)) );
 
     dialog.exec();
 }
@@ -1718,19 +1718,19 @@ void MainWindow::_print( void )
     // create options widget
     PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
     optionWidget->setHelper( &helper );
-    connect( optionWidget, SIGNAL( orientationChanged( QPrinter::Orientation ) ), &helper, SLOT( setOrientation( QPrinter::Orientation ) ) );
-    connect( optionWidget, SIGNAL( pageModeChanged( BasePrintHelper::PageMode ) ), &helper, SLOT( setPageMode( BasePrintHelper::PageMode ) ) );
+    connect( optionWidget, SIGNAL(orientationChanged(QPrinter::Orientation)), &helper, SLOT(setOrientation(QPrinter::Orientation)) );
+    connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
-    connect( logbookOptionWidget, SIGNAL( maskChanged( unsigned int ) ), &helper, SLOT( setMask( unsigned int ) ) );
+    connect( logbookOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setMask(unsigned int)) );
     logbookOptionWidget->read();
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
-    connect( logEntryOptionWidget, SIGNAL( maskChanged( unsigned int ) ), &helper, SLOT( setEntryMask( unsigned int ) ) );
+    connect( logEntryOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setEntryMask(unsigned int)) );
     logEntryOptionWidget->read();
 
     LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
-    connect( logEntrySelectionWidget, SIGNAL( modeChanged( LogEntryPrintSelectionWidget::Mode ) ), &helper, SLOT( setSelectionMode( LogEntryPrintSelectionWidget::Mode ) ) );
+    connect( logEntrySelectionWidget, SIGNAL(modeChanged(LogEntryPrintSelectionWidget::Mode)), &helper, SLOT(setSelectionMode(LogEntryPrintSelectionWidget::Mode)) );
     logEntrySelectionWidget->read();
 
     // create prind dialog and run.
@@ -1920,7 +1920,7 @@ void MainWindow::_synchronize( void )
     Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remoteFile << endl;
 
     Logbook remoteLogbook;
-    connect( &remoteLogbook, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+    connect( &remoteLogbook, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
     remoteLogbook.setFile( remoteFile );
     remoteLogbook.read();
 
@@ -2118,7 +2118,7 @@ void MainWindow::_mergeBackup( Backup backup )
     Debug::Throw() << "MainWindow::_mergeBackup - reading remote logbook from file: " << backup.file() << endl;
 
     Logbook backupLogbook;
-    connect( &backupLogbook, SIGNAL( messageAvailable( const QString& ) ), SIGNAL( messageAvailable( const QString& ) ) );
+    connect( &backupLogbook, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
     backupLogbook.setFile( backup.file() );
     backupLogbook.read();
 
@@ -2418,8 +2418,8 @@ void MainWindow::_newEntry( void )
         editionWindow = new EditionWindow( 0, false );
         editionWindow->setColorMenu( colorMenu_ );
         Key::associate( this, editionWindow );
-        connect( editionWindow, SIGNAL( scratchFileCreated( const File& ) ), this, SIGNAL( scratchFileCreated( const File& ) ) );
-        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateReadOnlyState() ) );
+        connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
+        connect( logbook_, SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
 
     }
 
@@ -2582,8 +2582,8 @@ void MainWindow::_displayEntry( LogEntry* entry )
         Key::associate( this, editionWindow );
         editionWindow->displayEntry( entry );
 
-        connect( editionWindow, SIGNAL( scratchFileCreated( const File& ) ), this, SIGNAL( scratchFileCreated( const File& ) ) );
-        connect( logbook_, SIGNAL( readOnlyChanged( bool ) ), editionWindow, SLOT( updateReadOnlyState() ) );
+        connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
+        connect( logbook_, SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
 
     }
 

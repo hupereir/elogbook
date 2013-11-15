@@ -59,35 +59,35 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
     addAction( action = new QAction( IconEngine::get( BOLD_ICON ), tr( "Bold" ), this ) );
     action->setCheckable( true );
     actions_.insert( Bold, action );
-    connect( action, SIGNAL( toggled( bool ) ), SLOT( _bold( bool ) ) );
+    connect( action, SIGNAL(toggled(bool)), SLOT(_bold(bool)) );
 
     // underline
     addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), tr( "Italic" ), this ) );
     action->setCheckable( true );
     actions_.insert( Italic, action );
-    connect( action, SIGNAL( toggled( bool ) ), SLOT( _italic( bool ) ) );
+    connect( action, SIGNAL(toggled(bool)), SLOT(_italic(bool)) );
 
     // underline
     addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), tr( "Underline" ), this ) );
     action->setCheckable( true );
     actions_.insert( Underline, action );
-    connect( action, SIGNAL( toggled( bool ) ), SLOT( _underline( bool ) ) );
+    connect( action, SIGNAL(toggled(bool)), SLOT(_underline(bool)) );
 
     // strike
     addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), tr( "Strike" ), this ) );
     action->setCheckable( true );
     actions_.insert( Strike, action );
-    connect( action, SIGNAL( toggled( bool ) ), SLOT( _strike( bool ) ) );
+    connect( action, SIGNAL(toggled(bool)), SLOT(_strike(bool)) );
 
     // color
     action = new QAction( IconEngine::get( ICONS::COLOR ), tr( "Color" ), this );
-    connect( action, SIGNAL( triggered() ), SLOT( _lastColor() ) );
+    connect( action, SIGNAL(triggered()), SLOT(_lastColor()) );
     actions_.insert( Color, action );
 
     // color menu
     colorMenu_ = new ColorMenu( this );
     action->setMenu( colorMenu_ );
-    connect( colorMenu_, SIGNAL( selected( QColor ) ), SLOT( _color( QColor ) ) );
+    connect( colorMenu_, SIGNAL(selected(QColor)), SLOT(_color(QColor)) );
     action->setMenu( colorMenu_ );
 
     // color button
@@ -95,11 +95,11 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
     addWidget( button );
     button->setDefaultAction( action );
     button->setPopupMode( QToolButton::DelayedPopup );
-    connect( colorMenu_, SIGNAL( selected( QColor ) ), button, SLOT( setColor( QColor ) ) );
+    connect( colorMenu_, SIGNAL(selected(QColor)), button, SLOT(setColor(QColor)) );
 
     // configuration
-    connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
-    connect( Singleton::get().application(), SIGNAL( saveConfiguration() ), SLOT( _saveConfiguration() ) );
+    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Singleton::get().application(), SIGNAL(saveConfiguration()), SLOT(_saveConfiguration()) );
     _updateConfiguration();
 
 }

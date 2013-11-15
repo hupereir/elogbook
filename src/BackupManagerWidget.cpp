@@ -62,21 +62,21 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     buttonLayout_->addStretch( 1 );
 
     // connections
-    connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
-    connect( cleanButton_, SIGNAL( clicked( void ) ), SLOT( _clean( void ) ) );
-    connect( cleanButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+    connect( list_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateActions()) );
+    connect( cleanButton_, SIGNAL(clicked()), SLOT(_clean()) );
+    connect( cleanButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
 
-    connect( removeButton_, SIGNAL( clicked( void ) ), SLOT( _remove( void ) ) );
-    connect( removeButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+    connect( removeButton_, SIGNAL(clicked()), SLOT(_remove()) );
+    connect( removeButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
 
-    connect( restoreButton_, SIGNAL( clicked( void ) ), SLOT( _restore( void ) ) );
-    connect( restoreButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+    connect( restoreButton_, SIGNAL(clicked()), SLOT(_restore()) );
+    connect( restoreButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
 
-    connect( mergeButton_, SIGNAL( clicked( void ) ), SLOT( _merge( void ) ) );
-    connect( mergeButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+    connect( mergeButton_, SIGNAL(clicked()), SLOT(_merge()) );
+    connect( mergeButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
 
-    connect( newBackupButton_, SIGNAL( clicked( void ) ), SIGNAL( backupRequested( void ) ) );
-    connect( newBackupButton_, SIGNAL( clicked( void ) ), SLOT( updateBackups( void ) ) );
+    connect( newBackupButton_, SIGNAL(clicked()), SIGNAL(backupRequested()) );
+    connect( newBackupButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
 
     if( logbook ) Key::associate( this, logbook );
 

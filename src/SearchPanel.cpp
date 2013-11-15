@@ -50,7 +50,7 @@ transitionWidget_( new TransitionWidget(parent) )
     // find selection button
     QPushButton* button;
     addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), tr( "Find" ), this ) );
-    connect( button, SIGNAL( clicked() ), SLOT( _selectionRequest() ) );
+    connect( button, SIGNAL(clicked()), SLOT(_selectionRequest()) );
     button->setToolTip( tr( "Find logbook entries matching selected text" ) );
     button->setEnabled( false );
     findButton_ = button;
@@ -62,8 +62,8 @@ transitionWidget_( new TransitionWidget(parent) )
     editor_->setToolTip( tr( "Text to be found in logbook" ) );
     editor_->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
     addWidget( editor_ );
-    connect( editor_, SIGNAL( activated( const QString& ) ), SLOT( _selectionRequest( void ) ) );
-    connect( editor_, SIGNAL( editTextChanged( const QString& ) ), SLOT( _updateFindButton( const QString& ) ) );
+    connect( editor_, SIGNAL(activated(QString)), SLOT(_selectionRequest()) );
+    connect( editor_, SIGNAL(editTextChanged(QString)), SLOT(_updateFindButton(QString)) );
 
     addWidget( new QLabel( " in ", this ) );
 
@@ -75,34 +75,34 @@ transitionWidget_( new TransitionWidget(parent) )
     checkboxes_[TEXT]->setChecked( true );
 
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
-    { connect( iter.value(), SIGNAL( toggled( bool ) ), SLOT( _saveMask() ) ); }
+    { connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_saveMask()) ); }
 
     // show_all button
     addWidget( button = new QPushButton( tr( "Show All" ), this ) );
-    connect( button, SIGNAL( clicked( void ) ), SIGNAL( showAllEntries( void ) ) );
-    connect( button, SIGNAL( clicked( void ) ), SLOT( _disableAllEntriesButton( void ) ) );
+    connect( button, SIGNAL(clicked()), SIGNAL(showAllEntries()) );
+    connect( button, SIGNAL(clicked()), SLOT(_disableAllEntriesButton()) );
     button->setToolTip( tr( "Show all logbook entries" ) );
     button->setEnabled( false );
     allEntriesButton_ = button;
 
-    connect( findButton_, SIGNAL( clicked( void ) ), SLOT( _enableAllEntriesButton( void ) ) );
-    connect( editor_, SIGNAL( activated( const QString& ) ), SLOT( _enableAllEntriesButton( void ) ) );
+    connect( findButton_, SIGNAL(clicked()), SLOT(_enableAllEntriesButton()) );
+    connect( editor_, SIGNAL(activated(QString)), SLOT(_enableAllEntriesButton()) );
 
     // close button
     QAction* hideAction;
     addAction( hideAction = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), this ) );
-    connect( hideAction, SIGNAL( triggered() ), SLOT( hide() ) );
-    connect( hideAction, SIGNAL( triggered() ), SIGNAL( showAllEntries() ) );
+    connect( hideAction, SIGNAL(triggered()), SLOT(hide()) );
+    connect( hideAction, SIGNAL(triggered()), SIGNAL(showAllEntries()) );
     hideAction->setToolTip( tr( "Show all entries and hide search bar" ) );
 
     // configuration
-    connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
 
     // transition widget
     _transitionWidget().setFlag( TransitionWidget::FROM_PARENT, true );
     _transitionWidget().hide();
-    connect( &_transitionWidget().timeLine(), SIGNAL( finished() ),  &_transitionWidget(), SLOT( hide() ) );
+    connect( &_transitionWidget().timeLine(), SIGNAL(finished()),  &_transitionWidget(), SLOT(hide()) );
 
 }
 
@@ -258,8 +258,8 @@ void SearchPanel::contextMenuEvent( QContextMenuEvent* event )
     menu.toolButtonStyleMenu().select( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
     menu.iconSizeMenu().select( (IconSize::Size) XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) );
 
-    CustomToolBar::connect( &menu.toolButtonStyleMenu(), SIGNAL( styleSelected( Qt::ToolButtonStyle ) ), SLOT( _updateToolButtonStyle( Qt::ToolButtonStyle ) ) );
-    CustomToolBar::connect( &menu.iconSizeMenu(), SIGNAL( iconSizeSelected( IconSize::Size ) ), SLOT( _updateToolButtonIconSize( IconSize::Size ) ) );
+    CustomToolBar::connect( &menu.toolButtonStyleMenu(), SIGNAL(styleSelected(Qt::ToolButtonStyle)), SLOT(_updateToolButtonStyle(Qt::ToolButtonStyle)) );
+    CustomToolBar::connect( &menu.iconSizeMenu(), SIGNAL(iconSizeSelected(IconSize::Size)), SLOT(_updateToolButtonIconSize(IconSize::Size)) );
 
     // move and show menu
     menu.adjustSize();

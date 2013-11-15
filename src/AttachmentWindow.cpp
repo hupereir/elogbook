@@ -43,17 +43,17 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     setOptionName( "ATTACHMENT_WINDOW" );
 
     mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
-    connect( frame_, SIGNAL( attachmentSelected( Attachment& ) ), SLOT( _displayEntry( Attachment& ) ) );
+    connect( frame_, SIGNAL(attachmentSelected(Attachment&)), SLOT(_displayEntry(Attachment&)) );
 
     frame().contextMenu().insertAction( &frame().newAction(), &frame().list().findAction() );
 
     // shortcuts
-    connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL( activated() ), qApp, SLOT( closeAllWindows() ) );
-    connect( new QShortcut( QKeySequence::Close, this ), SIGNAL( activated() ), SLOT( close() ) );
+    connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL(activated()), qApp, SLOT(closeAllWindows()) );
+    connect( new QShortcut( QKeySequence::Close, this ), SIGNAL(activated()), SLOT(close()) );
 
     uniconifyAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "Attachments" ), this );
     uniconifyAction_->setToolTip( tr( "Raise application main window" ) );
-    connect( uniconifyAction_, SIGNAL( triggered() ), SLOT( uniconify() ) );
+    connect( uniconifyAction_, SIGNAL(triggered()), SLOT(uniconify()) );
 
 };
 

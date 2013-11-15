@@ -62,7 +62,7 @@ CustomDialog( parent )
     iter ++ )
     { fileTypeComboBox_->addItem( iter.value().name() ); }
     fileTypeComboBox_->setToolTip( tr( "Attachment type. Defines the default application used to display the attachment" ) );
-    connect( fileTypeComboBox_, SIGNAL( activated( int ) ), SLOT( _attachmentTypeChanged( int ) ) );
+    connect( fileTypeComboBox_, SIGNAL(activated(int)), SLOT(_attachmentTypeChanged(int)) );
 
     // action
     gridLayout->addWidget( new QLabel( tr( "Action:" ), this ) );

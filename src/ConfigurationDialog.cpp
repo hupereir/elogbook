@@ -152,7 +152,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     checkbox->setChecked( false );
     spinbox->setEnabled( false );
-    connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
+    connect( checkbox, SIGNAL(toggled(bool)), spinbox, SLOT(setEnabled(bool)) );
 
     gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Backup logbook every" ), page, "AUTO_BACKUP" ), 2, 0, 1, 1 );
     addOptionWidget( checkbox );
@@ -165,7 +165,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     checkbox->setChecked( false );
     spinbox->setEnabled( false );
-    connect( checkbox, SIGNAL( toggled( bool ) ), spinbox, SLOT( setEnabled( bool ) ) );
+    connect( checkbox, SIGNAL(toggled(bool)), spinbox, SLOT(setEnabled(bool)) );
 
     // edition
     textEditConfiguration();

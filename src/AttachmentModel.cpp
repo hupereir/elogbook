@@ -52,7 +52,7 @@ AttachmentModel::AttachmentModel( QObject* parent ):
     Counter( "AttachmentModel" )
 {
     Debug::Throw( "AttachmentModel::AttachmentModel.\n" );
-    connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
 }
 
 //__________________________________________________________________

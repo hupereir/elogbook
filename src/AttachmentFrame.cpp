@@ -61,7 +61,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     // tell validFile thread not to check duplicates
     // this is needed when checking files that are links
     thread_.setCheckDuplicates( false );
-    connect( &thread_, SIGNAL( recordsAvailable( const FileRecord::List&, bool ) ), this, SLOT( _processRecords( const FileRecord::List&, bool ) ) );
+    connect( &thread_, SIGNAL(recordsAvailable(const FileRecord::List&,bool)), this, SLOT(_processRecords(const FileRecord::List&,bool)) );
 
     // default layout
     setLayout( new QVBoxLayout() );
@@ -89,11 +89,11 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     contextMenu_->addAction( &cleanAction() );
 
     // connections
-    connect( list_->selectionModel(), SIGNAL( selectionChanged(const QItemSelection &, const QItemSelection &) ), SLOT( _updateActions( void ) ) );
-    connect( list_->selectionModel(), SIGNAL( currentRowChanged(const QModelIndex &, const QModelIndex &) ), SLOT( _itemSelected( const QModelIndex& ) ) );
-    connect( list_, SIGNAL( activated( const QModelIndex& ) ), SLOT( _open( void ) ) );
+    connect( list_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateActions()) );
+    connect( list_->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(_itemSelected(QModelIndex)) );
+    connect( list_, SIGNAL(activated(QModelIndex)), SLOT(_open()) );
 
-    connect( Singleton::get().application(), SIGNAL( configurationChanged() ), SLOT( _updateConfiguration() ) );
+    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
     _updateActions();
 }
@@ -782,38 +782,38 @@ void AttachmentFrame::_installActions( void )
     visibilityAction().setToolTip( tr( "Show/hide attachment list" ) );
     visibilityAction().setCheckable( true );
     visibilityAction().setChecked( true );
-    connect( &visibilityAction(), SIGNAL( toggled( bool ) ), SLOT( setVisible( bool ) ) );
+    connect( &visibilityAction(), SIGNAL(toggled(bool)), SLOT(setVisible(bool)) );
 
     addAction( newAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "New" ), this ) );
     newAction().setToolTip( tr( "Attach a file/URL to the current entry" ) );
-    connect( &newAction(), SIGNAL( triggered() ), SLOT( _new() ) );
+    connect( &newAction(), SIGNAL(triggered()), SLOT(_new()) );
 
     addAction( openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), tr( "Open" ), this ) );
     openAction().setToolTip( tr( "Open selected attachments" ) );
-    connect( &openAction(), SIGNAL( triggered() ), SLOT( _open() ) );
+    connect( &openAction(), SIGNAL(triggered()), SLOT(_open()) );
 
     addAction( editAction_ = new QAction( IconEngine::get( ICONS::EDIT ), tr( "Edit" ), this ) );
     editAction().setToolTip( tr( "Edit selected attachments informations" ) );
-    connect( &editAction(), SIGNAL( triggered() ), SLOT( _edit() ) );
+    connect( &editAction(), SIGNAL(triggered()), SLOT(_edit()) );
 
     addAction( deleteAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete" ), this ) );
     deleteAction().setShortcut( QKeySequence::Delete );
     deleteAction().setToolTip( tr( "Delete selected attachments" ) );
-    connect( &deleteAction(), SIGNAL( triggered() ), SLOT( _delete() ) );
+    connect( &deleteAction(), SIGNAL(triggered()), SLOT(_delete()) );
 
     addAction( reloadAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), tr( "Reload" ), this ) );
     reloadAction().setShortcut( QKeySequence::Refresh );
     reloadAction().setToolTip( tr( "Reload attachments timestamps" ) );
-    connect( &reloadAction(), SIGNAL( triggered() ), SLOT( _reload() ) );
+    connect( &reloadAction(), SIGNAL(triggered()), SLOT(_reload()) );
 
     addAction( saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), tr( "Save As" ), this ) );
     saveAsAction().setToolTip( tr( "Save selected attachment with a different filename" ) );
-    connect( &saveAsAction(), SIGNAL( triggered() ), SLOT( _saveAs() ) );
+    connect( &saveAsAction(), SIGNAL(triggered()), SLOT(_saveAs()) );
 
 
     cleanAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Clean" ), this );
     cleanAction().setToolTip( tr( "Delete selected attachments" ) );
-    connect( &cleanAction(), SIGNAL( triggered() ), SLOT( _clean() ) );
+    connect( &cleanAction(), SIGNAL(triggered()), SLOT(_clean()) );
 }
 
 //_______________________________________________________________________
