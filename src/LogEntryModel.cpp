@@ -85,7 +85,7 @@ Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
     { out |= Qt::ItemIsEditable; }
 
     // check column
-    if( index.column() == TITLE ) out |= Qt::ItemIsDragEnabled;
+    out |= Qt::ItemIsDragEnabled;
     return out;
 
 }
