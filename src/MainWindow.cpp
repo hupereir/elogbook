@@ -1723,15 +1723,15 @@ void MainWindow::_print( void )
 
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
     connect( logbookOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setMask(unsigned int)) );
-    logbookOptionWidget->read();
+    logbookOptionWidget->read( XmlOptions::get() );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
     connect( logEntryOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setEntryMask(unsigned int)) );
-    logEntryOptionWidget->read();
+    logEntryOptionWidget->read( XmlOptions::get() );
 
     LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
     connect( logEntrySelectionWidget, SIGNAL(modeChanged(LogEntryPrintSelectionWidget::Mode)), &helper, SLOT(setSelectionMode(LogEntryPrintSelectionWidget::Mode)) );
-    logEntrySelectionWidget->read();
+    logEntrySelectionWidget->read( XmlOptions::get() );
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
@@ -1749,9 +1749,9 @@ void MainWindow::_print( void )
     { emit scratchFileCreated( printer.outputFileName() ); }
 
     // write options
-    logbookOptionWidget->write();
-    logEntrySelectionWidget->write();
-    logEntryOptionWidget->write();
+    logbookOptionWidget->write( XmlOptions::get() );
+    logEntrySelectionWidget->write( XmlOptions::get() );
+    logEntryOptionWidget->write( XmlOptions::get() );
 
     // retrieve mask and assign
     helper.setMask( logbookOptionWidget->mask() );
@@ -1819,13 +1819,13 @@ void MainWindow::_toHtml( void )
 
     // create options widget
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
-    logbookOptionWidget->read();
+    logbookOptionWidget->read( XmlOptions::get() );
 
     LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
-    logEntrySelectionWidget->read();
+    logEntrySelectionWidget->read( XmlOptions::get() );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
-    logEntryOptionWidget->read();
+    logEntryOptionWidget->read( XmlOptions::get() );
 
     // create dialog
     HtmlDialog dialog( this );
@@ -1861,9 +1861,9 @@ void MainWindow::_toHtml( void )
     emit scratchFileCreated( file );
 
     // write options
-    logbookOptionWidget->write();
-    logEntrySelectionWidget->write();
-    logEntryOptionWidget->write();
+    logbookOptionWidget->write( XmlOptions::get() );
+    logEntrySelectionWidget->write( XmlOptions::get() );
+    logEntryOptionWidget->write( XmlOptions::get() );
 
     // create print helper
     LogbookHtmlHelper helper( this );

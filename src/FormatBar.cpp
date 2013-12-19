@@ -31,6 +31,7 @@
 #include "Singleton.h"
 #include "TextEditor.h"
 #include "TextPosition.h"
+#include "XmlOptions.h"
 
 #include <QPainter>
 #include <QStylePainter>

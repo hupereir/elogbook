@@ -30,7 +30,7 @@
 //_________________________________________________________________
 LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     QWidget( parent ),
-    OptionWidget( "LOGENTRY_PRINT_OPTION_MASK" )
+    OptionWidget( "LOGENTRY_PRINT_OPTION_MASK", this )
 {
 
     setWindowTitle( tr( "Logbook Entry Configuration - Elogbook" ) );
@@ -59,16 +59,16 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
 }
 
 //_________________________________________________________________
-void LogEntryPrintOptionWidget::read()
+void LogEntryPrintOptionWidget::read( const Options& options )
 {
-    unsigned int mask( XmlOptions::get().get<unsigned int>( optionName() ) );
+    unsigned int mask( options.get<unsigned int>( optionName() ) );
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { iter.value()->setChecked( mask&iter.key() ); }
 }
 
 //_________________________________________________________________
-void LogEntryPrintOptionWidget::write( void ) const
-{ XmlOptions::get().set<unsigned int>( optionName(), mask() ); }
+void LogEntryPrintOptionWidget::write( Options& options ) const
+{ options.set<unsigned int>( optionName(), mask() ); }
 
 //_________________________________________________________________
 LogEntry::Mask LogEntryPrintOptionWidget::mask( void ) const

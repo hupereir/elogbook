@@ -43,10 +43,10 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     {}
 
     //! read
-    virtual void read( void );
+    virtual void read( const Options& );
 
     //! write
-    virtual void write( void ) const;
+    virtual void write( Options& ) const;
 
     //! mask
     enum Mode
@@ -60,6 +60,9 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 
     Q_SIGNALS:
 
+    //! modified
+    void modified( void );
+
     //! emited when selection mode is changed
     void modeChanged( LogEntryPrintSelectionWidget::Mode );
 
@@ -67,7 +70,10 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 
     //! update mode
     void _updateMode( void )
-    { emit modeChanged( mode() ); }
+    {
+        emit modeChanged( mode() );
+        emit modified();
+    }
 
     private:
 

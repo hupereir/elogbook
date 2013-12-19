@@ -30,7 +30,7 @@
 //_________________________________________________________________
 LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
     QWidget( parent ),
-    OptionWidget( "LOGENTRY_PRINT_SELECTION" )
+    OptionWidget( "LOGENTRY_PRINT_SELECTION", this )
 {
 
     setWindowTitle( "Logbook Entry Selection" );
@@ -59,16 +59,16 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
 }
 
 //_________________________________________________________________
-void LogEntryPrintSelectionWidget::read()
+void LogEntryPrintSelectionWidget::read( const Options& options )
 {
-    unsigned int mode( XmlOptions::get().get<unsigned int>( optionName() ) );
+    unsigned int mode( options.get<unsigned int>( optionName() ) );
     for( RadioButtonMap::const_iterator iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { iter.value()->setChecked( iter.key() == mode ); }
 }
 
 //_________________________________________________________________
-void LogEntryPrintSelectionWidget::write( void ) const
-{ XmlOptions::get().set<Mode>( optionName(), mode() ); }
+void LogEntryPrintSelectionWidget::write( Options& options ) const
+{ options.set<Mode>( optionName(), mode() ); }
 
 //_________________________________________________________________
 LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode( void ) const

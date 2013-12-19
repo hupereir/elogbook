@@ -44,15 +44,18 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
     {}
 
     //! read
-    virtual void read( void );
+    virtual void read( const Options& );
 
     //! write
-    virtual void write( void ) const;
+    virtual void write( Options& ) const;
 
     //! mask
     Logbook::Mask mask( void ) const;
 
     Q_SIGNALS:
+
+    //! modified
+    void modified( void );
 
     //! mask changed
     void maskChanged( unsigned int );
@@ -61,7 +64,10 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
 
     //! update mask
     void _updateMask( void )
-    { emit maskChanged( mask() ); }
+    {
+        emit maskChanged( mask() );
+        emit modified();
+    }
 
     private:
 

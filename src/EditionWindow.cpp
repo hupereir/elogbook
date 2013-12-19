@@ -1098,7 +1098,7 @@ void EditionWindow::_print( void )
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
     connect( logEntryOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setMask(unsigned int)) );
-    logEntryOptionWidget->read();
+    logEntryOptionWidget->read( XmlOptions::get() );
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
@@ -1111,7 +1111,7 @@ void EditionWindow::_print( void )
     { emit scratchFileCreated( printer.outputFileName() ); }
 
     // write options
-    logEntryOptionWidget->write();
+    logEntryOptionWidget->write( XmlOptions::get() );
 
     // print
     helper.print( &printer );
@@ -1151,7 +1151,7 @@ void EditionWindow::_toHtml( void )
 
     // create option widget
     LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
-    optionWidget->read();
+    optionWidget->read( XmlOptions::get() );
 
     // create dialog
     HtmlDialog dialog( this );
@@ -1184,7 +1184,7 @@ void EditionWindow::_toHtml( void )
     emit scratchFileCreated( file );
 
     // write options
-    optionWidget->write();
+    optionWidget->write( XmlOptions::get() );
 
     LogEntryHtmlHelper helper;
     helper.setEntry( entry() );
