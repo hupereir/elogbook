@@ -196,6 +196,11 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page->layout()->addWidget( recentFilesConfiguration );
     addOptionWidget( recentFilesConfiguration );
 
+    recentFilesConfiguration->read();
+    connect( this, SIGNAL(ok()), recentFilesConfiguration, SLOT(write()) );
+    connect( this, SIGNAL(apply()), recentFilesConfiguration, SLOT(write()) );
+    connect( this, SIGNAL(reset()), recentFilesConfiguration, SLOT(reload()) );
+
     // misc
     page = &addPage( IconEngine::get( ICONS::PREFERENCE_UNSORTED ), tr( "Unsorted" ), tr( "Additional unsorted settings" ) );
 
