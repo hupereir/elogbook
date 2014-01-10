@@ -19,20 +19,17 @@
 *
 *******************************************************************************/
 
-#include "Application.h"
-#include "AttachmentWindow.h"
-#include "ColorOptionListBox.h"
 #include "ConfigurationDialog.h"
 #include "ConfigurationDialog.moc"
-#include "CustomToolBar.h"
+
+#include "Application.h"
+#include "ColorOptionListBox.h"
 #include "Debug.h"
-#include "FileList.h"
 #include "GridLayout.h"
 #include "IconEngine.h"
 #include "Icons.h"
 #include "LogbookPrintOptionWidget.h"
 #include "LogEntryPrintOptionWidget.h"
-#include "MainWindow.h"
 #include "OptionBrowsedLineEditor.h"
 #include "OptionCheckBox.h"
 #include "OptionSpinBox.h"
