@@ -62,9 +62,6 @@ void installDefaultOptions( void )
     XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#3333FF" ) ) );
     XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( QColor( "#993399" ) ) );
 
-    // icon
-    XmlOptions::get().set( "ICON_PIXMAP", Option( ":/elogbook.png" , "application icon"  ) );
-
     // normal (overwritten) options
 
     // window sizes

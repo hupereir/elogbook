@@ -78,11 +78,28 @@ class Application: public BaseApplication, public Counter
     ScratchFileMonitor& scratchFileMonitor( void ) const
     { return *scratchFileMonitor_; }
 
-    protected Q_SLOTS:
+    //!@name application information
+    //@{
 
-    //! about eLogbook
-    virtual void _about( void )
-    { BaseApplication::_about( "Elogbook", VERSION, BUILD_TIMESTAMP ); }
+    //! application name
+    virtual QString applicationName( void ) const
+    { return "Elogbook"; }
+
+    // application icon
+    virtual QIcon applicationIcon( void ) const
+    { return QIcon( ":/elogbook.png" ); }
+
+    // application version
+    virtual QString applicationVersion( void ) const
+    { return VERSION; }
+
+    // build time stamp
+    virtual QString buildTimeStamp( void ) const
+    { return BUILD_TIMESTAMP; }
+
+    //@}
+
+    protected Q_SLOTS:
 
     //! configuration
     virtual void _configuration( void );
