@@ -177,8 +177,8 @@ void SearchPanel::_updateConfiguration( void )
     Debug::Throw( "SearchPanel::_updateConfiguration.\n" );
 
     // icon size
-    IconSize icon_size( IconSize( this, (IconSize::Size)XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) ) );
-    setIconSize( icon_size );
+    const IconSize iconSize( IconSize( (IconSize::Size)XmlOptions::get().get<int>( "SEARCH_PANEL_ICON_SIZE" ) ) );
+    setIconSize( iconSize );
 
     // text label for toolbars
     Qt::ToolButtonStyle style( (Qt::ToolButtonStyle) XmlOptions::get().get<int>( "SEARCH_PANEL_TEXT_POSITION" ) );
