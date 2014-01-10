@@ -85,10 +85,6 @@ class Application: public BaseApplication, public Counter
     virtual QString applicationName( void ) const
     { return "Elogbook"; }
 
-    // application icon
-    virtual QIcon applicationIcon( void ) const
-    { return QIcon( ":/elogbook.png" ); }
-
     // application version
     virtual QString applicationVersion( void ) const
     { return VERSION; }
