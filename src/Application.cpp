@@ -44,14 +44,6 @@
 #include <QMessageBox>
 
 //____________________________________________
-void Application::usage( void )
-{
-    Debug::Throw(0) << "usage : elogbook [options] [file]" << endl;
-    SERVER::ApplicationManager::commandLineParser().usage();
-    return;
-}
-
-//____________________________________________
 Application::Application( CommandLineArguments arguments ) :
     BaseApplication( 0, arguments ),
     Counter( "Application" ),
@@ -70,12 +62,12 @@ Application::~Application( void )
 }
 
 //____________________________________________
-void Application::initApplicationManager( void )
+bool Application::initApplicationManager( void )
 {
     Debug::Throw( "Application::initApplicationManager.\n" );
 
     // retrieve files from arguments and expand if needed
-    CommandLineParser parser( SERVER::ApplicationManager::commandLineParser( _arguments() ) );
+    CommandLineParser parser( commandLineParser( _arguments() ) );
     QStringList& orphans( parser.orphans() );
     for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); ++iter )
     { if( !iter->isEmpty() ) (*iter) = File( *iter ).expand(); }
@@ -84,7 +76,7 @@ void Application::initApplicationManager( void )
     _setArguments( parser.arguments() );
 
     // base class initialization
-    BaseApplication::initApplicationManager();
+    return BaseApplication::initApplicationManager();
 
 }
 
@@ -132,7 +124,7 @@ bool Application::realizeWidget( void )
     qApp->processEvents();
 
     // load file from arguments or recent files
-    QStringList filenames( SERVER::ApplicationManager::commandLineParser( _arguments() ).orphans() );
+    QStringList filenames( commandLineParser( _arguments() ).orphans() );
     const File file = filenames.empty() ?
         recentFiles_->lastValidFile().file():
         File( filenames.front() );
@@ -154,6 +146,14 @@ bool Application::realizeWidget( void )
 
     return true;
 
+}
+
+//____________________________________________
+void Application::usage( void ) const
+{
+    Debug::Throw(0) << "Usage: elogbook [options] [file]" << endl;
+    commandLineParser().usage();
+    return;
 }
 
 //_________________________________________________
@@ -209,7 +209,7 @@ bool Application::_processCommand( SERVER::ServerCommand command )
     if( command.command() == SERVER::ServerCommand::Raise )
     {
         if( mainWindow_ ) mainWindow_->uniconifyAction().trigger();
-        QStringList filenames( SERVER::ApplicationManager::commandLineParser( command.arguments() ).orphans() );
+        QStringList filenames( commandLineParser( command.arguments() ).orphans() );
         if( !filenames.isEmpty() )
         {
 

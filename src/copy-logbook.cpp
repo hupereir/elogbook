@@ -45,6 +45,7 @@ int main (int argc, char *argv[])
     signal(SIGTERM, interrupt);
 
     // read argument
+    // TODO use command-line arguments
     if( argc < 3 )
     {
         Debug::Throw(0) << "usage: copy-logbook <input file> <output file>" << endl;

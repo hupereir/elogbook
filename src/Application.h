@@ -27,6 +27,7 @@
 #include "CommandLineParser.h"
 #include "Config.h"
 #include "Counter.h"
+#include "IconEngine.h"
 
 class AttachmentWindow;
 class FileList;
@@ -47,9 +48,6 @@ class Application: public BaseApplication, public Counter
 
     public:
 
-    //! command line help
-    static void usage( void );
-
     //! constructor
     Application( CommandLineArguments );
 
@@ -57,7 +55,7 @@ class Application: public BaseApplication, public Counter
     ~Application( void );
 
     //! application manager
-    virtual void initApplicationManager( void );
+    virtual bool initApplicationManager( void );
 
     //! create all widgets
     virtual bool realizeWidget( void );
@@ -81,9 +79,16 @@ class Application: public BaseApplication, public Counter
     //!@name application information
     //@{
 
+    //! command line help
+    void usage( void ) const;
+
     //! application name
     virtual QString applicationName( void ) const
     { return "Elogbook"; }
+
+    //! application name
+    virtual QIcon applicationIcon( void ) const
+    { return IconEngine::get( ":/elogbook.png" ); }
 
     // application version
     virtual QString applicationVersion( void ) const
