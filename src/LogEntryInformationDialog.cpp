@@ -22,7 +22,7 @@
 #include "LogEntryInformationDialog.h"
 #include "LogEntryInformationDialog.moc"
 
-#include "BaseFileInformationDialog.h"
+#include "ToolTipWidgetItem.h"
 #include "Debug.h"
 #include "GridLayout.h"
 #include "Icons.h"
@@ -62,41 +62,41 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     hLayout->addLayout( gridLayout );
     hLayout->addStretch();
 
-    BaseFileInformationDialog::Item* item;
+    ToolTipWidgetItem* item;
 
     // title
-    item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Bold );
+    item = new ToolTipWidgetItem( this, gridLayout, ToolTipWidgetItem::Bold );
     item->setKey( tr( "Title:" ) );
-    item->setValue( entry->title() );
+    item->setText( entry->title() );
 
     // keyword
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Keyword:" ) );
-    item->setValue( entry->keyword().get() );
+    item->setText( entry->keyword().get() );
 
     // author
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Author:" ) );
-    item->setValue( entry->author() );
+    item->setText( entry->author() );
 
     // creation
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Created:" ) );
-    item->setValue( entry->creation().toString() );
+    item->setText( entry->creation().toString() );
 
     // modified
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Modified:" ) );
-    item->setValue( entry->modification().toString() );
+    item->setText( entry->modification().toString() );
 
     // retrieve associated logbook
     BASE::KeySet<Logbook> logbooks( entry );
     if( !logbooks.empty() )
     {
 
-        item = new BaseFileInformationDialog::Item( this, gridLayout );
+        item = new ToolTipWidgetItem( this, gridLayout );
         item->setKey( tr( "File:" ) );
-        item->setValue( File( (*logbooks.begin())->file() ).localName() );
+        item->setText( File( (*logbooks.begin())->file() ).localName() );
 
     }
 

@@ -23,13 +23,13 @@
 #include "LogbookStatisticsDialog.moc"
 
 #include "AnimatedLineEditor.h"
-#include "BaseFileInformationDialog.h"
 #include "Debug.h"
 #include "GridLayout.h"
 #include "Icons.h"
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
+#include "ToolTipWidgetItem.h"
 #include "TreeView.h"
 #include "Util.h"
 
@@ -65,45 +65,45 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     hLayout->addStretch();
 
     // generic item
-    BaseFileInformationDialog::Item* item;
+    ToolTipWidgetItem* item;
 
     if( !logbook->file().isEmpty() )
     {
         // file
-        item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::All );
+        item = new ToolTipWidgetItem( this, gridLayout, ToolTipWidgetItem::All );
         item->setKey( tr( "File name:" ) );
-        item->setValue( logbook->file().localName() );
+        item->setText( logbook->file().localName() );
 
         // path
-        item = new BaseFileInformationDialog::Item( this, gridLayout, BaseFileInformationDialog::Selectable|BaseFileInformationDialog::Elide );
+        item = new ToolTipWidgetItem( this, gridLayout, ToolTipWidgetItem::Selectable|ToolTipWidgetItem::Elide );
         item->setKey( tr( "Path:" ) );
-        item->setValue( logbook->file().path() );
+        item->setText( logbook->file().path() );
     }
 
     // creation
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Created:" ) );
-    item->setValue( logbook->creation().isValid() ? logbook->creation().toString():QString() );
+    item->setText( logbook->creation().isValid() ? logbook->creation().toString():QString() );
 
     // modification
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Modified:" ) );
-    item->setValue( logbook->modification().isValid() ? logbook->modification().toString():QString() );
+    item->setText( logbook->modification().isValid() ? logbook->modification().toString():QString() );
 
     // backup
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Last backup:" ) );
-    item->setValue( logbook->backup().isValid() ? logbook->backup().toString():QString() );
+    item->setText( logbook->backup().isValid() ? logbook->backup().toString():QString() );
 
     // entries
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Entries:" ) );
-    item->setValue( QString().setNum( logbook->entries().size() ) );
+    item->setText( QString().setNum( logbook->entries().size() ) );
 
     // attachments
-    item = new BaseFileInformationDialog::Item( this, gridLayout );
+    item = new ToolTipWidgetItem( this, gridLayout );
     item->setKey( tr( "Attachments:" ) );
-    item->setValue( QString().setNum( logbook->attachments().size() ) );
+    item->setText( QString().setNum( logbook->attachments().size() ) );
 
     gridLayout->setColumnStretch( 1, 1 );
 

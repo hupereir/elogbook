@@ -88,14 +88,9 @@ bool Application::realizeWidget( void )
     // check if the method has already been called.
     if( !BaseApplication::realizeWidget() ) return false;
 
-    // rename about action
-    aboutAction().setText( tr( "About Elogbook" ) );
-
     // need to redirect closeAction to proper exit
     closeAction().disconnect();
     connect( &closeAction(), SIGNAL(triggered()), SLOT(_exit()) );
-
-    configurationAction().setText( tr( "Configure Elogbook..." ) );
 
     // recent files
     recentFiles_ = new XmlFileList();
