@@ -29,7 +29,7 @@
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
-#include "ToolTipWidgetItem.h"
+#include "GridLayoutItem.h"
 #include "TreeView.h"
 #include "Util.h"
 
@@ -65,43 +65,43 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     hLayout->addStretch();
 
     // generic item
-    ToolTipWidgetItem* item;
+    GridLayoutItem* item;
 
     if( !logbook->file().isEmpty() )
     {
         // file
-        item = new ToolTipWidgetItem( this, gridLayout, ToolTipWidgetItem::All );
+        item = new GridLayoutItem( this, gridLayout, GridLayoutItem::All );
         item->setKey( tr( "File name:" ) );
         item->setText( logbook->file().localName() );
 
         // path
-        item = new ToolTipWidgetItem( this, gridLayout, ToolTipWidgetItem::Selectable|ToolTipWidgetItem::Elide );
+        item = new GridLayoutItem( this, gridLayout, GridLayoutItem::Selectable|GridLayoutItem::Elide );
         item->setKey( tr( "Path:" ) );
         item->setText( logbook->file().path() );
     }
 
     // creation
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Created:" ) );
     item->setText( logbook->creation().isValid() ? logbook->creation().toString():QString() );
 
     // modification
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Modified:" ) );
     item->setText( logbook->modification().isValid() ? logbook->modification().toString():QString() );
 
     // backup
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Last backup:" ) );
     item->setText( logbook->backup().isValid() ? logbook->backup().toString():QString() );
 
     // entries
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Entries:" ) );
     item->setText( QString().setNum( logbook->entries().size() ) );
 
     // attachments
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Attachments:" ) );
     item->setText( QString().setNum( logbook->attachments().size() ) );
 

@@ -22,7 +22,7 @@
 #include "LogEntryInformationDialog.h"
 #include "LogEntryInformationDialog.moc"
 
-#include "ToolTipWidgetItem.h"
+#include "GridLayoutItem.h"
 #include "Debug.h"
 #include "GridLayout.h"
 #include "Icons.h"
@@ -62,30 +62,30 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     hLayout->addLayout( gridLayout );
     hLayout->addStretch();
 
-    ToolTipWidgetItem* item;
+    GridLayoutItem* item;
 
     // title
-    item = new ToolTipWidgetItem( this, gridLayout, ToolTipWidgetItem::Bold );
+    item = new GridLayoutItem( this, gridLayout, GridLayoutItem::Bold );
     item->setKey( tr( "Title:" ) );
     item->setText( entry->title() );
 
     // keyword
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Keyword:" ) );
     item->setText( entry->keyword().get() );
 
     // author
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Author:" ) );
     item->setText( entry->author() );
 
     // creation
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Created:" ) );
     item->setText( entry->creation().toString() );
 
     // modified
-    item = new ToolTipWidgetItem( this, gridLayout );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Modified:" ) );
     item->setText( entry->modification().toString() );
 
@@ -94,7 +94,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     if( !logbooks.empty() )
     {
 
-        item = new ToolTipWidgetItem( this, gridLayout );
+        item = new GridLayoutItem( this, gridLayout );
         item->setKey( tr( "File:" ) );
         item->setText( File( (*logbooks.begin())->file() ).localName() );
 
