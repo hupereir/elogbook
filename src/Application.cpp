@@ -146,7 +146,7 @@ bool Application::realizeWidget( void )
 //____________________________________________
 void Application::usage( void ) const
 {
-    Debug::Throw(0) << "Usage: elogbook [options] [file]" << endl;
+    _usage( "elogbook", tr( "[options] [file]" ) );
     commandLineParser().usage();
     return;
 }
