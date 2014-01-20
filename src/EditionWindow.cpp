@@ -1613,7 +1613,7 @@ void EditionWindow::LocalTextEditor::_installActions( void )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
     addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), tr( "Insert Link..." ), this ) );
-    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), tr( "View Link..." ), this ) );
+    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), tr( "Open Link..." ), this ) );
 
     // disable insert link action by default
     insertLinkAction_->setEnabled( false );
