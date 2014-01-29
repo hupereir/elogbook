@@ -58,7 +58,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     void modified( void );
 
     //! mask changed
-    void maskChanged( unsigned int );
+    void maskChanged( LogEntry::Mask );
 
     protected Q_SLOTS:
 

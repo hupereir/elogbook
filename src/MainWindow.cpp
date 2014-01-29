@@ -1722,11 +1722,11 @@ void MainWindow::_print( void )
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
-    connect( logbookOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setMask(unsigned int)) );
+    connect( logbookOptionWidget, SIGNAL(maskChanged(Logbook::Mask)), &helper, SLOT(setMask(Logbook::Mask)) );
     logbookOptionWidget->read( XmlOptions::get() );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
-    connect( logEntryOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setEntryMask(unsigned int)) );
+    connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setEntryMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
 
     LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();

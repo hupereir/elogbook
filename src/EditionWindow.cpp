@@ -1097,7 +1097,7 @@ void EditionWindow::_print( void )
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
-    connect( logEntryOptionWidget, SIGNAL(maskChanged(unsigned int)), &helper, SLOT(setMask(unsigned int)) );
+    connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
 
     // create prind dialog and run.

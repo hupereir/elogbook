@@ -58,7 +58,7 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
     void modified( void );
 
     //! mask changed
-    void maskChanged( unsigned int );
+    void maskChanged( Logbook::Mask );
 
     protected Q_SLOTS:
 
