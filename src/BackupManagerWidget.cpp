@@ -22,7 +22,7 @@
 #include "BackupManagerWidget.h"
 #include "BackupManagerWidget.moc"
 
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "QuestionDialog.h"
 #include "TreeView.h"
@@ -48,16 +48,16 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     buttonLayout_->setMargin(0);
     hLayout->addLayout( buttonLayout_ );
 
-    buttonLayout_->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( ICONS::ADD ), tr( "New" ), this ) );
-    buttonLayout_->addWidget( removeButton_ = new QPushButton( IconEngine::get( ICONS::REMOVE ), tr( "Remove" ), this ) );
-    buttonLayout_->addWidget( restoreButton_ = new QPushButton( IconEngine::get( ICONS::UNDO ), tr( "Restore" ), this ) );
-    buttonLayout_->addWidget( mergeButton_ = new QPushButton( IconEngine::get( ICONS::MERGE ), tr( "Merge" ), this ) );
+    buttonLayout_->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( IconNames::Add ), tr( "New" ), this ) );
+    buttonLayout_->addWidget( removeButton_ = new QPushButton( IconEngine::get( IconNames::Remove ), tr( "Remove" ), this ) );
+    buttonLayout_->addWidget( restoreButton_ = new QPushButton( IconEngine::get( IconNames::Undo ), tr( "Restore" ), this ) );
+    buttonLayout_->addWidget( mergeButton_ = new QPushButton( IconEngine::get( IconNames::Merge ), tr( "Merge" ), this ) );
 
     QFrame* frame = new QFrame( this );
     frame->setFrameStyle( QFrame::HLine );
     buttonLayout_->addWidget( frame );
 
-    buttonLayout_->addWidget( cleanButton_ = new QPushButton( IconEngine::get( ICONS::DELETE ), tr( "Clean" ), this ) );
+    buttonLayout_->addWidget( cleanButton_ = new QPushButton( IconEngine::get( IconNames::Delete ), tr( "Clean" ), this ) );
 
     buttonLayout_->addStretch( 1 );
 

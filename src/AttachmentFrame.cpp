@@ -34,7 +34,7 @@
 #include "File.h"
 #include "FileDialog.h"
 #include "FileRecord.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -778,40 +778,40 @@ void AttachmentFrame::_installActions( void )
 {
     Debug::Throw( "AttachmentFrame::_installActions.\n" );
 
-    addAction( visibilityAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "Show &Attachment List" ), this ) );
+    addAction( visibilityAction_ = new QAction( IconEngine::get( IconNames::Attach ), tr( "Show &Attachment List" ), this ) );
     visibilityAction().setToolTip( tr( "Show/hide attachment list" ) );
     visibilityAction().setCheckable( true );
     visibilityAction().setChecked( true );
     connect( &visibilityAction(), SIGNAL(toggled(bool)), SLOT(setVisible(bool)) );
 
-    addAction( newAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "New" ), this ) );
+    addAction( newAction_ = new QAction( IconEngine::get( IconNames::Attach ), tr( "New" ), this ) );
     newAction().setToolTip( tr( "Attach a file/URL to the current entry" ) );
     connect( &newAction(), SIGNAL(triggered()), SLOT(_new()) );
 
-    addAction( openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), tr( "Open" ), this ) );
+    addAction( openAction_ = new QAction( IconEngine::get( IconNames::Open ), tr( "Open" ), this ) );
     openAction().setToolTip( tr( "Open selected attachments" ) );
     connect( &openAction(), SIGNAL(triggered()), SLOT(_open()) );
 
-    addAction( editAction_ = new QAction( IconEngine::get( ICONS::EDIT ), tr( "Edit" ), this ) );
+    addAction( editAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Edit" ), this ) );
     editAction().setToolTip( tr( "Edit selected attachments informations" ) );
     connect( &editAction(), SIGNAL(triggered()), SLOT(_edit()) );
 
-    addAction( deleteAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete" ), this ) );
+    addAction( deleteAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete" ), this ) );
     deleteAction().setShortcut( QKeySequence::Delete );
     deleteAction().setToolTip( tr( "Delete selected attachments" ) );
     connect( &deleteAction(), SIGNAL(triggered()), SLOT(_delete()) );
 
-    addAction( reloadAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), tr( "Reload" ), this ) );
+    addAction( reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this ) );
     reloadAction().setShortcut( QKeySequence::Refresh );
     reloadAction().setToolTip( tr( "Reload attachments timestamps" ) );
     connect( &reloadAction(), SIGNAL(triggered()), SLOT(_reload()) );
 
-    addAction( saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), tr( "Save As" ), this ) );
+    addAction( saveAsAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save As" ), this ) );
     saveAsAction().setToolTip( tr( "Save selected attachment with a different filename" ) );
     connect( &saveAsAction(), SIGNAL(triggered()), SLOT(_saveAs()) );
 
 
-    cleanAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Clean" ), this );
+    cleanAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Clean" ), this );
     cleanAction().setToolTip( tr( "Delete selected attachments" ) );
     connect( &cleanAction(), SIGNAL(triggered()), SLOT(_clean()) );
 }

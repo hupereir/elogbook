@@ -32,7 +32,7 @@
 #include "HelpManager.h"
 #include "HelpText.h"
 #include "IconEngine.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "Logbook.h"
 #include "MainWindow.h"
 #include "RecentFilesMenu.h"
@@ -234,7 +234,7 @@ void Menu::_updateEditorMenu( void )
 
             // add menu entry for this frame
             QString title( window->windowTitle() );
-            QAction* action = windowsMenu_->addAction( IconEngine::get( ICONS::EDIT ), title, &window->uniconifyAction(), SLOT(trigger()) );
+            QAction* action = windowsMenu_->addAction( IconEngine::get( IconNames::Edit ), title, &window->uniconifyAction(), SLOT(trigger()) );
 
             if( editionWindow )
             {

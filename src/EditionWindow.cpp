@@ -26,7 +26,7 @@
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
 #include "BaseContextMenu.h"
-#include "BaseIcons.h"
+#include "BaseIconNames.h"
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
@@ -34,7 +34,7 @@
 #include "File.h"
 #include "FormatBar.h"
 #include "HtmlDialog.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconSize.h"
 #include "IconEngine.h"
 #include "InformationDialog.h"
@@ -182,7 +182,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     lock_->visibilityAction().setVisible( false );
 
     QAction *action;
-    lock_->addAction( action = new QAction( IconEngine::get( ICONS::LOCK ), tr( "Unlock" ), this ) );
+    lock_->addAction( action = new QAction( IconEngine::get( IconNames::Lock ), tr( "Unlock" ), this ) );
     connect( action, SIGNAL(triggered()), SLOT(_unlock()) );
     action->setToolTip( tr( "Remove read-only lock for current editor." ) );
 
@@ -195,7 +195,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( &saveAction() );
 
     // delete_entry button
-    toolbar->addAction( action = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete Entry" ), this ) );
+    toolbar->addAction( action = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete Entry" ), this ) );
     connect( action, SIGNAL(triggered()), SLOT(_deleteEntry()) );
     readOnlyActions_ << action;
 
@@ -646,39 +646,39 @@ void EditionWindow::_installActions( void )
     Debug::Throw( "EditionWindow::_installActions.\n" );
 
     // undo action
-    addAction( undoAction_ = new QAction( IconEngine::get( ICONS::UNDO ), tr( "Undo" ), this ) );
+    addAction( undoAction_ = new QAction( IconEngine::get( IconNames::Undo ), tr( "Undo" ), this ) );
     undoAction_->setToolTip( tr( "Undo last modification" ) );
     connect( undoAction_, SIGNAL(triggered()), SLOT(_undo()) );
 
     // redo action
-    addAction( redoAction_ = new QAction( IconEngine::get( ICONS::REDO ), tr( "Redo" ), this ) );
+    addAction( redoAction_ = new QAction( IconEngine::get( IconNames::Redo ), tr( "Redo" ), this ) );
     redoAction_->setToolTip( tr( "Redo last undone modification" ) );
     connect( redoAction_, SIGNAL(triggered()), SLOT(_redo()) );
 
     // new entry
-    addAction( newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Entry" ), this ) );
+    addAction( newEntryAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Entry" ), this ) );
     newEntryAction_->setShortcut( QKeySequence::New );
     newEntryAction_->setToolTip( tr( "Create new entry in current editor" ) );
     connect( newEntryAction_, SIGNAL(triggered()), SLOT(_newEntry()) );
 
     // previous entry action
-    addAction( previousEntryAction_ = new QAction( IconEngine::get( ICONS::PREVIOUS ), tr( "Previous Entry" ), this ) );
+    addAction( previousEntryAction_ = new QAction( IconEngine::get( IconNames::Previous ), tr( "Previous Entry" ), this ) );
     previousEntryAction_->setToolTip( tr( "Display previous entry in current list" ) );
     connect( previousEntryAction_, SIGNAL(triggered()), SLOT(_previousEntry()) );
 
     // next entry action
-    addAction( nextEntryAction_ = new QAction( IconEngine::get( ICONS::NEXT ), tr( "Next Entry" ), this ) );
+    addAction( nextEntryAction_ = new QAction( IconEngine::get( IconNames::Next ), tr( "Next Entry" ), this ) );
     nextEntryAction_->setToolTip( tr( "Display next entry in current list" ) );
     connect( nextEntryAction_, SIGNAL(triggered()), SLOT(_nextEntry()) );
 
     // save
-    addAction( saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), tr( "Save Entry" ), this ) );
+    addAction( saveAction_ = new QAction( IconEngine::get( IconNames::Save ), tr( "Save Entry" ), this ) );
     saveAction_->setToolTip( tr( "Save current entry" ) );
     connect( saveAction_, SIGNAL(triggered()), SLOT(_save()) );
     saveAction_->setShortcut( QKeySequence::Save );
 
     #if WITH_ASPELL
-    addAction( spellcheckAction_ = new QAction( IconEngine::get( ICONS::SPELLCHECK ), tr( "Spellcheck..." ), this ) );
+    addAction( spellcheckAction_ = new QAction( IconEngine::get( IconNames::SpellCheck ), tr( "Spellcheck..." ), this ) );
     spellcheckAction_->setToolTip( tr( "Check spelling of current entry" ) );
     connect( spellcheckAction_, SIGNAL(triggered()), SLOT(_spellCheck()) );
 
@@ -687,41 +687,41 @@ void EditionWindow::_installActions( void )
     #endif
 
     // entry_info
-    addAction( entryInfoAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), tr( "Entry Properties..." ), this ) );
+    addAction( entryInfoAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Entry Properties..." ), this ) );
     entryInfoAction_->setToolTip( tr( "Show current entry properties" ) );
     connect( entryInfoAction_, SIGNAL(triggered()), SLOT(_entryInfo()) );
 
     // print
-    addAction( printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), tr( "Print..." ), this ) );
+    addAction( printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this ) );
     printAction_->setToolTip( tr( "Print current logbook entry" ) );
     printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, SIGNAL(triggered()), SLOT(_print()) );
 
     // print preview
-    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), tr( "Print Preview..." ), this ) );
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( IconNames::PrintPreview ), tr( "Print Preview..." ), this ) );
     connect( printPreviewAction_, SIGNAL(triggered()), SLOT(_printPreview()) );
 
     // print
-    addAction( htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), tr( "Export to HTML..." ), this ) );
+    addAction( htmlAction_ = new QAction( IconEngine::get( IconNames::Html ), tr( "Export to HTML..." ), this ) );
     htmlAction_->setToolTip( tr( "Export current logbook entry to HTML" ) );
     connect( htmlAction_, SIGNAL(triggered()), SLOT(_toHtml()) );
 
     // split action
-    addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( ICONS::VIEW_TOPBOTTOM ), tr( "Split View Top/Bottom" ), this ) );
+    addAction( splitViewHorizontalAction_ =new QAction( IconEngine::get( IconNames::ViewTopBottom ), tr( "Split View Top/Bottom" ), this ) );
     splitViewHorizontalAction_->setToolTip( tr( "Split current text editor vertically" ) );
     connect( splitViewHorizontalAction_, SIGNAL(triggered()), SLOT(_splitViewVertical()) );
 
-    addAction( splitViewVerticalAction_ =new QAction( IconEngine::get( ICONS::VIEW_LEFTRIGHT ), tr( "Split View Left/Right" ), this ) );
+    addAction( splitViewVerticalAction_ =new QAction( IconEngine::get( IconNames::ViewLeftRight ), tr( "Split View Left/Right" ), this ) );
     splitViewVerticalAction_->setToolTip( tr( "Split current text editor horizontally" ) );
     connect( splitViewVerticalAction_, SIGNAL(triggered()), SLOT(_splitViewHorizontal()) );
 
     // clone window action
-    addAction( cloneWindowAction_ = new QAction( IconEngine::get( ICONS::VIEW_CLONE ), tr( "Clone Window" ), this ) );
+    addAction( cloneWindowAction_ = new QAction( IconEngine::get( IconNames::ViewClone ), tr( "Clone Window" ), this ) );
     cloneWindowAction_->setToolTip( tr( "Create a new edition window displaying the same entry" ) );
     connect( cloneWindowAction_, SIGNAL(triggered()), SLOT(_cloneWindow()) );
 
     // close window action
-    addAction( closeAction_ = new QAction( IconEngine::get( ICONS::VIEW_REMOVE ), tr( "Close View" ), this ) );
+    addAction( closeAction_ = new QAction( IconEngine::get( IconNames::ViewRemove ), tr( "Close View" ), this ) );
     closeAction_->setShortcut( QKeySequence::Close );
     closeAction_->setToolTip( tr( "Close current view" ) );
     connect( closeAction_, SIGNAL(triggered()), SLOT(_close()) );
@@ -737,7 +737,7 @@ void EditionWindow::_installActions( void )
     connect( showKeywordAction_, SIGNAL(toggled(bool)), SLOT(_toggleShowKeyword(bool)) );
 
     // insert link
-    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), tr( "Insert Link" ), this ) );
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link" ), this ) );
     connect( insertLinkAction_, SIGNAL(triggered()), SLOT(_insertLink()) );
     insertLinkAction_->setEnabled( false );
 }
@@ -1612,8 +1612,8 @@ void EditionWindow::_updateConfiguration( void )
 void EditionWindow::LocalTextEditor::_installActions( void )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
-    addAction( insertLinkAction_ = new QAction( IconEngine::get( ICONS::INSERT_LINK ), tr( "Insert Link..." ), this ) );
-    addAction( openLinkAction_ = new QAction( IconEngine::get( ICONS::FIND ), tr( "Open Link..." ), this ) );
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
+    addAction( openLinkAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Open Link..." ), this ) );
 
     // disable insert link action by default
     insertLinkAction_->setEnabled( false );

@@ -25,7 +25,7 @@
 #include "Attachment.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "LogEntry.h"
 #include "Singleton.h"
@@ -360,7 +360,7 @@ const QIcon& LogEntryModel::_attachmentIcon( void ) const
     Debug::Throw( "LogEntryModel::_attachmentIcon" );
 
     static QIcon attachmentIcon;
-    if( attachmentIcon.isNull() ) attachmentIcon = IconEngine::get( ICONS::ATTACH );
+    if( attachmentIcon.isNull() ) attachmentIcon = IconEngine::get( IconNames::Attach );
     return attachmentIcon;
 
 }

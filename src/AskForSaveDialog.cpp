@@ -20,7 +20,7 @@
 
 #include "AskForSaveDialog.h"
 #include "AskForSaveDialog.moc"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "XmlOptions.h"
 #include "QtUtil.h"
@@ -50,7 +50,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     hLayout->setMargin(10);
     layout->addLayout( hLayout, 1 );
     QLabel* label = new QLabel( this );
-    label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::Warning ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignHCenter );
     hLayout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter );
 
@@ -70,28 +70,28 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
     QPushButton* button;
     if( buttons & YES )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), tr( "Yes" ), this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_yes()) );
     }
 
     // yes to all button
     if( buttons & ALL )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_OK ), tr( "Yes to All" ), this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes to All" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_all()) );
     }
 
     // no button
     if( buttons & NO )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "No" ), this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "No" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_no()) );
     }
 
     // cancel button
     if( buttons & CANCEL )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CANCEL ), tr( "Cancel" ), this ) );
+        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
         button->setShortcut( Qt::Key_Escape );
         connect( button, SIGNAL(clicked()), SLOT(_cancel()) );
     }

@@ -27,7 +27,7 @@
 #include "ElidedLabel.h"
 #include "FileDialog.h"
 #include "IconEngine.h"
-#include "Icons.h"
+#include "IconNames.h"
 
 #include <QGridLayout>
 #include <QButtonGroup>
@@ -66,7 +66,7 @@ OpenLinkDialog::OpenLinkDialog( QWidget* parent, const QString& file ):
 
     QToolButton* button;
     gridLayout->addWidget( button = new QToolButton( this ), 1, 2, 1, 1 );
-    button->setIcon( IconEngine::get( ICONS::OPEN ) );
+    button->setIcon( IconEngine::get( IconNames::Open ) );
     button->setAutoRaise( true );
     connect( button, SIGNAL(clicked()), SLOT(_browse()) );
     gridLayout->setColumnStretch( 1, 1 );

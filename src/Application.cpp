@@ -28,8 +28,6 @@
 #include "Debug.h"
 #include "EditionWindow.h"
 #include "File.h"
-#include "IconEngine.h"
-#include "Icons.h"
 #include "InformationDialog.h"
 #include "Logbook.h"
 #include "MainWindow.h"

@@ -25,7 +25,7 @@
 #include "AnimatedLineEditor.h"
 #include "Debug.h"
 #include "GridLayout.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -53,7 +53,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel(this);
-    label->setPixmap( IconEngine::get( ICONS::INFORMATION ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::Information ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
     hLayout->addStretch();
 

@@ -21,7 +21,7 @@
 
 #include "FormatBar.h"
 #include "FormatBar.moc"
-#include "BaseIcons.h"
+#include "BaseIconNames.h"
 #include "ColorMenu.h"
 #include "CustomPixmap.h"
 #include "Debug.h"
@@ -81,7 +81,7 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
     connect( action, SIGNAL(toggled(bool)), SLOT(_strike(bool)) );
 
     // color
-    action = new QAction( IconEngine::get( ICONS::COLOR ), tr( "Color" ), this );
+    action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this );
     connect( action, SIGNAL(triggered()), SLOT(_lastColor()) );
     actions_.insert( Color, action );
 

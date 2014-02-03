@@ -25,7 +25,7 @@
 #include "Application.h"
 #include "EditionWindow.h"
 #include "IconEngine.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "TreeView.h"
@@ -51,7 +51,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL(activated()), qApp, SLOT(closeAllWindows()) );
     connect( new QShortcut( QKeySequence::Close, this ), SIGNAL(activated()), SLOT(close()) );
 
-    uniconifyAction_ = new QAction( IconEngine::get( ICONS::ATTACH ), tr( "Attachments" ), this );
+    uniconifyAction_ = new QAction( IconEngine::get( IconNames::Attach ), tr( "Attachments" ), this );
     uniconifyAction_->setToolTip( tr( "Raise application main window" ) );
     connect( uniconifyAction_, SIGNAL(triggered()), SLOT(uniconify()) );
 

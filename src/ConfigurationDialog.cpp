@@ -27,7 +27,7 @@
 #include "Debug.h"
 #include "GridLayout.h"
 #include "IconEngine.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "LogbookPrintOptionWidget.h"
 #include "LogEntryPrintOptionWidget.h"
 #include "OptionBrowsedLineEditor.h"
@@ -58,7 +58,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     OptionSpinBox* spinbox;
 
     // attachment editors
-    QWidget* page = &addPage( IconEngine::get( ICONS::PREFERENCE_FILE_TYPES ), tr( "Applications" ), tr( "Third-party applications used to edit attachments" ) );
+    QWidget* page = &addPage( IconEngine::get( IconNames::PreferencesFileAssociations ), tr( "Applications" ), tr( "Third-party applications used to edit attachments" ) );
     page->layout()->addWidget( box = new QGroupBox( tr( "Attachment Editors" ), page ));
 
     GridLayout* gridLayout = new GridLayout();
@@ -105,7 +105,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     addOptionWidget( spinbox );
 
     // colors
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_COLORS ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
+    page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
     box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
@@ -128,7 +128,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     addOptionWidget( listbox );
 
     // auto save
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_BACKUP ), tr( "Backup" ), tr( "Logbook backup configuration" ) );
+    page = &addPage( IconEngine::get( IconNames::PreferencesBackup ), tr( "Backup" ), tr( "Logbook backup configuration" ) );
     gridLayout = new GridLayout();
     gridLayout->setSpacing(5);
     gridLayout->setMargin(0);
@@ -168,7 +168,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     textEditConfiguration();
 
     // printing
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_PRINTING ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );
+    page = &addPage( IconEngine::get( IconNames::PreferencesPrinting ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
@@ -188,7 +188,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     addOptionWidget( logEntryPrintOptionWidget );
 
     // recent files
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_RECENT_FILES ), tr( "Recent Files" ), tr( "Recent files list settings" ), true );
+    page = &addPage( IconEngine::get( IconNames::PreferencesRecentFiles ), tr( "Recent Files" ), tr( "Recent files list settings" ), true );
     RecentFilesConfiguration* recentFilesConfiguration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
     page->layout()->addWidget( recentFilesConfiguration );
     addOptionWidget( recentFilesConfiguration );
@@ -199,7 +199,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     connect( this, SIGNAL(reset()), recentFilesConfiguration, SLOT(reload()) );
 
     // misc
-    page = &addPage( IconEngine::get( ICONS::PREFERENCE_UNSORTED ), tr( "Unsorted" ), tr( "Additional unsorted settings" ) );
+    page = &addPage( IconEngine::get( IconNames::PreferencesUnsorted ), tr( "Unsorted" ), tr( "Additional unsorted settings" ) );
 
     box = new QWidget( page );
     gridLayout = new GridLayout();

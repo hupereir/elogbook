@@ -22,7 +22,7 @@
 
 #include "TransitionWidget.h"
 #include "Debug.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "IconSizeMenu.h"
 #include "LineEditor.h"
@@ -49,7 +49,7 @@ transitionWidget_( new TransitionWidget(parent) )
 
     // find selection button
     QPushButton* button;
-    addWidget( button = new QPushButton( IconEngine::get( ICONS::FIND ), tr( "Find" ), this ) );
+    addWidget( button = new QPushButton( IconEngine::get( IconNames::Find ), tr( "Find" ), this ) );
     connect( button, SIGNAL(clicked()), SLOT(_selectionRequest()) );
     button->setToolTip( tr( "Find logbook entries matching selected text" ) );
     button->setEnabled( false );
@@ -90,7 +90,7 @@ transitionWidget_( new TransitionWidget(parent) )
 
     // close button
     QAction* hideAction;
-    addAction( hideAction = new QAction( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), this ) );
+    addAction( hideAction = new QAction( IconEngine::get( IconNames::DialogClose ), tr( "Close" ), this ) );
     connect( hideAction, SIGNAL(triggered()), SLOT(hide()) );
     connect( hideAction, SIGNAL(triggered()), SIGNAL(showAllEntries()) );
     hideAction->setToolTip( tr( "Show all entries and hide search bar" ) );

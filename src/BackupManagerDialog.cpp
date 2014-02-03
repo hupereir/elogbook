@@ -22,7 +22,7 @@
 #include "BackupManagerDialog.h"
 #include "BackupManagerDialog.moc"
 #include "BackupManagerWidget.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 
 //__________________________________________________________________________________
@@ -38,7 +38,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
     layout()->addWidget( managerWidget_ = new BackupManagerWidget( this ) );
 
     // add close button
-    QPushButton* closeButton = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Close" ), managerWidget_ );
+    QPushButton* closeButton = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "Close" ), managerWidget_ );
     connect( closeButton, SIGNAL(clicked()), this, SLOT(close()) );
     managerWidget_->buttonLayout().addWidget( closeButton );
 

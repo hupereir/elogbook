@@ -23,7 +23,7 @@
 #include "LogbookInformationDialog.moc"
 
 #include "Debug.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "Logbook.h"
 #include "TextEditor.h"
@@ -47,7 +47,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel(this);
-    label->setPixmap( IconEngine::get( ICONS::INFORMATION ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::Information ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
     QGridLayout *gridLayout( new QGridLayout() );

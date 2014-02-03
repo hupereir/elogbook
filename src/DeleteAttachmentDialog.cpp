@@ -23,7 +23,7 @@
 #include "DeleteAttachmentDialog.h"
 #include "DeleteAttachmentDialog.moc"
 #include "Debug.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 
 #include <QButtonGroup>
@@ -48,7 +48,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel( this );
-    label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::Warning ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignHCenter );
     hLayout->addWidget( new QLabel( tr( "Delete attachment ?" ), this ) );
 
@@ -71,7 +71,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     { groupBox->setEnabled( false ); }
 
     okButton().setText( tr( "Delete" ) );
-    okButton().setIcon( IconEngine::get( ICONS::DELETE ) );
+    okButton().setIcon( IconEngine::get( IconNames::Delete ) );
 
     adjustSize();
 

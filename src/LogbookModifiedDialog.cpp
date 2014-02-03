@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 #include "AnimatedTreeView.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "IconEngine.h"
 #include "LogbookModifiedDialog.h"
 #include "LogbookModifiedDialog.moc"
@@ -54,7 +54,7 @@ Counter( "LogbookModifiedDialog" )
     QHBoxLayout *hLayout( new QHBoxLayout() );
     layout->addLayout( hLayout, 0 );
     QLabel* label = new QLabel( this );
-    label->setPixmap( IconEngine::get( ICONS::WARNING ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::Warning ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignHCenter );
     hLayout->addWidget( new QLabel( buffer, this ), 1, Qt::AlignHCenter );
 
@@ -75,22 +75,22 @@ Counter( "LogbookModifiedDialog" )
 
     // resave button
     QPushButton* button;
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE ), tr( "Save Again" ), this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::Save ), tr( "Save Again" ), this ) );
     connect( button, SIGNAL(clicked()), SLOT(_reSave()) );
     button->setToolTip( tr( "Save file again. Disc modifications will be lost" ) );
 
     // save as button
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::SAVE_AS ), tr( "Save As" ), this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::SaveAs ), tr( "Save As" ), this ) );
     connect( button, SIGNAL(clicked()), SLOT(_saveAs()) );
     button->setToolTip( tr( "Save file with a different name" ) );
 
     // reload button.
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::RELOAD ), tr( "Reload" ), this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this ) );
     connect( button, SIGNAL(clicked()), SLOT(_reLoad()) );
     button->setToolTip( tr( "Reload file from disc. Modifications will be lost" ) );
 
     // ignore button.
-    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( ICONS::DIALOG_CLOSE ), tr( "Ignore" ), this ) );
+    buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "Ignore" ), this ) );
     connect( button, SIGNAL(clicked()), SLOT(_ignore()) );
     button->setToolTip( tr( "Ignore warning" ) );
 

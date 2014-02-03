@@ -23,7 +23,7 @@
 
 #include "Application.h"
 #include "AttachmentWindow.h"
-#include "BaseIcons.h"
+#include "BaseIconNames.h"
 #include "BackupManagerDialog.h"
 #include "BackupManagerWidget.h"
 #include "ColorMenu.h"
@@ -39,7 +39,7 @@
 #include "FileList.h"
 #include "HtmlDialog.h"
 #include "IconEngine.h"
-#include "Icons.h"
+#include "IconNames.h"
 #include "InformationDialog.h"
 #include "LineEditor.h"
 #include "Logbook.h"
@@ -221,7 +221,7 @@ MainWindow::MainWindow( QWidget *parent ):
     // need to use a button to be able to set the popup mode
     entryColorButton_ = new QToolButton(0);
     entryColorButton_->setText( tr( "Entry Color" ) );
-    entryColorButton_->setIcon( IconEngine::get( ICONS::COLOR ) );
+    entryColorButton_->setIcon( IconEngine::get( IconNames::Color ) );
     entryColorButton_->setPopupMode( QToolButton::InstantPopup );
     entryColorButton_->setMenu( colorMenu_ );
     entryToolBar_->addWidget( entryColorButton_ );
@@ -1033,15 +1033,15 @@ void MainWindow::_installActions( void )
 {
 
     Debug::Throw( "MainWindow::_installActions.\n" );
-    uniconifyAction_ = new QAction( IconEngine::get( ICONS::HOME ), tr( "Main Window" ), this );
+    uniconifyAction_ = new QAction( IconEngine::get( IconNames::Home ), tr( "Main Window" ), this );
     uniconifyAction_->setToolTip( tr( "Raise application main window" ) );
     connect( uniconifyAction_, SIGNAL(triggered()), SLOT(uniconify()) );
 
-    newKeywordAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Keyword" ), this );
+    newKeywordAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Keyword" ), this );
     newKeywordAction_->setToolTip( tr( "Create a new keyword" ) );
     connect( newKeywordAction_, SIGNAL(triggered()), SLOT(_newKeyword()) );
 
-    addAction( editKeywordAction_ = new QAction( IconEngine::get( ICONS::RENAME ), tr( "Rename Keyword..." ), this ) );
+    addAction( editKeywordAction_ = new QAction( IconEngine::get( IconNames::Rename ), tr( "Rename Keyword..." ), this ) );
     editKeywordAction_->setToolTip( tr( "Rename selected keyword" ) );
     editKeywordAction_->setShortcut( Qt::Key_F2 );
     editKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -1052,27 +1052,27 @@ void MainWindow::_installActions( void )
     it is associated to the Qt::Key_Delete shortcut
     but the later is enabled only if the KeywordList has focus.
     */
-    deleteKeywordAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete Keyword" ), this );
+    deleteKeywordAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete Keyword" ), this );
     deleteKeywordAction_->setToolTip( tr( "Delete selected keyword" ) );
     deleteKeywordAction_->setShortcut( QKeySequence::Delete );
     deleteKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( deleteKeywordAction_, SIGNAL(triggered()), SLOT(_deleteKeyword()) );
 
-    findEntriesAction_ = new QAction( IconEngine::get( ICONS::FIND ), tr( "Find" ), this );
+    findEntriesAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Find" ), this );
     findEntriesAction_->setShortcut( QKeySequence::Find );
     findEntriesAction_->setToolTip( tr( "Find entries matching specific criteria" ) );
     connect( findEntriesAction_, SIGNAL(triggered()), SLOT(_findEntries()) );
 
-    newEntryAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Entry..." ), this );
+    newEntryAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Entry..." ), this );
     newEntryAction_->setToolTip( tr( "Create a new entry" ) );
     newEntryAction_->setShortcut( QKeySequence::New );
     connect( newEntryAction_, SIGNAL(triggered()), SLOT(_newEntry()) );
 
-    editEntryAction_ = new QAction( IconEngine::get( ICONS::EDIT ), tr( "Edit Entries..." ), this );
+    editEntryAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Edit Entries..." ), this );
     editEntryAction_->setToolTip( tr( "Edit selected entries" ) );
     connect( editEntryAction_, SIGNAL(triggered()), SLOT(_editEntries()) );
 
-    editEntryTitleAction_ = new QAction( IconEngine::get( ICONS::RENAME ), tr( "Rename Entry..." ), this );
+    editEntryTitleAction_ = new QAction( IconEngine::get( IconNames::Rename ), tr( "Rename Entry..." ), this );
     editEntryTitleAction_->setToolTip( tr( "Edit selected entry title" ) );
     editEntryTitleAction_->setShortcut( Qt::Key_F2 );
     editEntryTitleAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -1083,7 +1083,7 @@ void MainWindow::_installActions( void )
     it is associated to the Qt::Key_Delete shortcut
     but the later is enabled only if the KeywordList has focus.
     */
-    deleteEntryAction_ = new QAction( IconEngine::get( ICONS::DELETE ), tr( "Delete Entries" ), this );
+    deleteEntryAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete Entries" ), this );
     deleteEntryAction_->setToolTip( tr( "Delete selected entries" ) );
     deleteEntryAction_->setShortcut( QKeySequence::Delete );
     deleteEntryAction_->setShortcutContext( Qt::WidgetShortcut );
@@ -1094,24 +1094,24 @@ void MainWindow::_installActions( void )
     colorMenu_->setTitle( tr( "Change entry color" ) );
     connect( colorMenu_, SIGNAL(selected(QColor)), SLOT(_changeEntryColor(QColor)) );
 
-    entryColorAction_ = new QAction( IconEngine::get( ICONS::COLOR ), tr( "Entry Color" ), this );
+    entryColorAction_ = new QAction( IconEngine::get( IconNames::Color ), tr( "Entry Color" ), this );
     entryColorAction_->setToolTip( tr( "Change selected entries color" ) );
     entryColorAction_->setMenu( colorMenu_ );
 
-    entryKeywordAction_ = new QAction( IconEngine::get( ICONS::EDIT ), tr( "Change Keyword..." ), this );
+    entryKeywordAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Change Keyword..." ), this );
     entryKeywordAction_->setToolTip( tr( "Edit selected entries keyword" ) );
     connect( entryKeywordAction_, SIGNAL(triggered()), SLOT(_renameEntryKeyword()) );
 
-    newLogbookAction_ = new QAction( IconEngine::get( ICONS::NEW ), tr( "New Logbook..." ), this );
+    newLogbookAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Logbook..." ), this );
     newLogbookAction_->setToolTip( tr( "Create a new logbook" ) );
     connect( newLogbookAction_, SIGNAL(triggered()), SLOT(_newLogbook()) );
 
-    openAction_ = new QAction( IconEngine::get( ICONS::OPEN ), tr( "Open..." ), this );
+    openAction_ = new QAction( IconEngine::get( IconNames::Open ), tr( "Open..." ), this );
     openAction_->setToolTip( tr( "Open an existsing logbook" ) );
     openAction_->setShortcut( QKeySequence::Open );
     connect( openAction_, SIGNAL(triggered()), SLOT(open()) );
 
-    synchronizeAction_ = new QAction( IconEngine::get( ICONS::MERGE ), tr( "Synchronize..." ), this );
+    synchronizeAction_ = new QAction( IconEngine::get( IconNames::Merge ), tr( "Synchronize..." ), this );
     synchronizeAction_->setToolTip( tr( "Synchronize current logbook with remote" ) );
     connect( synchronizeAction_, SIGNAL(triggered()), SLOT(_synchronize()) );
 
@@ -1119,54 +1119,54 @@ void MainWindow::_installActions( void )
     reorganizeAction_->setToolTip( tr( "Reoganize logbook entries in files" ) );
     connect( reorganizeAction_, SIGNAL(triggered()), SLOT(_reorganize()) );
 
-    saveAction_ = new QAction( IconEngine::get( ICONS::SAVE ), tr( "Save" ), this );
+    saveAction_ = new QAction( IconEngine::get( IconNames::Save ), tr( "Save" ), this );
     saveAction_->setToolTip( tr( "Save all edited entries" ) );
     connect( saveAction_, SIGNAL(triggered()), SLOT(save()) );
 
-    saveForcedAction_ = new QAction( IconEngine::get( ICONS::SAVE ), tr( "Save (forced)" ), this );
+    saveForcedAction_ = new QAction( IconEngine::get( IconNames::Save ), tr( "Save (forced)" ), this );
     saveForcedAction_->setToolTip( tr( "Save all entries" ) );
     connect( saveForcedAction_, SIGNAL(triggered()), SLOT(_saveForced()) );
 
-    saveAsAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), tr( "Save As..." ), this );
+    saveAsAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save As..." ), this );
     saveAsAction_->setToolTip( tr( "Save logbook with a different name" ) );
     connect( saveAsAction_, SIGNAL(triggered()), SLOT(_saveAs()) );
 
-    saveBackupAction_ = new QAction( IconEngine::get( ICONS::SAVE_AS ), tr( "Save Backup..." ), this );
+    saveBackupAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save Backup..." ), this );
     saveBackupAction_->setToolTip( tr( "Save logbook backup" ) );
     connect( saveBackupAction_, SIGNAL(triggered()), SLOT(_saveBackup()) );
 
-    backupManagerAction_ = new QAction( IconEngine::get( ICONS::CONFIGURE_BACKUPS ), tr( "Manage Backups..." ), this );
+    backupManagerAction_ = new QAction( IconEngine::get( IconNames::ConfigureBackups ), tr( "Manage Backups..." ), this );
     backupManagerAction_->setToolTip( tr( "Save logbook backup" ) );
     connect( backupManagerAction_, SIGNAL(triggered()), SLOT(_manageBackups()) );
 
-    revertToSaveAction_ = new QAction( IconEngine::get( ICONS::RELOAD ), tr( "Reload" ), this );
+    revertToSaveAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this );
     revertToSaveAction_->setToolTip( tr( "Restore saved logbook" ) );
     revertToSaveAction_->setShortcut( QKeySequence::Refresh );
     connect( revertToSaveAction_, SIGNAL(triggered()), SLOT(_revertToSaved()) );
 
     // print
-    printAction_ = new QAction( IconEngine::get( ICONS::PRINT ), tr( "Print..." ), this );
+    printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this );
     printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, SIGNAL(triggered()), SLOT(_print()) );
 
     // print preview
-    addAction( printPreviewAction_ = new QAction( IconEngine::get( ICONS::PRINT_PREVIEW ), tr( "Print Preview..." ), this ) );
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( IconNames::PrintPreview ), tr( "Print Preview..." ), this ) );
     printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
     connect( printPreviewAction_, SIGNAL(triggered()), SLOT(_printPreview()) );
 
     // export to HTML
-    htmlAction_ = new QAction( IconEngine::get( ICONS::HTML ), tr( "Export to HTML..." ), this );
+    htmlAction_ = new QAction( IconEngine::get( IconNames::Html ), tr( "Export to HTML..." ), this );
     connect( htmlAction_, SIGNAL(triggered()), SLOT(_toHtml()) );
 
-    logbookStatisticsAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), tr( "Logbook Statistics..." ), this );
+    logbookStatisticsAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Logbook Statistics..." ), this );
     logbookStatisticsAction_->setToolTip( tr( "View logbook statistics" ) );
     connect( logbookStatisticsAction_, SIGNAL(triggered()), SLOT(_viewLogbookStatistics()) );
 
-    logbookInformationsAction_ = new QAction( IconEngine::get( ICONS::INFORMATION ), tr( "Logbook Properties..." ), this );
+    logbookInformationsAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Logbook Properties..." ), this );
     logbookInformationsAction_->setToolTip( tr( "Edit logbook properties" ) );
     connect( logbookInformationsAction_, SIGNAL(triggered()), SLOT(_editLogbookInformations()) );
 
-    closeFramesAction_ = new QAction( IconEngine::get( ICONS::CLOSE ), tr( "Close Editors" ), this );
+    closeFramesAction_ = new QAction( IconEngine::get( IconNames::Close ), tr( "Close Editors" ), this );
     closeFramesAction_->setToolTip( tr( "Close all entry editors" ) );
     connect( closeFramesAction_, SIGNAL(triggered()), SLOT(_closeEditionWindows()) );
 
@@ -2491,7 +2491,7 @@ void MainWindow::_deleteEntries( void )
     const QString buffer = QString( selection.size() == 1 ? tr( "Delete selected entry" ):tr( "Delete selected entries" ) );
     QuestionDialog dialog( this, buffer );
     dialog.okButton().setText( tr( "Delete" ) );
-    dialog.okButton().setIcon( IconEngine::get( ICONS::DELETE ) );
+    dialog.okButton().setIcon( IconEngine::get( IconNames::Delete ) );
     if( !dialog.exec() ) return;
 
     // retrieve associated entry
