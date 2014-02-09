@@ -272,14 +272,14 @@ bool Logbook::write( File file )
         if( !author_.isEmpty() ) top.setAttribute( XML::AUTHOR, XmlString( author_ ).toXml() ) ;
         if( !parentFile_.isEmpty() ) top.setAttribute( XML::PARENT_FILE, XmlString( parentFile_ ).toXml() );
 
-        top.setAttribute( XML::SORT_METHOD, QString().setNum( sortMethod_ ) );
-        top.setAttribute( XML::SORT_ORDER, QString().setNum( sortOrder_ ) );
-        top.setAttribute( XML::READ_ONLY, QString().setNum( readOnly_ ) );
-        top.setAttribute( XML::LOGBOOK_BACKUP, QString().setNum( isBackup_ ) );
+        top.setAttribute( XML::SORT_METHOD, QString::number( sortMethod_ ) );
+        top.setAttribute( XML::SORT_ORDER, QString::number( sortOrder_ ) );
+        top.setAttribute( XML::READ_ONLY, QString::number( readOnly_ ) );
+        top.setAttribute( XML::LOGBOOK_BACKUP, QString::number( isBackup_ ) );
 
         // update number of entries and children
-        top.setAttribute( XML::ENTRIES, QString().setNum(xmlEntries()) );
-        top.setAttribute( XML::CHILDREN, QString().setNum(xmlChildren()) );
+        top.setAttribute( XML::ENTRIES, QString::number(xmlEntries()) );
+        top.setAttribute( XML::CHILDREN, QString::number(xmlChildren()) );
 
         // append node
         document.appendChild( top );

@@ -98,12 +98,12 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     // entries
     item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Entries:" ) );
-    item->setText( QString().setNum( logbook->entries().size() ) );
+    item->setText( QString::number( logbook->entries().size() ) );
 
     // attachments
     item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Attachments:" ) );
-    item->setText( QString().setNum( logbook->attachments().size() ) );
+    item->setText( QString::number( logbook->attachments().size() ) );
 
     gridLayout->setColumnStretch( 1, 1 );
 

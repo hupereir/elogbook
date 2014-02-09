@@ -48,7 +48,7 @@ QDomElement Backup::domElement( QDomDocument& document ) const
 {
     Debug::Throw( "Backup::domElement.\n" );
     QDomElement out( document.createElement( XML::LOGBOOK_BACKUP ) );
-    out.setAttribute( XML::CREATION, QString().setNum( creation() ) );
+    out.setAttribute( XML::CREATION, QString::number( creation() ) );
     out.setAttribute( XML::FILE, file() );
     return out;
 }

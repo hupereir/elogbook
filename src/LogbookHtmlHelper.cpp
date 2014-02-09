@@ -216,13 +216,13 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
         // keyword
         QDomElement ref = row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", QString( "#" ) + QString().setNum( entry->creation() ) );
+        ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation() ) );
         ref.appendChild( document.createTextNode( entry->keyword().get() ) );
 
         // title
         ref = row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", QString( "#" ) + QString().setNum( entry->creation() ) );
+        ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation() ) );
         ref.appendChild( document.createTextNode( entry->title() ) );
 
         // creation
