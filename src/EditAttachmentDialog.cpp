@@ -54,7 +54,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     label->setBuddy( fileLineEdit );
 
     AttachmentType type( attachment.type() );
-    File fullname( ( type == AttachmentType::URL ) ? attachment.file():attachment.file().expand() );
+    File fullname( ( type == AttachmentType::Url ) ? attachment.file():attachment.file().expand() );
     fileLineEdit->setText( fullname );
 
     // type
@@ -66,8 +66,8 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
         iter ++ )
     {
 
-        if( type == AttachmentType::URL && !( iter.value() == AttachmentType::URL ) ) continue;
-        if( !( type == AttachmentType::URL ) && iter.value() == AttachmentType::URL ) continue;
+        if( type == AttachmentType::Url && !( iter.value() == AttachmentType::Url ) ) continue;
+        if( !( type == AttachmentType::Url ) && iter.value() == AttachmentType::Url ) continue;
         fileTypeComboBox_->addItem( iter.value().name() );
 
     }
@@ -114,7 +114,7 @@ AttachmentType EditAttachmentDialog::type( void ) const
         iter != AttachmentType::types().end();
         ++iter )
     { if( iter.value().name() == type_string ) return iter.value(); }
-    return AttachmentType::UNKNOWN;
+    return AttachmentType::Unknown;
 
 }
 

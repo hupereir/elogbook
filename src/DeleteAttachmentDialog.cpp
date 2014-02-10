@@ -67,7 +67,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     fromLogbookButton_->setToolTip( tr( "Select this button to remove attachment file from logbook only (attachment is kept on disk)." ) );
     group->addButton( fromLogbookButton_ );
 
-    if( attachment.type() == AttachmentType::URL )
+    if( attachment.type() == AttachmentType::Url )
     { groupBox->setEnabled( false ); }
 
     okButton().setText( tr( "Delete" ) );

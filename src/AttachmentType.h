@@ -32,22 +32,22 @@ class AttachmentType: public Counter
     public:
 
     //! unknown file type
-    static AttachmentType UNKNOWN;
+    static AttachmentType Unknown;
 
     //! postscript file type
-    static AttachmentType POSTSCRIPT;
+    static AttachmentType Postscript;
 
     //! image file type
-    static AttachmentType IMAGE;
+    static AttachmentType Image;
 
     //! plain text file type
-    static AttachmentType PLAIN_TEXT;
+    static AttachmentType PlainText;
 
     //! html file type
-    static AttachmentType HTML;
+    static AttachmentType Html;
 
     //! url (pseudo) file type
-    static AttachmentType URL;
+    static AttachmentType Url;
 
     /*!
     retrieves predefined attachment type from key

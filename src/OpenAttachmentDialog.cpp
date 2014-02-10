@@ -49,7 +49,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     mainLayout().addLayout( gridLayout, 0 );
 
     // attachment full name
-    File fullname( ( attachment.type() == AttachmentType::URL ) ? attachment.file() : attachment.file().expand() );
+    File fullname( ( attachment.type() == AttachmentType::Url ) ? attachment.file() : attachment.file().expand() );
 
     // file name
     QLabel* label;
@@ -98,7 +98,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     saveRadioButton_->setToolTip( tr( "Select this button to save a copy of the attachment on disk" ) );
     group->addButton( saveRadioButton_ );
 
-    if( attachment.type() == AttachmentType::URL )
+    if( attachment.type() == AttachmentType::Url )
     {
 
         openRadioButton_->setChecked( true );
@@ -113,7 +113,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     }
 
     // comments
-    if( !( attachment.comments().isEmpty() || attachment.comments()== Attachment::NO_COMMENTS ) )
+    if( !( attachment.comments().isEmpty() || attachment.comments()== Attachment::NoComments ) )
     {
         mainLayout().addWidget( new QLabel( tr( "Comments:" ), this ), 0 );
         TextEditor* commentsTextEdit = new TextEditor( this );
@@ -133,4 +133,4 @@ QString OpenAttachmentDialog::command( void ) const
 
 //______________________________________________________
 OpenAttachmentDialog::Action OpenAttachmentDialog::action( void ) const
-{ return openRadioButton_->isChecked() ? OPEN:SAVE_AS; }
+{ return openRadioButton_->isChecked() ? Open:SaveAs; }

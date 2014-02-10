@@ -288,7 +288,7 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
             appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).
             toElement();
-        if( attachment->type() == AttachmentType::URL ) ref.setAttribute( "href", attachment->file() );
+        if( attachment->type() == AttachmentType::Url ) ref.setAttribute( "href", attachment->file() );
         else ref.setAttribute( "href", QString("file:") + attachment->file() );
         ref.appendChild( document.createTextNode( attachment->file() ) );
 

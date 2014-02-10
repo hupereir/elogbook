@@ -408,11 +408,11 @@ bool MainWindow::setLogbook( File file )
 
     switch( logbook_->sortMethod() )
     {
-        case Logbook::SORT_COLOR: entryList_->sortByColumn( LogEntryModel::COLOR, sort_order ); break;
-        case Logbook::SORT_TITLE: entryList_->sortByColumn( LogEntryModel::TITLE, sort_order ); break;
-        case Logbook::SORT_CREATION: entryList_->sortByColumn( LogEntryModel::CREATION, sort_order ); break;
-        case Logbook::SORT_MODIFICATION: entryList_->sortByColumn( LogEntryModel::MODIFICATION , sort_order); break;
-        case Logbook::SORT_AUTHOR: entryList_->sortByColumn( LogEntryModel::AUTHOR, sort_order ); break;
+        case Logbook::SortColor: entryList_->sortByColumn( LogEntryModel::COLOR, sort_order ); break;
+        case Logbook::SortTitle: entryList_->sortByColumn( LogEntryModel::TITLE, sort_order ); break;
+        case Logbook::SortCreation: entryList_->sortByColumn( LogEntryModel::CREATION, sort_order ); break;
+        case Logbook::SortModification: entryList_->sortByColumn( LogEntryModel::MODIFICATION , sort_order); break;
+        case Logbook::SortAuthor: entryList_->sortByColumn( LogEntryModel::AUTHOR, sort_order ); break;
         default: break;
     }
 
@@ -3087,11 +3087,11 @@ void MainWindow::_storeSortMethod( int column, Qt::SortOrder order  )
     bool changed( false );
     switch( column ) {
 
-        case LogEntryModel::COLOR: changed = logbook_->setSortMethod( Logbook::SORT_COLOR ); break;
-        case LogEntryModel::TITLE: changed = logbook_->setSortMethod( Logbook::SORT_TITLE ); break;
-        case LogEntryModel::CREATION: changed = logbook_->setSortMethod( Logbook::SORT_CREATION ); break;
-        case LogEntryModel::MODIFICATION: changed = logbook_->setSortMethod( Logbook::SORT_MODIFICATION ); break;
-        case LogEntryModel::AUTHOR: changed = logbook_->setSortMethod( Logbook::SORT_AUTHOR ); break;
+        case LogEntryModel::COLOR: changed = logbook_->setSortMethod( Logbook::SortColor ); break;
+        case LogEntryModel::TITLE: changed = logbook_->setSortMethod( Logbook::SortTitle ); break;
+        case LogEntryModel::CREATION: changed = logbook_->setSortMethod( Logbook::SortCreation ); break;
+        case LogEntryModel::MODIFICATION: changed = logbook_->setSortMethod( Logbook::SortModification ); break;
+        case LogEntryModel::AUTHOR: changed = logbook_->setSortMethod( Logbook::SortAuthor ); break;
         default: return;
 
     }

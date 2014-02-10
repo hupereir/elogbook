@@ -98,7 +98,7 @@ void NewAttachmentDialog::setFile( const File& file )
 File NewAttachmentDialog::file( void ) const
 {
     File out( fileEditor_->editor().text() );
-    return type() == AttachmentType::URL ? out : out.expand();
+    return type() == AttachmentType::Url ? out : out.expand();
 }
 
 //____________________________________________________
@@ -130,7 +130,7 @@ AttachmentType NewAttachmentDialog::type( void ) const
     iter != AttachmentType::types().end();
     ++iter )
     { if( iter.value().name() == type ) return iter.value(); }
-    return AttachmentType::UNKNOWN;
+    return AttachmentType::Unknown;
 
 }
 
@@ -138,13 +138,13 @@ AttachmentType NewAttachmentDialog::type( void ) const
 void NewAttachmentDialog::setAction( const Attachment::Command& command )
 {
     Debug::Throw( "NewAttachmentDialog::SetAction.\n" );
-    QString actionString = ( command == Attachment::COPY_VERSION ) ? tr( "Copy" ) : tr( "Link" );
+    QString actionString = ( command == Attachment::CopyVersion ) ? tr( "Copy" ) : tr( "Link" );
     actionComboBox_->setCurrentIndex( actionComboBox_->findText( actionString ) );
 }
 
 //____________________________________________________
 Attachment::Command NewAttachmentDialog::action( void ) const
-{ return actionComboBox_->currentText() == tr( "Copy" ) ? Attachment::COPY_VERSION: Attachment::LINK_VERSION; }
+{ return actionComboBox_->currentText() == tr( "Copy" ) ? Attachment::CopyVersion: Attachment::LinkVersion; }
 
 //____________________________________________________
 void NewAttachmentDialog::setComments( const QString& comments )
@@ -163,7 +163,7 @@ QString NewAttachmentDialog::comments( void ) const
 //____________________________________________________
 void NewAttachmentDialog::_attachmentTypeChanged( int )
 {
-    bool enabled = !( type() == AttachmentType::URL );
+    bool enabled = !( type() == AttachmentType::Url );
     destinationDirectoryEditor_->setEnabled( enabled );
     actionComboBox_->setEnabled( enabled );
     return;

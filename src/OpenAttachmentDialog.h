@@ -50,10 +50,10 @@ class OpenAttachmentDialog: public CustomDialog
     enum Action
     {
         //! open attachment with command
-        OPEN,
+        Open,
 
         //! save attachment locally
-        SAVE_AS
+        SaveAs
 
     };
 

@@ -202,12 +202,12 @@ class Logbook:public QObject, public Counter, public Base::Key
     //! sort method enumeration
     enum SortMethod
     {
-        SORT_CREATION,
-        SORT_MODIFICATION,
-        SORT_TITLE,
-        SORT_KEYWORD,
-        SORT_AUTHOR,
-        SORT_COLOR
+        SortCreation,
+        SortModification,
+        SortTitle,
+        SortKeyword,
+        SortAuthor,
+        SortColor
 
     };
 

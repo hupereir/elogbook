@@ -185,8 +185,8 @@ void AttachmentFrame::_new( void )
     }
 
     // type and action
-    dialog.setType( AttachmentType::UNKNOWN );
-    dialog.setAction( Attachment::COPY_VERSION );
+    dialog.setType( AttachmentType::Unknown );
+    dialog.setAction( Attachment::CopyVersion );
     dialog.resize( 400, 350 );
     if( dialog.centerOnWidget( AttachmentFrame::window() ).exec() == QDialog::Rejected ) return;
 
@@ -197,7 +197,7 @@ void AttachmentFrame::_new( void )
     File fullDirectory = dialog.destinationDirectory();
 
     // check destination directory (if file is not URL)
-    if( !(type == AttachmentType::URL) )
+    if( !(type == AttachmentType::Url) )
     {
         // check if destination directory is not a non directory existsing file
         if( fullDirectory.exists() && !fullDirectory.isDirectory() )
@@ -235,27 +235,27 @@ void AttachmentFrame::_new( void )
     switch (error)
     {
 
-        case Attachment::SOURCE_NOT_FOUND:
+        case Attachment::SourceNotFound:
         InformationDialog( this, QString( tr( "Cannot find file '%1'. <Add Attachment> canceled." ) ).arg( file ) ).exec();
         delete attachment;
         break;
 
-        case Attachment::DEST_NOT_FOUND:
+        case Attachment::DestNotFound:
         InformationDialog( this, QString( tr( "Cannot find directory '%1'. <Add Attachment> canceled." ) ).arg( fullDirectory ) ).exec();
         delete attachment;
         break;
 
-        case Attachment::SOURCE_IS_DIR:
+        case Attachment::SourceIsDir:
         InformationDialog( this, QString( tr( "File '%1' is a directory. <Add Attachment> canceled." ) ).arg( file ) ).exec();
         delete attachment;
         break;
 
-        case Attachment::DEST_EXIST:
+        case Attachment::DestExist:
         InformationDialog( this, QString( tr( "File '%1' is already in list." ) ).arg( file ) ).exec();
         delete attachment;
         break;
 
-        case Attachment::SUCCESS:
+        case Attachment::Success:
 
         // associate attachment to entry
         Key::associate( entry, attachment );
@@ -309,12 +309,12 @@ void AttachmentFrame::enterEvent( QEvent* event )
     foreach( Attachment* attachment, attachments )
     {
 
-        if( attachment->type() == AttachmentType::URL ) continue;
+        if( attachment->type() == AttachmentType::Url ) continue;
         if( attachment->file().isEmpty() ) continue;
 
         records << FileRecord( attachment->file() );
 
-        if( attachment->isLink() == Attachment::YES || attachment->isLink() == Attachment::UNKNOWN )
+        if( attachment->isLink() == Attachment::Yes || attachment->isLink() == Attachment::Unknown )
         { records << FileRecord( attachment->sourceFile() ); }
 
     }
@@ -339,7 +339,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
     foreach( Attachment* attachment, model_.get() )
     {
 
-        if( attachment->type() == AttachmentType::URL ) continue;
+        if( attachment->type() == AttachmentType::Url ) continue;
         if( attachment->file().isEmpty() ) continue;
 
         Debug::Throw() << "AttachmentFrame::_processRecords - checking: " << attachment->file() << endl;
@@ -353,15 +353,15 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
 
         // check link status
-        if( isValid && isLink == Attachment::UNKNOWN )
+        if( isValid && isLink == Attachment::Unknown )
         {
             // check if destination is a link
             QFileInfo fileInfo( attachment->file() );
-            isLink = fileInfo.isSymLink() ? Attachment::YES : Attachment::NO;
+            isLink = fileInfo.isSymLink() ? Attachment::Yes : Attachment::No;
         }
 
         // check source file
-        if( isValid && isLink == Attachment::YES )
+        if( isValid && isLink == Attachment::Yes )
         {
             found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTor( attachment->sourceFile() ) );
             if( found != records.end() ) { isValid &= found->isValid(); }
@@ -456,8 +456,8 @@ void AttachmentFrame::_open( void )
         if( attachment->updateTimeStamps() ) modifiedAttachments << attachment;
 
         AttachmentType type = attachment->type();
-        File fullname( ( type == AttachmentType::URL ) ? attachment->file():attachment->file().expand() );
-        if( !( type == AttachmentType::URL || fullname.exists() ) )
+        File fullname( ( type == AttachmentType::Url ) ? attachment->file():attachment->file().expand() );
+        if( !( type == AttachmentType::Url || fullname.exists() ) )
         {
             InformationDialog( this, QString( tr( "Cannot find file '%1'. <Open Attachment> canceled." ) ).arg( fullname ) ).exec();
             continue;
@@ -466,7 +466,7 @@ void AttachmentFrame::_open( void )
         OpenAttachmentDialog dialog( this, *attachment );
         if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted )
         {
-            if( dialog.action() == OpenAttachmentDialog::OPEN ) ( Command( dialog.command() ) << fullname ).run();
+            if( dialog.action() == OpenAttachmentDialog::Open ) ( Command( dialog.command() ) << fullname ).run();
             else  {
 
                 // create and configure SaveAs dialog
@@ -610,7 +610,7 @@ void AttachmentFrame::_delete( void )
 
             // remove file from disk, if required
             File file( attachment->file().expand() );
-            if( fromDisk && ( !( attachment->type() == AttachmentType::URL ) ) && file.isWritable() )
+            if( fromDisk && ( !( attachment->type() == AttachmentType::Url ) ) && file.isWritable() )
             { file.remove(); }
 
             // delete attachment
@@ -677,8 +677,8 @@ void AttachmentFrame::_saveAs( void )
     {
 
         const AttachmentType type = attachment->type();
-        File fullname( ( type == AttachmentType::URL ) ? attachment->file():attachment->file().expand() );
-        if( type == AttachmentType::URL )
+        File fullname( ( type == AttachmentType::Url ) ? attachment->file():attachment->file().expand() );
+        if( type == AttachmentType::Url )
         {
 
             InformationDialog( this, QString( tr( "Selected attachement is URL. <Save Attachment As> canceled." ) ) ).exec();

@@ -57,12 +57,12 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( attribute.isNull() ) continue;
         QString name( attribute.name() );
         QString value( attribute.value() );
-        if( name == Xml::TITLE ) setTitle( XmlString( value ).toText() );
-        else if( name == Xml::KEYWORD ) setKeyword( Keyword( XmlString( value ).toText() ) );
-        else if( name == Xml::AUTHOR ) setAuthor( XmlString( value ).toText() );
+        if( name == Xml::Title ) setTitle( XmlString( value ).toText() );
+        else if( name == Xml::Keyword ) setKeyword( Keyword( XmlString( value ).toText() ) );
+        else if( name == Xml::Author ) setAuthor( XmlString( value ).toText() );
 
         // kept for backward compatibility
-        else if( name == Xml::COLOR ) setColor( QColor( value ) );
+        else if( name == Xml::Color ) setColor( QColor( value ) );
         else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized entry attribute: \"" << name << "\"\n";
     }
 
@@ -73,17 +73,17 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( childElement.isNull() ) continue;
 
         QString tagName( childElement.tagName() );
-        if( tagName == Base::Xml::COLOR )
+        if( tagName == Base::Xml::Color )
         {
 
             XmlColor color( childElement );
             if( color.isValid() ) setColor( color );
 
-        } else if( tagName == Xml::TEXT ) setText( XmlString( childElement.text() ).toText() );
-        else if( tagName == Xml::CREATION ) setCreation( XmlTimeStamp( childElement ) );
-        else if( tagName == Xml::MODIFICATION ) setModification( XmlTimeStamp( childElement ) );
-        else if( tagName == Format::Xml::TAG ) addFormat( Format::XmlTextFormatBlock( childElement ) );
-        else if( tagName == Xml::ATTACHMENT ) Key::associate( this, new Attachment( childElement ) );
+        } else if( tagName == Xml::Text ) setText( XmlString( childElement.text() ).toText() );
+        else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( childElement ) );
+        else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( childElement ) );
+        else if( tagName == Format::Xml::Tag ) addFormat( Format::XmlTextFormatBlock( childElement ) );
+        else if( tagName == Xml::Attachment ) Key::associate( this, new Attachment( childElement ) );
         else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized child " << childElement.tagName() << endl;
     }
 
@@ -104,17 +104,17 @@ LogEntry::~LogEntry( void )
 QDomElement LogEntry::domElement( QDomDocument& parent ) const
 {
     Debug::Throw( "LogEntry::domElement.\n" );
-    QDomElement out( parent.createElement( Xml::ENTRY ) );
-    if( !title().isEmpty() ) out.setAttribute( Xml::TITLE, XmlString( title() ).toXml() );
-    if( !keyword().get().isEmpty() ) out.setAttribute( Xml::KEYWORD, XmlString( keyword().get() ).toXml() );
-    if( !author().isEmpty() ) out.setAttribute( Xml::AUTHOR, XmlString( author() ).toXml() );
+    QDomElement out( parent.createElement( Xml::Entry ) );
+    if( !title().isEmpty() ) out.setAttribute( Xml::Title, XmlString( title() ).toXml() );
+    if( !keyword().get().isEmpty() ) out.setAttribute( Xml::Keyword, XmlString( keyword().get() ).toXml() );
+    if( !author().isEmpty() ) out.setAttribute( Xml::Author, XmlString( author() ).toXml() );
 
     // color
     if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( parent ) );
 
     // dump timeStamp
-    if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( Xml::CREATION, parent ) );
-    if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::MODIFICATION, parent ) );
+    if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( Xml::Creation, parent ) );
+    if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, parent ) );
 
     // dump text
     if( !text().isEmpty() )
@@ -123,7 +123,7 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
         if( text[text.size()-1] != '\n' ) text+='\n';
 
         out.
-            appendChild( parent.createElement( Xml::TEXT ) ).
+            appendChild( parent.createElement( Xml::Text ) ).
             appendChild( parent.createTextNode( XmlString( text ).toXml() ) );
     }
 

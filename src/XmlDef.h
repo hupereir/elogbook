@@ -29,85 +29,85 @@ namespace Xml
 {
 
     //! logbook tag
-    static const QString LOGBOOK( "Logbook" );
+    static const QString Logbook( "Logbook" );
 
     //! attachment tag
-    static const QString ATTACHMENT( "Attachment" );
+    static const QString Attachment( "Attachment" );
 
     //! recent entries
-    static const QString RECENT_ENTRIES( "RecentEntries" );
+    static const QString RecentEntries( "RecentEntries" );
 
     //! entry tag
-    static const QString ENTRY( "Entry" );
+    static const QString Entry( "Entry" );
 
     //! logbook child tag
-    static const QString CHILD( "Child" );
+    static const QString Child( "Child" );
 
     //! attachment type
-    static const QString TYPE( "type" );
+    static const QString Type( "type" );
 
     //! attachment destination file
-    static const QString FILE( "file" );
+    static const QString File( "file" );
 
     //! attachment source file
-    static const QString SOURCE_FILE( "orig" );
+    static const QString SourceFile( "orig" );
 
     //! parent file
-    static const QString PARENT_FILE( "parent_file" );
+    static const QString ParentFile( "parent_file" );
 
     //! attachment validity
-    static const QString VALID( "valid" );
+    static const QString Valid( "valid" );
 
     //! attachement is link
-    static const QString IS_LINK( "is_link" );
+    static const QString IsLink( "is_link" );
 
     //! directory
-    static const QString DIRECTORY( "directory" );
+    static const QString Directory( "directory" );
 
     //! comments
-    static const QString COMMENTS( "comments" );
+    static const QString Comments( "comments" );
 
     //! creation time
-    static const QString CREATION( "Creation" );
+    static const QString Creation( "Creation" );
 
     //! modification time
-    static const QString MODIFICATION( "Modification" );
+    static const QString Modification( "Modification" );
 
     //! backup time
-    static const QString BACKUP( "Backup" );
+    static const QString Backup( "Backup" );
 
     //! backup file
     static const QString BackupMask( "Logbook_backup" );
 
     //! title
-    static const QString TITLE( "title" );
+    static const QString Title( "title" );
 
     //! logbook author
-    static const QString AUTHOR( "author" );
+    static const QString Author( "author" );
 
     //! logbook sort method
-    static const QString SORT_METHOD( "sort_method" );
+    static const QString SortMethod( "sort_method" );
 
     //! logbook sort order
-    static const QString SORT_ORDER( "sort_order" );
+    static const QString SortOrder( "sort_order" );
 
     //! logbook number of entries
-    static const QString ENTRIES( "entries" );
+    static const QString Entries( "entries" );
 
     //! logbook number of children
-    static const QString CHILDREN( "children" );
+    static const QString Children( "children" );
 
     //! entry text
-    static const QString TEXT( "Text" );
+    static const QString Text( "Text" );
 
     //! entry key
-    static const QString KEYWORD( "key" );
+    static const QString Keyword( "key" );
 
     //! entry color
-    static const QString COLOR( "color" );
+    static const QString Color( "color" );
 
     //! true if logbook is read only
-    static const QString READ_ONLY( "ReadOnly" );
+    static const QString ReadOnly( "ReadOnly" );
 
 };
 

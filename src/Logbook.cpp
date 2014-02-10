@@ -54,7 +54,7 @@ Logbook::Logbook( const File& file ):
     readOnly_( false ),
     isBackup_( false ),
     creation_( TimeStamp::now() ),
-    sortMethod_( Logbook::SORT_CREATION ),
+    sortMethod_( Logbook::SortCreation ),
     sortOrder_( 0 ),
     xmlEntries_( 0 ),
     xmlChildren_( 0 )
@@ -120,7 +120,7 @@ bool Logbook::read( void )
     // read first child
     QDomElement docElement = document.documentElement();
     QString tagName( docElement.tagName() );
-    if( tagName != Xml::LOGBOOK )
+    if( tagName != Xml::Logbook )
     {
         Debug::Throw(0) << "Logbook::read - invalid tag name: " << tagName << endl;
         return false;
@@ -136,21 +136,21 @@ bool Logbook::read( void )
         QString name( attribute.name() );
         QString value( attribute.value() );
 
-        if( name == Xml::TITLE ) setTitle( XmlString( value ).toText() );
-        else if( name == Xml::FILE ) setFile( File( XmlString( value ).toText() ) );
-        else if( name == Xml::PARENT_FILE ) setParentFile( XmlString( value ).toText() );
-        else if( name == Xml::DIRECTORY ) setDirectory( File( XmlString( value ).toText() ) );
-        else if( name == Xml::AUTHOR ) setAuthor( XmlString( value ).toText() );
-        else if( name == Xml::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
-        else if( name == Xml::SORT_ORDER ) setSortOrder( value.toInt() );
-        else if( name == Xml::READ_ONLY ) setReadOnly( value.toInt() );
+        if( name == Xml::Title ) setTitle( XmlString( value ).toText() );
+        else if( name == Xml::File ) setFile( File( XmlString( value ).toText() ) );
+        else if( name == Xml::ParentFile ) setParentFile( XmlString( value ).toText() );
+        else if( name == Xml::Directory ) setDirectory( File( XmlString( value ).toText() ) );
+        else if( name == Xml::Author ) setAuthor( XmlString( value ).toText() );
+        else if( name == Xml::SortMethod ) setSortMethod( (SortMethod) value.toInt() );
+        else if( name == Xml::SortOrder ) setSortOrder( value.toInt() );
+        else if( name == Xml::ReadOnly ) setReadOnly( value.toInt() );
         else if( name == Xml::BackupMask ) setIsBackup( value.toInt() );
-        else if( name == Xml::ENTRIES ) {
+        else if( name == Xml::Entries ) {
 
             setXmlEntries( value.toInt() );
             emit maximumProgressAvailable( value.toInt() );
 
-        } else if( name == Xml::CHILDREN ) setXmlChildren( value.toInt() );
+        } else if( name == Xml::Children ) setXmlChildren( value.toInt() );
         else Debug::Throw(0) << "Logbook::read - unrecognized logbook attribute: \"" << name << "\"\n";
 
     }
@@ -166,23 +166,23 @@ bool Logbook::read( void )
         QString tagName( element.tagName() );
 
         // children
-        if( tagName == Xml::COMMENTS ) setComments( XmlString( element.text() ).toText() );
-        else if( tagName == Xml::CREATION ) setCreation( XmlTimeStamp( element ) );
-        else if( tagName == Xml::MODIFICATION ) setModification( XmlTimeStamp( element ) );
-        else if( tagName == Xml::BACKUP ) setBackup( XmlTimeStamp( element ) );
-        else if( tagName == Xml::RECENT_ENTRIES ) _readRecentEntries( element );
+        if( tagName == Xml::Comments ) setComments( XmlString( element.text() ).toText() );
+        else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( element ) );
+        else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( element ) );
+        else if( tagName == Xml::Backup ) setBackup( XmlTimeStamp( element ) );
+        else if( tagName == Xml::RecentEntries ) _readRecentEntries( element );
         else if( tagName == Xml::BackupMask ) backupFiles_ << Backup( element );
-        else if( tagName == Xml::ENTRY ) {
+        else if( tagName == Xml::Entry ) {
 
             LogEntry* entry = new LogEntry( element );
             Key::associate( this, entry );
             entryCount++;
             if( !(entryCount%progress) ) emit progressAvailable( progress );
 
-        } else if( tagName == Xml::CHILD ) {
+        } else if( tagName == Xml::Child ) {
 
             // try retrieve file from attributes
-            QString file_attribute( element.attribute( Xml::FILE ) );
+            QString file_attribute( element.attribute( Xml::File ) );
             if( file_attribute.isNull() )
             {
                 Debug::Throw(0) << "Logbook::read - no file given for child" << endl;
@@ -266,20 +266,20 @@ bool Logbook::write( File file )
         XmlDocument document;
 
         // create main element
-        QDomElement top = document.createElement( Xml::LOGBOOK );
-        if( !title_.isEmpty() ) top.setAttribute( Xml::TITLE, XmlString( title_ ).toXml() );
-        if( !directory_.isEmpty() ) top.setAttribute( Xml::DIRECTORY, XmlString(directory_ ) );
-        if( !author_.isEmpty() ) top.setAttribute( Xml::AUTHOR, XmlString( author_ ).toXml() ) ;
-        if( !parentFile_.isEmpty() ) top.setAttribute( Xml::PARENT_FILE, XmlString( parentFile_ ).toXml() );
+        QDomElement top = document.createElement( Xml::Logbook );
+        if( !title_.isEmpty() ) top.setAttribute( Xml::Title, XmlString( title_ ).toXml() );
+        if( !directory_.isEmpty() ) top.setAttribute( Xml::Directory, XmlString(directory_ ) );
+        if( !author_.isEmpty() ) top.setAttribute( Xml::Author, XmlString( author_ ).toXml() ) ;
+        if( !parentFile_.isEmpty() ) top.setAttribute( Xml::ParentFile, XmlString( parentFile_ ).toXml() );
 
-        top.setAttribute( Xml::SORT_METHOD, QString::number( sortMethod_ ) );
-        top.setAttribute( Xml::SORT_ORDER, QString::number( sortOrder_ ) );
-        top.setAttribute( Xml::READ_ONLY, QString::number( readOnly_ ) );
+        top.setAttribute( Xml::SortMethod, QString::number( sortMethod_ ) );
+        top.setAttribute( Xml::SortOrder, QString::number( sortOrder_ ) );
+        top.setAttribute( Xml::ReadOnly, QString::number( readOnly_ ) );
         top.setAttribute( Xml::BackupMask, QString::number( isBackup_ ) );
 
         // update number of entries and children
-        top.setAttribute( Xml::ENTRIES, QString::number(xmlEntries()) );
-        top.setAttribute( Xml::CHILDREN, QString::number(xmlChildren()) );
+        top.setAttribute( Xml::Entries, QString::number(xmlEntries()) );
+        top.setAttribute( Xml::Children, QString::number(xmlChildren()) );
 
         // append node
         document.appendChild( top );
@@ -287,16 +287,16 @@ bool Logbook::write( File file )
         // comments
         if( comments().size() )
         {
-            QDomElement comments_element = document.createElement( Xml::COMMENTS );
+            QDomElement commentsElement = document.createElement( Xml::Comments );
             QDomText comments_text = document.createTextNode( XmlString( comments() ).toXml() );
-            comments_element.appendChild( comments_text );
-            top.appendChild( comments_element );
+            commentsElement.appendChild( comments_text );
+            top.appendChild( commentsElement );
         }
 
         // write time stamps
-        if( creation().isValid() ) top.appendChild( XmlTimeStamp( creation() ).domElement( Xml::CREATION, document ) );
-        if( modification().isValid() ) top.appendChild( XmlTimeStamp( modification() ).domElement( Xml::MODIFICATION, document ) );
-        if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( Xml::BACKUP, document ) );
+        if( creation().isValid() ) top.appendChild( XmlTimeStamp( creation() ).domElement( Xml::Creation, document ) );
+        if( modification().isValid() ) top.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, document ) );
+        if( backup().isValid() ) top.appendChild( XmlTimeStamp( backup() ).domElement( Xml::Backup, document ) );
 
         // write recent entries
         if( !recentEntries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
@@ -324,8 +324,8 @@ bool Logbook::write( File file )
         for( int childCount = 0; childCount < children_.size(); ++childCount )
         {
             File childFilename = _childFilename( file, childCount );
-            QDomElement childElement = document.createElement( Xml::CHILD );
-            childElement.setAttribute( Xml::FILE, XmlString( childFilename ).toXml() );
+            QDomElement childElement = document.createElement( Xml::Child );
+            childElement.setAttribute( Xml::File, XmlString( childFilename ).toXml() );
             top.appendChild( childElement );
         }
 
@@ -762,26 +762,26 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
     switch( sortMethod_ )
     {
 
-        case Logbook::SORT_COLOR:
+        case Logbook::SortColor:
         return (first->color() < second->color() );
         break;
 
-        case Logbook::SORT_CREATION:
+        case Logbook::SortCreation:
         return (first->creation() < second->creation());
         break;
 
-        case Logbook::SORT_MODIFICATION:
+        case Logbook::SortModification:
         return (first->modification() < second->modification());
         break;
 
-        case Logbook::SORT_TITLE:
+        case Logbook::SortTitle:
         return (first->title() < second->title());
         break;
 
-        case Logbook::SORT_KEYWORD:
+        case Logbook::SortKeyword:
         return (first->keyword() < second->keyword());
 
-        case Logbook::SORT_AUTHOR:
+        case Logbook::SortAuthor:
         return (first->author() < second->author());
 
         default:
@@ -830,7 +830,7 @@ void Logbook::_readRecentEntries( const QDomElement& element )
 
         // children
         QString tagName( childElement.tagName() );
-        if( tagName == Xml::CREATION ) recentEntries_ << XmlTimeStamp( childElement );
+        if( tagName == Xml::Creation ) recentEntries_ << XmlTimeStamp( childElement );
 
     }
 
@@ -841,9 +841,9 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 {
     Debug::Throw( "Logbook::_recentEntriesElement.\n" );
 
-    QDomElement out( document.createElement( Xml::RECENT_ENTRIES ) );
+    QDomElement out( document.createElement( Xml::RecentEntries ) );
     foreach( const TimeStamp& timeStamp, recentEntries_ )
-    { out.appendChild( XmlTimeStamp( timeStamp ).domElement( Xml::CREATION, document ) ); }
+    { out.appendChild( XmlTimeStamp( timeStamp ).domElement( Xml::Creation, document ) ); }
 
     return out;
 

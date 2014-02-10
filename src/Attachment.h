@@ -43,16 +43,16 @@ class Attachment: public Counter, public Base::Key
   public:
 
   //! default string when no file given
-  static const QString NO_FILE;
+  static const QString NoFile;
 
   //! default string when no comments given
-  static const QString NO_COMMENTS;
+  static const QString NoComments;
 
   //! no size
-  static const QString NO_SIZE;
+  static const QString NoSize;
 
   //! contructor
-  Attachment( const QString = QString(), const AttachmentType& = AttachmentType::UNKNOWN );
+  Attachment( const QString = QString(), const AttachmentType& = AttachmentType::Unknown );
 
   //! creator from DomElement
   Attachment( const QDomElement& element );
@@ -113,9 +113,9 @@ class Attachment: public Counter, public Base::Key
   //! link state
   enum LinkState
   {
-    UNKNOWN,
-    YES,
-    NO
+    Unknown,
+    Yes,
+    No
   };
 
   //! link
@@ -187,21 +187,21 @@ class Attachment: public Counter, public Base::Key
 
   //! command enum to tell who original file should be transformed into attached file
   enum Command {
-    COPY,
-    LINK,
-    COPY_FORCED,
-    LINK_FORCED,
-    COPY_VERSION,
-    LINK_VERSION,
-    DO_NOTHING };
+    Copy,
+    Link,
+    ForceCopy,
+    ForceLink,
+    CopyVersion,
+    LinkVersion,
+    Nothing };
 
   //! error codes output enum for ProcessCopy
   enum ErrorCode {
-    SUCCESS,
-    SOURCE_NOT_FOUND,
-    DEST_NOT_FOUND,
-    SOURCE_IS_DIR,
-    DEST_EXIST };
+    Success,
+    SourceNotFound,
+    DestNotFound,
+    SourceIsDir,
+    DestExist };
 
   /*! \fn ErrorCode copy( const Attachment::Command& command, const QString& destdir )
     \brief ErrorCode convert original file into attached file. Returns true in case of success
