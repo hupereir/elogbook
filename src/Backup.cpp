@@ -37,8 +37,8 @@ Backup::Backup( const QDomElement& element ):
     {
         QDomAttr attribute( attributes.item( i ).toAttr() );
         if( attribute.isNull() ) continue;
-        if( attribute.name() == XML::CREATION ) setCreation( attribute.value().toUInt() );
-        else if( attribute.name() == XML::FILE ) setFile( File( attribute.value() ) );
+        if( attribute.name() == Xml::CREATION ) setCreation( attribute.value().toUInt() );
+        else if( attribute.name() == Xml::FILE ) setFile( File( attribute.value() ) );
         else Debug::Throw(0) << "Backup::Backup - unknown attribute name: " << attribute.name() << endl;
     }
 }
@@ -47,8 +47,8 @@ Backup::Backup( const QDomElement& element ):
 QDomElement Backup::domElement( QDomDocument& document ) const
 {
     Debug::Throw( "Backup::domElement.\n" );
-    QDomElement out( document.createElement( XML::LOGBOOK_BACKUP ) );
-    out.setAttribute( XML::CREATION, QString::number( creation() ) );
-    out.setAttribute( XML::FILE, file() );
+    QDomElement out( document.createElement( Xml::LOGBOOK_BACKUP ) );
+    out.setAttribute( Xml::CREATION, QString::number( creation() ) );
+    out.setAttribute( Xml::FILE, file() );
     return out;
 }

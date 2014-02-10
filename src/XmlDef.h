@@ -25,7 +25,7 @@
 #include <QString>
 
 //! Some Xml definitions
-namespace XML
+namespace Xml
 {
 
     //! logbook tag
