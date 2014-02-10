@@ -72,7 +72,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     void _updateMode( void )
     {
         emit modeChanged( mode() );
-        emit modified();
+        if( _connected() ) emit modified();
     }
 
     private:

@@ -61,9 +61,13 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
 //_________________________________________________________________
 void LogEntryPrintSelectionWidget::read( const Options& options )
 {
+
     unsigned int mode( options.get<unsigned int>( optionName() ) );
     for( RadioButtonMap::const_iterator iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { iter.value()->setChecked( iter.key() == mode ); }
+
+    _setConnected();
+
 }
 
 //_________________________________________________________________

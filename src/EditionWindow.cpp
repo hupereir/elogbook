@@ -347,7 +347,7 @@ void EditionWindow::setIsClosed( bool value )
 
         // delete associated entry if it is 'new'
         LogEntry *entry( this->entry() );
-        if( entry && BASE::KeySet<Logbook>( entry ).empty() )
+        if( entry && Base::KeySet<Logbook>( entry ).empty() )
         { delete entry; }
 
     }
@@ -384,7 +384,7 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( bool enableCancel )
     Debug::Throw( "EditionWindow::askForSave.\n" );
 
     // retrieve other editFrames
-    BASE::KeySet<EditionWindow> editionwindows( &_mainWindow() );
+    Base::KeySet<EditionWindow> editionwindows( &_mainWindow() );
     unsigned int count( std::count_if( editionwindows.begin(), editionwindows.end(), ModifiedFTor() ) );
 
     // create dialog
@@ -483,7 +483,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
 
     // retrieve number of editors
     // if only one display, close the entire window
-    BASE::KeySet<LocalTextEditor> editors( this );
+    Base::KeySet<LocalTextEditor> editors( this );
     if( editors.size() < 2 )
     {
         Debug::Throw() << "EditionWindow::closeEditor - full close." << endl;
@@ -496,7 +496,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
     QSplitter* parentSplitter( qobject_cast<QSplitter*>( parent ) );
 
     // retrieve editors associated to current
-    editors = BASE::KeySet<LocalTextEditor>( &editor );
+    editors = Base::KeySet<LocalTextEditor>( &editor );
 
     // check how many children remain in parentSplitter if any
     // take action if it is less than 2 (the current one to be deleted, and another one)
@@ -551,7 +551,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
 
     // update activeEditor
     bool activeFound( false );
-    BASE::KeySetIterator<LocalTextEditor> iterator( editors );
+    Base::KeySetIterator<LocalTextEditor> iterator( editors );
     iterator.toBack();
     while( iterator.hasPrevious() )
     {
@@ -581,7 +581,7 @@ void EditionWindow::setActiveEditor( LocalTextEditor& editor )
     if( !activeEditor().isActive() )
     {
 
-        foreach( LocalTextEditor* editor, BASE::KeySet<LocalTextEditor>( this ) )
+        foreach( LocalTextEditor* editor, Base::KeySet<LocalTextEditor>( this ) )
         { editor->setActive( false ); }
 
         activeEditor().setActive( true );
@@ -683,7 +683,7 @@ void EditionWindow::_installActions( void )
     connect( spellcheckAction_, SIGNAL(triggered()), SLOT(_spellCheck()) );
 
     // disable action if there is no dictionary
-    spellcheckAction_->setEnabled( !SPELLCHECK::SpellInterface().dictionaries().empty() );
+    spellcheckAction_->setEnabled( !SpellCheck::SpellInterface().dictionaries().empty() );
     #endif
 
     // entry_info
@@ -779,7 +779,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation
     if there exists no clone of active display,
     backup text and register a new Sync object
     */
-    BASE::KeySet<LocalTextEditor> editors( &activeEditorLocal );
+    Base::KeySet<LocalTextEditor> editors( &activeEditorLocal );
 
     // clone new display
     editor.synchronize( &activeEditorLocal );
@@ -787,10 +787,10 @@ EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation
     // perform associations
     // check if active editors has associates and propagate to new
     foreach( LocalTextEditor* iter, editors )
-    { BASE::Key::associate( &editor, iter ); }
+    { Base::Key::associate( &editor, iter ); }
 
     // associate new display to active
-    BASE::Key::associate( &editor, &activeEditorLocal );
+    Base::Key::associate( &editor, &activeEditorLocal );
 
     return editor;
 
@@ -889,7 +889,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     }
 
     // associate display to this editFrame
-    BASE::Key::associate( this, editor );
+    Base::Key::associate( this, editor );
 
     // update current display and focus
     setActiveEditor( *editor );
@@ -918,13 +918,13 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
 
 //_______________________________________________
 bool EditionWindow::_hasMainWindow( void ) const
-{ return BASE::KeySet<MainWindow>( this ).size() > 0; }
+{ return Base::KeySet<MainWindow>( this ).size() > 0; }
 
 //_______________________________________________
 MainWindow& EditionWindow::_mainWindow( void ) const
 {
     Debug::Throw( "EditionWindow::_mainWindow.\n" );
-    BASE::KeySet<MainWindow> mainWindows( this );
+    Base::KeySet<MainWindow> mainWindows( this );
     Q_ASSERT( mainWindows.size()==1 );
     return **mainWindows.begin();
 }
@@ -963,7 +963,7 @@ void EditionWindow::_displayAttachments( void )
     }
 
     // get associated attachments
-    BASE::KeySet<Attachment> attachments( entry );
+    Base::KeySet<Attachment> attachments( entry );
     if( attachments.empty() ) {
 
         frame.visibilityAction().setChecked( false );
@@ -1000,7 +1000,7 @@ void EditionWindow::_save( bool updateSelection )
     LogEntry *entry( this->entry() );
 
     // see if entry is new
-    const bool entryIsNew( !entry || BASE::KeySet<Logbook>( entry ).empty() );
+    const bool entryIsNew( !entry || Base::KeySet<Logbook>( entry ).empty() );
 
     // create entry if none set
     if( !entry ) entry = new LogEntry();
@@ -1041,7 +1041,7 @@ void EditionWindow::_save( bool updateSelection )
     updateWindowTitle();
 
     // update associated EditionWindows
-    BASE::KeySet<EditionWindow> windows( entry );
+    Base::KeySet<EditionWindow> windows( entry );
     foreach( EditionWindow* window, windows )
     {
         Q_ASSERT( window == this || window->isReadOnly() || window->isClosed() );
@@ -1053,7 +1053,7 @@ void EditionWindow::_save( bool updateSelection )
     mainWindow.updateWindowTitle();
 
     // set logbook as modified
-    BASE::KeySet<Logbook> logbooks( entry );
+    Base::KeySet<Logbook> logbooks( entry );
     foreach( Logbook* logbook, logbooks )
     { logbook->setModified( true ); }
 
@@ -1385,7 +1385,7 @@ void EditionWindow::_spellCheck( void )
     Debug::Throw( "EditionWindow::_spellCheck.\n" );
 
     // create dialog
-    SPELLCHECK::SpellDialog dialog( &activeEditor() );
+    SpellCheck::SpellDialog dialog( &activeEditor() );
 
     // set dictionary and filter
     dialog.setFilter( XmlOptions::get().raw("DICTIONARY_FILTER") );
@@ -1472,7 +1472,7 @@ void EditionWindow::_updateReadOnlyActions( void )
     titleEditor_->setReadOnly( readOnly );
 
     // update editors
-    foreach( LocalTextEditor* editor, BASE::KeySet<LocalTextEditor>( this ) )
+    foreach( LocalTextEditor* editor, Base::KeySet<LocalTextEditor>( this ) )
     { editor->setReadOnly( readOnly ); }
 
     // changes attachment list status
@@ -1482,7 +1482,7 @@ void EditionWindow::_updateReadOnlyActions( void )
     newEntryAction_->setEnabled( !logbookReadOnly );
 
     #if WITH_ASPELL
-    spellcheckAction_->setEnabled( !( readOnly || SPELLCHECK::SpellInterface().dictionaries().empty() ) );
+    spellcheckAction_->setEnabled( !( readOnly || SpellCheck::SpellInterface().dictionaries().empty() ) );
     #endif
 
 }
@@ -1548,7 +1548,7 @@ void EditionWindow::_updateInsertLinkActions( void )
     if( hasInsertLinkAction() ) insertLinkAction().setEnabled( enabled );
 
     // also disable editors action
-    BASE::KeySet<LocalTextEditor> editors( this );
+    Base::KeySet<LocalTextEditor> editors( this );
     foreach( LocalTextEditor* editor, editors )
     { editor->insertLinkAction().setEnabled( enabled ); }
 

@@ -53,7 +53,7 @@ void FileCheck::registerLogbook( Logbook* logbook )
 
         // associate (make sure association is unique)
         if( !isAssociated( logbook ) )
-        { BASE::Key::associate( this, logbook ); }
+        { Base::Key::associate( this, logbook ); }
 
         _addFile( logbook->file() );
     }
@@ -66,7 +66,7 @@ void FileCheck::registerLogbook( Logbook* logbook )
 
             // associate (make sure association is unique)
             if( !isAssociated( iter ) )
-            { BASE::Key::associate( this, iter ); }
+            { Base::Key::associate( this, iter ); }
 
             _addFile( iter->file() );
 
@@ -146,8 +146,8 @@ void FileCheck::_fileChanged( const QString& file )
     Data data( file );
 
     // find associated display with matching file
-    BASE::KeySet<Logbook> logbooks( this );
-    BASE::KeySet<Logbook>::iterator iter( std::find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
+    Base::KeySet<Logbook> logbooks( this );
+    Base::KeySet<Logbook>::iterator iter( std::find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
     if( iter != logbooks.end() )
     {
 

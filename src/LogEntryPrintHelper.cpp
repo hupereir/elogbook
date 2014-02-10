@@ -53,7 +53,7 @@ void LogEntryPrintHelper::print( QPrinter* printer )
     setupPage( printer );
 
     // get associated logbook
-    BASE::KeySet<Logbook> logbooks( entry_ );
+    Base::KeySet<Logbook> logbooks( entry_ );
     if( !logbooks.empty() ) setFile( (*logbooks.begin())->file() );
 
     // create painter on printer
@@ -152,7 +152,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     painter->translate( pageRect.topLeft() + offset );
 
     // render background frame
-    QColor color( BASE::Color( entry_->color() ) );
+    QColor color( Base::Color( entry_->color() ) );
     if( !color.isValid() ) color = QColor( "#888888" );
     painter->setPen( color );
     painter->drawRect( QRectF( QPointF(0,0), boundingRect.size() ) );
@@ -186,7 +186,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     QTextCursor cursor( &document );
     cursor.beginEditBlock();
 
-    foreach( const FORMAT::TextFormatBlock& format, entry_->formats() )
+    foreach( const Format::TextFormatBlock& format, entry_->formats() )
     {
 
         // define cursor
@@ -195,11 +195,11 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
 
         // define format
         QTextCharFormat textFormat;
-        textFormat.setFontWeight( format.format() & FORMAT::Bold ? QFont::Bold : QFont::Normal );
-        textFormat.setFontItalic( format.format() & FORMAT::Italic );
-        textFormat.setFontUnderline( format.format() & FORMAT::Underline );
-        textFormat.setFontStrikeOut( format.format() & FORMAT::Strike );
-        textFormat.setFontOverline( format.format() & FORMAT::Overline );
+        textFormat.setFontWeight( format.format() & Format::Bold ? QFont::Bold : QFont::Normal );
+        textFormat.setFontItalic( format.format() & Format::Italic );
+        textFormat.setFontUnderline( format.format() & Format::Underline );
+        textFormat.setFontStrikeOut( format.format() & Format::Strike );
+        textFormat.setFontOverline( format.format() & Format::Overline );
 
         // load color
         if( format.color().isValid() )
@@ -287,7 +287,7 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     if( !(mask_&LogEntry::ENTRY_ATTACHMENTS) ) return;
 
     // check attachments
-    BASE::KeySet<Attachment> attachments( entry_ );
+    Base::KeySet<Attachment> attachments( entry_ );
     if( attachments.empty() ) return;
 
     // create document

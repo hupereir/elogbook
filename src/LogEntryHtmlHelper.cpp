@@ -91,7 +91,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
     table.setAttribute( "class", "header_outer_table" );
 
-    QColor color( BASE::Color( entry_->color() ) );
+    QColor color( Base::Color( entry_->color() ) );
     if( color.isValid() )
     {
         QString buffer;
@@ -183,7 +183,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     QDomElement par = parent.appendChild( document.createElement("p") ).toElement();
 
     // get formats
-    FORMAT::TextFormatBlock::List formats( entry_->formats() );
+    Format::TextFormatBlock::List formats( entry_->formats() );
 
     // text
     const QString text( entry_->text() );
@@ -193,10 +193,10 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     for( int index = 0; index < text.size(); )
     {
         Debug::Throw() << "index: " << index << " position: " << index << endl;
-        FORMAT::TextFormatBlock::List::iterator iter( std::find_if(
+        Format::TextFormatBlock::List::iterator iter( std::find_if(
             formats.begin(),
             formats.end(),
-            FORMAT::TextFormatBlock::ContainsFTor( index ) ) );
+            Format::TextFormatBlock::ContainsFTor( index ) ) );
         if( iter == formats.end() || iter->isEmpty() )
         {
             QTextStream( &buffer ) << text[index];
@@ -212,10 +212,10 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
 
             // open new element define format
             QDomElement localNode( parent );
-            if( iter->format() & FORMAT::Underline ) localNode = localNode.appendChild( document.createElement( "u" ) ).toElement();
-            if( iter->format() & FORMAT::Italic ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
-            if( iter->format() & FORMAT::Bold ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
-            if( iter->format() & FORMAT::Strike ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
+            if( iter->format() & Format::Underline ) localNode = localNode.appendChild( document.createElement( "u" ) ).toElement();
+            if( iter->format() & Format::Italic ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
+            if( iter->format() & Format::Bold ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
+            if( iter->format() & Format::Strike ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
             if( iter->color().isValid() )
             {
                 localNode = localNode.appendChild( document.createElement( "font" ) ).toElement();
@@ -251,7 +251,7 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
     if( !(mask_&LogEntry::ENTRY_ATTACHMENTS) ) return;
 
     // check attachments
-    BASE::KeySet<Attachment> attachments( entry_ );
+    Base::KeySet<Attachment> attachments( entry_ );
     if( attachments.empty() ) return;
 
     // paragraph node

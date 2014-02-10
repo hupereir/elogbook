@@ -66,7 +66,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     void _updateMask( void )
     {
         emit maskChanged( mask() );
-        emit modified();
+        if( _connected() ) emit modified();
     }
 
     private:

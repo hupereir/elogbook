@@ -132,7 +132,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
             return _icon( entry->color() );
 
             case ATTACHMENT:
-            return BASE::KeySet<Attachment>(entry).empty() ? QVariant():_attachmentIcon();
+            return Base::KeySet<Attachment>(entry).empty() ? QVariant():_attachmentIcon();
 
             default:
             return QVariant();
@@ -324,7 +324,7 @@ void LogEntryModel::_resetIcons( void )
 }
 
 //________________________________________________________
-const QIcon& LogEntryModel::_icon( const BASE::Color& color ) const
+const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
 {
 
     IconCache::iterator iter( _icons().find( color.name() ) );

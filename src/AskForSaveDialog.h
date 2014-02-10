@@ -66,6 +66,8 @@ class AskForSaveDialog: public BaseDialog, public Counter
 
     };
 
+    Q_DECLARE_FLAGS( ReturnCodes, ReturnCode )
+
     //! constructor
     AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons = DEFAULT );
 
@@ -88,5 +90,7 @@ class AskForSaveDialog: public BaseDialog, public Counter
     { done( CANCEL ); }
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( AskForSaveDialog::ReturnCodes )
 
 #endif

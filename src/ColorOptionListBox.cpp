@@ -89,7 +89,7 @@ void ColorOptionListBox::_add( void )
     if( !dialog.editor().color().isValid() ) return;
 
     // create new item
-    const Options::Pair option( optionName(), Option().set<BASE::Color>( dialog.editor().color() ) );
+    const Options::Pair option( optionName(), Option().set<Base::Color>( dialog.editor().color() ) );
     _model().add( option );
 
     // make sure item is selected
@@ -120,7 +120,7 @@ void ColorOptionListBox::_edit( void )
 
     // create dialog
     EditDialog dialog( this );
-    dialog.editor().setColor( source.second.get<BASE::Color>() );
+    dialog.editor().setColor( source.second.get<Base::Color>() );
     if( source.second.isCurrent() )
     {
         dialog.checkbox().setChecked( true );
@@ -133,7 +133,7 @@ void ColorOptionListBox::_edit( void )
 
     // modify value
     Options::Pair destination( source );
-    destination.second.set<BASE::Color>( dialog.editor().color() );
+    destination.second.set<Base::Color>( dialog.editor().color() );
 
     // re-add to model
     _model().replace( source, destination );

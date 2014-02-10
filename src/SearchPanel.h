@@ -56,6 +56,8 @@ class SearchPanel: public CustomToolBar
         COLOR = 1<<4
     };
 
+    Q_DECLARE_FLAGS( SearchModes, SearchMode )
+
     //! editor
     CustomComboBox& editor( void ) const
     { return *editor_; }
@@ -63,7 +65,7 @@ class SearchPanel: public CustomToolBar
     Q_SIGNALS:
 
     //! emitted when the Find button is pressed
-    void selectEntries( QString text, unsigned int mode );
+    void selectEntries( QString, SearchPanel::SearchModes );
 
     //! emitted when the Show All button is pressed
     void showAllEntries( void );
@@ -157,4 +159,7 @@ class SearchPanel: public CustomToolBar
     CustomComboBox *editor_;
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( SearchPanel::SearchModes )
+
 #endif

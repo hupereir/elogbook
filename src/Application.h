@@ -109,7 +109,7 @@ class Application: public BaseApplication, public Counter
     void _exit( void );
 
     //! process request from application manager
-    virtual bool _processCommand( SERVER::ServerCommand );
+    virtual bool _processCommand( Server::ServerCommand );
 
     private:
 

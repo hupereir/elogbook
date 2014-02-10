@@ -112,7 +112,7 @@ MainWindow::MainWindow( QWidget *parent ):
     searchPanel_->setAppearsInMenu( true );
     searchPanel_->hide();
 
-    connect( &searchPanel(), SIGNAL(selectEntries(QString,unsigned int)), SLOT(selectEntries(QString,unsigned int)) );
+    connect( &searchPanel(), SIGNAL(selectEntries(QString,SearchPanel::SearchModes)), SLOT(selectEntries(QString,SearchPanel::SearchModes)) );
     connect( &searchPanel(), SIGNAL(showAllEntries()), SLOT(showAllEntries()) );
     addAction( &searchPanel().visibilityAction() );
 
@@ -423,8 +423,8 @@ bool MainWindow::setLogbook( File file )
     Debug::Throw( "MainWindow::setLogbook - attachment frame reset.\n" );
 
     // retrieve last modified entry
-    BASE::KeySet<LogEntry> entries( logbook_->entries() );
-    BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    Base::KeySet<LogEntry> entries( logbook_->entries() );
+    Base::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
@@ -538,7 +538,7 @@ void MainWindow::reset( void )
     Singleton::get().application<Application>()->attachmentWindow().frame().clear();
 
     // make all EditionWindows for deletion
-    foreach( EditionWindow* window, BASE::KeySet<EditionWindow>( this ) )
+    foreach( EditionWindow* window, Base::KeySet<EditionWindow>( this ) )
     {
         window->setIsClosed( true );
         window->hide();
@@ -626,12 +626,12 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
     Q_CHECK_PTR( entry );
 
     // get associated attachments
-    BASE::KeySet<Attachment> attachments( entry );
+    Base::KeySet<Attachment> attachments( entry );
     foreach( Attachment* attachment, attachments )
     {
 
         // retrieve/delete associated attachment frames
-        BASE::KeySet<AttachmentFrame> frames( attachment );
+        Base::KeySet<AttachmentFrame> frames( attachment );
         foreach( AttachmentFrame* frame, frames )
         { frame->remove( *attachment ); }
 
@@ -648,7 +648,7 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
     they will get deleted next time
     MainWindow::_displayEntry() is called
     */
-    BASE::KeySet<EditionWindow> windows( entry );
+    Base::KeySet<EditionWindow> windows( entry );
     foreach( EditionWindow* window, windows )
     {
         window->setIsClosed( true );
@@ -656,7 +656,7 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
     }
 
     // set logbooks as modified
-    BASE::KeySet<Logbook> logbooks( entry );
+    Base::KeySet<Logbook> logbooks( entry );
     foreach( Logbook* logbook, logbooks )
     { logbook->setModified( true ); }
 
@@ -678,7 +678,7 @@ bool MainWindow::lockEntry( LogEntry* entry ) const
 
     if( !entry ) return true;
 
-    BASE::KeySet<EditionWindow> windows( entry );
+    Base::KeySet<EditionWindow> windows( entry );
     if( _checkModifiedEntries( windows, true ) == AskForSaveDialog::CANCEL ) return false;
 
     foreach( EditionWindow* window, windows )
@@ -739,7 +739,7 @@ void MainWindow::resetAttachmentWindow( void ) const
     if( !logbook_ ) return;
 
     // retrieve logbook attachments, adds to AttachmentWindow
-    BASE::KeySet<Attachment> attachments( logbook_->attachments() );
+    Base::KeySet<Attachment> attachments( logbook_->attachments() );
     attachmentWindow.frame().add( attachments.toList() );
 
     return;
@@ -769,7 +769,7 @@ void MainWindow::save( const bool& confirmEntries )
 
     if( !confirmEntries ) confirmEntries_ = false;
 
-    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
 
     // check logbook filename, go to Save As if no file is given and redirect is true
     if( logbook_->file().isEmpty() ) {
@@ -834,7 +834,7 @@ void MainWindow::save( const bool& confirmEntries )
 }
 
 //_______________________________________________
-void MainWindow::selectEntries( QString selection, unsigned int mode )
+void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode )
 {
     Debug::Throw() << "MainWindow::selectEntries - selection: " << selection << " mode:" << mode << endl;
 
@@ -870,7 +870,7 @@ void MainWindow::selectEntries( QString selection, unsigned int mode )
     bool colorValid = ( mode&SearchPanel::COLOR && QColor( selection ).isValid() );
 
     // retrieve all logbook entries
-    BASE::KeySet<LogEntry> turnedOffEntries;
+    Base::KeySet<LogEntry> turnedOffEntries;
     foreach( LogEntry* entry, logbook_->entries() )
     {
 
@@ -1216,7 +1216,7 @@ void MainWindow::_resetLogEntryList( void )
 
     // loop over associated editionwindows
     // update navigation buttons
-    BASE::KeySet<EditionWindow> windows( this );
+    Base::KeySet<EditionWindow> windows( this );
     foreach( EditionWindow* window, windows )
     {
 
@@ -1305,7 +1305,7 @@ void MainWindow::_setEnabled( bool value )
 //__________________________________________________________________
 bool MainWindow::_hasModifiedEntries( void ) const
 {
-    BASE::KeySet<EditionWindow> frames( this );
+    Base::KeySet<EditionWindow> frames( this );
     return std::find_if( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() ) != frames.end();
 }
 
@@ -1319,7 +1319,7 @@ void MainWindow::_autoSave( void )
         statusbar_->label().setText( tr( "Saving" ) );
 
         // retrieve non read only editors; perform save
-        BASE::KeySet<EditionWindow> windows( this );
+        Base::KeySet<EditionWindow> windows( this );
         foreach( EditionWindow* window, windows )
         {
             if( window->isReadOnly() || window->isClosed() ) continue;
@@ -1337,7 +1337,7 @@ void MainWindow::_autoSave( void )
 }
 
 //__________________________________________________________________
-AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( BASE::KeySet<EditionWindow> windows, const bool& confirmEntries ) const
+AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<EditionWindow> windows, const bool& confirmEntries ) const
 {
     Debug::Throw( "_MainWindow::checkModifiedEntries.\n" );
 
@@ -1363,7 +1363,7 @@ void MainWindow::_updateEntryFrames( LogEntry* entry, unsigned int mask )
     if( !mask ) return;
 
     // update associated EditionWindows
-    BASE::KeySet<EditionWindow> windows( entry );
+    Base::KeySet<EditionWindow> windows( entry );
     foreach( EditionWindow* window, windows )
     {
 
@@ -1485,7 +1485,7 @@ void MainWindow::open( FileRecord record )
     Debug::Throw( "MainWindow::open.\n" );
 
     // check if current logbook needs save
-    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
     if( logbook_ && logbook_->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
 
     // open file from dialog if not set as argument
@@ -1694,7 +1694,7 @@ void MainWindow::_print( void )
     Debug::Throw( "MainWindow::_print.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1711,7 +1711,7 @@ void MainWindow::_print( void )
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook_ );
     helper.setEntries(
-        BASE::KeySet<LogEntry>( logbook_->entries() ).toList(),
+        Base::KeySet<LogEntry>( logbook_->entries() ).toList(),
         entryModel_.get(),
         entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
@@ -1775,7 +1775,7 @@ void MainWindow::_printPreview( void )
     Debug::Throw( "MainWindow::_printPreview.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1784,7 +1784,7 @@ void MainWindow::_printPreview( void )
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook_ );
     helper.setEntries(
-        BASE::KeySet<LogEntry>( logbook_->entries() ).toList(),
+        Base::KeySet<LogEntry>( logbook_->entries() ).toList(),
         entryModel_.get(),
         entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
@@ -1812,7 +1812,7 @@ void MainWindow::_toHtml( void )
     Debug::Throw( "MainWindow::_toHtml.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1899,7 +1899,7 @@ void MainWindow::_synchronize( void )
     }
 
     // save EditionWindows
-    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -1954,7 +1954,7 @@ void MainWindow::_synchronize( void )
     {
 
         // display the new entry in all matching edit frames
-        BASE::KeySet<EditionWindow> windows( iter.key() );
+        Base::KeySet<EditionWindow> windows( iter.key() );
         foreach( EditionWindow* window, windows )
         { window->displayEntry( iter.value() ); }
 
@@ -1972,8 +1972,8 @@ void MainWindow::_synchronize( void )
     resetAttachmentWindow();
 
     // retrieve last modified entry
-    BASE::KeySet<LogEntry> entries( logbook_->entries() );
-    BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    Base::KeySet<LogEntry> entries( logbook_->entries() );
+    Base::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
@@ -2055,7 +2055,7 @@ void MainWindow::_restoreBackup( Backup backup )
     Backup::List backups( logbook_->backupFiles() );
 
     // store associated backup manager Widget
-    BASE::KeySet<BackupManagerWidget> widgets( logbook_ );
+    Base::KeySet<BackupManagerWidget> widgets( logbook_ );
 
     // replace logbook with backup
     setLogbook( backup.file() );
@@ -2072,7 +2072,7 @@ void MainWindow::_restoreBackup( Backup backup )
 
     // re-associate
     foreach( BackupManagerWidget* widget, widgets )
-    { BASE::Key::associate( widget, logbook_ ); }
+    { Base::Key::associate( widget, logbook_ ); }
 
     // and save
     if( !logbook_->file().isEmpty() )
@@ -2101,7 +2101,7 @@ void MainWindow::_mergeBackup( Backup backup )
     }
 
     // save EditionWindows
-    if( _checkModifiedEntries( BASE::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
@@ -2152,7 +2152,7 @@ void MainWindow::_mergeBackup( Backup backup )
     {
 
         // display the new entry in all matching edit frames
-        BASE::KeySet<EditionWindow> windows( iter.key() );
+        Base::KeySet<EditionWindow> windows( iter.key() );
         foreach( EditionWindow* window, windows )
         { window->displayEntry( iter.value() ); }
 
@@ -2170,8 +2170,8 @@ void MainWindow::_mergeBackup( Backup backup )
     resetAttachmentWindow();
 
     // retrieve last modified entry
-    BASE::KeySet<LogEntry> entries( logbook_->entries() );
-    BASE::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    Base::KeySet<LogEntry> entries( logbook_->entries() );
+    Base::KeySet<LogEntry>::const_iterator iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
@@ -2198,11 +2198,11 @@ void MainWindow::_reorganize( void )
     }
 
     // retrieve all entries
-    BASE::KeySet<LogEntry> entries( logbook_->entries() );
+    Base::KeySet<LogEntry> entries( logbook_->entries() );
     foreach( LogEntry* entry, entries )
     {
 
-        BASE::KeySet<Logbook> logbooks( entry );
+        Base::KeySet<Logbook> logbooks( entry );
         foreach( Logbook* logbook, logbooks )
         { logbook->setModified( true ); }
 
@@ -2252,8 +2252,8 @@ void MainWindow::_showDuplicatedEntries( void )
     int found( 0 );
 
     // retrieve all logbook entries
-    BASE::KeySet<LogEntry> entries( logbook_->entries() );
-    BASE::KeySet<LogEntry> turnedOffEntries;
+    Base::KeySet<LogEntry> entries( logbook_->entries() );
+    Base::KeySet<LogEntry> turnedOffEntries;
     foreach( LogEntry* entry, entries )
     {
 
@@ -2364,7 +2364,7 @@ void MainWindow::_closeEditionWindows( bool askForSave ) const
     Debug::Throw( "MainWindow::_closeEditionWindows.\n" );
 
     // get all EditionWindows from MainWindow
-    BASE::KeySet<EditionWindow> windows( this );
+    Base::KeySet<EditionWindow> windows( this );
     if( askForSave && _checkModifiedEntries( windows, true ) == AskForSaveDialog::CANCEL ) return;
     foreach( EditionWindow* window, windows )  window->deleteLater();
 
@@ -2397,8 +2397,8 @@ void MainWindow::_newEntry( void )
 
     // retrieve associated EditionWindows, check if one matches the selected entry
     EditionWindow *editionWindow( 0 );
-    BASE::KeySet<EditionWindow> frames( this );
-    BASE::KeySetIterator<EditionWindow> iterator( frames );
+    Base::KeySet<EditionWindow> frames( this );
+    Base::KeySetIterator<EditionWindow> iterator( frames );
     iterator.toBack();
     while( iterator.hasPrevious() )
     {
@@ -2513,7 +2513,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
 
     // retrieve associated EditionWindows, check if one matches the selected entry
     EditionWindow *editionWindow( 0 );
-    BASE::KeySet<EditionWindow> windows( this );
+    Base::KeySet<EditionWindow> windows( this );
     foreach( EditionWindow* window, windows )
     {
 
@@ -2535,7 +2535,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     {
 
         // the order is reversed to start from latest
-        BASE::KeySetIterator<EditionWindow> iterator( windows );
+        Base::KeySetIterator<EditionWindow> iterator( windows );
         iterator.toBack();
         while( iterator.hasPrevious() )
         {
@@ -2555,11 +2555,11 @@ void MainWindow::_displayEntry( LogEntry* entry )
             editionWindow->displayEntry( entry );
 
             // also kill all frames but one
-            BASE::KeySet< EditionWindow::LocalTextEditor > editors( editionWindow );
+            Base::KeySet< EditionWindow::LocalTextEditor > editors( editionWindow );
             if( editors.size() > 1 )
             {
 
-                BASE::KeySet<EditionWindow::LocalTextEditor>::iterator localIter( editors.begin() );
+                Base::KeySet<EditionWindow::LocalTextEditor>::iterator localIter( editors.begin() );
                 ++localIter;
                 for( ;localIter != editors.end(); ++localIter )
                 { editionWindow->closeEditor( **localIter ); }
@@ -2608,7 +2608,7 @@ void MainWindow::_changeEntryTitle( LogEntry* entry, QString newTitle )
     _updateEntryFrames( entry, TITLE_MASK );
 
     // set logbooks as modified
-    BASE::KeySet<Logbook> logbooks( entry );
+    Base::KeySet<Logbook> logbooks( entry );
     foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
     // save Logbook
@@ -2637,12 +2637,12 @@ void MainWindow::_changeEntryColor( QColor color )
         entry->setModification( entry->modification()+1 );
 
         // update EditionWindow color
-        BASE::KeySet<EditionWindow> windows( entry );
+        Base::KeySet<EditionWindow> windows( entry );
         foreach( EditionWindow* window, windows )
         { if( !window->isClosed() ) window->displayColor(); }
 
         // set logbooks as modified
-        BASE::KeySet<Logbook> logbooks( entry );
+        Base::KeySet<Logbook> logbooks( entry );
         foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
     }
@@ -2704,8 +2704,8 @@ void MainWindow::_deleteKeyword( void )
     { if( index.isValid() ) keywords << keywordModel_.get( index ); }
 
     // retrieve associated entries
-    BASE::KeySet<LogEntry> entries( logbook_->entries() );
-    BASE::KeySet<LogEntry> associatedEntries;
+    Base::KeySet<LogEntry> entries( logbook_->entries() );
+    Base::KeySet<LogEntry> associatedEntries;
     foreach( const Keyword& keyword, keywords )
     {
         foreach( LogEntry* entry, entries )
@@ -2812,7 +2812,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
             _updateEntryFrames( entry, KEYWORD_MASK );
 
             // set associated logbooks as modified
-            BASE::KeySet<Logbook> logbooks( entry );
+            Base::KeySet<Logbook> logbooks( entry );
             foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
         }
@@ -2893,7 +2893,7 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
     Debug::Throw() << "MainWindow::_renameEntryKeyword - newKeyword: " << newKeyword << endl;
 
     // keep track of modified entries
-    BASE::KeySet<LogEntry> entries;
+    Base::KeySet<LogEntry> entries;
 
     // retrieve current selection
     foreach( LogEntry* entry, entryModel_.get( entryList_->selectionModel()->selectedRows() ) )
@@ -2917,7 +2917,7 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
         _updateEntryFrames( entry, KEYWORD_MASK );
 
         // set associated logbooks as modified
-        BASE::KeySet<Logbook> logbooks( entry );
+        Base::KeySet<Logbook> logbooks( entry );
         foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
     }
@@ -2994,7 +2994,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
     LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
 
     // retrieve all logbook entries
-    BASE::KeySet<LogEntry> turnedOffEntries;
+    Base::KeySet<LogEntry> turnedOffEntries;
     foreach( LogEntry* entry, logbook_->entries() )
     { entry->setKeywordSelected( entry->keyword() == keyword ); }
 
@@ -3147,7 +3147,7 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
     _updateEntryFrames( entry, mask );
 
     // set logbooks as modified
-    BASE::KeySet<Logbook> logbooks( entry );
+    Base::KeySet<Logbook> logbooks( entry );
     foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
     // save Logbook
@@ -3219,7 +3219,7 @@ void MainWindow::_toggleTreeMode( bool value )
     keywordToolBar().visibilityAction().setEnabled( value );
 
     // force show keyword
-    BASE::KeySet<EditionWindow> windows( this );
+    Base::KeySet<EditionWindow> windows( this );
     foreach( EditionWindow* window, windows )
     {
 
@@ -3275,7 +3275,7 @@ void MainWindow::_updateConfiguration( void )
     // colors
     colorMenu_->reset();
     foreach( const Option& color, XmlOptions::get().specialOptions( "COLOR" ) )
-    { colorMenu_->add( color.get<BASE::Color>() ); }
+    { colorMenu_->add( color.get<Base::Color>() ); }
 
     // max number of recent entries
     maxRecentEntries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );
@@ -3301,7 +3301,7 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     {
         default:
         case LogEntryPrintSelectionWidget::ALL_ENTRIES:
-        { BASE::KeySet<LogEntry>( logbook_->entries() ).toList(); }
+        { Base::KeySet<LogEntry>( logbook_->entries() ).toList(); }
 
         case LogEntryPrintSelectionWidget::VISIBLE_ENTRIES:
         return entryModel_.get();

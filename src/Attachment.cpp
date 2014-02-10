@@ -191,7 +191,7 @@ bool Attachment::updateTimeStamps( void )
 //__________________________________
 LogEntry* Attachment::entry( void ) const
 {
-    BASE::KeySet<LogEntry> entries( this );
+    Base::KeySet<LogEntry> entries( this );
     Q_ASSERT( entries.size() == 1 );
     return *entries.begin();
 }

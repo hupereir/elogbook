@@ -45,7 +45,7 @@ class XmlTextFormatInfo;
 \class Logbook
 \brief log file parser based on xml
 */
-class Logbook:public QObject, public Counter, public BASE::Key
+class Logbook:public QObject, public Counter, public Base::Key
 {
 
     Q_OBJECT
@@ -112,13 +112,13 @@ class Logbook:public QObject, public Counter, public BASE::Key
     Logbook* latestChild( void );
 
     //! retrieve all associated entries [recursive]
-    BASE::KeySet<LogEntry> entries( void ) const;
+    Base::KeySet<LogEntry> entries( void ) const;
 
     //! recent entries
     QList<LogEntry*> recentEntries( void ) const;
 
     //! retrieve all associated attachments [recursive]
-    BASE::KeySet<Attachment> attachments( void ) const;
+    Base::KeySet<Attachment> attachments( void ) const;
 
     //! returns true if logbook is empty (no recursive entries found)
     bool empty( void ) const

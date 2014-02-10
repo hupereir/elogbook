@@ -75,7 +75,7 @@ Logbook::~Logbook( void )
     children_.clear();
 
     // delete associated entries
-    BASE::KeySet<LogEntry> entries( this );
+    Base::KeySet<LogEntry> entries( this );
     foreach( LogEntry* entry, entries ) delete entry;
 
 }
@@ -308,7 +308,7 @@ bool Logbook::write( File file )
         // write all entries
         static unsigned int progress( 10 );
         unsigned int entryCount( 0 );
-        BASE::KeySet<LogEntry> entries( this );
+        Base::KeySet<LogEntry> entries( this );
         foreach( LogEntry* entry, entries )
         {
 
@@ -341,7 +341,7 @@ bool Logbook::write( File file )
         // assign new filename
         if( file != Logbook::file() ) setFile( file );
 
-    } else { emit progressAvailable( BASE::KeySet<LogEntry>( this ).size() ); }
+    } else { emit progressAvailable( Base::KeySet<LogEntry>( this ).size() ); }
 
 
     // update saved timeStamp
@@ -374,8 +374,8 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     Debug::Throw( "Logbook::synchronize.\n" );
 
     // retrieve logbook entries
-    BASE::KeySet<LogEntry> newEntries( logbook.entries() );
-    BASE::KeySet<LogEntry> currentEntries( entries() );
+    Base::KeySet<LogEntry> newEntries( logbook.entries() );
+    Base::KeySet<LogEntry> currentEntries( entries() );
 
     // map of duplicated entries
     QHash< LogEntry*, LogEntry* > duplicates;
@@ -385,7 +385,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     {
 
         // check if there is an entry with matching creation and modification time
-        BASE::KeySet< LogEntry >::iterator duplicate( std::find_if(
+        Base::KeySet< LogEntry >::iterator duplicate( std::find_if(
             currentEntries.begin(),
             currentEntries.end(),
             LogEntry::DuplicateFTor( entry ) ) );
@@ -410,11 +410,11 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
         {
             // set logbooks as modified
             // and disassociate with entry
-            BASE::KeySet<Logbook> logbooks( *duplicate );
+            Base::KeySet<Logbook> logbooks( *duplicate );
             foreach( Logbook* logbook, logbooks )
             {
                 logbook->setModified( true );
-                BASE::Key::disassociate( logbook, *duplicate );
+                Base::Key::disassociate( logbook, *duplicate );
             }
 
             // insert duplicate pairs in map
@@ -467,12 +467,12 @@ Logbook* Logbook::latestChild( void )
     Logbook* dest = 0;
 
     // check parent number of entries
-    if( BASE::KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
+    if( Base::KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
 
     // check if one existsing child is not complete
     foreach( Logbook* logbook, children_ )
     {
-        if( logbook && BASE::KeySet<LogEntry>(logbook).size() < MAX_ENTRIES )
+        if( logbook && Base::KeySet<LogEntry>(logbook).size() < MAX_ENTRIES )
         {
             dest = logbook;
             break;
@@ -494,7 +494,7 @@ Logbook* Logbook::latestChild( void )
         setModified( true );
 
         // associate to existing FileCheck if any
-        BASE::KeySet<FileCheck> fileChecks( this );
+        Base::KeySet<FileCheck> fileChecks( this );
         if( !fileChecks.empty() )
         {
             Q_ASSERT( fileChecks.size() == 1 );
@@ -507,24 +507,24 @@ Logbook* Logbook::latestChild( void )
 }
 
 //_________________________________
-BASE::KeySet<LogEntry> Logbook::entries( void ) const
+Base::KeySet<LogEntry> Logbook::entries( void ) const
 {
 
-    BASE::KeySet<LogEntry> out( this );
+    Base::KeySet<LogEntry> out( this );
     foreach( Logbook* logbook, children_ ) out.merge( logbook->entries() );
     return out;
 
 }
 
 //_________________________________
-BASE::KeySet<Attachment> Logbook::attachments( void ) const
+Base::KeySet<Attachment> Logbook::attachments( void ) const
 {
 
-    BASE::KeySet<Attachment> out;
+    Base::KeySet<Attachment> out;
 
     // loop over associated entries, add entries associated attachments
-    BASE::KeySet<LogEntry> entries( this );
-    foreach( LogEntry* entry, entries ) out.merge( BASE::KeySet<Attachment>(entry) );
+    Base::KeySet<LogEntry> entries( this );
+    foreach( LogEntry* entry, entries ) out.merge( Base::KeySet<Attachment>(entry) );
 
     // loop over children, add associated attachments
     foreach( Logbook* logbook, children_ ) out.merge( logbook->attachments() );
@@ -575,10 +575,10 @@ QList<LogEntry*> Logbook::recentEntries( void ) const
     QList<LogEntry*> out;
     if( recentEntries_.empty() ) return out;
 
-    BASE::KeySet<LogEntry> entries( Logbook::entries() );
+    Base::KeySet<LogEntry> entries( Logbook::entries() );
     foreach( const TimeStamp& timeStamp, recentEntries_ )
     {
-        BASE::KeySet<LogEntry>::const_iterator entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( timeStamp ) ) );
+        Base::KeySet<LogEntry>::const_iterator entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( timeStamp ) ) );
         if( entryIter != entries.end() ) out << *entryIter;
     }
 

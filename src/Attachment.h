@@ -38,7 +38,7 @@ class LogEntry;
   \brief Attached file object
 */
 
-class Attachment: public Counter, public BASE::Key
+class Attachment: public Counter, public Base::Key
 {
   public:
 

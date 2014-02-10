@@ -37,7 +37,7 @@ class TreeView;
 \class  AttachmentFrame
 \brief  handles attachment list
 */
-class AttachmentFrame: public QWidget, public BASE::Key
+class AttachmentFrame: public QWidget, public Base::Key
 {
 
     //! Qt meta object declaration
@@ -71,7 +71,7 @@ class AttachmentFrame: public QWidget, public BASE::Key
     {
         // clear model and associations
         _model().clear();
-        BASE::Key::clearAssociations<Attachment>();
+        Base::Key::clearAssociations<Attachment>();
     }
 
     //! add attachment to the list
@@ -158,10 +158,10 @@ class AttachmentFrame: public QWidget, public BASE::Key
     virtual void enterEvent( QEvent* );
 
     protected Q_SLOTS:
-    
+
     //! process records from thread
     void _processRecords( const FileRecord::List&, bool );
-    
+
     private Q_SLOTS:
 
     //! update configuration

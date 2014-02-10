@@ -113,10 +113,10 @@ class FormatBar: public CustomToolBar
     void setTarget( TextEditor& editor );
 
     //! load text formats
-    void load( const FORMAT::TextFormatBlock::List& ) const;
+    void load( const Format::TextFormatBlock::List& ) const;
 
     //! get text formats
-    FORMAT::TextFormatBlock::List get( void ) const;
+    Format::TextFormatBlock::List get( void ) const;
 
     //! button map
     typedef QMap< ActionId, QAction* > ActionMap;

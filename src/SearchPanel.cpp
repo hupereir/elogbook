@@ -100,7 +100,7 @@ transitionWidget_( new TransitionWidget(parent) )
     _updateConfiguration();
 
     // transition widget
-    _transitionWidget().setFlag( TransitionWidget::FROM_PARENT, true );
+    _transitionWidget().setFlag( TransitionWidget::FromParent, true );
     _transitionWidget().hide();
     connect( &_transitionWidget().timeLine(), SIGNAL(finished()),  &_transitionWidget(), SLOT(hide()) );
 
@@ -236,7 +236,7 @@ void SearchPanel::_selectionRequest( void )
     Debug::Throw( "SearchPanel::_selectionRequest.\n" );
 
     // build mode
-    unsigned int mode = NONE;
+    SearchModes mode = NONE;
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { if( iter.value()->isChecked() ) mode |= iter.key(); }
 

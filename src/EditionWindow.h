@@ -61,7 +61,7 @@ because of that next time it is asked to create a new EditionWindow, thus acting
 garbage collector
 */
 
-class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
+class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 {
 
     //! Qt meta object declaration
@@ -83,7 +83,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! returns current entry
     LogEntry* entry( void ) const
     {
-        BASE::KeySet<LogEntry> entries( this );
+        Base::KeySet<LogEntry> entries( this );
         Q_ASSERT( entries.size() <= 1 );
         return( entries.size() ) ? *entries.begin():0;
     }
@@ -91,7 +91,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     //! retrieve attachment list
     AttachmentFrame& attachmentFrame( void )
     {
-        BASE::KeySet<AttachmentFrame> frames( this );
+        Base::KeySet<AttachmentFrame> frames( this );
         Q_ASSERT( frames.size() == 1 );
         return **frames.begin();
     }
@@ -454,7 +454,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _close( void )
     {
         Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
-        BASE::KeySet< LocalTextEditor > editors( this );
+        Base::KeySet< LocalTextEditor > editors( this );
         if( editors.size() > 1 ) closeEditor( activeEditor() );
         else close();
     }

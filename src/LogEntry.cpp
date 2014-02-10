@@ -73,7 +73,7 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( childElement.isNull() ) continue;
 
         QString tagName( childElement.tagName() );
-        if( tagName == BASE::XML::COLOR )
+        if( tagName == Base::XML::COLOR )
         {
 
             XmlColor color( childElement );
@@ -82,7 +82,7 @@ LogEntry::LogEntry( const QDomElement& element ):
         } else if( tagName == XML::TEXT ) setText( XmlString( childElement.text() ).toText() );
         else if( tagName == XML::CREATION ) setCreation( XmlTimeStamp( childElement ) );
         else if( tagName == XML::MODIFICATION ) setModification( XmlTimeStamp( childElement ) );
-        else if( tagName == FORMAT::XML::TAG ) addFormat( FORMAT::XmlTextFormatBlock( childElement ) );
+        else if( tagName == Format::XML::TAG ) addFormat( Format::XmlTextFormatBlock( childElement ) );
         else if( tagName == XML::ATTACHMENT ) Key::associate( this, new Attachment( childElement ) );
         else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized child " << childElement.tagName() << endl;
     }
@@ -95,7 +95,7 @@ LogEntry::~LogEntry( void )
     Debug::Throw( "LogEntry::~LogEntry.\n" );
 
     // delete associated attachments
-    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
+    foreach( Attachment* attachment, Base::KeySet<Attachment>( this ) )
     { delete attachment; }
 
 }
@@ -128,14 +128,14 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
     }
 
     // dump text format
-    foreach( const FORMAT::TextFormatBlock& format, formats() )
+    foreach( const Format::TextFormatBlock& format, formats() )
     {
-        if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != FORMAT::Default ) )
-        { out.appendChild( FORMAT::XmlTextFormatBlock( format ).domElement( parent ) ); }
+        if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != Format::Default ) )
+        { out.appendChild( Format::XmlTextFormatBlock( format ).domElement( parent ) ); }
      }
 
     // dump attachments
-    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
+    foreach( Attachment* attachment, Base::KeySet<Attachment>( this ) )
     { out.appendChild( attachment->domElement( parent ) ); }
 
     return out;
@@ -153,7 +153,7 @@ LogEntry* LogEntry::clone( void ) const
     out->clearAssociations();
 
     // copy all Attachments
-    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
+    foreach( Attachment* attachment, Base::KeySet<Attachment>( this ) )
     {
 
         // copy attachment, associate to entry
@@ -192,7 +192,7 @@ bool LogEntry::matchAttachment( const QString& buffer ) const
     Debug::Throw( "LogEntry::matchAttachment.\n" );
 
     // retrieve associated attachments
-    foreach( Attachment* attachment, BASE::KeySet<Attachment>( this ) )
+    foreach( Attachment* attachment, Base::KeySet<Attachment>( this ) )
     {
         if( attachment->file().contains( buffer, _caseSensitive() ) )
         { return true; }
@@ -219,7 +219,7 @@ void LogEntry::_init( void )
     keyword_.clear();
     author_.clear();
     text_.clear();
-    color_ = BASE::Color();
+    color_ = Base::Color();
 }
 
 //________________________________________________________

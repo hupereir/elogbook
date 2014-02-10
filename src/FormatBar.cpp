@@ -118,7 +118,7 @@ void FormatBar::setTarget( TextEditor& editor )
 }
 
 //________________________________________
-void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
+void FormatBar::load( const Format::TextFormatBlock::List& formatList ) const
 {
 
     Debug::Throw( "FormatBar::loadFormats.\n" );
@@ -129,7 +129,7 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 
     QTextCursor cursor( editor_->document() );
     cursor.beginEditBlock();
-    foreach( const FORMAT::TextFormatBlock& block, formatList )
+    foreach( const Format::TextFormatBlock& block, formatList )
     {
 
         // define cursor
@@ -138,11 +138,11 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 
         // define format
         QTextCharFormat textFormat;
-        textFormat.setFontWeight( block.format() & FORMAT::Bold ? QFont::Bold : QFont::Normal );
-        textFormat.setFontItalic( block.format() & FORMAT::Italic );
-        textFormat.setFontUnderline( block.format() & FORMAT::Underline );
-        textFormat.setFontStrikeOut( block.format() & FORMAT::Strike );
-        textFormat.setFontOverline( block.format() & FORMAT::Overline );
+        textFormat.setFontWeight( block.format() & Format::Bold ? QFont::Bold : QFont::Normal );
+        textFormat.setFontItalic( block.format() & Format::Italic );
+        textFormat.setFontUnderline( block.format() & Format::Underline );
+        textFormat.setFontStrikeOut( block.format() & Format::Strike );
+        textFormat.setFontOverline( block.format() & Format::Overline );
 
         // load color
         if( block.color().isValid() && !(block.color() == baseTextColor) )
@@ -160,12 +160,12 @@ void FormatBar::load( const FORMAT::TextFormatBlock::List& formatList ) const
 
 }
 //________________________________________
-FORMAT::TextFormatBlock::List FormatBar::get( void ) const
+Format::TextFormatBlock::List FormatBar::get( void ) const
 {
     Debug::Throw( "FormatBar::get.\n" );
     Q_CHECK_PTR( editor_ );
 
-    FORMAT::TextFormatBlock::List out;
+    Format::TextFormatBlock::List out;
 
     // iterator over blocks
     for( QTextBlock block = editor_->document()->begin(); block.isValid(); block = block.next() )
@@ -184,12 +184,12 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
             // retrieve text format
             QTextCharFormat textFormat( fragment.charFormat() );
 
-            FORMAT::TextFormatFlags format( FORMAT::Default );
-            if( textFormat.fontWeight() == QFont::Bold ) format |= FORMAT::Bold;
-            if( textFormat.fontItalic() ) format |= FORMAT::Italic;
-            if( textFormat.fontUnderline() ) format |= FORMAT::Underline;
-            if( textFormat.fontStrikeOut() ) format |= FORMAT::Strike;
-            if( textFormat.fontOverline() ) format |= FORMAT::Overline;
+            Format::TextFormatFlags format( Format::Default );
+            if( textFormat.fontWeight() == QFont::Bold ) format |= Format::Bold;
+            if( textFormat.fontItalic() ) format |= Format::Italic;
+            if( textFormat.fontUnderline() ) format |= Format::Underline;
+            if( textFormat.fontStrikeOut() ) format |= Format::Strike;
+            if( textFormat.fontOverline() ) format |= Format::Overline;
 
             // retrieve text color
             QColor color( textFormat.foreground().color() );
@@ -198,10 +198,10 @@ FORMAT::TextFormatBlock::List FormatBar::get( void ) const
             const QString href( textFormat.anchorHref() );
 
             // skip format if corresponds to default
-            if( format == FORMAT::Default && !color.isValid() && href.isEmpty() ) continue;
+            if( format == Format::Default && !color.isValid() && href.isEmpty() ) continue;
 
             // store new TextFormatBlock
-            FORMAT::TextFormatBlock textFormatBlock( begin, end, format, color );
+            Format::TextFormatBlock textFormatBlock( begin, end, format, color );
             if( !href.isEmpty() ) textFormatBlock.setHRef( href );
 
             out << textFormatBlock;
@@ -234,14 +234,14 @@ void FormatBar::_updateConfiguration( void )
         XmlOptions::get().keep( "TEXT_COLOR" );
         foreach( const QColor& color, defaultColors )
         {
-            XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( color ) );
+            XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( color ) );
             colorMenu_->add( color );
         }
 
     } else {
 
         foreach( const Option& color, colors )
-        { colorMenu_->add( color.get<BASE::Color>() ); }
+        { colorMenu_->add( color.get<Base::Color>() ); }
 
     }
 }
@@ -254,8 +254,8 @@ void FormatBar::_saveConfiguration( void )
     XmlOptions::get().keep( "TEXT_COLOR" );
 
     const ColorMenu::ColorSet colors( colorMenu_->colors() );
-    foreach( const BASE::Color& color, colors )
-    { XmlOptions::get().add( "TEXT_COLOR", Option().set<BASE::Color>( color ) ); }
+    foreach( const Base::Color& color, colors )
+    { XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( color ) ); }
 
     return;
 }

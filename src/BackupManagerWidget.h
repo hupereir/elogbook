@@ -34,7 +34,7 @@
 
 class TreeView;
 
-class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
+class BackupManagerWidget: public QWidget, public Counter, public Base::Key
 {
 
     Q_OBJECT
@@ -79,7 +79,7 @@ class BackupManagerWidget: public QWidget, public Counter, public BASE::Key
     //! get associated logbook
     Logbook* _logbook( void ) const
     {
-        BASE::KeySet<Logbook> logbooks( this );
+        Base::KeySet<Logbook> logbooks( this );
         return logbooks.empty() ? 0L:*logbooks.begin();
     }
 

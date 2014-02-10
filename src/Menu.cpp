@@ -145,10 +145,10 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     connect( preferenceMenu_, SIGNAL(aboutToShow()), this, SLOT(_updatePreferenceMenu()) );
 
     // help manager
-    BASE::HelpManager* help( new BASE::HelpManager( this ) );
+    Base::HelpManager* help( new Base::HelpManager( this ) );
     help->setWindowTitle( tr( "Elogbook Handbook" ) );
     help->install( helpText );
-    help->install( BASE::helpText, false );
+    help->install( Base::helpText, false );
 
     // help menu
     menu = addMenu( tr( "Help" ) );
@@ -220,7 +220,7 @@ void Menu::_updateEditorMenu( void )
 
     if( editionWindow ) { windowsMenu_->addAction( &editionWindow->entryInfoAction() ); }
 
-    BASE::KeySet<EditionWindow> windows( mainWindow );
+    Base::KeySet<EditionWindow> windows( mainWindow );
     bool hasAliveFrame( std::find_if( windows.begin(), windows.end(), EditionWindow::aliveFTor() ) != windows.end() );
     if( hasAliveFrame )
     {

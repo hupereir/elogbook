@@ -49,13 +49,13 @@ class ColorOptionModel: public OptionModel
     private:
 
     //! icon cache
-    typedef QMap<BASE::Color, QIcon> IconCache;
+    typedef QMap<Base::Color, QIcon> IconCache;
 
     //! icon cache
     static IconCache& _icons( void );
 
     //! icon matching color
-    static QIcon _icon( const BASE::Color& );
+    static QIcon _icon( const Base::Color& );
 
 
 };

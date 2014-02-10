@@ -41,7 +41,7 @@ QVariant ColorOptionModel::data( const QModelIndex& index, int role ) const
     if( !index.isValid() ) return QVariant();
 
     // retrieve associated color
-    const BASE::Color& color( get( index ).second.get<BASE::Color>() );
+    const Base::Color& color( get( index ).second.get<Base::Color>() );
 
     if( role == Qt::DisplayRole && index.column() == VALUE ) return color.name();
     else if( role == Qt::DecorationRole && index.column() == VALUE ) return _icon( color );
@@ -50,7 +50,7 @@ QVariant ColorOptionModel::data( const QModelIndex& index, int role ) const
 }
 
 //______________________________________________________
-QIcon ColorOptionModel::_icon( const BASE::Color& color )
+QIcon ColorOptionModel::_icon( const Base::Color& color )
 {
 
     IconCache::iterator iter( _icons().find( color ) );

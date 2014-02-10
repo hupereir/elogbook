@@ -113,7 +113,7 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
 
     Debug::Throw( "AttachmentFrame::add.\n" );
     foreach( Attachment* attachment, attachments )
-    { BASE::Key::associate( this, attachment ); }
+    { Base::Key::associate( this, attachment ); }
 
     model_.add( attachments );
     list_->resizeColumns();
@@ -158,12 +158,12 @@ void AttachmentFrame::_new( void )
     Debug::Throw( "AttachmentFrame::_new.\n" );
 
     // retrieve/check associated EditionWindow/LogEntry
-    BASE::KeySet<EditionWindow> windows( this );
+    Base::KeySet<EditionWindow> windows( this );
     Q_ASSERT( windows.size() == 1 );
 
     EditionWindow &window( **windows.begin() );
 
-    BASE::KeySet<LogEntry> entries( window );
+    Base::KeySet<LogEntry> entries( window );
     if( entries.size() != 1 )
     {
         InformationDialog( this, tr( "No valid entry found. <New Attachment> canceled." ) ).exec();
@@ -171,7 +171,7 @@ void AttachmentFrame::_new( void )
     }
 
     LogEntry *entry( *entries.begin() );
-    BASE::KeySet<Logbook> logbooks( entry );
+    Base::KeySet<Logbook> logbooks( entry );
 
     // create dialog
     NewAttachmentDialog dialog( this );
@@ -261,7 +261,7 @@ void AttachmentFrame::_new( void )
         Key::associate( entry, attachment );
 
         // update all windows edition windows associated to entry
-        windows = BASE::KeySet<EditionWindow>( entry );
+        windows = Base::KeySet<EditionWindow>( entry );
         foreach( EditionWindow* window, windows )
         {
 
@@ -374,13 +374,13 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         {
 
             // get associated entry
-            BASE::KeySet<LogEntry> entries( attachment );
+            Base::KeySet<LogEntry> entries( attachment );
             Q_ASSERT( entries.size() == 1 );
             LogEntry& entry( **entries.begin() );
             entry.modified();
 
             // get associated logbooks
-            BASE::KeySet<Logbook> logbooks( &entry );
+            Base::KeySet<Logbook> logbooks( &entry );
             foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
 
             modified = true;
@@ -561,7 +561,7 @@ void AttachmentFrame::_delete( void )
     }
 
     // retrieve/check associated EditionWindow/LogEntry
-    BASE::KeySet<EditionWindow> windows( this );
+    Base::KeySet<EditionWindow> windows( this );
     Q_ASSERT( windows.size() == 1 );
     EditionWindow &window( **windows.begin() );
 
@@ -581,23 +581,23 @@ void AttachmentFrame::_delete( void )
             bool fromDisk( dialog.action() == DeleteAttachmentDialog::FROM_DISK );
 
             // retrieve associated attachment frames and remove item
-            BASE::KeySet<AttachmentFrame> frames( attachment );
+            Base::KeySet<AttachmentFrame> frames( attachment );
             foreach( AttachmentFrame* frame, frames ) frame->model_.remove( attachment );
 
             // retrieve associated entries
-            BASE::KeySet<LogEntry> entries( attachment );
+            Base::KeySet<LogEntry> entries( attachment );
             Q_ASSERT( entries.size() == 1 );
             LogEntry& entry( **entries.begin() );
             entry.modified();
 
             // retrieve associated logbooks
-            BASE::KeySet<Logbook> logbooks( &entry );
+            Base::KeySet<Logbook> logbooks( &entry );
 
             // check sharing attachments to avoid fromDisk deletion
             if( fromDisk && logbooks.size() )
             {
 
-                BASE::KeySet<Attachment> attachments( (*logbooks.begin())->attachments() );
+                Base::KeySet<Attachment> attachments( (*logbooks.begin())->attachments() );
                 unsigned int n_share = std::count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) );
                 if( n_share > 1 ) {
 
@@ -732,17 +732,17 @@ void AttachmentFrame::_clean( void )
         Debug::Throw() << "AttachmentFrame::_clean - removing: " << attachment->file() << endl;
 
         // retrieve associated attachment frames and remove item
-        BASE::KeySet<AttachmentFrame> frames( attachment );
+        Base::KeySet<AttachmentFrame> frames( attachment );
         foreach( AttachmentFrame* frame, frames ) frame->model_.remove( attachment );
 
         // retrieve associated entries
-        BASE::KeySet<LogEntry> entries( attachment );
+        Base::KeySet<LogEntry> entries( attachment );
         Q_ASSERT( entries.size() == 1 );
         LogEntry& entry( **entries.begin() );
         entry.modified();
 
         // retrieve associated logbooks
-        BASE::KeySet<Logbook> logbooks( &entry );
+        Base::KeySet<Logbook> logbooks( &entry );
         foreach( Logbook* logbook, logbooks )
         { logbook->setModified( true ); }
 
@@ -823,18 +823,18 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     if( attachments.empty() ) return;
 
     // associated lists
-    BASE::KeySet<LogEntry> entries;
+    Base::KeySet<LogEntry> entries;
 
     // loop over attachments
     foreach( Attachment* attachment, attachments )
     {
 
         // get associated entries and store
-        entries.unite( BASE::KeySet<LogEntry>( attachment ) );
+        entries.unite( Base::KeySet<LogEntry>( attachment ) );
         Debug::Throw( "AttachmentFrame::_saveAttachments - entries.\n" );
 
         // get associated attachment frames and store
-        BASE::KeySet<AttachmentFrame> localFrames( attachment );
+        Base::KeySet<AttachmentFrame> localFrames( attachment );
         foreach( AttachmentFrame* frame, localFrames )
         { frame->update( *attachment ); }
 
@@ -842,20 +842,20 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
 
     }
 
-    BASE::KeySet<Logbook> logbooks;
-    BASE::KeySet<EditionWindow> editionWindows;
+    Base::KeySet<Logbook> logbooks;
+    Base::KeySet<EditionWindow> editionWindows;
 
     // loop over entries
     foreach( LogEntry* entry, entries )
     {
 
         // get associated logbooks and store
-        logbooks.unite( BASE::KeySet<Logbook>( entry ) );
+        logbooks.unite( Base::KeySet<Logbook>( entry ) );
 
         Debug::Throw( "AttachmentFrame::_saveAttachments - logbooks.\n" );
 
         // get associated Edition windows
-        editionWindows.unite( BASE::KeySet<EditionWindow>( entry ) );
+        editionWindows.unite( Base::KeySet<EditionWindow>( entry ) );
         Debug::Throw( "AttachmentFrame::_saveAttachments - edition windows.\n" );
 
     }

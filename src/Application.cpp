@@ -172,7 +172,7 @@ void Application::_exit( void )
     if( mainWindow_ )
     {
         // check if editable EditionWindows needs save
-        BASE::KeySet<EditionWindow> windows( mainWindow_ );
+        Base::KeySet<EditionWindow> windows( mainWindow_ );
         foreach( EditionWindow* window, windows )
         {
             if( !( window->isReadOnly() || window->isClosed() ) && window->modified() && window->askForSave() == AskForSaveDialog::CANCEL )
@@ -194,12 +194,12 @@ void Application::_exit( void )
 }
 
 //________________________________________________
-bool Application::_processCommand( SERVER::ServerCommand command )
+bool Application::_processCommand( Server::ServerCommand command )
 {
 
     Debug::Throw( "Application::_processCommand.\n" );
     if( BaseApplication::_processCommand( command ) ) return true;
-    if( command.command() == SERVER::ServerCommand::Raise )
+    if( command.command() == Server::ServerCommand::Raise )
     {
         if( mainWindow_ ) mainWindow_->uniconifyAction().trigger();
         QStringList filenames( commandLineParser( command.arguments() ).orphans() );

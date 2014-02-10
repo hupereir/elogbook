@@ -34,7 +34,7 @@
 #include <QDomDocument>
 
 //! log file entry manipulation object
-class LogEntry:public Counter, public BASE::Key
+class LogEntry:public Counter, public Base::Key
 {
 
     public:
@@ -124,19 +124,19 @@ class LogEntry:public Counter, public BASE::Key
     { color_ = color; }
 
     //! LogEntry color
-    BASE::Color color( void ) const
+    Base::Color color( void ) const
     { return color_; }
 
     //! add TextFormatBlock
-    void addFormat( const FORMAT::TextFormatBlock& format )
+    void addFormat( const Format::TextFormatBlock& format )
     { formats_.append(format); }
 
     //! entry text format
-    void setFormats( const FORMAT::TextFormatBlock::List& formats )
+    void setFormats( const Format::TextFormatBlock::List& formats )
     { formats_ = formats; }
 
     //! entry text format
-    const FORMAT::TextFormatBlock::List& formats( void ) const
+    const Format::TextFormatBlock::List& formats( void ) const
     { return formats_; }
 
     //! clears LogEntry text
@@ -304,7 +304,7 @@ class LogEntry:public Counter, public BASE::Key
     QString text_;
 
     //! LogEntry color
-    BASE::Color color_;
+    Base::Color color_;
 
     //! set to true if entry is said visible by the selection bar
     bool findSelected_;
@@ -313,7 +313,7 @@ class LogEntry:public Counter, public BASE::Key
     bool keywordSelected_;
 
     //! list of text formats
-    FORMAT::TextFormatBlock::List formats_;
+    Format::TextFormatBlock::List formats_;
 
 };
 

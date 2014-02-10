@@ -33,6 +33,7 @@
 #include "LogEntry.h"
 #include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
+#include "SearchPanel.h"
 
 #include "AnimatedTreeView.h"
 
@@ -45,11 +46,10 @@ class CustomToolBar;
 class EditionWindow;
 class FileCheck;
 class Menu;
-class SearchPanel;
 class ProgressStatusBar;
 
 //! display a set of log entries, allows selection of one
-class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
+class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 {
 
     //! Qt meta object declaration
@@ -304,7 +304,7 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     virtual void selectEntry( LogEntry* );
 
     //! select entries using selection criterions
-    virtual void selectEntries( QString, unsigned int );
+    virtual void selectEntries( QString, SearchPanel::SearchModes );
 
     //! show all entries
     virtual void showAllEntries( void );
@@ -339,11 +339,11 @@ class MainWindow: public BaseMainWindow, public Counter, public BASE::Key
     void _autoSave( void );
 
     //! check modified entries
-    AskForSaveDialog::ReturnCode _checkModifiedEntries( BASE::KeySet<EditionWindow>, const bool& ) const;
+    AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow>, const bool& ) const;
 
     enum Mask
     {
-        NONE = 0,
+        None = 0,
         TITLE_MASK = 1<<0,
         KEYWORD_MASK = 1<<1
     };

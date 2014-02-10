@@ -61,9 +61,13 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
 //_________________________________________________________________
 void LogEntryPrintOptionWidget::read( const Options& options )
 {
+
     unsigned int mask( options.get<unsigned int>( optionName() ) );
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { iter.value()->setChecked( mask&iter.key() ); }
+
+    _setConnected();
+
 }
 
 //_________________________________________________________________

@@ -90,7 +90,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     item->setText( entry->modification().toString() );
 
     // retrieve associated logbook
-    BASE::KeySet<Logbook> logbooks( entry );
+    Base::KeySet<Logbook> logbooks( entry );
     if( !logbooks.empty() )
     {
 

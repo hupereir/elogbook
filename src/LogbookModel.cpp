@@ -51,7 +51,7 @@ QVariant LogbookModel::data( const QModelIndex& index, int role ) const
         {
 
             case FILE: return logbook.file().localName();
-            case ENTRIES: return int(BASE::KeySet<LogEntry>(&logbook).size());
+            case ENTRIES: return int(Base::KeySet<LogEntry>(&logbook).size());
             case CREATED: return logbook.creation().toString();
             case MODIFIED: return logbook.modification().toString();
             default: return QVariant();

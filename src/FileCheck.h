@@ -35,7 +35,7 @@
 class Logbook;
 
 //! handles threads for file auto-save
-class FileCheck: public QObject, public BASE::Key, public Counter
+class FileCheck: public QObject, public Base::Key, public Counter
 {
 
     //! Qt meta object declaration
