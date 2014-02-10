@@ -54,16 +54,16 @@ class Logbook:public QObject, public Counter, public Base::Key
 
 
     //! default string when no title given
-    static const QString LOGBOOK_NO_TITLE;
+    static const QString NoTitle;
 
     //! default string when no author given
-    static const QString LOGBOOK_NO_AUTHOR;
+    static const QString NoAuthor;
 
     //! default string when no file given
-    static const QString LOGBOOK_NO_FILE;
+    static const QString NoFile;
 
     //! default string when no directory given
-    static const QString LOGBOOK_NO_DIRECTORY;
+    static const QString NoDirectory;
 
     //! max number of entries in logbook (make child logbook if larger)
     enum { MAX_ENTRIES = 50 };
@@ -71,21 +71,21 @@ class Logbook:public QObject, public Counter, public Base::Key
     //! configuration mask
     enum MaskFlag
     {
-        LOGBOOK_TITLE = 1<<0,
-        LOGBOOK_COMMENTS = 1<< 1,
-        LOGBOOK_AUTHOR = 1<<2,
-        LOGBOOK_FILE = 1<<3,
-        LOGBOOK_DIRECTORY = 1<<4,
-        LOGBOOK_CREATION = 1<<5,
-        LOGBOOK_MODIFICATION = 1<<6,
-        LOGBOOK_BACKUP = 1<<7,
-        LOGBOOK_TABLE = 1<<8,
-        LOGBOOK_CONTENT = 1<<9,
-        LOGBOOK_HEADER =
-            LOGBOOK_TITLE|LOGBOOK_AUTHOR|LOGBOOK_FILE|
-            LOGBOOK_CREATION|LOGBOOK_MODIFICATION|LOGBOOK_BACKUP|
-            LOGBOOK_DIRECTORY|LOGBOOK_COMMENTS,
-        LOGBOOK_ALL = LOGBOOK_HEADER|LOGBOOK_TABLE|LOGBOOK_CONTENT
+        TitleMask = 1<<0,
+        CommentsMask = 1<< 1,
+        AuthorMasks = 1<<2,
+        FileMask = 1<<3,
+        DirectoryMask = 1<<4,
+        CreationMask = 1<<5,
+        ModificationMask = 1<<6,
+        BackupMask = 1<<7,
+        TableOfContentMask = 1<<8,
+        ContentMask = 1<<9,
+        HeaderMask =
+            TitleMask|AuthorMasks|FileMask|
+            CreationMask|ModificationMask|BackupMask|
+            DirectoryMask|CommentsMask,
+        All = HeaderMask|TableOfContentMask|ContentMask
     };
 
     Q_DECLARE_FLAGS( Mask, MaskFlag )

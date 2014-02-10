@@ -42,7 +42,7 @@ class LogEntryHtmlHelper: public QObject, public Counter
     LogEntryHtmlHelper( QObject* parent = 0 ):
         QObject( parent ),
         Counter( "LogEntryHtmlHelper" ),
-        mask_( LogEntry::ENTRY_ALL ),
+        mask_( LogEntry::All ),
         entry_( 0 )
     { Debug::Throw( "LogEntryHtmlHelper::LogEntryHtmlHelper.\n" ); };
 

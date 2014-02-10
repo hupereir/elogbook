@@ -63,7 +63,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     Debug::Throw( "LogbookHtmlHelper::_appendHeader.\n" );
 
     // check mask
-    if( !( mask_ & Logbook::LOGBOOK_HEADER ) ) return;
+    if( !( mask_ & Logbook::HeaderMask ) ) return;
 
     // surrounding table
     QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
@@ -81,7 +81,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     QDomElement row;
 
     // title
-    if( mask_&Logbook::LOGBOOK_TITLE )
+    if( mask_&Logbook::TitleMask )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -91,7 +91,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     }
 
     // comments
-    if( mask_&Logbook::LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() )
+    if( mask_&Logbook::CommentsMask && !logbook_->comments().isEmpty() )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -102,7 +102,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     }
 
     // author
-    if( mask_&Logbook::LOGBOOK_AUTHOR && !logbook_->author().isEmpty() )
+    if( mask_&Logbook::AuthorMasks && !logbook_->author().isEmpty() )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -112,7 +112,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     }
 
     // file
-    if( mask_&Logbook::LOGBOOK_FILE && !logbook_->file().isEmpty() )
+    if( mask_&Logbook::FileMask && !logbook_->file().isEmpty() )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -124,7 +124,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     }
 
     // directory
-    if( mask_&Logbook::LOGBOOK_DIRECTORY && !logbook_->directory().isEmpty() )
+    if( mask_&Logbook::DirectoryMask && !logbook_->directory().isEmpty() )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -140,7 +140,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
    }
 
     // creation
-    if( logbook_->creation().isValid() && (mask_&Logbook::LOGBOOK_CREATION) )
+    if( logbook_->creation().isValid() && (mask_&Logbook::CreationMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -150,7 +150,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     }
 
     // modification
-    if( logbook_->modification().isValid() && (mask_&Logbook::LOGBOOK_MODIFICATION) )
+    if( logbook_->modification().isValid() && (mask_&Logbook::ModificationMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -160,7 +160,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     }
 
     // backup
-    if( logbook_->backup().isValid() && (mask_&Logbook::LOGBOOK_BACKUP) )
+    if( logbook_->backup().isValid() && (mask_&Logbook::BackupMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -184,7 +184,7 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
     if( entries_.empty() ) return;
 
     // check mask
-    if( !( mask_ & Logbook::LOGBOOK_TABLE ) ) return;
+    if( !( mask_ & Logbook::TableOfContentMask ) ) return;
 
     // table
     QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
@@ -252,10 +252,10 @@ void LogbookHtmlHelper::_appendEntries( QDomDocument& document, QDomElement& par
     if( entries_.empty() ) return;
 
     // check entries
-    if( !( entryMask_ & LogEntry::ENTRY_ALL ) ) return;
+    if( !( entryMask_ & LogEntry::All ) ) return;
 
     // check mask
-    if( !( mask_ & Logbook::LOGBOOK_CONTENT ) ) return;
+    if( !( mask_ & Logbook::ContentMask ) ) return;
 
     LogEntryHtmlHelper helper;
     foreach( LogEntry* entry, entries_ )

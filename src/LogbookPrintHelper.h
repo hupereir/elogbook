@@ -46,8 +46,8 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     LogbookPrintHelper( QObject* parent = 0 ):
         BasePrintHelper( parent ),
         Counter( "LogbookPrintHelper" ),
-        mask_( Logbook::LOGBOOK_ALL ),
-        entryMask_( LogEntry::ENTRY_ALL ),
+        mask_( Logbook::All ),
+        entryMask_( LogEntry::All ),
         selectionMode_( LogEntryPrintSelectionWidget::VisibleEntries ),
         logbook_( 0 ),
         progressDialog_( 0 ),

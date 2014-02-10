@@ -85,7 +85,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     Debug::Throw( "LogEntryHtmlHelper::_appendHeader.\n" );
 
     // check mask
-    if( !( mask_ & LogEntry::ENTRY_HEADER ) ) return;
+    if( !( mask_ & LogEntry::HeaderMask ) ) return;
 
     // surrounding table
     QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
@@ -111,7 +111,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     QDomElement row;
 
     // keyword
-    if( !entry_->keyword().get().isEmpty() && (mask_&LogEntry::ENTRY_KEYWORD) )
+    if( !entry_->keyword().get().isEmpty() && (mask_&LogEntry::KeywordMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -122,7 +122,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     }
 
     // title
-    if( !entry_->title().isEmpty() && (mask_&LogEntry::ENTRY_TITLE) )
+    if( !entry_->title().isEmpty() && (mask_&LogEntry::TitleMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -137,7 +137,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     }
 
     // author
-    if( !entry_->author().isEmpty() && (mask_&LogEntry::ENTRY_AUTHOR) )
+    if( !entry_->author().isEmpty() && (mask_&LogEntry::AuthorMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -148,7 +148,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     }
 
     // creation
-    if( entry_->creation().isValid() && (mask_&LogEntry::ENTRY_CREATION) )
+    if( entry_->creation().isValid() && (mask_&LogEntry::CreationMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -159,7 +159,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     }
 
     // modification
-    if( entry_->modification().isValid() && (mask_&LogEntry::ENTRY_MODIFICATION) )
+    if( entry_->modification().isValid() && (mask_&LogEntry::ModificationMask) )
     {
         row = table.appendChild( document.createElement( "tr" ) ).toElement();
         row.appendChild( document.createElement( "td" ) ).
@@ -177,7 +177,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     Debug::Throw( "LogEntryHtmlHelper::_appendBody.\n" );
 
     // check mask
-    if( !(mask_&LogEntry::ENTRY_TEXT ) ) return;
+    if( !(mask_&LogEntry::TextMask ) ) return;
 
     // paragraph node
     QDomElement par = parent.appendChild( document.createElement("p") ).toElement();
@@ -248,7 +248,7 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
     Debug::Throw( "LogEntryHtmlHelper::_appendAttachments.\n" );
 
     // check mask
-    if( !(mask_&LogEntry::ENTRY_ATTACHMENTS) ) return;
+    if( !(mask_&LogEntry::AttachmentsMask) ) return;
 
     // check attachments
     Base::KeySet<Attachment> attachments( entry_ );

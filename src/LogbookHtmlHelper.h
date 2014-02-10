@@ -44,8 +44,8 @@ class LogbookHtmlHelper: public QObject, public Counter
     LogbookHtmlHelper( QObject* parent = 0 ):
         QObject( parent ),
         Counter( "LogbookHtmlHelper" ),
-        mask_( Logbook::LOGBOOK_ALL ),
-        entryMask_( LogEntry::ENTRY_ALL ),
+        mask_( Logbook::All ),
+        entryMask_( LogEntry::All ),
         logbook_( 0 )
     { Debug::Throw( "LogbookHtmlHelper::LogbookHtmlHelper.\n" ); };
 

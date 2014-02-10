@@ -77,7 +77,7 @@ namespace Xml
     static const QString BACKUP( "Backup" );
 
     //! backup file
-    static const QString LOGBOOK_BACKUP( "Logbook_backup" );
+    static const QString BackupMask( "Logbook_backup" );
 
     //! title
     static const QString TITLE( "title" );

@@ -42,7 +42,7 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
     LogEntryPrintHelper( QObject* parent = 0 ):
         BasePrintHelper( parent ),
         Counter( "LogEntryPrintHelper" ),
-        mask_( LogEntry::ENTRY_ALL ),
+        mask_( LogEntry::All ),
         entry_( 0 )
     { Debug::Throw( "LogEntryPrintHelper::LogEntryPrintHelper.\n" ); };
 

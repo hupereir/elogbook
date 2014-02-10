@@ -111,9 +111,9 @@ void installDefaultOptions( void )
     XmlOptions::get().set<bool>( "SHOW_KEYWORD", false );
     XmlOptions::get().set<bool>( "USE_TREE", true );
 
-    XmlOptions::get().set<int>( "LOGENTRY_PRINT_OPTION_MASK", LogEntry::ENTRY_ALL );
+    XmlOptions::get().set<int>( "LOGENTRY_PRINT_OPTION_MASK", LogEntry::All );
     XmlOptions::get().set<int>( "LOGENTRY_PRINT_SELECTION", LogEntryPrintSelectionWidget::AllEntries );
-    XmlOptions::get().set<int>( "LOGBOOK_PRINT_OPTION_MASK", Logbook::LOGBOOK_ALL );
+    XmlOptions::get().set<int>( "LOGBOOK_PRINT_OPTION_MASK", Logbook::All );
 
     // masks
     XmlOptions::get().set<int>( "ENTRY_LIST_MASK",

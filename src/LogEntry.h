@@ -42,15 +42,15 @@ class LogEntry:public Counter, public Base::Key
     //! configuration mask
     enum MaskFlag
     {
-        ENTRY_KEYWORD = 1<<0,
-        ENTRY_TITLE = 1<<1,
-        ENTRY_AUTHOR = 1<<2,
-        ENTRY_CREATION = 1<<3,
-        ENTRY_MODIFICATION = 1<<4,
-        ENTRY_TEXT = 1<<5,
-        ENTRY_ATTACHMENTS = 1<<6,
-        ENTRY_HEADER = ENTRY_TITLE | ENTRY_KEYWORD | ENTRY_CREATION | ENTRY_MODIFICATION | ENTRY_AUTHOR,
-        ENTRY_ALL = ENTRY_HEADER | ENTRY_TEXT | ENTRY_ATTACHMENTS
+        KeywordMask = 1<<0,
+        TitleMask = 1<<1,
+        AuthorMask = 1<<2,
+        CreationMask = 1<<3,
+        ModificationMask = 1<<4,
+        TextMask = 1<<5,
+        AttachmentsMask = 1<<6,
+        HeaderMask = TitleMask | KeywordMask | CreationMask | ModificationMask | AuthorMask,
+        All = HeaderMask | TextMask | AttachmentsMask
     };
 
     Q_DECLARE_FLAGS( Mask, MaskFlag )

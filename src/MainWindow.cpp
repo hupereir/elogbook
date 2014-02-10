@@ -327,7 +327,7 @@ void MainWindow::createDefaultLogbook( void )
     setLogbook( File() );
     Q_CHECK_PTR( logbook_ );
 
-    logbook_->setTitle(  Logbook::LOGBOOK_NO_TITLE );
+    logbook_->setTitle(  Logbook::NoTitle );
     logbook_->setAuthor( XmlOptions::get().raw( "USER" ) );
     logbook_->setDirectory( workingDirectory() );
 
@@ -1356,7 +1356,7 @@ AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<Edi
 }
 
 //_______________________________________________
-void MainWindow::_updateEntryFrames( LogEntry* entry, unsigned int mask )
+void MainWindow::_updateEntryFrames( LogEntry* entry, Mask mask )
 {
     Debug::Throw( "MainWindow::_updateEntryFrames.\n" );
 
@@ -1371,8 +1371,8 @@ void MainWindow::_updateEntryFrames( LogEntry* entry, unsigned int mask )
         bool windowModified( window->modified() && !window->isReadOnly() );
 
         // update EditionWindow
-        if( mask&TITLE_MASK ) window->displayTitle();
-        if( mask&KEYWORD_MASK ) window->displayKeyword();
+        if( mask&TitleMask ) window->displayTitle();
+        if( mask&KeywordMask ) window->displayKeyword();
 
         // save if needed [title/keyword changes are discarded since saved here anyway]
         if( windowModified ) window->askForSave( false );
@@ -1423,7 +1423,7 @@ void MainWindow::_newLogbook( void )
 
     // new logbook
     NewLogbookDialog dialog( this );
-    dialog.setTitle( Logbook::LOGBOOK_NO_TITLE );
+    dialog.setTitle( Logbook::NoTitle );
     dialog.setAuthor( XmlOptions::get().raw( "USER" ) );
     dialog.setAttachmentDirectory( workingDirectory() );
     if( !dialog.centerOnParent().exec() ) return;
@@ -2605,7 +2605,7 @@ void MainWindow::_changeEntryTitle( LogEntry* entry, QString newTitle )
     entry->setTitle( newTitle );
 
     // update associated entries
-    _updateEntryFrames( entry, TITLE_MASK );
+    _updateEntryFrames( entry, TitleMask );
 
     // set logbooks as modified
     Base::KeySet<Logbook> logbooks( entry );
@@ -2809,7 +2809,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
             entry->setModification( entry->modification()+1 );
 
             // update frames
-            _updateEntryFrames( entry, KEYWORD_MASK );
+            _updateEntryFrames( entry, KeywordMask );
 
             // set associated logbooks as modified
             Base::KeySet<Logbook> logbooks( entry );
@@ -2914,7 +2914,7 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
         entries.insert( entry );
 
         // update frames
-        _updateEntryFrames( entry, KEYWORD_MASK );
+        _updateEntryFrames( entry, KeywordMask );
 
         // set associated logbooks as modified
         Base::KeySet<Logbook> logbooks( entry );
@@ -3139,9 +3139,9 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
     if( !index.isValid() ) return;
     LogEntry* entry( entryModel_.get( index ) );
 
-    unsigned int mask(0);
-    if( index.column() == LogEntryModel::TITLE ) mask = TITLE_MASK;
-    else if( index.column() == LogEntryModel::KEYWORD ) mask = KEYWORD_MASK;
+    Mask mask;
+    if( index.column() == LogEntryModel::TITLE ) mask |= TitleMask;
+    else if( index.column() == LogEntryModel::KEYWORD ) mask |= KeywordMask;
 
     // update associated EditionWindows
     _updateEntryFrames( entry, mask );

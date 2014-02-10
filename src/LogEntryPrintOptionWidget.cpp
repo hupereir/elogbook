@@ -39,13 +39,13 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_.insert( LogEntry::ENTRY_KEYWORD, new QCheckBox( tr( "Keyword" ), this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_TITLE, new QCheckBox( tr( "Title" ), this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_AUTHOR, new QCheckBox( tr( "Author" ), this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_CREATION, new QCheckBox( tr( "Creation time" ), this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_MODIFICATION, new QCheckBox( tr( "Last modificaion time" ), this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_TEXT, new QCheckBox( tr( "Contents" ), this ) );
-    checkBoxes_.insert( LogEntry::ENTRY_ATTACHMENTS, new QCheckBox( tr( "Attachments" ), this ) );
+    checkBoxes_.insert( LogEntry::KeywordMask, new QCheckBox( tr( "Keyword" ), this ) );
+    checkBoxes_.insert( LogEntry::TitleMask, new QCheckBox( tr( "Title" ), this ) );
+    checkBoxes_.insert( LogEntry::AuthorMask, new QCheckBox( tr( "Author" ), this ) );
+    checkBoxes_.insert( LogEntry::CreationMask, new QCheckBox( tr( "Creation time" ), this ) );
+    checkBoxes_.insert( LogEntry::ModificationMask, new QCheckBox( tr( "Last modificaion time" ), this ) );
+    checkBoxes_.insert( LogEntry::TextMask, new QCheckBox( tr( "Contents" ), this ) );
+    checkBoxes_.insert( LogEntry::AttachmentsMask, new QCheckBox( tr( "Attachments" ), this ) );
 
     // insert in layout
     for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

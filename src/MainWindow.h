@@ -341,15 +341,17 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //! check modified entries
     AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow>, const bool& ) const;
 
-    enum Mask
+    enum MaskFlag
     {
         None = 0,
-        TITLE_MASK = 1<<0,
-        KEYWORD_MASK = 1<<1
+        TitleMask = 1<<0,
+        KeywordMask = 1<<1
     };
 
+    Q_DECLARE_FLAGS( Mask, MaskFlag )
+
     //! update frames associated to given entry
-    void _updateEntryFrames( LogEntry*, unsigned int );
+    void _updateEntryFrames( LogEntry*, Mask );
 
     //! get entries matching a given entry selection mode
     LogEntryModel::List _entries( LogEntryPrintSelectionWidget::Mode mode );

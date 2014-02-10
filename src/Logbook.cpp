@@ -39,17 +39,17 @@
 //________________________________
 // public methods
 
-const QString Logbook::LOGBOOK_NO_TITLE( QObject::tr( "My electronic logbook" ) );
-const QString Logbook::LOGBOOK_NO_AUTHOR( QObject::tr( "anonymous" ) );
-const QString Logbook::LOGBOOK_NO_FILE;
-const QString Logbook::LOGBOOK_NO_DIRECTORY;
+const QString Logbook::NoTitle( QObject::tr( "My electronic logbook" ) );
+const QString Logbook::NoAuthor( QObject::tr( "anonymous" ) );
+const QString Logbook::NoFile;
+const QString Logbook::NoDirectory;
 
 //________________________________
 Logbook::Logbook( const File& file ):
     Counter( "Logbook" ),
-    directory_( LOGBOOK_NO_DIRECTORY ),
-    title_( LOGBOOK_NO_TITLE ),
-    author_( LOGBOOK_NO_AUTHOR ),
+    directory_( NoDirectory ),
+    title_( NoTitle ),
+    author_( NoAuthor ),
     modified_( false ),
     readOnly_( false ),
     isBackup_( false ),
@@ -144,7 +144,7 @@ bool Logbook::read( void )
         else if( name == Xml::SORT_METHOD ) setSortMethod( (SortMethod) value.toInt() );
         else if( name == Xml::SORT_ORDER ) setSortOrder( value.toInt() );
         else if( name == Xml::READ_ONLY ) setReadOnly( value.toInt() );
-        else if( name == Xml::LOGBOOK_BACKUP ) setIsBackup( value.toInt() );
+        else if( name == Xml::BackupMask ) setIsBackup( value.toInt() );
         else if( name == Xml::ENTRIES ) {
 
             setXmlEntries( value.toInt() );
@@ -171,7 +171,7 @@ bool Logbook::read( void )
         else if( tagName == Xml::MODIFICATION ) setModification( XmlTimeStamp( element ) );
         else if( tagName == Xml::BACKUP ) setBackup( XmlTimeStamp( element ) );
         else if( tagName == Xml::RECENT_ENTRIES ) _readRecentEntries( element );
-        else if( tagName == Xml::LOGBOOK_BACKUP ) backupFiles_ << Backup( element );
+        else if( tagName == Xml::BackupMask ) backupFiles_ << Backup( element );
         else if( tagName == Xml::ENTRY ) {
 
             LogEntry* entry = new LogEntry( element );
@@ -275,7 +275,7 @@ bool Logbook::write( File file )
         top.setAttribute( Xml::SORT_METHOD, QString::number( sortMethod_ ) );
         top.setAttribute( Xml::SORT_ORDER, QString::number( sortOrder_ ) );
         top.setAttribute( Xml::READ_ONLY, QString::number( readOnly_ ) );
-        top.setAttribute( Xml::LOGBOOK_BACKUP, QString::number( isBackup_ ) );
+        top.setAttribute( Xml::BackupMask, QString::number( isBackup_ ) );
 
         // update number of entries and children
         top.setAttribute( Xml::ENTRIES, QString::number(xmlEntries()) );

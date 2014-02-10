@@ -60,8 +60,8 @@ void LogbookPrintHelper::print( QPrinter* printer )
 
     // progress dialog
     int maxValue(0);
-    if( mask_ & Logbook::LOGBOOK_TABLE ) maxValue += entries_.size();
-    if( (mask_&Logbook::LOGBOOK_CONTENT) && (entryMask_&LogEntry::ENTRY_ALL) ) maxValue += entries_.size();
+    if( mask_ & Logbook::TableOfContentMask ) maxValue += entries_.size();
+    if( (mask_&Logbook::ContentMask) && (entryMask_&LogEntry::All) ) maxValue += entries_.size();
 
     if( maxValue )
     {
@@ -118,7 +118,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     Debug::Throw( "LogbookPrintHelper::_printHeader.\n" );
 
     // check mask
-    if( !( mask_ & Logbook::LOGBOOK_HEADER ) ) return;
+    if( !( mask_ & Logbook::HeaderMask ) ) return;
 
     // create document
     QTextDocument document;
@@ -134,20 +134,20 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     typedef QPair<QString, QString> StringPair;
     typedef QList<StringPair> StringList;
     StringList values;
-    if( mask_&Logbook::LOGBOOK_TITLE ) values << StringPair( tr( "Title:" ), logbook_->title() );
-    if( mask_&Logbook::LOGBOOK_COMMENTS && !logbook_->comments().isEmpty() ) values << StringPair( tr( "Comments:" ), logbook_->comments() );
-    if( mask_&Logbook::LOGBOOK_AUTHOR ) values << StringPair( tr( "Author:" ), logbook_->author() );
+    if( mask_&Logbook::TitleMask ) values << StringPair( tr( "Title:" ), logbook_->title() );
+    if( mask_&Logbook::CommentsMask && !logbook_->comments().isEmpty() ) values << StringPair( tr( "Comments:" ), logbook_->comments() );
+    if( mask_&Logbook::AuthorMasks ) values << StringPair( tr( "Author:" ), logbook_->author() );
 
-    if( mask_&Logbook::LOGBOOK_FILE ) values << StringPair( tr( "File:" ), logbook_->file() );
-    if( mask_&Logbook::LOGBOOK_DIRECTORY && !logbook_->directory().isEmpty() )
+    if( mask_&Logbook::FileMask ) values << StringPair( tr( "File:" ), logbook_->file() );
+    if( mask_&Logbook::DirectoryMask && !logbook_->directory().isEmpty() )
     {
         const QString buffer = logbook_->checkDirectory() ? QString(logbook_->directory()) : QString( tr( "%1 (not found)" ) ).arg( logbook_->directory() );
         values << StringPair( tr( "Attachments directory:" ), buffer );
     }
 
-    if( mask_&Logbook::LOGBOOK_CREATION ) values << StringPair( tr( "Created:" ), logbook_->creation().toString() );
-    if( mask_&Logbook::LOGBOOK_MODIFICATION ) values << StringPair( tr( "Modified:" ), logbook_->modification().toString() );
-    if( mask_&Logbook::LOGBOOK_BACKUP ) values << StringPair( tr( "Backup:" ), logbook_->backup().toString() );
+    if( mask_&Logbook::CreationMask ) values << StringPair( tr( "Created:" ), logbook_->creation().toString() );
+    if( mask_&Logbook::ModificationMask ) values << StringPair( tr( "Modified:" ), logbook_->modification().toString() );
+    if( mask_&Logbook::BackupMask ) values << StringPair( tr( "Backup:" ), logbook_->backup().toString() );
     const int nRows( values.size() );
 
     // create table
@@ -206,7 +206,7 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
     if( entries_.empty() ) return;
 
     // check mask
-    if( !( mask_ & Logbook::LOGBOOK_TABLE ) ) return;
+    if( !( mask_ & Logbook::TableOfContentMask ) ) return;
 
     // calculate number of entries per page
     const QFont font( QTextDocument().defaultFont() );
@@ -311,10 +311,10 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     if( entries_.empty() ) return;
 
     // check entries
-    if( !( entryMask_ & LogEntry::ENTRY_ALL ) ) return;
+    if( !( entryMask_ & LogEntry::All ) ) return;
 
     // check mask
-    if( !( mask_ & Logbook::LOGBOOK_CONTENT ) ) return;
+    if( !( mask_ & Logbook::ContentMask ) ) return;
 
     LogEntryPrintHelper helper;
     helper.setOrientation( orientation() );

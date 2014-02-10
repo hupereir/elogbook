@@ -96,7 +96,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     Debug::Throw( "LogEntryPrintHelper::_printHeader.\n" );
 
     // check mask
-    if( !( mask_ & LogEntry::ENTRY_HEADER ) ) return;
+    if( !( mask_ & LogEntry::HeaderMask ) ) return;
 
     // create document
     QTextDocument document;
@@ -112,11 +112,11 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     typedef QPair<QString, QString> StringPair;
     typedef QList<StringPair> StringList;
     StringList values;
-    if( mask_&LogEntry::ENTRY_KEYWORD ) values << StringPair( tr( "Keyword:" ), entry_->keyword().get() );
-    if( mask_&LogEntry::ENTRY_TITLE ) values << StringPair( tr( "Title:" ), entry_->title() );
-    if( mask_&LogEntry::ENTRY_AUTHOR ) values << StringPair( tr( "Author:" ), entry_->author() );
-    if( mask_&LogEntry::ENTRY_CREATION ) values << StringPair( tr( "Created:" ), entry_->creation().toString() );
-    if( mask_&LogEntry::ENTRY_MODIFICATION ) values << StringPair( tr( "Modified:" ), entry_->modification().toString() );
+    if( mask_&LogEntry::KeywordMask ) values << StringPair( tr( "Keyword:" ), entry_->keyword().get() );
+    if( mask_&LogEntry::TitleMask ) values << StringPair( tr( "Title:" ), entry_->title() );
+    if( mask_&LogEntry::AuthorMask ) values << StringPair( tr( "Author:" ), entry_->author() );
+    if( mask_&LogEntry::CreationMask ) values << StringPair( tr( "Created:" ), entry_->creation().toString() );
+    if( mask_&LogEntry::ModificationMask ) values << StringPair( tr( "Modified:" ), entry_->modification().toString() );
     const int nRows( values.size() );
 
     // create table
@@ -172,7 +172,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     Debug::Throw( "LogEntryPrintHelper::_printBody.\n" );
 
     // check mask
-    if( !(mask_&LogEntry::ENTRY_TEXT ) ) return;
+    if( !(mask_&LogEntry::TextMask ) ) return;
 
     // create document
     QTextDocument document;
@@ -284,7 +284,7 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     Debug::Throw( "LogEntryPrintHelper::_printAttachments.\n" );
 
     // check mask
-    if( !(mask_&LogEntry::ENTRY_ATTACHMENTS) ) return;
+    if( !(mask_&LogEntry::AttachmentsMask) ) return;
 
     // check attachments
     Base::KeySet<Attachment> attachments( entry_ );
