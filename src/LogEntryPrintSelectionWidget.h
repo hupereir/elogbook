@@ -51,9 +51,9 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     //! mask
     enum Mode
     {
-        ALL_ENTRIES,
-        VISIBLE_ENTRIES,
-        SELECTED_ENTRIES
+        AllEntries,
+        VisibleEntries,
+        SelectedEntries
     };
 
     Mode mode( void ) const;

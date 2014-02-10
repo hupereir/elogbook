@@ -48,7 +48,7 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
         Counter( "LogbookPrintHelper" ),
         mask_( Logbook::LOGBOOK_ALL ),
         entryMask_( LogEntry::ENTRY_ALL ),
-        selectionMode_( LogEntryPrintSelectionWidget::VISIBLE_ENTRIES ),
+        selectionMode_( LogEntryPrintSelectionWidget::VisibleEntries ),
         logbook_( 0 ),
         progressDialog_( 0 ),
         progress_( 0 ),

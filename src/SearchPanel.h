@@ -48,12 +48,12 @@ class SearchPanel: public CustomToolBar
     //! search mode enumeration
     enum SearchMode
     {
-        NONE = 0,
-        TITLE = 1<<0,
-        KEYWORD = 1<<1,
-        TEXT = 1<<2,
-        ATTACHMENT = 1<<3,
-        COLOR = 1<<4
+        None = 0,
+        Title = 1<<0,
+        Keyword = 1<<1,
+        Text = 1<<2,
+        Attachment = 1<<3,
+        Color = 1<<4
     };
 
     Q_DECLARE_FLAGS( SearchModes, SearchMode )

@@ -21,14 +21,6 @@
 *
 *******************************************************************************/
 
-/*!
-\file AskForSaveDialog.h
-\brief QDialog used to ask if modifications of a file should be saved
-\author Hugo Pereira
-\version $Revision$
-\date $Date$
-*/
-
 #include "BaseDialog.h"
 #include "Counter.h"
 #include "File.h"
@@ -49,45 +41,36 @@ class AskForSaveDialog: public BaseDialog, public Counter
     */
     enum ReturnCode {
 
-        //! file is to be saved
-        YES = 1<<0,
-
-        //! file is not to be saved
-        NO = 1<<1,
-
-        //! all files are to be saved
-        ALL = 1<<2,
-
-        //! action is canceled
-        CANCEL = 1<<3,
-
-        //! all buttons
-        DEFAULT = YES|NO|CANCEL
+        Yes = 1<<0,
+        No = 1<<1,
+        All = 1<<2,
+        Cancel = 1<<3,
+        Default = Yes|No|Cancel
 
     };
 
     Q_DECLARE_FLAGS( ReturnCodes, ReturnCode )
 
     //! constructor
-    AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons = DEFAULT );
+    AskForSaveDialog( QWidget*, const QString&, ReturnCodes = Default );
 
     private Q_SLOTS:
 
     //! save changes
     void _yes( void )
-    { done( YES ); }
+    { done( Yes ); }
 
     //! discard changes
     void _no( void )
-    { done( NO ); }
+    { done( No ); }
 
     //! save for all modified entries
     void _all( void )
-    { done( ALL ); }
+    { done( All ); }
 
     //! cancel action
     void _cancel( void )
-    { done( CANCEL ); }
+    { done( Cancel ); }
 
 };
 

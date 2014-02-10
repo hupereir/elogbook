@@ -175,7 +175,7 @@ void Application::_exit( void )
         Base::KeySet<EditionWindow> windows( mainWindow_ );
         foreach( EditionWindow* window, windows )
         {
-            if( !( window->isReadOnly() || window->isClosed() ) && window->modified() && window->askForSave() == AskForSaveDialog::CANCEL )
+            if( !( window->isReadOnly() || window->isClosed() ) && window->modified() && window->askForSave() == AskForSaveDialog::Cancel )
             { return; }
         }
 
@@ -185,7 +185,7 @@ void Application::_exit( void )
         if(
             mainWindow_->logbook() &&
             mainWindow_->logbook()->modified() &&
-            mainWindow_->askForSave() == AskForSaveDialog::CANCEL )
+            mainWindow_->askForSave() == AskForSaveDialog::Cancel )
         { return; }
     }
 

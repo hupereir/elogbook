@@ -321,7 +321,7 @@ void MainWindow::createDefaultLogbook( void )
     Debug::Throw( "MainWindow::_newLogbook.\n" );
 
     // check current logbook
-    if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create a new logbook, with no file
     setLogbook( File() );
@@ -555,12 +555,12 @@ AskForSaveDialog::ReturnCode MainWindow::askForSave( const bool& enableCancel )
     Debug::Throw( "MainWindow::askForSave.\n" );
 
     // create dialog
-    unsigned int buttons = AskForSaveDialog::YES | AskForSaveDialog::NO;
-    if( enableCancel ) buttons |= AskForSaveDialog::CANCEL;
+    AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No );
+    if( enableCancel ) buttons |= AskForSaveDialog::Cancel;
 
     // exec and check return code
     int state = AskForSaveDialog( this, tr( "Logbook has been modified. Save ?" ), buttons ).centerOnParent().exec();
-    if( state == AskForSaveDialog::YES ) save();
+    if( state == AskForSaveDialog::Yes ) save();
     return AskForSaveDialog::ReturnCode(state);
 }
 
@@ -679,7 +679,7 @@ bool MainWindow::lockEntry( LogEntry* entry ) const
     if( !entry ) return true;
 
     Base::KeySet<EditionWindow> windows( entry );
-    if( _checkModifiedEntries( windows, true ) == AskForSaveDialog::CANCEL ) return false;
+    if( _checkModifiedEntries( windows, true ) == AskForSaveDialog::Cancel ) return false;
 
     foreach( EditionWindow* window, windows )
     { window->setReadOnly( true ); }
@@ -769,7 +769,7 @@ void MainWindow::save( const bool& confirmEntries )
 
     if( !confirmEntries ) confirmEntries_ = false;
 
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::Cancel ) return;
 
     // check logbook filename, go to Save As if no file is given and redirect is true
     if( logbook_->file().isEmpty() ) {
@@ -849,7 +849,7 @@ void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode
     }
 
     // retrieve selection source
-    if( mode == SearchPanel::NONE )
+    if( mode == SearchPanel::None )
     {
         InformationDialog( this, tr( "At least one search field must be selected" ) ).centerOnParent().exec();
         return;
@@ -867,7 +867,7 @@ void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode
     LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
 
     // check is selection is a valid color when Color search is requested.
-    bool colorValid = ( mode&SearchPanel::COLOR && QColor( selection ).isValid() );
+    bool colorValid = ( mode&SearchPanel::Color && QColor( selection ).isValid() );
 
     // retrieve all logbook entries
     Base::KeySet<LogEntry> turnedOffEntries;
@@ -881,10 +881,10 @@ void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode
 
         // check entry
         bool accept( false );
-        if( (mode&SearchPanel::TITLE ) && entry->matchTitle( selection ) ) accept = true;
-        if( (mode&SearchPanel::KEYWORD ) && entry->matchKeyword( selection ) ) accept = true;
-        if( (mode&SearchPanel::TEXT ) && entry->matchText( selection ) ) accept = true;
-        if( (mode&SearchPanel::ATTACHMENT ) && entry->matchAttachment( selection ) ) accept = true;
+        if( (mode&SearchPanel::Title ) && entry->matchTitle( selection ) ) accept = true;
+        if( (mode&SearchPanel::Keyword ) && entry->matchKeyword( selection ) ) accept = true;
+        if( (mode&SearchPanel::Text ) && entry->matchText( selection ) ) accept = true;
+        if( (mode&SearchPanel::Attachment ) && entry->matchAttachment( selection ) ) accept = true;
         if( colorValid && entry->matchColor( selection ) ) accept = true;
 
         if( accept )
@@ -1348,11 +1348,11 @@ AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<Edi
         if( !(window->isReadOnly() || window->isClosed()) && window->modified() )
         {
             if( !confirmEntries ) { window->saveAction().trigger(); }
-            else if( window->askForSave() == AskForSaveDialog::CANCEL ) return AskForSaveDialog::CANCEL;
+            else if( window->askForSave() == AskForSaveDialog::Cancel ) return AskForSaveDialog::Cancel;
         }
     }
 
-    return  AskForSaveDialog::YES;
+    return  AskForSaveDialog::Yes;
 }
 
 //_______________________________________________
@@ -1419,7 +1419,7 @@ void MainWindow::_newLogbook( void )
     Debug::Throw( "MainWindow::_newLogbook.\n" );
 
     // check current logbook
-    if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // new logbook
     NewLogbookDialog dialog( this );
@@ -1485,8 +1485,8 @@ void MainWindow::open( FileRecord record )
     Debug::Throw( "MainWindow::open.\n" );
 
     // check if current logbook needs save
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::CANCEL ) return;
-    if( logbook_ && logbook_->modified()  && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::Cancel ) return;
+    if( logbook_ && logbook_->modified()  && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // open file from dialog if not set as argument
     if( record.file().isEmpty() )
@@ -1694,10 +1694,10 @@ void MainWindow::_print( void )
     Debug::Throw( "MainWindow::_print.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
-    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create printer
     QPrinter printer( QPrinter::HighResolution );
@@ -1775,10 +1775,10 @@ void MainWindow::_printPreview( void )
     Debug::Throw( "MainWindow::_printPreview.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
-    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create helper
     LogbookPrintHelper helper( this );
@@ -1812,10 +1812,10 @@ void MainWindow::_toHtml( void )
     Debug::Throw( "MainWindow::_toHtml.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
-    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create options widget
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
@@ -1899,10 +1899,10 @@ void MainWindow::_synchronize( void )
     }
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
-    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create file dialog
     File remoteFile( FileDialog(this).getFile() );
@@ -2101,10 +2101,10 @@ void MainWindow::_mergeBackup( Backup backup )
     }
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::CANCEL ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
-    if( logbook_->modified() && askForSave() == AskForSaveDialog::CANCEL ) return;
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // debug
     Debug::Throw() << "MainWindow::_mergeBackup - number of local files: " << logbook_->children().size() << endl;
@@ -2365,7 +2365,7 @@ void MainWindow::_closeEditionWindows( bool askForSave ) const
 
     // get all EditionWindows from MainWindow
     Base::KeySet<EditionWindow> windows( this );
-    if( askForSave && _checkModifiedEntries( windows, true ) == AskForSaveDialog::CANCEL ) return;
+    if( askForSave && _checkModifiedEntries( windows, true ) == AskForSaveDialog::Cancel ) return;
     foreach( EditionWindow* window, windows )  window->deleteLater();
 
     return;
@@ -3300,13 +3300,13 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     switch( mode )
     {
         default:
-        case LogEntryPrintSelectionWidget::ALL_ENTRIES:
+        case LogEntryPrintSelectionWidget::AllEntries:
         { Base::KeySet<LogEntry>( logbook_->entries() ).toList(); }
 
-        case LogEntryPrintSelectionWidget::VISIBLE_ENTRIES:
+        case LogEntryPrintSelectionWidget::VisibleEntries:
         return entryModel_.get();
 
-        case LogEntryPrintSelectionWidget::SELECTED_ENTRIES:
+        case LogEntryPrintSelectionWidget::SelectedEntries:
         return entryModel_.get( entryList_->selectionModel()->selectedRows() );
 
     }

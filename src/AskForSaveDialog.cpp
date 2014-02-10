@@ -31,7 +31,7 @@
 #include <QPushButton>
 
 //________________________________________________________
-AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, const unsigned int& buttons ):
+AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, ReturnCodes buttons ):
     BaseDialog( parent ),
     Counter( "AskForSaveDialog" )
 {
@@ -68,28 +68,28 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, con
 
     // yes button
     QPushButton* button;
-    if( buttons & YES )
+    if( buttons & Yes )
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_yes()) );
     }
 
     // yes to all button
-    if( buttons & ALL )
+    if( buttons & All )
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes to All" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_all()) );
     }
 
     // no button
-    if( buttons & NO )
+    if( buttons & No )
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "No" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_no()) );
     }
 
     // cancel button
-    if( buttons & CANCEL )
+    if( buttons & Cancel )
     {
         button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
         button->setShortcut( Qt::Key_Escape );

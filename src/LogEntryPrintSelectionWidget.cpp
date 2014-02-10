@@ -41,9 +41,9 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
     QButtonGroup* group = new QButtonGroup( this );
 
     // insert checkboxes
-    radioButtons_.insert( ALL_ENTRIES, new QRadioButton( tr( "All entries" ), this ) );
-    radioButtons_.insert( VISIBLE_ENTRIES, new QRadioButton( tr( "Visible entries" ), this ) );
-    radioButtons_.insert( SELECTED_ENTRIES, new QRadioButton( tr( "Selected entries" ), this ) );
+    radioButtons_.insert( AllEntries, new QRadioButton( tr( "All entries" ), this ) );
+    radioButtons_.insert( VisibleEntries, new QRadioButton( tr( "Visible entries" ), this ) );
+    radioButtons_.insert( SelectedEntries, new QRadioButton( tr( "Selected entries" ), this ) );
 
     // insert in layout
     for( RadioButtonMap::const_iterator iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
@@ -80,5 +80,5 @@ LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode( void ) co
     for( RadioButtonMap::const_iterator iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { if( iter.value()->isChecked() ) return iter.key(); }
 
-    return ALL_ENTRIES;
+    return AllEntries;
 }

@@ -41,8 +41,8 @@
 #include <QLayout>
 
 //___________________________________________________________
-SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& option_name ):
-CustomToolBar( title, parent, option_name ),
+SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& optionName ):
+CustomToolBar( title, parent, optionName ),
 transitionWidget_( new TransitionWidget(parent) )
 {
     Debug::Throw( "SearchPanel::SearchPanel.\n" );
@@ -67,12 +67,12 @@ transitionWidget_( new TransitionWidget(parent) )
 
     addWidget( new QLabel( " in ", this ) );
 
-    addWidget( checkboxes_[TITLE] = new QCheckBox( tr( "Title" ), this ) );
-    addWidget( checkboxes_[KEYWORD] = new QCheckBox( tr( "Keyword" ), this ) );
-    addWidget( checkboxes_[TEXT]  = new QCheckBox( tr( "Text" ), this ) );
-    addWidget( checkboxes_[ATTACHMENT] = new QCheckBox( tr( "Attachment" ), this ) );
-    addWidget( checkboxes_[COLOR] = new QCheckBox( tr( "Color" ), this ) );
-    checkboxes_[TEXT]->setChecked( true );
+    addWidget( checkboxes_[Title] = new QCheckBox( tr( "Title" ), this ) );
+    addWidget( checkboxes_[Keyword] = new QCheckBox( tr( "Keyword" ), this ) );
+    addWidget( checkboxes_[Text]  = new QCheckBox( tr( "Text" ), this ) );
+    addWidget( checkboxes_[Attachment] = new QCheckBox( tr( "Attachment" ), this ) );
+    addWidget( checkboxes_[Color] = new QCheckBox( tr( "Color" ), this ) );
+    checkboxes_[Text]->setChecked( true );
 
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
     { connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_saveMask()) ); }
@@ -236,7 +236,7 @@ void SearchPanel::_selectionRequest( void )
     Debug::Throw( "SearchPanel::_selectionRequest.\n" );
 
     // build mode
-    SearchModes mode = NONE;
+    SearchModes mode = None;
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { if( iter.value()->isChecked() ) mode |= iter.key(); }
 
