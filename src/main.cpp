@@ -60,7 +60,7 @@ int main (int argc, char *argv[])
     if( Debug::level() ) Debug::Throw() << XmlOptions::get() << endl;
 
     // migration
-    XmlMigration( File(".elogbook_db").addPath(Util::home() ), "DB_FILE", FILERECORD::Xml::FILE_LIST ).run();
+    XmlMigration( File(".elogbook_db").addPath(Util::home() ), "DB_FILE", Base::Xml::FILE_LIST ).run();
 
     // resources
     Q_INIT_RESOURCE( basePixmaps );
