@@ -1,6 +1,6 @@
 // $Id$
-#ifndef _LogbookModifiedDialog_h_
-#define _LogbookModifiedDialog_h_
+#ifndef LogbookModifiedDialog_h
+#define LogbookModifiedDialog_h
 
 /******************************************************************************
 *

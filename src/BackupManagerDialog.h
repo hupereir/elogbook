@@ -1,5 +1,5 @@
-#ifndef _BackupManagerDialog_h_
-#define _BackupManagerDialog_h_
+#ifndef BackupManagerDialog_h
+#define BackupManagerDialog_h
 // $Id$
 
 /******************************************************************************

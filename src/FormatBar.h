@@ -1,6 +1,6 @@
 // $Id$
-#ifndef _FormatBar_h_
-#define _FormatBar_h_
+#ifndef FormatBar_h
+#define FormatBar_h
 
 /******************************************************************************
 *
