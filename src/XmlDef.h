@@ -28,85 +28,32 @@
 namespace Xml
 {
 
-    //! logbook tag
     static const QString Logbook( "Logbook" );
-
-    //! attachment tag
     static const QString Attachment( "Attachment" );
-
-    //! recent entries
     static const QString RecentEntries( "RecentEntries" );
-
-    //! entry tag
     static const QString Entry( "Entry" );
-
-    //! logbook child tag
     static const QString Child( "Child" );
-
-    //! attachment type
     static const QString Type( "type" );
-
-    //! attachment destination file
     static const QString File( "file" );
-
-    //! attachment source file
     static const QString SourceFile( "orig" );
-
-    //! parent file
     static const QString ParentFile( "parent_file" );
-
-    //! attachment validity
     static const QString Valid( "valid" );
-
-    //! attachement is link
     static const QString IsLink( "is_link" );
-
-    //! directory
     static const QString Directory( "directory" );
-
-    //! comments
     static const QString Comments( "comments" );
-
-    //! creation time
     static const QString Creation( "Creation" );
-
-    //! modification time
     static const QString Modification( "Modification" );
-
-    //! backup time
     static const QString Backup( "Backup" );
-
-    //! backup file
     static const QString BackupMask( "Logbook_backup" );
-
-    //! title
     static const QString Title( "title" );
-
-    //! logbook author
     static const QString Author( "author" );
-
-    //! logbook sort method
     static const QString SortMethod( "sort_method" );
-
-    //! logbook sort order
     static const QString SortOrder( "sort_order" );
-
-    //! logbook number of entries
     static const QString Entries( "entries" );
-
-    //! logbook number of children
     static const QString Children( "children" );
-
-    //! entry text
     static const QString Text( "Text" );
-
-    //! entry key
     static const QString Keyword( "key" );
-
-    //! entry color
     static const QString Color( "color" );
-
-    //! true if logbook is read only
     static const QString ReadOnly( "ReadOnly" );
 
 };

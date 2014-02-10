@@ -2801,7 +2801,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
         if( entry->keyword().inherits( keyword ) )
         {
 
-            entry->setKeyword( Keyword( Str( entry->keyword().get() ).replace( keyword.get(), newKeyword.get() ) ) );
+            entry->setKeyword( Keyword( QString( entry->keyword().get() ).replace( keyword.get(), newKeyword.get() ) ) );
 
             /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the
             keyword change when synchronizing logbooks, without having all entries modification time

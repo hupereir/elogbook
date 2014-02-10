@@ -24,7 +24,6 @@
 #include "Debug.h"
 #include "File.h"
 #include "LogEntry.h"
-#include "Str.h"
 #include "XmlDef.h"
 #include "XmlOptions.h"
 #include "XmlString.h"

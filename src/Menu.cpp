@@ -39,7 +39,6 @@
 #include "QtUtil.h"
 #include "SearchPanel.h"
 #include "Singleton.h"
-#include "Str.h"
 #include "Util.h"
 #include "XmlOptions.h"
 
