@@ -106,7 +106,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case KEYWORD:
+            case Keyword:
             {
                 QString keyword( entry->keyword().get() );
                 if( keyword.size() > 1 && keyword[0] == '/' )
@@ -115,10 +115,10 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
                 return keyword;
             }
 
-            case TITLE: return entry->title();
-            case CREATION: return entry->creation().toString();
-            case MODIFICATION: return entry->modification().toString();
-            case AUTHOR: return entry->author();
+            case Title: return entry->title();
+            case Creation: return entry->creation().toString();
+            case Modification: return entry->modification().toString();
+            case Author: return entry->author();
 
             default:
             return QVariant();
@@ -128,10 +128,10 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 
         switch( index.column() )
         {
-            case COLOR:
+            case Color:
             return _icon( entry->color() );
 
-            case ATTACHMENT:
+            case HasAttachment:
             return Base::KeySet<Attachment>(entry).empty() ? QVariant():_attachmentIcon();
 
             default:
@@ -143,10 +143,10 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 
         switch( index.column() )
         {
-            case COLOR:
-            case CREATION:
-            case MODIFICATION:
-            case AUTHOR:
+            case Color:
+            case Creation:
+            case Modification:
+            case Author:
             return Qt::AlignCenter;
 
             default: return QVariant();
@@ -158,8 +158,8 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case ATTACHMENT:
-            case COLOR:
+            case HasAttachment:
+            case Color:
             return QSize( iconSize_, iconSize_ );
 
             default:
@@ -184,7 +184,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
         return false;
     }
 
-    if( !(index.isValid() && ( index.column() == TITLE || index.column() == KEYWORD ) && role == Qt::EditRole ) )
+    if( !(index.isValid() && ( index.column() == Title || index.column() == Keyword ) && role == Qt::EditRole ) )
     {
         Debug::Throw(0, "LogEntryModel::setData - invalid index/role. setData canceled.\n" );
         return false;
@@ -197,13 +197,13 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
         return false;
     }
 
-    if( index.column() == TITLE && value != entry->title() )
+    if( index.column() == Title && value != entry->title() )
     {
 
         entry->setTitle( value.toString() );
         emit dataChanged( index, index );
 
-    } else if( index.column() == KEYWORD && value != entry->keyword().get() )  {
+    } else if( index.column() == Keyword && value != entry->keyword().get() )  {
 
         entry->setKeyword( value.toString() );
         emit dataChanged( index, index );
@@ -222,7 +222,7 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
     {
         switch( section )
         {
-            case ATTACHMENT: return _attachmentIcon();
+            case HasAttachment: return _attachmentIcon();
             default: return columnTitles_[section];
         }
 
@@ -230,10 +230,10 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
 
         switch( section )
         {
-            case COLOR:
-            case CREATION:
-            case MODIFICATION:
-            case AUTHOR:
+            case Color:
+            case Creation:
+            case Modification:
+            case Author:
             return Qt::AlignCenter;
 
             default: return QVariant();
@@ -244,8 +244,8 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
 
         switch( section )
         {
-            case ATTACHMENT:
-            case COLOR:
+            case HasAttachment:
+            case Color:
             return QSize( iconSize_, iconSize_ );
 
             default:
@@ -285,7 +285,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     QTextStream what( &buffer );
     foreach( const QModelIndex& index, indexes )
     {
-        if( !( index.isValid() && index.column() == TITLE ) ) continue;
+        if( !( index.isValid() && index.column() == Title ) ) continue;
         LogEntry* entry( get( index ) );
         what << entry->keyword() << "/" << entry->title() << endl;
     }
@@ -374,12 +374,12 @@ bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) 
     switch( type_ )
     {
 
-        case KEYWORD: return first->keyword() < second->keyword();
-        case TITLE: return first->title() < second->title();
-        case CREATION: return first->creation() < second->creation();
-        case MODIFICATION: return first->modification() < second->modification();
-        case AUTHOR: return first->author() < second->author();
-        case COLOR: return  first->color() < second->color();
+        case Keyword: return first->keyword() < second->keyword();
+        case Title: return first->title() < second->title();
+        case Creation: return first->creation() < second->creation();
+        case Modification: return first->modification() < second->modification();
+        case Author: return first->author() < second->author();
+        case Color: return  first->color() < second->color();
 
         default: return true;
 

@@ -34,16 +34,14 @@ class LogbookModel: public ListModel<Logbook*>, public Counter
 
     public:
 
-    //! number of columns
-    enum { nColumns = 4 };
-
     //! column type enumeration
     enum ColumnType
     {
-        FILE,
-        ENTRIES,
-        CREATED,
-        MODIFIED
+        Filename,
+        Entries,
+        Created,
+        Modified,
+        nColumns
     };
 
     //! constructor

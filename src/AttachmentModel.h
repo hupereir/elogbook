@@ -44,18 +44,16 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     virtual ~AttachmentModel()
     {}
 
-    //! number of columns
-    enum { nColumns = 6 };
-
     //! column type enumeration
     enum ColumnType
     {
-        ICON,
-        FILE,
-        TYPE,
-        SIZE,
-        CREATION,
-        MODIFICATION
+        Icon,
+        Filename,
+        Type,
+        Size,
+        Creation,
+        Modification,
+        nColumns
     };
 
     //!@name methods reimplemented from base class

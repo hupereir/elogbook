@@ -62,9 +62,9 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
 
         switch( index.column() )
         {
-            case FILE: return backup.file().localName();
-            case PATH: return backup.file().path();
-            case CREATION: return backup.creation().toString();
+            case Filename: return backup.file().localName();
+            case Path: return backup.file().path();
+            case Creation: return backup.creation().toString();
 
             default:
             return QVariant();
@@ -74,7 +74,7 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
 
         switch( index.column() )
         {
-            case CREATION:
+            case Creation:
             return Qt::AlignCenter;
 
             default: return QVariant();
@@ -98,7 +98,7 @@ QVariant BackupModel::headerData(int section, Qt::Orientation orientation, int r
 
             switch( section )
             {
-                case CREATION:
+                case Creation:
                 return Qt::AlignCenter;
 
                 default: return QVariant();
@@ -127,9 +127,9 @@ bool BackupModel::SortFTor::operator () ( Backup first, Backup second ) const
     switch( type_ )
     {
 
-        case FILE: return first.file().localName() < second.file().localName();
-        case PATH: return first.file().path() < second.file().path();
-        case CREATION: return first.creation() < second.creation();
+        case Filename: return first.file().localName() < second.file().localName();
+        case Path: return first.file().path() < second.file().path();
+        case Creation: return first.creation() < second.creation();
         default: return true;
 
     }

@@ -44,11 +44,8 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
     virtual ~KeywordModel()
     {}
 
-    //! number of columns
-    enum { nColumns = 1 };
-
     //! column type enumeration
-    enum ColumnType { KEYWORD };
+    enum { nColumns = 1 };
 
     //!@name methods reimplemented from base class
     //@{

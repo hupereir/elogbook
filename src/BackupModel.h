@@ -42,11 +42,14 @@ class BackupModel: public ListModel< Backup >, public Counter
     virtual ~BackupModel( void )
     {}
 
-    //! number of columns
-    enum { nColumns = 3 };
-
     //! column type enumeration
-    enum ColumnType { FILE, PATH, CREATION };
+    enum ColumnType
+    {
+        Filename,
+        Path,
+        Creation,
+        nColumns
+    };
 
     //! flags
     virtual Qt::ItemFlags flags( const QModelIndex& ) const;

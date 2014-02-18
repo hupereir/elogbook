@@ -31,56 +31,48 @@ class AnimatedTreeView;
 class LogbookModifiedDialog: public BaseDialog, public Counter
 {
 
-  //! Qt macro
-  Q_OBJECT
+    //! Qt macro
+    Q_OBJECT
 
-  public:
+    public:
 
-  //! return codes
-  enum {
+    //! return codes
+    enum ReturnCode
+    {
+        SaveAgain,
+        SaveAs,
+        Reload,
+        Ignore
+    };
+
+    //! constructor
+    LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files );
+
+    private Q_SLOTS:
 
     //! re-saved removed file
-    RESAVE = 0,
+    void _reLoad( void )
+    { done( Reload ); }
+
+    //! re-saved removed file
+    void _reSave( void )
+    { done( SaveAgain ); }
 
     //! save file with new name
-    SAVE_AS = 1,
+    void _saveAs( void )
+    { done( SaveAs ); }
 
-    //! re-load modified file
-    RELOAD = 2,
+    //! save file with new name
+    void _ignore( void )
+    { done( Ignore ); }
 
-    //! ignore warning
-    IGNORE = 3
+    private:
 
-  };
+    //! model
+    FileCheck::Model model_;
 
-  //! constructor
-  LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files );
-
-  private Q_SLOTS:
-
-  //! re-saved removed file
-  void _reLoad( void )
-  { done( RELOAD ); }
-
-  //! re-saved removed file
-  void _reSave( void )
-  { done( RESAVE ); }
-
-  //! save file with new name
-  void _saveAs( void )
-  { done( SAVE_AS ); }
-
-  //! save file with new name
-  void _ignore( void )
-  { done( IGNORE ); }
-
-  private:
-
-  //! model
-  FileCheck::Model model_;
-
-  //! list
-  AnimatedTreeView* list_;
+    //! list
+    AnimatedTreeView* list_;
 
 };
 

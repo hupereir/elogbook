@@ -66,7 +66,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     static const QString NoDirectory;
 
     //! max number of entries in logbook (make child logbook if larger)
-    enum { MAX_ENTRIES = 50 };
+    enum { MaxEntries = 50 };
 
     //! configuration mask
     enum MaskFlag

@@ -41,10 +41,10 @@
 #include <QTextFragment>
 
 //________________________________________
-const QString FormatBar::BOLD_ICON = "format-text-bold.png";
-const QString FormatBar::ITALIC_ICON = "format-text-italic.png";
-const QString FormatBar::STRIKE_ICON = "format-text-strikethrough.png";
-const QString FormatBar::UNDERLINE_ICON = "format-text-underline.png";
+const QString FormatBar::IconBold = "format-text-bold.png";
+const QString FormatBar::IconItalic = "format-text-italic.png";
+const QString FormatBar::IconStrike = "format-text-strikethrough.png";
+const QString FormatBar::IconUnderline = "format-text-underline.png";
 
 //________________________________________
 FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
@@ -57,25 +57,25 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
 
     // bold
     QAction* action;
-    addAction( action = new QAction( IconEngine::get( BOLD_ICON ), tr( "Bold" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconBold ), tr( "Bold" ), this ) );
     action->setCheckable( true );
     actions_.insert( Bold, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_bold(bool)) );
 
     // underline
-    addAction( action = new QAction( IconEngine::get( ITALIC_ICON ), tr( "Italic" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconItalic ), tr( "Italic" ), this ) );
     action->setCheckable( true );
     actions_.insert( Italic, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_italic(bool)) );
 
     // underline
-    addAction( action = new QAction( IconEngine::get( UNDERLINE_ICON ), tr( "Underline" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconUnderline ), tr( "Underline" ), this ) );
     action->setCheckable( true );
     actions_.insert( Underline, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_underline(bool)) );
 
     // strike
-    addAction( action = new QAction( IconEngine::get( STRIKE_ICON ), tr( "Strike" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconStrike ), tr( "Strike" ), this ) );
     action->setCheckable( true );
     actions_.insert( Strike, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_strike(bool)) );

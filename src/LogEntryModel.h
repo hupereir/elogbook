@@ -46,19 +46,17 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     virtual ~LogEntryModel()
     {}
 
-    //! number of columns
-    enum { nColumns = 7 };
-
     //! column type enumeration
     enum ColumnType
     {
-        COLOR,
-        KEYWORD,
-        TITLE,
-        ATTACHMENT,
-        CREATION,
-        MODIFICATION,
-        AUTHOR
+        Color,
+        Keyword,
+        Title,
+        HasAttachment,
+        Creation,
+        Modification,
+        Author,
+        nColumns
     };
 
     //!@name methods reimplemented from base class

@@ -63,13 +63,13 @@ class FileCheck: public QObject, public Base::Key, public Counter
         //! flag
         enum Flag
         {
-            NONE,
-            REMOVED,
-            MODIFIED
+            None,
+            FileRemoved,
+            FileModified
         };
 
         //! constructor
-        Data( QString file = QString(), Flag flag = NONE, TimeStamp stamp = TimeStamp() ):
+        Data( QString file = QString(), Flag flag = None, TimeStamp stamp = TimeStamp() ):
             file_( file ),
             flag_( flag ),
             timeStamp_( stamp )
@@ -126,14 +126,12 @@ class FileCheck: public QObject, public Base::Key, public Counter
 
         public:
 
-        //! number of columns
-        enum { nColumns = 3 };
-
         //! column type enumeration
         enum ColumnType {
-            FILE,
-            FLAG,
-            TIME
+            File,
+            Flag,
+            Time,
+            nColumns
         };
 
         //! constructor

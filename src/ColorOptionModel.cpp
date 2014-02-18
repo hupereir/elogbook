@@ -43,8 +43,8 @@ QVariant ColorOptionModel::data( const QModelIndex& index, int role ) const
     // retrieve associated color
     const Base::Color& color( get( index ).second.get<Base::Color>() );
 
-    if( role == Qt::DisplayRole && index.column() == VALUE ) return color.name();
-    else if( role == Qt::DecorationRole && index.column() == VALUE ) return _icon( color );
+    if( role == Qt::DisplayRole && index.column() == Value ) return color.name();
+    else if( role == Qt::DecorationRole && index.column() == Value ) return _icon( color );
     else return OptionModel::data( index, role );
 
 }
@@ -64,10 +64,6 @@ QIcon ColorOptionModel::_icon( const Base::Color& color )
 
         QPainter painter( &pixmap );
         painter.setRenderHints(QPainter::Antialiasing );
-
-//         painter.setPen( QPalette().color( QPalette::Text ) );
-//         painter.setBrush( color );
-//         painter.drawEllipse( rect );
 
         painter.setPen( Qt::NoPen );
         painter.setBrush( color );

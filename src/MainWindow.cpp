@@ -237,16 +237,16 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
     entryList_->setDragEnabled(true);
     entryList_->setOptionName( "ENTRY_LIST" );
-    entryList_->lockColumnVisibility( LogEntryModel::KEYWORD );
-    entryList_->setColumnHidden( LogEntryModel::TITLE, false );
-    entryList_->lockColumnVisibility( LogEntryModel::TITLE );
+    entryList_->lockColumnVisibility( LogEntryModel::Keyword );
+    entryList_->setColumnHidden( LogEntryModel::Title, false );
+    entryList_->lockColumnVisibility( LogEntryModel::Title );
 
     #if QT_VERSION >= 0x050000
-    entryList_->header()->setSectionResizeMode(LogEntryModel::CREATION, QHeaderView::Stretch);
-    entryList_->header()->setSectionResizeMode(LogEntryModel::MODIFICATION, QHeaderView::Stretch);
+    entryList_->header()->setSectionResizeMode(LogEntryModel::Creation, QHeaderView::Stretch);
+    entryList_->header()->setSectionResizeMode(LogEntryModel::Modification, QHeaderView::Stretch);
     #else
-    entryList_->header()->setResizeMode(LogEntryModel::CREATION, QHeaderView::Stretch);
-    entryList_->header()->setResizeMode(LogEntryModel::MODIFICATION, QHeaderView::Stretch);
+    entryList_->header()->setResizeMode(LogEntryModel::Creation, QHeaderView::Stretch);
+    entryList_->header()->setResizeMode(LogEntryModel::Modification, QHeaderView::Stretch);
     #endif
 
     // replace item delegate
@@ -331,7 +331,7 @@ void MainWindow::createDefaultLogbook( void )
     logbook_->setAuthor( XmlOptions::get().raw( "USER" ) );
     logbook_->setDirectory( workingDirectory() );
 
-    logbook_->setComments( QString( tr( "Default logbook created automatically on %1" ) ).arg( TimeStamp::now().toString( TimeStamp::LONG ) ) );
+    logbook_->setComments( QString( tr( "Default logbook created automatically on %1" ) ).arg( TimeStamp::now().toString( TimeStamp::Long ) ) );
 
 }
 
@@ -408,11 +408,11 @@ bool MainWindow::setLogbook( File file )
 
     switch( logbook_->sortMethod() )
     {
-        case Logbook::SortColor: entryList_->sortByColumn( LogEntryModel::COLOR, sort_order ); break;
-        case Logbook::SortTitle: entryList_->sortByColumn( LogEntryModel::TITLE, sort_order ); break;
-        case Logbook::SortCreation: entryList_->sortByColumn( LogEntryModel::CREATION, sort_order ); break;
-        case Logbook::SortModification: entryList_->sortByColumn( LogEntryModel::MODIFICATION , sort_order); break;
-        case Logbook::SortAuthor: entryList_->sortByColumn( LogEntryModel::AUTHOR, sort_order ); break;
+        case Logbook::SortColor: entryList_->sortByColumn( LogEntryModel::Color, sort_order ); break;
+        case Logbook::SortTitle: entryList_->sortByColumn( LogEntryModel::Title, sort_order ); break;
+        case Logbook::SortCreation: entryList_->sortByColumn( LogEntryModel::Creation, sort_order ); break;
+        case Logbook::SortModification: entryList_->sortByColumn( LogEntryModel::Modification , sort_order); break;
+        case Logbook::SortAuthor: entryList_->sortByColumn( LogEntryModel::Author, sort_order ); break;
         default: break;
     }
 
@@ -1393,15 +1393,15 @@ void MainWindow::_filesModified( FileCheck::DataSet files )
 
     // ask dialog and take action accordinly
     int state = LogbookModifiedDialog( this, files ).exec();
-    if( state == LogbookModifiedDialog::RESAVE ) { save(); }
-    else if( state == LogbookModifiedDialog::SAVE_AS ) { _saveAs(); }
-    else if( state == LogbookModifiedDialog::RELOAD )
+    if( state == LogbookModifiedDialog::SaveAgain ) { save(); }
+    else if( state == LogbookModifiedDialog::SaveAs ) { _saveAs(); }
+    else if( state == LogbookModifiedDialog::Reload )
     {
 
         logbook_->setModifiedRecursive( false );
         _revertToSaved();
 
-    } else if( state == LogbookModifiedDialog::IGNORE ) { ignoreWarnings_ = true; }
+    } else if( state == LogbookModifiedDialog::Ignore ) { ignoreWarnings_ = true; }
 
     return;
 }
@@ -3087,11 +3087,11 @@ void MainWindow::_storeSortMethod( int column, Qt::SortOrder order  )
     bool changed( false );
     switch( column ) {
 
-        case LogEntryModel::COLOR: changed = logbook_->setSortMethod( Logbook::SortColor ); break;
-        case LogEntryModel::TITLE: changed = logbook_->setSortMethod( Logbook::SortTitle ); break;
-        case LogEntryModel::CREATION: changed = logbook_->setSortMethod( Logbook::SortCreation ); break;
-        case LogEntryModel::MODIFICATION: changed = logbook_->setSortMethod( Logbook::SortModification ); break;
-        case LogEntryModel::AUTHOR: changed = logbook_->setSortMethod( Logbook::SortAuthor ); break;
+        case LogEntryModel::Color: changed = logbook_->setSortMethod( Logbook::SortColor ); break;
+        case LogEntryModel::Title: changed = logbook_->setSortMethod( Logbook::SortTitle ); break;
+        case LogEntryModel::Creation: changed = logbook_->setSortMethod( Logbook::SortCreation ); break;
+        case LogEntryModel::Modification: changed = logbook_->setSortMethod( Logbook::SortModification ); break;
+        case LogEntryModel::Author: changed = logbook_->setSortMethod( Logbook::SortAuthor ); break;
         default: return;
 
     }
@@ -3122,7 +3122,7 @@ void MainWindow::_entryItemClicked( const QModelIndex& index )
     // do nothing if index is not already selected
     if( !entryList_->selectionModel()->isSelected( index ) ) return;
 
-    if( !( index.column() == LogEntryModel::TITLE ||  index.column() == LogEntryModel::KEYWORD ) )
+    if( !( index.column() == LogEntryModel::Title ||  index.column() == LogEntryModel::Keyword ) )
     { return; }
 
     // compare to model edition index
@@ -3140,8 +3140,8 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
     LogEntry* entry( entryModel_.get( index ) );
 
     Mask mask;
-    if( index.column() == LogEntryModel::TITLE ) mask |= TitleMask;
-    else if( index.column() == LogEntryModel::KEYWORD ) mask |= KeywordMask;
+    if( index.column() == LogEntryModel::Title ) mask |= TitleMask;
+    else if( index.column() == LogEntryModel::Keyword ) mask |= KeywordMask;
 
     // update associated EditionWindows
     _updateEntryFrames( entry, mask );
@@ -3166,7 +3166,7 @@ void MainWindow::_startEntryEdition( void )
     if( !index.isValid() ) return;
 
     // make sure 'title' index is selected
-    index = entryModel_.index( index.row(), LogEntryModel::TITLE );
+    index = entryModel_.index( index.row(), LogEntryModel::Title );
 
     // enable model edition
     entryModel_.setEditionIndex( index );
@@ -3212,7 +3212,7 @@ void MainWindow::_toggleTreeMode( bool value )
     _resetLogEntryList();
 
     // change keyword column visibility
-    entryList_->setColumnHidden( LogEntryModel::KEYWORD, value );
+    entryList_->setColumnHidden( LogEntryModel::Keyword, value );
     entryList_->resizeColumns();
 
     // keyword toolbar visibility action

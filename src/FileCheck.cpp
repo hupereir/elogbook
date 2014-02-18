@@ -155,16 +155,16 @@ void FileCheck::_fileChanged( const QString& file )
         if( !local.exists() )
         {
 
-            data.setFlag( Data::REMOVED );
+            data.setFlag( Data::FileRemoved );
 
         } else {
 
-            data.setFlag( Data::MODIFIED );
+            data.setFlag( Data::FileModified );
             data.setTimeStamp( local.lastModified() );
 
         }
 
-        if( data.flag() == Data::REMOVED || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
+        if( data.flag() == Data::FileRemoved || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
         {
             data_.insert( data );
             timer_.start( 200, this );
@@ -205,19 +205,19 @@ QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case FILE: return data.file();
-            case FLAG:
+            case File: return data.file();
+            case Flag:
             {
                 switch( data.flag() )
                 {
-                    case Data::MODIFIED: return tr( "Modified" );
-                    case Data::REMOVED: return tr( "Removed" );
-                    case Data::NONE:
+                    case Data::FileModified: return tr( "Modified" );
+                    case Data::FileRemoved: return tr( "Removed" );
+                    case Data::None:
                     default: return tr( "None" );
                 }
             }
 
-            case TIME: return data.timeStamp().toString();
+            case Time: return data.timeStamp().toString();
 
             default: return QVariant();
         }
@@ -237,9 +237,9 @@ bool FileCheck::Model::SortFTor::operator () ( FileCheck::Data first, FileCheck:
     {
 
         default:
-        case FILE: return first.file() < second.file();
-        case FLAG: return first.flag() < second.flag();
-        case TIME: return (first.timeStamp() != second.timeStamp() ) ? (first.timeStamp() < second.timeStamp()):first.file() < second.file();
+        case File: return first.file() < second.file();
+        case Flag: return first.flag() < second.flag();
+        case Time: return (first.timeStamp() != second.timeStamp() ) ? (first.timeStamp() < second.timeStamp()):first.file() < second.file();
 
     }
 

@@ -91,26 +91,26 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case FILE:
+            case Filename:
             return
                 attachment->type() == AttachmentType::Url ?
                 attachment->file() : attachment->shortFile();
 
-            case TYPE: return attachment->type().name();
+            case Type: return attachment->type().name();
 
-            case SIZE: return attachment->sizeString();
+            case Size: return attachment->sizeString();
 
-            case CREATION:
+            case Creation:
             return (attachment->creation().isValid() ) ? attachment->creation().toString(): QVariant();
 
-            case MODIFICATION:
+            case Modification:
             return (attachment->modification().isValid() ) ? attachment->modification().toString(): QVariant();
 
             default: return QVariant();
         }
     } else if( role == Qt::ToolTipRole ) return attachment->file();
-    else if( role == Qt::DecorationRole && index.column() == ICON ) return _icon( attachment->type().icon() );
-    else if( role == Qt::TextAlignmentRole && index.column() == ICON ) return Qt::AlignCenter;
+    else if( role == Qt::DecorationRole && index.column() == Icon ) return _icon( attachment->type().icon() );
+    else if( role == Qt::TextAlignmentRole && index.column() == Icon ) return Qt::AlignCenter;
 
     return QVariant();
 
@@ -156,12 +156,12 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
     {
 
         default:
-        case FILE: return first->shortFile() < second->shortFile();
-        case ICON: return first->type().name() < second->type().name();
-        case TYPE: return first->type().name() < second->type().name();
-        case SIZE: return  first->size() < second->size();
-        case CREATION: return first->creation() < second->creation();
-        case MODIFICATION: return first->modification() < second->modification();
+        case Filename: return first->shortFile() < second->shortFile();
+        case Icon: return first->type().name() < second->type().name();
+        case Type: return first->type().name() < second->type().name();
+        case Size: return  first->size() < second->size();
+        case Creation: return first->creation() < second->creation();
+        case Modification: return first->modification() < second->modification();
 
     }
 

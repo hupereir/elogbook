@@ -50,10 +50,10 @@ QVariant LogbookModel::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case FILE: return logbook.file().localName();
-            case ENTRIES: return int(Base::KeySet<LogEntry>(&logbook).size());
-            case CREATED: return logbook.creation().toString();
-            case MODIFIED: return logbook.modification().toString();
+            case Filename: return logbook.file().localName();
+            case Entries: return int(Base::KeySet<LogEntry>(&logbook).size());
+            case Created: return logbook.creation().toString();
+            case Modified: return logbook.modification().toString();
             default: return QVariant();
 
         }
@@ -62,9 +62,9 @@ QVariant LogbookModel::data( const QModelIndex& index, int role ) const
 
         switch( index.column() )
         {
-            case ENTRIES:
-            case CREATED:
-            case MODIFIED:
+            case Entries:
+            case Created:
+            case Modified:
             return Qt::AlignCenter;
 
             default: return QVariant();
@@ -87,9 +87,9 @@ QVariant LogbookModel::headerData(int section, Qt::Orientation orientation, int 
 
             switch( section )
             {
-                case ENTRIES:
-                case CREATED:
-                case MODIFIED:
+                case Entries:
+                case Created:
+                case Modified:
                 return Qt::AlignCenter;
 
                 default: return QVariant();

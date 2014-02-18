@@ -578,7 +578,7 @@ void AttachmentFrame::_delete( void )
             logbookChanged = true;
 
             // retrieve action
-            bool fromDisk( dialog.action() == DeleteAttachmentDialog::FROM_DISK );
+            bool fromDisk( dialog.action() == DeleteAttachmentDialog::DeleteFromDisk );
 
             // retrieve associated attachment frames and remove item
             Base::KeySet<AttachmentFrame> frames( attachment );

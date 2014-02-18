@@ -467,12 +467,12 @@ Logbook* Logbook::latestChild( void )
     Logbook* dest = 0;
 
     // check parent number of entries
-    if( Base::KeySet<LogEntry>(this).size() < MAX_ENTRIES ) dest = this;
+    if( Base::KeySet<LogEntry>(this).size() < MaxEntries ) dest = this;
 
     // check if one existsing child is not complete
     foreach( Logbook* logbook, children_ )
     {
-        if( logbook && Base::KeySet<LogEntry>(logbook).size() < MAX_ENTRIES )
+        if( logbook && Base::KeySet<LogEntry>(logbook).size() < MaxEntries )
         {
             dest = logbook;
             break;
@@ -627,7 +627,7 @@ QString Logbook::backupFilename( void ) const
     QString head( File( file_ ).truncatedName() );
     QString foot( File( file_ ).extension() );
     if( !foot.isEmpty() ) foot = QString(".") + foot;
-    QString tag( TimeStamp::now().toString( TimeStamp::DATE_TAG ) );
+    QString tag( TimeStamp::now().toString( TimeStamp::DateTag ) );
 
     QString out;
     QTextStream( &out ) << head << "_backup_" << tag << foot;

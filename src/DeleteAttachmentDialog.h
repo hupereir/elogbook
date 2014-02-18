@@ -45,12 +45,8 @@ class DeleteAttachmentDialog: public CustomDialog
     //! action
     enum Action
     {
-        //! delete file from disk
-        FROM_DISK,
-
-        //! delete file from logbook
-        FROM_LOGBOOK
-
+        DeleteFromDisk,
+        DeleteFromLogbook
     };
 
     //! get action

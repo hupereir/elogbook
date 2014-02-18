@@ -117,17 +117,17 @@ void installDefaultOptions( void )
 
     // masks
     XmlOptions::get().set<int>( "ENTRY_LIST_MASK",
-        (1<< LogEntryModel::COLOR)|
-        (1<< LogEntryModel::TITLE)|
-        (1<< LogEntryModel::CREATION)|
-        (1<< LogEntryModel::MODIFICATION)|
-        (1<< LogEntryModel::AUTHOR) );
+        (1<< LogEntryModel::Color)|
+        (1<< LogEntryModel::Title)|
+        (1<< LogEntryModel::Creation)|
+        (1<< LogEntryModel::Modification)|
+        (1<< LogEntryModel::Author) );
 
     XmlOptions::get().set<int>( "ATTACHMENT_LIST_MASK",
-        (1<< AttachmentModel::FILE)|
-        (1<< AttachmentModel::SIZE)|
-        (1<< AttachmentModel::TYPE)|
-        (1<< AttachmentModel::MODIFICATION) );
+        (1<< AttachmentModel::Filename)|
+        (1<< AttachmentModel::Size)|
+        (1<< AttachmentModel::Type)|
+        (1<< AttachmentModel::Modification) );
 
     // add run-time non recordable options
     QString user( Util::user( ) );

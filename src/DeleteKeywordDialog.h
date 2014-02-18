@@ -45,22 +45,21 @@ class DeleteKeywordDialog: public CustomDialog
     //! entry action
     enum Action
     {
-        MOVE,
-        DELETE
-
+        MoveEntries,
+        DeleteEntries
     };
 
     //! get action
     Action action( void ) const
-    { return moveRadioButton_->isChecked() ? MOVE:DELETE; }
+    { return moveRadioButton_->isChecked() ? MoveEntries:DeleteEntries; }
 
     //! move netries
     bool moveEntries( void ) const
-    { return action() == MOVE; }
+    { return action() == MoveEntries; }
 
     //! delete entries
     bool deleteEntries( void ) const
-    { return action() == DELETE; }
+    { return action() == DeleteEntries; }
 
     private:
 

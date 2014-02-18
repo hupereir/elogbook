@@ -47,16 +47,8 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
     if( !index.isValid() ) return QVariant();
 
     // check index, role and column
-    if( role == Qt::DisplayRole && index.column() == KEYWORD )
-    {
-
-        return _find( index.internalId() ).get().current();
-
-    } else {
-
-        return QVariant();
-
-    }
+    if( role == Qt::DisplayRole ) return _find( index.internalId() ).get().current();
+    else return QVariant();
 
 }
 
@@ -64,7 +56,7 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
 bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int role )
 {
     Debug::Throw( "KeywordModel::setData.\n" );
-    if( !(index.isValid() && index.column() == KEYWORD && role == Qt::EditRole ) ) return false;
+    if( !(index.isValid() && role == Qt::EditRole ) ) return false;
 
     // retrieve parent index
     Keyword parent_keyword( get( parent( index ) ) );
@@ -188,7 +180,6 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
 void KeywordModel::_sort( int column, Qt::SortOrder order )
 {
     Debug::Throw() << "KeywordModel::sort - column: " << column << " order: " << order << endl;
-    if( column != KEYWORD ) return;
     _root().sort( SortFTor(order) );
 }
 

@@ -39,14 +39,13 @@ class AskForSaveDialog: public BaseDialog, public Counter
     the enumeration is used both to interpret the result and to decide which
     buttons are to be shown in the dialog.
     */
-    enum ReturnCode {
-
+    enum ReturnCode 
+    {
         Yes = 1<<0,
         No = 1<<1,
         All = 1<<2,
         Cancel = 1<<3,
         Default = Yes|No|Cancel
-
     };
 
     Q_DECLARE_FLAGS( ReturnCodes, ReturnCode )

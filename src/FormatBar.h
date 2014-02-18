@@ -81,16 +81,16 @@ class FormatBar: public CustomToolBar
     public:
 
     //! bold icon name
-    static const QString BOLD_ICON;
+    static const QString IconBold;
 
     //! italic icon name
-    static const QString ITALIC_ICON;
+    static const QString IconItalic;
 
     //! strike icon name
-    static const QString STRIKE_ICON;
+    static const QString IconStrike;
 
     //! underline icon name
-    static const QString UNDERLINE_ICON;
+    static const QString IconUnderline;
 
     //! action id enumeration
     enum ActionId
