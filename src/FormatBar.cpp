@@ -20,11 +20,12 @@
 *******************************************************************************/
 
 #include "FormatBar.h"
-#include "FormatBar.moc"
+
 #include "BaseIconNames.h"
 #include "ColorMenu.h"
-#include "CustomPixmap.h"
+#include "CustomToolButton.h"
 #include "Debug.h"
+#include "FormatBarIconNames.h"
 #include "IconEngine.h"
 #include "PixmapEngine.h"
 #include "RoundedPath.h"
@@ -40,11 +41,43 @@
 #include <QTextEdit>
 #include <QTextFragment>
 
-//________________________________________
-const QString FormatBar::IconBold = "format-text-bold.png";
-const QString FormatBar::IconItalic = "format-text-italic.png";
-const QString FormatBar::IconStrike = "format-text-strikethrough.png";
-const QString FormatBar::IconUnderline = "format-text-underline.png";
+//! used for customized color button
+class FormatColorButton: public CustomToolButton
+{
+
+    Q_OBJECT
+
+    public:
+
+    //! constructor
+    FormatColorButton( QWidget* parent ):
+        CustomToolButton( parent )
+    {}
+
+    public Q_SLOTS:
+
+    //! set color
+    void setColor( QColor color )
+    {
+        color_ = color;
+        update();
+    }
+
+    protected:
+
+    //! paint
+    void paintEvent( QPaintEvent* event );
+
+    private:
+
+    // associated color
+    QColor color_;
+
+};
+
+
+// needs to be included after definition of FormatColorButton
+#include "FormatBar.moc"
 
 //________________________________________
 FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
@@ -57,31 +90,32 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
 
     // bold
     QAction* action;
-    addAction( action = new QAction( IconEngine::get( IconBold ), tr( "Bold" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this ) );
     action->setCheckable( true );
     actions_.insert( Bold, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_bold(bool)) );
 
     // underline
-    addAction( action = new QAction( IconEngine::get( IconItalic ), tr( "Italic" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this ) );
     action->setCheckable( true );
     actions_.insert( Italic, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_italic(bool)) );
 
     // underline
-    addAction( action = new QAction( IconEngine::get( IconUnderline ), tr( "Underline" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this ) );
     action->setCheckable( true );
     actions_.insert( Underline, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_underline(bool)) );
 
     // strike
-    addAction( action = new QAction( IconEngine::get( IconStrike ), tr( "Strike" ), this ) );
+    addAction( action = new QAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this ) );
     action->setCheckable( true );
     actions_.insert( Strike, action );
     connect( action, SIGNAL(toggled(bool)), SLOT(_strike(bool)) );
 
     // color
     action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this );
+    action->setIconText( tr( "Color" ) );
     connect( action, SIGNAL(triggered()), SLOT(_lastColor()) );
     actions_.insert( Color, action );
 
@@ -93,9 +127,10 @@ FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
 
     // color button
     FormatColorButton *button( new FormatColorButton( this ) );
+    button->setText( tr( "Color" ) );
     addWidget( button );
     button->setDefaultAction( action );
-    button->setPopupMode( QToolButton::DelayedPopup );
+    button->setPopupMode( QToolButton::MenuButtonPopup );
     connect( colorMenu_, SIGNAL(selected(QColor)), button, SLOT(setColor(QColor)) );
 
     // configuration
@@ -350,17 +385,17 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
         painter.setRenderHint( QPainter::Antialiasing );
         painter.setBrush( color_ );
         painter.setPen( Qt::NoPen );
-        QRectF tmp_rect( FormatColorButton::rect() );
-        tmp_rect.setWidth( 0.5*qMin( rect().width(), rect().height() ) );
-        tmp_rect.setHeight( 0.5*qMin( rect().width(), rect().height() ) );
-        tmp_rect.translate( rect().width() - tmp_rect.width(), rect().height() - tmp_rect.height() );
-        painter.drawEllipse( tmp_rect );
+        QRectF tmpRect( FormatColorButton::rect() );
+        tmpRect.setWidth( 0.5*qMin( rect().width(), rect().height() ) );
+        tmpRect.setHeight( 0.5*qMin( rect().width(), rect().height() ) );
+        tmpRect.translate( rect().width() - tmpRect.width(), rect().height() - tmpRect.height() );
+        painter.drawEllipse( tmpRect );
         painter.end();
 
     }
 
     // default handling if color is invalid
-    QToolButton::paintEvent( event );
+    CustomToolButton::paintEvent( event );
 
     return;
 

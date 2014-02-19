@@ -164,9 +164,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // status bar for tooltips
     setStatusBar( statusBar_ = new BaseStatusBar( this ) );
-    statusBar().addLabel( 2, true );
-    statusBar().addLabels( 3, 0 );
-    statusBar().addClock();
+    statusBar_->addLabel( 2, true );
+    statusBar_->addLabels( 3, 0 );
+    statusBar_->addClock();
 
     // actions
     _installActions();
@@ -190,23 +190,17 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     CustomToolBar* toolbar;
     toolbar = new CustomToolBar( tr( "Main" ), this, "MAIN_TOOLBAR" );
 
-    // new entry
-    toolbar->addAction( &newEntryAction() );
-    toolbar->addAction( &saveAction() );
-
-    // delete_entry button
-    toolbar->addAction( action = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete Entry" ), this ) );
-    connect( action, SIGNAL(triggered()), SLOT(_deleteEntry()) );
-    readOnlyActions_ << action;
-
-    // add_attachment button
+    toolbar->addAction( newEntryAction_ );
+    toolbar->addAction( saveAction_ );
+    toolbar->addAction( deleteEntryAction_ );
+    readOnlyActions_ << deleteEntryAction_;
     toolbar->addAction( &frame->newAction() );
 
     // format bar
     formatBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
-    formatBar_->setTarget( activeEditor() );
-    formatBar_->addAction( &insertLinkAction() );
-    readOnlyActions_ << &insertLinkAction();
+    formatBar_->setTarget( editor );
+    formatBar_->addAction( insertLinkAction_ );
+    readOnlyActions_ << insertLinkAction_;
 
     const FormatBar::ActionMap& actions( formatBar_->actions() );
     for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); ++iter )
@@ -241,21 +235,21 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( &spellcheckAction() );
     #endif
 
-    toolbar->addAction( &printAction() );
-    toolbar->addAction( &entryInfoAction() );
+    toolbar->addAction( printAction_ );
+    toolbar->addAction( entryInfoAction_ );
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Multiple Views" ), this, "MULTIPLE_VIEW_TOOLBAR" );
-    toolbar->addAction( &splitViewHorizontalAction() );
-    toolbar->addAction( &splitViewVerticalAction() );
-    toolbar->addAction( &cloneWindowAction() );
-    toolbar->addAction( &closeAction() );
+    toolbar->addAction( splitViewHorizontalAction_ );
+    toolbar->addAction( splitViewVerticalAction_ );
+    toolbar->addAction( cloneWindowAction_ );
+    toolbar->addAction( closeAction_ );
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Navigation" ), this, "NAVIGATION_TOOLBAR" );
     toolbar->addAction( &application.mainWindow().uniconifyAction() );
-    toolbar->addAction( &previousEntryAction() );
-    toolbar->addAction( &nextEntryAction() );
+    toolbar->addAction( previousEntryAction_ );
+    toolbar->addAction( nextEntryAction_ );
 
     // create menu if requested
     menu_ = new Menu( this, &Singleton::get().application<Application>()->mainWindow() );
@@ -304,8 +298,8 @@ void EditionWindow::displayEntry( LogEntry *entry )
 
     // update previous and next action states
     Debug::Throw( "EditionWindow::displayEntry - setting button states.\n" );
-    previousEntryAction().setEnabled( mainWindow.previousEntry(entry, false) );
-    nextEntryAction().setEnabled( mainWindow.nextEntry(entry, false) );
+    previousEntryAction_->setEnabled( mainWindow.previousEntry(entry, false) );
+    nextEntryAction_->setEnabled( mainWindow.nextEntry(entry, false) );
 
     // reset modify flag; change title accordingly
     setModified( false );
@@ -472,8 +466,8 @@ void EditionWindow::setModified( bool value )
 void EditionWindow::setForceShowKeyword( bool value )
 {
     Debug::Throw( "EditionWindow::setForceShowKeyword.\n" );
-    _setKeywordVisible( value || showKeywordAction().isChecked() );
-    showKeywordAction().setEnabled( !value );
+    _setKeywordVisible( value || showKeywordAction_->isChecked() );
+    showKeywordAction_->setEnabled( !value );
 }
 
 //___________________________________________________________
@@ -657,28 +651,32 @@ void EditionWindow::_installActions( void )
 
     // new entry
     addAction( newEntryAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Entry" ), this ) );
+    newEntryAction_->setIconText( tr( "New" ) );
     newEntryAction_->setShortcut( QKeySequence::New );
     newEntryAction_->setToolTip( tr( "Create new entry in current editor" ) );
     connect( newEntryAction_, SIGNAL(triggered()), SLOT(_newEntry()) );
 
     // previous entry action
-    addAction( previousEntryAction_ = new QAction( IconEngine::get( IconNames::Previous ), tr( "Previous Entry" ), this ) );
+    addAction( previousEntryAction_ = new QAction( IconEngine::get( IconNames::PreviousEntry ), tr( "Previous Entry" ), this ) );
+    previousEntryAction_->setIconText( tr( "Previous" ) );
     previousEntryAction_->setToolTip( tr( "Display previous entry in current list" ) );
     connect( previousEntryAction_, SIGNAL(triggered()), SLOT(_previousEntry()) );
 
     // next entry action
-    addAction( nextEntryAction_ = new QAction( IconEngine::get( IconNames::Next ), tr( "Next Entry" ), this ) );
+    addAction( nextEntryAction_ = new QAction( IconEngine::get( IconNames::NextEntry ), tr( "Next Entry" ), this ) );
+    nextEntryAction_->setIconText( tr( "Next" ) );
     nextEntryAction_->setToolTip( tr( "Display next entry in current list" ) );
     connect( nextEntryAction_, SIGNAL(triggered()), SLOT(_nextEntry()) );
 
     // save
     addAction( saveAction_ = new QAction( IconEngine::get( IconNames::Save ), tr( "Save Entry" ), this ) );
+    saveAction_->setIconText( tr( "Save" ) );
     saveAction_->setToolTip( tr( "Save current entry" ) );
     connect( saveAction_, SIGNAL(triggered()), SLOT(_save()) );
     saveAction_->setShortcut( QKeySequence::Save );
 
     #if WITH_ASPELL
-    addAction( spellcheckAction_ = new QAction( IconEngine::get( IconNames::SpellCheck ), tr( "Spellcheck..." ), this ) );
+    addAction( spellcheckAction_ = new QAction( IconEngine::get( IconNames::SpellCheck ), tr( "Spell Check..." ), this ) );
     spellcheckAction_->setToolTip( tr( "Check spelling of current entry" ) );
     connect( spellcheckAction_, SIGNAL(triggered()), SLOT(_spellCheck()) );
 
@@ -688,6 +686,7 @@ void EditionWindow::_installActions( void )
 
     // entry_info
     addAction( entryInfoAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Entry Properties..." ), this ) );
+    entryInfoAction_->setIconText( tr( "Properties" ) );
     entryInfoAction_->setToolTip( tr( "Show current entry properties" ) );
     connect( entryInfoAction_, SIGNAL(triggered()), SLOT(_entryInfo()) );
 
@@ -725,6 +724,10 @@ void EditionWindow::_installActions( void )
     closeAction_->setShortcut( QKeySequence::Close );
     closeAction_->setToolTip( tr( "Close current view" ) );
     connect( closeAction_, SIGNAL(triggered()), SLOT(_close()) );
+
+    addAction( deleteEntryAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete Entry" ), this ) );
+    deleteEntryAction_->setIconText( tr( "Delete" ) );
+    connect( deleteEntryAction_, SIGNAL(triggered()), SLOT(_deleteEntry()) );
 
     // uniconify
     addAction( uniconifyAction_ = new QAction( tr( "Uniconify" ), this ) );
@@ -910,8 +913,8 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
     Debug::Throw( "EditionWindow::_DisplayCursorPosition.\n" );
     if( !_hasStatusBar() ) return;
 
-    statusBar().label(2).setText( QString( tr( "Line: %1" ) ).arg( position.paragraph()+1 ), false );
-    statusBar().label(3).setText( QString( tr( "Column: %1" ) ).arg( position.index()+1 ), true );
+    statusBar_->label(2).setText( QString( tr( "Line: %1" ) ).arg( position.paragraph()+1 ), false );
+    statusBar_->label(3).setText( QString( tr( "Column: %1" ) ).arg( position.index()+1 ), true );
 
     return;
 }
@@ -1031,7 +1034,7 @@ void EditionWindow::_save( bool updateSelection )
     entry->modified();
 
     // status bar
-    statusBar().label().setText( tr( "writting entry to logbook..." ) );
+    statusBar_->label().setText( tr( "writting entry to logbook..." ) );
 
     // add entry to logbook, if needed
     if( entryIsNew ) Key::associate( entry, logbook->latestChild() );
@@ -1063,7 +1066,7 @@ void EditionWindow::_save( bool updateSelection )
     // Save logbook
     if( !mainWindow.logbook()->file().isEmpty() ) mainWindow.save();
 
-    statusBar().label().setText( "" );
+    statusBar_->label().setText( "" );
 
     return;
 
@@ -1489,7 +1492,7 @@ void EditionWindow::_updateReadOnlyActions( void )
 
 //_____________________________________________
 void EditionWindow::_updateSaveAction( void )
-{ saveAction().setEnabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && modified() ); }
+{ saveAction_->setEnabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && modified() ); }
 
 //_____________________________________________
 void EditionWindow::_updateUndoRedoActions( void )
@@ -1545,7 +1548,7 @@ void EditionWindow::_updateInsertLinkActions( void )
     const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && activeEditor().textCursor().hasSelection() );
 
     // disable main window action
-    if( hasInsertLinkAction() ) insertLinkAction().setEnabled( enabled );
+    if( hasInsertLinkAction() ) insertLinkAction_->setEnabled( enabled );
 
     // also disable editors action
     Base::KeySet<LocalTextEditor> editors( this );
@@ -1582,7 +1585,7 @@ void EditionWindow::_modifiersChanged( TextEditor::Modifiers modifiers )
     if( modifiers & TextEditor::ModifierInsert ) buffer << "INS";
     if( modifiers & TextEditor::ModifierCapsLock ) buffer << "CAPS";
     if( modifiers & TextEditor::ModifierNumLock ) buffer << "NUM";
-    statusBar().label(1).setText( buffer.join( " " ) );
+    statusBar_->label(1).setText( buffer.join( " " ) );
 }
 
 //________________________________________________________________
@@ -1604,7 +1607,7 @@ void EditionWindow::_updateConfiguration( void )
     resize( sizeHint() );
 
     // show keyword
-    showKeywordAction().setChecked( XmlOptions::get().get<bool>( "SHOW_KEYWORD" ) );
+    showKeywordAction_->setChecked( XmlOptions::get().get<bool>( "SHOW_KEYWORD" ) );
 
 }
 

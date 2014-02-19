@@ -79,14 +79,14 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     _installActions();
 
     contextMenu_ = new ContextMenu( list_ );
-    contextMenu_->addAction( &newAction() );
-    contextMenu_->addAction( &openAction() );
-    contextMenu_->addAction( &saveAsAction() );
-    contextMenu_->addAction( &editAction() );
-    contextMenu_->addAction( &deleteAction() );
-    contextMenu_->addAction( &reloadAction() );
+    contextMenu_->addAction( newAction_ );
+    contextMenu_->addAction( openAction_ );
+    contextMenu_->addAction( saveAsAction_ );
+    contextMenu_->addAction( editAction_ );
+    contextMenu_->addAction( deleteAction_ );
+    contextMenu_->addAction( reloadAction_ );
     contextMenu_->addSeparator();
-    contextMenu_->addAction( &cleanAction() );
+    contextMenu_->addAction( cleanAction_ );
 
     // connections
     connect( list_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateActions()) );
@@ -265,7 +265,7 @@ void AttachmentFrame::_new( void )
         foreach( EditionWindow* window, windows )
         {
 
-            window->attachmentFrame().visibilityAction().setChecked( true );
+            window->attachmentFrame().visibilityAction_->setChecked( true );
             window->attachmentFrame().add( *attachment );
 
         }
@@ -403,7 +403,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
 
     }
 
-    cleanAction().setEnabled( hasInvalidRecords );
+    cleanAction_->setEnabled( hasInvalidRecords );
     return;
 
 }
@@ -779,41 +779,42 @@ void AttachmentFrame::_installActions( void )
     Debug::Throw( "AttachmentFrame::_installActions.\n" );
 
     addAction( visibilityAction_ = new QAction( IconEngine::get( IconNames::Attach ), tr( "Show &Attachment List" ), this ) );
-    visibilityAction().setToolTip( tr( "Show/hide attachment list" ) );
-    visibilityAction().setCheckable( true );
-    visibilityAction().setChecked( true );
+    visibilityAction_->setToolTip( tr( "Show/hide attachment list" ) );
+    visibilityAction_->setCheckable( true );
+    visibilityAction_->setChecked( true );
     connect( &visibilityAction(), SIGNAL(toggled(bool)), SLOT(setVisible(bool)) );
 
     addAction( newAction_ = new QAction( IconEngine::get( IconNames::Attach ), tr( "New" ), this ) );
-    newAction().setToolTip( tr( "Attach a file/URL to the current entry" ) );
-    connect( &newAction(), SIGNAL(triggered()), SLOT(_new()) );
+    newAction_->setToolTip( tr( "Attach a file/URL to the current entry" ) );
+    newAction_->setIconText( tr( "Attach" ) );
+    connect( newAction_, SIGNAL(triggered()), SLOT(_new()) );
 
     addAction( openAction_ = new QAction( IconEngine::get( IconNames::Open ), tr( "Open" ), this ) );
-    openAction().setToolTip( tr( "Open selected attachments" ) );
-    connect( &openAction(), SIGNAL(triggered()), SLOT(_open()) );
+    openAction_->setToolTip( tr( "Open selected attachments" ) );
+    connect( openAction_, SIGNAL(triggered()), SLOT(_open()) );
 
     addAction( editAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Edit" ), this ) );
-    editAction().setToolTip( tr( "Edit selected attachments informations" ) );
-    connect( &editAction(), SIGNAL(triggered()), SLOT(_edit()) );
+    editAction_->setToolTip( tr( "Edit selected attachments informations" ) );
+    connect( editAction_, SIGNAL(triggered()), SLOT(_edit()) );
 
     addAction( deleteAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete" ), this ) );
-    deleteAction().setShortcut( QKeySequence::Delete );
-    deleteAction().setToolTip( tr( "Delete selected attachments" ) );
-    connect( &deleteAction(), SIGNAL(triggered()), SLOT(_delete()) );
+    deleteAction_->setShortcut( QKeySequence::Delete );
+    deleteAction_->setToolTip( tr( "Delete selected attachments" ) );
+    connect( deleteAction_, SIGNAL(triggered()), SLOT(_delete()) );
 
     addAction( reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this ) );
-    reloadAction().setShortcut( QKeySequence::Refresh );
-    reloadAction().setToolTip( tr( "Reload attachments timestamps" ) );
-    connect( &reloadAction(), SIGNAL(triggered()), SLOT(_reload()) );
+    reloadAction_->setShortcut( QKeySequence::Refresh );
+    reloadAction_->setToolTip( tr( "Reload attachments timestamps" ) );
+    connect( reloadAction_, SIGNAL(triggered()), SLOT(_reload()) );
 
     addAction( saveAsAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save As" ), this ) );
-    saveAsAction().setToolTip( tr( "Save selected attachment with a different filename" ) );
-    connect( &saveAsAction(), SIGNAL(triggered()), SLOT(_saveAs()) );
+    saveAsAction_->setToolTip( tr( "Save selected attachment with a different filename" ) );
+    connect( saveAsAction_, SIGNAL(triggered()), SLOT(_saveAs()) );
 
 
     cleanAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Clean" ), this );
-    cleanAction().setToolTip( tr( "Delete selected attachments" ) );
-    connect( &cleanAction(), SIGNAL(triggered()), SLOT(_clean()) );
+    cleanAction_->setToolTip( tr( "Delete selected attachments" ) );
+    connect( cleanAction_, SIGNAL(triggered()), SLOT(_clean()) );
 }
 
 //_______________________________________________________________________
@@ -861,15 +862,15 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     }
 
     // loop over logbook and set modified
-    foreach( Logbook* logbook, logbooks ) logbook->setModified( true );
-    Debug::Throw( "AttachmentFrame::_saveAttachments - logbooks modified.\n" );
+    foreach( Logbook* logbook, logbooks )
+    { logbook->setModified( true ); }
 
     // loop over edition windows and trigger save action
-    foreach( EditionWindow* window, editionWindows ) window->saveAction().trigger();
-    Debug::Throw( "AttachmentFrame::_saveAttachments - edition windows saved.\n" );
+    foreach( EditionWindow* window, editionWindows )
+    { window->saveAction().trigger(); }
 
     MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
-    if( mainwindow.logbook()->file().size() ) mainwindow.save();
-    Debug::Throw( "AttachmentFrame::_saveAttachments - logbook saved.\n" );
+    if( mainwindow.logbook()->file().size() )
+    { mainwindow.save(); }
 
 }

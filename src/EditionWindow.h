@@ -640,6 +640,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //! close view (or window) action
     QAction* closeAction_;
 
+    //! delete enty
+    QAction* deleteEntryAction_;
+
     //! uniconify
     QAction* uniconifyAction_;
 

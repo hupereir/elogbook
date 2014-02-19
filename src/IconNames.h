@@ -32,6 +32,8 @@ namespace IconNames
     static const QString Attach = "attach.png";
     static const QString Close = "document-close.png";
     static const QString Home = "go-home.png";
+    static const QString PreviousEntry = "go-previous.png";
+    static const QString NextEntry = "go-next.png";
     static const QString New = "document-new.png";
     static const QString Save = "document-save.png";
     static const QString SaveAs = "document-save-as.png";

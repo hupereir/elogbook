@@ -35,42 +35,6 @@
 class ColorMenu;
 class TextEditor;
 
-//! used for customized color button
-class FormatColorButton: public QToolButton, public Counter
-{
-
-    Q_OBJECT
-
-    public:
-
-    //! constructor
-    FormatColorButton( QWidget* parent ):
-        QToolButton( parent ),
-        Counter( "FormatColorButton" )
-    {}
-
-    public Q_SLOTS:
-
-    //! set color
-    void setColor( QColor color )
-    {
-        color_ = color;
-        update();
-    }
-
-    protected:
-
-    //! paint
-    void paintEvent( QPaintEvent* event );
-
-    private:
-
-    // associated color
-    QColor color_;
-
-};
-
-
 //! text formating bar
 class FormatBar: public CustomToolBar
 {
@@ -79,18 +43,6 @@ class FormatBar: public CustomToolBar
     Q_OBJECT
 
     public:
-
-    //! bold icon name
-    static const QString IconBold;
-
-    //! italic icon name
-    static const QString IconItalic;
-
-    //! strike icon name
-    static const QString IconStrike;
-
-    //! underline icon name
-    static const QString IconUnderline;
 
     //! action id enumeration
     enum ActionId
