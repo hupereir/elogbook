@@ -188,7 +188,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // main toolbar
     CustomToolBar* toolbar;
-    toolbar = new CustomToolBar( tr( "Main" ), this, "MAIN_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Main Toolbar" ), this, "MAIN_TOOLBAR" );
 
     toolbar->addAction( newEntryAction_ );
     toolbar->addAction( saveAction_ );
@@ -358,14 +358,20 @@ QString EditionWindow::windowTitle( void ) const
     const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) );
 
     QString buffer;
-    if( entry )
+    if( entry && !entry->title().isEmpty() )
     {
 
         if( readOnly ) buffer = QString( tr( "%1 (read only) - Elogbook" ) ).arg( entry->title() );
         else if( modified()  ) buffer = QString( tr( "%1 (modified) - Elogbook" ) ).arg( entry->title() );
         else buffer = QString( "%1 - Elogbook" ).arg( entry->title() );
 
-    } else buffer = "Elogbook";
+    } else {
+
+        if( readOnly ) buffer = QString( tr( "Untitled Logbook Entry (read only) - Elogbook" ) );
+        else if( modified() ) buffer = QString( tr( "Untitled Logbook Entry (modified) - Elogbook" ) );
+        else buffer = QString( tr( "Untitled Logbook Entry - Elogbook" ) );
+
+    }
 
     return buffer;
 
