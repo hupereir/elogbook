@@ -682,7 +682,7 @@ void EditionWindow::_installActions( void )
     saveAction_->setShortcut( QKeySequence::Save );
 
     #if WITH_ASPELL
-    addAction( spellcheckAction_ = new QAction( IconEngine::get( IconNames::SpellCheck ), tr( "Spell Check..." ), this ) );
+    addAction( spellcheckAction_ = new QAction( IconEngine::get( IconNames::SpellCheck ), tr( "Check Spelling..." ), this ) );
     spellcheckAction_->setToolTip( tr( "Check spelling of current entry" ) );
     connect( spellcheckAction_, SIGNAL(triggered()), SLOT(_spellCheck()) );
 
