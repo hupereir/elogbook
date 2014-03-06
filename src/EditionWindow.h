@@ -126,6 +126,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
         QAction& openLinkAction( void ) const
         { return *openLinkAction_; }
 
+        //! view link action
+        QAction& copyLinkAction( void ) const
+        { return *copyLinkAction_; }
+
         //! anchor at context menu
         QString anchor( void ) const
         { return anchorAt( _contextMenuPosition() ); }
@@ -146,6 +150,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
         //! open link
         QAction* openLinkAction_;
 
+        //! copy link
+        QAction* copyLinkAction_;
     };
 
     //! retrieve active display
@@ -423,6 +429,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //! view link
     void _openLink( void );
+
+    //! view link
+    void _copyLinkLocation( void );
 
     //! read only actions
     void _updateReadOnlyActions( void );

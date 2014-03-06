@@ -883,6 +883,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     // connections
     connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
     connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
+    connect( &editor->copyLinkAction(), SIGNAL(triggered()), SLOT(_copyLinkLocation()) );
     connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
     connect( editor, SIGNAL(cursorPositionChanged()), SLOT(_displayCursorPosition()) );
     connect( editor, SIGNAL(modifiersChanged(TextEditor::Modifiers)), SLOT(_modifiersChanged(TextEditor::Modifiers)) );
@@ -1363,6 +1364,19 @@ void EditionWindow::_openLink( void )
 }
 
 //_____________________________________________
+void EditionWindow::_copyLinkLocation( void )
+{
+    Debug::Throw( "EditionWindow::_copyLinkLocation.\n" );
+    QString anchor( activeEditor().anchor() );
+    if( anchor.isEmpty() ) return;
+
+    // copy selected text to clipboard
+    qApp->clipboard()->setText( anchor, QClipboard::Clipboard );
+    if( qApp->clipboard()->supportsSelection() ) qApp->clipboard()->setText( anchor, QClipboard::Selection );
+    if( qApp->clipboard()->supportsFindBuffer() ) qApp->clipboard()->setText( anchor, QClipboard::FindBuffer );
+}
+
+//_____________________________________________
 void EditionWindow::_deleteEntry( void )
 {
 
@@ -1623,10 +1637,10 @@ void EditionWindow::LocalTextEditor::_installActions( void )
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
     addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
     addAction( openLinkAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Open Link..." ), this ) );
+    addAction( copyLinkAction_ = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Link Location" ), this ) );
 
     // disable insert link action by default
     insertLinkAction_->setEnabled( false );
-
 }
 
 //___________________________________________________________________________________
@@ -1636,11 +1650,14 @@ void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu*
     AnimatedTextEditor::installContextMenuActions( menu, allActions );
 
     // insert link
-    menu->insertAction( &showLineNumberAction(), &insertLinkAction() );
+    menu->insertAction( &showLineNumberAction(), insertLinkAction_ );
 
     // open link
     if( !anchorAt( _contextMenuPosition() ).isEmpty() )
-    { menu->insertAction( &showLineNumberAction(), &openLinkAction() ); }
+    {
+        menu->insertAction( &showLineNumberAction(), openLinkAction_ );
+        menu->insertAction( &showLineNumberAction(), copyLinkAction_ );
+    }
 
     // separator
     menu->insertSeparator( &showLineNumberAction() );
