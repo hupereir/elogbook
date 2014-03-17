@@ -24,6 +24,10 @@
 
 #include "Counter.h"
 
+#include <QDomElement>
+#include <QDomDocument>
+#include <QList>
+#include <QSet>
 #include <QString>
 #include <QTextStream>
 
@@ -39,9 +43,19 @@ class Keyword: public Counter
     //! constructor
     Keyword( const QString& = QString() );
 
+    //! constructor from dom
+    Keyword( const QDomElement& );
+
     //! destructor
     virtual ~Keyword( void )
     {}
+
+    //! keyword set
+    typedef QSet<Keyword> Set;
+    typedef QList<Keyword> List;
+
+    //! dom element
+    QDomElement domElement( QDomDocument& ) const;
 
     //! equal to operator
     bool operator == (const Keyword& other ) const
@@ -107,5 +121,9 @@ class Keyword: public Counter
         return out;
     }
 };
+
+//! hash
+inline unsigned int qHash( const Keyword& keyword )
+{ return qHash( keyword.get() ); }
 
 #endif

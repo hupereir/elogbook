@@ -59,13 +59,13 @@ class LogEntry:public Counter, public Base::Key
     LogEntry( void );
 
     //! constructor from DOM
-    LogEntry( const QDomElement& element );
+    LogEntry( const QDomElement& );
 
     //! destructor
     ~LogEntry( void );
 
-    //! retrieve DomElement
-    QDomElement domElement( QDomDocument& parent ) const;
+    //! DomElement
+    QDomElement domElement( QDomDocument& ) const;
 
     //! return a new entry cloned from this
     LogEntry *clone( void ) const;

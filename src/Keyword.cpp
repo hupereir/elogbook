@@ -21,7 +21,9 @@
 *******************************************************************************/
 
 #include "Keyword.h"
+
 #include "Debug.h"
+#include "XmlDef.h"
 
 //_________________________________________________________________
 const QString Keyword::MimeType( "logbook/keyword-list" );
@@ -31,6 +33,34 @@ Keyword::Keyword( const QString& value):
     Counter( "Keyword" ),
     value_( _format( value ) )
 {}
+
+//_________________________________________________
+Keyword::Keyword( const QDomElement& element ):
+    Counter( "Keyword" )
+{
+
+    // parse attributes
+    QDomNamedNodeMap attributes( element.attributes() );
+    for( unsigned int i=0; i<attributes.length(); i++ )
+    {
+        QDomAttr attribute( attributes.item( i ).toAttr() );
+        if( attribute.isNull() ) continue;
+        QString name( attribute.name() );
+        QString value( attribute.value() );
+        if( name == Xml::KeywordValue ) set( value );
+        else Debug::Throw(0) << "Keyword::Keyword - unrecognized entry attribute: \"" << name << "\"\n";
+    }
+
+}
+
+//_________________________________________________
+QDomElement Keyword::domElement( QDomDocument& parent ) const
+{
+    QDomElement out( parent.createElement( Xml::Keyword ) );
+    out.setAttribute( Xml::KeywordValue, value_ );
+    return out;
+
+}
 
 //_________________________________________________________________
 Keyword& Keyword::append( const QString& value )

@@ -1248,23 +1248,18 @@ void MainWindow::_resetKeywordList( void )
     keywordList_->initializeAnimation();
 
     // retrieve new list of keywords (from logbook)
-    KeywordModel::List newKeywords;
+    Keyword::Set newKeywords;
     Keyword root;
     foreach( LogEntry* entry, logbook_->entries() )
     {
         if( entry->isFindSelected() )
         {
-            Keyword keyword( entry->keyword() );
-            while( keyword != root )
-            {
-                if( !newKeywords.contains( keyword ) ) newKeywords << keyword;
-                keyword = keyword.parent();
-            }
-
+            for( Keyword keyword = entry->keyword(); keyword != root; keyword = keyword.parent() )
+            { newKeywords.insert( keyword ); }
         }
     }
 
-    keywordModel_.set( newKeywords );
+    keywordModel_.set( newKeywords.toList() );
 
     // animation
     keywordList_->startAnimation();

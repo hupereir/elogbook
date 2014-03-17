@@ -596,7 +596,7 @@ void Logbook::addRecentEntry( const LogEntry* entry )
     // first remove time stamp from list if it exists
     recentEntries_.erase( std::remove( recentEntries_.begin(), recentEntries_.end(), timeStamp ), recentEntries_.end() );
 
-    // adds again at the end of the list
+    // add again at the end of the list
     recentEntries_ << timeStamp;
 
     // mark logbook as modified

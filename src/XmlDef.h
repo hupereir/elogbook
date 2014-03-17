@@ -53,6 +53,7 @@ namespace Xml
     static const QString Children( "children" );
     static const QString Text( "Text" );
     static const QString Keyword( "key" );
+    static const QString KeywordValue( "value" );
     static const QString Color( "color" );
     static const QString ReadOnly( "ReadOnly" );
 
