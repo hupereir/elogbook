@@ -400,6 +400,9 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //! remove backup
     void _removeBackup( Backup );
 
+    //! remove backups
+    void _removeBackups( Backup::List );
+
     //! restore backup
     void _restoreBackup( Backup );
 

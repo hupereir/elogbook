@@ -57,8 +57,11 @@ class BackupManagerWidget: public QWidget, public Counter, public Base::Key
     //! emitted when backups are changed (from clean action)
     void saveLogbookRequested( void );
 
-    //! emitted when backup is remove
+    //! emitted when backup is removed
     void removeBackupRequested( Backup );
+
+    //! emitted when backup is removed
+    void removeBackupsRequested( Backup::List );
 
     //! emitted when backup is restored
     void restoreBackupRequested( Backup );

@@ -23,9 +23,9 @@
 
 #include "Application.h"
 #include "AttachmentWindow.h"
-#include "BaseIconNames.h"
 #include "BackupManagerDialog.h"
 #include "BackupManagerWidget.h"
+#include "BaseIconNames.h"
 #include "ColorMenu.h"
 #include "Command.h"
 #include "ContextMenu.h"
@@ -1649,6 +1649,7 @@ void MainWindow::_manageBackups( void )
     connect( &dialog.managerWidget(), SIGNAL(saveLogbookRequested()), SLOT(save()) );
     connect( &dialog.managerWidget(), SIGNAL(backupRequested()), SLOT(_saveBackup()) );
     connect( &dialog.managerWidget(), SIGNAL(removeBackupRequested(Backup)), SLOT(_removeBackup(Backup)) );
+    connect( &dialog.managerWidget(), SIGNAL(removeBackupsRequested(Backup::List)), SLOT(_removeBackups(Backup::List)) );
     connect( &dialog.managerWidget(), SIGNAL(restoreBackupRequested(Backup)), SLOT(_restoreBackup(Backup)) );
     connect( &dialog.managerWidget(), SIGNAL(mergeBackupRequested(Backup)), SLOT(_mergeBackup(Backup)) );
 
@@ -1994,40 +1995,72 @@ void MainWindow::_synchronize( void )
 
 //_______________________________________________
 void MainWindow::_removeBackup( Backup backup )
+{ _removeBackups( Backup::List() << backup ); }
+
+//_______________________________________________
+void MainWindow::_removeBackups( Backup::List backups )
 {
-    Debug::Throw( "MainWindow::_removeBackup.\n" );
-    if( !backup.file().exists() )
+
+    Debug::Throw( "MainWindow::_removeBackups.\n" );
+
+    File::List invalidFiles;
+    bool modified( false );
+    foreach( const Backup& backup, backups )
     {
-        const QString buffer = QString( tr( "Unable to open file named '%1'. <Remove Backup> canceled." ) ).arg( backup.file() );
+
+        if( !backup.file().exists() )
+        {
+            invalidFiles.append( backup.file() );
+            continue;
+        }
+
+        // read backup
+        Logbook backupLogbook;
+        backupLogbook.setFile( backup.file() );
+        backupLogbook.read();
+
+        // get list of children
+        Logbook::List all( backupLogbook.children() );
+        all.prepend( &backupLogbook );
+
+        // remove all files
+        foreach( Logbook* logbook, all )
+        {
+            emit messageAvailable( QString( tr( "Removing '%1'" ) ).arg( logbook->file() ) );
+            logbook->file().remove();
+        }
+
+        // clean logbook backups
+        Backup::List backups( logbook_->backupFiles() );
+        Backup::List::iterator iter = std::find( backups.begin(), backups.end(), backup );
+        if( iter != backups.end() )
+        {
+            backups.erase( iter );
+            logbook_->setBackupFiles( backups );
+            modified = true;
+        }
+    }
+
+    if( modified && !logbook_->file().isEmpty() )
+    { save(); }
+
+    if( invalidFiles.size() == 1 )
+    {
+
+        const QString buffer = QString( tr( "Unable to open file named '%1'. <Remove Backup> canceled." ) ).arg( invalidFiles.front() );
         InformationDialog( this, buffer ).exec();
-        return;
-    }
 
-    // read backup
-    Logbook backupLogbook;
-    backupLogbook.setFile( backup.file() );
-    backupLogbook.read();
+    } else if( invalidFiles.size() > 1 ) {
 
-    // get list of children
-    Logbook::List all( backupLogbook.children() );
-    all.push_front( &backupLogbook );
+        const QString buffer = QString( tr( "%i files could not be opened. <Remove Backup> canceled." ) ).arg( invalidFiles.size() );
+        QString details;
+        foreach( const File& file, invalidFiles )
+        { details += file + "\n"; }
 
-    // remove all files
-    foreach( Logbook* logbook, all )
-    {
-        emit messageAvailable( QString( tr( "Removing '%1'" ) ).arg( logbook->file() ) );
-        logbook->file().remove();
-    }
+        InformationDialog dialog( this, buffer );
+        dialog.setDetails( details );
+        dialog.exec();
 
-    // clean logbook backups
-    Backup::List backups( logbook_->backupFiles() );
-    Backup::List::iterator iter = std::find( backups.begin(), backups.end(), backup );
-    if( iter != backups.end() )
-    {
-        backups.erase( iter );
-        logbook_->setBackupFiles( backups );
-        if( !logbook_->file().isEmpty() )
-        { save(); }
     }
 
 }

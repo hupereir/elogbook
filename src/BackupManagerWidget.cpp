@@ -152,8 +152,16 @@ void BackupManagerWidget::_remove( void )
     if( !QuestionDialog( this, buffer ).exec() ) return;
 
     // ask for deletion of all selected backups
-    foreach( const QModelIndex& index, selectedIndexes )
-    { emit removeBackupRequested( model_.get( index ) ); }
+    if( selectedIndexes.size() == 1 ) emit removeBackupRequested( model_.get( selectedIndexes.front() ) );
+    else {
+
+        Backup::List backups;
+        foreach( const QModelIndex& index, selectedIndexes )
+        { backups.append( model_.get( index ) ); }
+
+        emit removeBackupsRequested( backups );
+
+    }
 
 }
 

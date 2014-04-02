@@ -43,10 +43,6 @@ class FileCheckDialog: public CustomDialog
 
     private:
 
-    //! list
-    TreeView& _list( void ) const
-    { return *list_; }
-
     //! model
     FileRecordModel model_;
 
