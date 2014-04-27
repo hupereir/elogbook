@@ -1,14 +1,5 @@
 # $Id$
-
-########### X11 #########
-IF( UNIX )
-
-  FIND_PACKAGE( X11 REQUIRED )
-  INCLUDE_DIRECTORIES( ${X11_X11_INCLUDE_PATH} )
-
-ENDIF()
-
-########### Qt4 configuration #########
+########### Qt configuration #########
 IF( USE_QT5 )
 
   FIND_PACKAGE( Qt5Widgets REQUIRED )
@@ -176,7 +167,6 @@ IF( UNIX )
 
   SET( synchronize_logbook_SOURCES synchronize-logbook.cpp )
   ADD_EXECUTABLE( synchronize-logbook ${synchronize_logbook_SOURCES} )
-  TARGET_LINK_LIBRARIES( synchronize-logbook ${X11_X11_LIB} )
   TARGET_LINK_LIBRARIES( synchronize-logbook ${QT_LIBRARIES} )
   TARGET_LINK_LIBRARIES( synchronize-logbook
     base
