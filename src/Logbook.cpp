@@ -128,7 +128,7 @@ bool Logbook::read( void )
 
     // read attributes
     QDomNamedNodeMap attributes( docElement.attributes() );
-    for( unsigned int i=0; i<attributes.length(); i++ )
+    for( int i=0; i<attributes.count(); i++ )
     {
 
         QDomAttr attribute( attributes.item( i ).toAttr() );

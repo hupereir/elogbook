@@ -51,7 +51,7 @@ LogEntry::LogEntry( const QDomElement& element ):
 
     // parse attributes
     QDomNamedNodeMap attributes( element.attributes() );
-    for( unsigned int i=0; i<attributes.length(); i++ )
+    for( int i=0; i<attributes.count(); i++ )
     {
         QDomAttr attribute( attributes.item( i ).toAttr() );
         if( attribute.isNull() ) continue;
