@@ -812,7 +812,7 @@ void MainWindow::save( const bool& confirmEntries )
 
     logbook_->truncateRecentEntriesList( maxRecentEntries_ );
 
-    bool written( logbook_->write() );
+    logbook_->write();
     Singleton::get().application<Application>()->idle();
     _setEnabled( true );
 

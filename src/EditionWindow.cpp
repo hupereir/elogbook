@@ -563,6 +563,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
             break;
         }
     }
+    Q_UNUSED( activeFound );
     Q_ASSERT( activeFound );
 
     // change focus
