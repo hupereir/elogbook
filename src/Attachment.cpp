@@ -111,8 +111,8 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
     if( file().size() ) out.setAttribute( Xml::File, XmlString( file() ).toXml() );
     if( sourceFile().size() ) out.setAttribute( Xml::SourceFile, XmlString( sourceFile() ).toXml() );
     out.setAttribute( Xml::Type, type().key() );
-    out.setAttribute( Xml::Valid, QString::number( (int) isValid() ) );
-    out.setAttribute( Xml::IsLink, QString::number( (int) isLink() ) );
+    out.setAttribute( Xml::Valid, QString::number( isValid() ) );
+    out.setAttribute( Xml::IsLink, QString::number( isLink() ) );
     if( comments().size())
     {
         out.
