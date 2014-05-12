@@ -283,7 +283,7 @@ MainWindow::MainWindow( QWidget *parent ):
         menu->setHideDisabledActions( true );
     }
 
-    // add widgets to Hs
+    // add widgets to splitter
     splitter->addWidget( keywordContainer_ );
     splitter->addWidget( right );
 
@@ -3319,7 +3319,7 @@ void MainWindow::KeywordList::setDefaultWidth( int value )
 
 //____________________________________________
 QSize MainWindow::KeywordList::sizeHint( void ) const
-{ return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):TreeView::sizeHint(); }
+{ return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):AnimatedTreeView::sizeHint(); }
 
 //_______________________________________________
 LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mode )
