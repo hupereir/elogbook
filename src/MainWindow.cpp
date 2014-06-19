@@ -237,6 +237,7 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
     entryList_->setDragEnabled(true);
     entryList_->setOptionName( "ENTRY_LIST" );
+    entryList_->setColumnHidden( LogEntryModel::Keyword, true );
     entryList_->lockColumnVisibility( LogEntryModel::Keyword );
     entryList_->setColumnHidden( LogEntryModel::Title, false );
     entryList_->lockColumnVisibility( LogEntryModel::Title );
@@ -2003,6 +2004,8 @@ void MainWindow::_removeBackups( Backup::List backups )
 
     Debug::Throw( "MainWindow::_removeBackups.\n" );
 
+    Singleton::get().application<Application>()->busy();
+
     File::List invalidFiles;
     bool modified( false );
     foreach( const Backup& backup, backups )
@@ -2040,6 +2043,8 @@ void MainWindow::_removeBackups( Backup::List backups )
             modified = true;
         }
     }
+
+    Singleton::get().application<Application>()->idle();
 
     if( modified && !logbook_->file().isEmpty() )
     { save(); }
