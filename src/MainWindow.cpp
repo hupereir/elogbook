@@ -550,7 +550,7 @@ void MainWindow::reset( void )
 }
 
 //____________________________________________
-AskForSaveDialog::ReturnCode MainWindow::askForSave( const bool& enableCancel )
+AskForSaveDialog::ReturnCode MainWindow::askForSave( bool enableCancel )
 {
 
     Debug::Throw( "MainWindow::askForSave.\n" );
@@ -591,7 +591,7 @@ void MainWindow::selectEntry( LogEntry* entry )
 }
 
 //_______________________________________________
-void MainWindow::updateEntry( LogEntry* entry, const bool& updateSelection )
+void MainWindow::updateEntry( LogEntry* entry, bool updateSelection )
 {
 
     Debug::Throw( "MainWindow::updateEntry.\n" );
@@ -620,7 +620,7 @@ void MainWindow::updateEntry( LogEntry* entry, const bool& updateSelection )
 
 
 //_______________________________________________
-void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
+void MainWindow::deleteEntry( LogEntry* entry, bool save )
 {
     Debug::Throw( "MainWindow::deleteEntry.\n" );
 
@@ -666,7 +666,7 @@ void MainWindow::deleteEntry( LogEntry* entry, const bool& save )
 
     //! save
     if( save && !logbook_->file().isEmpty() )
-        MainWindow::save();
+    { this->save(); }
 
     return;
 
@@ -689,7 +689,7 @@ bool MainWindow::lockEntry( LogEntry* entry ) const
 }
 
 //_______________________________________________
-LogEntry* MainWindow::previousEntry( LogEntry* entry, const bool& updateSelection )
+LogEntry* MainWindow::previousEntry( LogEntry* entry, bool updateSelection )
 {
 
     Debug::Throw( "MainWindow::previousEntry.\n" );
@@ -708,7 +708,7 @@ LogEntry* MainWindow::previousEntry( LogEntry* entry, const bool& updateSelectio
 }
 
 //_______________________________________________
-LogEntry* MainWindow::nextEntry( LogEntry* entry, const bool& updateSelection )
+LogEntry* MainWindow::nextEntry( LogEntry* entry, bool updateSelection )
 {
 
     Debug::Throw( "MainWindow::nextEntry.\n" );
@@ -756,7 +756,7 @@ Keyword MainWindow::currentKeyword( void ) const
 }
 
 //_______________________________________________
-void MainWindow::save( const bool& confirmEntries )
+void MainWindow::save( bool confirmEntries )
 {
 
     Debug::Throw( "MainWindow::_save.\n" );
@@ -1333,7 +1333,7 @@ void MainWindow::_autoSave( void )
 }
 
 //__________________________________________________________________
-AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<EditionWindow> windows, const bool& confirmEntries ) const
+AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<EditionWindow> windows, bool confirmEntries ) const
 {
     Debug::Throw( "_MainWindow::checkModifiedEntries.\n" );
 
@@ -1623,7 +1623,7 @@ void MainWindow::_saveBackup( void )
     Singleton::get().application<Application>()->recentFiles().remove( File(filename).expand() );
 
     // restore initial filename
-    logbook_->setFile( currentFilename );
+    logbook_->setFile( currentFilename, true );
 
     if( saved ) {
 

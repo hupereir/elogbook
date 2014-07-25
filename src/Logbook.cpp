@@ -227,13 +227,12 @@ bool Logbook::write( File file )
     if( file.isEmpty() ) file = Logbook::file();
     if( file.isEmpty() ) return false;
 
-    Debug::Throw( ) << "Logbook::write - \"" << file << "\".\n";
     bool completed = true;
 
     // update stateFrame
     emit messageAvailable( QString( tr( "Writing '%1'" ) ).arg( file.localName() ) );
 
-        // check number of entries and children to save in header
+    // check number of entries and children to save in header
     if( setXmlEntries( entries().size() ) || setXmlChildren( children().size() ) )
     { setModified( true ); }
 
@@ -605,11 +604,30 @@ void Logbook::addRecentEntry( const LogEntry* entry )
 }
 
 //_________________________________
-void Logbook::setFile( const File& file )
+void Logbook::setFile( const File& file, bool recursive )
 {
     Debug::Throw( "Logbook::setFile.\n" );
+
+    // update file and last saved timestamp
     file_ = file;
     saved_ = File( file_ ).lastModified();
+
+    // update children files
+    if( recursive )
+    {
+
+        // write children
+        unsigned int childCount=0;
+        foreach( Logbook* logbook, children_ )
+        {
+            File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
+            logbook->setParentFile( file );
+            logbook->setFile( childFilename, true );
+            ++childCount;
+        }
+
+    }
+
 }
 
 //_________________________________

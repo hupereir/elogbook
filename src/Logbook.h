@@ -271,7 +271,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     { saved_ = stamp; }
 
     //! logbook filename
-    void setFile( const File& );
+    void setFile( const File&, bool recursive = false );
 
     //! parent logbook filename
     void setParentFile( const QString& file )

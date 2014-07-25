@@ -97,7 +97,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     { return logbook_; }
 
     //! creates dialog to ask for Logbook save.
-    AskForSaveDialog::ReturnCode askForSave( const bool& enable_cancel = true );
+    AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
 
     //! retrieve working directory
     virtual const File& workingDirectory( void ) const
@@ -107,19 +107,19 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void clearSelection( void );
 
     //! update entry (create new if not found )
-    virtual void updateEntry( LogEntry*, const bool& );
+    virtual void updateEntry( LogEntry*, bool );
 
     //! delete entry
-    virtual void deleteEntry( LogEntry*, const bool& save = true );
+    virtual void deleteEntry( LogEntry*, bool save = true );
 
     //! look for EditionWindows matching entry, set readonly
     virtual bool lockEntry( LogEntry* ) const;
 
     //! retrieve previous entry (if any)
-    virtual LogEntry* previousEntry( LogEntry*, const bool& );
+    virtual LogEntry* previousEntry( LogEntry*, bool );
 
     //! retrieve next entry (if any)
-    virtual LogEntry* nextEntry( LogEntry*, const bool& );
+    virtual LogEntry* nextEntry( LogEntry*, bool );
 
     //! reset attachment frame
     virtual void resetAttachmentWindow( void ) const;
@@ -298,7 +298,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //! save current logbook
     /*! if argument is false, all modified entries will be saved without asking */
-    virtual void save( const bool& confirmEntries = true );
+    virtual void save( bool confirmEntries = true );
 
     //! select entry
     virtual void selectEntry( LogEntry* );
@@ -339,7 +339,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _autoSave( void );
 
     //! check modified entries
-    AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow>, const bool& ) const;
+    AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow>, bool ) const;
 
     enum MaskFlag
     {
