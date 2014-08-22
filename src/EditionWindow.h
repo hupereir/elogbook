@@ -249,7 +249,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     QAction& saveAction( void ) const
     { return *saveAction_; }
 
-    #if WITH_ASPELL
+    #if USE_ASPELL
     //! check spelling of current entry
     QAction& spellcheckAction( void ) const
     { return *spellcheckAction_; }
@@ -621,7 +621,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //! save
     QAction* saveAction_;
 
-    #if WITH_ASPELL
+    #if USE_ASPELL
     QAction* spellcheckAction_;
     #endif
 

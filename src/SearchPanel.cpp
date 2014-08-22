@@ -42,8 +42,8 @@
 
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& optionName ):
-CustomToolBar( title, parent, optionName ),
-transitionWidget_( new TransitionWidget(parent) )
+    CustomToolBar( title, parent, optionName ),
+    transitionWidget_( new TransitionWidget(parent) )
 {
     Debug::Throw( "SearchPanel::SearchPanel.\n" );
 

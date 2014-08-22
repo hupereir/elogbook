@@ -41,7 +41,7 @@ void installSystemOptions( void )
   XmlOptions::get().set( "EDIT_UNKNOWN_ATC", Option( "@QEDIT@" , "to edit unknown type attachments"  ) );
   XmlOptions::get().set( "EDIT_URL_ATC", Option( "@FIREFOX@" , "to edit url attachments"  ) );
 
-  #ifdef WITH_ASPELL
+  #ifdef USE_ASPELL
   XmlOptions::get().set( "ASPELL", Option( "@ASPELL@", "aspell command" ) );
   XmlOptions::get().set( "DICTIONARY", Option( "en" , "default dictionary"  ) );
   XmlOptions::get().set( "DICTIONARY_FILTER", Option( "none" , "default filter"  ) );
