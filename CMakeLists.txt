@@ -1,67 +1,67 @@
 # $Id$
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.6)
-IF( COMMAND CMAKE_POLICY )
-  CMAKE_POLICY( SET CMP0003 NEW )
-ENDIF()
+if( COMMAND CMAKE_POLICY )
+  cmake_policy( SET CMP0003 NEW )
+endif()
 
-SET(CMAKE_AUTOMOC TRUE)
+set(CMAKE_AUTOMOC TRUE)
 
-PROJECT( elogbook )
-SET( ELOGBOOK_VERSION_MAJOR 1 )
-SET( ELOGBOOK_VERSION_MINOR 9 )
-SET( ELOGBOOK_VERSION_PATCH 6 )
-SET( ELOGBOOK_VERSION ${ELOGBOOK_VERSION_MAJOR}.${ELOGBOOK_VERSION_MINOR}.${ELOGBOOK_VERSION_PATCH} )
+project( elogbook )
+set( ELOGBOOK_VERSION_MAJOR 1 )
+set( ELOGBOOK_VERSION_MINOR 9 )
+set( ELOGBOOK_VERSION_PATCH 6 )
+set( ELOGBOOK_VERSION ${ELOGBOOK_VERSION_MAJOR}.${ELOGBOOK_VERSION_MINOR}.${ELOGBOOK_VERSION_PATCH} )
 
 ########### modules #################
-SET( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/base-cmake" )
-INCLUDE( Macros )
+set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/base-cmake" )
+include( Macros )
 
 ########### timestamp #########
-GET_BUILD_TIMESTAMP( TIMESTAMP )
+get_build_timestamp( TIMESTAMP )
 
 ########### packages ###############
-SET( CPACK_PACKAGE_NAME "elogbook" )
-SET( CPACK_PACKAGE_VENDOR "hugo.pereira@free.fr" )
-SET( CPACK_PACKAGE_VERSION "${ELOGBOOK_VERSION}" )
-SET( CPACK_SOURCE_GENERATOR TGZ )
-SET( CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}" )
-INCLUDE( CPack )
+set( CPACK_PACKAGE_NAME "elogbook" )
+set( CPACK_PACKAGE_VENDOR "hugo.pereira@free.fr" )
+set( CPACK_PACKAGE_VERSION "${ELOGBOOK_VERSION}" )
+set( CPACK_SOURCE_GENERATOR TGZ )
+set( CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}" )
+include( CPack )
 
 ########### configuration files ###############
-CONFIGURE_FILE( elogbook.spec.cmake ${CMAKE_SOURCE_DIR}/elogbook.spec )
+configure_file( elogbook.spec.cmake ${CMAKE_SOURCE_DIR}/elogbook.spec )
 
 ########### external applications ###############
-FIND_PROGRAM( FIREFOX firefox )
-FIND_PROGRAM( QEDIT qedit )
-FIND_PROGRAM( OKULAR okular )
-FIND_PROGRAM( GWENVIEW gwenview )
+find_program( FIREFOX firefox )
+find_program( QEDIT qedit )
+find_program( OKULAR okular )
+find_program( GWENVIEW gwenview )
 
 ########### aspell ###############
-FIND_PROGRAM( ASPELL aspell )
-FIND_PACKAGE( ASPELL )
+find_program( ASPELL aspell )
+find_package( ASPELL )
 if( ASPELL_FOUND )
-  ADD_DEFINITIONS( -DUSE_ASPELL=1 )
+  add_definitions( -DUSE_ASPELL=1 )
 else()
-  ADD_DEFINITIONS( -DUSE_ASPELL=0 )
+  add_definitions( -DUSE_ASPELL=0 )
 endif()
 
 ########### subdirectories ###############
-IF( ENABLE_SHARED )
+if( ENABLE_SHARED )
 
-  SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-  LINK_DIRECTORIES( ${CMAKE_INSTALL_PREFIX}/lib )
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  link_directories( ${CMAKE_install_PREFIX}/lib )
 
-ELSE()
+else()
 
-  ADD_SUBDIRECTORY( base )
-  ADD_SUBDIRECTORY( base-qt )
-  ADD_SUBDIRECTORY( base-server )
-  ADD_SUBDIRECTORY( base-help )
+  add_subdirectory( base )
+  add_subdirectory( base-qt )
+  add_subdirectory( base-server )
+  add_subdirectory( base-help )
 
-  IF( ASPELL_FOUND )
-    ADD_SUBDIRECTORY( base-spellcheck )
-  ENDIF( ASPELL_FOUND )
+  if( ASPELL_FOUND )
+    add_subdirectory( base-spellcheck )
+  endif( ASPELL_FOUND )
 
-ENDIF()
+endif()
 
-ADD_SUBDIRECTORY( src )
+add_subdirectory( src )
