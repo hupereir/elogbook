@@ -1,16 +1,16 @@
 # $Id$
 ########### Qt configuration #########
-if( USE_QT5 )
+if(USE_QT5)
 
-  find_package( Qt5Widgets REQUIRED )
+  find_package(Qt5Widgets REQUIRED)
 
 else()
 
-  find_package( Qt4 REQUIRED )
-  set( QT_USE_QTXML TRUE )
-  set( QT_USE_QTNETWORK TRUE )
-  include( ${QT_USE_FILE} )
-  add_definitions( ${QT_DEFINITIONS} )
+  find_package(Qt4 REQUIRED)
+  set(QT_USE_QTXML TRUE)
+  set(QT_USE_QTNETWORK TRUE)
+  include(${QT_USE_FILE})
+  add_definitions(${QT_DEFINITIONS})
 
 endif()
 
@@ -21,17 +21,17 @@ include_directories(${CMAKE_SOURCE_DIR}/base-qt)
 include_directories(${CMAKE_SOURCE_DIR}/base-server)
 include_directories(${CMAKE_SOURCE_DIR}/base-help)
 
-if( ASPELL_FOUND )
+if(ASPELL_FOUND)
   include_directories(${ASPELL_INCLUDE_DIR})
   include_directories(${CMAKE_SOURCE_DIR}/base-spellcheck)
 endif()
 
 ########### configuration files ###############
-configure_file( Config.h.cmake Config.h )
-configure_file( SystemOptions.h.cmake SystemOptions.h )
+configure_file(Config.h.cmake Config.h)
+configure_file(SystemOptions.h.cmake SystemOptions.h)
 
 ########### next target ###############
-set( elogbook_lib_SOURCES
+set(elogbook_lib_SOURCES
   Attachment.cpp
   AttachmentType.cpp
   Backup.cpp
@@ -41,17 +41,17 @@ set( elogbook_lib_SOURCES
   LogEntry.cpp
 )
 
-add_library( elogbook_lib STATIC ${elogbook_lib_SOURCES} )
-target_link_libraries( elogbook_lib ${QT_LIBRARIES} )
+add_library(elogbook_lib STATIC ${elogbook_lib_SOURCES})
+target_link_libraries(elogbook_lib ${QT_LIBRARIES})
 
-if( USE_QT5 )
+if(USE_QT5)
 
-  qt5_use_modules( elogbook_lib Widgets Xml )
+  qt5_use_modules(elogbook_lib Widgets Xml)
 
 endif()
 
 ########### next target ###############
-set( elogbook_SOURCES
+set(elogbook_SOURCES
   Application.cpp
   AskForSaveDialog.cpp
   AttachmentFrame.cpp
@@ -97,89 +97,89 @@ set( elogbook_SOURCES
   main.cpp
 )
 
-set( elogbook_RESOURCES pixmaps.qrc)
+set(elogbook_RESOURCES pixmaps.qrc)
 
-if( USE_QT5 )
+if(USE_QT5)
 
-  qt5_add_resources( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
+  qt5_add_resources(elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
 
 else()
 
-  qt4_add_resources( elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
+  qt4_add_resources(elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
 
 endif()
 
-add_application_icon( elogbook_SOURCES ${CMAKE_SOURCE_DIR}/elogbook )
-add_desktop_file( ${CMAKE_SOURCE_DIR}/elogbook )
-add_platform_executable( elogbook
+add_application_icon(elogbook_SOURCES ${CMAKE_SOURCE_DIR}/elogbook)
+add_desktop_file(${CMAKE_SOURCE_DIR}/elogbook)
+add_platform_executable(elogbook
   ${ELOGBOOK_VERSION}
   ${elogbook_SOURCES}
   ${elogbook_RESOURCES_RCC}
 )
 
-target_link_libraries( elogbook elogbook_lib )
-target_link_libraries( elogbook ${QT_LIBRARIES} )
-target_link_libraries( elogbook
+target_link_libraries(elogbook elogbook_lib)
+target_link_libraries(elogbook ${QT_LIBRARIES})
+target_link_libraries(elogbook
   base
   base-qt
   base-server
   base-help
 )
 
-if( ASPELL_FOUND )
-  target_link_libraries( elogbook base-spellcheck )
+if(ASPELL_FOUND)
+  target_link_libraries(elogbook base-spellcheck)
 endif()
 
-install( TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR})
 
-if( USE_QT5 )
+if(USE_QT5)
 
-  qt5_use_modules( elogbook Widgets Network PrintSupport Xml )
+  qt5_use_modules(elogbook Widgets Network PrintSupport Xml)
 
 endif()
 
 
 ########### next target ###############
-if( UNIX )
+if(UNIX)
 
-  set( copy_logbook_SOURCES copy-logbook.cpp )
-  add_executable( copy-logbook ${copy_logbook_SOURCES} )
-  target_link_libraries( copy-logbook ${QT_LIBRARIES} )
-  target_link_libraries( copy-logbook
+  set(copy_logbook_SOURCES copy-logbook.cpp)
+  add_executable(copy-logbook ${copy_logbook_SOURCES})
+  target_link_libraries(copy-logbook ${QT_LIBRARIES})
+  target_link_libraries(copy-logbook
     base
     base-qt
     base-server
     elogbook_lib
-  )
+ )
 
-  install( TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR} )
+  install(TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR})
 
-  if( USE_QT5 )
+  if(USE_QT5)
 
-    qt5_use_modules( copy-logbook Widgets Xml )
+    qt5_use_modules(copy-logbook Widgets Xml)
 
   endif()
 
 endif()
 
 ########### next target ###############
-if( UNIX )
+if(UNIX)
 
-  set( synchronize_logbook_SOURCES synchronize-logbook.cpp )
-  add_executable( synchronize-logbook ${synchronize_logbook_SOURCES} )
-  target_link_libraries( synchronize-logbook ${QT_LIBRARIES} )
-  target_link_libraries( synchronize-logbook
+  set(synchronize_logbook_SOURCES synchronize-logbook.cpp)
+  add_executable(synchronize-logbook ${synchronize_logbook_SOURCES})
+  target_link_libraries(synchronize-logbook ${QT_LIBRARIES})
+  target_link_libraries(synchronize-logbook
     base
     base-qt
     base-server
     elogbook_lib
-  )
+ )
 
-  install( TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR} )
+  install(TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR})
 
-  if( USE_QT5 )
+  if(USE_QT5)
 
-    qt5_use_modules( synchronize-logbook Widgets Xml )
+    qt5_use_modules(synchronize-logbook Widgets Xml)
 
   endif()
 
