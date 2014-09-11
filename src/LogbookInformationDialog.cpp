@@ -75,13 +75,13 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 2, 1 );
     attachmentDirectory_->setFile( logbook->directory().isEmpty() ? File(Util::workingDirectory()) : logbook->directory() );
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
-    attachmentDirectory_->setToolTip( tr( "Default directory where attached files are stored (either copied or linked)." ) );
+    attachmentDirectory_->setToolTip( tr( "Default directory where attached files are stored (either copied or linked)" ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     label->setBuddy( attachmentDirectory_ );
 
     // readonly
     gridLayout->addWidget( readOnlyCheckBox_ = new QCheckBox( tr( "Read-only" ), this ), 3, 1 );
-    readOnlyCheckBox_->setToolTip( tr( "Mark logbook as read-only. Further write to the logbook will be forbidden." ) );
+    readOnlyCheckBox_->setToolTip( tr( "Mark logbook as read-only. Further write to the logbook will be forbidden" ) );
 
     gridLayout->setColumnStretch( 1, 1 );
 
@@ -89,7 +89,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     mainLayout().addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );
     mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
     comments_->setPlainText( logbook->comments() );
-    comments_->setToolTip( tr( "Logbook comments." ) );
+    comments_->setToolTip( tr( "Logbook comments" ) );
     label->setBuddy( comments_ );
 
     // connections

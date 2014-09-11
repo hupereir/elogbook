@@ -52,7 +52,7 @@ CustomDialog( parent )
     gridLayout->addWidget( new QLabel( tr( "Destination directory:" ), this ) );
     gridLayout->addWidget( destinationDirectoryEditor_ = new BrowsedLineEditor( this ) );
     destinationDirectoryEditor_->setFileMode( QFileDialog::DirectoryOnly );
-    destinationDirectoryEditor_->setToolTip( tr( "Attachment directory where attached file is stored (either copied or linked)." ) );
+    destinationDirectoryEditor_->setToolTip( tr( "Attachment directory where attached file is stored (either copied or linked)" ) );
 
     gridLayout->addWidget( new QLabel( tr( "Type:" ), this ) );
     gridLayout->addWidget( fileTypeComboBox_ = new QComboBox( this ) );
@@ -72,14 +72,14 @@ CustomDialog( parent )
     { actionComboBox_->addItem( actions[i] ); }
 
     actionComboBox_->setCurrentIndex( 0 );
-    actionComboBox_->setToolTip( tr( "Action to perform in order to save the attachment." ) );
+    actionComboBox_->setToolTip( tr( "Action to perform in order to save the attachment" ) );
 
     gridLayout->setColumnStretch( 1, 1 );
 
     // comments
     mainLayout().addWidget( new QLabel( tr( "Comments:" ), this ), 0 );
     mainLayout().addWidget( commentsEditor_ = new TextEditor( this ), 1 );
-    commentsEditor_->setToolTip( tr( "Attachment comments." ) );
+    commentsEditor_->setToolTip( tr( "Attachment comments" ) );
 
     adjustSize();
 

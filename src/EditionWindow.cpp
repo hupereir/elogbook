@@ -116,7 +116,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // colorWidget
     gridLayout->addWidget( colorWidget_ = new ColorWidget( main ), 1, 2, 1, 1 );
-    colorWidget_->setToolTip( tr( "Change entry color.\nThis is used to tag entries in the main window list." ) );
+    colorWidget_->setToolTip( tr( "Change entry color.\nThis is used to tag entries in the main window list" ) );
     colorWidget_->setAutoRaise( true );
     colorWidget_->setPopupMode( QToolButton::InstantPopup );
 
@@ -184,7 +184,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     QAction *action;
     lock_->addAction( action = new QAction( IconEngine::get( IconNames::Lock ), tr( "Unlock" ), this ) );
     connect( action, SIGNAL(triggered()), SLOT(_unlock()) );
-    action->setToolTip( tr( "Remove read-only lock for current editor." ) );
+    action->setToolTip( tr( "Remove read-only lock for current editor" ) );
 
     // main toolbar
     CustomToolBar* toolbar;

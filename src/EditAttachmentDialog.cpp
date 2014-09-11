@@ -99,7 +99,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     boxLayout->addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );
     boxLayout->addWidget( commentsEditor_ = new TextEditor( this ), 1 );
     commentsEditor_->setPlainText( attachment.comments() );
-    commentsEditor_->setToolTip( tr( "Attachment comments." ) );
+    commentsEditor_->setToolTip( tr( "Attachment comments" ) );
     label->setBuddy( commentsEditor_ );
 }
 
