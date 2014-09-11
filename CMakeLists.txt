@@ -1,10 +1,5 @@
 # $Id$
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.6)
-if(COMMAND CMAKE_POLICY)
-  cmake_policy(SET CMP0003 NEW)
-endif()
-
-set(CMAKE_AUTOMOC TRUE)
+cmake_minimum_required(VERSION 2.8.12)
 
 project(elogbook)
 set(ELOGBOOK_VERSION_MAJOR 1)
@@ -15,6 +10,8 @@ set(ELOGBOOK_VERSION ${ELOGBOOK_VERSION_MAJOR}.${ELOGBOOK_VERSION_MINOR}.${ELOGB
 ########### modules #################
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/base-cmake")
 include(Macros)
+setup_cmake_settings()
+setup_compiler_flags()
 
 ########### timestamp #########
 get_build_timestamp(TIMESTAMP)
