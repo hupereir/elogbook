@@ -82,7 +82,7 @@ class AttachmentType: public Counter
     QString editCommand( void ) const;
 
     //! attachment types map
-    typedef QMap< QString, AttachmentType > Map;
+    using Map = QMap< QString, AttachmentType >;
 
     //! returns predefined attachment types
     static const Map& types( void );

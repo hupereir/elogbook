@@ -90,7 +90,7 @@ class Menu:public QMenuBar, public Counter
     RecentFilesMenu* recentFilesMenu_;
 
     //! associates actions and recent entries
-    typedef QHash< QAction*, LogEntry* > ActionMap;
+    using ActionMap = QHash< QAction*, LogEntry* >;
 
     //! action group
     QActionGroup* actionGroup_;

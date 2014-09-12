@@ -78,7 +78,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     private:
 
     //! checkboxes
-    typedef QMap<Mode, QRadioButton* > RadioButtonMap;
+    using RadioButtonMap = QMap<Mode, QRadioButton* >;
     RadioButtonMap radioButtons_;
 
 };

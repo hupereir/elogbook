@@ -110,7 +110,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     static const QIcon& _icon( QString );
 
     //! icon cache
-    typedef QHash<QString, QIcon> IconCache;
+    using IconCache = QHash<QString, QIcon>;
 
     //! type icon cache
     static IconCache& _icons();

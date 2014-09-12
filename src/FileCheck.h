@@ -196,7 +196,7 @@ class FileCheck: public QObject, public Base::Key, public Counter
     };
 
     //! map data to file
-    typedef QSet<Data> DataSet;
+    using DataSet = QSet<Data>;
 
     //! file system watcher
     const QFileSystemWatcher& fileSystemWatcher( void ) const
@@ -235,7 +235,7 @@ class FileCheck: public QObject, public Base::Key, public Counter
     private:
 
     //! file set
-    typedef QSet<QString> FileSet;
+    using FileSet = QSet<QString>;
 
     //! file set
     FileSet files_;

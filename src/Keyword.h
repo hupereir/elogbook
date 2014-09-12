@@ -51,8 +51,8 @@ class Keyword: public Counter
     {}
 
     //! keyword set
-    typedef QSet<Keyword> Set;
-    typedef QList<Keyword> List;
+    using Set = QSet<Keyword>;
+    using List = QList<Keyword>;
 
     //! dom element
     QDomElement domElement( QDomDocument& ) const;

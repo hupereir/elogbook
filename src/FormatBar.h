@@ -71,7 +71,7 @@ class FormatBar: public CustomToolBar
     Format::TextFormatBlock::List get( void ) const;
 
     //! button map
-    typedef QMap< ActionId, QAction* > ActionMap;
+    using ActionMap = QMap< ActionId, QAction* >;
 
     //! actions
     const ActionMap& actions( void ) const

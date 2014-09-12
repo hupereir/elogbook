@@ -72,7 +72,7 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
     private:
 
     //! checkboxes
-    typedef QMap<Logbook::MaskFlag, QCheckBox* > CheckBoxMap;
+    using CheckBoxMap = QMap<Logbook::MaskFlag, QCheckBox* >;
     CheckBoxMap checkBoxes_;
 
 };

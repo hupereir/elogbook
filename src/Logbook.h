@@ -103,7 +103,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     XmlError::List xmlErrors( void ) const;
 
     //! shortcut for logbook children list
-    typedef QList< Logbook* > List;
+    using List = QList< Logbook* >;
 
     //! retrieves list of all child logbook [recursive]
     List children( void ) const;
@@ -491,7 +491,7 @@ class Logbook:public QObject, public Counter, public Base::Key
 
     //! list of recent entries
     /*! creation time stamp of recent entries are stored */
-    typedef QList<TimeStamp> TimeStampList;
+    using TimeStampList = QList<TimeStamp>;
 
     //! list of recent entries
     /*! creation time stamp of recent entries are stored */

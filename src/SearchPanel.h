@@ -126,7 +126,7 @@ class SearchPanel: public CustomToolBar
     private:
 
     //! checkboxes
-    typedef QHash<SearchMode, QCheckBox* > CheckBoxMap;
+    using CheckBoxMap = QHash<SearchMode, QCheckBox* >;
 
     //! transition widget
     TransitionWidget* transitionWidget_;

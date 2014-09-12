@@ -69,7 +69,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     public:
 
-    typedef AnimatedLineEditor Editor;
+    using Editor = AnimatedLineEditor;
 
     //! creator
     EditionWindow( QWidget* parent, bool readOnly = true );
@@ -503,7 +503,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     bool readOnly_;
 
     //! list of buttons to disactivate in case of read-only
-    typedef QList< QAction* > ActionList;
+    using ActionList = QList< QAction* >;
 
     //! list of buttons to disactivate in case of read-only
     ActionList readOnlyActions_;

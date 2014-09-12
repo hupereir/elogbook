@@ -128,7 +128,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     private:
 
     //! color icon cache
-    typedef QMap<Base::Color, QIcon> IconCache;
+    using IconCache = QMap<Base::Color, QIcon>;
 
     //! color icon cache
     static IconCache& _icons( void );
