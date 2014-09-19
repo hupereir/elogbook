@@ -58,8 +58,8 @@ QIcon ColorOptionModel::_icon( const Base::Color& color )
     else {
 
 
-        QPixmap pixmap( CustomPixmap().empty( IconSize( IconSize::Large ) ) );
-        QRect rect( pixmap.rect() );
+        CustomPixmap pixmap( IconSize( IconSize::Large ), CustomPixmap::AllFlags );
+        QRect rect( QPoint(0,0), pixmap.size()/pixmap.devicePixelRatio() );
         rect.adjust( 2, 2, -2, -2 );
 
         QPainter painter( &pixmap );
