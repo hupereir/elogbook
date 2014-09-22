@@ -155,7 +155,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     addOptionWidget( checkbox );
 
     gridLayout->addWidget( spinbox = new OptionSpinBox( page, "BACKUP_ITV" ), 2, 1, 1, 1 );
-    spinbox->setSuffix( tr( "days" ) );
+    spinbox->setSuffix( tr( " days" ) );
     spinbox->setMinimum( 0 );
     spinbox->setMaximum( 365 );
     addOptionWidget( spinbox );
