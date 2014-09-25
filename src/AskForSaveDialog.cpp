@@ -41,12 +41,10 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
 
     // create vbox layout
     QVBoxLayout* layout=new QVBoxLayout();
-    layout->setSpacing(5);
     layout->setMargin(10);
     setLayout( layout );
 
     QHBoxLayout *hLayout( new QHBoxLayout() );
-    hLayout->setSpacing(10);
     hLayout->setMargin(10);
     layout->addLayout( hLayout, 1 );
     QLabel* label = new QLabel( this );
@@ -62,7 +60,6 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     // button layout
     QHBoxLayout *button_layout = new QHBoxLayout();
     button_layout->setMargin(0);
-    button_layout->setSpacing(5);
     layout->addLayout( button_layout );
     button_layout->addStretch(1);
 

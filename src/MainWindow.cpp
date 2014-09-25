@@ -99,7 +99,6 @@ MainWindow::MainWindow( QWidget *parent ):
     // local layout
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setMargin(0);
-    layout->setSpacing(2);
     main->setLayout( layout );
 
     // splitter for KeywordList/LogEntryList
@@ -136,7 +135,6 @@ MainWindow::MainWindow( QWidget *parent ):
     // set layout
     QVBoxLayout* vLayout = new QVBoxLayout();
     vLayout->setMargin(0);
-    vLayout->setSpacing( 5 );
     keywordContainer_->setLayout( vLayout );
 
     keywordToolBar_ = new CustomToolBar( tr( "Keywords" ), keywordContainer_, "KEYWORD_TOOLBAR" );
@@ -206,7 +204,6 @@ MainWindow::MainWindow( QWidget *parent ):
 
     vLayout = new QVBoxLayout();
     vLayout->setMargin(0);
-    vLayout->setSpacing( 5 );
     right->setLayout( vLayout );
 
     entryToolBar_ = new CustomToolBar( tr( "Entries" ), right, "ENTRY_TOOLBAR" );

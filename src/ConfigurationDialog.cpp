@@ -62,7 +62,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page->layout()->addWidget( box = new QGroupBox( tr( "Attachment Editors" ), page ));
 
     GridLayout* gridLayout = new GridLayout();
-    gridLayout->setSpacing(5);
     gridLayout->setMargin(5);
     gridLayout->setMaxCount( 2 );
     gridLayout->setColumnAlignment( 0, Qt::AlignRight|Qt::AlignVCenter );
@@ -109,7 +108,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
-    box->layout()->setSpacing(5);
     page->layout()->addWidget( box );
 
     OptionListBox* listbox;
@@ -120,7 +118,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     box = new QGroupBox( tr( "Text Colors" ), page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
-    box->layout()->setSpacing(5);
     page->layout()->addWidget( box );
 
     box->layout()->addWidget( listbox = new ColorOptionListBox( box, "TEXT_COLOR" ) );
@@ -130,7 +127,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     // auto save
     page = &addPage( IconEngine::get( IconNames::PreferencesBackup ), tr( "Backup" ), tr( "Logbook backup configuration" ) );
     gridLayout = new GridLayout();
-    gridLayout->setSpacing(5);
     gridLayout->setMargin(0);
     page->layout()->addItem( gridLayout );
 
@@ -172,7 +168,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     QHBoxLayout* hLayout = new QHBoxLayout();
     hLayout->setMargin(0);
-    hLayout->setSpacing(5);
     page->layout()->addItem( hLayout );
 
     hLayout->addWidget( box = new QGroupBox( tr( "Logbook" ), page ) );
@@ -203,7 +198,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     box = new QWidget( page );
     gridLayout = new GridLayout();
-    gridLayout->setSpacing(5);
     gridLayout->setMargin(0);
     gridLayout->setMaxCount( 2 );
     box->setLayout( gridLayout );

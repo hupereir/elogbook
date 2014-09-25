@@ -91,7 +91,6 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setMargin(0);
-    layout->setSpacing(2);
     main->setLayout( layout );
 
     // header layout

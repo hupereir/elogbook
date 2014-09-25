@@ -66,7 +66,6 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     // default layout
     setLayout( new QVBoxLayout() );
     layout()->setMargin(0);
-    layout()->setSpacing(5);
 
     // create list
     layout()->addWidget( list_ = new TreeView( this ) );

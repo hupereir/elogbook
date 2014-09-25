@@ -39,7 +39,6 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 
     GridLayout* gridLayout = new GridLayout();
     gridLayout->setMargin(0);
-    gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
     mainLayout().addLayout( gridLayout );
@@ -93,7 +92,6 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 
     QVBoxLayout* boxLayout = new QVBoxLayout();
     boxLayout->setMargin(0);
-    boxLayout->setSpacing(5);
     mainLayout().addLayout( boxLayout, 1 );
 
     boxLayout->addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );

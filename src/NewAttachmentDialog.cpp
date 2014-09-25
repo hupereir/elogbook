@@ -38,7 +38,6 @@ CustomDialog( parent )
 
     GridLayout* gridLayout = new GridLayout();
     gridLayout->setMargin(0);
-    gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
     mainLayout().addLayout( gridLayout, 0 );

@@ -48,7 +48,6 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
-    hLayout->setSpacing(10);
     hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
@@ -59,7 +58,6 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 
     GridLayout* gridLayout = new GridLayout();
     gridLayout->setMargin(0);
-    gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
     hLayout->addLayout( gridLayout );
     hLayout->addStretch();

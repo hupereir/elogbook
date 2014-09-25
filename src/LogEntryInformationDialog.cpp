@@ -45,7 +45,6 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     setOptionName( "ENTRY_INFORMATION_DIALOG" );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
-    hLayout->setSpacing(10);
     hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
@@ -55,7 +54,6 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     GridLayout *gridLayout = new GridLayout();
     gridLayout->setMargin(0);
-    gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
 
     hLayout->addStretch();

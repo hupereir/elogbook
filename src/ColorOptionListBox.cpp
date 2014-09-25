@@ -60,7 +60,6 @@ EditDialog::EditDialog( QWidget* parent ):
     setOptionName( "OPTIONLISTBOX_EDIT" );
     QVBoxLayout* vLayout = new QVBoxLayout();
     vLayout->setMargin(0);
-    vLayout->setSpacing(5);
     mainLayout().addLayout( vLayout );
 
     vLayout->addWidget( editor_ = new ColorDisplay( this ) );
