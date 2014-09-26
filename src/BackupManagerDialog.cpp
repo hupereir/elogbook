@@ -34,6 +34,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
     setOptionName( "BACKUP_MANAGER_DIALOG" );
 
     setLayout( new QVBoxLayout() );
+    layout()->setMargin(5);
     layout()->addWidget( managerWidget_ = new BackupManagerWidget( this ) );
 
     // add close button

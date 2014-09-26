@@ -61,6 +61,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
 
     //! try load Question icon
     QHBoxLayout *hLayout( new QHBoxLayout() );
+    hLayout->setSpacing(10);
     hLayout->setMargin(0);
     mainLayout().addLayout( hLayout );
 
@@ -72,6 +73,8 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     QWidget *box = new QWidget( this );
     mainLayout().addWidget( box );
     box->setLayout( new QVBoxLayout() );
+    box->layout()->setMargin(5);
+    box->layout()->setSpacing(5);
 
 
     // radio buttons
