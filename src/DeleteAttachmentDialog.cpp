@@ -54,7 +54,6 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     QWidget *groupBox = new QWidget( this );
     mainLayout().addWidget( groupBox );
     groupBox->setLayout( new QVBoxLayout() );
-    groupBox->layout()->setMargin(5);
 
     groupBox->layout()->addWidget( fromDiskButton_ = new QRadioButton( tr( "From disk" ), groupBox ) );
     fromDiskButton_->setChecked( true );

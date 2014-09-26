@@ -48,7 +48,6 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
-    hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel(this);

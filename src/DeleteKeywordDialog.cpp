@@ -72,7 +72,6 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     QWidget *box = new QWidget( this );
     mainLayout().addWidget( box );
     box->setLayout( new QVBoxLayout() );
-    box->layout()->setMargin(5);
 
 
     // radio buttons

@@ -62,7 +62,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page->layout()->addWidget( box = new QGroupBox( tr( "Attachment Editors" ), page ));
 
     GridLayout* gridLayout = new GridLayout();
-    gridLayout->setMargin(5);
     gridLayout->setMaxCount( 2 );
     gridLayout->setColumnAlignment( 0, Qt::AlignRight|Qt::AlignVCenter );
     box->setLayout( gridLayout );
@@ -107,7 +106,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
     box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
     box->setLayout( new QVBoxLayout() );
-    box->layout()->setMargin(5);
     page->layout()->addWidget( box );
 
     OptionListBox* listbox;
@@ -117,7 +115,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     box = new QGroupBox( tr( "Text Colors" ), page );
     box->setLayout( new QVBoxLayout() );
-    box->layout()->setMargin(5);
     page->layout()->addWidget( box );
 
     box->layout()->addWidget( listbox = new ColorOptionListBox( box, "TEXT_COLOR" ) );

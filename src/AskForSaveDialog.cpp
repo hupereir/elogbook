@@ -41,11 +41,9 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
 
     // create vbox layout
     QVBoxLayout* layout=new QVBoxLayout();
-    layout->setMargin(10);
     setLayout( layout );
 
     QHBoxLayout *hLayout( new QHBoxLayout() );
-    hLayout->setMargin(10);
     layout->addLayout( hLayout, 1 );
     QLabel* label = new QLabel( this );
     label->setPixmap( IconEngine::get( IconNames::Warning ).pixmap( iconSize() ) );

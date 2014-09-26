@@ -44,7 +44,6 @@ Counter( "LogbookModifiedDialog" )
 
     // create vbox layout
     QVBoxLayout* layout=new QVBoxLayout();
-    layout->setMargin(10);
     setLayout( layout );
 
     // create message

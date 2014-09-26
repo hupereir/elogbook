@@ -45,7 +45,6 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     setOptionName( "ENTRY_INFORMATION_DIALOG" );
 
     QHBoxLayout* hLayout = new QHBoxLayout();
-    hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel(this);
