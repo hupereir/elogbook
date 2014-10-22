@@ -1,3 +1,4 @@
+// $Id$
 
 /******************************************************************************
 *
@@ -50,6 +51,7 @@
 #include "LogbookPrintOptionWidget.h"
 #include "LogbookPrintHelper.h"
 #include "LogEntryPrintOptionWidget.h"
+#include "LogEntryPrintSelectionDialog.h"
 #include "LogEntryPrintSelectionWidget.h"
 #include "Menu.h"
 #include "NewLogbookDialog.h"
@@ -1688,6 +1690,19 @@ void MainWindow::_revertToSaved( void )
 //___________________________________________________________
 void MainWindow::_print( void )
 {
+
+    // save EditionWindows
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
+
+    // save current logbook
+    if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
+
+    // get entry selection
+    LogEntryPrintSelectionDialog selectionDialog( this );
+    selectionDialog.okButton().setText( tr( "Print ..." ) );
+    selectionDialog.okButton().setIcon( IconEngine::get( IconNames::Print ) );
+    if( !selectionDialog.exec() ) return;
+
     // create helper
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook_ );
@@ -1696,6 +1711,8 @@ void MainWindow::_print( void )
         entryModel_.get(),
         entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
+    helper.setSelectionMode( selectionDialog.mode() );
+
     _print( helper );
 }
 
@@ -1703,12 +1720,6 @@ void MainWindow::_print( void )
 void MainWindow::_print( LogbookPrintHelper& helper )
 {
     Debug::Throw( "MainWindow::_print.\n" );
-
-    // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
-
-    // save current logbook
-    if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create printer
     QPrinter printer( QPrinter::HighResolution );
@@ -1725,22 +1736,19 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
+    logbookOptionWidget->setWindowTitle( "Logbook Configuration" );
     connect( logbookOptionWidget, SIGNAL(maskChanged(Logbook::Mask)), &helper, SLOT(setMask(Logbook::Mask)) );
     logbookOptionWidget->read( XmlOptions::get() );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    logEntryOptionWidget->setWindowTitle( "Logbook Entry Configuration" );
     connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setEntryMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
-
-    LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
-    connect( logEntrySelectionWidget, SIGNAL(modeChanged(LogEntryPrintSelectionWidget::Mode)), &helper, SLOT(setSelectionMode(LogEntryPrintSelectionWidget::Mode)) );
-    logEntrySelectionWidget->read( XmlOptions::get() );
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
     dialog.setOptionTabs( QList<QWidget *>()
         << optionWidget
-        << logEntrySelectionWidget
         << logbookOptionWidget
         << logEntryOptionWidget );
 
@@ -1753,13 +1761,11 @@ void MainWindow::_print( LogbookPrintHelper& helper )
 
     // write options
     logbookOptionWidget->write( XmlOptions::get() );
-    logEntrySelectionWidget->write( XmlOptions::get() );
     logEntryOptionWidget->write( XmlOptions::get() );
 
     // retrieve mask and assign
     helper.setMask( logbookOptionWidget->mask() );
     helper.setEntryMask( logEntryOptionWidget->mask() );
-    helper.setSelectionMode( logEntrySelectionWidget->mode() );
 
     // print
     helper.print( &printer );
@@ -1783,6 +1789,12 @@ void MainWindow::_printPreview( void )
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
+    // get entry selection
+    LogEntryPrintSelectionDialog selectionDialog( this );
+    selectionDialog.okButton().setText( tr( "Preview ..." ) );
+    selectionDialog.okButton().setIcon( IconEngine::get( IconNames::PrintPreview ) );
+    if( !selectionDialog.exec() ) return;
+
     // create helper
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook_ );
@@ -1791,7 +1803,7 @@ void MainWindow::_printPreview( void )
         entryModel_.get(),
         entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
-    helper.setSelectionMode( (LogEntryPrintSelectionWidget::Mode) XmlOptions::get().get<unsigned int>( "LOGENTRY_PRINT_SELECTION" ) );
+    helper.setSelectionMode( selectionDialog.mode() );
 
     // masks
     helper.setMask( (Logbook::Mask) XmlOptions::get().get<int>( "LOGBOOK_PRINT_OPTION_MASK" ) );

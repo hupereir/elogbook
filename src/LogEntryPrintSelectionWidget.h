@@ -35,20 +35,20 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 
     public:
 
-    //! constructor
+    //* constructor
     LogEntryPrintSelectionWidget( QWidget* = 0 );
 
-    //! destructor
+    //* destructor
     virtual ~LogEntryPrintSelectionWidget( void )
     {}
 
-    //! read
+    //* read
     virtual void read( const Options& );
 
-    //! write
+    //* write
     virtual void write( Options& ) const;
 
-    //! mask
+    //* mask
     enum Mode
     {
         AllEntries,
@@ -60,15 +60,15 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 
     Q_SIGNALS:
 
-    //! modified
+    //* modified
     void modified( void );
 
-    //! emited when selection mode is changed
+    //* emited when selection mode is changed
     void modeChanged( LogEntryPrintSelectionWidget::Mode );
 
     protected Q_SLOTS:
 
-    //! update mode
+    //* update mode
     void _updateMode( void )
     {
         emit modeChanged( mode() );
@@ -77,7 +77,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
 
     private:
 
-    //! checkboxes
+    //* checkboxes
     using RadioButtonMap = QMap<Mode, QRadioButton* >;
     RadioButtonMap radioButtons_;
 

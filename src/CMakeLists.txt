@@ -85,6 +85,7 @@ set(elogbook_SOURCES
   LogEntryModel.cpp
   LogEntryPrintHelper.cpp
   LogEntryPrintOptionWidget.cpp
+  LogEntryPrintSelectionDialog.cpp
   LogEntryPrintSelectionWidget.cpp
   MainWindow.cpp
   Menu.cpp

@@ -1115,6 +1115,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    logEntryOptionWidget->setWindowTitle( "Logbook Entry Configuration" );
     connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
 
