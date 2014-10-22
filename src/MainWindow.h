@@ -45,40 +45,41 @@ class ColorMenu;
 class CustomToolBar;
 class EditionWindow;
 class FileCheck;
+class LogbookPrintHelper;
 class Menu;
 class ProgressStatusBar;
 
-//! display a set of log entries, allows selection of one
+//* display a set of log entries, allows selection of one
 class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! constructor
+    //* constructor
     MainWindow( QWidget *parent = 0 );
 
-    //! destructor
+    //* destructor
     virtual ~MainWindow( void );
 
-    //! retrive menu
+    //* retrive menu
     Menu& menu( void )
     { return *menu_; }
 
-    //! retrive search panel
+    //* retrive search panel
     SearchPanel& searchPanel( void ) const
     { return *searchPanel_; }
 
-    //! retrive state frame
+    //* retrive state frame
     ProgressStatusBar& statusBar( void ) const
     { return *statusbar_; }
 
-    //! creates a new default logbook
+    //* creates a new default logbook
     virtual void createDefaultLogbook( void );
 
-    //! deletes old logbook, if any. Set the new one an display
+    //* deletes old logbook, if any. Set the new one an display
     /*
     note: don't pass a const File& here cause it crashes the application
     when the file that is passed is from the currently opened logbook,
@@ -86,259 +87,259 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     */
     virtual bool setLogbook( File );
 
-    //! check if logbook needs a backup, ask for it if needed
+    //* check if logbook needs a backup, ask for it if needed
     virtual void checkLogbookBackup( void );
 
-    //! deletes old logbook, if any
+    //* deletes old logbook, if any
     virtual void reset( void );
 
-    //! returns pointer to selected Logbook, if any
+    //* returns pointer to selected Logbook, if any
     virtual Logbook* logbook( void ) const
     { return logbook_; }
 
-    //! creates dialog to ask for Logbook save.
+    //* creates dialog to ask for Logbook save.
     AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
 
-    //! retrieve working directory
+    //* retrieve working directory
     virtual const File& workingDirectory( void ) const
     { return workingDirectory_; }
 
-    //! clear entry selection
+    //* clear entry selection
     virtual void clearSelection( void );
 
-    //! update entry (create new if not found )
+    //* update entry (create new if not found )
     virtual void updateEntry( LogEntry*, bool );
 
-    //! delete entry
+    //* delete entry
     virtual void deleteEntry( LogEntry*, bool save = true );
 
-    //! look for EditionWindows matching entry, set readonly
+    //* look for EditionWindows matching entry, set readonly
     virtual bool lockEntry( LogEntry* ) const;
 
-    //! retrieve previous entry (if any)
+    //* retrieve previous entry (if any)
     virtual LogEntry* previousEntry( LogEntry*, bool );
 
-    //! retrieve next entry (if any)
+    //* retrieve next entry (if any)
     virtual LogEntry* nextEntry( LogEntry*, bool );
 
-    //! reset attachment frame
+    //* reset attachment frame
     virtual void resetAttachmentWindow( void ) const;
 
-    //! return keyword list
+    //* return keyword list
     AnimatedTreeView& keywordList( void ) const
     { return *keywordList_; }
 
-    //! log entry list
+    //* log entry list
     virtual AnimatedTreeView& logEntryList( void ) const
     { return *entryList_; }
 
-    //! current keyword
+    //* current keyword
     Keyword currentKeyword( void ) const;
 
-    //! file checker
+    //* file checker
     FileCheck& fileCheck( void ) const
     { return *fileCheck_; }
 
-    //!@name toolbars
+    //*@name toolbars
     //@{
 
-    //! keyword toolbar
+    //* keyword toolbar
     CustomToolBar& keywordToolBar( void ) const
     { return *keywordToolBar_; }
 
-    //! entry toolbar
+    //* entry toolbar
     CustomToolBar& entryToolBar( void ) const
     { return *entryToolBar_; }
 
     //@}
 
-    //!@name actions
+    //*@name actions
     //@{
 
-    //! uniconify window
+    //* uniconify window
     QAction& uniconifyAction( void ) const
     { return *uniconifyAction_; }
 
-    //! new keyword action
+    //* new keyword action
     QAction& newKeywordAction( void ) const
     { return *newKeywordAction_; }
 
-    //! edit keyword action
+    //* edit keyword action
     QAction& editKeywordAction( void ) const
     { return *editKeywordAction_; }
 
-    //! delete keyword action
+    //* delete keyword action
     QAction& deleteKeywordAction( void ) const
     { return *deleteKeywordAction_; }
 
-    //! find entries action
+    //* find entries action
     QAction& findEntriesAction( void ) const
     { return *findEntriesAction_; }
 
-    //! new entry action
+    //* new entry action
     QAction& newEntryAction( void ) const
     { return *newEntryAction_; }
 
-    //! edit entry action
+    //* edit entry action
     QAction& editEntryAction( void ) const
     { return *editEntryAction_; }
 
-    //! edit entry action
+    //* edit entry action
     QAction& editEntryTitleAction( void ) const
     { return *editEntryTitleAction_; }
 
-    //! delete entry action
+    //* delete entry action
     QAction& deleteEntryAction( void ) const
     { return *deleteEntryAction_; }
 
-    //! change entry color action
+    //* change entry color action
     QAction& entryColorAction( void ) const
     { return *entryColorAction_; }
 
-    //! change entry keyword action
+    //* change entry keyword action
     QAction& entryKeywordAction( void ) const
     { return *entryKeywordAction_; }
 
-    //! create new logbook
+    //* create new logbook
     QAction& newLogbookAction( void ) const
     { return *newLogbookAction_; }
 
-    //! open existing logbook
+    //* open existing logbook
     QAction& openAction( void ) const
     { return *openAction_; }
 
-    //! synchronize logbooks
+    //* synchronize logbooks
     QAction& synchronizeAction( void ) const
     { return *synchronizeAction_; }
 
-    //! reorganize logbook
+    //* reorganize logbook
     QAction& reorganizeAction( void ) const
     { return *reorganizeAction_; }
 
-    //! save logbook
+    //* save logbook
     QAction& saveAction( void ) const
     { return *saveAction_; }
 
-    //! save logbook
+    //* save logbook
     QAction& saveForcedAction( void ) const
     { return *saveForcedAction_; }
 
-    //! save logbook with a different name
+    //* save logbook with a different name
     QAction& saveAsAction( void ) const
     { return *saveAsAction_; }
 
-    //! save logbook backup
+    //* save logbook backup
     QAction& saveBackupAction( void ) const
     { return *saveBackupAction_; }
 
-    //! backup manager
+    //* backup manager
     QAction& backupManagerAction( void ) const
     { return *backupManagerAction_; }
 
-    //! revert logbook to saved version
+    //* revert logbook to saved version
     QAction& revertToSaveAction( void ) const
     { return *revertToSaveAction_; }
 
-    //! print
+    //* print
     QAction& printAction( void ) const
     { return *printAction_; }
 
-    //! print preview
+    //* print preview
     QAction& printPreviewAction( void ) const
     { return *printPreviewAction_; }
 
-    //! export to html
+    //* export to html
     QAction& htmlAction( void ) const
     { return *htmlAction_; }
 
-    //! logbook information
+    //* logbook information
     QAction& logbookInformationsAction( void ) const
     { return *logbookInformationsAction_; }
 
-    //! logbook information
+    //* logbook information
     QAction& logbookStatisticsAction( void ) const
     { return *logbookStatisticsAction_; }
 
-    //! close editionwindows
+    //* close editionwindows
     QAction& closeFramesAction( void ) const
     { return *closeFramesAction_; }
 
-    //! show duplicates
+    //* show duplicates
     QAction& showDuplicatesAction( void ) const
     { return *showDuplicatesAction_; }
 
-    //! monitored files
+    //* monitored files
     QAction& monitoredFilesAction( void ) const
     { return *monitoredFilesAction_; }
 
-    //! tree mode action
+    //* tree mode action
     QAction& treeModeAction( void ) const
     { return *treeModeAction_; }
 
     //@}
 
-    //! update window title
+    //* update window title
     void updateWindowTitle( void );
 
     Q_SIGNALS:
 
-    //! emmited when new scratch file is created
+    //* emmited when new scratch file is created
     void scratchFileCreated( const File& );
 
-    //! emmited when a message is available from logbook
+    //* emmited when a message is available from logbook
     void messageAvailable( const QString& );
 
-    //! emmited at the end of SetLogbook
+    //* emmited at the end of SetLogbook
     void ready( void );
 
     public Q_SLOTS:
 
-    //! open existing logbook
+    //* open existing logbook
     virtual void open( FileRecord file = FileRecord() );
 
-    //! save current logbook
+    //* save current logbook
     /*! if argument is false, all modified entries will be saved without asking */
     virtual void save( bool confirmEntries = true );
 
-    //! select entry
+    //* select entry
     virtual void selectEntry( LogEntry* );
 
-    //! select entries using selection criterions
+    //* select entries using selection criterions
     virtual void selectEntries( QString, SearchPanel::SearchModes );
 
-    //! show all entries
+    //* show all entries
     virtual void showAllEntries( void );
 
     protected:
 
-    //! close event
+    //* close event
     virtual void closeEvent( QCloseEvent* );
 
-    //! timer event
+    //* timer event
     virtual void timerEvent( QTimerEvent* );
 
-    //! context menu event [overloaded]
+    //* context menu event [overloaded]
     virtual void contextMenuEvent( QContextMenuEvent* );
 
-    //! clear list and reinitialize from logbook entries
+    //* clear list and reinitialize from logbook entries
     virtual void _resetLogEntryList( void );
 
-    //! clear list and reinitialize from logbook entries
+    //* clear list and reinitialize from logbook entries
     virtual void _resetKeywordList( void );
 
-    //! load colors (from current logbook)
+    //* load colors (from current logbook)
     void _loadColors( void );
 
-    //! enable state
+    //* enable state
     void _setEnabled( bool );
 
-    //! returns true if logbook has modified entries
+    //* returns true if logbook has modified entries
     bool _hasModifiedEntries( void ) const;
 
-    //! perform autoSave
+    //* perform autoSave
     void _autoSave( void );
 
-    //! check modified entries
+    //* check modified entries
     AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow>, bool ) const;
 
     enum MaskFlag
@@ -350,24 +351,24 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 
     Q_DECLARE_FLAGS( Mask, MaskFlag )
 
-    //! update frames associated to given entry
+    //* update frames associated to given entry
     void _updateEntryFrames( LogEntry*, Mask );
 
-    //! get entries matching a given entry selection mode
+    //* get entries matching a given entry selection mode
     LogEntryModel::List _entries( LogEntryPrintSelectionWidget::Mode mode );
 
     protected Q_SLOTS:
 
-    //! files modified
+    //* files modified
     void _filesModified( FileCheck::DataSet );
 
-    //! splitter moved
+    //* splitter moved
     void _splitterMoved( void );
 
-    //! create a new logbook
+    //* create a new logbook
     void _newLogbook( void );
 
-    //! save logbook and children whether they are modified or not
+    //* save logbook and children whether they are modified or not
     void _saveForced( void );
 
     /*! \brief
@@ -376,40 +377,43 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     */
     bool _saveAs( File defaultFile = File(), bool registerLogbook = true );
 
-    //! save current logbook with a given filename
+    //* save current logbook with a given filename
     void _saveBackup( void );
 
-    //! manage backups
+    //* manage backups
     void _manageBackups( void );
 
-    //! revert logbook to saved version
+    //* revert logbook to saved version
     void _revertToSaved( void );
 
-    //! Print current document
+    //* Print current document
     void _print( void );
 
-    //! Print current document
+    //* Print current document
+    void _print( LogbookPrintHelper& );
+
+    //* Print current document
     void _printPreview( void );
 
-    //! export to html
+    //* export to html
     void _toHtml( void );
 
-    //! opens a logbook merge it to the existing onecomments
+    //* opens a logbook merge it to the existing onecomments
     void _synchronize( void );
 
-    //! remove backup
+    //* remove backup
     void _removeBackup( Backup );
 
-    //! remove backups
+    //* remove backups
     void _removeBackups( Backup::List );
 
-    //! restore backup
+    //* restore backup
     void _restoreBackup( Backup );
 
-    //! merge backup
+    //* merge backup
     void _mergeBackup( Backup );
 
-    //! reorganize logbook to entries associations
+    //* reorganize logbook to entries associations
     void _reorganize( void );
 
     /*! \brief
@@ -419,50 +423,50 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     */
     virtual void _showDuplicatedEntries( void );
 
-    //! view logbook statistics
+    //* view logbook statistics
     virtual void _viewLogbookStatistics( void );
 
-    //! edit current logbook informations
+    //* edit current logbook informations
     virtual void _editLogbookInformations( void );
 
-    //! close EditionWindows
+    //* close EditionWindows
     virtual void _closeEditionWindows( bool askForSave = true ) const;
 
-    //! find entries
+    //* find entries
     void _findEntries( void ) const;
 
-    //! create new entry
+    //* create new entry
     virtual void _newEntry( void );
 
-    //! edit selected entries
+    //* edit selected entries
     virtual void _editEntries( void );
 
-    //! delete selected entries
+    //* delete selected entries
     virtual void _deleteEntries ( void );
 
-    //! show EditionWindow associated to a given name
+    //* show EditionWindow associated to a given name
     virtual void _displayEntry( LogEntry* );
 
-    //! rename entry with current title
+    //* rename entry with current title
     virtual void _changeEntryTitle( LogEntry*, QString );
 
-    //! change selected entries color
+    //* change selected entries color
     virtual void _changeEntryColor( QColor );
 
-    //! create new keyword
+    //* create new keyword
     void _newKeyword( void );
 
-    //! delete keyword from keyword list using dialog
+    //* delete keyword from keyword list using dialog
     void _deleteKeyword( void );
 
-    //! change selected entries keyword using dialog
+    //* change selected entries keyword using dialog
     /*!
     this is triggered by the rename keyword action from
     the keyword list
     */
     void _renameKeyword( void );
 
-    //! rename keyword for all entries that match old keyword.
+    //* rename keyword for all entries that match old keyword.
     /*!
     this is triggered by drag and drop in the keyword list,
     by renaming a keyword directly from the keyword list,
@@ -471,262 +475,262 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     */
     void _renameKeyword( const Keyword& oldKeyword, const Keyword& newKeyword, bool updateSelection = true );
 
-    //! rename keyword for selected entries using dialog
+    //* rename keyword for selected entries using dialog
     /*!
     this is triggered by the rename entry keyword action in the
     logEntry list.
     */
     void _renameEntryKeyword( void );
 
-    //! change selected entries keyword using argument
+    //* change selected entries keyword using argument
     /*!
     this is triggered by drag and drop from the logEntry list
     to the keyword list, and it is also called by the slot above
     */
     void _renameEntryKeyword( Keyword newKeyword, bool updateSelection = true );
 
-    //! keyword selection changed
+    //* keyword selection changed
     void _keywordSelectionChanged( const QModelIndex& );
 
-    //! update keyword-list related actions
+    //* update keyword-list related actions
     void _updateKeywordActions( void );
 
-    //! update entry-list related actions
+    //* update entry-list related actions
     void _updateEntryActions( void );
 
-    //! read-only actions
+    //* read-only actions
     void _updateReadOnlyState( void );
 
-    //! store sorting method when changed via list header
+    //* store sorting method when changed via list header
     virtual void _storeSortMethod( void )
     { _storeSortMethod( entryModel_.sortColumn(), entryModel_.sortOrder() ); }
 
-    //! store sorting method when changed via list header
+    //* store sorting method when changed via list header
     virtual void _storeSortMethod( int, Qt::SortOrder );
 
-    //! item clicked
+    //* item clicked
     virtual void _entryItemClicked( const QModelIndex& index );
 
-    //! activare item
+    //* activare item
     void _entryItemActivated( const QModelIndex& index );
 
-    //! item data changed
+    //* item data changed
     void _entryDataChanged( const QModelIndex& index );
 
-    //! edit entry title
+    //* edit entry title
     void _startEntryEdition( void );
 
-    //! monitored files
+    //* monitored files
     void _showMonitoredFiles( void );
 
-    //! tree mode
+    //* tree mode
     void _toggleTreeMode( bool );
 
     private Q_SLOTS:
 
-    //! configuration
+    //* configuration
     void _updateConfiguration( void );
 
     private:
 
-    //! install actions
+    //* install actions
     void _installActions( void );
 
-    //! main menu
+    //* main menu
     Menu* menu_;
 
-    //! search panel
+    //* search panel
     SearchPanel *searchPanel_;
 
-    //! state frame
+    //* state frame
     ProgressStatusBar* statusbar_;
 
-    //! keyword model
+    //* keyword model
     KeywordModel keywordModel_;
 
-    //! entry model
+    //* entry model
     LogEntryModel entryModel_;
 
-    //! logEntry list
+    //* logEntry list
     AnimatedTreeView* entryList_;
 
-    //! file check
+    //* file check
     FileCheck* fileCheck_;
 
-    //! local TreeView to store size hint
+    //* local TreeView to store size hint
     class KeywordList: public AnimatedTreeView
     {
 
         public:
 
-        //! constructor
+        //* constructor
         KeywordList( QWidget* parent = 0 ):
             AnimatedTreeView( parent ),
             defaultWidth_( -1 )
         {}
 
-        //! default size
+        //* default size
         void setDefaultWidth( int );
 
-        //! size
+        //* size
         QSize sizeHint( void ) const;
 
         private:
 
-        //! default width;
+        //* default width;
         int defaultWidth_;
 
     };
 
-    //! Keyword list
+    //* Keyword list
     KeywordList *keywordList_;
 
-    //! color menu
+    //* color menu
     ColorMenu* colorMenu_;
 
-    //! autoSaveTimer
+    //* autoSaveTimer
     QBasicTimer autosaveTimer_;
 
-    //! autosave interval
+    //* autosave interval
     int autoSaveDelay_;
 
-    //!@name item edition
+    //*@name item edition
     //@{
 
-    //! edition timer
+    //* edition timer
     QBasicTimer editionTimer_;
 
-    //! edit_item delay (ms)
+    //* edit_item delay (ms)
     int editionDelay_;
 
     //@}
 
-    //! maximum number of recent entries
+    //* maximum number of recent entries
     unsigned int maxRecentEntries_;
 
-    //! associated logbook
+    //* associated logbook
     Logbook* logbook_;
 
-    //! last directory in which logbook was opened, saved.
+    //* last directory in which logbook was opened, saved.
     File workingDirectory_;
 
-    //! ignore file modified warnings if true
+    //* ignore file modified warnings if true
     bool ignoreWarnings_;
 
-    //! ask entries for confirmation before saving
+    //* ask entries for confirmation before saving
     bool confirmEntries_;
 
-    //! keyword container
+    //* keyword container
     QWidget* keywordContainer_;
 
     //@name toolbars
     //@{
-    //! keywords
+    //* keywords
     CustomToolBar *keywordToolBar_;
 
-    //! entries
+    //* entries
     CustomToolBar *entryToolBar_;
     //@}
 
-    //!@name actions
+    //*@name actions
     //@{
 
-    //! uniconify action
+    //* uniconify action
     QAction* uniconifyAction_;
 
-    //! add new keyword
+    //* add new keyword
     QAction* newKeywordAction_;
 
-    //! edit keyword
+    //* edit keyword
     QAction* editKeywordAction_;
 
-    //! delete keyword
+    //* delete keyword
     QAction* deleteKeywordAction_;
 
-    //! find entries
+    //* find entries
     QAction* findEntriesAction_;
 
-    //! new entry
+    //* new entry
     QAction* newEntryAction_;
 
-    //! edit entry
+    //* edit entry
     QAction* editEntryAction_;
 
-    //! edit entry title
+    //* edit entry title
     QAction* editEntryTitleAction_;
 
-    //! delete entry
+    //* delete entry
     QAction* deleteEntryAction_;
 
-    //! change selected entries color
+    //* change selected entries color
     QAction* entryColorAction_;
 
-    //! change selected entries keyword
+    //* change selected entries keyword
     QAction* entryKeywordAction_;
 
-    //! create new logbook
+    //* create new logbook
     QAction* newLogbookAction_;
 
-    //! open existing logbook
+    //* open existing logbook
     QAction* openAction_;
 
-    //! synchronize logbooks
+    //* synchronize logbooks
     QAction* synchronizeAction_;
 
-    //! reorganize logbook
+    //* reorganize logbook
     QAction* reorganizeAction_;
 
-    //! save logbook
+    //* save logbook
     QAction* saveAction_;
 
-    //! save logbook
+    //* save logbook
     QAction* saveForcedAction_;
 
-    //! save logbook with different name
+    //* save logbook with different name
     QAction* saveAsAction_;
 
-    //! save logbook backup
+    //* save logbook backup
     QAction* saveBackupAction_;
 
-    //! configure backups
+    //* configure backups
     QAction* backupManagerAction_;
 
-    //! revert logbook to saved version
+    //* revert logbook to saved version
     QAction* revertToSaveAction_;
 
-    //! print preview
+    //* print preview
     QAction* printAction_;
 
-    //! print preview
+    //* print preview
     QAction* printPreviewAction_;
 
-    //! export to html
+    //* export to html
     QAction* htmlAction_;
 
-    //! logbook information
+    //* logbook information
     QAction* logbookInformationsAction_;
 
-    //! logbook information
+    //* logbook information
     QAction* logbookStatisticsAction_;
 
-    //! close editionwindows
+    //* close editionwindows
     QAction* closeFramesAction_;
 
-    //! show duplicates
+    //* show duplicates
     QAction* showDuplicatesAction_;
 
-    //! show monitored files
+    //* show monitored files
     QAction* monitoredFilesAction_;
 
-    //! tree mode
+    //* tree mode
     QAction* treeModeAction_;
 
-    //! entry color button
+    //* entry color button
     QToolButton* entryColorButton_;
 
     //@}
 
-    //! resize timer
+    //* resize timer
     /*! needed to store Keyword list width */
     QBasicTimer resizeTimer_;
 

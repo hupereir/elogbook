@@ -664,7 +664,7 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
     // delete entry
     delete entry;
 
-    //! save
+    // save
     if( save && !logbook_->file().isEmpty() )
     { this->save(); }
 
@@ -1275,7 +1275,7 @@ void MainWindow::_loadColors( void )
 
     if( !logbook_ ) return;
 
-    //! retrieve all entries
+    // retrieve all entries
     foreach( LogEntry* entry, logbook_->entries() )
     { colorMenu_->add( entry->color() ); }
 
@@ -1688,6 +1688,20 @@ void MainWindow::_revertToSaved( void )
 //___________________________________________________________
 void MainWindow::_print( void )
 {
+    // create helper
+    LogbookPrintHelper helper( this );
+    helper.setLogbook( logbook_ );
+    helper.setEntries(
+        Base::KeySet<LogEntry>( logbook_->entries() ).toList(),
+        entryModel_.get(),
+        entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
+
+    _print( helper );
+}
+
+//___________________________________________________________
+void MainWindow::_print( LogbookPrintHelper& helper )
+{
     Debug::Throw( "MainWindow::_print.\n" );
 
     // save EditionWindows
@@ -1703,14 +1717,6 @@ void MainWindow::_print( void )
     QString buffer;
     QTextStream( &buffer )  << "elogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
     printer.setDocName( buffer );
-
-    // create helper
-    LogbookPrintHelper helper( this );
-    helper.setLogbook( logbook_ );
-    helper.setEntries(
-        Base::KeySet<LogEntry>( logbook_->entries() ).toList(),
-        entryModel_.get(),
-        entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
     // create options widget
     PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
@@ -1759,7 +1765,7 @@ void MainWindow::_print( void )
     helper.print( &printer );
 
     // reset status bar
-    statusbar_->label().setText( "" );
+    statusbar_->label().clear();
     statusbar_->showLabel();
 
     return;
@@ -1792,14 +1798,16 @@ void MainWindow::_printPreview( void )
     helper.setEntryMask( (LogEntry::Mask) XmlOptions::get().get<int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
 
     // create dialog, connect and execute
-    PrintPreviewDialog dialog( this );
+    PrintPreviewDialog dialog( this, CustomDialog::OkButton|CustomDialog::CancelButton );
     dialog.setWindowTitle( tr( "Print Preview - Elogbook" ) );
     dialog.setHelper( &helper );
-    dialog.exec();
 
-    // reset status bar
-    statusbar_->label().clear();
-    statusbar_->showLabel();
+    // print
+    if( dialog.exec() ) _print( helper );
+    else {
+        statusbar_->label().clear();
+        statusbar_->showLabel();
+    }
 
 }
 
@@ -2243,7 +2251,7 @@ void MainWindow::_reorganize( void )
 
     }
 
-    //! put entry set into a list and sort by creation time.
+    // put entry set into a list and sort by creation time.
     // First entry must the oldest
     QList<LogEntry*> entryList( entries.toList() );
     std::sort( entryList.begin(), entryList.end(), LogEntry::FirstCreatedFTor() );
@@ -2694,7 +2702,7 @@ void MainWindow::_newKeyword( void )
 
     Debug::Throw( "MainWindow::_newKeyword.\n" );
 
-    //! create dialog
+    // create dialog
     EditKeywordDialog dialog( this );
     dialog.setWindowTitle( tr( "New Keyword - Elogbook" ) );
 
@@ -2723,7 +2731,7 @@ void MainWindow::_deleteKeyword( void )
 {
     Debug::Throw("MainWindow::_deleteKeyword.\n" );
 
-    //! check that keywordlist has selected item
+    // check that keywordlist has selected item
     QModelIndexList selectedIndexes( keywordList_->selectionModel()->selectedRows() );
     if( selectedIndexes.empty() )
     {
@@ -2745,7 +2753,7 @@ void MainWindow::_deleteKeyword( void )
         { if( entry->keyword().inherits( keyword ) ) associatedEntries.insert( entry );  }
     }
 
-    //! create dialog
+    // create dialog
     DeleteKeywordDialog dialog( this, keywords, !associatedEntries.empty() );
     if( !dialog.centerOnParent().exec() )
     { return; }
@@ -2801,7 +2809,7 @@ void MainWindow::_renameKeyword( void )
 {
     Debug::Throw("MainWindow::_renameKeyword.\n" );
 
-    //! check that keywordlist has selected item
+    // check that keywordlist has selected item
     QModelIndex current( keywordList_->selectionModel()->currentIndex() );
     if( !current.isValid() )
     {
@@ -2888,7 +2896,7 @@ void MainWindow::_renameEntryKeyword( void )
         return;
     }
 
-    //! check that current keyword make sense
+    // check that current keyword make sense
     if( !keywordList_->selectionModel()->currentIndex().isValid() )
     {
         InformationDialog( this, tr( "No keyword selected. <Rename Entry Keyword> canceled" ) ).exec();
@@ -2898,7 +2906,7 @@ void MainWindow::_renameEntryKeyword( void )
     // get current selected keyword
     Keyword keyword( keywordModel_.get( keywordList_->selectionModel()->currentIndex() ) );
 
-    //! create dialog
+    // create dialog
     EditKeywordDialog dialog( this );
     dialog.setWindowTitle( tr( "Edit Keyword - Elogbook" ) );
 

@@ -1023,14 +1023,14 @@ void EditionWindow::_save( bool updateSelection )
     }
     Debug::Throw( "EditionWindow::_save - logbook checked.\n" );
 
-    //! update entry text
+    // update entry text
     entry->setText( activeEditor().toPlainText() );
     entry->setFormats( formatBar_->get() );
 
-    //! update entry keyword
+    // update entry keyword
     entry->setKeyword( keywordEditor_->text() );
 
-    //! update entry title
+    // update entry title
     entry->setTitle( titleEditor_->text() );
 
     // update author
@@ -1086,6 +1086,19 @@ void EditionWindow::_print( void )
     // check if entry is modified
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
+
+    // create helper
+    LogEntryPrintHelper helper( this );
+    helper.setEntry( entry() );
+
+    _print( helper );
+
+}
+
+//___________________________________________________________
+void EditionWindow::_print( LogEntryPrintHelper& helper )
+{
+
     // create printer
     QPrinter printer( QPrinter::HighResolution );
 
@@ -1093,10 +1106,6 @@ void EditionWindow::_print( void )
     QString buffer;
     QTextStream( &buffer )  << "elogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
     printer.setDocName( buffer );
-
-    // create helper
-    LogEntryPrintHelper helper( this );
-    helper.setEntry( entry() );
 
     // create option widget
     PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
@@ -1143,10 +1152,12 @@ void EditionWindow::_printPreview( void )
     helper.setMask( (LogEntry::Mask) XmlOptions::get().get<int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
 
     // create dialog, connect and execute
-    PrintPreviewDialog dialog( this );
+    PrintPreviewDialog dialog( this, CustomDialog::OkButton|CustomDialog::CancelButton );
     dialog.setWindowTitle( tr( "Print Preview - Elogbook" ) );
     dialog.setHelper( &helper );
-    dialog.exec();
+
+    // print
+    if( dialog.exec() ) _print( helper );
 
 }
 
