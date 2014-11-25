@@ -288,7 +288,7 @@ void FormatBar::_saveConfiguration( void )
     Debug::Throw( "FormatBar::_saveConfiguration.\n" );
     XmlOptions::get().keep( "TEXT_COLOR" );
 
-    const ColorMenu::ColorSet colors( colorMenu_->colors() );
+    const Base::Color::Set colors( colorMenu_->colors() );
     foreach( const Base::Color& color, colors )
     { XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( color ) ); }
 

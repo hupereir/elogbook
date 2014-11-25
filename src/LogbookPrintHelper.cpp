@@ -131,8 +131,8 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     const QFontMetrics metrics( font, printer );
 
     // get table cells
-    typedef QPair<QString, QString> StringPair;
-    typedef QList<StringPair> StringList;
+    using StringPair=QPair<QString, QString>;
+    using StringList=QList<StringPair>;
     StringList values;
     if( mask_&Logbook::TitleMask ) values << StringPair( tr( "Title:" ), logbook_->title() );
     if( mask_&Logbook::CommentsMask && !logbook_->comments().isEmpty() ) values << StringPair( tr( "Comments:" ), logbook_->comments() );

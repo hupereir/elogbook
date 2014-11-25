@@ -109,8 +109,8 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     const QFontMetrics metrics( font, printer );
 
     // get table cells
-    typedef QPair<QString, QString> StringPair;
-    typedef QList<StringPair> StringList;
+    using StringPair=QPair<QString, QString> ;
+    using StringList=QList<StringPair>;
     StringList values;
     if( mask_&LogEntry::KeywordMask ) values << StringPair( tr( "Keyword:" ), entry_->keyword().get() );
     if( mask_&LogEntry::TitleMask ) values << StringPair( tr( "Title:" ), entry_->title() );

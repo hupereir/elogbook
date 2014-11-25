@@ -1730,7 +1730,6 @@ QSize EditionWindow::ColorWidget::minimumSizeHint( void ) const
 //___________________________________________________________________________________
 void EditionWindow::ColorWidget::paintEvent( QPaintEvent* )
 {
-    // rotated paint
     QStylePainter painter(this);
     QStyleOptionToolButton option;
     initStyleOption(&option);
