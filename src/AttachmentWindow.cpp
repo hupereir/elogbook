@@ -42,10 +42,13 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     setWindowTitle( tr( "Attachments - Elogbook" ) );
     setOptionName( "ATTACHMENT_WINDOW" );
 
+    layout()->setMargin(0);
+    buttonLayout().setMargin(5);
+
     mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
     connect( frame_, SIGNAL(attachmentSelected(Attachment&)), SLOT(_displayEntry(Attachment&)) );
 
-    frame().contextMenu().insertAction( &frame().newAction(), &frame().list().findAction() );
+    frame_->contextMenu().insertAction( &frame_->newAction(), &frame_->list().findAction() );
 
     // shortcuts
     connect( new QShortcut( QKeySequence::Quit, this ), SIGNAL(activated()), qApp, SLOT(closeAllWindows()) );
@@ -70,7 +73,7 @@ void AttachmentWindow::show( void )
 void AttachmentWindow::uniconify( void )
 {
     CustomDialog::uniconify();
-    frame().list().setFocus();
+    frame_->list().setFocus();
 }
 
 //________________________________________

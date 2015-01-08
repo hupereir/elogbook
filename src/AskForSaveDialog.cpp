@@ -60,38 +60,38 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     layout->addWidget( frame );
 
     // button layout
-    QHBoxLayout *button_layout = new QHBoxLayout();
-    button_layout->setMargin(0);
-    button_layout->setSpacing(5);
-    layout->addLayout( button_layout );
-    button_layout->addStretch(1);
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    buttonLayout->setMargin(0);
+    buttonLayout->setSpacing(5);
+    layout->addLayout( buttonLayout );
+    buttonLayout->addStretch(1);
 
     // yes button
     QPushButton* button;
     if( buttons & Yes )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes" ), this ) );
+        buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_yes()) );
     }
 
     // yes to all button
     if( buttons & All )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes to All" ), this ) );
+        buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogOk ), tr( "Yes to All" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_all()) );
     }
 
     // no button
     if( buttons & No )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "No" ), this ) );
+        buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "No" ), this ) );
         connect( button, SIGNAL(clicked()), SLOT(_no()) );
     }
 
     // cancel button
     if( buttons & Cancel )
     {
-        button_layout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
+        buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
         button->setShortcut( Qt::Key_Escape );
         connect( button, SIGNAL(clicked()), SLOT(_cancel()) );
     }
