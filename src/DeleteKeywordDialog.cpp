@@ -66,7 +66,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel( this );
-    label->setPixmap( IconEngine::get( IconNames::Warning ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::DialogWarning ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignHCenter );
     hLayout->addWidget( new QLabel( buffer, this ) );
 

@@ -46,7 +46,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel(this);
-    label->setPixmap( IconEngine::get( IconNames::Information ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::DialogInformation ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
     QGridLayout *gridLayout( new QGridLayout() );

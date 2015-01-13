@@ -50,7 +50,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     hLayout->setMargin(10);
     layout->addLayout( hLayout, 1 );
     QLabel* label = new QLabel( this );
-    label->setPixmap( IconEngine::get( IconNames::Warning ).pixmap( iconSize() ) );
+    label->setPixmap( IconEngine::get( IconNames::DialogWarning ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignHCenter );
     hLayout->addWidget( new QLabel( message, this ), 1, Qt::AlignHCenter );
 
