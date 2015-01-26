@@ -537,25 +537,25 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _installActions( void );
 
     //* main menu
-    Menu* menu_;
+    Menu* menu_ = nullptr;
 
     //* search panel
-    SearchPanel *searchPanel_;
+    SearchPanel *searchPanel_ = nullptr;
 
     //* state frame
-    ProgressStatusBar* statusbar_;
+    ProgressStatusBar* statusbar_ = nullptr;
 
     //* keyword model
-    KeywordModel keywordModel_;
+    KeywordModel keywordModel_ = nullptr;
 
     //* entry model
-    LogEntryModel entryModel_;
+    LogEntryModel entryModel_ = nullptr;
 
     //* logEntry list
-    AnimatedTreeView* entryList_;
+    AnimatedTreeView* entryList_ = nullptr;
 
     //* file check
-    FileCheck* fileCheck_;
+    FileCheck* fileCheck_ = nullptr;
 
     //* local TreeView to store size hint
     class KeywordList: public AnimatedTreeView
@@ -583,7 +583,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     };
 
     //* Keyword list
-    KeywordList *keywordList_;
+    KeywordList *keywordList_ = nullptr;
 
     //* color menu
     ColorMenu* colorMenu_;

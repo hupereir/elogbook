@@ -117,10 +117,10 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
     if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, parent ) );
 
     // dump text
-    if( !text().isEmpty() )
+    if( !text_.isEmpty() )
     {
-        QString text( LogEntry::text() );
-        if( text[text.size()-1] != '\n' ) text+='\n';
+        QString text( text_ );
+        if( !text.endsWith('\n') ) text+='\n';
 
         out.
             appendChild( parent.createElement( Xml::Text ) ).
@@ -176,7 +176,7 @@ bool LogEntry::matchKeyword( const QString& buffer ) const
 
 //__________________________________
 bool LogEntry::matchText(  const QString& buffer ) const
-{ return text().contains( buffer, _caseSensitive() ); }
+{ return text_.contains( buffer, _caseSensitive() ); }
 
 //__________________________________
 bool LogEntry::matchColor( const QString& buffer ) const

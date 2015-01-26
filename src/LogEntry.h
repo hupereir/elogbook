@@ -33,13 +33,13 @@
 #include <QDomElement>
 #include <QDomDocument>
 
-//! log file entry manipulation object
+//* log file entry manipulation object
 class LogEntry:public Counter, public Base::Key
 {
 
     public:
 
-    //! configuration mask
+    //* configuration mask
     enum MaskFlag
     {
         KeywordMask = 1<<0,
@@ -55,195 +55,195 @@ class LogEntry:public Counter, public Base::Key
 
     Q_DECLARE_FLAGS( Mask, MaskFlag )
 
-    //! empty creator
+    //* empty creator
     LogEntry( void );
 
-    //! constructor from DOM
+    //* constructor from DOM
     LogEntry( const QDomElement& );
 
-    //! destructor
+    //* destructor
     ~LogEntry( void );
 
-    //! DomElement
+    //* DomElement
     QDomElement domElement( QDomDocument& ) const;
 
-    //! return a new entry cloned from this
+    //* return a new entry cloned from this
     LogEntry *clone( void ) const;
 
-    //! mime type (for drag and drop)
+    //* mime type (for drag and drop)
     static const QString MimeType;
 
-    //!@name attributes
+    //*@name attributes
     //@{
 
-    //! set modification_ to _now_
+    //* set modification_ to _now_
     void modified( void );
 
-    //! creation TimeStamp
+    //* creation TimeStamp
     void setCreation( const TimeStamp stamp )
     { creation_ = stamp; }
 
-    //! creation TimeStamp
+    //* creation TimeStamp
     TimeStamp creation() const
     { return creation_; }
 
-    //! modification TimeStamp
+    //* modification TimeStamp
     void setModification( const TimeStamp stamp )
     { modification_ = stamp; }
 
-    //! modification TimeStamp
+    //* modification TimeStamp
     TimeStamp modification() const
     { return modification_; }
 
-    //! Log entry title
+    //* Log entry title
     void setTitle( const QString& title )
     { title_ = title; }
 
-    //! LogEntry title
+    //* LogEntry title
     QString title( void ) const
     { return title_; }
 
-    //! Log entry keyword
+    //* Log entry keyword
     void setKeyword( const Keyword& keyword )
     { keyword_ = keyword; }
 
-    //! Log entry keyword
+    //* Log entry keyword
     const Keyword& keyword( void ) const
     { return keyword_; }
 
-    //! Log entry author
+    //* Log entry author
     void setAuthor( const QString& author )
     { author_ = author; }
 
-    //! Log entry last author
+    //* Log entry last author
     QString author( void ) const
     { return author_; }
 
-    //! LogEntry color
+    //* LogEntry color
     void setColor(  QColor color )
     { color_ = color; }
 
-    //! LogEntry color
+    //* LogEntry color
     Base::Color color( void ) const
     { return color_; }
 
-    //! add TextFormatBlock
+    //* add TextFormatBlock
     void addFormat( const Format::TextFormatBlock& format )
     { formats_.append(format); }
 
-    //! entry text format
+    //* entry text format
     void setFormats( const Format::TextFormatBlock::List& formats )
     { formats_ = formats; }
 
-    //! entry text format
+    //* entry text format
     const Format::TextFormatBlock::List& formats( void ) const
     { return formats_; }
 
-    //! clears LogEntry text
+    //* clears LogEntry text
     void setText( const QString& text )
     { text_ = text; }
 
-    //! LogEntry text
+    //* LogEntry text
     const QString& text( void ) const
     { return text_; }
 
-    //! returns true if entry title matches buffer
+    //* returns true if entry title matches buffer
     bool matchTitle( const QString& buf ) const;
 
-    //! returns true if entry keyword matches buffer
+    //* returns true if entry keyword matches buffer
     bool matchKeyword( const QString& buf ) const;
 
-    //! returns true if entry text matches buffer
+    //* returns true if entry text matches buffer
     bool matchText(  const QString& buf ) const;
 
-    //! returns true if entry text matches buffer
+    //* returns true if entry text matches buffer
     bool matchColor(  const QString& buf ) const;
 
-    //! returns true if any entry attachment file name matches buffer
+    //* returns true if any entry attachment file name matches buffer
     bool matchAttachment( const QString& buf ) const;
 
-    //! set if entry is said visible by the find bar
+    //* set if entry is said visible by the find bar
     void setFindSelected( bool value )
     { findSelected_ = value; }
 
-    //! set if entry is said vidible by the keyword list
+    //* set if entry is said vidible by the keyword list
     void setKeywordSelected( bool value )
     { keywordSelected_ = value; }
 
-    //! returns true if entry is visible (i.e. selected by the find bar and keyword list)
+    //* returns true if entry is visible (i.e. selected by the find bar and keyword list)
     bool isSelected( void ) const
     { return findSelected_ && keywordSelected_; }
 
-    //! returns true if entry is selected by the find bar
+    //* returns true if entry is selected by the find bar
     bool isFindSelected( void ) const
     { return findSelected_; }
 
-    //! returns true if entry is selected by the keyword list
+    //* returns true if entry is selected by the keyword list
     bool isKeywordSelected( void ) const
     { return keywordSelected_; }
 
-    //! use to get last modified entry
+    //* use to get last modified entry
     class LastModifiedFTor
     {
 
         public:
 
-        //! returns true if first entry was modified after the second
+        //* returns true if first entry was modified after the second
         bool operator() ( const LogEntry* first, const LogEntry* second )
         { return second->modification() < first->modification(); }
 
     };
 
-    //! use to get first created entry
+    //* use to get first created entry
     class FirstCreatedFTor
     {
 
         public:
 
-        //! returns true if first entry was modified after the second
+        //* returns true if first entry was modified after the second
         bool operator() ( const LogEntry* first, const LogEntry* second )
         { return first->creation() < second->creation(); }
 
     };
 
-    //! use to check if entries have same creation time
+    //* use to check if entries have same creation time
     class SameCreationFTor
     {
         public:
 
-        //! constructor
+        //* constructor
         SameCreationFTor( const TimeStamp& stamp ):
             stamp_( stamp )
         {}
 
-        //! predicate
+        //* predicate
         bool operator()( const LogEntry *entry ) const
         { return entry->creation() == stamp_; }
 
         private:
 
-        //! predicted stamp
+        //* predicted stamp
         TimeStamp stamp_;
 
     };
 
-    //! use to check if entries have same creation and modification time
+    //* use to check if entries have same creation and modification time
     class DuplicateFTor
     {
         public:
 
-        //! constructor
+        //* constructor
         DuplicateFTor( LogEntry* entry ):
             entry_( entry )
         {}
 
-        //! predicate
+        //* predicate
         bool operator()( const LogEntry *entry ) const
         { return entry->creation() == entry_->creation(); }
 
         private:
 
-        //! predicte entry
+        //* predicte entry
         LogEntry *entry_;
 
     };
@@ -257,18 +257,18 @@ class LogEntry:public Counter, public Base::Key
     {
         public:
 
-        //! constructor
+        //* constructor
         MatchKeywordFTor( const Keyword& keyword ):
             keyword_( keyword )
         {}
 
-        //! predicate
+        //* predicate
         bool operator() (const LogEntry* entry ) const
         { return entry->keyword().inherits( keyword_ );}
 
         private:
 
-        //! comparison keyword
+        //* comparison keyword
         Keyword keyword_;
 
     };
@@ -276,43 +276,43 @@ class LogEntry:public Counter, public Base::Key
 
     private:
 
-    //! LogEntry color
+    //* LogEntry color
     void setColor( QString );
 
-    //! initialize fields (default values)
+    //* initialize fields (default values)
     void _init( void );
 
-    //! case sensitivity
+    //* case sensitivity
     Qt::CaseSensitivity _caseSensitive( void ) const;
 
-    //! log entry creation time
+    //* log entry creation time
     TimeStamp creation_;
 
-    //! log entry last modification time
+    //* log entry last modification time
     TimeStamp modification_;
 
-    //! log entry title
+    //* log entry title
     QString title_;
 
-    //! log entry keywords
+    //* log entry keywords
     Keyword keyword_;
 
-    //! last user name who had access to the entry
+    //* last user name who had access to the entry
     QString author_;
 
-    //! LogEntry text
+    //* LogEntry text
     QString text_;
 
-    //! LogEntry color
+    //* LogEntry color
     Base::Color color_;
 
-    //! set to true if entry is said visible by the selection bar
+    //* set to true if entry is said visible by the selection bar
     bool findSelected_;
 
-    //! set to true if entry is said visible by the keyword selection
+    //* set to true if entry is said visible by the keyword selection
     bool keywordSelected_;
 
-    //! list of text formats
+    //* list of text formats
     Format::TextFormatBlock::List formats_;
 
 };
