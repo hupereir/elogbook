@@ -546,10 +546,10 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     ProgressStatusBar* statusbar_ = nullptr;
 
     //* keyword model
-    KeywordModel keywordModel_ = nullptr;
+    KeywordModel keywordModel_;
 
     //* entry model
-    LogEntryModel entryModel_ = nullptr;
+    LogEntryModel entryModel_;
 
     //* logEntry list
     AnimatedTreeView* entryList_ = nullptr;
