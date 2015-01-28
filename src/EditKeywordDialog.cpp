@@ -21,7 +21,6 @@
 *******************************************************************************/
 
 #include "EditKeywordDialog.h"
-#include "EditKeywordDialog.moc"
 #include "Debug.h"
 
 #include <QLabel>

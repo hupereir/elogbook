@@ -23,7 +23,6 @@
 #include "GridLayout.h"
 #include "Debug.h"
 #include "NewAttachmentDialog.h"
-#include "NewAttachmentDialog.moc"
 
 #include <QLayout>
 #include <QLabel>

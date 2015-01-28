@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "LogbookInformationDialog.h"
-#include "LogbookInformationDialog.moc"
 
 #include "Debug.h"
 #include "IconNames.h"

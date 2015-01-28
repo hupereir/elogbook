@@ -21,7 +21,6 @@
 
 
 #include "LogEntryPrintSelectionWidget.h"
-#include "LogEntryPrintSelectionWidget.moc"
 #include "XmlOptions.h"
 
 #include <QLayout>

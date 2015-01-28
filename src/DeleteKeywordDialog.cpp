@@ -21,7 +21,6 @@
 *******************************************************************************/
 
 #include "DeleteKeywordDialog.h"
-#include "DeleteKeywordDialog.moc"
 #include "Debug.h"
 #include "IconNames.h"
 #include "IconEngine.h"

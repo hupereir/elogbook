@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "Logbook.h"
-#include "Logbook.moc"
 
 #include "Attachment.h"
 #include "Debug.h"

@@ -22,7 +22,6 @@
 
 #include "Debug.h"
 #include "NewLogbookDialog.h"
-#include "NewLogbookDialog.moc"
 #include "QtUtil.h"
 
 #include <QLabel>

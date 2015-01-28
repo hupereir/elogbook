@@ -29,7 +29,6 @@
 #include "MainWindow.h"
 #include "QtUtil.h"
 #include "SearchPanel.h"
-#include "SearchPanel.moc"
 #include "Singleton.h"
 #include "ToolBarMenu.h"
 #include "ToolButtonStyleMenu.h"

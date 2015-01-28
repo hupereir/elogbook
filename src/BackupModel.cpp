@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "BackupModel.h"
-#include "BackupModel.moc"
 
 //_______________________________________________
 const QString BackupModel::columnTitles_[ BackupModel::nColumns ] =

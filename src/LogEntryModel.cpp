@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "LogEntryModel.h"
-#include "LogEntryModel.moc"
 
 #include "Attachment.h"
 #include "ColorMenu.h"

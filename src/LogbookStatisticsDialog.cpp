@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "LogbookStatisticsDialog.h"
-#include "LogbookStatisticsDialog.moc"
 
 #include "AnimatedLineEditor.h"
 #include "Debug.h"

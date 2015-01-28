@@ -21,7 +21,6 @@
 *******************************************************************************/
 
 #include "DeleteAttachmentDialog.h"
-#include "DeleteAttachmentDialog.moc"
 #include "Debug.h"
 #include "IconNames.h"
 #include "IconEngine.h"

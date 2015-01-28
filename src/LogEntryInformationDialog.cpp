@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "LogEntryInformationDialog.h"
-#include "LogEntryInformationDialog.moc"
 
 #include "GridLayoutItem.h"
 #include "Debug.h"

@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "BackupManagerDialog.h"
-#include "BackupManagerDialog.moc"
 #include "BackupManagerWidget.h"
 #include "IconNames.h"
 #include "IconEngine.h"

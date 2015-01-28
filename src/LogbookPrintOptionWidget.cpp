@@ -21,7 +21,6 @@
 
 
 #include "LogbookPrintOptionWidget.h"
-#include "LogbookPrintOptionWidget.moc"
 #include "Logbook.h"
 #include "XmlOptions.h"
 

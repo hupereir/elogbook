@@ -20,7 +20,6 @@
 *******************************************************************************/
 
 #include "AttachmentModel.h"
-#include "AttachmentModel.moc"
 
 #include "Attachment.h"
 #include "IconEngine.h"
