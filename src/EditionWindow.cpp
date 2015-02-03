@@ -71,15 +71,7 @@
 EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     BaseMainWindow( parent ),
     Counter( "EditionWindow" ),
-    readOnly_( readOnly ),
-    closed_( false ),
-    forceShowKeyword_( false ),
-    colorMenu_( 0 ),
-    colorWidget_( 0 ),
-    activeEditor_( 0 ),
-    formatBar_( 0 ),
-    statusBar_( 0 ),
-    insertLinkAction_( 0 )
+    readOnly_( readOnly )
 {
     Debug::Throw("EditionWindow::EditionWindow.\n" );
     setOptionName( "EDITION_WINDOW" );
@@ -267,8 +259,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 }
 
 //____________________________________________
-EditionWindow::~EditionWindow( void )
-{ Debug::Throw( "EditionWindow::~EditionWindow.\n" ); }
+EditionWindow::~EditionWindow( void ) = default;
 
 //____________________________________________
 void EditionWindow::displayEntry( LogEntry *entry )

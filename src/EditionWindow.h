@@ -504,7 +504,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     void _installActions( void );
 
     //* if true, LogEntry associated to EditionWindow cannot be modified
-    bool readOnly_;
+    bool readOnly_ = false;
 
     //* list of buttons to disactivate in case of read-only
     using ActionList = QList< QAction* >;
@@ -514,16 +514,16 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* "closed" flag
     /*! this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
-    bool closed_;
+    bool closed_ = false;
 
     //* true if keyword is forced visible
-    bool forceShowKeyword_;
+    bool forceShowKeyword_ = false;
 
     //*@name stored actions to toggle visibility
     //@{
 
     //* lock toolbar
-    CustomToolBar* lock_;
+    CustomToolBar* lock_ = nullptr;
 
     //@}
 
@@ -547,22 +547,22 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     };
 
     //* main widget (that contains first editor)
-    QWidget *main_;
+    QWidget *main_ = nullptr;
 
     //* labels
-    QLabel* keywordLabel_;
+    QLabel* keywordLabel_ = nullptr;
 
     //* labels
-    QLabel* titleLabel_;
+    QLabel* titleLabel_ = nullptr;
 
     //* Keyword object
-    Editor* keywordEditor_;
+    Editor* keywordEditor_ = nullptr;
 
     //* LogEntry title Object
-    Editor *titleEditor_;
+    Editor *titleEditor_ = nullptr;
 
     //* color menu
-    ColorMenu* colorMenu_;
+    ColorMenu* colorMenu_ = nullptr;
 
     //* color widget
     class ColorWidget: public QToolButton, public Counter
@@ -590,19 +590,19 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     };
 
     //* color widget
-    ColorWidget* colorWidget_;
+    ColorWidget* colorWidget_ = nullptr;
 
     //* LogEntry text Object
-    LocalTextEditor *activeEditor_;
+    LocalTextEditor *activeEditor_ = nullptr;
 
     //* text format bar
-    FormatBar* formatBar_;
+    FormatBar* formatBar_ = nullptr;
 
     //* statusbar
-    BaseStatusBar* statusBar_;
+    BaseStatusBar* statusBar_ = nullptr;
 
     //* menu
-    Menu* menu_;
+    Menu* menu_ = nullptr;
 
     //*@name actions
     //@{
@@ -663,7 +663,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     QAction* showKeywordAction_;
 
     //* hyperlink action
-    QAction* insertLinkAction_;
+    QAction* insertLinkAction_ = nullptr;
 
     //@}
 
