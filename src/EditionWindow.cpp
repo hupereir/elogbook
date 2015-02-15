@@ -756,7 +756,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation
     QSplitter& splitter( _newSplitter( orientation ) );
 
     // create new display
-    LocalTextEditor& editor( _newTextEditor(0) );
+    LocalTextEditor& editor( _newTextEditor(nullptr) );
 
     // insert in splitter, at correct position
     splitter.insertWidget( splitter.indexOf( &activeEditorLocal )+1, &editor );
