@@ -25,7 +25,9 @@
 #include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
 #include "BaseContextMenu.h"
+#include "BaseFindWidget.h"
 #include "BaseIconNames.h"
+#include "BaseReplaceWidget.h"
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
@@ -51,6 +53,7 @@
 #include "PrintPreviewDialog.h"
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
+#include "SelectLineWidget.h"
 #include "Singleton.h"
 #include "OpenLinkDialog.h"
 #include "Util.h"
@@ -123,27 +126,38 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     layout->addWidget( splitter, 1 );
 
     // create text
-    splitter->addWidget( main_ = new QWidget() );
-    main_->setLayout( new QVBoxLayout() );
-    main_->layout()->setMargin(0);
-    main_->layout()->setSpacing(0);
+    QWidget* splitterWidget = new QWidget();
+    splitterWidget->setLayout( new QVBoxLayout() );
+    splitterWidget->layout()->setMargin(0);
+    splitterWidget->layout()->setSpacing(0);
+    splitter->addWidget( splitterWidget );
 
-    // assign stretch factors
+    QWidget* editorContainer = new QWidget( splitterWidget );
+    editorContainer->setLayout( new QVBoxLayout() );
+    editorContainer->layout()->setMargin(0);
+    editorContainer->layout()->setSpacing(0);
+    static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( editorContainer, 1 );
+
+    // container for embedded widgets
+    container_ = new QWidget( splitterWidget );
+    container_->setLayout( new QVBoxLayout() );
+    container_->layout()->setMargin(0);
+    container_->layout()->setSpacing(0);
+    static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( container_, 0 );
+
+    // first editor
+    LocalTextEditor& editor( _newTextEditor( editorContainer ) );
+    editorContainer->layout()->addWidget( &editor );
+
+    // assign stretch factors to splitters
     splitter->setStretchFactor( 0, 1 );
     splitter->setStretchFactor( 1, 0 );
 
     connect( splitter, SIGNAL(splitterMoved(int,int)), SLOT(_splitterMoved()) );
-
-    // create editor
-    LocalTextEditor& editor( _newTextEditor( main_ ) );
-    main_->layout()->addWidget( &editor );
-
     connect( keywordEditor_, SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
     connect( keywordEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
-
     connect( titleEditor_, SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
     connect( titleEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
-
     connect( activeEditor().document(), SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
 
     // create attachment list
@@ -887,6 +901,28 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
             formatBar_, SLOT(updateState(QTextCharFormat)) );
     }
 
+    // create embedded widgets and insert in container
+    if( container_ )
+    {
+        editor->setUseEmbeddedWidgets( true );
+
+        editor->createFindWidget( true );
+        editor->findWidget().setParent( container_ );
+        container_->layout()->addWidget( &editor->findWidget() );
+        editor->findWidget().hide();
+
+        editor->createReplaceWidget( true );
+        editor->replaceWidget().setParent( container_ );
+        container_->layout()->addWidget( &editor->replaceWidget() );
+        editor->replaceWidget().hide();
+
+        editor->createSelectLineWidget( true );
+        editor->selectLineWidget().setParent( container_ );
+        container_->layout()->addWidget( &editor->selectLineWidget() );
+        editor->selectLineWidget().hide();
+
+    }
+
     // associate display to this editFrame
     Base::Key::associate( this, editor );
 
@@ -1569,11 +1605,11 @@ void EditionWindow::_updateInsertLinkActions( void )
     const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && activeEditor().textCursor().hasSelection() );
 
     // disable main window action
-    if( hasInsertLinkAction() ) insertLinkAction_->setEnabled( enabled );
+    if( insertLinkAction_ ) insertLinkAction_->setEnabled( enabled );
 
     // also disable editors action
     Base::KeySet<LocalTextEditor> editors( this );
-    foreach( LocalTextEditor* editor, editors )
+    foreach( auto editor, editors )
     { editor->insertLinkAction().setEnabled( enabled ); }
 
 }

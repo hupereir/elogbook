@@ -296,9 +296,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     QAction& showKeywordAction( void ) const
     { return *showKeywordAction_; }
 
-    //* add hyperlink
-    bool hasInsertLinkAction( void ) const
-    { return insertLinkAction_; }
+//     //* add hyperlink
+//     bool hasInsertLinkAction( void ) const
+//     { return insertLinkAction_; }
 
     //* add hyperLink
     QAction& insertLinkAction( void ) const
@@ -546,13 +546,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     };
 
-    //* main widget (that contains first editor)
-    QWidget *main_ = nullptr;
-
-    //* labels
+    //* keyword label
     QLabel* keywordLabel_ = nullptr;
 
-    //* labels
+    //* title label
     QLabel* titleLabel_ = nullptr;
 
     //* Keyword object
@@ -593,7 +590,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     ColorWidget* colorWidget_ = nullptr;
 
     //* LogEntry text Object
-    LocalTextEditor *activeEditor_ = nullptr;
+    LocalTextEditor* activeEditor_ = nullptr;
+
+    //* embedded widgets container
+    QWidget* container_ = nullptr;
 
     //* text format bar
     FormatBar* formatBar_ = nullptr;
@@ -608,59 +608,59 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //@{
 
     //* undo
-    QAction* undoAction_;
+    QAction* undoAction_ = nullptr;
 
     //* redo
-    QAction* redoAction_;
+    QAction* redoAction_ = nullptr;
 
     //* new entry
-    QAction* newEntryAction_;
+    QAction* newEntryAction_ = nullptr;
 
     //* previous entry action
-    QAction* previousEntryAction_;
+    QAction* previousEntryAction_ = nullptr;
 
     //* next entry action
-    QAction* nextEntryAction_;
+    QAction* nextEntryAction_ = nullptr;
 
     //* save
-    QAction* saveAction_;
+    QAction* saveAction_ = nullptr;
 
     #if USE_ASPELL
-    QAction* spellcheckAction_;
+    QAction* spellcheckAction_ = nullptr;
     #endif
 
     //* entry information
-    QAction* entryInfoAction_;
+    QAction* entryInfoAction_ = nullptr;
 
     //* print
-    QAction* printAction_;
+    QAction* printAction_ = nullptr;
 
     //* print preview
-    QAction* printPreviewAction_;
+    QAction* printPreviewAction_ = nullptr;
 
     //* export to html
-    QAction* htmlAction_;
+    QAction* htmlAction_ = nullptr;
 
     //* split view horizontal
-    QAction* splitViewHorizontalAction_;
+    QAction* splitViewHorizontalAction_ = nullptr;
 
     //* split view vertical
-    QAction* splitViewVerticalAction_;
+    QAction* splitViewVerticalAction_ = nullptr;
 
     //* new window action
-    QAction* cloneWindowAction_;
+    QAction* cloneWindowAction_ = nullptr;
 
     //* close view (or window) action
-    QAction* closeAction_;
+    QAction* closeAction_ = nullptr;
 
     //* delete enty
-    QAction* deleteEntryAction_;
+    QAction* deleteEntryAction_ = nullptr;
 
     //* uniconify
-    QAction* uniconifyAction_;
+    QAction* uniconifyAction_ = nullptr;
 
     //* show keyword
-    QAction* showKeywordAction_;
+    QAction* showKeywordAction_ = nullptr;
 
     //* hyperlink action
     QAction* insertLinkAction_ = nullptr;
