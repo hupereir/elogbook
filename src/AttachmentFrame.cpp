@@ -68,16 +68,17 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     layout()->setSpacing(5);
 
     // create list
-    layout()->addWidget( list_ = new TreeView( this ) );
-    list_->setModel( &_model() );
-    list_->setSelectionMode( QAbstractItemView::ContiguousSelection );
-    list_->setOptionName( "ATTACHMENTLIST" );
-    list_->setTextElideMode ( Qt::ElideMiddle );
+    treeView_ = new TreeView();
+    layout()->addWidget( new TreeView::Container( this, treeView_ ) );
+    treeView_->setModel( &_model() );
+    treeView_->setSelectionMode( QAbstractItemView::ContiguousSelection );
+    treeView_->setOptionName( "ATTACHMENTLIST" );
+    treeView_->setTextElideMode ( Qt::ElideMiddle );
 
     // install actions
     _installActions();
 
-    contextMenu_ = new ContextMenu( list_ );
+    contextMenu_ = new ContextMenu( treeView_ );
     contextMenu_->addAction( newAction_ );
     contextMenu_->addAction( openAction_ );
     contextMenu_->addAction( saveAsAction_ );
@@ -88,9 +89,9 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     contextMenu_->addAction( cleanAction_ );
 
     // connections
-    connect( list_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateActions()) );
-    connect( list_->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(_itemSelected(QModelIndex)) );
-    connect( list_, SIGNAL(activated(QModelIndex)), SLOT(_open()) );
+    connect( treeView_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateActions()) );
+    connect( treeView_->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(_itemSelected(QModelIndex)) );
+    connect( treeView_, SIGNAL(activated(QModelIndex)), SLOT(_open()) );
 
     connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
@@ -115,7 +116,7 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
     { Base::Key::associate( this, attachment ); }
 
     model_.add( attachments );
-    list_->resizeColumns();
+    treeView_->resizeColumns();
 
 }
 
@@ -126,7 +127,7 @@ void AttachmentFrame::update( Attachment& attachment )
     Debug::Throw( "AttachmentFrame::update.\n" );
     Q_ASSERT( attachment.isAssociated( this ) );
     model_.add( &attachment );
-    list_->resizeColumns();
+    treeView_->resizeColumns();
 
 }
 
@@ -141,10 +142,10 @@ void AttachmentFrame::select( Attachment& attachment )
     QModelIndex index( model_.index( &attachment ) );
 
     // check if index is valid and not selected
-    if( ( !index.isValid() ) || list_->selectionModel()->isSelected( index ) ) return;
+    if( ( !index.isValid() ) || treeView_->selectionModel()->isSelected( index ) ) return;
 
     // select
-    list_->selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
+    treeView_->selectionModel()->select( index,  QItemSelectionModel::Clear|QItemSelectionModel::Select|QItemSelectionModel::Rows );
 
     return;
 
@@ -413,7 +414,7 @@ void AttachmentFrame::_updateConfiguration( void )
 
     Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
     int icon_size( XmlOptions::get().get<int>( "ATTACHMENT_LIST_ICON_SIZE" ) );
-    list_->setIconSize( QSize( icon_size, icon_size ) );
+    treeView_->setIconSize( QSize( icon_size, icon_size ) );
 
 }
 
@@ -421,7 +422,7 @@ void AttachmentFrame::_updateConfiguration( void )
 void AttachmentFrame::_updateActions( void )
 {
 
-    bool hasSelection( !list_->selectionModel()->selectedRows().isEmpty() );
+    bool hasSelection( !treeView_->selectionModel()->selectedRows().isEmpty() );
     newAction_->setEnabled( !readOnly_ );
     openAction_->setEnabled( hasSelection );
     saveAsAction_->setEnabled( hasSelection );
@@ -438,7 +439,7 @@ void AttachmentFrame::_open( void )
     Debug::Throw( "AttachmentFrame::_open.\n" );
 
     // get selection
-    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -499,7 +500,7 @@ void AttachmentFrame::_edit( void )
 
     // store selected item locally
     // get selection
-    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -550,7 +551,7 @@ void AttachmentFrame::_delete( void )
 
     // store selected item locally
     // get selection
-    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -625,7 +626,7 @@ void AttachmentFrame::_delete( void )
         window.saveAction().trigger();
 
         // resize columns
-        list_->resizeColumns();
+        treeView_->resizeColumns();
     }
 
     return;
@@ -638,7 +639,7 @@ void AttachmentFrame::_reload( void )
     Debug::Throw( "AttachmentFrame::_reload.\n" );
 
     // get selection
-    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )
@@ -662,7 +663,7 @@ void AttachmentFrame::_saveAs( void )
     Debug::Throw( "AttachmentFrame::_saveAs.\n" );
 
     // get selection
-    AttachmentModel::List selection( model_.get( list_->selectionModel()->selectedRows() ) );
+    AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
 
     // check items
     if( selection.empty() )

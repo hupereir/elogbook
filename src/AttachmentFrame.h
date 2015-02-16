@@ -60,11 +60,11 @@ class AttachmentFrame: public QWidget, public Base::Key
 
     //! list
     bool hasList( void ) const
-    { return (bool) list_; }
+    { return (bool) treeView_; }
 
     //! list
     TreeView& list( void ) const
-    { return *list_; }
+    { return *treeView_; }
 
     //! clear
     void clear( void )
@@ -254,7 +254,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     AttachmentModel model_;
 
     //! list
-    TreeView* list_;
+    TreeView* treeView_;
 
     // valid file thread
     ValidFileThread thread_;
