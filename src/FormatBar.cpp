@@ -35,6 +35,7 @@
 #include "XmlOptions.h"
 
 #include <QPainter>
+#include <QStyleOptionToolButton>
 #include <QStylePainter>
 #include <QTextBlock>
 #include <QTextCursor>
@@ -380,16 +381,21 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
     if( color_.isValid() )
     {
 
+        // prepare option
+        QStyleOptionToolButton toolButtonOption;
+        toolButtonOption.initFrom(this);
+        toolButtonOption.features |= QStyleOptionToolButton::MenuButtonPopup;
+
+        QRect subRect( style()->subControlRect(
+            QStyle::CC_ToolButton,
+            &toolButtonOption,
+            QStyle::SC_ToolButton,
+            this ) );
+
+
         QPainter painter( this );
-        painter.setClipRect( event->rect() );
-        painter.setRenderHint( QPainter::Antialiasing );
-        painter.setBrush( color_ );
-        painter.setPen( Qt::NoPen );
-        QRectF tmpRect( FormatColorButton::rect() );
-        tmpRect.setWidth( 0.5*qMin( rect().width(), rect().height() ) );
-        tmpRect.setHeight( 0.5*qMin( rect().width(), rect().height() ) );
-        tmpRect.translate( rect().width() - tmpRect.width(), rect().height() - tmpRect.height() );
-        painter.drawEllipse( tmpRect );
+        painter.setPen( color_ );
+        painter.drawLine( subRect.bottomLeft() + QPoint( 3, -3 ), subRect.bottomRight() + QPoint( -3, -3 ) );
         painter.end();
 
     }
