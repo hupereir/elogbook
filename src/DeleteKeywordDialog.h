@@ -36,7 +36,7 @@ class DeleteKeywordDialog: public CustomDialog
     public:
 
     //! constructor
-    DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&, const bool& has_entries );
+    DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&, bool has_entries );
 
     //! destructor
     virtual ~DeleteKeywordDialog( void )

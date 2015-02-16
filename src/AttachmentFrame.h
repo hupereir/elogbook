@@ -103,7 +103,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     }
 
     //! read only state
-    const bool& readOnly( void ) const
+    bool readOnly( void ) const
     { return readOnly_; }
 
     //! context menu

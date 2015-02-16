@@ -90,11 +90,11 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     //@{
 
     //! enable edition
-    const bool& editionEnabled( void ) const
+    bool editionEnabled( void ) const
     { return editionEnabled_; }
 
     //! enable edition
-    void setEditionEnabled( const bool& value )
+    void setEditionEnabled( bool value )
     { editionEnabled_ = value; }
 
     //! edition index

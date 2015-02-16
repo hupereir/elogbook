@@ -1645,7 +1645,7 @@ void EditionWindow::LocalTextEditor::_installActions( void )
 }
 
 //___________________________________________________________________________________
-void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, const bool& allActions )
+void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, bool allActions )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::installContextMenuActions.\n" );
     AnimatedTextEditor::installContextMenuActions( menu, allActions );

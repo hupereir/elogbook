@@ -138,7 +138,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
         protected:
 
         //* install actions in context menu
-        virtual void installContextMenuActions( BaseContextMenu*, const bool& = true );
+        virtual void installContextMenuActions( BaseContextMenu*, bool = true );
 
         private:
 

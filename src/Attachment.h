@@ -41,75 +41,75 @@ class LogEntry;
 class Attachment: public Counter, public Base::Key
 {
     public:
-    
+
     //! default string when no file given
     static const QString NoFile;
-    
+
     //! default string when no comments given
     static const QString NoComments;
-    
+
     //! no size
     static const QString NoSize;
-    
+
     //! contructor
     Attachment( const QString = QString(), const AttachmentType& = AttachmentType::Unknown );
-    
+
     //! creator from DomElement
     Attachment( const QDomElement& element );
-    
+
     //! destructor
     ~Attachment( void )
     {}
-    
+
     //! domElement
     QDomElement domElement( QDomDocument& parent ) const;
-    
+
     /*!\fn bool operator < (const Attachment& attachment ) const
     \brief inferior to operator, based on Attachment Short name lexicographic order
     \param attachment the attachment to which this is to be compared
     */
     bool operator < (const Attachment& attachment ) const;
-    
+
     /*!\fn bool operator == (const Attachment& attachment ) const
     \brief equal to operator, based on Attachment Full name
     \param attachment the attachment to which this is to be compared
     */
     bool operator == (const Attachment& attachment ) const
     { return file() == attachment.file(); }
-    
+
     //! used to check attachment filenames
     class SameFileFTor
     {
         public:
-        
+
         //! constructor
         SameFileFTor( Attachment* attachment ):
             attachment_( attachment )
         {}
-        
+
         //! predicate
         bool operator()(Attachment* attachment )
         { return *attachment == *attachment_; }
-        
+
         private:
-        
+
         //! reference attachment
         Attachment* attachment_;
-        
+
     };
-    
+
     //! validity
-    bool setIsValid( const bool& value )
+    bool setIsValid( bool value )
     {
         if( valid_ == value ) return false;
         valid_ = value;
         return true;
     }
-    
+
     //! validity
     bool isValid( void ) const
     { return valid_; }
-    
+
     //! link state
     enum LinkState
     {
@@ -117,7 +117,7 @@ class Attachment: public Counter, public Base::Key
         Yes,
         No
     };
-        
+
     //! link
     bool setIsLink( const LinkState& value )
     {
@@ -125,51 +125,51 @@ class Attachment: public Counter, public Base::Key
         isLink_ = value;
         return true;
     }
-    
+
     //! link
     LinkState isLink( void ) const
     { return isLink_; }
-    
+
     //! read file size
     void updateSize( void );
-    
+
     //! retrieves local file size
     double size( void ) const
     { return size_; }
-    
+
     //! retrieves local file size
     QString sizeString( void ) const
     { return sizeString_; }
-    
+
     //! retrieves associated entry
     LogEntry* entry() const;
-    
+
     //! update time stamps
     bool updateTimeStamps( void );
-    
+
     //! file creation
     TimeStamp creation( void ) const
     { return creation_; }
-    
+
     //! retrieves file last modification
     TimeStamp modification( void ) const
     { return modification_; }
-    
+
     //! retrieves original file name
     const File& sourceFile( void ) const
     { return source_file_; }
-    
+
     //! retrieves attachment file name
     const File& file( void ) const
     { return file_; }
-    
+
     //! retrieves attachment short file name
     File shortFile( void ) const;
-    
+
     //! retrieves attachment comments
     const QString& comments( void ) const
     { return comments_; }
-    
+
     //! appends string to attachment comments
     bool setComments( const QString& buf )
     {
@@ -177,16 +177,16 @@ class Attachment: public Counter, public Base::Key
         comments_ = buf;
         return true;
     }
-    
+
     //! retrieves attachment type
     const AttachmentType& type( void ) const
     { return type_; }
-    
+
     //! changes attachment type
     bool setType( const AttachmentType& type );
-    
+
     //! command enum to tell who original file should be transformed into attached file
-    enum Command 
+    enum Command
     {
         Copy,
         Link,
@@ -194,11 +194,11 @@ class Attachment: public Counter, public Base::Key
         ForceLink,
         CopyVersion,
         LinkVersion,
-        Nothing 
+        Nothing
     };
-    
+
     //! error codes output enum for ProcessCopy
-    enum ErrorCode 
+    enum ErrorCode
     {
         Success,
         SourceNotFound,

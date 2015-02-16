@@ -30,7 +30,7 @@
 #include <QLayout>
 
 //_____________________________________________________
-DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, const bool& hasEntries ):
+DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, bool hasEntries ):
     CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
