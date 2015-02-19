@@ -29,7 +29,6 @@
 #include "IconNames.h"
 
 #include <QGridLayout>
-#include <QButtonGroup>
 #include <QToolButton>
 #include <QLabel>
 

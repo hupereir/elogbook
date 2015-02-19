@@ -24,37 +24,34 @@
 
 #include "CustomDialog.h"
 
-#include <QRadioButton>
-
 class CustomComboBox;
 
 class OpenLinkDialog: public CustomDialog
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! constructor
+    //* constructor
     OpenLinkDialog( QWidget*, const QString& );
 
-    //! destructor
-    virtual ~OpenLinkDialog( void )
-    {}
+    //* destructor
+    virtual ~OpenLinkDialog( void ) = default;
 
-    //! combo box
+    //* combo box
     CustomComboBox& actionComboBox( void ) const
     { return *actionComboBox_; }
 
     protected Q_SLOTS:
 
-    //! select action from fileSelection dialog.
+    //* select action from fileSelection dialog.
     void _browse( void );
 
     private:
 
-    CustomComboBox* actionComboBox_;
+    CustomComboBox* actionComboBox_ = nullptr;
 
 };
 
