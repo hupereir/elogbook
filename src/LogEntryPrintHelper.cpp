@@ -225,7 +225,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
         // layout text
         textLayout.beginLayout();
         qreal height(0);
-        while( true )
+        forever
         {
             QTextLine line = textLayout.createLine();
             if (!line.isValid()) break;
