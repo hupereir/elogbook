@@ -32,6 +32,7 @@ find_program(FIREFOX firefox)
 find_program(QEDIT qedit)
 find_program(OKULAR okular)
 find_program(GWENVIEW gwenview)
+find_program(XDG_OPEN xdg-open)
 
 ########### aspell ###############
 find_program(ASPELL aspell)

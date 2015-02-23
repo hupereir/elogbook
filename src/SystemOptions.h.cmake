@@ -30,23 +30,33 @@
 //! System options installer
 void installSystemOptions( void )
 {
-  // set system dependent options
+    // set system dependent options
 
-  XmlOptions::get().setAutoDefault( true );
+    XmlOptions::get().setAutoDefault( true );
 
-  XmlOptions::get().set( "EDIT_HTML_ATC", Option( "@FIREFOX@" , "to edit html attachments"  ) );
-  XmlOptions::get().set( "EDIT_IMAGE_ATC", Option( "@GWENVIEW@" , "to edit image type attachments"  ) );
-  XmlOptions::get().set( "EDIT_PLAIN_TEXT_ATC", Option( "@QEDIT@" , "to edit plain text attachments"  ) );
-  XmlOptions::get().set( "EDIT_POSTSCRIPT_ATC", Option( "@OKULAR@" , "to edit postscript attachments"  ) );
-  XmlOptions::get().set( "EDIT_UNKNOWN_ATC", Option( "@QEDIT@" , "to edit unknown type attachments"  ) );
-  XmlOptions::get().set( "EDIT_URL_ATC", Option( "@FIREFOX@" , "to edit url attachments"  ) );
+    #if defined(Q_OS_WIN)
+    XmlOptions::get().set( "EDIT_HTML_ATC", Option( "@FIREFOX@" , "to edit html attachments"  ) );
+    XmlOptions::get().set( "EDIT_IMAGE_ATC", Option( "@GWENVIEW@" , "to edit image type attachments"  ) );
+    XmlOptions::get().set( "EDIT_PLAIN_TEXT_ATC", Option( "@QEDIT@" , "to edit plain text attachments"  ) );
+    XmlOptions::get().set( "EDIT_POSTSCRIPT_ATC", Option( "@OKULAR@" , "to edit postscript attachments"  ) );
+    XmlOptions::get().set( "EDIT_UNKNOWN_ATC", Option( "@QEDIT@" , "to edit unknown type attachments"  ) );
+    XmlOptions::get().set( "EDIT_URL_ATC", Option( "@FIREFOX@" , "to edit url attachments"  ) );
+    #else
+    XmlOptions::get().set( "EDIT_HTML_ATC", Option( "@XDG_OPEN@" , "to edit html attachments"  ) );
+    XmlOptions::get().set( "EDIT_IMAGE_ATC", Option( "@XDG_OPEN@" , "to edit image type attachments"  ) );
+    XmlOptions::get().set( "EDIT_PLAIN_TEXT_ATC", Option( "@XDG_OPEN@" , "to edit plain text attachments"  ) );
+    XmlOptions::get().set( "EDIT_POSTSCRIPT_ATC", Option( "@XDG_OPEN@" , "to edit postscript attachments"  ) );
+    XmlOptions::get().set( "EDIT_UNKNOWN_ATC", Option( "@XDG_OPEN@" , "to edit unknown type attachments"  ) );
+    XmlOptions::get().set( "EDIT_URL_ATC", Option( "@XDG_OPEN@" , "to edit url attachments"  ) );
+    XmlOptions::get().set( "XDG_OPEN", Option( "@XDG_OPEN@" , "to edit url attachments"  ) );
+    #endif
 
-  #ifdef USE_ASPELL
-  XmlOptions::get().set( "ASPELL", Option( "@ASPELL@", "aspell command" ) );
-  XmlOptions::get().set( "DICTIONARY", Option( "en" , "default dictionary"  ) );
-  XmlOptions::get().set( "DICTIONARY_FILTER", Option( "none" , "default filter"  ) );
-  #endif
-  XmlOptions::get().setAutoDefault( false );
+    #ifdef USE_ASPELL
+    XmlOptions::get().set( "ASPELL", Option( "@ASPELL@", "aspell command" ) );
+    XmlOptions::get().set( "DICTIONARY", Option( "en" , "default dictionary"  ) );
+    XmlOptions::get().set( "DICTIONARY_FILTER", Option( "none" , "default filter"  ) );
+    #endif
+    XmlOptions::get().setAutoDefault( false );
 
 };
 

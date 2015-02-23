@@ -31,6 +31,7 @@
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
+#include "CustomProcess.h"
 #include "CustomToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
@@ -1668,16 +1669,50 @@ void EditionWindow::_updateConfiguration( void )
 
 }
 
-//___________________________________________________________________________________
-void EditionWindow::LocalTextEditor::_installActions( void )
+//______________________________________________________
+EditionWindow::LocalTextEditor::LocalTextEditor( QWidget* parent ):
+    AnimatedTextEditor( parent )
 {
-    Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
-    addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
-    addAction( openLinkAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Open Link..." ), this ) );
-    addAction( copyLinkAction_ = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Link Location" ), this ) );
+    setMouseTracking( true );
+    _installActions();
+}
 
-    // disable insert link action by default
-    insertLinkAction_->setEnabled( false );
+//______________________________________________________
+void EditionWindow::LocalTextEditor::mouseMoveEvent( QMouseEvent* event )
+{
+    // do nothing if some buttons are pressed
+    if( !( event->buttons() || anchorAt( event->pos() ).isEmpty() ) )
+    {
+        viewport()->setCursor( Qt::PointingHandCursor );
+
+    } else viewport()->setCursor( Qt::IBeamCursor );
+
+    // base class
+    return AnimatedTextEditor::mouseMoveEvent( event );
+
+}
+
+//______________________________________________________
+void EditionWindow::LocalTextEditor::mouseReleaseEvent( QMouseEvent* event )
+{
+    QString command;
+    QString anchor;
+    if(
+        event->button() == Qt::LeftButton &&
+        !event->modifiers() &&
+        !textCursor().hasSelection() &&
+        !( anchor = anchorAt( event->pos() ) ).isEmpty() &&
+        File( ( command = XmlOptions::get().raw( "XDG_OPEN" ) ) ).exists() )
+    {
+
+        // run xdg-open
+        CustomProcess* process( new CustomProcess( this ) );
+        process->setAutoDelete();
+        process->start( QStringList() << command << anchor );
+
+    }
+    return AnimatedTextEditor::mouseReleaseEvent( event );
+
 }
 
 //___________________________________________________________________________________
@@ -1699,6 +1734,18 @@ void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu*
     // separator
     menu->insertSeparator( &showLineNumberAction() );
 
+}
+
+//___________________________________________________________________________________
+void EditionWindow::LocalTextEditor::_installActions( void )
+{
+    Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
+    addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
+    addAction( openLinkAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Open Link..." ), this ) );
+    addAction( copyLinkAction_ = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Link Location" ), this ) );
+
+    // disable insert link action by default
+    insertLinkAction_->setEnabled( false );
 }
 
 //___________________________________________________________________________________

@@ -111,13 +111,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
         public:
 
         //* constructor
-        LocalTextEditor( QWidget* parent ):
-            AnimatedTextEditor( parent )
-        { _installActions(); }
+        LocalTextEditor( QWidget* );
 
         //* destructor
-        virtual ~LocalTextEditor( void )
-        {}
+        virtual ~LocalTextEditor( void ) = default;
 
         //* insert link action
         QAction& insertLinkAction( void ) const
@@ -139,6 +136,12 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
         //* install actions in context menu
         virtual void installContextMenuActions( BaseContextMenu*, bool = true );
+
+        //* mouse move event
+        virtual void mouseMoveEvent( QMouseEvent* );
+
+        //* mouse release event
+        virtual void mouseReleaseEvent( QMouseEvent* );
 
         private:
 
@@ -296,10 +299,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     QAction& showKeywordAction( void ) const
     { return *showKeywordAction_; }
 
-//     //* add hyperlink
-//     bool hasInsertLinkAction( void ) const
-//     { return insertLinkAction_; }
-
     //* add hyperLink
     QAction& insertLinkAction( void ) const
     { return *insertLinkAction_; }
@@ -332,11 +331,16 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     protected:
 
+    //*@name event filters
+    //@{
+
     //* close window event handler
-    virtual void closeEvent( QCloseEvent *event );
+    virtual void closeEvent( QCloseEvent* );
 
     //* timer event
     virtual void timerEvent( QTimerEvent* );
+
+    //@}
 
     //*@name display management
     //@{

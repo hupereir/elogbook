@@ -23,31 +23,17 @@
 #include "Debug.h"
 #include "DefaultOptions.h"
 #include "SystemOptions.h"
-#include "ErrorHandler.h"
 #include "Singleton.h"
 #include "XmlFileRecord.h"
 #include "XmlMigration.h"
 #include "XmlOptions.h"
 
 #include <QApplication>
-#include <signal.h>
-#include <unistd.h>
-
-//_______________________________
-//! to handle keyboard interruptions
-void interrupt( int sig );
 
 //__________________________________________
 //! main function
 int main (int argc, char *argv[])
 {
-
-    // Ensure proper cleaning at exit
-    signal(SIGINT,  interrupt);
-    signal(SIGTERM, interrupt);
-
-    // install error handler
-    ErrorHandler::initialize();
 
     // options
     installDefaultOptions();
@@ -79,11 +65,4 @@ int main (int argc, char *argv[])
 
     return 0;
 
-}
-
-//_____________________________________________
-void interrupt( int sig )
-{
-    Debug::Throw() << "interrupt - Recieved signal " << sig << endl;
-    qApp->quit();
 }
