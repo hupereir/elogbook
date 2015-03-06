@@ -29,7 +29,6 @@
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
-#include "CustomProcess.h"
 #include "CustomToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
@@ -885,7 +884,6 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     // connections
     connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
     connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
-    connect( &editor->copyLinkAction(), SIGNAL(triggered()), SLOT(_copyLinkLocation()) );
     connect( editor, SIGNAL(anchorClicked(QString)), SLOT(_openLink(QString)) );
     connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
     connect( editor, SIGNAL(cursorPositionChanged()), SLOT(_displayCursorPosition()) );
@@ -1408,28 +1406,8 @@ void EditionWindow::_openLink( QString anchor )
     if( anchor.isEmpty() ) return;
     const QString command( XmlOptions::get().raw( "XDG_OPEN" ) );
     if( File( command ).exists() )
-    {
+    { ( Command( command ) << anchor ).run(); }
 
-        // run xdg-open
-        CustomProcess* process( new CustomProcess( this ) );
-        process->setAutoDelete();
-        process->start( QStringList() << command << anchor );
-
-    }
-
-}
-
-//_____________________________________________
-void EditionWindow::_copyLinkLocation( void )
-{
-    Debug::Throw( "EditionWindow::_copyLinkLocation.\n" );
-    QString anchor( activeEditor().anchor() );
-    if( anchor.isEmpty() ) return;
-
-    // copy selected text to clipboard
-    qApp->clipboard()->setText( anchor, QClipboard::Clipboard );
-    if( qApp->clipboard()->supportsSelection() ) qApp->clipboard()->setText( anchor, QClipboard::Selection );
-    if( qApp->clipboard()->supportsFindBuffer() ) qApp->clipboard()->setText( anchor, QClipboard::FindBuffer );
 }
 
 //_____________________________________________
@@ -1706,10 +1684,7 @@ void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu*
 
     // open link
     if( !anchorAt( _contextMenuPosition() ).isEmpty() )
-    {
-        menu->insertAction( &showLineNumberAction(), openLinkAction_ );
-        menu->insertAction( &showLineNumberAction(), copyLinkAction_ );
-    }
+    { menu->insertAction( &copyLinkAction(), openLinkAction_ ); }
 
     // separator
     menu->insertSeparator( &showLineNumberAction() );
@@ -1722,7 +1697,6 @@ void EditionWindow::LocalTextEditor::_installActions( void )
     Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
     addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
     addAction( openLinkAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Open Link..." ), this ) );
-    addAction( copyLinkAction_ = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Link Location" ), this ) );
 
     // disable insert link action by default
     insertLinkAction_->setEnabled( false );
