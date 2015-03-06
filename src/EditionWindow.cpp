@@ -886,6 +886,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
     connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
     connect( &editor->copyLinkAction(), SIGNAL(triggered()), SLOT(_copyLinkLocation()) );
+    connect( editor, SIGNAL(anchorClicked(QString)), SLOT(_openLink(QString)) );
     connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
     connect( editor, SIGNAL(cursorPositionChanged()), SLOT(_displayCursorPosition()) );
     connect( editor, SIGNAL(modifiersChanged(TextEditor::Modifiers)), SLOT(_modifiersChanged(TextEditor::Modifiers)) );
@@ -1400,6 +1401,25 @@ void EditionWindow::_openLink( void )
 }
 
 //_____________________________________________
+void EditionWindow::_openLink( QString anchor )
+{
+
+    Debug::Throw( "EditionWindow::_openLink.\n" );
+    if( anchor.isEmpty() ) return;
+    const QString command( XmlOptions::get().raw( "XDG_OPEN" ) );
+    if( File( command ).exists() )
+    {
+
+        // run xdg-open
+        CustomProcess* process( new CustomProcess( this ) );
+        process->setAutoDelete();
+        process->start( QStringList() << command << anchor );
+
+    }
+
+}
+
+//_____________________________________________
 void EditionWindow::_copyLinkLocation( void )
 {
     Debug::Throw( "EditionWindow::_copyLinkLocation.\n" );
@@ -1671,46 +1691,8 @@ void EditionWindow::_updateConfiguration( void )
 EditionWindow::LocalTextEditor::LocalTextEditor( QWidget* parent ):
     AnimatedTextEditor( parent )
 {
-    setMouseTracking( true );
+    setTrackAnchors( true );
     _installActions();
-}
-
-//______________________________________________________
-void EditionWindow::LocalTextEditor::mouseMoveEvent( QMouseEvent* event )
-{
-    // do nothing if some buttons are pressed
-    if( !( event->buttons() || anchorAt( event->pos() ).isEmpty() ) )
-    {
-        viewport()->setCursor( Qt::PointingHandCursor );
-
-    } else viewport()->setCursor( Qt::IBeamCursor );
-
-    // base class
-    return AnimatedTextEditor::mouseMoveEvent( event );
-
-}
-
-//______________________________________________________
-void EditionWindow::LocalTextEditor::mouseReleaseEvent( QMouseEvent* event )
-{
-    QString command;
-    QString anchor;
-    if(
-        event->button() == Qt::LeftButton &&
-        !event->modifiers() &&
-        !textCursor().hasSelection() &&
-        !( anchor = anchorAt( event->pos() ) ).isEmpty() &&
-        File( ( command = XmlOptions::get().raw( "XDG_OPEN" ) ) ).exists() )
-    {
-
-        // run xdg-open
-        CustomProcess* process( new CustomProcess( this ) );
-        process->setAutoDelete();
-        process->start( QStringList() << command << anchor );
-
-    }
-    return AnimatedTextEditor::mouseReleaseEvent( event );
-
 }
 
 //___________________________________________________________________________________

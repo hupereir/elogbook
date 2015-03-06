@@ -135,12 +135,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
         //* install actions in context menu
         virtual void installContextMenuActions( BaseContextMenu*, bool = true );
 
-        //* mouse move event
-        virtual void mouseMoveEvent( QMouseEvent* );
-
-        //* mouse release event
-        virtual void mouseReleaseEvent( QMouseEvent* );
-
         private:
 
         //* install actions
@@ -435,6 +429,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* view link
     void _openLink( void );
+
+    //* open link
+    void _openLink( QString );
 
     //* view link
     void _copyLinkLocation( void );
