@@ -1,8 +1,6 @@
 #ifndef AttachmentModel_h
 #define AttachmentModel_h
 
-// $Id$
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>

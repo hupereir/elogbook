@@ -1,6 +1,5 @@
 #ifndef LogbookStatisticsDialog_h
 #define LogbookStatisticsDialog_h
-// $Id$
 
 /******************************************************************************
 *

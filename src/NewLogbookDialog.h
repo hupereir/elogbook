@@ -1,8 +1,6 @@
 #ifndef NewLogbookDialog_h
 #define NewLogbookDialog_h
 
-// $Id$
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>

@@ -1,4 +1,3 @@
-// $Id$
 #ifndef LogbookModifiedDialog_h
 #define LogbookModifiedDialog_h
 

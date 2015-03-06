@@ -1,8 +1,6 @@
 #ifndef OpenLinkDialog_h
 #define OpenLinkDialog_h
 
-// $Id$
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>

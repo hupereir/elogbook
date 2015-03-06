@@ -1,8 +1,6 @@
 #ifndef LogEntryPrintSelectionWidget_h
 #define LogEntryPrintSelectionWidget_h
 
-// $Id$
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>

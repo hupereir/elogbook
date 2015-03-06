@@ -1,6 +1,5 @@
 #ifndef BackupManagerWidget_h
 #define BackupManagerWidget_h
-// $Id$
 
 /******************************************************************************
 *

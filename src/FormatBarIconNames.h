@@ -1,8 +1,6 @@
 #ifndef FormatBarIconNames_h
 #define FormatBarIconNames_h
 
-// $Id$
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>

@@ -1,4 +1,3 @@
-// $Id$
 #ifndef FormatBar_h
 #define FormatBar_h
 

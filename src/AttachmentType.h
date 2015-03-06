@@ -1,6 +1,5 @@
 #ifndef AttachmentType_h
 #define AttachmentType_h
-// $Id$
 
 /******************************************************************************
 *

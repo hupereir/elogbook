@@ -1,4 +1,3 @@
-// $Id$
 #ifndef MainWindow_h
 #define MainWindow_h
 

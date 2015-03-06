@@ -1,6 +1,5 @@
 #ifndef LogEntryInformationDialog_h
 #define LogEntryInformationDialog_h
-// $Id$
 
 /******************************************************************************
 *

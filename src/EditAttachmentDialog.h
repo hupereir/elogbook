@@ -1,8 +1,6 @@
 #ifndef EditAttachmentDialog_h
 #define EditAttachmentDialog_h
 
-// $Id$
-
 /******************************************************************************
 *
 * Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
