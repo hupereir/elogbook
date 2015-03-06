@@ -884,7 +884,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     // connections
     connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
     connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
-    connect( editor, SIGNAL(anchorClicked(QString)), SLOT(_openLink(QString)) );
+    connect( editor, SIGNAL(linkActivated(QString)), SLOT(_openLink(QString)) );
     connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
     connect( editor, SIGNAL(cursorPositionChanged()), SLOT(_displayCursorPosition()) );
     connect( editor, SIGNAL(modifiersChanged(TextEditor::Modifiers)), SLOT(_modifiersChanged(TextEditor::Modifiers)) );
