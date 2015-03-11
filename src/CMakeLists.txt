@@ -43,15 +43,6 @@ set(elogbook_lib_SOURCES
   LogEntry.cpp
 )
 
-add_library(elogbook_lib STATIC ${elogbook_lib_SOURCES})
-target_link_libraries(elogbook_lib ${QT_LIBRARIES})
-
-if(USE_QT5)
-
-  qt5_use_modules(elogbook_lib Widgets Xml)
-
-endif()
-
 ########### next target ###############
 set(elogbook_SOURCES
   Application.cpp
@@ -114,11 +105,11 @@ add_application_icon(elogbook_SOURCES ${CMAKE_SOURCE_DIR}/elogbook)
 add_desktop_file(${CMAKE_SOURCE_DIR}/elogbook)
 add_platform_executable(elogbook
   ${ELOGBOOK_VERSION}
+  ${elogbook_lib_SOURCES}
   ${elogbook_SOURCES}
   ${elogbook_RESOURCES_RCC}
 )
 
-target_link_libraries(elogbook elogbook_lib)
 target_link_libraries(elogbook ${QT_LIBRARIES})
 target_link_libraries(elogbook
   base
@@ -144,14 +135,15 @@ endif()
 if(UNIX)
 
   set(copy_logbook_SOURCES copy-logbook.cpp)
-  add_executable(copy-logbook ${copy_logbook_SOURCES})
+  add_executable(copy-logbook
+    ${elogbook_lib_SOURCES}
+    ${copy_logbook_SOURCES})
+
   target_link_libraries(copy-logbook ${QT_LIBRARIES})
   target_link_libraries(copy-logbook
     base
     base-qt
-    base-server
-    elogbook_lib
- )
+    base-server)
 
   install(TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR})
 
@@ -167,14 +159,15 @@ endif()
 if(UNIX)
 
   set(synchronize_logbook_SOURCES synchronize-logbook.cpp)
-  add_executable(synchronize-logbook ${synchronize_logbook_SOURCES})
+  add_executable(synchronize-logbook
+    ${elogbook_lib_SOURCES}
+    ${synchronize_logbook_SOURCES})
+
   target_link_libraries(synchronize-logbook ${QT_LIBRARIES})
   target_link_libraries(synchronize-logbook
     base
     base-qt
-    base-server
-    elogbook_lib
- )
+    base-server)
 
   install(TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR})
 
