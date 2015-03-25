@@ -61,12 +61,14 @@
 #endif
 
 #include <QApplication>
+#include <QDesktopServices>
 #include <QLabel>
 #include <QLayout>
 #include <QPrintDialog>
 #include <QStylePainter>
 #include <QStyleOptionToolButton>
 #include <QTextLayout>
+#include <QUrl>
 
 //_______________________________________________
 EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
@@ -1401,13 +1403,8 @@ void EditionWindow::_openLink( void )
 //_____________________________________________
 void EditionWindow::_openLink( QString anchor )
 {
-
     Debug::Throw( "EditionWindow::_openLink.\n" );
-    if( anchor.isEmpty() ) return;
-    const QString command( XmlOptions::get().raw( "XDG_OPEN" ) );
-    if( File( command ).exists() )
-    { ( Command( command ) << anchor ).run(); }
-
+    if( !anchor.isEmpty() ) QDesktopServices::openUrl( QUrl( anchor ) );
 }
 
 //_____________________________________________
