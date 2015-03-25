@@ -50,7 +50,7 @@ void LogbookHtmlHelper::print( QIODevice* device )
     _appendEntries( document, body );
 
     // write to document
-    device->write( document.toString().toLatin1() );
+    device->write( qPrintable( document.toString() ) );
 
 }
 

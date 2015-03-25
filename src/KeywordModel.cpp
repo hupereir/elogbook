@@ -101,7 +101,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 
     // add keywords mimetype
     foreach( const QModelIndex& index, indexes )
-    { if( index.isValid() ) mime->setData( Keyword::MimeType, get( index ).get().toLatin1() ); }
+    { if( index.isValid() ) mime->setData( Keyword::MimeType, qPrintable( get( index ).get() ) ); }
 
     // add plain text mimetype
     QString buffer;
@@ -112,7 +112,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     }
 
     // set plain text data
-    mime->setData( "text/plain", buffer.toLatin1() );
+    mime->setData( "text/plain", qPrintable( buffer ) );
 
     return mime;
 

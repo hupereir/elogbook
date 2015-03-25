@@ -54,7 +54,7 @@ void LogEntryHtmlHelper::print( QIODevice* device )
     QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
     appendEntry( document, body );
 
-    device->write( document.toString().toLatin1() );
+    device->write( qPrintable( document.toString() ) );
 
 }
 
