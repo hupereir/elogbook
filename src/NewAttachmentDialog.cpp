@@ -17,9 +17,9 @@
 *
 *******************************************************************************/
 
-#include "AnimatedLineEditor.h"
-#include "GridLayout.h"
 #include "Debug.h"
+#include "GridLayout.h"
+#include "LineEditor.h"
 #include "NewAttachmentDialog.h"
 
 #include <QLayout>

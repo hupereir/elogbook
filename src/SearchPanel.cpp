@@ -17,7 +17,6 @@
 *
 *******************************************************************************/
 
-#include "TransitionWidget.h"
 #include "Debug.h"
 #include "IconNames.h"
 #include "IconEngine.h"
@@ -38,8 +37,7 @@
 
 //___________________________________________________________
 SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& optionName ):
-    CustomToolBar( title, parent, optionName ),
-    transitionWidget_( new TransitionWidget(parent) )
+    CustomToolBar( title, parent, optionName )
 {
     Debug::Throw( "SearchPanel::SearchPanel.\n" );
 
@@ -94,58 +92,6 @@ SearchPanel::SearchPanel( const QString& title, QWidget* parent, const QString& 
     // configuration
     connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
-
-    // transition widget
-    _transitionWidget().setFlag( TransitionWidget::FromParent, true );
-    _transitionWidget().hide();
-    connect( &_transitionWidget().timeLine(), SIGNAL(finished()),  &_transitionWidget(), SLOT(hide()) );
-
-}
-
-//_______________________________________________________________
-void SearchPanel::show( void )
-{
-    Debug::Throw( "SearchPanel::show.\n" );
-
-    // check transition enability
-    if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) ) return CustomToolBar::show();
-
-    // transition
-    _transitionWidget().initialize();
-    CustomToolBar::show();
-    _transitionWidget().start();
-
-}
-
-//_______________________________________________________________
-void SearchPanel::hide( void )
-{
-    Debug::Throw( "SearchPanel::hide.\n" );
-
-    // check transition enability
-    if( !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )  return CustomToolBar::hide();
-
-    // transition
-    _transitionWidget().initialize();
-    CustomToolBar::hide();
-    _transitionWidget().start();
-
-}
-
-//_______________________________________________________________
-void SearchPanel::setVisible( bool state )
-{
-
-    Debug::Throw( "SearchPanel::setVisible.\n" );
-
-    // check state and transition enability
-    if( state == isVisible() || !( _transitionWidget().isEnabled() && parentWidget()->isVisible() ) )
-    { return CustomToolBar::setVisible( state ); }
-
-    // transition
-    _transitionWidget().initialize();
-    CustomToolBar::setVisible( state );
-    _transitionWidget().start();
 
 }
 

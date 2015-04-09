@@ -21,14 +21,14 @@
 *******************************************************************************/
 
 #include "AskForSaveDialog.h"
-#include "AnimatedLineEditor.h"
-#include "AnimatedTextEditor.h"
 #include "AttachmentFrame.h"
 #include "BaseMainWindow.h"
 #include "Counter.h"
 #include "Debug.h"
 #include "Key.h"
+#include "LineEditor.h"
 #include "LogEntry.h"
+#include "TextEditor.h"
 #include "TextPosition.h"
 
 #include <QBasicTimer>
@@ -68,7 +68,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     public:
 
-    using Editor = AnimatedLineEditor;
+    using Editor = LineEditor;
 
     //* creator
     EditionWindow( QWidget* parent, bool readOnly = true );
@@ -103,7 +103,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //@{
 
     //* local text editor, to deal with HTML edition
-    class LocalTextEditor: public AnimatedTextEditor
+    class LocalTextEditor: public TextEditor
     {
 
         public:

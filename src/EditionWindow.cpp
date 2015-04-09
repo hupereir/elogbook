@@ -169,7 +169,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // status bar for tooltips
     setStatusBar( statusBar_ = new BaseStatusBar( this ) );
-    statusBar_->addLabel( 2, true );
+    statusBar_->addLabel( 2 );
     statusBar_->addLabels( 3, 0 );
     statusBar_->addClock();
 
@@ -1664,7 +1664,7 @@ void EditionWindow::_updateConfiguration( void )
 
 //______________________________________________________
 EditionWindow::LocalTextEditor::LocalTextEditor( QWidget* parent ):
-    AnimatedTextEditor( parent )
+    TextEditor( parent )
 {
     setTrackAnchors( true );
     _installActions();
@@ -1674,7 +1674,7 @@ EditionWindow::LocalTextEditor::LocalTextEditor( QWidget* parent ):
 void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, bool allActions )
 {
     Debug::Throw( "EditionWindow::LocalTextEditor::installContextMenuActions.\n" );
-    AnimatedTextEditor::installContextMenuActions( menu, allActions );
+    TextEditor::installContextMenuActions( menu, allActions );
 
     // insert link
     menu->insertAction( &showLineNumberAction(), insertLinkAction_ );

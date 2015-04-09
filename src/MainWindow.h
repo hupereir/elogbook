@@ -33,8 +33,7 @@
 #include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
 #include "SearchPanel.h"
-
-#include "AnimatedTreeView.h"
+#include "TreeView.h"
 
 #include <QBasicTimer>
 #include <QTimerEvent>
@@ -125,11 +124,11 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void resetAttachmentWindow( void ) const;
 
     //* return keyword list
-    AnimatedTreeView& keywordList( void ) const
+    TreeView& keywordList( void ) const
     { return *keywordList_; }
 
     //* log entry list
-    virtual AnimatedTreeView& logEntryList( void ) const
+    virtual TreeView& logEntryList( void ) const
     { return *entryList_; }
 
     //* current keyword
@@ -551,21 +550,20 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     LogEntryModel entryModel_;
 
     //* logEntry list
-    AnimatedTreeView* entryList_ = nullptr;
+    TreeView* entryList_ = nullptr;
 
     //* file check
     FileCheck* fileCheck_ = nullptr;
 
     //* local TreeView to store size hint
-    class KeywordList: public AnimatedTreeView
+    class KeywordList: public TreeView
     {
 
         public:
 
         //* constructor
-        KeywordList( QWidget* parent = 0 ):
-            AnimatedTreeView( parent ),
-            defaultWidth_( -1 )
+        KeywordList( QWidget* parent = nullptr ):
+            TreeView( parent )
         {}
 
         //* default size
@@ -577,7 +575,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
         private:
 
         //* default width;
-        int defaultWidth_;
+        int defaultWidth_ = -1;
 
     };
 
@@ -585,13 +583,13 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     KeywordList *keywordList_ = nullptr;
 
     //* color menu
-    ColorMenu* colorMenu_;
+    ColorMenu* colorMenu_ = nullptr;
 
     //* autoSaveTimer
     QBasicTimer autosaveTimer_;
 
     //* autosave interval
-    int autoSaveDelay_;
+    int autoSaveDelay_ = 60*1000;
 
     //*@name item edition
     //@{
@@ -599,133 +597,133 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* edition timer
     QBasicTimer editionTimer_;
 
-    //* edit_item delay (ms)
-    int editionDelay_;
+    //* edition delay (ms)
+    int editionDelay_ = 200;
 
     //@}
 
     //* maximum number of recent entries
-    unsigned int maxRecentEntries_;
+    int maxRecentEntries_ = 0;
 
     //* associated logbook
-    Logbook* logbook_;
+    Logbook* logbook_ = nullptr;
 
     //* last directory in which logbook was opened, saved.
     File workingDirectory_;
 
     //* ignore file modified warnings if true
-    bool ignoreWarnings_;
+    bool ignoreWarnings_ = false;
 
     //* ask entries for confirmation before saving
-    bool confirmEntries_;
+    bool confirmEntries_ = true;
 
     //* keyword container
-    QWidget* keywordContainer_;
+    QWidget* keywordContainer_ = nullptr;
 
     //@name toolbars
     //@{
     //* keywords
-    CustomToolBar *keywordToolBar_;
+    CustomToolBar *keywordToolBar_ = nullptr;
 
     //* entries
-    CustomToolBar *entryToolBar_;
+    CustomToolBar *entryToolBar_ = nullptr;
     //@}
 
     //*@name actions
     //@{
 
     //* uniconify action
-    QAction* uniconifyAction_;
+    QAction* uniconifyAction_ = nullptr;
 
     //* add new keyword
-    QAction* newKeywordAction_;
+    QAction* newKeywordAction_ = nullptr;
 
     //* edit keyword
-    QAction* editKeywordAction_;
+    QAction* editKeywordAction_ = nullptr;
 
     //* delete keyword
-    QAction* deleteKeywordAction_;
+    QAction* deleteKeywordAction_ = nullptr;
 
     //* find entries
-    QAction* findEntriesAction_;
+    QAction* findEntriesAction_ = nullptr;
 
     //* new entry
-    QAction* newEntryAction_;
+    QAction* newEntryAction_ = nullptr;
 
     //* edit entry
-    QAction* editEntryAction_;
+    QAction* editEntryAction_ = nullptr;
 
     //* edit entry title
-    QAction* editEntryTitleAction_;
+    QAction* editEntryTitleAction_ = nullptr;
 
     //* delete entry
-    QAction* deleteEntryAction_;
+    QAction* deleteEntryAction_ = nullptr;
 
     //* change selected entries color
-    QAction* entryColorAction_;
+    QAction* entryColorAction_ = nullptr;
 
     //* change selected entries keyword
-    QAction* entryKeywordAction_;
+    QAction* entryKeywordAction_ = nullptr;
 
     //* create new logbook
-    QAction* newLogbookAction_;
+    QAction* newLogbookAction_ = nullptr;
 
     //* open existing logbook
-    QAction* openAction_;
+    QAction* openAction_ = nullptr;
 
     //* synchronize logbooks
-    QAction* synchronizeAction_;
+    QAction* synchronizeAction_ = nullptr;
 
     //* reorganize logbook
-    QAction* reorganizeAction_;
+    QAction* reorganizeAction_ = nullptr;
 
     //* save logbook
-    QAction* saveAction_;
+    QAction* saveAction_ = nullptr;
 
     //* save logbook
-    QAction* saveForcedAction_;
+    QAction* saveForcedAction_ = nullptr;
 
     //* save logbook with different name
-    QAction* saveAsAction_;
+    QAction* saveAsAction_ = nullptr;
 
     //* save logbook backup
-    QAction* saveBackupAction_;
+    QAction* saveBackupAction_ = nullptr;
 
     //* configure backups
-    QAction* backupManagerAction_;
+    QAction* backupManagerAction_ = nullptr;
 
     //* revert logbook to saved version
-    QAction* revertToSaveAction_;
+    QAction* revertToSaveAction_ = nullptr;
 
     //* print preview
-    QAction* printAction_;
+    QAction* printAction_ = nullptr;
 
     //* print preview
-    QAction* printPreviewAction_;
+    QAction* printPreviewAction_ = nullptr;
 
     //* export to html
-    QAction* htmlAction_;
+    QAction* htmlAction_ = nullptr;
 
     //* logbook information
-    QAction* logbookInformationsAction_;
+    QAction* logbookInformationsAction_ = nullptr;
 
     //* logbook information
-    QAction* logbookStatisticsAction_;
+    QAction* logbookStatisticsAction_ = nullptr;
 
     //* close editionwindows
-    QAction* closeFramesAction_;
+    QAction* closeFramesAction_ = nullptr;
 
     //* show duplicates
-    QAction* showDuplicatesAction_;
+    QAction* showDuplicatesAction_ = nullptr;
 
     //* show monitored files
-    QAction* monitoredFilesAction_;
+    QAction* monitoredFilesAction_ = nullptr;
 
     //* tree mode
-    QAction* treeModeAction_;
+    QAction* treeModeAction_ = nullptr;
 
     //* entry color button
-    QToolButton* entryColorButton_;
+    QToolButton* entryColorButton_ = nullptr;
 
     //@}
 

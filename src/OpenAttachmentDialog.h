@@ -26,7 +26,7 @@
 
 #include <QRadioButton>
 
-//! open attachment popup dialog
+//* open attachment popup dialog
 class OpenAttachmentDialog: public CustomDialog
 {
 
@@ -34,36 +34,35 @@ class OpenAttachmentDialog: public CustomDialog
 
     public:
 
-    //! constructor
+    //* constructor
     OpenAttachmentDialog( QWidget*, const Attachment& );
 
-    //! destructor
-    virtual ~OpenAttachmentDialog( void )
-    {}
+    //* destructor
+    virtual ~OpenAttachmentDialog( void ) = default;
 
-    //! get command
+    //* get command
     QString command( void ) const;
 
-    //! action
+    //* action
     enum Action
     {
         Open,
         SaveAs
     };
 
-    //! get action
+    //* get action
     Action action( void ) const;
 
     private:
 
-    //! command browsed line editor
-    BrowsedLineEditor *commandEditor_;
+    //* command browsed line editor
+    BrowsedLineEditor *commandEditor_ = nullptr;
 
-    //! open with radio button
-    QRadioButton* openRadioButton_;
+    //* open with radio button
+    QRadioButton* openRadioButton_ = nullptr;
 
-    //! save as radio button
-    QRadioButton* saveRadioButton_;
+    //* save as radio button
+    QRadioButton* saveRadioButton_ = nullptr;
 
 };
 

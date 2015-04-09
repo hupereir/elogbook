@@ -51,7 +51,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     hLayout->addLayout( gridLayout, 0 );
 
     gridLayout->addWidget( label = new QLabel( tr( "Title:" ), this ), 0, 0 );
-    gridLayout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
+    gridLayout->addWidget( title_ = new LineEditor( this ), 0, 1 );
     title_->setText( logbook->title().isEmpty() ?   Logbook::NoTitle:logbook->title()  );
     title_->setToolTip( tr( "Logbook title" ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
@@ -59,7 +59,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
 
     // logbook author
     gridLayout->addWidget( label = new QLabel( tr( "Author:" ), this ), 1, 0 );
-    gridLayout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
+    gridLayout->addWidget( author_ = new LineEditor( this ), 1, 1 );
     author_->setText( logbook->author().isEmpty() ? Logbook::NoAuthor:logbook->author() );
     author_->setToolTip( tr( "Logbook author" ) );
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );

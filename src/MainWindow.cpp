@@ -75,13 +75,7 @@
 MainWindow::MainWindow( QWidget *parent ):
     BaseMainWindow( parent ),
     Counter( "MainWindow" ),
-    autoSaveDelay_( 60000 ),
-    editionDelay_( 200 ),
-    maxRecentEntries_( 0 ),
-    logbook_( 0 ),
-    workingDirectory_( Util::workingDirectory() ),
-    ignoreWarnings_( false ),
-    confirmEntries_( true )
+    workingDirectory_( Util::workingDirectory() )
 {
     Debug::Throw( "MainWindow::MainWindow.\n" );
     setOptionName( "MAIN_WINDOW" );
@@ -230,7 +224,7 @@ MainWindow::MainWindow( QWidget *parent ):
     entryToolBar_->addAction( printAction_ );
 
     // create logEntry list
-    vLayout->addWidget( entryList_ = new AnimatedTreeView( right ), 1 );
+    vLayout->addWidget( entryList_ = new TreeView( right ), 1 );
     entryList_->setFindEnabled( false );
     entryList_->setModel( &entryModel_ );
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
@@ -1194,9 +1188,6 @@ void MainWindow::_resetLogEntryList( void )
 
     Debug::Throw( "MainWindow::_resetLogEntryList.\n" );
 
-    // animation
-    entryList_->initializeAnimation();
-
     // clear list of entries
     entryModel_.clear();
 
@@ -1230,9 +1221,6 @@ void MainWindow::_resetLogEntryList( void )
 
     }
 
-    // animation
-    entryList_->startAnimation();
-
     return;
 
 }
@@ -1243,9 +1231,6 @@ void MainWindow::_resetKeywordList( void )
 
     Debug::Throw( "MainWindow::_resetKeywordList.\n" );
     Q_CHECK_PTR( logbook_ );
-
-    // animation
-    keywordList_->initializeAnimation();
 
     // retrieve new list of keywords (from logbook)
     Keyword::Set newKeywords;
@@ -1260,9 +1245,6 @@ void MainWindow::_resetKeywordList( void )
     }
 
     keywordModel_.set( newKeywords.toList() );
-
-    // animation
-    keywordList_->startAnimation();
 
 }
 
@@ -3341,7 +3323,7 @@ void MainWindow::KeywordList::setDefaultWidth( int value )
 
 //____________________________________________
 QSize MainWindow::KeywordList::sizeHint( void ) const
-{ return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):AnimatedTreeView::sizeHint(); }
+{ return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):TreeView::sizeHint(); }
 
 //_______________________________________________
 LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mode )

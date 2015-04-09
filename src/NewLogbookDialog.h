@@ -20,7 +20,7 @@
 *
 *******************************************************************************/
 
-#include "AnimatedLineEditor.h"
+#include "LineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 #include "TextEditor.h"
@@ -29,7 +29,7 @@
 
 #include <QString>
 
-//! new attachment popup dialog
+//* new attachment popup dialog
 class NewLogbookDialog: public CustomDialog
 {
 
@@ -37,60 +37,60 @@ class NewLogbookDialog: public CustomDialog
 
     public:
 
-    //! constructor
+    //* constructor
     NewLogbookDialog( QWidget* parent );
 
-    //! destructor
+    //* destructor
     virtual ~NewLogbookDialog( void )
     { Debug::Throw( "NewLogbookDialog::~NewLogbookDialog\n" ); }
 
-    //! title
+    //* title
     void setTitle( const QString& title )
     { title_->setText( title ); }
 
-    //! title
+    //* title
     QString title( void ) const
     { return title_->text(); }
 
-    //! author
+    //* author
     void setAuthor( const QString& author )
     { author_->setText( author ); }
 
-    //! filename
+    //* filename
     QString author( void ) const
     { return author_->text(); }
 
-    //! attachment directory
+    //* attachment directory
     void setAttachmentDirectory( const File& file )
     { attachmentDirectory_->setFile( file ); }
 
-    //! attachment directory
+    //* attachment directory
     File attachmentDirectory( void ) const
     { return File( attachmentDirectory_->editor().text() ).expand(); }
 
-    //! comments
+    //* comments
     void setComments( const QString& comments )
     {
         Debug::Throw( "NewLogbookDialog::setComments.\n" );
         comments_->setPlainText( comments );
     }
 
-    //! comments
+    //* comments
     QString comments( void ) const
     { return comments_->toPlainText(); }
 
     private:
 
-    //! title line edit
-    AnimatedLineEditor *title_;
+    //* title line edit
+    LineEditor *title_;
 
-    //! author line edit
-    AnimatedLineEditor *author_;
+    //* author line edit
+    LineEditor *author_;
 
-    //! destination directory browsed line edti
+    //* destination directory browsed line edti
     BrowsedLineEditor *attachmentDirectory_;
 
-    //! comments
+    //* comments
     TextEditor *comments_;
 
 };

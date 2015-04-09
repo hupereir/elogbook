@@ -20,11 +20,11 @@
 *
 *******************************************************************************/
 
-#include "AnimatedLineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
+#include "LineEditor.h"
 
-//! open attachment popup dialog
+//* open attachment popup dialog
 class InsertLinkDialog: public CustomDialog
 {
 
@@ -32,7 +32,7 @@ class InsertLinkDialog: public CustomDialog
 
     public:
 
-    //! constructor
+    //* constructor
     InsertLinkDialog( QWidget*, QString = QString() );
 
     QString link( void )
@@ -40,7 +40,7 @@ class InsertLinkDialog: public CustomDialog
 
     private:
 
-    //! editor
+    //* editor
     BrowsedLineEditor* editor_;
 
 };

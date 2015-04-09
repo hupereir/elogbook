@@ -39,14 +39,14 @@ CustomDialog( parent )
     // title
     QLabel* label;
     gridLayout->addWidget( label = new QLabel( tr( "Title:" ), this ), 0, 0 );
-    gridLayout->addWidget( title_ = new AnimatedLineEditor( this ), 0, 1 );
+    gridLayout->addWidget( title_ = new LineEditor( this ), 0, 1 );
     title_->setToolTip( tr( "Logbook title" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( title_ );
 
     // logbook author
     gridLayout->addWidget( label = new QLabel( tr( "Author:" ), this ), 1, 0 );
-    gridLayout->addWidget( author_ = new AnimatedLineEditor( this ), 1, 1 );
+    gridLayout->addWidget( author_ = new LineEditor( this ), 1, 1 );
     author_->setToolTip( tr("Logbook author" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( author_ );

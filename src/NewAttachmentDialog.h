@@ -20,16 +20,6 @@
 *
 *******************************************************************************/
 
-/*!
-   \file NewAttachmentDialog.h
-   \brief new attachment popup dialog
-   \author Hugo Pereira
-   \version $Revision$
-   \date $Date$
-*/
-
-#include <QComboBox>
-
 #include "Attachment.h"
 #include "AttachmentType.h"
 #include "BrowsedLineEditor.h"
@@ -37,11 +27,14 @@
 #include "TextEditor.h"
 #include "File.h"
 
-//! new attachment popup dialog
+
+#include <QComboBox>
+
+//* new attachment popup dialog
 class NewAttachmentDialog: public CustomDialog
 {
 
-  //! Qt meta object declaration
+  //* Qt meta object declaration
   Q_OBJECT
 
   public:
@@ -49,62 +42,60 @@ class NewAttachmentDialog: public CustomDialog
   // constructor
   NewAttachmentDialog( QWidget* parent );
 
-  //! destructor
-  virtual ~NewAttachmentDialog( void )
-  {}
+  //* destructor
+  virtual ~NewAttachmentDialog( void ) = default;
 
-  //! filename
+  //* filename
   void setFile( const File& );
 
-  //! filename
+  //* filename
   File file( void ) const;
 
-  //! destination directory
+  //* destination directory
   void setDestinationDirectory( const File& );
 
-  //! destination directory
+  //* destination directory
   File destinationDirectory( void ) const;
 
-  //! attachment type
+  //* attachment type
   void setType( const AttachmentType& );
 
-  //! attachment type
+  //* attachment type
   AttachmentType type( void ) const;
 
-  //! Action
+  //* Action
   void setAction( const Attachment::Command& );
 
-  //! Action
+  //* Action
   Attachment::Command action( void ) const;
 
-  //! comments
+  //* comments
   void setComments( const QString& comments );
 
-  //! comments
+  //* comments
   QString comments( void ) const;
 
   private Q_SLOTS:
 
-  //! attachment type changed
+  //* attachment type changed
   void _attachmentTypeChanged( int index );
 
   private:
 
-  //! filename browsed line editor
-  BrowsedLineEditor *fileEditor_;
+  //* filename browsed line editor
+  BrowsedLineEditor *fileEditor_ = nullptr;
 
-  //! destination directory browsed line edti
-  BrowsedLineEditor *destinationDirectoryEditor_;
+  //* destination directory browsed line edti
+  BrowsedLineEditor *destinationDirectoryEditor_ = nullptr;
 
-  //! file type combo box
-  QComboBox *fileTypeComboBox_;
+  //* file type combo box
+  QComboBox *fileTypeComboBox_ = nullptr;
 
-  //! action combo box
-  QComboBox *actionComboBox_;
+  //* action combo box
+  QComboBox *actionComboBox_ = nullptr;
 
-  //! comments
-  TextEditor *commentsEditor_;
-
+  //* comments
+  TextEditor *commentsEditor_ = nullptr;
 
 };
 

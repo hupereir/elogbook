@@ -17,13 +17,13 @@
 *
 *******************************************************************************/
 
-#include "AnimatedLineEditor.h"
 #include "GridLayout.h"
-#include "TextEditor.h"
 #include "Debug.h"
 #include "ElidedLabel.h"
 #include "File.h"
+#include "LineEditor.h"
 #include "OpenAttachmentDialog.h"
+#include "TextEditor.h"
 
 #include <QButtonGroup>
 #include <QGroupBox>

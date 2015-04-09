@@ -19,7 +19,6 @@
 
 #include "LogbookStatisticsDialog.h"
 
-#include "AnimatedLineEditor.h"
 #include "Debug.h"
 #include "GridLayout.h"
 #include "IconNames.h"

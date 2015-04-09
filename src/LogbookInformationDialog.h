@@ -20,7 +20,7 @@
 *
 *******************************************************************************/
 
-#include "AnimatedLineEditor.h"
+#include "LineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 #include "File.h"
@@ -37,45 +37,45 @@ class LogbookInformationDialog: public CustomDialog
 
     public:
 
-    //! constructor
+    //* constructor
     LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
 
-    //! title
+    //* title
     QString title( void ) const
     { return title_->text(); }
 
-    //! author
+    //* author
     QString author( void ) const
     { return author_->text(); }
 
-    //! attachment directory
+    //* attachment directory
     File attachmentDirectory( void ) const
     { return attachmentDirectory_->editor().text(); }
 
-    //! read only
+    //* read only
     bool readOnly( void ) const
     { return readOnlyCheckBox_->isChecked(); }
 
-    //! comments
+    //* comments
     QString comments( void ) const
     { return comments_->toPlainText(); }
 
     private:
 
-    //! title line edit
-    AnimatedLineEditor* title_;
+    //* title line edit
+    LineEditor* title_ = nullptr;
 
-    //! author
-    AnimatedLineEditor* author_;
+    //* author
+    LineEditor* author_ = nullptr;
 
-    //! attachment directory
-    BrowsedLineEditor* attachmentDirectory_;
+    //* attachment directory
+    BrowsedLineEditor* attachmentDirectory_ = nullptr;
 
-    //! read only checkbox
-    QCheckBox* readOnlyCheckBox_;
+    //* read only checkbox
+    QCheckBox* readOnlyCheckBox_ = nullptr;
 
-    //! comments
-    TextEditor* comments_;
+    //* comments
+    TextEditor* comments_ = nullptr;
 
 };
 

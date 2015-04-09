@@ -24,18 +24,18 @@
 #include "Counter.h"
 #include "FileCheck.h"
 
-class AnimatedTreeView;
+class TreeView;
 
-//! QDialog used to ask if a new file should be created
+//* QDialog used to ask if a new file should be created
 class LogbookModifiedDialog: public BaseDialog, public Counter
 {
 
-    //! Qt macro
+    //* Qt macro
     Q_OBJECT
 
     public:
 
-    //! return codes
+    //* return codes
     enum ReturnCode
     {
         SaveAgain,
@@ -44,34 +44,34 @@ class LogbookModifiedDialog: public BaseDialog, public Counter
         Ignore
     };
 
-    //! constructor
-    LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files );
+    //* constructor
+    LogbookModifiedDialog( QWidget*, const FileCheck::DataSet& );
 
     private Q_SLOTS:
 
-    //! re-saved removed file
+    //* re-saved removed file
     void _reLoad( void )
     { done( Reload ); }
 
-    //! re-saved removed file
+    //* re-saved removed file
     void _reSave( void )
     { done( SaveAgain ); }
 
-    //! save file with new name
+    //* save file with new name
     void _saveAs( void )
     { done( SaveAs ); }
 
-    //! save file with new name
+    //* save file with new name
     void _ignore( void )
     { done( Ignore ); }
 
     private:
 
-    //! model
+    //* model
     FileCheck::Model model_;
 
-    //! list
-    AnimatedTreeView* list_;
+    //* list
+    TreeView* list_ = nullptr;
 
 };
 

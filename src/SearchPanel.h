@@ -29,7 +29,6 @@
 #include <QPushButton>
 
 class CustomComboBox;
-class TransitionWidget;
 
 //! selects entries from keyword/title/text/...
 class SearchPanel: public CustomToolBar
@@ -68,25 +67,10 @@ class SearchPanel: public CustomToolBar
     //! emitted when the Show All button is pressed
     void showAllEntries( void );
 
-    public Q_SLOTS:
-
-    //! show
-    virtual void show( void );
-
-    //! hide
-    virtual void hide( void );
-
-    //! visibility
-    virtual void setVisible( bool );
-
     protected:
 
     //! context menu
     virtual void contextMenuEvent( QContextMenuEvent* );
-
-    //! transition widget
-    TransitionWidget& _transitionWidget( void ) const
-    { return *transitionWidget_; }
 
     protected Q_SLOTS:
 
@@ -125,9 +109,6 @@ class SearchPanel: public CustomToolBar
 
     //! checkboxes
     using CheckBoxMap = QHash<SearchMode, QCheckBox* >;
-
-    //! transition widget
-    TransitionWidget* transitionWidget_;
 
     //! find button
     QPushButton* findButton_;
