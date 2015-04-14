@@ -99,71 +99,84 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
     LogEntry* entry( get()[index.row()] );
 
     // return text associated to file and column
-    if( role == Qt::DisplayRole ) {
-
-        switch( index.column() )
+    switch( role )
+    {
+        case Qt::DisplayRole:
         {
 
-            case Keyword:
+            switch( index.column() )
             {
-                QString keyword( entry->keyword().get() );
-                if( keyword.size() > 1 && keyword[0] == '/' )
-                { keyword = keyword.mid( 1 ); }
 
-                return keyword;
+                case Keyword:
+                {
+                    QString keyword( entry->keyword().get() );
+                    if( keyword.size() > 1 && keyword[0] == '/' )
+                    { keyword = keyword.mid( 1 ); }
+
+                    return keyword;
+                }
+
+                case Title: return entry->title();
+                case Creation: return entry->creation().toString();
+                case Modification: return entry->modification().toString();
+                case Author: return entry->author();
+
+                default:
+                return QVariant();
+            }
+            break;
+        }
+
+        case Qt::DecorationRole:
+        {
+
+            switch( index.column() )
+            {
+                case Color: return _icon( entry->color() );
+                case HasAttachment: return Base::KeySet<Attachment>(entry).empty() ? QVariant():_attachmentIcon();
+                default: return QVariant();
+            }
+            break;
+        }
+
+        case Qt::TextAlignmentRole:
+        {
+
+            switch( index.column() )
+            {
+                case Color:
+                case Creation:
+                case Modification:
+                case Author:
+                return Qt::AlignCenter;
+
+                default: return QVariant();
+
+            }
+            break;
+
+        }
+
+        case Qt::SizeHintRole:
+        {
+
+            switch( index.column() )
+            {
+
+                case HasAttachment:
+                case Color:
+                return QSize( iconSize_, iconSize_ );
+
+                default:
+                return QVariant();
+
             }
 
-            case Title: return entry->title();
-            case Creation: return entry->creation().toString();
-            case Modification: return entry->modification().toString();
-            case Author: return entry->author();
-
-            default:
-            return QVariant();
-        }
-
-    } else if( role == Qt::DecorationRole ) {
-
-        switch( index.column() )
-        {
-            case Color:
-            return _icon( entry->color() );
-
-            case HasAttachment:
-            return Base::KeySet<Attachment>(entry).empty() ? QVariant():_attachmentIcon();
-
-            default:
-            return QVariant();
+            break;
 
         }
 
-    } else if( role == Qt::TextAlignmentRole ) {
-
-        switch( index.column() )
-        {
-            case Color:
-            case Creation:
-            case Modification:
-            case Author:
-            return Qt::AlignCenter;
-
-            default: return QVariant();
-
-        }
-
-    } else if( role == Qt::SizeHintRole ) {
-
-        switch( index.column() )
-        {
-
-            case HasAttachment:
-            case Color:
-            return QSize( iconSize_, iconSize_ );
-
-            default:
-            return QVariant();
-
-        }
+        default: break;
 
     }
 
@@ -216,40 +229,58 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
 QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
 
-    if( role == Qt::DisplayRole )
+    switch( role )
     {
-        switch( section )
+
+        case Qt::DisplayRole:
         {
-            case HasAttachment: return _attachmentIcon();
-            default: return columnTitles_[section];
-        }
+            switch( section )
+            {
+                case HasAttachment: return _attachmentIcon();
+                default: return columnTitles_[section];
+            }
 
-    } else if( role == Qt::TextAlignmentRole ) {
-
-        switch( section )
-        {
-            case Color:
-            case Creation:
-            case Modification:
-            case Author:
-            return Qt::AlignCenter;
-
-            default: return QVariant();
+            break;
 
         }
 
-    } else if( role == Qt::SizeHintRole ) {
-
-        switch( section )
+        case Qt::TextAlignmentRole:
         {
-            case HasAttachment:
-            case Color:
-            return QSize( iconSize_, iconSize_ );
 
-            default:
-            return QVariant();
+            switch( section )
+            {
+                case Color:
+                case Creation:
+                case Modification:
+                case Author:
+                return Qt::AlignCenter;
+
+                default: return QVariant();
+
+            }
+
+            break;
 
         }
+
+        case Qt::SizeHintRole:
+        {
+
+            switch( section )
+            {
+                case HasAttachment:
+                case Color:
+                return QSize( iconSize_, iconSize_ );
+
+                default:
+                return QVariant();
+
+            }
+
+            break;
+        }
+
+        default: break;
 
     }
 
