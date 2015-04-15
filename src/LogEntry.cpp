@@ -55,9 +55,9 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( attribute.isNull() ) continue;
         QString name( attribute.name() );
         QString value( attribute.value() );
-        if( name == Xml::Title ) setTitle( XmlString( value ).toText() );
-        else if( name == Xml::Keyword ) setKeyword( Keyword( XmlString( value ).toText() ) );
-        else if( name == Xml::Author ) setAuthor( XmlString( value ).toText() );
+        if( name == Xml::Title ) setTitle( XmlString( value ) );
+        else if( name == Xml::Keyword ) setKeyword( Keyword( XmlString( value ) ) );
+        else if( name == Xml::Author ) setAuthor( XmlString( value ) );
 
         // kept for backward compatibility
         else if( name == Xml::Color ) setColor( QColor( value ) );
@@ -77,7 +77,7 @@ LogEntry::LogEntry( const QDomElement& element ):
             XmlColor color( childElement );
             if( color.isValid() ) setColor( color );
 
-        } else if( tagName == Xml::Text ) setText( XmlString( childElement.text() ).toText() );
+        } else if( tagName == Xml::Text ) setText( XmlString( childElement.text() ) );
         else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( childElement ) );
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( childElement ) );
         else if( tagName == Format::Xml::Tag ) addFormat( Format::XmlTextFormatBlock( childElement ) );

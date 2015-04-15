@@ -133,11 +133,11 @@ bool Logbook::read( void )
         QString name( attribute.name() );
         QString value( attribute.value() );
 
-        if( name == Xml::Title ) setTitle( XmlString( value ).toText() );
-        else if( name == Xml::File ) setFile( File( XmlString( value ).toText() ) );
-        else if( name == Xml::ParentFile ) setParentFile( XmlString( value ).toText() );
-        else if( name == Xml::Directory ) setDirectory( File( XmlString( value ).toText() ) );
-        else if( name == Xml::Author ) setAuthor( XmlString( value ).toText() );
+        if( name == Xml::Title ) setTitle( XmlString( value ) );
+        else if( name == Xml::File ) setFile( File( XmlString( value ) ) );
+        else if( name == Xml::ParentFile ) setParentFile( XmlString( value ) );
+        else if( name == Xml::Directory ) setDirectory( File( XmlString( value ) ) );
+        else if( name == Xml::Author ) setAuthor( XmlString( value ) );
         else if( name == Xml::SortMethod ) setSortMethod( (SortMethod) value.toInt() );
         else if( name == Xml::SortOrder ) setSortOrder( value.toInt() );
         else if( name == Xml::ReadOnly ) setReadOnly( value.toInt() );
@@ -163,7 +163,7 @@ bool Logbook::read( void )
         QString tagName( element.tagName() );
 
         // children
-        if( tagName == Xml::Comments ) setComments( XmlString( element.text() ).toText() );
+        if( tagName == Xml::Comments ) setComments( XmlString( element.text() ) );
         else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( element ) );
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( element ) );
         else if( tagName == Xml::Backup ) setBackup( XmlTimeStamp( element ) );

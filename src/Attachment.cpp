@@ -74,10 +74,10 @@ Attachment::Attachment( const QDomElement& element):
         QString name( attribute.name() );
         QString value( attribute.value() );
 
-        if( name == Xml::SourceFile ) _setSourceFile( XmlString( value ).toText() );
+        if( name == Xml::SourceFile ) _setSourceFile( XmlString( value ) );
         else if( name == Xml::Type ) setType( AttachmentType::get( value ) );
-        else if( name == Xml::File ) _setFile( XmlString( value ).toText() );
-        else if( name == Xml::Comments ) setComments( XmlString( value ).toText() );
+        else if( name == Xml::File ) _setFile( XmlString( value ) );
+        else if( name == Xml::Comments ) setComments( XmlString( value ) );
         else if( name == Xml::Valid ) setIsValid( (bool) value.toInt() );
         else if( name == Xml::IsLink ) setIsLink( (LinkState) value.toInt() );
         else Debug::Throw(0) << "unrecognized attachment attribute: \"" << name << "\"\n";
@@ -88,7 +88,7 @@ Attachment::Attachment( const QDomElement& element):
     {
         QDomElement child_element = child_node.toElement();
         QString tag_name( child_element.tagName() );
-        if( tag_name == Xml::Comments ) setComments( XmlString( child_element.text() ).toText() );
+        if( tag_name == Xml::Comments ) setComments( XmlString( child_element.text() ) );
         else if( tag_name == Xml::Creation ) _setCreation( XmlTimeStamp( child_element ) );
         else if( tag_name == Xml::Modification ) _setModification( XmlTimeStamp( child_element ) );
         else Debug::Throw(0) << "Attachment::Attachment - unrecognized child " << child_element.tagName() << ".\n";
