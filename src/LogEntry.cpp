@@ -103,9 +103,9 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 {
     Debug::Throw( "LogEntry::domElement.\n" );
     QDomElement out( parent.createElement( Xml::Entry ) );
-    if( !title().isEmpty() ) out.setAttribute( Xml::Title, XmlString( title() ).toXml() );
-    if( !keyword().get().isEmpty() ) out.setAttribute( Xml::Keyword, XmlString( keyword().get() ).toXml() );
-    if( !author().isEmpty() ) out.setAttribute( Xml::Author, XmlString( author() ).toXml() );
+    if( !title().isEmpty() ) out.setAttribute( Xml::Title, title() );
+    if( !keyword().get().isEmpty() ) out.setAttribute( Xml::Keyword, keyword().get() );
+    if( !author().isEmpty() ) out.setAttribute( Xml::Author, author() );
 
     // color
     if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( parent ) );
@@ -122,7 +122,7 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 
         out.
             appendChild( parent.createElement( Xml::Text ) ).
-            appendChild( parent.createTextNode( XmlString( text ).toXml() ) );
+            appendChild( parent.createTextNode( text ) );
     }
 
     // dump text format

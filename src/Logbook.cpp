@@ -263,10 +263,10 @@ bool Logbook::write( File file )
 
         // create main element
         QDomElement top = document.createElement( Xml::Logbook );
-        if( !title_.isEmpty() ) top.setAttribute( Xml::Title, XmlString( title_ ).toXml() );
-        if( !directory_.isEmpty() ) top.setAttribute( Xml::Directory, XmlString(directory_ ) );
-        if( !author_.isEmpty() ) top.setAttribute( Xml::Author, XmlString( author_ ).toXml() ) ;
-        if( !parentFile_.isEmpty() ) top.setAttribute( Xml::ParentFile, XmlString( parentFile_ ).toXml() );
+        if( !title_.isEmpty() ) top.setAttribute( Xml::Title, title_ );
+        if( !directory_.isEmpty() ) top.setAttribute( Xml::Directory, directory_ );
+        if( !author_.isEmpty() ) top.setAttribute( Xml::Author, author_ ) ;
+        if( !parentFile_.isEmpty() ) top.setAttribute( Xml::ParentFile, parentFile_ );
 
         top.setAttribute( Xml::SortMethod, QString::number( sortMethod_ ) );
         top.setAttribute( Xml::SortOrder, QString::number( sortOrder_ ) );
@@ -284,7 +284,7 @@ bool Logbook::write( File file )
         if( comments().size() )
         {
             QDomElement commentsElement = document.createElement( Xml::Comments );
-            QDomText comments_text = document.createTextNode( XmlString( comments() ).toXml() );
+            QDomText comments_text = document.createTextNode( comments() );
             commentsElement.appendChild( comments_text );
             top.appendChild( commentsElement );
         }
@@ -321,7 +321,7 @@ bool Logbook::write( File file )
         {
             File childFilename = _childFilename( file, childCount );
             QDomElement childElement = document.createElement( Xml::Child );
-            childElement.setAttribute( Xml::File, XmlString( childFilename ).toXml() );
+            childElement.setAttribute( Xml::File, childFilename );
             top.appendChild( childElement );
         }
 

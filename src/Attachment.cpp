@@ -106,8 +106,8 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 
     Debug::Throw( "Attachment::DomElement.\n" );
     QDomElement out( parent.createElement( Xml::Attachment ) );
-    if( file().size() ) out.setAttribute( Xml::File, XmlString( file() ).toXml() );
-    if( sourceFile().size() ) out.setAttribute( Xml::SourceFile, XmlString( sourceFile() ).toXml() );
+    if( file().size() ) out.setAttribute( Xml::File, file() );
+    if( sourceFile().size() ) out.setAttribute( Xml::SourceFile, sourceFile() );
     out.setAttribute( Xml::Type, type().key() );
     out.setAttribute( Xml::Valid, QString::number( isValid() ) );
     out.setAttribute( Xml::IsLink, QString::number( isLink() ) );
@@ -115,7 +115,7 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
     {
         out.
             appendChild( parent.createElement(  Xml::Comments ) ).
-            appendChild( parent.createTextNode( XmlString( comments() ).toXml() ) );
+            appendChild( parent.createTextNode( comments() ) );
     }
 
     // dump timeStamp
