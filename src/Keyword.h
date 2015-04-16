@@ -22,8 +22,6 @@
 
 #include "Counter.h"
 
-#include <QDomElement>
-#include <QDomDocument>
 #include <QList>
 #include <QSet>
 #include <QString>
@@ -41,9 +39,6 @@ class Keyword: public Counter
     //! constructor
     Keyword( const QString& = QString() );
 
-    //! constructor from dom
-    Keyword( const QDomElement& );
-
     //! destructor
     virtual ~Keyword( void )
     {}
@@ -51,9 +46,6 @@ class Keyword: public Counter
     //! keyword set
     using Set = QSet<Keyword>;
     using List = QList<Keyword>;
-
-    //! dom element
-    QDomElement domElement( QDomDocument& ) const;
 
     //! equal to operator
     bool operator == (const Keyword& other ) const
