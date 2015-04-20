@@ -171,7 +171,10 @@ bool Logbook::read( void )
         else if( tagName == Xml::BackupMask ) backupFiles_ << Backup( element );
         else if( tagName == Xml::Entry ) {
 
+            // create entry. Make sure it has a non zero keyword
             LogEntry* entry = new LogEntry( element );
+            if( entry->keyword().isRoot() ) entry->setKeyword( Keyword::Default );
+
             Key::associate( this, entry );
             entryCount++;
             if( !(entryCount%progress) ) emit progressAvailable( progress );

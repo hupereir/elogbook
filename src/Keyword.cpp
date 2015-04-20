@@ -22,7 +22,10 @@
 #include "Debug.h"
 #include "XmlDef.h"
 
+#include <QObject>
+
 //_________________________________________________________________
+const QString Keyword::Default( QObject::tr( "New entries" ) );
 const QString Keyword::MimeType( "logbook/keyword-list" );
 
 //_________________________________________________________________

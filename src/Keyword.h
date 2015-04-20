@@ -27,84 +27,91 @@
 #include <QString>
 #include <QTextStream>
 
-//! log entry keyword
+//* log entry keyword
 class Keyword: public Counter
 {
 
     public:
 
-    //! used when LogEntry keyword is not defined
+    //* default keyword
+    static const QString Default;
+
+    //* used when LogEntry keyword is not defined
     static const QString MimeType;
 
-    //! constructor
+    //* constructor
     Keyword( const QString& = QString() );
 
-    //! destructor
+    //* destructor
     virtual ~Keyword( void )
     {}
 
-    //! keyword set
+    //* keyword set
     using Set = QSet<Keyword>;
     using List = QList<Keyword>;
 
-    //! equal to operator
+    //* equal to operator
     bool operator == (const Keyword& other ) const
     { return get() == other.get(); }
 
-    //! equal to operator
+    //* equal to operator
     bool operator != (const Keyword& other ) const
     { return !( *this == other ); }
 
-    //! less than operator
+    //* less than operator
     bool operator < (const Keyword& other ) const
     { return get() < other.get(); }
 
-    //!@name accessors
+    //*@name accessors
     //@{
 
-    //! full keyword
+    //* full keyword
     const QString& get( void ) const
     { return value_; }
 
-    //! current keyword
+    //* true if is root
+    bool isRoot( void ) const
+    { return value_ == QString( '/' ); }
+
+    //* current keyword
     QString current( void ) const;
 
-    //! parent keyword
+    //* parent keyword
     Keyword parent( void ) const;
 
     /*! true if this keyword is direct child of this one */
     bool isChild( const Keyword& keyword ) const;
 
-    //! true if this keyword in descendance of argument
+    //* true if this keyword in descendance of argument
     bool inherits( const Keyword& keyword ) const;
 
     //@}
 
-    //!@name modifiers
+    //*@name modifiers
     //@{
 
-    //! clear
+    //* clear
     void clear( void )
     { value_ = _format( QString() ); }
 
-    //! set full keyword
+    //* set full keyword
     void set( const QString& value )
     { value_ = _format( value ); }
 
-    //! append
+    //* append
     Keyword& append( const QString& value );
 
     //@}
 
     private:
 
-    //! format keyword
+    //* format keyword
     QString _format( const QString& ) const;
 
-    //! full value
+    //* full value
     QString value_;
 
-    //! streamer
+    //* streamer
     friend QTextStream& operator << (QTextStream& out, const Keyword& keyword )
     {
         out << keyword.get();
@@ -112,7 +119,7 @@ class Keyword: public Counter
     }
 };
 
-//! hash
+//* hash
 inline unsigned int qHash( const Keyword& keyword )
 { return qHash( keyword.get() ); }
 

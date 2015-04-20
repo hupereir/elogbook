@@ -1055,6 +1055,7 @@ void EditionWindow::_save( bool updateSelection )
 
     // update entry keyword
     entry->setKeyword( keywordEditor_->text() );
+    if( entry->keyword().isRoot() ) entry->setKeyword( Keyword::Default );
 
     // update entry title
     entry->setTitle( titleEditor_->text() );
