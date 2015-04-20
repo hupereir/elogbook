@@ -61,11 +61,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     menu = addMenu( tr( "File" ) );
     menu->addAction( &mainWindow->newLogbookAction() );
 
-    if( editionWindow )
-    {
-        menu->addAction( &editionWindow->newEntryAction() );
-        menu->addAction( &editionWindow->splitViewHorizontalAction() );
-    }
+    if( editionWindow ) menu->addAction( &editionWindow->newEntryAction() );
 
     menu->addAction( &mainWindow->openAction() );
 
