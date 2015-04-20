@@ -25,6 +25,4 @@
 *******************************************************************************/
 
 #define VERSION "@ELOGBOOK_VERSION@"
-#define BUILD_TIMESTAMP "@TIMESTAMP@"
-
 #endif

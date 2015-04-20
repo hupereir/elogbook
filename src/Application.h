@@ -92,10 +92,6 @@ class Application: public BaseApplication, public Counter
     virtual QString applicationVersion( void ) const
     { return VERSION; }
 
-    // build time stamp
-    virtual QString buildTimeStamp( void ) const
-    { return BUILD_TIMESTAMP; }
-
     //@}
 
     protected Q_SLOTS:
