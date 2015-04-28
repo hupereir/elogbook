@@ -33,58 +33,54 @@ class LogEntry;
 class MainWindow;
 class ScratchFileMonitor;
 
-/*!
-\class  Application
-\brief  Main Window singleton object
-*/
-
+//* application
 class Application: public BaseApplication, public Counter
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! constructor
+    //* constructor
     Application( CommandLineArguments );
 
-    //! destructor
+    //* destructor
     ~Application( void );
 
-    //! application manager
+    //* application manager
     virtual bool initApplicationManager( void );
 
-    //! create all widgets
+    //* create all widgets
     virtual bool realizeWidget( void );
 
-    //! file list
+    //* file list
     FileList& recentFiles( void ) const
     { return *recentFiles_; }
 
-    //! retrieve AttachmentWindow singleton
+    //* retrieve AttachmentWindow singleton
     AttachmentWindow & attachmentWindow( void ) const
     { return *attachmentWindow_; }
 
-    //! retrieve MainWindow singleton
+    //* retrieve MainWindow singleton
     MainWindow& mainWindow( void ) const
     { return *mainWindow_; }
 
-    //! scratch files
+    //* scratch files
     ScratchFileMonitor& scratchFileMonitor( void ) const
     { return *scratchFileMonitor_; }
 
-    //!@name application information
+    //*@name application information
     //@{
 
-    //! command line help
+    //* command line help
     void usage( void ) const;
 
-    //! application name
+    //* application name
     virtual QString applicationName( void ) const
     { return "Elogbook"; }
 
-    //! application name
+    //* application name
     virtual QIcon applicationIcon( void ) const
     { return IconEngine::get( ":/elogbook.png" ); }
 
@@ -96,29 +92,28 @@ class Application: public BaseApplication, public Counter
 
     protected Q_SLOTS:
 
-    //! configuration
+    //* configuration
     virtual void _configuration( void );
 
-    //! exit safely
+    //* exit safely
     void _exit( void );
 
-    //! process request from application manager
+    //* process request from application manager
     virtual bool _processCommand( Server::ServerCommand );
 
     private:
 
-    //! recent files
-    FileList* recentFiles_;
+    //* recent files
+    FileList* recentFiles_ = nullptr;
 
-    //! toplevel attachment frame
-    AttachmentWindow* attachmentWindow_;
+    //* toplevel attachment frame
+    AttachmentWindow* attachmentWindow_ = nullptr;
 
-    //! main window entry selection frame
-    MainWindow* mainWindow_;
+    //* main window entry selection frame
+    MainWindow* mainWindow_ = nullptr;
 
-    //! scratch files
-    ScratchFileMonitor* scratchFileMonitor_;
-
+    //* scratch files
+    ScratchFileMonitor* scratchFileMonitor_ = nullptr;
 
 };
 
