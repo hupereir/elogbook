@@ -46,6 +46,7 @@ OpenLinkDialog::OpenLinkDialog( QWidget* parent, const QString& file ):
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
 
     gridLayout->addWidget( label = new ElidedLabel( file, this ), 0, 1, 1, 2 );
+    label->setTextInteractionFlags( Qt::TextSelectableByMouse );
 
     // change font
     QFont font( label->font() );

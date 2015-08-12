@@ -50,16 +50,14 @@ class LogEntryPrintHelper;
 class MainWindow;
 class Menu;
 
-//* log entry edition/creation object
-/*!
-Note:
-though EditionWindows are TopLevel widgets, they are not deleted at window closure
-to avoid crash when object is deleted when still within one of its methods.
-On the contrary, a close event hides the window, and the MainWindow will delete it
-because of that next time it is asked to create a new EditionWindow, thus acting like a
-garbage collector
-*/
+namespace Private
+{
 
+    class ColorWidget;
+    class LocalTextEditor;
+}
+
+//* log entry edition/creation object
 class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 {
 
@@ -99,54 +97,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     BaseStatusBar& statusBar( void )
     { return *statusBar_; }
 
-    //*@name active editor
-    //@{
-
-    //* local text editor, to deal with HTML edition
-    class LocalTextEditor: public TextEditor
-    {
-
-        public:
-
-        //* constructor
-        LocalTextEditor( QWidget* );
-
-        //* destructor
-        virtual ~LocalTextEditor( void ) = default;
-
-        //* insert link action
-        QAction& insertLinkAction( void ) const
-        { return *insertLinkAction_; }
-
-        //* view link action
-        QAction& openLinkAction( void ) const
-        { return *openLinkAction_; }
-
-        protected:
-
-        //* install actions in context menu
-        virtual void installContextMenuActions( BaseContextMenu*, bool = true );
-
-        private:
-
-        //* install actions
-        void _installActions( void );
-
-        //* insert link
-        QAction* insertLinkAction_;
-
-        //* open link
-        QAction* openLinkAction_;
-
-    };
+    //* retrieve active display
+    TextEditor& activeEditor( void );
 
     //* retrieve active display
-    LocalTextEditor& activeEditor( void )
-    { return *activeEditor_; }
-
-    //* retrieve active display
-    const LocalTextEditor& activeEditor( void ) const
-    { return *activeEditor_; }
+    const TextEditor& activeEditor( void ) const;
 
     //@}
 
@@ -292,10 +247,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* close view
     /*! Ask for save if view is modified */
-    void closeEditor( LocalTextEditor& );
+    void closeEditor( TextEditor& );
 
     //* change active display manualy
-    void setActiveEditor( LocalTextEditor& );
+    void setActiveEditor( TextEditor& );
 
     Q_SIGNALS:
 
@@ -328,13 +283,13 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //@{
 
     //* split view
-    LocalTextEditor& _splitView( const Qt::Orientation& );
+    Private::LocalTextEditor& _splitView( const Qt::Orientation& );
 
     //* create new splitter
     QSplitter& _newSplitter( const Qt::Orientation&  );
 
     //* create new TextEditor
-    LocalTextEditor& _newTextEditor( QWidget* parent );
+    Private::LocalTextEditor& _newTextEditor( QWidget* parent );
 
     //@}
 
@@ -417,6 +372,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* insert link
     void _insertLink( void );
 
+    //* insert link
+    void _editLink( void );
+
     //* view link
     void _openLink( void );
 
@@ -450,13 +408,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     { _displayCursorPosition( TextPosition( 0, new_position ) ); }
 
     //* close
-    void _close( void )
-    {
-        Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
-        Base::KeySet< LocalTextEditor > editors( this );
-        if( editors.size() > 1 ) closeEditor( activeEditor() );
-        else close();
-    }
+    void _close( void );
 
     //* clone current file
     void _splitView( void )
@@ -513,25 +465,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //@}
 
-    //* local QSplitter object, derived from Counter
-    /*! helps keeping track of how many splitters are created/deleted */
-    class LocalSplitter: public QSplitter, public Counter
-    {
-
-        public:
-
-        //* constructor
-        LocalSplitter( QWidget* parent ):
-            QSplitter( parent ),
-            Counter( "LocalSplitter" )
-        { Debug::Throw( "LocalSplitter::LocalSplitter.\n" ); }
-
-        //* destructor
-        virtual ~LocalSplitter( void )
-        { Debug::Throw( "LocalSplitter::~LocalSplitter.\n" ); }
-
-    };
-
     //* keyword label
     QLabel* keywordLabel_ = nullptr;
 
@@ -548,35 +481,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     ColorMenu* colorMenu_ = nullptr;
 
     //* color widget
-    class ColorWidget: public QToolButton, public Counter
-    {
-
-        public:
-
-        //* constructor
-        ColorWidget( QWidget* parent );
-
-        //* color
-        void setColor( const QColor& color );
-
-        //* size hint
-        QSize sizeHint( void ) const;
-
-        //* size hint
-        QSize minimumSizeHint( void ) const;
-
-        protected:
-
-        //* paint event
-        void paintEvent( QPaintEvent* );
-
-    };
-
-    //* color widget
-    ColorWidget* colorWidget_ = nullptr;
+    Private::ColorWidget* colorWidget_ = nullptr;
 
     //* LogEntry text Object
-    LocalTextEditor* activeEditor_ = nullptr;
+    Private::LocalTextEditor* activeEditor_ = nullptr;
 
     //* embedded widgets container
     QWidget* container_ = nullptr;

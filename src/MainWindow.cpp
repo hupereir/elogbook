@@ -2587,11 +2587,11 @@ void MainWindow::_displayEntry( LogEntry* entry )
             editionWindow->displayEntry( entry );
 
             // also kill all frames but one
-            Base::KeySet< EditionWindow::LocalTextEditor > editors( editionWindow );
+            Base::KeySet< TextEditor > editors( editionWindow );
             if( editors.size() > 1 )
             {
 
-                Base::KeySet<EditionWindow::LocalTextEditor>::iterator localIter( editors.begin() );
+                Base::KeySet<TextEditor>::iterator localIter( editors.begin() );
                 ++localIter;
                 for( ;localIter != editors.end(); ++localIter )
                 { editionWindow->closeEditor( **localIter ); }

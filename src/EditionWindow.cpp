@@ -18,6 +18,7 @@
 *******************************************************************************/
 
 #include "EditionWindow.h"
+#include "EditionWindow_p.h"
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -109,7 +110,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     titleLabel_->setBuddy( titleEditor_ );
 
     // colorWidget
-    gridLayout->addWidget( colorWidget_ = new ColorWidget( main ), 1, 2, 1, 1 );
+    gridLayout->addWidget( colorWidget_ = new Private::ColorWidget( main ), 1, 2, 1, 1 );
     colorWidget_->setToolTip( tr( "Change entry color.\nThis is used to tag entries in the main window list" ) );
     colorWidget_->setAutoRaise( true );
     colorWidget_->setPopupMode( QToolButton::InstantPopup );
@@ -146,7 +147,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( container_, 0 );
 
     // first editor
-    LocalTextEditor& editor( _newTextEditor( editorContainer ) );
+    auto& editor( _newTextEditor( editorContainer ) );
     editorContainer->layout()->addWidget( &editor );
 
     // assign stretch factors to splitters
@@ -158,7 +159,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     connect( keywordEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
     connect( titleEditor_, SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
     connect( titleEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
-    connect( activeEditor().document(), SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
+    connect( activeEditor_->document(), SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
 
     // create attachment list
     AttachmentFrame *frame = new AttachmentFrame( 0, readOnly_ );
@@ -264,7 +265,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     setReadOnly( readOnly_ );
 
     // update modifiers
-    _modifiersChanged( activeEditor().modifiers() );
+    _modifiersChanged( activeEditor_->modifiers() );
 
     // configuration
     connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
@@ -315,6 +316,14 @@ void EditionWindow::displayEntry( LogEntry *entry )
     Debug::Throw( "EditionWindow::displayEntry - done.\n" );
     return;
 }
+
+//____________________________________________
+TextEditor& EditionWindow::activeEditor( void )
+{ return *activeEditor_; }
+
+//____________________________________________
+const TextEditor& EditionWindow::activeEditor( void ) const
+{ return *activeEditor_; }
 
 //____________________________________________
 void EditionWindow::setReadOnly( bool value )
@@ -423,7 +432,7 @@ void EditionWindow::displayKeyword( void )
 {
     Debug::Throw( "EditionWindow::displayKeyword.\n" );
 
-    LogEntry* entry( EditionWindow::entry() );
+    LogEntry* entry( this->entry() );
     if( entry ) keywordEditor_->setText( entry->keyword().get() );
     keywordEditor_->setCursorPosition( 0 );
     return;
@@ -469,7 +478,7 @@ void EditionWindow::setModified( bool value )
     Debug::Throw( "EditionWindow::setModified.\n" );
     keywordEditor_->setModified( value );
     titleEditor_->setModified( value );
-    activeEditor().document()->setModified( value );
+    activeEditor_->document()->setModified( value );
 }
 
 //___________________________________________________________
@@ -481,13 +490,13 @@ void EditionWindow::setForceShowKeyword( bool value )
 }
 
 //___________________________________________________________
-void EditionWindow::closeEditor( LocalTextEditor& editor )
+void EditionWindow::closeEditor( TextEditor& editor )
 {
     Debug::Throw( "EditionWindow::closeEditor.\n" );
 
     // retrieve number of editors
     // if only one display, close the entire window
-    Base::KeySet<LocalTextEditor> editors( this );
+    Base::KeySet<TextEditor> editors( this );
     if( editors.size() < 2 )
     {
         Debug::Throw() << "EditionWindow::closeEditor - full close." << endl;
@@ -500,7 +509,7 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
     QSplitter* parentSplitter( qobject_cast<QSplitter*>( parent ) );
 
     // retrieve editors associated to current
-    editors = Base::KeySet<LocalTextEditor>( &editor );
+    editors = Base::KeySet<TextEditor>( &editor );
 
     // check how many children remain in parentSplitter if any
     // take action if it is less than 2 (the current one to be deleted, and another one)
@@ -555,11 +564,11 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
 
     // update activeEditor
     bool activeFound( false );
-    Base::KeySetIterator<LocalTextEditor> iterator( editors );
+    Base::KeySetIterator<TextEditor> iterator( editors );
     iterator.toBack();
     while( iterator.hasPrevious() )
     {
-        LocalTextEditor* current( iterator.previous() );
+        TextEditor* current( iterator.previous() );
         if( current != &editor )
         {
             setActiveEditor( *current );
@@ -571,30 +580,30 @@ void EditionWindow::closeEditor( LocalTextEditor& editor )
     Q_ASSERT( activeFound );
 
     // change focus
-    activeEditor().setFocus();
+    activeEditor_->setFocus();
     Debug::Throw( "EditionWindow::closeEditor - done.\n" );
 
 }
 
 //________________________________________________________________
-void EditionWindow::setActiveEditor( LocalTextEditor& editor )
+void EditionWindow::setActiveEditor( TextEditor& editor )
 {
     Debug::Throw() << "EditionWindow::setActiveEditor - key: " << editor.key() << endl;
     Q_ASSERT( editor.isAssociated( this ) );
 
-    activeEditor_ = &editor;
-    if( !activeEditor().isActive() )
+    activeEditor_ = static_cast<Private::LocalTextEditor*>(&editor);
+    if( !activeEditor_->isActive() )
     {
 
-        foreach( LocalTextEditor* editor, Base::KeySet<LocalTextEditor>( this ) )
+        foreach( auto editor, Base::KeySet<TextEditor>( this ) )
         { editor->setActive( false ); }
 
-        activeEditor().setActive( true );
+        activeEditor_->setActive( true );
 
     }
 
     // associate with toolbar
-    if( formatBar_ ) formatBar_->setTarget( activeEditor() );
+    if( formatBar_ ) formatBar_->setTarget( *activeEditor_ );
 
 }
 
@@ -755,12 +764,12 @@ void EditionWindow::_installActions( void )
 }
 
 //___________________________________________________________
-EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
+Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
 {
     Debug::Throw( "EditionWindow::_splitView.\n" );
 
     // keep local pointer to current active display
-    LocalTextEditor& activeEditorLocal( activeEditor() );
+    auto& activeEditorLocal( *activeEditor_ );
 
     // compute desired dimension of the new splitter
     // along its splitting direction
@@ -770,7 +779,7 @@ EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation
     QSplitter& splitter( _newSplitter( orientation ) );
 
     // create new display
-    LocalTextEditor& editor( _newTextEditor(nullptr) );
+    auto& editor( _newTextEditor(nullptr) );
 
     // insert in splitter, at correct position
     splitter.insertWidget( splitter.indexOf( &activeEditorLocal )+1, &editor );
@@ -791,14 +800,14 @@ EditionWindow::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation
     if there exists no clone of active display,
     backup text and register a new Sync object
     */
-    Base::KeySet<LocalTextEditor> editors( &activeEditorLocal );
+    Base::KeySet<Private::LocalTextEditor> editors( &activeEditorLocal );
 
     // clone new display
     editor.synchronize( &activeEditorLocal );
 
     // perform associations
     // check if active editors has associates and propagate to new
-    foreach( LocalTextEditor* iter, editors )
+    foreach( auto iter, editors )
     { Base::Key::associate( &editor, iter ); }
 
     // associate new display to active
@@ -816,7 +825,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
     QSplitter *splitter = 0;
 
     // retrieve parent of current display
-    QWidget* parent( activeEditor().parentWidget() );
+    QWidget* parent( activeEditor_->parentWidget() );
 
     // try cast to splitter
     // do not create a new splitter if the parent has same orientation
@@ -836,23 +845,23 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
             Debug::Throw( "EditionWindow::_newSplitter - found parent splitter with incorrect orientation.\n" );
             // create a splitter with correct orientation
             // give him no parent, because the parent is set in QSplitter::insertWidget()
-            splitter = new LocalSplitter(0);
+            splitter = new Private::LocalSplitter( nullptr );
             splitter->setOrientation( orientation );
-            parentSplitter->insertWidget( parentSplitter->indexOf( &activeEditor() ), splitter );
+            parentSplitter->insertWidget( parentSplitter->indexOf( activeEditor_ ), splitter );
 
         } else {
 
             Debug::Throw( "EditionWindow::_newSplitter - no splitter found. Creating a new one.\n" );
 
             // create a splitter with correct orientation
-            splitter = new LocalSplitter(parent);
+            splitter = new Private::LocalSplitter(parent);
             splitter->setOrientation( orientation );
             parent->layout()->addWidget( splitter );
 
         }
 
         // reparent current display
-        splitter->addWidget( &activeEditor() );
+        splitter->addWidget( activeEditor_ );
 
         // resize parent splitter if any
         if( parentSplitter )
@@ -876,15 +885,16 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 }
 
 //_____________________________________________________________
-EditionWindow::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
+Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 {
     Debug::Throw( "EditionWindow::_newTextEditor.\n" );
 
     // create textDisplay
-    LocalTextEditor* editor = new LocalTextEditor( parent );
+    Private::LocalTextEditor* editor = new Private::LocalTextEditor( parent );
 
     // connections
     connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
+    connect( &editor->editLinkAction(), SIGNAL(triggered()), SLOT(_editLink()) );
     connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
     connect( editor, SIGNAL(linkActivated(QString)), SLOT(_openLink(QString)) );
     connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
@@ -968,15 +978,15 @@ MainWindow& EditionWindow::_mainWindow( void ) const
 void EditionWindow::_displayText( void )
 {
     Debug::Throw( "EditionWindow::_displayText.\n" );
-    if( !&activeEditor() ) return;
+    if( !activeEditor_ ) return;
 
-    LogEntry* entry( EditionWindow::entry() );
-    activeEditor().setCurrentCharFormat( QTextCharFormat() );
-    activeEditor().setPlainText( (entry) ? entry->text() : QString() );
+    LogEntry* entry( this->entry() );
+    activeEditor_->setCurrentCharFormat( QTextCharFormat() );
+    activeEditor_->setPlainText( (entry) ? entry->text() : QString() );
     formatBar_->load( entry->formats() );
 
     // reset undo/redo stack
-    activeEditor().resetUndoRedoStack();
+    activeEditor_->resetUndoRedoStack();
 
     return;
 }
@@ -989,7 +999,7 @@ void EditionWindow::_displayAttachments( void )
     AttachmentFrame &frame( attachmentFrame() );
     frame.clear();
 
-    LogEntry* entry( EditionWindow::entry() );
+    LogEntry* entry( this->entry() );
     if( !entry ) {
 
         frame.visibilityAction().setChecked( false );
@@ -1050,7 +1060,7 @@ void EditionWindow::_save( bool updateSelection )
     Debug::Throw( "EditionWindow::_save - logbook checked.\n" );
 
     // update entry text
-    entry->setText( activeEditor().toPlainText() );
+    entry->setText( activeEditor_->toPlainText() );
     entry->setFormats( formatBar_->get() );
 
     // update entry keyword
@@ -1284,7 +1294,7 @@ void EditionWindow::_previousEntry( void )
     Debug::Throw( "EditionWindow::_previousEntry.\n" );
 
     MainWindow &mainWindow( _mainWindow() );
-    LogEntry* entry( mainWindow.previousEntry( EditionWindow::entry(), true ) );
+    LogEntry* entry( mainWindow.previousEntry( this->entry(), true ) );
     if( !( entry  && mainWindow.lockEntry( entry ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
@@ -1297,7 +1307,7 @@ void EditionWindow::_nextEntry( void )
     Debug::Throw( "EditionWindow::_nextEntry.\n" );
 
     MainWindow &mainWindow( _mainWindow() );
-    LogEntry* entry( mainWindow.nextEntry( EditionWindow::entry(), true ) );
+    LogEntry* entry( mainWindow.nextEntry( this->entry(), true ) );
     if( !( entry && mainWindow.lockEntry( entry ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
@@ -1311,7 +1321,7 @@ void EditionWindow::_entryInfo( void )
     Debug::Throw( "EditionWindow::_EntryInfo.\n" );
 
     // check entry
-    LogEntry *entry( EditionWindow::entry() );
+    LogEntry *entry( this->entry() );
     if( !entry ) {
         InformationDialog( this, tr( "No valid entry." ) ).exec();
         return;
@@ -1326,7 +1336,7 @@ void EditionWindow::_entryInfo( void )
 void EditionWindow::_undo( void )
 {
     Debug::Throw( "EditionWindow::_undo.\n" );
-    if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->undo();
+    if( activeEditor_->QWidget::hasFocus() ) activeEditor_->document()->undo();
     else if( titleEditor_->hasFocus() ) titleEditor_->undo();
     else if( keywordEditor_->hasFocus() ) keywordEditor_->undo();
     return;
@@ -1336,7 +1346,7 @@ void EditionWindow::_undo( void )
 void EditionWindow::_redo( void )
 {
     Debug::Throw( "EditionWindow::_redo.\n" );
-    if( activeEditor().QWidget::hasFocus() ) activeEditor().document()->redo();
+    if( activeEditor_->QWidget::hasFocus() ) activeEditor_->document()->redo();
     else if( titleEditor_->hasFocus() ) titleEditor_->redo();
     else if( keywordEditor_->hasFocus() ) keywordEditor_->redo();
     return;
@@ -1348,7 +1358,7 @@ void EditionWindow::_insertLink( void )
     Debug::Throw( "EditionWindow::_insertLink.\n" );
 
     // check readonly and selection
-    const QTextCursor cursor( activeEditor().textCursor() );
+    const QTextCursor cursor( activeEditor_->textCursor() );
     if( readOnly_ || !cursor.hasSelection() ) return;
 
     const QTextCharFormat format( cursor.charFormat() );
@@ -1361,18 +1371,24 @@ void EditionWindow::_insertLink( void )
     // update format
     QTextCharFormat outputFormat;
     outputFormat.setFontUnderline( true );
-    outputFormat.setForeground( activeEditor().palette().color( QPalette::Link ) );
+    outputFormat.setForeground( activeEditor_->palette().color( QPalette::Link ) );
     outputFormat.setAnchorHref( dialog.link() );
     outputFormat.setAnchor( true );
-    activeEditor().mergeCurrentCharFormat( outputFormat );
+    activeEditor_->mergeCurrentCharFormat( outputFormat );
 
+}
+
+//_____________________________________________
+void EditionWindow::_editLink( void )
+{
+    Debug::Throw( "EditionWindow::_editLink.\n" );
 }
 
 //_____________________________________________
 void EditionWindow::_openLink( void )
 {
     Debug::Throw( "EditionWindow::_openLink.\n" );
-    QString anchor( activeEditor().anchor() );
+    QString anchor( activeEditor_->anchor() );
     if( anchor.isEmpty() ) return;
 
     OpenLinkDialog dialog( this, anchor );
@@ -1415,7 +1431,7 @@ void EditionWindow::_deleteEntry( void )
     Debug::Throw( "EditionWindow::_deleteEntry.\n" );
 
     // check current entry
-    LogEntry *entry( EditionWindow::entry() );
+    LogEntry *entry( this->entry() );
 
     if( !entry )
     {
@@ -1440,7 +1456,7 @@ void EditionWindow::_spellCheck( void )
     Debug::Throw( "EditionWindow::_spellCheck.\n" );
 
     // create dialog
-    SpellCheck::SpellDialog dialog( &activeEditor() );
+    SpellCheck::SpellDialog dialog( activeEditor_ );
 
     // set dictionary and filter
     dialog.setFilter( XmlOptions::get().raw("DICTIONARY_FILTER") );
@@ -1461,7 +1477,7 @@ void EditionWindow::_cloneWindow( void )
 {
 
     Debug::Throw( "EditionWindow::_cloneWindow.\n" );
-    LogEntry *entry( EditionWindow::entry() );
+    LogEntry *entry( this->entry() );
     if( !entry ) {
         InformationDialog( this, tr( "No valid entry found. <New window> canceled." ) ).exec();
         return;
@@ -1488,7 +1504,7 @@ void EditionWindow::_unlock( void )
     Debug::Throw( "EditionWindow::_unlock.\n" );
 
     if( !readOnly_ ) return;
-    LogEntry *entry( EditionWindow::entry() );
+    LogEntry *entry( this->entry() );
 
     if( entry && ! _mainWindow().lockEntry( entry ) ) return;
     setReadOnly( false );
@@ -1527,7 +1543,7 @@ void EditionWindow::_updateReadOnlyActions( void )
     titleEditor_->setReadOnly( readOnly );
 
     // update editors
-    foreach( LocalTextEditor* editor, Base::KeySet<LocalTextEditor>( this ) )
+    foreach( auto editor, Base::KeySet<Private::LocalTextEditor>( this ) )
     { editor->setReadOnly( readOnly ); }
 
     // changes attachment list status
@@ -1561,10 +1577,10 @@ void EditionWindow::_updateUndoRedoActions( void )
         undoAction_->setEnabled( titleEditor_->isUndoAvailable() && !titleEditor_->isReadOnly() );
         redoAction_->setEnabled( titleEditor_->isRedoAvailable() && !titleEditor_->isReadOnly() );
 
-    } else if( activeEditor().QWidget::hasFocus() ) {
+    } else if( activeEditor_->QWidget::hasFocus() ) {
 
-        undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() && !activeEditor().isReadOnly() );
-        redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() && !activeEditor().isReadOnly() );
+        undoAction_->setEnabled( activeEditor_->document()->isUndoAvailable() && !activeEditor_->isReadOnly() );
+        redoAction_->setEnabled( activeEditor_->document()->isRedoAvailable() && !activeEditor_->isReadOnly() );
 
     }
 }
@@ -1584,10 +1600,10 @@ void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
         undoAction_->setEnabled( titleEditor_->isUndoAvailable() && !titleEditor_->isReadOnly() );
         redoAction_->setEnabled( titleEditor_->isRedoAvailable() && !titleEditor_->isReadOnly() );
 
-    } else if( current == &activeEditor() ) {
+    } else if( current == activeEditor_ ) {
 
-        undoAction_->setEnabled( activeEditor().document()->isUndoAvailable() && !activeEditor().isReadOnly() );
-        redoAction_->setEnabled( activeEditor().document()->isRedoAvailable() && !activeEditor().isReadOnly() );
+        undoAction_->setEnabled( activeEditor_->document()->isUndoAvailable() && !activeEditor_->isReadOnly() );
+        redoAction_->setEnabled( activeEditor_->document()->isRedoAvailable() && !activeEditor_->isReadOnly() );
 
     }
 
@@ -1597,13 +1613,13 @@ void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 void EditionWindow::_updateInsertLinkActions( void )
 {
     Debug::Throw( "EditionWindow::_updateInsertLinkActions.\n" );
-    const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && activeEditor().textCursor().hasSelection() );
+    const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && activeEditor_->textCursor().hasSelection() );
 
     // disable main window action
     if( insertLinkAction_ ) insertLinkAction_->setEnabled( enabled );
 
     // also disable editors action
-    Base::KeySet<LocalTextEditor> editors( this );
+    Base::KeySet<Private::LocalTextEditor> editors( this );
     foreach( auto editor, editors )
     { editor->insertLinkAction().setEnabled( enabled ); }
 
@@ -1620,11 +1636,20 @@ void EditionWindow::_textModified( bool state )
 }
 
 //_____________________________________________
+void EditionWindow::_close( void )
+{
+    Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
+    Base::KeySet< Private::LocalTextEditor > editors( this );
+    if( editors.size() > 1 ) closeEditor( activeEditor() );
+    else close();
+}
+
+//_____________________________________________
 void EditionWindow::_displayFocusChanged( TextEditor* editor )
 {
 
     Debug::Throw() << "EditionWindow::_DisplayFocusChanged - " << editor->key() << endl;
-    setActiveEditor( *static_cast<LocalTextEditor*>(editor) );
+    setActiveEditor( *static_cast<Private::LocalTextEditor*>(editor) );
 
 }
 
@@ -1664,7 +1689,7 @@ void EditionWindow::_updateConfiguration( void )
 }
 
 //______________________________________________________
-EditionWindow::LocalTextEditor::LocalTextEditor( QWidget* parent ):
+Private::LocalTextEditor::LocalTextEditor( QWidget* parent ):
     TextEditor( parent )
 {
     setTrackAnchors( true );
@@ -1672,9 +1697,9 @@ EditionWindow::LocalTextEditor::LocalTextEditor( QWidget* parent ):
 }
 
 //___________________________________________________________________________________
-void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, bool allActions )
+void Private::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, bool allActions )
 {
-    Debug::Throw( "EditionWindow::LocalTextEditor::installContextMenuActions.\n" );
+    Debug::Throw( "Private::LocalTextEditor::installContextMenuActions.\n" );
     TextEditor::installContextMenuActions( menu, allActions );
 
     // insert link
@@ -1682,7 +1707,10 @@ void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu*
 
     // open link
     if( !anchorAt( _contextMenuPosition() ).isEmpty() )
-    { menu->insertAction( &copyLinkAction(), openLinkAction_ ); }
+    {
+        menu->insertAction( &copyLinkAction(), openLinkAction_ );
+        menu->insertAction( &copyLinkAction(), editLinkAction_ );
+    }
 
     // separator
     menu->insertSeparator( &showLineNumberAction() );
@@ -1690,10 +1718,11 @@ void EditionWindow::LocalTextEditor::installContextMenuActions( BaseContextMenu*
 }
 
 //___________________________________________________________________________________
-void EditionWindow::LocalTextEditor::_installActions( void )
+void Private::LocalTextEditor::_installActions( void )
 {
-    Debug::Throw( "EditionWindow::LocalTextEditor::_installActions.\n" );
+    Debug::Throw( "Private::LocalTextEditor::_installActions.\n" );
     addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
+    addAction( editLinkAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Edit Link..." ), this ) );
     addAction( openLinkAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Open Link..." ), this ) );
 
     // disable insert link action by default
@@ -1701,13 +1730,13 @@ void EditionWindow::LocalTextEditor::_installActions( void )
 }
 
 //___________________________________________________________________________________
-EditionWindow::ColorWidget::ColorWidget( QWidget* parent ):
+Private::ColorWidget::ColorWidget( QWidget* parent ):
     QToolButton( parent ),
     Counter( "ColorWidget" )
 { Debug::Throw( "ColorWidget::ColorWidget.\n" ); }
 
 //___________________________________________________________________________________
-void EditionWindow::ColorWidget::setColor( const QColor& color )
+void Private::ColorWidget::setColor( const QColor& color )
 {
 
     // create pixmap
@@ -1730,30 +1759,30 @@ void EditionWindow::ColorWidget::setColor( const QColor& color )
 }
 
 //___________________________________________________________________________________
-QSize EditionWindow::ColorWidget::sizeHint( void ) const
+QSize Private::ColorWidget::sizeHint( void ) const
 {
     // the const_cast is use to temporarily remove the menu
     // in order to keep the size of the toolbutton minimum
     QMenu* menu( ColorWidget::menu() );
-    const_cast<EditionWindow::ColorWidget*>( this )->setMenu(0);
+    const_cast<Private::ColorWidget*>( this )->setMenu(0);
     QSize out( QToolButton::sizeHint() );
-    const_cast<EditionWindow::ColorWidget*>( this )->setMenu(menu);
+    const_cast<Private::ColorWidget*>( this )->setMenu(menu);
     return out;
 }
 
 //___________________________________________________________________________________
-QSize EditionWindow::ColorWidget::minimumSizeHint( void ) const
+QSize Private::ColorWidget::minimumSizeHint( void ) const
 {
     // this is an ugly hack to keep the size of the toolbutton minimum
     QMenu* menu( ColorWidget::menu() );
-    const_cast<EditionWindow::ColorWidget*>( this )->setMenu(0);
+    const_cast<Private::ColorWidget*>( this )->setMenu(0);
     QSize out( QToolButton::minimumSizeHint() );
-    const_cast<EditionWindow::ColorWidget*>( this )->setMenu(menu);
+    const_cast<Private::ColorWidget*>( this )->setMenu(menu);
     return out;
 }
 
 //___________________________________________________________________________________
-void EditionWindow::ColorWidget::paintEvent( QPaintEvent* )
+void Private::ColorWidget::paintEvent( QPaintEvent* )
 {
     QStylePainter painter(this);
     QStyleOptionToolButton option;
