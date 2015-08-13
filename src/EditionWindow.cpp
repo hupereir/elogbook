@@ -68,6 +68,7 @@
 #include <QPrintDialog>
 #include <QStylePainter>
 #include <QStyleOptionToolButton>
+#include <QTextFragment>
 #include <QTextLayout>
 #include <QUrl>
 
@@ -1366,6 +1367,7 @@ void EditionWindow::_insertLink( void )
 
     // create dialog
     InsertLinkDialog dialog( this, selection );
+    dialog.setWindowTitle( tr( "Insert link - Elogbook" ) );
     if( !dialog.exec() ) return;
 
     // update format
@@ -1382,6 +1384,31 @@ void EditionWindow::_insertLink( void )
 void EditionWindow::_editLink( void )
 {
     Debug::Throw( "EditionWindow::_editLink.\n" );
+    QTextCursor cursor( activeEditor_->cursorAtContextMenu() );
+    QTextBlock block( cursor.block() );
+
+    // loop over text fragments and find the one that matches cursor
+    for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+    {
+        QTextFragment fragment = it.fragment();
+        if( !fragment.isValid() ) continue;
+        if( fragment.position() > cursor.position() || fragment.position() + fragment.length() <= cursor.position() )
+        { continue; }
+
+        QString anchor( fragment.charFormat().anchorHref() );
+        if( anchor.isEmpty() ) continue;
+
+        // select the corresponding block
+        QTextCursor cursor( activeEditor_->textCursor() );
+        cursor.setPosition( fragment.position() );
+        cursor.setPosition( fragment.position() + fragment.length(), QTextCursor::KeepAnchor );
+        activeEditor_->setTextCursor( cursor );
+
+        // insert link
+        _insertLink();
+
+        break;
+    }
 }
 
 //_____________________________________________
