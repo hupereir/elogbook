@@ -1448,7 +1448,7 @@ void EditionWindow::_openLink( void )
 void EditionWindow::_openLink( QString anchor )
 {
     Debug::Throw( "EditionWindow::_openLink.\n" );
-    if( !anchor.isEmpty() ) QDesktopServices::openUrl( QUrl( anchor ) );
+    if( !anchor.isEmpty() ) QDesktopServices::openUrl( QUrl::fromEncoded( anchor.toAscii() ) );
 }
 
 //_____________________________________________
