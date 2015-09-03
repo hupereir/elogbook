@@ -175,12 +175,14 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     hLayout->addWidget( box = new QGroupBox( tr( "Logbook" ), page ) );
     box->setLayout( new QVBoxLayout() );
     LogbookPrintOptionWidget* logbookPrintOptionWidget = new LogbookPrintOptionWidget( box );
+    logbookPrintOptionWidget->layout()->setMargin(0);
     box->layout()->addWidget( logbookPrintOptionWidget );
     addOptionWidget( logbookPrintOptionWidget );
 
     hLayout->addWidget( box = new QGroupBox( tr( "Logbook Entries" ), page ) );
     box->setLayout( new QVBoxLayout() );
     LogEntryPrintOptionWidget* logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
+    logEntryPrintOptionWidget->layout()->setMargin(0);
     box->layout()->addWidget( logEntryPrintOptionWidget );
     addOptionWidget( logEntryPrintOptionWidget );
 
