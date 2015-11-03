@@ -40,7 +40,7 @@
 #include <QTextEdit>
 #include <QTextFragment>
 
-//! used for customized color button
+//* used for customized color button
 class FormatColorButton: public CustomToolButton
 {
 
@@ -48,14 +48,14 @@ class FormatColorButton: public CustomToolButton
 
     public:
 
-    //! constructor
+    //* constructor
     FormatColorButton( QWidget* parent ):
         CustomToolButton( parent )
     {}
 
     public Q_SLOTS:
 
-    //! set color
+    //* set color
     void setColor( QColor color )
     {
         color_ = color;
@@ -64,7 +64,7 @@ class FormatColorButton: public CustomToolButton
 
     protected:
 
-    //! paint
+    //* paint
     void paintEvent( QPaintEvent* event );
 
     private:
@@ -79,10 +79,8 @@ class FormatColorButton: public CustomToolButton
 #include "FormatBar.moc"
 
 //________________________________________
-FormatBar::FormatBar( QWidget* parent, const QString& option_name ):
-    CustomToolBar( "Text format", parent, option_name ),
-    editor_(0),
-    enabled_( true )
+FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
+    CustomToolBar( "Text format", parent, optionName )
 {
 
     Debug::Throw( "ToolBar::ToolBar.\n" );
@@ -393,7 +391,7 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
 
         QPainter painter( this );
         painter.setPen( color_ );
-        painter.drawLine( subRect.bottomLeft() + QPoint( 3, -3 ), subRect.bottomRight() + QPoint( -3, -3 ) );
+        painter.drawLine( subRect.bottomLeft() + QPoint( 5, -3 ), subRect.bottomRight() + QPoint( -5, -3 ) );
         painter.end();
 
     }

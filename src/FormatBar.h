@@ -34,16 +34,16 @@
 class ColorMenu;
 class TextEditor;
 
-//! text formating bar
+//* text formating bar
 class FormatBar: public CustomToolBar
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! action id enumeration
+    //* action id enumeration
     enum ActionId
     {
         Bold,
@@ -53,73 +53,72 @@ class FormatBar: public CustomToolBar
         Color
     };
 
-    //! constructor
-    FormatBar( QWidget* parent, const QString& option_name );
+    //* constructor
+    FormatBar( QWidget*, const QString& );
 
-    //! destructor
-    virtual ~FormatBar( void )
-    { Debug::Throw( "FormatBar::~FormatBar.\n" ); }
+    //* destructor
+    virtual ~FormatBar( void ) = default;
 
-    //! set target editor
-    void setTarget( TextEditor& editor );
+    //* set target editor
+    void setTarget( TextEditor& );
 
-    //! load text formats
+    //* load text formats
     void load( const Format::TextFormatBlock::List& ) const;
 
-    //! get text formats
+    //* get text formats
     Format::TextFormatBlock::List get( void ) const;
 
-    //! button map
+    //* button map
     using ActionMap = QMap< ActionId, QAction* >;
 
-    //! actions
+    //* actions
     const ActionMap& actions( void ) const
     { return actions_; }
 
     public Q_SLOTS:
 
-    //! update button state
+    //* update button state
     void updateState( const QTextCharFormat& );
 
     private Q_SLOTS:
 
-    //! update configuration
+    //* update configuration
     void _updateConfiguration( void );
 
-    //! save configuration
+    //* save configuration
     void _saveConfiguration( void );
 
-    //! bold
+    //* bold
     void _bold( bool );
 
-    //! italic
+    //* italic
     void _italic( bool );
 
-    //! underline
+    //* underline
     void _underline( bool );
 
-    //! strike
+    //* strike
     void _strike( bool );
 
-    //! color
+    //* color
     void _color( QColor );
 
-    //! last selected color
+    //* last selected color
     void _lastColor( void );
 
     private:
 
-    //! target text editor
-    TextEditor* editor_;
+    //* target text editor
+    TextEditor* editor_ = nullptr;
 
     // enabled
-    bool enabled_;
+    bool enabled_ = true;
 
-    //! button map
+    //* button map
     ActionMap actions_;
 
-    //! color menu
-    ColorMenu* colorMenu_;
+    //* color menu
+    ColorMenu* colorMenu_ = nullptr;
 
 };
 
