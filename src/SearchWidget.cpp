@@ -1,0 +1,177 @@
+/******************************************************************************
+*
+* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+*
+* This is free software; you can redistribute it and/or modify it under the
+* terms of the GNU General Public License as published by the Free Software
+* Foundation; either version 2 of the License, or (at your option) any later
+* version.
+*
+* This software is distributed in the hope that it will be useful, but WITHOUT
+* Any WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+* for more details.
+*
+* You should have received a copy of the GNU General Public License along with
+* this program.  If not, see <http://www.gnu.org/licenses/>.
+*
+*******************************************************************************/
+
+#include "SearchWidget.h"
+#include "SearchWidget.moc"
+
+#include "CustomComboBox.h"
+#include "Debug.h"
+#include "IconNames.h"
+#include "IconEngine.h"
+#include "Singleton.h"
+#include "XmlOptions.h"
+
+#include <QApplication>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QToolButton>
+
+//___________________________________________________________
+SearchWidget::SearchWidget( QWidget* parent ):
+    QWidget( parent ),
+    Counter( "SearchWidget" )
+{
+    Debug::Throw( "SearchWidget::SearchWidget.\n" );
+
+    // editor layout
+    QGridLayout* gridLayout = new QGridLayout();
+    gridLayout->setMargin(2);
+    gridLayout->setSpacing(5);
+    setLayout( gridLayout );
+
+    // first row
+    QLabel *label = new QLabel( tr( "Text to find:" ), this );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    gridLayout->addWidget( label, 0, 0, 1, 1 );
+
+    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->setMargin(0);
+    hLayout->setSpacing(5);
+    gridLayout->addLayout( hLayout, 0, 1, 1, 1 );
+
+    // editor
+    editor_ = new CustomComboBox( this );
+    editor_->setEditable( true );
+    editor_->setAutoCompletion( true );
+    editor_->setToolTip( tr( " Text to be found in logbook" ) );
+    editor_->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    hLayout->addWidget( editor_, 1 );
+
+    connect( editor_, SIGNAL(activated(QString)), SLOT(_selectionRequest()) );
+    connect( editor_, SIGNAL(editTextChanged(QString)), SLOT(_updateFindButton(QString)) );
+
+    // find selection button
+    findButton_ = new QPushButton( IconEngine::get( IconNames::Find ), tr( "Find" ), this );
+    findButton_->setToolTip( tr( "Find logbook entries matching selected text" ) );
+    findButton_->setEnabled( false );
+    hLayout->addWidget( findButton_ );
+
+    connect( findButton_, SIGNAL(clicked()), SLOT(_selectionRequest()) );
+
+    // show all button
+    allEntriesButton_ = new QPushButton( tr( "Show All" ), this );
+    allEntriesButton_->setIcon( IconEngine::get( IconNames::DialogCancel ) );
+    allEntriesButton_->setToolTip( tr( "Show all logbook entries" ) );
+    allEntriesButton_->setEnabled( false );
+    hLayout->addWidget( allEntriesButton_ );
+
+    connect( allEntriesButton_, SIGNAL(clicked()), SIGNAL(showAllEntries()) );
+    connect( allEntriesButton_, SIGNAL(clicked()), SLOT(_disableAllEntriesButton()) );
+
+    // close button
+    QToolButton* closeButton = new QToolButton( this );
+    closeButton->setAutoRaise( true );
+    closeButton->setIcon( IconEngine::get( IconNames::DialogClose ) );
+    closeButton->setText( tr( "Close" ) );
+    hLayout->addWidget( closeButton );
+    connect( closeButton, SIGNAL(clicked()),this,  SIGNAL(showAllEntries()) );
+    connect( closeButton, SIGNAL(clicked()),this,  SLOT(hide()) );
+
+    // second row
+    label = new QLabel( tr( "In:" ), this );
+    label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
+    gridLayout->addWidget( label, 1, 0, 1, 1 );
+
+    hLayout = new QHBoxLayout();
+    hLayout->setMargin(0);
+    hLayout->setSpacing(5);
+    gridLayout->addLayout( hLayout, 1, 1, 1, 1 );
+
+    // checkboxes
+    hLayout->addWidget( checkboxes_[Title] = new QCheckBox( tr( "Title" ), this ) );
+    hLayout->addWidget( checkboxes_[Keyword] = new QCheckBox( tr( "Keyword" ), this ) );
+    hLayout->addWidget( checkboxes_[Text]  = new QCheckBox( tr( "Text" ), this ) );
+    hLayout->addWidget( checkboxes_[Attachment] = new QCheckBox( tr( "Attachment" ), this ) );
+    hLayout->addWidget( checkboxes_[Color] = new QCheckBox( tr( "Color" ), this ) );
+    hLayout->addStretch(1);
+
+    checkboxes_[Text]->setChecked( true );
+
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
+    { connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_saveMask()) ); }
+
+    connect( findButton_, SIGNAL(clicked()), SLOT(_enableAllEntriesButton()) );
+    connect( editor_, SIGNAL(activated(QString)), SLOT(_enableAllEntriesButton()) );
+
+    // configuration
+    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    _updateConfiguration();
+
+}
+
+//___________________________________________________________
+void SearchWidget::_updateFindButton( const QString& value )
+{ findButton_->setEnabled( !value.isEmpty() ); }
+
+//___________________________________________________________
+void SearchWidget::_updateConfiguration( void )
+{
+
+    Debug::Throw( "SearchWidget::_updateConfiguration.\n" );
+
+    // load mask
+    if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
+    {
+        unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
+        for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+        { iter.value()->setChecked( mask & iter.key() ); }
+    }
+
+}
+
+//___________________________________________________________
+void SearchWidget::_saveMask( void )
+{
+
+    Debug::Throw( "SearchWidget::_saveMask.\n" );
+
+    // store mask
+    unsigned int mask(0);
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+    { if( iter.value()->isChecked() ) mask |= iter.key(); }
+
+    XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
+
+}
+
+//___________________________________________________________
+void SearchWidget::_selectionRequest( void )
+{
+    Debug::Throw( "SearchWidget::_selectionRequest.\n" );
+
+    // build mode
+    SearchModes mode = None;
+    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+    { if( iter.value()->isChecked() ) mode |= iter.key(); }
+
+    // text selection
+    emit selectEntries( editor_->currentText(), mode );
+
+}

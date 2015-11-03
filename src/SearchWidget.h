@@ -1,5 +1,5 @@
-#ifndef SearchPanel_h
-#define SearchPanel_h
+#ifndef SearchWidget_h
+#define SearchWidget_h
 
 /******************************************************************************
 *
@@ -9,7 +9,7 @@
 * terms of the GNU General Public License as published by the Free Software
 * Foundation; either version 2 of the License, or (at your option) any later
 * version.
-*
+s*
 * This software is distributed in the hope that it will be useful, but WITHOUT
 * Any WARRANTY; without even the implied warranty of MERCHANTABILITY or
 * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
@@ -20,29 +20,27 @@
 *
 *******************************************************************************/
 
-#include "CustomToolBar.h"
-#include "IconSize.h"
+#include "Counter.h"
 
 #include <QCheckBox>
-#include <QContextMenuEvent>
 #include <QHash>
 #include <QPushButton>
 
 class CustomComboBox;
 
-//! selects entries from keyword/title/text/...
-class SearchPanel: public CustomToolBar
+//* selects entries from keyword/title/text/...
+class SearchWidget: public QWidget, public Counter
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! constructor
-    SearchPanel( const QString&, QWidget*, const QString& = QString() );
+    //* constructor
+    SearchWidget( QWidget* );
 
-    //! search mode enumeration
+    //* search mode enumeration
     enum SearchMode
     {
         None = 0,
@@ -55,90 +53,61 @@ class SearchPanel: public CustomToolBar
 
     Q_DECLARE_FLAGS( SearchModes, SearchMode )
 
-    //! editor
+    //* editor
     CustomComboBox& editor( void ) const
     { return *editor_; }
 
     Q_SIGNALS:
 
-    //! emitted when the Find button is pressed
-    void selectEntries( QString, SearchPanel::SearchModes );
+    //* emitted when the Find button is pressed
+    void selectEntries( QString, SearchWidget::SearchModes );
 
-    //! emitted when the Show All button is pressed
+    //* emitted when the Show All button is pressed
     void showAllEntries( void );
-
-    protected:
-
-    //! context menu
-    virtual void contextMenuEvent( QContextMenuEvent* );
 
     protected Q_SLOTS:
 
-    //! toggle visibility [overloaded]
-    virtual void _toggleVisibility( bool );
-
-    //! find button
+    //* find button
     virtual void _updateFindButton( const QString& );
 
     private Q_SLOTS:
 
-    //! configuration
+    //* configuration
     void _updateConfiguration( void );
 
-    //! toolbar text position
-    void _updateToolButtonStyle( Qt::ToolButtonStyle );
-
-    //! toolbar text position
-    void _updateToolButtonIconSize( IconSize::Size );
-
-    //! save configuration
+    //* save configuration
     void _saveMask( void );
 
-    //! send SelectEntries request
+    //* send SelectEntries request
     void _selectionRequest( void );
 
-    //! enable all entries button
+    //* enable all entries button
     void _enableAllEntriesButton( void )
     { allEntriesButton_->setEnabled( true ); }
 
-    //! disable all entries button
+    //* disable all entries button
     void _disableAllEntriesButton( void )
     { allEntriesButton_->setEnabled( false ); }
 
     private:
 
-    //! checkboxes
+    //* checkboxes
     using CheckBoxMap = QHash<SearchMode, QCheckBox* >;
 
-    //! find button
-    QPushButton* findButton_;
+    //* find button
+    QPushButton* findButton_ = nullptr;
 
-    //! show all entries button
-    QPushButton* allEntriesButton_;
+    //* show all entries button
+    QPushButton* allEntriesButton_ = nullptr;
 
-    //! checkboxes
+    //* checkboxes
     CheckBoxMap checkboxes_;
 
-    //! select LogEntry according to title
-    QCheckBox *titleSelection_;
-
-    //! select LogEntry according to key
-    QCheckBox *keywordSelection_;
-
-    //! select LogEntry according to text
-    QCheckBox *textSelection_;
-
-    //! select LogEntry according to attachment title
-    QCheckBox *attachmentSelection_;
-
-    //! select LogEntry according to color
-    QCheckBox *colorSelection_;
-
-    //! selection text widget
-    CustomComboBox *editor_;
+    //* selection text widget
+    CustomComboBox *editor_ = nullptr;
 
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( SearchPanel::SearchModes )
+Q_DECLARE_OPERATORS_FOR_FLAGS( SearchWidget::SearchModes )
 
 #endif

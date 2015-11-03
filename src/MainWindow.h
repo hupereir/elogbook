@@ -32,7 +32,7 @@
 #include "LogEntry.h"
 #include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
-#include "SearchPanel.h"
+#include "SearchWidget.h"
 #include "TreeView.h"
 
 #include <QBasicTimer>
@@ -67,8 +67,8 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     { return *menu_; }
 
     //* retrive search panel
-    SearchPanel& searchPanel( void ) const
-    { return *searchPanel_; }
+    SearchWidget& searchWidget( void ) const
+    { return *searchWidget_; }
 
     //* retrive state frame
     ProgressStatusBar& statusBar( void ) const
@@ -303,7 +303,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void selectEntry( LogEntry* );
 
     //* select entries using selection criterions
-    virtual void selectEntries( QString, SearchPanel::SearchModes );
+    virtual void selectEntries( QString, SearchWidget::SearchModes );
 
     //* show all entries
     virtual void showAllEntries( void );
@@ -538,7 +538,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     Menu* menu_ = nullptr;
 
     //* search panel
-    SearchPanel *searchPanel_ = nullptr;
+    SearchWidget *searchWidget_ = nullptr;
 
     //* state frame
     ProgressStatusBar* statusbar_ = nullptr;

@@ -34,7 +34,6 @@
 #include "MainWindow.h"
 #include "RecentFilesMenu.h"
 #include "QtUtil.h"
-#include "SearchPanel.h"
 #include "Singleton.h"
 #include "Util.h"
 #include "XmlOptions.h"

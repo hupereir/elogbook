@@ -59,7 +59,7 @@
 #include "QuestionDialog.h"
 #include "QtUtil.h"
 #include "RecentFilesMenu.h"
-#include "SearchPanel.h"
+#include "SearchWidget.h"
 #include "Singleton.h"
 #include "TextEditionDelegate.h"
 #include "Util.h"
@@ -100,14 +100,17 @@ MainWindow::MainWindow( QWidget *parent ):
     layout->addWidget( splitter, 1 );
     splitter->setOrientation( Qt::Horizontal );
 
-    // create hidden search panel
-    addToolBar( Qt::BottomToolBarArea, searchPanel_ = new SearchPanel( tr( "Search panel" ), this ) );
-    searchPanel_->setAppearsInMenu( true );
-    searchPanel_->hide();
+//     // create hidden search panel
+//     addToolBar( Qt::BottomToolBarArea, searchWidget_ = new SearchWidget( tr( "Search panel" ), this ) );
+//     searchWidget_->setAppearsInMenu( true );
+//     searchWidget_->hide();
 
-    connect( &searchPanel(), SIGNAL(selectEntries(QString,SearchPanel::SearchModes)), SLOT(selectEntries(QString,SearchPanel::SearchModes)) );
-    connect( &searchPanel(), SIGNAL(showAllEntries()), SLOT(showAllEntries()) );
-    addAction( &searchPanel().visibilityAction() );
+    // search widget
+    layout->addWidget( searchWidget_ = new SearchWidget( main ) );
+    searchWidget_->hide();
+
+    connect( searchWidget_, SIGNAL(selectEntries(QString,SearchWidget::SearchModes)), SLOT(selectEntries(QString,SearchWidget::SearchModes)) );
+    connect( searchWidget_, SIGNAL(showAllEntries()), SLOT(showAllEntries()) );
 
     // status bar
     setStatusBar( statusbar_ = new ProgressStatusBar( this ) );
@@ -828,7 +831,7 @@ void MainWindow::save( bool confirmEntries )
 }
 
 //_______________________________________________
-void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode )
+void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mode )
 {
     Debug::Throw() << "MainWindow::selectEntries - selection: " << selection << " mode:" << mode << endl;
 
@@ -843,7 +846,7 @@ void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode
     }
 
     // retrieve selection source
-    if( mode == SearchPanel::None )
+    if( mode == SearchWidget::None )
     {
         InformationDialog( this, tr( "At least one search field must be selected" ) ).centerOnParent().exec();
         return;
@@ -861,7 +864,7 @@ void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode
     LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
 
     // check is selection is a valid color when Color search is requested.
-    bool colorValid = ( mode&SearchPanel::Color && QColor( selection ).isValid() );
+    bool colorValid = ( mode&SearchWidget::Color && QColor( selection ).isValid() );
 
     // retrieve all logbook entries
     Base::KeySet<LogEntry> turnedOffEntries;
@@ -875,10 +878,10 @@ void MainWindow::selectEntries( QString selection, SearchPanel::SearchModes mode
 
         // check entry
         bool accept( false );
-        if( (mode&SearchPanel::Title ) && entry->matchTitle( selection ) ) accept = true;
-        if( (mode&SearchPanel::Keyword ) && entry->matchKeyword( selection ) ) accept = true;
-        if( (mode&SearchPanel::Text ) && entry->matchText( selection ) ) accept = true;
-        if( (mode&SearchPanel::Attachment ) && entry->matchAttachment( selection ) ) accept = true;
+        if( (mode&SearchWidget::Title ) && entry->matchTitle( selection ) ) accept = true;
+        if( (mode&SearchWidget::Keyword ) && entry->matchKeyword( selection ) ) accept = true;
+        if( (mode&SearchWidget::Text ) && entry->matchText( selection ) ) accept = true;
+        if( (mode&SearchWidget::Attachment ) && entry->matchAttachment( selection ) ) accept = true;
         if( colorValid && entry->matchColor( selection ) ) accept = true;
 
         if( accept )
@@ -2411,13 +2414,13 @@ void MainWindow::_findEntries( void ) const
     Debug::Throw( "MainWindow::_findEntries.\n" );
 
     // check panel visibility
-    if( !searchPanel().isVisible() ) {
-        searchPanel().editor().clear();
-        searchPanel().visibilityAction().trigger();
-    } else searchPanel().editor().lineEdit()->selectAll();
+    if( !searchWidget_->isVisible() ) {
+        searchWidget_->editor().clear();
+        searchWidget_->show();
+    } else searchWidget_->editor().lineEdit()->selectAll();
 
     // change focus
-    searchPanel().editor().setFocus();
+    searchWidget_->editor().setFocus();
 
 }
 
