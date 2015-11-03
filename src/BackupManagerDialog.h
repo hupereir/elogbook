@@ -36,9 +36,6 @@ class BackupManagerDialog: public BaseDialog
     //* constructor
     BackupManagerDialog( QWidget* );
 
-    //* destructor
-    virtual ~BackupManagerDialog( void ) = default;
-
     //* widget
     BackupManagerWidget& managerWidget( void ) const
     { return *managerWidget_; }

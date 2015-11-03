@@ -35,9 +35,6 @@ class OpenLinkDialog: public CustomDialog
     //* constructor
     OpenLinkDialog( QWidget*, const QString& );
 
-    //* destructor
-    virtual ~OpenLinkDialog( void ) = default;
-
     //* combo box
     CustomComboBox& actionComboBox( void ) const
     { return *actionComboBox_; }

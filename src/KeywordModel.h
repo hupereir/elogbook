@@ -38,9 +38,6 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
     //* constructor
     KeywordModel( QObject* = nullptr );
 
-    //* destructor
-    virtual ~KeywordModel() = default;
-
     //* column type enumeration
     enum { nColumns = 1 };
 
@@ -76,13 +73,13 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
 
     Q_SIGNALS:
 
-    /*! \brief
+    /** \brief
     emitted when a logEntryList drag is accepted.
     Sends the new keyword
     */
     void entryKeywordChanged( Keyword );
 
-    /*! \brief
+    /** \brief
     emitted when a Keyword drag is accepted, or when keyword item
     is emitted directly in the list. Sends old keyword, new keyword
     */

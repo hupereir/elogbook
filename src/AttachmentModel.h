@@ -38,9 +38,6 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     //* constructor
     AttachmentModel( QObject* = nullptr );
 
-    //* destructor
-    virtual ~AttachmentModel() = default;
-
     //* column type enumeration
     enum ColumnType
     {

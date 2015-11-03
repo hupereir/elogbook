@@ -42,10 +42,6 @@ class Keyword: public Counter
     //* constructor
     Keyword( const QString& = QString() );
 
-    //* destructor
-    virtual ~Keyword( void )
-    {}
-
     //* keyword set
     using Set = QSet<Keyword>;
     using List = QList<Keyword>;
@@ -79,7 +75,7 @@ class Keyword: public Counter
     //* parent keyword
     Keyword parent( void ) const;
 
-    /*! true if this keyword is direct child of this one */
+    /** true if this keyword is direct child of this one */
     bool isChild( const Keyword& keyword ) const;
 
     //* true if this keyword in descendance of argument

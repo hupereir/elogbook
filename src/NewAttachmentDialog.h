@@ -42,9 +42,6 @@ class NewAttachmentDialog: public CustomDialog
   // constructor
   NewAttachmentDialog( QWidget* parent );
 
-  //* destructor
-  virtual ~NewAttachmentDialog( void ) = default;
-
   //* filename
   void setFile( const File& );
 

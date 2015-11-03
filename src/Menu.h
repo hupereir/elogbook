@@ -30,7 +30,7 @@ class LogEntry;
 class MainWindow;
 class RecentFilesMenu;
 
-/*!
+/**
 \class Menu
 \brief main menu
 */
@@ -45,9 +45,6 @@ class Menu:public QMenuBar, public Counter
 
     //* creator
     Menu( QWidget*, MainWindow* );
-
-    //* destructor
-    ~Menu( void ) = default;
 
     //* recent files menu
     RecentFilesMenu& recentFilesMenu( void ) const

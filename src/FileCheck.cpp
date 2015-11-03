@@ -27,16 +27,12 @@
 
 //____________________________________________________
 FileCheck::FileCheck( QObject* parent ):
-QObject( parent ),
-Counter( "FileCheck" )
+    QObject( parent ),
+    Counter( "FileCheck" )
 {
     Debug::Throw( "FileCheck::FileCheck.\n" );
     connect( &_fileSystemWatcher(), SIGNAL(fileChanged(QString)), SLOT(_fileChanged(QString)) );
 }
-
-//______________________________________________________
-FileCheck::~FileCheck( void )
-{ Debug::Throw( "FileCheck::~FileCheck.\n" ); }
 
 //______________________________________________________
 void FileCheck::registerLogbook( Logbook* logbook )

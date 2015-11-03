@@ -275,9 +275,6 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 }
 
 //____________________________________________
-EditionWindow::~EditionWindow( void ) = default;
-
-//____________________________________________
 void EditionWindow::displayEntry( LogEntry *entry )
 {
     Debug::Throw( "EditionWindow::displayEntry.\n" );

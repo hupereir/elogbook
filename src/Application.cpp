@@ -40,17 +40,13 @@
 
 //____________________________________________
 Application::Application( CommandLineArguments arguments ) :
-    BaseApplication( 0, arguments ),
-    Counter( "Application" ),
-    recentFiles_( 0 ),
-    attachmentWindow_( 0 ),
-    mainWindow_( 0 )
+    BaseApplication( nullptr, arguments ),
+    Counter( "Application" )
 {}
 
 //____________________________________________
 Application::~Application( void )
 {
-    Debug::Throw( "Application::~Application.\n" );
     if( mainWindow_ ) delete mainWindow_;
     if( recentFiles_ ) delete recentFiles_;
 

@@ -90,7 +90,6 @@ LogEntry::LogEntry( const QDomElement& element ):
 //__________________________________
 LogEntry::~LogEntry( void )
 {
-    Debug::Throw( "LogEntry::~LogEntry.\n" );
 
     // delete associated attachments
     foreach( Attachment* attachment, Base::KeySet<Attachment>( this ) )

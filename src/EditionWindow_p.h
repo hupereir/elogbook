@@ -30,10 +30,10 @@ namespace Private
         public:
 
         //* constructor
-        ColorWidget( QWidget* parent );
+        ColorWidget( QWidget* );
 
         //* color
-        void setColor( const QColor& color );
+        void setColor( const QColor& );
 
         //* size hint
         QSize sizeHint( void ) const;
@@ -58,11 +58,7 @@ namespace Private
         LocalSplitter( QWidget* parent ):
             QSplitter( parent ),
             Counter( "LocalSplitter" )
-        { Debug::Throw( "LocalSplitter::LocalSplitter.\n" ); }
-
-        //* destructor
-        virtual ~LocalSplitter( void )
-        { Debug::Throw( "LocalSplitter::~LocalSplitter.\n" ); }
+        {}
 
     };
 
@@ -74,9 +70,6 @@ namespace Private
 
         //* constructor
         LocalTextEditor( QWidget* );
-
-        //* destructor
-        virtual ~LocalTextEditor( void ) = default;
 
         //* insert link action
         QAction& insertLinkAction( void ) const
@@ -105,13 +98,13 @@ namespace Private
         void _installActions( void );
 
         //* insert link
-        QAction* insertLinkAction_;
+        QAction* insertLinkAction_ = nullptr;
 
         //* insert link
-        QAction* editLinkAction_;
+        QAction* editLinkAction_ = nullptr;
 
         //* open link
-        QAction* openLinkAction_;
+        QAction* openLinkAction_ = nullptr;
 
     };
 

@@ -37,9 +37,6 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
     //* constructor
     LogbookPrintOptionWidget( QWidget* = nullptr );
 
-    //* destructor
-    virtual ~LogbookPrintOptionWidget( void ) = default;
-
     //* read
     virtual void read( const Options& );
 

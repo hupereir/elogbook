@@ -39,7 +39,7 @@ class LogEntry;
 class Attachment;
 class XmlTextFormatInfo;
 
-/*!
+/**
 \class Logbook
 \brief log file parser based on xml
 */
@@ -177,14 +177,14 @@ class Logbook:public QObject, public Counter, public Base::Key
     TimeStamp saved( void ) const
     { return saved_; }
 
-    /*! \brief
+    /** \brief
     number of entries in logbook as read from xml
     it is not supposed to be synchronized with current list of entries
     */
     int xmlEntries( void ) const
     { return xmlEntries_; }
 
-    /*! \brief
+    /** \brief
     number of children in logbook as read from xml
     it is not supposed to be synchronized with current list of children
     */
@@ -227,7 +227,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     //@{
 
     //* read from file
-    /*!
+    /**
     reads all xml based objects in the input file and chlids,
     if any [recursive]
     */
@@ -237,7 +237,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     bool write( File file = File("") );
 
     //* synchronize logbook with remote
-    /*!
+    /**
     returns a map of duplicated entries.
     The first entry is local and can be safely deleted
     The second entry is the remote replacement
@@ -307,7 +307,7 @@ class Logbook:public QObject, public Counter, public Base::Key
         return true;
     }
 
-    /*! \brief
+    /** \brief
     number of entries in logbook as read from xml
     it is not supposed to be synchronized with current list of entries
     Returns true if changed.
@@ -319,7 +319,7 @@ class Logbook:public QObject, public Counter, public Base::Key
         return true;
     }
 
-    /*! \brief
+    /** \brief
     number of children in logbook as read from xml
     it is not supposed to be synchronized with current list of children.
     Returns true if changed.
@@ -346,7 +346,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     //* sets logbook and children modified value [recursive]
     void setModifiedRecursive( bool );
 
-    /*!
+    /**
     changes sort method associated to oldest parent
     returns true if changed
     */
@@ -416,11 +416,11 @@ class Logbook:public QObject, public Counter, public Base::Key
     void messageAvailable( const QString& message );
 
     //* emit maximum progress
-    /*! argument is the maximum number of entries to read */
+    /** argument is the maximum number of entries to read */
     void maximumProgressAvailable( int );
 
     //* emit progress when reading, saving
-    /*! argument is the number of entries read since last signal */
+    /** argument is the number of entries read since last signal */
     void progressAvailable( int );
 
     //* read-only changed
@@ -488,25 +488,25 @@ class Logbook:public QObject, public Counter, public Base::Key
     Backup::List backupFiles_;
 
     //* list of recent entries
-    /*! creation time stamp of recent entries are stored */
+    /** creation time stamp of recent entries are stored */
     using TimeStampList = QList<TimeStamp>;
 
     //* list of recent entries
-    /*! creation time stamp of recent entries are stored */
+    /** creation time stamp of recent entries are stored */
     TimeStampList recentEntries_;
 
     //* sort order
     int sortOrder_ = 0;
 
     //* number of entries in logbook as read from xml
-    /*!  \brief
+    /**  \brief
     number of entries in logbook as read from xml
     it is not supposed to be synchronized with current list of entries
     */
     int xmlEntries_ = 0;
 
     //* number of children in logbook as read from xml
-    /*!
+    /**
     number of children in logbook as read from xml
     it is not supposed to be synchronized with current list of children
     */

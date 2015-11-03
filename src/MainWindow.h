@@ -57,7 +57,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     public:
 
     //* constructor
-    MainWindow( QWidget *parent = 0 );
+    MainWindow( QWidget* = nullptr );
 
     //* destructor
     virtual ~MainWindow( void );
@@ -65,10 +65,6 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* retrive menu
     Menu& menu( void )
     { return *menu_; }
-
-//     //* retrive search panel
-//     SearchWidget& searchWidget( void ) const
-//     { return *searchWidget_; }
 
     //* retrive state frame
     ProgressStatusBar& statusBar( void ) const
@@ -296,7 +292,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void open( FileRecord file = FileRecord() );
 
     //* save current logbook
-    /*! if argument is false, all modified entries will be saved without asking */
+    /** if argument is false, all modified entries will be saved without asking */
     virtual void save( bool confirmEntries = true );
 
     //* select entry
@@ -369,7 +365,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* save logbook and children whether they are modified or not
     void _saveForced( void );
 
-    /*! \brief
+    /** \brief
     save current logbook with a given filename
     returns true if logbook was saved
     */
@@ -414,7 +410,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* reorganize logbook to entries associations
     void _reorganize( void );
 
-    /*! \brief
+    /** \brief
     show all entries which have equal creation time
     is needed to remove duplicate entries in case of
     wrong logbook merging. This is a Debugging tool
@@ -458,14 +454,14 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _deleteKeyword( void );
 
     //* change selected entries keyword using dialog
-    /*!
+    /**
     this is triggered by the rename keyword action from
     the keyword list
     */
     void _renameKeyword( void );
 
     //* rename keyword for all entries that match old keyword.
-    /*!
+    /**
     this is triggered by drag and drop in the keyword list,
     by renaming a keyword directly from the keyword list,
     or by deleting a keyword in the list, and moving entries to the parent.
@@ -474,14 +470,14 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _renameKeyword( const Keyword& oldKeyword, const Keyword& newKeyword, bool updateSelection = true );
 
     //* rename keyword for selected entries using dialog
-    /*!
+    /**
     this is triggered by the rename entry keyword action in the
     logEntry list.
     */
     void _renameEntryKeyword( void );
 
     //* change selected entries keyword using argument
-    /*!
+    /**
     this is triggered by drag and drop from the logEntry list
     to the keyword list, and it is also called by the slot above
     */
@@ -728,7 +724,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //@}
 
     //* resize timer
-    /*! needed to store Keyword list width */
+    /** needed to store Keyword list width */
     QBasicTimer resizeTimer_;
 
 };

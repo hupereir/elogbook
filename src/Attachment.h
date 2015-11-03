@@ -31,7 +31,7 @@
 
 class LogEntry;
 
-/*!
+/**
 \class Attachment
 \brief Attached file object
 */
@@ -58,13 +58,13 @@ class Attachment: public Counter, public Base::Key
     //* domElement
     QDomElement domElement( QDomDocument& parent ) const;
 
-    /*!\fn bool operator < (const Attachment& attachment ) const
+    /**\fn bool operator < (const Attachment& attachment ) const
     \brief inferior to operator, based on Attachment Short name lexicographic order
     \param attachment the attachment to which this is to be compared
     */
     bool operator < (const Attachment& attachment ) const;
 
-    /*!\fn bool operator == (const Attachment& attachment ) const
+    /**\fn bool operator == (const Attachment& attachment ) const
     \brief equal to operator, based on Attachment Full name
     \param attachment the attachment to which this is to be compared
     */
@@ -201,7 +201,7 @@ class Attachment: public Counter, public Base::Key
         DestExist
     };
 
-    /*! \fn ErrorCode copy( const Attachment::Command& command, const QString& destdir )
+    /** \fn ErrorCode copy( const Attachment::Command& command, const QString& destdir )
     \brief ErrorCode convert original file into attached file. Returns true in case of success
     \param command tells how the original file is to be converted into attached file. Is one of the following:
     Attachment::COPY use command cp, if the attached file is not present

@@ -37,9 +37,6 @@ class BackupModel: public ListModel< Backup >, public Counter
         Counter( "BackupModel" )
     {}
 
-    //* destructor
-    virtual ~BackupModel( void ) = default;
-
     //* column type enumeration
     enum ColumnType
     {

@@ -29,7 +29,7 @@ class LogEntryPrintSelectionDialog: public CustomDialog
     public:
 
     //* constructor
-    LogEntryPrintSelectionDialog( QWidget* = 0 );
+    LogEntryPrintSelectionDialog( QWidget* = nullptr );
 
     //* destructor
     virtual ~LogEntryPrintSelectionDialog( void );
@@ -41,7 +41,7 @@ class LogEntryPrintSelectionDialog: public CustomDialog
     private:
 
     //* selection widget
-    LogEntryPrintSelectionWidget* selectionWidget_;
+    LogEntryPrintSelectionWidget* selectionWidget_ = nullptr;
 
 };
 

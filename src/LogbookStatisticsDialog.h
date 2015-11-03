@@ -36,9 +36,6 @@ class LogbookStatisticsDialog: public CustomDialog
     //* constructor
     LogbookStatisticsDialog( QWidget*, Logbook* );
 
-    //* destructor
-    virtual ~LogbookStatisticsDialog( void ) = default;
-
     private:
 
     //* model

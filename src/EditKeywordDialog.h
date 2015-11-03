@@ -35,9 +35,6 @@ class EditKeywordDialog: public CustomDialog
     //* constructor
     EditKeywordDialog( QWidget* );
 
-    //* destructor
-    virtual ~EditKeywordDialog( void ) = default;
-
     //* keyword
     void add( const Keyword& keyword )
     { combobox_->addItem( keyword.get() ); }

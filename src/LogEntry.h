@@ -246,7 +246,7 @@ class LogEntry:public Counter, public Base::Key
 
     };
 
-    /*!
+    /**
     used to check if LogEntry keyword matches a given keyword.
     A match is found when the LogEntry keyword starts with the reference keyword
     It is used to check for keywords which have no associated entries
@@ -305,10 +305,10 @@ class LogEntry:public Counter, public Base::Key
     Base::Color color_;
 
     //* set to true if entry is said visible by the selection bar
-    bool findSelected_;
+    bool findSelected_ = false;
 
     //* set to true if entry is said visible by the keyword selection
-    bool keywordSelected_;
+    bool keywordSelected_ = false;
 
     //* list of text formats
     Format::TextFormatBlock::List formats_;

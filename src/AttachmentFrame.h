@@ -31,7 +31,7 @@
 
 class TreeView;
 
-/*!
+/**
 \class  AttachmentFrame
 \brief  handles attachment list
 */
@@ -44,7 +44,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     public:
 
     //* constructor
-    AttachmentFrame( QWidget *, bool );
+    AttachmentFrame( QWidget*, bool );
 
     //* default size
     void setDefaultHeight( const int& );
@@ -207,7 +207,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     { return model_; }
 
     //* save attachment
-    /*! this requires carefull handling of associate entries and Edition windows */
+    /** this requires carefull handling of associate entries and Edition windows */
     void _saveAttachments( const AttachmentModel::List& );
 
     //* if true, listbox is read only

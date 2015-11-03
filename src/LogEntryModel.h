@@ -40,9 +40,6 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     //* constructor
     LogEntryModel(QObject* = nullptr );
 
-    //* destructor
-    virtual ~LogEntryModel() = default;
-
     //* column type enumeration
     enum ColumnType
     {
@@ -159,7 +156,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     bool editionEnabled_ = false;
 
     //* edition index
-    /*! needs to be stored to start delayed edition */
+    /** needs to be stored to start delayed edition */
     QModelIndex editionIndex_;
 
     //* icon size

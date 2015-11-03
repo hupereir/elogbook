@@ -34,11 +34,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     public:
 
     //* constructor
-    LogEntryPrintSelectionWidget( QWidget* = 0 );
-
-    //* destructor
-    virtual ~LogEntryPrintSelectionWidget( void )
-    {}
+    LogEntryPrintSelectionWidget( QWidget* = nullptr );
 
     //* read
     virtual void read( const Options& );

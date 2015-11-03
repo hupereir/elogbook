@@ -69,13 +69,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     using Editor = LineEditor;
 
     //* creator
-    EditionWindow( QWidget* parent, bool readOnly = true );
-
-    //* destructor
-    ~EditionWindow( void );
+    EditionWindow( QWidget*, bool readOnly = true );
 
     //* display all entries informations
-    void displayEntry( LogEntry *entry = 0 );
+    void displayEntry( LogEntry* = nullptr );
 
     //* returns current entry
     LogEntry* entry( void ) const
@@ -246,7 +243,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     void setForceShowKeyword( bool value );
 
     //* close view
-    /*! Ask for save if view is modified */
+    /** Ask for save if view is modified */
     void closeEditor( TextEditor& );
 
     //* change active display manualy
@@ -451,7 +448,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     ActionList readOnlyActions_;
 
     //* "closed" flag
-    /*! this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
+    /** this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
     bool closed_ = false;
 
     //* true if keyword is forced visible

@@ -38,11 +38,7 @@ class NewLogbookDialog: public CustomDialog
     public:
 
     //* constructor
-    NewLogbookDialog( QWidget* parent );
-
-    //* destructor
-    virtual ~NewLogbookDialog( void )
-    { Debug::Throw( "NewLogbookDialog::~NewLogbookDialog\n" ); }
+    NewLogbookDialog( QWidget* );
 
     //* title
     void setTitle( const QString& title )
@@ -82,16 +78,16 @@ class NewLogbookDialog: public CustomDialog
     private:
 
     //* title line edit
-    LineEditor *title_;
+    LineEditor *title_ = nullptr;
 
     //* author line edit
-    LineEditor *author_;
+    LineEditor *author_ = nullptr;
 
     //* destination directory browsed line edti
-    BrowsedLineEditor *attachmentDirectory_;
+    BrowsedLineEditor *attachmentDirectory_ = nullptr;
 
     //* comments
-    TextEditor *comments_;
+    TextEditor* comments_ = nullptr;
 
 };
 

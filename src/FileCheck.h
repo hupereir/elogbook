@@ -44,9 +44,6 @@ class FileCheck: public QObject, public Base::Key, public Counter
     //* constructor
     FileCheck( QObject* = nullptr );
 
-    //* destructor
-    ~FileCheck( void );
-
     //* register logbook and children
     void registerLogbook( Logbook* );
 

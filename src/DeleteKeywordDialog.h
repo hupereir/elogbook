@@ -36,9 +36,6 @@ class DeleteKeywordDialog: public CustomDialog
     //* constructor
     DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&, bool hasEntries );
 
-    //* destructor
-    virtual ~DeleteKeywordDialog( void ) = default;
-
     //* entry action
     enum Action
     {
