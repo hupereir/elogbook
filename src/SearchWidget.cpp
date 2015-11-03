@@ -20,6 +20,7 @@
 #include "SearchWidget.h"
 #include "SearchWidget.moc"
 
+#include "Color.h"
 #include "CustomComboBox.h"
 #include "Debug.h"
 #include "IconNames.h"
@@ -39,6 +40,9 @@ SearchWidget::SearchWidget( QWidget* parent ):
     Counter( "SearchWidget" )
 {
     Debug::Throw( "SearchWidget::SearchWidget.\n" );
+
+    // update palette
+    _updateNotFoundPalette();
 
     // editor layout
     QGridLayout* gridLayout = new QGridLayout();
@@ -62,10 +66,14 @@ SearchWidget::SearchWidget( QWidget* parent ):
     editor_->setAutoCompletion( true );
     editor_->setToolTip( tr( " Text to be found in logbook" ) );
     editor_->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+    editor_->setAutoCompletion( true, Qt::CaseSensitive );
+    editor_->setNavigationEnabled( false );
+
     hLayout->addWidget( editor_, 1 );
 
     connect( editor_, SIGNAL(activated(QString)), SLOT(_selectionRequest()) );
     connect( editor_, SIGNAL(editTextChanged(QString)), SLOT(_updateFindButton(QString)) );
+    connect( editor_->lineEdit(), SIGNAL(textChanged(QString)), SLOT(_restorePalette()) );
 
     // find selection button
     findButton_ = new QPushButton( IconEngine::get( IconNames::Find ), tr( "Find" ), this );
@@ -117,14 +125,51 @@ SearchWidget::SearchWidget( QWidget* parent ):
     for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
     { connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_saveMask()) ); }
 
-    connect( findButton_, SIGNAL(clicked()), SLOT(_enableAllEntriesButton()) );
-    connect( editor_, SIGNAL(activated(QString)), SLOT(_enableAllEntriesButton()) );
-
     // configuration
     connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
 
 }
+
+//________________________________________________________________________
+void SearchWidget::setText( const QString& text )
+{
+    editor_->setEditText( text );
+    _restorePalette();
+}
+
+//________________________________________________________________________
+void SearchWidget::matchFound( void )
+{
+    allEntriesButton_->setEnabled(true);
+    _restorePalette();
+}
+
+//________________________________________________________________________
+void SearchWidget::noMatchFound( void )
+{
+    if( !editor_->currentText().isEmpty() )
+    { editor_->setPalette( notFoundPalette_ ); }
+}
+
+//________________________________________________________________________
+void SearchWidget::changeEvent( QEvent* event )
+{
+    switch( event->type() )
+    {
+        case QEvent::PaletteChange:
+        _updateNotFoundPalette();
+        break;
+
+        default: break;
+    }
+
+    return QWidget::changeEvent( event );
+}
+
+//___________________________________________________________
+void SearchWidget::_restorePalette( void )
+{ editor_->setPalette( palette() ); }
 
 //___________________________________________________________
 void SearchWidget::_updateFindButton( const QString& value )
@@ -174,4 +219,13 @@ void SearchWidget::_selectionRequest( void )
     // text selection
     emit selectEntries( editor_->currentText(), mode );
 
+}
+
+//________________________________________________________________________
+void SearchWidget::_updateNotFoundPalette( void )
+{
+    notFoundPalette_ = palette();
+    notFoundPalette_.setColor( QPalette::Base,
+        Base::Color( palette().color( QPalette::Base ) ).merge(
+        Qt::red, 0.95 ) );
 }

@@ -53,9 +53,22 @@ class SearchWidget: public QWidget, public Counter
 
     Q_DECLARE_FLAGS( SearchModes, SearchMode )
 
+    //*@name accessors
+    //@{
+
     //* editor
     CustomComboBox& editor( void ) const
     { return *editor_; }
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    //* change text
+    void setText( const QString& );
+
+    //@}
 
     Q_SIGNALS:
 
@@ -65,10 +78,21 @@ class SearchWidget: public QWidget, public Counter
     //* emitted when the Show All button is pressed
     void showAllEntries( void );
 
+    public Q_SLOTS:
+
+    //* take action when at least one match is found
+    virtual void matchFound( void );
+
+    //* take action when no match is found
+    virtual void noMatchFound( void );
+
     protected Q_SLOTS:
 
     //* find button
     virtual void _updateFindButton( const QString& );
+
+    //* restore palette
+    virtual void _restorePalette( void );
 
     private Q_SLOTS:
 
@@ -89,7 +113,15 @@ class SearchWidget: public QWidget, public Counter
     void _disableAllEntriesButton( void )
     { allEntriesButton_->setEnabled( false ); }
 
+    protected:
+
+    //* change event
+    virtual void changeEvent( QEvent* );
+
     private:
+
+    //* create not found palette
+    void _updateNotFoundPalette( void );
 
     //* checkboxes
     using CheckBoxMap = QHash<SearchMode, QCheckBox* >;
@@ -105,6 +137,9 @@ class SearchWidget: public QWidget, public Counter
 
     //* selection text widget
     CustomComboBox *editor_ = nullptr;
+
+    //* not found palette
+    QPalette notFoundPalette_;
 
 };
 

@@ -66,9 +66,9 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     Menu& menu( void )
     { return *menu_; }
 
-    //* retrive search panel
-    SearchWidget& searchWidget( void ) const
-    { return *searchWidget_; }
+//     //* retrive search panel
+//     SearchWidget& searchWidget( void ) const
+//     { return *searchWidget_; }
 
     //* retrive state frame
     ProgressStatusBar& statusBar( void ) const

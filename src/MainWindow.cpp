@@ -100,11 +100,6 @@ MainWindow::MainWindow( QWidget *parent ):
     layout->addWidget( splitter, 1 );
     splitter->setOrientation( Qt::Horizontal );
 
-//     // create hidden search panel
-//     addToolBar( Qt::BottomToolBarArea, searchWidget_ = new SearchWidget( tr( "Search panel" ), this ) );
-//     searchWidget_->setAppearsInMenu( true );
-//     searchWidget_->hide();
-
     // search widget
     layout->addWidget( searchWidget_ = new SearchWidget( main ) );
     searchWidget_->hide();
@@ -904,28 +899,33 @@ void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mod
     if( !found )
     {
 
+        searchWidget_->noMatchFound();
         statusbar_->label().setText( tr( "No match found" ) );
 
         // reset flag for the turned off entries to true
         foreach( LogEntry* entry, turnedOffEntries )
         { entry->setFindSelected( true ); }
 
-        return;
+    } else {
+
+        searchWidget_->matchFound();
+
+        // reinitialize logEntry list
+        _resetKeywordList();
+        _resetLogEntryList();
+
+        // if EditionWindow current entry is visible, select it;
+        if( selectedEntry && selectedEntry->isSelected() ) selectEntry( selectedEntry );
+        else if( lastVisibleEntry ) selectEntry( lastVisibleEntry );
+
+        const QString buffer = QString( found > 1 ? tr( "%1 out of %2 entries selected" ):tr( "%1 out of %2 entry selected" ) ).arg( found ).arg( total );
+        statusbar_->label().setText( buffer );
 
     }
 
-    // reinitialize logEntry list
-    _resetKeywordList();
-    _resetLogEntryList();
-
-    // if EditionWindow current entry is visible, select it;
-    if( selectedEntry && selectedEntry->isSelected() ) selectEntry( selectedEntry );
-    else if( lastVisibleEntry ) selectEntry( lastVisibleEntry );
-
-    const QString buffer = QString( found > 1 ? tr( "%1 out of %2 entries selected" ):tr( "%1 out of %2 entry selected" ) ).arg( found ).arg( total );
-    statusbar_->label().setText( buffer );
-
+    entryList_->setFocus();
     return;
+
 }
 
 //_______________________________________________
@@ -949,7 +949,10 @@ void MainWindow::showAllEntries( void )
     else if( entryModel_.rowCount() ) selectEntry( entryModel_.get( entryModel_.index( entryModel_.rowCount()-1, 0 ) ) );
 
     statusbar_->label().setText( "" );
+
+    entryList_->setFocus();
     return;
+
 }
 
 //____________________________________
@@ -2413,13 +2416,20 @@ void MainWindow::_findEntries( void ) const
 
     Debug::Throw( "MainWindow::_findEntries.\n" );
 
+    // try set from current selection
+    QString text;
+    if( !( text = qApp->clipboard()->text( QClipboard::Selection ) ).isEmpty() )
+    {
+        const int maxLength( 1024 );
+        text = text.left( maxLength );
+        searchWidget_->setText( text );
+    }
+
     // check panel visibility
-    if( !searchWidget_->isVisible() ) {
-        searchWidget_->editor().clear();
-        searchWidget_->show();
-    } else searchWidget_->editor().lineEdit()->selectAll();
+    if( !searchWidget_->isVisible() ) searchWidget_->show();
 
     // change focus
+    searchWidget_->editor().lineEdit()->selectAll();
     searchWidget_->editor().setFocus();
 
 }
