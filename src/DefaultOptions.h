@@ -34,7 +34,7 @@
 #include <QString>
 
 //_____________________________________________________
-//! Default options installer
+//* Default options installer
 void installDefaultOptions( void )
 {
     // set options default values

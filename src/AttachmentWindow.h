@@ -29,26 +29,26 @@
 
 class Attachment;
 
-//! popup window to list/edit all attachments independantly from entries
+//* popup window to list/edit all attachments independantly from entries
 class AttachmentWindow: public CustomDialog
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! creator
-    AttachmentWindow( QWidget* = 0 );
+    //* creator
+    AttachmentWindow( QWidget* = nullptr );
 
-    //! display widget
+    //* display widget
     void show( void );
 
-    //! retrieve associated List
+    //* retrieve associated List
     AttachmentFrame& frame()
     { return *frame_; }
 
-    //! uniconify window
+    //* uniconify window
     QAction& uniconifyAction( void )
     { return *uniconifyAction_; }
 
@@ -58,21 +58,21 @@ class AttachmentWindow: public CustomDialog
 
     public Q_SLOTS:
 
-    //! uniconify
+    //* uniconify
     void uniconify( void );
 
     protected Q_SLOTS:
 
-    //! display entry associated to selected attachment when selection changes
+    //* display entry associated to selected attachment when selection changes
     void _displayEntry( Attachment& );
 
     private:
 
-    //! associated attachment list
-    AttachmentFrame* frame_;
+    //* associated attachment list
+    AttachmentFrame* frame_ = nullptr;
 
-    //! uniconify action
-    QAction* uniconifyAction_;
+    //* uniconify action
+    QAction* uniconifyAction_ = nullptr;
 
 };
 

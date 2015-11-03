@@ -24,28 +24,28 @@
 
 #include <QMap>
 
-//! Attached file types for file manipulations
+//* Attached file types for file manipulations
 class AttachmentType: public Counter
 {
 
     public:
 
-    //! unknown file type
+    //* unknown file type
     static AttachmentType Unknown;
 
-    //! postscript file type
+    //* postscript file type
     static AttachmentType Postscript;
 
-    //! image file type
+    //* image file type
     static AttachmentType Image;
 
-    //! plain text file type
+    //* plain text file type
     static AttachmentType PlainText;
 
-    //! html file type
+    //* html file type
     static AttachmentType Html;
 
-    //! url (pseudo) file type
+    //* url (pseudo) file type
     static AttachmentType Url;
 
     /*!
@@ -54,53 +54,53 @@ class AttachmentType: public Counter
     */
     static AttachmentType get( const QString& key );
 
-    //! equal to operator
+    //* equal to operator
     bool operator == (const AttachmentType& type ) const
     { return key_ == type.key_; }
 
-    //! creator
+    //* creator
     AttachmentType(
         const QString& key,
         const QString& name,
         const QString& icon,
         const QString& options = QString()  );
 
-    //! retrieves attachment key
+    //* retrieves attachment key
     const QString& key( void ) const
     { return key_; }
 
-    //! retrieves attachment name
+    //* retrieves attachment name
     const QString& name( void ) const
     { return name_; }
 
-    //! icon
+    //* icon
     const QString& icon( void ) const
     { return icon_; }
 
-    //! retrieves command used to edit the attachment
+    //* retrieves command used to edit the attachment
     QString editCommand( void ) const;
 
-    //! attachment types map
+    //* attachment types map
     using Map = QMap< QString, AttachmentType >;
 
-    //! returns predefined attachment types
+    //* returns predefined attachment types
     static const Map& types( void );
 
     private:
 
-    //! install static type map
+    //* install static type map
     static Map _install( void );
 
-    //! used to identify the file type
+    //* used to identify the file type
     QString key_;
 
-    //! used to display the file type in readable format
+    //* used to display the file type in readable format
     QString name_;
 
-    //! icon
+    //* icon
     QString icon_;
 
-    //! option name for looking up command
+    //* option name for looking up command
     QString option_;
 
 };

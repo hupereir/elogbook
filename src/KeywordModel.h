@@ -26,51 +26,50 @@
 
 #include <QMimeData>
 
-//! Job model. Stores job information for display in lists
+//* Job model. Stores job information for display in lists
 class KeywordModel : public TreeModel<Keyword>, public Counter
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! constructor
-    KeywordModel( QObject* = 0 );
+    //* constructor
+    KeywordModel( QObject* = nullptr );
 
-    //! destructor
-    virtual ~KeywordModel()
-    {}
+    //* destructor
+    virtual ~KeywordModel() = default;
 
-    //! column type enumeration
+    //* column type enumeration
     enum { nColumns = 1 };
 
-    //!@name methods reimplemented from base class
+    //*@name methods reimplemented from base class
     //@{
 
-    //! flags
+    //* flags
     virtual Qt::ItemFlags flags( const QModelIndex& ) const;
 
-    //! return data
+    //* return data
     virtual QVariant data( const QModelIndex&, int ) const;
 
     // modify data
     virtual bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole );
 
-    //! header data
+    //* header data
     virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
 
-    //! number of columns for a given index
+    //* number of columns for a given index
     virtual int columnCount( const QModelIndex& = QModelIndex() ) const
     { return nColumns; }
 
-    //! mime type
+    //* mime type
     virtual QStringList mimeTypes( void ) const;
 
-    //! mime data
+    //* mime data
     virtual QMimeData* mimeData( const QModelIndexList& ) const;
 
-    //! drop mine data
+    //* drop mine data
     virtual bool dropMimeData(const QMimeData*, Qt::DropAction, int, int, const QModelIndex&);
 
     //@}
@@ -91,36 +90,36 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
 
     protected:
 
-    //! sort
+    //* sort
     virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
 
     private:
 
-    //! list column names
+    //* list column names
     static const QString columnTitles_[nColumns];
 
-    //! used to sort Jobs
+    //* used to sort Jobs
     class SortFTor
     {
 
         public:
 
-        //! constructor
+        //* constructor
         SortFTor( Qt::SortOrder order = Qt::AscendingOrder ):
             order_( order )
             {}
 
-        //! prediction
+        //* prediction
         bool operator() ( const Item& first, const Item& second ) const
         { return (*this)( first.get(), second.get() ); }
 
-        //! prediction
+        //* prediction
         bool operator() ( Keyword first, Keyword second ) const;
 
         private:
 
-        //! order
-        Qt::SortOrder order_;
+        //* order
+        Qt::SortOrder order_ = Qt::AscendingOrder;
 
     };
 

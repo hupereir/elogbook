@@ -32,7 +32,7 @@
 #include <QPrinter>
 #include <QProgressDialog>
 
-//! printing utilityclass
+//* printing utilityclass
 class LogbookPrintHelper: public BasePrintHelper, public Counter
 {
 
@@ -40,28 +40,17 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
 
     public:
 
-    //! constructor
-    LogbookPrintHelper( QObject* parent = 0 ):
+    //* constructor
+    LogbookPrintHelper( QObject* parent = nullptr ):
         BasePrintHelper( parent ),
-        Counter( "LogbookPrintHelper" ),
-        mask_( Logbook::All ),
-        entryMask_( LogEntry::All ),
-        selectionMode_( LogEntryPrintSelectionWidget::VisibleEntries ),
-        logbook_( 0 ),
-        progressDialog_( 0 ),
-        progress_( 0 ),
-        aborted_( false )
+        Counter( "LogbookPrintHelper" )
     { Debug::Throw( "LogbookPrintHelper::LogbookPrintHelper.\n" ); };
 
-    //! destructor
-    virtual ~LogbookPrintHelper( void )
-    {}
-
-    //! logbook
+    //* logbook
     void setLogbook( Logbook* logbook )
     { logbook_ = logbook; }
 
-    //! entries
+    //* entries
     void setEntries(
         const LogEntryModel::List& allEntries,
         const LogEntryModel::List& visibleEntries,
@@ -73,68 +62,68 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
         _updateEntries();
     }
 
-    //! abort
+    //* abort
     void setAborted( bool value )
     { aborted_ = value; }
 
-    //! abort
+    //* abort
     void abort( void )
     { aborted_ = true; }
 
-    //! abort
+    //* abort
     bool isAborted( void ) const
     { return aborted_; }
 
     public Q_SLOTS:
 
 
-    //! mask
+    //* mask
     void setMask( Logbook::Mask value )
     { mask_ = value; }
 
-    //! entry mask
+    //* entry mask
     void setEntryMask( LogEntry::Mask value )
     { entryMask_ = value; }
 
-    //! set entry selection mode
+    //* set entry selection mode
     void setSelectionMode( LogEntryPrintSelectionWidget::Mode mode )
     {
         selectionMode_ = mode;
         _updateEntries();
     }
 
-    //! print
+    //* print
     void print( QPrinter* );
 
     protected:
 
-    //! update entries
+    //* update entries
     void _updateEntries( void );
 
-    //! print header
+    //* print header
     void _printHeader( QPrinter*, QPainter*, QPointF& );
 
-    //! print table
+    //* print table
     void _printTable( QPrinter*, QPainter*, QPointF& );
 
-    //! print contents
+    //* print contents
     void _printEntries( QPrinter*, QPainter*, QPointF& );
 
     private:
 
-    //! mask
-    Logbook::Mask mask_;
+    //* mask
+    Logbook::Mask mask_ = Logbook::All;
 
-    //! entry mask
-    LogEntry::Mask entryMask_;
+    //* entry mask
+    LogEntry::Mask entryMask_ = LogEntry::All;
 
-    //! selection mode
-    LogEntryPrintSelectionWidget::Mode selectionMode_;
+    //* selection mode
+    LogEntryPrintSelectionWidget::Mode selectionMode_ = LogEntryPrintSelectionWidget::VisibleEntries;
 
-    //! logbook
-    Logbook* logbook_;
+    //* logbook
+    Logbook* logbook_ = nullptr;
 
-    //!@name logbook entries
+    //*@name logbook entries
     //@{
 
     LogEntryModel::List allEntries_;
@@ -144,14 +133,14 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
 
     //@}
 
-    //! progress dialog
-    QProgressDialog* progressDialog_;
+    //* progress dialog
+    QProgressDialog* progressDialog_ = nullptr;
 
-    //! progress
-    int progress_;
+    //* progress
+    int progress_ = 0;
 
-    //! true when aborted
-    bool aborted_;
+    //* true when aborted
+    bool aborted_ = false;
 
 };
 

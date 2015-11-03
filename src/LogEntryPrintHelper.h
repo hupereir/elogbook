@@ -28,7 +28,7 @@
 #include <QPainter>
 #include <QPrinter>
 
-//! printing utility
+//* printing utility
 class LogEntryPrintHelper: public BasePrintHelper, public Counter
 {
 
@@ -36,19 +36,13 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
 
     public:
 
-    //! constructor
-    LogEntryPrintHelper( QObject* parent = 0 ):
+    //* constructor
+    LogEntryPrintHelper( QObject* parent = nullptr ):
         BasePrintHelper( parent ),
-        Counter( "LogEntryPrintHelper" ),
-        mask_( LogEntry::All ),
-        entry_( 0 )
+        Counter( "LogEntryPrintHelper" )
     { Debug::Throw( "LogEntryPrintHelper::LogEntryPrintHelper.\n" ); };
 
-    //! destructor
-    virtual ~LogEntryPrintHelper( void )
-    {}
-
-    //! entry
+    //* entry
     void setEntry( LogEntry* entry )
     { entry_ = entry; }
 
@@ -57,31 +51,31 @@ class LogEntryPrintHelper: public BasePrintHelper, public Counter
 
     public Q_SLOTS:
 
-    //! mask
+    //* mask
     void setMask( LogEntry::Mask value )
     { mask_ = value; }
 
-    //! print
+    //* print
     void print( QPrinter* );
 
     protected:
 
-    //! print header
+    //* print header
     void _printHeader( QPrinter*, QPainter*, QPointF& );
 
-    //! print body
+    //* print body
     void _printBody( QPrinter*, QPainter*, QPointF& );
 
-    //! print attachments
+    //* print attachments
     void _printAttachments( QPrinter*, QPainter*, QPointF& );
 
     private:
 
-    //! mask
-    LogEntry::Mask mask_;
+    //* mask
+    LogEntry::Mask mask_ = LogEntry::All;
 
-    //! log entry
-    LogEntry* entry_;
+    //* log entry
+    LogEntry* entry_ = nullptr;
 
 };
 

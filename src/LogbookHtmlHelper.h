@@ -30,7 +30,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-//! printing utilityclass
+//* printing utilityclass
 class LogbookHtmlHelper: public QObject, public Counter
 {
 
@@ -38,63 +38,56 @@ class LogbookHtmlHelper: public QObject, public Counter
 
     public:
 
-    //! constructor
-    LogbookHtmlHelper( QObject* parent = 0 ):
+    //* constructor
+    LogbookHtmlHelper( QObject* parent = nullptr ):
         QObject( parent ),
-        Counter( "LogbookHtmlHelper" ),
-        mask_( Logbook::All ),
-        entryMask_( LogEntry::All ),
-        logbook_( 0 )
+        Counter( "LogbookHtmlHelper" )
     { Debug::Throw( "LogbookHtmlHelper::LogbookHtmlHelper.\n" ); };
 
-    //! destructor
-    virtual ~LogbookHtmlHelper( void )
-    {}
-
-    //! logbook
+    //* logbook
     void setLogbook( Logbook* logbook )
     { logbook_ = logbook; }
 
-    //! entries
+    //* entries
     void setEntries( const LogEntryModel::List& entries )
     { entries_ = entries; }
 
-    //! mask
+    //* mask
     void setMask( Logbook::Mask value )
     { mask_ = value; }
 
-    //! entry mask
+    //* entry mask
     void setEntryMask( LogEntry::Mask value )
     { entryMask_ = value; }
 
     public Q_SLOTS:
 
-    //! print
+    //* print
     void print( QIODevice* );
 
     protected:
 
-    //! print header
+    //* print header
     void _appendHeader( QDomDocument&, QDomElement& );
 
-    //! print table
+    //* print table
     void _appendTable( QDomDocument&, QDomElement& );
 
-    //! print contents
+    //* print contents
     void _appendEntries( QDomDocument&, QDomElement& );
 
     private:
 
-    //! mask
-    Logbook::Mask mask_;
+    //* mask
+    Logbook::Mask mask_ = Logbook::All;
 
-    //! entry mask
-    LogEntry::Mask entryMask_;
+    //* entry mask
+    LogEntry::Mask entryMask_ = LogEntry::All;
 
-    //! logbook
-    Logbook* logbook_;
+    //* logbook
+    Logbook* logbook_ = nullptr;
 
-    //! logbook entries
+    //* logbook entries
     LogEntryModel::List entries_;
 
 };

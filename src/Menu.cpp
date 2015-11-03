@@ -41,11 +41,7 @@
 //_______________________________________________
 Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     QMenuBar( parent ),
-    Counter( "Menu" ),
-    recentEntriesMenu_(0),
-    windowsMenu_(0),
-    preferenceMenu_(0),
-    recentFilesMenu_(0)
+    Counter( "Menu" )
 {
 
     Debug::Throw( "Menu::Menu.\n" );

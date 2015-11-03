@@ -40,45 +40,41 @@ class BackupManagerWidget: public QWidget, public Counter, public Base::Key
 
     public:
 
-    //! constructor
-    BackupManagerWidget( QWidget*, Logbook* = 0 );
+    //* constructor
+    BackupManagerWidget( QWidget*, Logbook* = nullptr );
 
-    //! destructor
-    virtual ~BackupManagerWidget( void )
-    {}
-
-    //! button layout
+    //* button layout
     QVBoxLayout& buttonLayout( void )
     { return *buttonLayout_; }
 
     Q_SIGNALS:
 
-    //! emitted when backups are changed (from clean action)
+    //* emitted when backups are changed (from clean action)
     void saveLogbookRequested( void );
 
-    //! emitted when backup is removed
+    //* emitted when backup is removed
     void removeBackupRequested( Backup );
 
-    //! emitted when backup is removed
+    //* emitted when backup is removed
     void removeBackupsRequested( Backup::List );
 
-    //! emitted when backup is restored
+    //* emitted when backup is restored
     void restoreBackupRequested( Backup );
 
-    //! emmitted when backup is merged
+    //* emmitted when backup is merged
     void mergeBackupRequested( Backup );
 
-    //! emitted when backup is requested
+    //* emitted when backup is requested
     void backupRequested( void );
 
     public Q_SLOTS:
 
-    //! update
+    //* update
     void updateBackups( void );
 
     protected:
 
-    //! get associated logbook
+    //* get associated logbook
     Logbook* _logbook( void ) const
     {
         Base::KeySet<Logbook> logbooks( this );
@@ -87,40 +83,40 @@ class BackupManagerWidget: public QWidget, public Counter, public Base::Key
 
     protected Q_SLOTS:
 
-    //! update actions
+    //* update actions
     void _updateActions( void );
 
-    //! clean
+    //* clean
     void _clean( void );
 
-    //! remove backup
+    //* remove backup
     void _remove( void );
 
-    //! restore
+    //* restore
     void _restore( void );
 
-    //! merge
+    //* merge
     void _merge( void );
 
     private:
 
-    //! model
+    //* model
     BackupModel model_;
 
-    //! list
-    TreeView* list_;
+    //* list
+    TreeView* list_ = nullptr;
 
-    //! button layout
-    QVBoxLayout* buttonLayout_;
+    //* button layout
+    QVBoxLayout* buttonLayout_ = nullptr;
 
-    //!@name buttons
+    //*@name buttons
     //@{
 
-    QPushButton* cleanButton_;
-    QPushButton* removeButton_;
-    QPushButton* restoreButton_;
-    QPushButton* mergeButton_;
-    QPushButton* newBackupButton_;
+    QPushButton* cleanButton_ = nullptr;
+    QPushButton* removeButton_ = nullptr;
+    QPushButton* restoreButton_ = nullptr;
+    QPushButton* mergeButton_ = nullptr;
+    QPushButton* newBackupButton_ = nullptr;
 
     //@}
 

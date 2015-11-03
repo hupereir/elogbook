@@ -28,23 +28,22 @@
 
 class LogEntry;
 
-//! Job model. Stores job information for display in lists
+//* Job model. Stores job information for display in lists
 class LogEntryModel : public ListModel<LogEntry*>, public Counter
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! constructor
-    LogEntryModel(QObject *parent = 0);
+    //* constructor
+    LogEntryModel(QObject* = nullptr );
 
-    //! destructor
-    virtual ~LogEntryModel()
-    {}
+    //* destructor
+    virtual ~LogEntryModel() = default;
 
-    //! column type enumeration
+    //* column type enumeration
     enum ColumnType
     {
         Color,
@@ -57,49 +56,49 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
         nColumns
     };
 
-    //!@name methods reimplemented from base class
+    //*@name methods reimplemented from base class
     //@{
 
-    //! flags
+    //* flags
     virtual Qt::ItemFlags flags( const QModelIndex& ) const;
 
-    //! return data
+    //* return data
     virtual QVariant data( const QModelIndex&, int ) const;
 
     // modify data
     virtual bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole );
 
-    //! header data
+    //* header data
     virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
 
-    //! mime type
+    //* mime type
     virtual QStringList mimeTypes( void ) const;
 
-    //! mime data
+    //* mime data
     virtual QMimeData* mimeData( const QModelIndexList& ) const;
 
-    //! number of columns for a given index
+    //* number of columns for a given index
     virtual int columnCount( const QModelIndex& = QModelIndex() ) const
     { return nColumns; }
 
     //@}
 
-    //!@name edition
+    //*@name edition
     //@{
 
-    //! enable edition
+    //* enable edition
     bool editionEnabled( void ) const
     { return editionEnabled_; }
 
-    //! enable edition
+    //* enable edition
     void setEditionEnabled( bool value )
     { editionEnabled_ = value; }
 
-    //! edition index
+    //* edition index
     const QModelIndex& editionIndex( void ) const
     { return editionIndex_; }
 
-    //! edition index
+    //* edition index
     void setEditionIndex( const QModelIndex& index )
     {
         editionEnabled_ = false;
@@ -111,62 +110,62 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
 
     protected:
 
-    //! sort
+    //* sort
     virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
 
     private Q_SLOTS:
 
-    //! update configuration
+    //* update configuration
     void _updateConfiguration( void );
 
-    //! used to disable edition when model is changed while editing
+    //* used to disable edition when model is changed while editing
     void _disableEdition( void )
     { setEditionEnabled( false ); }
 
     private:
 
-    //! color icon cache
+    //* color icon cache
     using IconCache = QMap<Base::Color, QIcon>;
 
-    //! color icon cache
+    //* color icon cache
     static IconCache& _icons( void );
 
-    //! reset icons
+    //* reset icons
     void _resetIcons( void );
 
-    //! create icon for a given color
+    //* create icon for a given color
     const QIcon& _icon( const Base::Color& ) const;
 
-    //! attachment icon
+    //* attachment icon
     const QIcon& _attachmentIcon( void ) const;
 
-    //! used to sort IconCaches
+    //* used to sort IconCaches
     class SortFTor: public ItemModel::SortFTor
     {
 
         public:
 
-        //! constructor
+        //* constructor
         SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
             ItemModel::SortFTor( type, order )
         {}
 
-        //! prediction
+        //* prediction
         bool operator() ( LogEntry*, LogEntry* ) const;
 
     };
 
-    //! edition flag
-    bool editionEnabled_;
+    //* edition flag
+    bool editionEnabled_ = false;
 
-    //! edition index
+    //* edition index
     /*! needs to be stored to start delayed edition */
     QModelIndex editionIndex_;
 
-    //! icon size
-    int iconSize_;
+    //* icon size
+    int iconSize_ = 8;
 
-    //! list column names
+    //* list column names
     static const QString columnTitles_[nColumns];
 
 };

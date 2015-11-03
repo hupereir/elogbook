@@ -27,13 +27,13 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-//! store backup information
+//* store backup information
 class Backup: public Counter
 {
 
     public:
 
-    //! constructor
+    //* constructor
     Backup( const File& file = File(), const TimeStamp& creation = TimeStamp::now() ):
         Counter( "Backup" ),
         file_( file ),
@@ -41,71 +41,71 @@ class Backup: public Counter
         valid_( true )
     {}
 
-    //! constructor from Dom
+    //* constructor from Dom
     Backup( const QDomElement& );
 
-    //! equal to operator
+    //* equal to operator
     bool operator == (const Backup& other ) const
     { return creation() == other.creation() && file() == other.file(); }
 
-    //! less than operator
+    //* less than operator
     bool operator < (const Backup& other ) const
     {
         if( creation() != other.creation() ) return creation() < other.creation();
         else return file() < other.file();
     }
 
-    //!@name accessors
+    //*@name accessors
     //@{
 
-    //! get dom
+    //* get dom
     QDomElement domElement( QDomDocument& ) const;
 
-    //! creation
+    //* creation
     const TimeStamp& creation( void ) const
     { return creation_; }
 
-    //! file
+    //* file
     const File& file( void ) const
     { return file_; }
 
-    //! validity
+    //* validity
     bool isValid( void ) const
     { return valid_; }
 
     //@}
 
-    //!@name modifiers
+    //*@name modifiers
 
-    //! time
+    //* time
     void setCreation( const TimeStamp& creation )
     { creation_ = creation; }
 
-    //! file
+    //* file
     void setFile( const File& file )
     { file_ = file; }
 
-    //! check validity
+    //* check validity
     void checkValidity( void )
     { valid_ = file_.exists(); }
 
     //@}
 
-    //! list
+    //* list
     class List: public QList<Backup>
     {
         public:
 
-        //! constructor
+        //* constructor
         List( void )
         {}
 
-        //! constructor
+        //* constructor
         List( const QList<Backup>& other ):
             QList<Backup>( other )
         {}
 
-        //! validity
+        //* validity
         void checkValidity( void )
         {
             for( iterator iter = begin(); iter != end(); ++iter )
@@ -114,13 +114,13 @@ class Backup: public Counter
 
     };
 
-    //! test validity
+    //* test validity
     class InvalidFTor
     {
 
         public:
 
-        //! predicate
+        //* predicate
         bool operator() ( Backup backup ) const
         { return !backup.isValid(); }
 
@@ -128,14 +128,14 @@ class Backup: public Counter
 
     private:
 
-    //! filename
+    //* filename
     File file_;
 
-    //! timestamp
+    //* timestamp
     TimeStamp creation_;
 
-    //! validity
-    bool valid_;
+    //* validity
+    bool valid_ = false;
 
 };
 

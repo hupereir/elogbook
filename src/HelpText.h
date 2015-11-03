@@ -22,7 +22,7 @@
 
 #include <QObject>
 
-//! eLogbook help text
+//* eLogbook help text
 static const QString helpText[] =
 {
 

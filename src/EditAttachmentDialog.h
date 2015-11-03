@@ -28,7 +28,7 @@
 #include <QComboBox>
 #include <QString>
 
-//! edit attachment popup dialog
+//* edit attachment popup dialog
 class EditAttachmentDialog: public CustomDialog
 {
 
@@ -36,26 +36,22 @@ class EditAttachmentDialog: public CustomDialog
 
     public:
 
-    //! constructor
-    EditAttachmentDialog( QWidget* parent, const Attachment& attachment );
+    //* constructor
+    EditAttachmentDialog( QWidget*, const Attachment& );
 
-    //! destructor
-    virtual ~EditAttachmentDialog( void )
-    {}
-
-    //! attachment type
+    //* attachment type
     AttachmentType type( void ) const;
 
-    //! get comments
+    //* get comments
     QString comments( void ) const;
 
     private:
 
-    //! file type combo box
-    QComboBox *fileTypeComboBox_;
+    //* file type combo box
+    QComboBox *fileTypeComboBox_ = nullptr;
 
-    //! comments editor
-    TextEditor *commentsEditor_;
+    //* comments editor
+    TextEditor *commentsEditor_ = nullptr;
 
 };
 

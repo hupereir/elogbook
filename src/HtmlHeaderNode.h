@@ -39,7 +39,7 @@ class HtmlHeaderNode
 {
   public:
 
-  //! constructor
+  //* constructor
   HtmlHeaderNode( QDomElement& parent, QDomDocument& document );
 
 };

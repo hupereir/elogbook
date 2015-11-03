@@ -34,33 +34,32 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
 
     public:
 
-    //! constructor
-    LogbookPrintOptionWidget( QWidget* = 0 );
+    //* constructor
+    LogbookPrintOptionWidget( QWidget* = nullptr );
 
-    //! destructor
-    virtual ~LogbookPrintOptionWidget( void )
-    {}
+    //* destructor
+    virtual ~LogbookPrintOptionWidget( void ) = default;
 
-    //! read
+    //* read
     virtual void read( const Options& );
 
-    //! write
+    //* write
     virtual void write( Options& ) const;
 
-    //! mask
+    //* mask
     Logbook::Mask mask( void ) const;
 
     Q_SIGNALS:
 
-    //! modified
+    //* modified
     void modified( void );
 
-    //! mask changed
+    //* mask changed
     void maskChanged( Logbook::Mask );
 
     protected Q_SLOTS:
 
-    //! update mask
+    //* update mask
     void _updateMask( void )
     {
         emit maskChanged( mask() );
@@ -69,7 +68,7 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
 
     private:
 
-    //! checkboxes
+    //* checkboxes
     using CheckBoxMap = QMap<Logbook::MaskFlag, QCheckBox* >;
     CheckBoxMap checkBoxes_;
 

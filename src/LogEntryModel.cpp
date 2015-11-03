@@ -45,10 +45,10 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
 //_______________________________________________
 const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 {
-    "",
+    QString(),
     tr( "Keyword" ),
     tr( "Subject" ),
-    "",
+    QString(),
     tr( "Creation" ),
     tr( "Modification" ),
     tr( "Author" )
@@ -57,9 +57,7 @@ const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 //_______________________________________________________________
 LogEntryModel::LogEntryModel( QObject* parent ):
     ListModel<LogEntry*>( parent ),
-    Counter( "LogEntryModel" ),
-    editionEnabled_( false ),
-    iconSize_( 8 )
+    Counter( "LogEntryModel" )
 {
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
 

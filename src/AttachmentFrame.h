@@ -38,33 +38,33 @@ class TreeView;
 class AttachmentFrame: public QWidget, public Base::Key
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! constructor
+    //* constructor
     AttachmentFrame( QWidget *, bool );
 
-    //! default size
+    //* default size
     void setDefaultHeight( const int& );
 
-    //! default height
+    //* default height
     const int& defaultHeight( void ) const
     { return defaultHeight_; }
 
-    //! size
+    //* size
     QSize sizeHint( void ) const;
 
-    //! list
+    //* list
     bool hasList( void ) const
     { return (bool) treeView_; }
 
-    //! list
+    //* list
     TreeView& list( void ) const
     { return *treeView_; }
 
-    //! clear
+    //* clear
     void clear( void )
     {
         // clear model and associations
@@ -72,7 +72,7 @@ class AttachmentFrame: public QWidget, public Base::Key
         Base::Key::clearAssociations<Attachment>();
     }
 
-    //! add attachment to the list
+    //* add attachment to the list
     void add( Attachment& attachment )
     {
         AttachmentModel::List attachments;
@@ -80,66 +80,66 @@ class AttachmentFrame: public QWidget, public Base::Key
         add( attachments );
     }
 
-    //! add attachments to list
+    //* add attachments to list
     void add( const AttachmentModel::List& attachments );
 
-    //! update attachment in the list
+    //* update attachment in the list
     void update( Attachment& attachment );
 
-    //! select attachment in the list
+    //* select attachment in the list
     void select( Attachment& attachment );
 
-    //! remove attachment from list
+    //* remove attachment from list
     void remove( Attachment& attachment )
     { _model().remove( &attachment ); }
 
-    //! change read only status
+    //* change read only status
     void setReadOnly( bool value )
     {
         readOnly_ = value;
         _updateActions();
     }
 
-    //! read only state
+    //* read only state
     bool readOnly( void ) const
     { return readOnly_; }
 
-    //! context menu
+    //* context menu
     QMenu& contextMenu( void ) const
     { return *contextMenu_; }
 
-    //!@name actions
+    //*@name actions
     //@{
 
-    //! visibility action
+    //* visibility action
     QAction& visibilityAction( void ) const
     { return *visibilityAction_; }
 
-    //! new attachment action
+    //* new attachment action
     QAction& newAction( void ) const
     { return *newAction_; }
 
-    //! view attachment action
+    //* view attachment action
     QAction& openAction( void ) const
     { return *openAction_; }
 
-    //! edit attachment action
+    //* edit attachment action
     QAction& editAction( void ) const
     { return *editAction_; }
 
-    //! update attachment action
+    //* update attachment action
     QAction& reloadAction( void ) const
     { return *reloadAction_; }
 
-    //! update attachment action
+    //* update attachment action
     QAction& saveAsAction( void ) const
     { return *saveAsAction_; }
 
-    //! delete attachment action
+    //* delete attachment action
     QAction& deleteAction( void ) const
     { return *deleteAction_; }
 
-    //! clean action
+    //* clean action
     QAction& cleanAction( void ) const
     { return *cleanAction_; }
 
@@ -147,112 +147,112 @@ class AttachmentFrame: public QWidget, public Base::Key
 
     Q_SIGNALS:
 
-    //! emitted when an item is selected in list
+    //* emitted when an item is selected in list
     void attachmentSelected( Attachment& );
 
     protected:
 
-    //! enter event
+    //* enter event
     virtual void enterEvent( QEvent* );
 
     protected Q_SLOTS:
 
-    //! process records from thread
+    //* process records from thread
     void _processRecords( const FileRecord::List&, bool );
 
     private Q_SLOTS:
 
-    //! update configuration
+    //* update configuration
     void _updateConfiguration( void );
 
-    //! update context menu
+    //* update context menu
     void _updateActions( void );
 
-    //! create new attachment
+    //* create new attachment
     void _new( void );
 
-    //! display current attachment
+    //* display current attachment
     void _open( void );
 
-    //! edit current attachment
+    //* edit current attachment
     void _edit( void );
 
-    //! delete current attachment
+    //* delete current attachment
     void _delete( void );
 
-    //! reload attachment time stamps
+    //* reload attachment time stamps
     void _reload( void );
 
-    //! save current attachment
+    //* save current attachment
     void _saveAs( void );
 
-    //! clean
+    //* clean
     void _clean( void );
 
-    //!@name selections
+    //*@name selections
     //@{
 
-    //! current item changed
+    //* current item changed
     void _itemSelected( const QModelIndex& );
 
     //@}
 
     private:
 
-    //! install actions
+    //* install actions
     void _installActions( void );
 
-    //! model
+    //* model
     AttachmentModel& _model( void )
     { return model_; }
 
-    //! save attachment
+    //* save attachment
     /*! this requires carefull handling of associate entries and Edition windows */
     void _saveAttachments( const AttachmentModel::List& );
 
-    //! if true, listbox is read only
-    bool readOnly_;
+    //* if true, listbox is read only
+    bool readOnly_ = true;
 
-    //! default height;
-    int defaultHeight_;
+    //* default height;
+    int defaultHeight_ = -1;
 
-    //! context menu
-    QMenu* contextMenu_;
+    //* context menu
+    QMenu* contextMenu_ = nullptr;
 
-    //!@name actions
+    //*@name actions
     //@{
 
-    //! visibility action
-    QAction* visibilityAction_;
+    //* visibility action
+    QAction* visibilityAction_ = nullptr;
 
-    //! new attachment
-    QAction* newAction_;
+    //* new attachment
+    QAction* newAction_ = nullptr;
 
-    //! view attachment
-    QAction* openAction_;
+    //* view attachment
+    QAction* openAction_ = nullptr;
 
-    //! edit attachment
-    QAction* editAction_;
+    //* edit attachment
+    QAction* editAction_ = nullptr;
 
-    //! update actions
-    QAction* reloadAction_;
+    //* update actions
+    QAction* reloadAction_ = nullptr;
 
-    //! save as action
-    QAction* saveAsAction_;
+    //* save as action
+    QAction* saveAsAction_ = nullptr;
 
-    //! delete attachment
-    QAction* deleteAction_;
+    //* delete attachment
+    QAction* deleteAction_ = nullptr;
 
-    //! clean action
-    QAction* cleanAction_;
+    //* clean action
+    QAction* cleanAction_ = nullptr;
 
     //@}
 
-    //! model
+    //* model
     AttachmentModel model_;
 
-    //! list
-    TreeView* treeView_;
+    //* list
+    TreeView* treeView_ = nullptr;
 
     // valid file thread
     ValidFileThread thread_;

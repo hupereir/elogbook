@@ -50,7 +50,6 @@
 AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     QWidget( parent ),
     readOnly_( readOnly ),
-    defaultHeight_( -1 ),
     thread_( this )
 {
     Debug::Throw( "AttachmentFrame::AttachmentFrame.\n" );

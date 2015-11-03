@@ -25,7 +25,7 @@
 
 #include <QRadioButton>
 
-//! delete keyword popup dialog
+//* delete keyword popup dialog
 class DeleteKeywordDialog: public CustomDialog
 {
 
@@ -33,41 +33,39 @@ class DeleteKeywordDialog: public CustomDialog
 
     public:
 
-    //! constructor
-    DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&, bool has_entries );
+    //* constructor
+    DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&, bool hasEntries );
 
-    //! destructor
-    virtual ~DeleteKeywordDialog( void )
-    {}
+    //* destructor
+    virtual ~DeleteKeywordDialog( void ) = default;
 
-    //! entry action
+    //* entry action
     enum Action
     {
         MoveEntries,
         DeleteEntries
     };
 
-    //! get action
+    //* get action
     Action action( void ) const
     { return moveRadioButton_->isChecked() ? MoveEntries:DeleteEntries; }
 
-    //! move netries
+    //* move netries
     bool moveEntries( void ) const
     { return action() == MoveEntries; }
 
-    //! delete entries
+    //* delete entries
     bool deleteEntries( void ) const
     { return action() == DeleteEntries; }
 
     private:
 
 
-    //! open with radio button
-    QRadioButton* moveRadioButton_;
+    //* open with radio button
+    QRadioButton* moveRadioButton_ = nullptr;
 
-    //! save as radio button
-    QRadioButton* deleteRadioButton_;
-
+    //* save as radio button
+    QRadioButton* deleteRadioButton_ = nullptr;
 
 };
 

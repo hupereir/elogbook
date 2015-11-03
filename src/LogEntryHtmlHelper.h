@@ -28,7 +28,7 @@
 #include <QDomDocument>
 #include <QDomElement>
 
-//! printing utility
+//* printing utility
 class LogEntryHtmlHelper: public QObject, public Counter
 {
 
@@ -36,52 +36,46 @@ class LogEntryHtmlHelper: public QObject, public Counter
 
     public:
 
-    //! constructor
-    LogEntryHtmlHelper( QObject* parent = 0 ):
+    //* constructor
+    LogEntryHtmlHelper( QObject* parent = nullptr ):
         QObject( parent ),
-        Counter( "LogEntryHtmlHelper" ),
-        mask_( LogEntry::All ),
-        entry_( 0 )
+        Counter( "LogEntryHtmlHelper" )
     { Debug::Throw( "LogEntryHtmlHelper::LogEntryHtmlHelper.\n" ); };
 
-    //! destructor
-    virtual ~LogEntryHtmlHelper( void )
-    {}
-
-    //! entry
+    //* entry
     void setEntry( LogEntry* entry )
     { entry_ = entry; }
 
-    //! mask
+    //* mask
     void setMask( LogEntry::Mask value )
     { mask_ = value; }
 
-    //! print header
+    //* print header
     void appendEntry( QDomDocument&, QDomElement& );
 
     public Q_SLOTS:
 
-    //! print
+    //* print
     void print( QIODevice* );
 
     protected:
 
-    //! print header
+    //* print header
     void _appendHeader( QDomDocument&, QDomElement& );
 
-    //! print body
+    //* print body
     void _appendBody( QDomDocument&, QDomElement& );
 
-    //! print attachments
+    //* print attachments
     void _appendAttachments( QDomDocument&, QDomElement& );
 
     private:
 
-    //! mask
-    LogEntry::Mask mask_;
+    //* mask
+    LogEntry::Mask mask_ = LogEntry::All;
 
-    //! log entry
-    LogEntry* entry_;
+    //* log entry
+    LogEntry* entry_ = nullptr;
 
 };
 

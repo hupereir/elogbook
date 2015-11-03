@@ -23,7 +23,7 @@
 #include "BaseProgressBar.h"
 #include "Counter.h"
 
-//! display command progress and remaining time
+//* display command progress and remaining time
 class ProgressBar:public BaseProgressBar, public Counter
 {
 
@@ -31,34 +31,29 @@ class ProgressBar:public BaseProgressBar, public Counter
 
     public:
 
-    //! constructor
-    ProgressBar( QWidget* parent = 0 ):
+    //* constructor
+    ProgressBar( QWidget* parent = nullptr ):
         BaseProgressBar( parent ),
-        Counter( "ProgressBar" ),
-        current_( 0 )
-    {}
-
-    //! destructor
-    virtual ~ProgressBar( void )
+        Counter( "ProgressBar" )
     {}
 
     public Q_SLOTS:
 
-    //! set maximum
+    //* set maximum
     virtual void setMaximum( int value )
     {
         BaseProgressBar::setMaximum( value );
         current_ = 0;
     }
 
-    //! add to progress
+    //* add to progress
     void addToProgress( int value )
     { setValue( current_ += value ); }
 
     private:
 
-    //! current progress
-    int current_;
+    //* current progress
+    int current_ = 0;
 
 };
 

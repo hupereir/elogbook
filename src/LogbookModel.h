@@ -25,7 +25,7 @@
 
 class Logbook;
 
-//! logbook information model
+//* logbook information model
 class LogbookModel: public ListModel<Logbook*>, public Counter
 {
 
@@ -33,7 +33,7 @@ class LogbookModel: public ListModel<Logbook*>, public Counter
 
     public:
 
-    //! column type enumeration
+    //* column type enumeration
     enum ColumnType
     {
         Filename,
@@ -43,26 +43,26 @@ class LogbookModel: public ListModel<Logbook*>, public Counter
         nColumns
     };
 
-    //! constructor
-    LogbookModel( QObject* parent = 0 ):
+    //* constructor
+    LogbookModel( QObject* parent = nullptr ):
         ListModel<Logbook*>( parent ),
         Counter( "LogbookStatisticsDialog::Model" )
     {}
 
-    //!@name methods reimplemented from base class
+    //*@name methods reimplemented from base class
     //@{
 
-    //! flags
+    //* flags
     virtual Qt::ItemFlags flags( const QModelIndex& ) const
     { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
 
-    //! return data
+    //* return data
     virtual QVariant data( const QModelIndex&, int ) const;
 
-    //! header data
+    //* header data
     virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole) const;
 
-    //! number of columns for a given index
+    //* number of columns for a given index
     virtual int columnCount( const QModelIndex& = QModelIndex() ) const
     { return nColumns; }
 
@@ -70,11 +70,11 @@ class LogbookModel: public ListModel<Logbook*>, public Counter
 
     protected:
 
-    //! sort
+    //* sort
     virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder )
     {}
 
-    //! list column names
+    //* list column names
     static const QString columnTitles_[nColumns];
 
 };

@@ -27,7 +27,7 @@
 
 class Attachment;
 
-//! Job model. Stores job information for display in lists
+//* Job model. Stores job information for display in lists
 class AttachmentModel : public ListModel<Attachment*>, public Counter
 {
 
@@ -35,14 +35,13 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
 
     public:
 
-    //! constructor
-    AttachmentModel( QObject* = 0 );
+    //* constructor
+    AttachmentModel( QObject* = nullptr );
 
-    //! destructor
-    virtual ~AttachmentModel()
-    {}
+    //* destructor
+    virtual ~AttachmentModel() = default;
 
-    //! column type enumeration
+    //* column type enumeration
     enum ColumnType
     {
         Icon,
@@ -54,19 +53,19 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
         nColumns
     };
 
-    //!@name methods reimplemented from base class
+    //*@name methods reimplemented from base class
     //@{
 
-    //! flags
+    //* flags
     virtual Qt::ItemFlags flags( const QModelIndex& ) const;
 
-    //! return data
+    //* return data
     virtual QVariant data( const QModelIndex&, int ) const;
 
-    //! header data
+    //* header data
     virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole) const;
 
-    //! number of columns for a given index
+    //* number of columns for a given index
     virtual int columnCount( const QModelIndex& = QModelIndex() ) const
     { return nColumns; }
 
@@ -74,43 +73,43 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
 
     protected:
 
-    //! sort
+    //* sort
     virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
 
     private Q_SLOTS:
 
-    //! update configuration
+    //* update configuration
     void _updateConfiguration( void );
 
     private:
 
 
-    //! used to sort IconCaches
+    //* used to sort IconCaches
     class SortFTor: public ItemModel::SortFTor
     {
 
         public:
 
-        //! constructor
+        //* constructor
         SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
             ItemModel::SortFTor( type, order )
         {}
 
-        //! prediction
+        //* prediction
         bool operator() ( Attachment* first, Attachment* second ) const;
 
     };
 
-    //! list column names
+    //* list column names
     static const QString columnTitles_[nColumns];
 
-    //! icon
+    //* icon
     static const QIcon& _icon( QString );
 
-    //! icon cache
+    //* icon cache
     using IconCache = QHash<QString, QIcon>;
 
-    //! type icon cache
+    //* type icon cache
     static IconCache& _icons();
 
 };

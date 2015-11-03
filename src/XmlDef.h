@@ -22,7 +22,7 @@
 
 #include <QString>
 
-//! Some Xml definitions
+//* Some Xml definitions
 namespace Xml
 {
 

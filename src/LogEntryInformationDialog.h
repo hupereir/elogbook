@@ -25,7 +25,7 @@
 
 class LogEntry;
 
-//! logbook entry informations
+//* logbook entry informations
 class LogEntryInformationDialog: public CustomDialog
 {
 
@@ -33,8 +33,8 @@ class LogEntryInformationDialog: public CustomDialog
 
     public:
 
-    //! constructor
-    LogEntryInformationDialog( QWidget* parent, LogEntry* entry  );
+    //* constructor
+    LogEntryInformationDialog( QWidget*, LogEntry*  );
 
 };
 

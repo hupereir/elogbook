@@ -34,33 +34,29 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
 
     public:
 
-    //! constructor
-    LogEntryPrintOptionWidget( QWidget* = 0 );
+    //* constructor
+    LogEntryPrintOptionWidget( QWidget* = nullptr );
 
-    //! destructor
-    virtual ~LogEntryPrintOptionWidget( void )
-    {}
-
-    //! read
+    //* read
     virtual void read( const Options& );
 
-    //! write
+    //* write
     virtual void write( Options& ) const;
 
-    //! mask
+    //* mask
     LogEntry::Mask mask( void ) const;
 
     Q_SIGNALS:
 
-    //! modified
+    //* modified
     void modified( void );
 
-    //! mask changed
+    //* mask changed
     void maskChanged( LogEntry::Mask );
 
     protected Q_SLOTS:
 
-    //! update mask
+    //* update mask
     void _updateMask( void )
     {
         emit maskChanged( mask() );
@@ -69,7 +65,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
 
     private:
 
-    //! checkboxes
+    //* checkboxes
     using CheckBoxMap = QMap<LogEntry::MaskFlag, QCheckBox* >;
     CheckBoxMap checkBoxes_;
 

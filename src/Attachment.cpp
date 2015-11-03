@@ -38,14 +38,10 @@ const QString Attachment::NoSize( " - " );
 //_______________________________________
 Attachment::Attachment( const QString orig, const AttachmentType& type ):
     Counter( "Attachment" ),
-    type_( AttachmentType::Unknown ),
-    source_file_( orig ),
+    sourceFile_( orig ),
     file_( NoFile ),
     comments_( NoComments ),
-    size_( 0 ),
-    sizeString_( NoSize ),
-    isLink_( Unknown ),
-    valid_( false )
+    sizeString_( NoSize )
 {
     Debug::Throw( "Attachment::Attachment.\n" );
     setType( type );
@@ -54,14 +50,10 @@ Attachment::Attachment( const QString orig, const AttachmentType& type ):
 //_______________________________________
 Attachment::Attachment( const QDomElement& element):
     Counter( "Attachment" ),
-    type_( AttachmentType::Unknown ),
-    source_file_( NoFile ),
+    sourceFile_( NoFile ),
     file_( NoFile ),
     comments_( NoComments ),
-    size_( 0 ),
-    sizeString_( NoSize ),
-    isLink_( Unknown ),
-    valid_( false )
+    sizeString_( NoSize )
 {
     Debug::Throw() << "Attachment::Attachment.\n";
 
@@ -199,7 +191,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     Debug::Throw() << "Attachment::ProcessCopy.\n";
 
     // check original file
-    if( source_file_.isEmpty() )
+    if( sourceFile_.isEmpty() )
     {
         Debug::Throw(0) << "Attachment::ProcessCopy - orig not set. Canceled.\n";
         return SourceNotFound;
@@ -208,7 +200,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     // for URL attachments, just copy origin to file, whatever the command
     if( type() == AttachmentType::Url )
     {
-        _setFile( source_file_ );
+        _setFile( sourceFile_ );
         _setCreation( TimeStamp::now() );
         _setModification( TimeStamp() );
         setIsValid( true );
@@ -223,13 +215,13 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     }
 
     // generate expanded source name
-    File fullname( source_file_ .expand() );
+    File fullname( sourceFile_ .expand() );
     if( !( type() == AttachmentType::Url || fullname.exists() ) ) return SourceNotFound;
     else if( !( type() == AttachmentType::Url ) && fullname.isDirectory() ) return SourceIsDir;
 
     // destination filename
     File destname( fullname.localName().addPath( destdir ).expand() );
-    source_file_ = fullname;
+    sourceFile_ = fullname;
 
     // for other process command
     ::Command command_string;
@@ -238,7 +230,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
         case Copy:
         if( destname.exists() ) return DestExist;
         else {
-            command_string << "cp" << source_file_ << destname;
+            command_string << "cp" << sourceFile_ << destname;
             setIsLink( No );
             break;
         }
@@ -246,34 +238,34 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
         case Link:
         if( destname.exists() ) return DestExist;
         else {
-            command_string << "ln" << "-s" << source_file_ << destname;
+            command_string << "ln" << "-s" << sourceFile_ << destname;
             setIsLink( Yes );
             break;
         }
 
         case ForceCopy:
         destname.remove();
-        command_string << "cp" << source_file_ << destname;
+        command_string << "cp" << sourceFile_ << destname;
         setIsLink( No );
         break;
 
         case ForceLink:
         destname.remove();
-        command_string << "ln" << "-s" << source_file_ << destname;
+        command_string << "ln" << "-s" << sourceFile_ << destname;
         setIsLink( Yes );
         break;
 
         case CopyVersion:
-        if( destname.exists() && destname.diff( source_file_ ) )
+        if( destname.exists() && destname.diff( sourceFile_ ) )
         { destname = destname.version(); }
-        command_string << "cp" << source_file_ << destname;
+        command_string << "cp" << sourceFile_ << destname;
         setIsLink( No );
         break;
 
         case LinkVersion:
-        if( destname.exists() && destname.diff( source_file_ ) )
+        if( destname.exists() && destname.diff( sourceFile_ ) )
         { destname = destname.version(); }
-        command_string << "ln" << "-s" << source_file_ << destname;
+        command_string << "ln" << "-s" << sourceFile_ << destname;
         setIsLink( Yes );
         break;
 

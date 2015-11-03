@@ -47,14 +47,7 @@ Logbook::Logbook( const File& file ):
     directory_( NoDirectory ),
     title_( NoTitle ),
     author_( NoAuthor ),
-    modified_( false ),
-    readOnly_( false ),
-    isBackup_( false ),
-    creation_( TimeStamp::now() ),
-    sortMethod_( Logbook::SortCreation ),
-    sortOrder_( 0 ),
-    xmlEntries_( 0 ),
-    xmlChildren_( 0 )
+    creation_( TimeStamp::now() )
 {
     Debug::Throw( "Logbook::Logbook. (file)\n" );
     setFile( file );

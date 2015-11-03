@@ -38,62 +38,61 @@ class RecentFilesMenu;
 class Menu:public QMenuBar, public Counter
 {
 
-    //! Qt meta object declaration
+    //* Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //! creator
-    Menu( QWidget* parent, MainWindow* frame );
+    //* creator
+    Menu( QWidget*, MainWindow* );
 
-    //! destructor
-    ~Menu( void )
-    { Debug::Throw() << "Menu::~Menu.\n"; }
+    //* destructor
+    ~Menu( void ) = default;
 
-    //! recent files menu
+    //* recent files menu
     RecentFilesMenu& recentFilesMenu( void ) const
     { return *recentFilesMenu_; }
 
     Q_SIGNALS:
 
-    //! triggered when an entry is selected in recent entries list
+    //* triggered when an entry is selected in recent entries list
     void entrySelected( LogEntry* );
 
     private Q_SLOTS:
 
-    //! recent entries
+    //* recent entries
     void _updateRecentEntriesMenu( void );
 
-    //! select entry from recent entries menu
+    //* select entry from recent entries menu
     void _selectEntry( QAction* );
 
-    //! get list of editor windows into menu
+    //* get list of editor windows into menu
     void _updateEditorMenu( void );
 
-    //! update preference menu
+    //* update preference menu
     void _updatePreferenceMenu( void );
 
     private:
 
-    //! recent entries
-    QMenu* recentEntriesMenu_;
+    //* recent entries
+    QMenu* recentEntriesMenu_ = nullptr;
 
-    //! editor windows menu
-    QMenu* windowsMenu_;
+    //* editor windows menu
+    QMenu* windowsMenu_ = nullptr;
 
-    //! preference menu
-    QMenu* preferenceMenu_;
+    //* preference menu
+    QMenu* preferenceMenu_ = nullptr;
 
-    //! recent files menu
+    //* recent files menu
     RecentFilesMenu* recentFilesMenu_;
 
-    //! associates actions and recent entries
+    //* associates actions and recent entries
     using ActionMap = QHash< QAction*, LogEntry* >;
 
-    //! action group
-    QActionGroup* actionGroup_;
+    //* action group
+    QActionGroup* actionGroup_ = nullptr;
 
-    //! associates actions and recent entries
+    //* associates actions and recent entries
     ActionMap actions_;
 
 };

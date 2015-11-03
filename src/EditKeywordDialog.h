@@ -24,37 +24,36 @@
 #include "CustomDialog.h"
 #include "Keyword.h"
 
-//! Edit/create keyword popup dialog
+//* Edit/create keyword popup dialog
 class EditKeywordDialog: public CustomDialog
 {
-    
+
     Q_OBJECT
 
     public:
 
-    //! constructor
+    //* constructor
     EditKeywordDialog( QWidget* );
 
-    //! destructor
-    virtual ~EditKeywordDialog( void )
-    {}
+    //* destructor
+    virtual ~EditKeywordDialog( void ) = default;
 
-    //! keyword
+    //* keyword
     void add( const Keyword& keyword )
     { combobox_->addItem( keyword.get() ); }
 
-    //! keyword
+    //* keyword
     void setKeyword( const Keyword& keyword )
     { combobox_->setEditText( keyword.get() ); }
 
-    //! keyword
+    //* keyword
     Keyword keyword( void ) const
     { return Keyword( combobox_->currentText() ); }
 
     private:
 
-    //!keyword combo box
-    CustomComboBox *combobox_;
+    //*keyword combo box
+    CustomComboBox *combobox_ = nullptr;
 
 };
 

@@ -21,7 +21,7 @@
 
 #include "BaseConfigurationDialog.h"
 
-//! configuration dialog
+//* configuration dialog
 class ConfigurationDialog: public BaseConfigurationDialog
 {
 
@@ -29,12 +29,11 @@ class ConfigurationDialog: public BaseConfigurationDialog
 
     public:
 
-    //! creator
-    ConfigurationDialog( QWidget *parent = 0 );
+    //* creator
+    ConfigurationDialog( QWidget* = nullptr );
 
-    //! destructor
-    virtual ~ConfigurationDialog( void )
-    {}
+    //* destructor
+    virtual ~ConfigurationDialog( void ) = default;
 
 };
 

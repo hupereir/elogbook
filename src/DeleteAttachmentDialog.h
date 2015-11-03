@@ -25,7 +25,7 @@
 
 #include <QRadioButton>
 
-//! delete attachment popup dialog
+//* delete attachment popup dialog
 class DeleteAttachmentDialog: public CustomDialog
 {
 
@@ -33,30 +33,26 @@ class DeleteAttachmentDialog: public CustomDialog
 
     public:
 
-    //! constructor
-    DeleteAttachmentDialog( QWidget* parent, const Attachment& attachment );
+    //* constructor
+    DeleteAttachmentDialog( QWidget*, const Attachment& );
 
-    //! destructor
-    virtual ~DeleteAttachmentDialog( void )
-    {}
-
-    //! action
+    //* action
     enum Action
     {
         DeleteFromDisk,
         DeleteFromLogbook
     };
 
-    //! get action
+    //* get action
     Action action( void ) const;
 
     private:
 
-    //! open with radio button
-    QRadioButton* fromDiskButton_;
+    //* open with radio button
+    QRadioButton* fromDiskButton_ = nullptr;
 
-    //! save as radio button
-    QRadioButton* fromLogbookButton_;
+    //* save as radio button
+    QRadioButton* fromLogbookButton_ = nullptr;
 
 
 };

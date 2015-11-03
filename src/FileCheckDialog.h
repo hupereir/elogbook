@@ -26,7 +26,7 @@
 
 class TreeView;
 
-//! QDialog used to select opened files
+//* QDialog used to select opened files
 class FileCheckDialog: public CustomDialog
 {
 
@@ -34,19 +34,22 @@ class FileCheckDialog: public CustomDialog
 
     public:
 
-    //! constructor
-    FileCheckDialog( QWidget* parent );
+    //* constructor
+    FileCheckDialog( QWidget* );
 
-    //! set files
+    //* destructor
+    virtual ~FileCheckDialog( void ) = default;
+
+    //* set files
     void setFiles( const QStringList& );
 
     private:
 
-    //! model
+    //* model
     FileRecordModel model_;
 
-    //! list of files
-    TreeView* list_;
+    //* list of files
+    TreeView* list_ = nullptr;
 
 };
 
