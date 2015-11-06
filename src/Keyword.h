@@ -116,7 +116,7 @@ class Keyword: public Counter
 };
 
 //* hash
-inline unsigned int qHash( const Keyword& keyword )
+inline uint qHash( const Keyword& keyword )
 { return qHash( keyword.get() ); }
 
 #endif
