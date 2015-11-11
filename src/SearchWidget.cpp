@@ -18,7 +18,6 @@
 *******************************************************************************/
 
 #include "SearchWidget.h"
-#include "SearchWidget.moc"
 
 #include "Color.h"
 #include "CustomComboBox.h"
