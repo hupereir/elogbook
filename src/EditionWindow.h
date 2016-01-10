@@ -372,6 +372,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* insert link
     void _editLink( void );
 
+    //* insert link
+    void _removeLink( void );
+
     //* view link
     void _openLink( void );
 

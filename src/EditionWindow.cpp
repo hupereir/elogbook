@@ -893,6 +893,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     // connections
     connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
     connect( &editor->editLinkAction(), SIGNAL(triggered()), SLOT(_editLink()) );
+    connect( &editor->removeLinkAction(), SIGNAL(triggered()), SLOT(_removeLink()) );
     connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
     connect( editor, SIGNAL(linkActivated(QString)), SLOT(_openLink(QString)) );
     connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
@@ -1409,6 +1410,40 @@ void EditionWindow::_editLink( void )
 }
 
 //_____________________________________________
+void EditionWindow::_removeLink( void )
+{
+    Debug::Throw( "EditionWindow::_removeLink.\n" );
+    QTextCursor cursor( activeEditor_->cursorAtContextMenu() );
+    QTextBlock block( cursor.block() );
+
+    // loop over text fragments and find the one that matches cursor
+    for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+    {
+        QTextFragment fragment = it.fragment();
+        if( !fragment.isValid() ) continue;
+        if( fragment.position() > cursor.position() || fragment.position() + fragment.length() <= cursor.position() )
+        { continue; }
+
+        QString anchor( fragment.charFormat().anchorHref() );
+        if( anchor.isEmpty() ) continue;
+
+        // select the corresponding block
+        QTextCursor cursor( activeEditor_->textCursor() );
+        cursor.setPosition( fragment.position() );
+        cursor.setPosition( fragment.position() + fragment.length(), QTextCursor::KeepAnchor );
+        activeEditor_->setTextCursor( cursor );
+
+        // insert link
+        QTextCharFormat outputFormat;
+        outputFormat.setFontUnderline( false );
+        outputFormat.setAnchorHref( QString() );
+        outputFormat.setAnchor( false );
+        activeEditor_->mergeCurrentCharFormat( outputFormat );
+
+        break;
+    }
+}
+//_____________________________________________
 void EditionWindow::_openLink( void )
 {
     Debug::Throw( "EditionWindow::_openLink.\n" );
@@ -1734,6 +1769,7 @@ void Private::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu,
     {
         menu->insertAction( &copyLinkAction(), openLinkAction_ );
         menu->insertAction( &copyLinkAction(), editLinkAction_ );
+        menu->insertAction( &copyLinkAction(), removeLinkAction_ );
     }
 
     // separator
@@ -1747,6 +1783,7 @@ void Private::LocalTextEditor::_installActions( void )
     Debug::Throw( "Private::LocalTextEditor::_installActions.\n" );
     addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
     addAction( editLinkAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Edit Link..." ), this ) );
+    addAction( removeLinkAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Remove Link..." ), this ) );
     addAction( openLinkAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Open Link..." ), this ) );
 
     // disable insert link action by default

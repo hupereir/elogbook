@@ -79,6 +79,10 @@ namespace Private
         QAction& editLinkAction( void ) const
         { return *editLinkAction_; }
 
+        //* remove link action
+        QAction& removeLinkAction( void ) const
+        { return *removeLinkAction_; }
+
         //* view link action
         QAction& openLinkAction( void ) const
         { return *openLinkAction_; }
@@ -100,8 +104,11 @@ namespace Private
         //* insert link
         QAction* insertLinkAction_ = nullptr;
 
-        //* insert link
+        //* edit link
         QAction* editLinkAction_ = nullptr;
+
+        //*  remove
+        QAction* removeLinkAction_ = nullptr;
 
         //* open link
         QAction* openLinkAction_ = nullptr;
