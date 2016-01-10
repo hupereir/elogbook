@@ -27,26 +27,26 @@
 namespace IconNames
 {
 
-    static const QString Attach = "attach.png";
-    static const QString Close = "document-close.png";
-    static const QString Home = "go-home.png";
-    static const QString PreviousEntry = "go-previous.png";
-    static const QString NextEntry = "go-next.png";
-    static const QString New = "document-new.png";
-    static const QString Save = "document-save.png";
-    static const QString SaveAs = "document-save-as.png";
-    static const QString SpellCheck = "tools-check-spelling.png";
-    static const QString ViewLeftRight = "view-split-left-right.png";
-    static const QString ViewTopBottom = "view-split-top-bottom.png";
-    static const QString ViewRemove = "view-close.png";
-    static const QString ViewClone = "view-fullscreen.png";
-    static const QString Tree = "view-list-tree.png";
-    static const QString ConfigureBackups = "configure-backups.png";
-    static const QString InsertSymbolicLink = "insert-link.png";
+    static const QString Attach = "attach";
+    static const QString Close = "document-close";
+    static const QString Home = "go-home";
+    static const QString PreviousEntry = "go-previous";
+    static const QString NextEntry = "go-next";
+    static const QString New = "document-new";
+    static const QString Save = "document-save";
+    static const QString SaveAs = "document-save-as";
+    static const QString SpellCheck = "tools-check-spelling";
+    static const QString ViewLeftRight = "view-split-left-right";
+    static const QString ViewTopBottom = "view-split-top-bottom";
+    static const QString ViewRemove = "view-close";
+    static const QString ViewClone = "view-fullscreen";
+    static const QString Tree = "view-list-tree";
+    static const QString ConfigureBackups = "configure-backups";
+    static const QString InsertSymbolicLink = "insert-link";
 
-    static const QString PreferencesSpellCheck = "tools-check-spelling.png";
-    static const QString PreferencesBackup = "configure-backups.png";
-    static const QString Merge = "merge.png";
+    static const QString PreferencesSpellCheck = "tools-check-spelling";
+    static const QString PreferencesBackup = "configure-backups";
+    static const QString Merge = "merge";
 
 };
 
