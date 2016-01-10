@@ -1438,6 +1438,7 @@ void EditionWindow::_removeLink( void )
         outputFormat.setFontUnderline( false );
         outputFormat.setAnchorHref( QString() );
         outputFormat.setAnchor( false );
+        outputFormat.setForeground( QColor() );
         activeEditor_->mergeCurrentCharFormat( outputFormat );
 
         break;
