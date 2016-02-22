@@ -1,7 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
   <qresource>
     <file alias="elogbook.png">../elogbook.png</file>
-    <file alias="icons/32x32/attach.png">../pixmaps/attach.png</file>
+    <file alias="icons/32x32/mail-attachment.png">../pixmaps/mail-attachment.png</file>
     <file alias="icons/32x32/configure-backups.png">../pixmaps/configure-backups.png</file>
     <file alias="icons/32x32/document-close.png">../pixmaps/document-close.png</file>
     <file alias="icons/32x32/document-new.png">../pixmaps/document-new.png</file>

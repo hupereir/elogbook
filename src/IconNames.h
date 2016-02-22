@@ -27,7 +27,7 @@
 namespace IconNames
 {
 
-    static const QString Attach = "attach";
+    static const QString Attach = "mail-attachment";
     static const QString Close = "document-close";
     static const QString Home = "go-home";
     static const QString PreviousEntry = "go-previous";
