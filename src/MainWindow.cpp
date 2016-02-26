@@ -1475,7 +1475,7 @@ void MainWindow::open( FileRecord record )
     if( record.file().isEmpty() )
     {
 
-        QString file( FileDialog(this).selectFile( workingDirectory() ).getFile() );
+        const QString file( FileDialog(this).selectFile( workingDirectory() ).getFile() );
         if( file.isNull() ) return;
         else record = FileRecord( file );
 
