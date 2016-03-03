@@ -61,7 +61,7 @@ class BackupManagerWidget: public QWidget, public Counter, public Base::Key
     //* emitted when backup is restored
     void restoreBackupRequested( Backup );
 
-    //* emmitted when backup is merged
+    //* emitted when backup is merged
     void mergeBackupRequested( Backup );
 
     //* emitted when backup is requested

@@ -277,13 +277,13 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 
     Q_SIGNALS:
 
-    //* emmited when new scratch file is created
+    //* emitted when new scratch file is created
     void scratchFileCreated( const File& );
 
-    //* emmited when a message is available from logbook
+    //* emitted when a message is available from logbook
     void messageAvailable( const QString& );
 
-    //* emmited at the end of SetLogbook
+    //* emitted at the end of SetLogbook
     void ready( void );
 
     public Q_SLOTS:
