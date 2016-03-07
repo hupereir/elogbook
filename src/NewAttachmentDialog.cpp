@@ -51,12 +51,6 @@ CustomDialog( parent )
     destinationDirectoryEditor_->setFileMode( QFileDialog::DirectoryOnly );
     destinationDirectoryEditor_->setToolTip( tr( "Attachment directory where attached file is stored (either copied or linked)" ) );
 
-    gridLayout->addWidget(
-        urlCheckBox_ = new QCheckBox( tr( "Selected attachment is a web adress" ), this ),
-        gridLayout->currentRow(), gridLayout->currentColumn(), 1, 2 );
-
-    connect( urlCheckBox_, SIGNAL(toggled(bool)), SLOT(_urlChanged(bool)) );
-
     // action
     gridLayout->addWidget( new QLabel( tr( "Action:" ), this ) );
     gridLayout->addWidget( actionComboBox_ = new QComboBox( this ) );
@@ -66,6 +60,13 @@ CustomDialog( parent )
 
     actionComboBox_->setCurrentIndex( 0 );
     actionComboBox_->setToolTip( tr( "Action to perform in order to save the attachment" ) );
+
+    // is url
+    gridLayout->addWidget(
+        urlCheckBox_ = new QCheckBox( tr( "Selected attachment is a web adress" ), this ),
+        gridLayout->currentRow(), 1, 1, 1 );
+
+    connect( urlCheckBox_, SIGNAL(toggled(bool)), SLOT(_urlChanged(bool)) );
 
     gridLayout->setColumnStretch( 1, 1 );
 
