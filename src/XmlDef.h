@@ -37,6 +37,7 @@ namespace Xml
     static const QString ParentFile( "parent_file" );
     static const QString Valid( "valid" );
     static const QString IsLink( "is_link" );
+    static const QString IsUrl( "is_url" );
     static const QString Directory( "directory" );
     static const QString Comments( "comments" );
     static const QString Creation( "Creation" );

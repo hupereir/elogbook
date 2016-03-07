@@ -41,6 +41,7 @@ void installDefaultOptions( void )
     XmlOptions::get().setAutoDefault( true );
 
     XmlOptions::get().keep( "OPEN_LINK_APPLICATIONS" );
+    XmlOptions::get().keep( "OPEN_ATTACHMENT_APPLICATIONS" );
 
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( "COLOR" );
@@ -124,7 +125,6 @@ void installDefaultOptions( void )
     XmlOptions::get().set<int>( "ATTACHMENT_LIST_MASK",
         (1<< AttachmentModel::Filename)|
         (1<< AttachmentModel::Size)|
-        (1<< AttachmentModel::Type)|
         (1<< AttachmentModel::Modification) );
 
     // add run-time non recordable options

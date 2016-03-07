@@ -24,13 +24,6 @@ include(CPack)
 ########### configuration files ###############
 configure_file(elogbook.spec.cmake ${CMAKE_SOURCE_DIR}/elogbook.spec)
 
-########### external applications ###############
-find_program(FIREFOX firefox)
-find_program(QEDIT qedit)
-find_program(OKULAR okular)
-find_program(GWENVIEW gwenview)
-find_program(XDG_OPEN xdg-open)
-
 ########### aspell ###############
 find_program(ASPELL aspell)
 find_package(ASPELL)

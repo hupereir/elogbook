@@ -50,27 +50,8 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     gridLayout->addWidget( fileLineEdit );
     label->setBuddy( fileLineEdit );
 
-    AttachmentType type( attachment.type() );
-    File fullname( ( type == AttachmentType::Url ) ? attachment.file():attachment.file().expand() );
+    File fullname( ( attachment.isUrl() ) ? attachment.file():attachment.file().expand() );
     fileLineEdit->setText( fullname );
-
-    // type
-    gridLayout->addWidget( label = new QLabel( tr( "Type:" ), this ) );
-    gridLayout->addWidget( fileTypeComboBox_ = new QComboBox( this ) );
-    for(
-        AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
-        iter != AttachmentType::types().end();
-        iter ++ )
-    {
-
-        if( type == AttachmentType::Url && !( iter.value() == AttachmentType::Url ) ) continue;
-        if( !( type == AttachmentType::Url ) && iter.value() == AttachmentType::Url ) continue;
-        fileTypeComboBox_->addItem( iter.value().name() );
-
-    }
-    fileTypeComboBox_->setCurrentIndex( fileTypeComboBox_->findText( type.name() ) );
-    fileTypeComboBox_->setToolTip( tr( "Attachment type. Defines the default application used to display the attachment" ) );
-    label->setBuddy( fileTypeComboBox_ );
 
     // creation
     if( attachment.creation().isValid() )
@@ -99,22 +80,6 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     commentsEditor_->setToolTip( tr( "Attachment comments" ) );
     label->setBuddy( commentsEditor_ );
 }
-
-//____________________________________________
-AttachmentType EditAttachmentDialog::type( void ) const
-{
-
-    Debug::Throw( "EditAttachmentDialog::GetType.\n" );
-    QString type_string( fileTypeComboBox_->currentText() );
-    for(
-        AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
-        iter != AttachmentType::types().end();
-        ++iter )
-    { if( iter.value().name() == type_string ) return iter.value(); }
-    return AttachmentType::Unknown;
-
-}
-
 
 //____________________________________________________
 QString EditAttachmentDialog::comments( void ) const

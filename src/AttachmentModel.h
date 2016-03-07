@@ -23,9 +23,8 @@
 #include "Counter.h"
 #include "ListModel.h"
 
-#include <QHash>
-
 class Attachment;
+class MimeTypeIconProvider;
 
 //* Job model. Stores job information for display in lists
 class AttachmentModel : public ListModel<Attachment*>, public Counter
@@ -41,9 +40,7 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     //* column type enumeration
     enum ColumnType
     {
-        Icon,
         Filename,
-        Type,
         Size,
         Creation,
         Modification,
@@ -73,10 +70,8 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     //* sort
     virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
 
-    private Q_SLOTS:
-
-    //* update configuration
-    void _updateConfiguration( void );
+    //* icon matching given model index
+    virtual QIcon _icon( const QModelIndex& ) const;
 
     private:
 
@@ -100,14 +95,8 @@ class AttachmentModel : public ListModel<Attachment*>, public Counter
     //* list column names
     static const QString columnTitles_[nColumns];
 
-    //* icon
-    static const QIcon& _icon( QString );
-
-    //* icon cache
-    using IconCache = QHash<QString, QIcon>;
-
-    //* type icon cache
-    static IconCache& _icons();
+    //* icon provider
+    MimeTypeIconProvider* iconProvider_ = nullptr;
 
 };
 

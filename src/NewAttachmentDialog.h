@@ -21,78 +21,90 @@
 *******************************************************************************/
 
 #include "Attachment.h"
-#include "AttachmentType.h"
 #include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 #include "TextEditor.h"
 #include "File.h"
 
-
+#include <QCheckBox>
 #include <QComboBox>
 
 //* new attachment popup dialog
 class NewAttachmentDialog: public CustomDialog
 {
 
-  //* Qt meta object declaration
-  Q_OBJECT
+    //* Qt meta object declaration
+    Q_OBJECT
 
-  public:
+    public:
 
-  // constructor
-  NewAttachmentDialog( QWidget* parent );
+    //* constructor
+    NewAttachmentDialog( QWidget* );
 
-  //* filename
-  void setFile( const File& );
+    //* destuctor
+    virtual ~NewAttachmentDialog( void ) = default;
 
-  //* filename
-  File file( void ) const;
+    //*@name accessors
+    //@{
 
-  //* destination directory
-  void setDestinationDirectory( const File& );
+    //* filename
+    File file( void ) const;
 
-  //* destination directory
-  File destinationDirectory( void ) const;
+    //* destination directory
+    File destinationDirectory( void ) const;
 
-  //* attachment type
-  void setType( const AttachmentType& );
+    //* url
+    bool isUrl( void ) const;
 
-  //* attachment type
-  AttachmentType type( void ) const;
+    //* Action
+    Attachment::Command action( void ) const;
 
-  //* Action
-  void setAction( const Attachment::Command& );
+    //* comments
+    QString comments( void ) const;
 
-  //* Action
-  Attachment::Command action( void ) const;
+    //@}
 
-  //* comments
-  void setComments( const QString& comments );
+    //*@name modifiers
+    //@{
 
-  //* comments
-  QString comments( void ) const;
+    //* filename
+    void setFile( const File& );
 
-  private Q_SLOTS:
+    //* destination directory
+    void setDestinationDirectory( const File& );
 
-  //* attachment type changed
-  void _attachmentTypeChanged( int index );
+    //* attachment type
+    void setIsUrl( bool );
 
-  private:
+    //* Action
+    void setAction( const Attachment::Command& );
 
-  //* filename browsed line editor
-  BrowsedLineEditor *fileEditor_ = nullptr;
+    //* comments
+    void setComments( const QString& comments );
 
-  //* destination directory browsed line edti
-  BrowsedLineEditor *destinationDirectoryEditor_ = nullptr;
+    //@}
 
-  //* file type combo box
-  QComboBox *fileTypeComboBox_ = nullptr;
+    private Q_SLOTS:
 
-  //* action combo box
-  QComboBox *actionComboBox_ = nullptr;
+    //* called when url checkbox toggled
+    void _urlChanged( bool );
 
-  //* comments
-  TextEditor *commentsEditor_ = nullptr;
+    private:
+
+    //* filename browsed line editor
+    BrowsedLineEditor* fileEditor_ = nullptr;
+
+    //* destination directory browsed line edti
+    BrowsedLineEditor* destinationDirectoryEditor_ = nullptr;
+
+    //* is url checkbox
+    QCheckBox* urlCheckBox_ = nullptr;
+
+    //* action combo box
+    QComboBox* actionComboBox_ = nullptr;
+
+    //* comments
+    TextEditor* commentsEditor_ = nullptr;
 
 };
 

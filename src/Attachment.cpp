@@ -36,16 +36,13 @@ const QString Attachment::NoComments( QObject::tr( "no comments" ) );
 const QString Attachment::NoSize( " - " );
 
 //_______________________________________
-Attachment::Attachment( const QString orig, const AttachmentType& type ):
+Attachment::Attachment( const QString orig ):
     Counter( "Attachment" ),
     sourceFile_( orig ),
     file_( NoFile ),
     comments_( NoComments ),
     sizeString_( NoSize )
-{
-    Debug::Throw( "Attachment::Attachment.\n" );
-    setType( type );
-}
+{ Debug::Throw( "Attachment::Attachment.\n" ); }
 
 //_______________________________________
 Attachment::Attachment( const QDomElement& element):
@@ -67,11 +64,12 @@ Attachment::Attachment( const QDomElement& element):
         QString value( attribute.value() );
 
         if( name == Xml::SourceFile ) _setSourceFile( XmlString( value ) );
-        else if( name == Xml::Type ) setType( AttachmentType::get( value ) );
+        else if( name == Xml::Type ) setIsUrl( XmlString( value ) == "URL" );
         else if( name == Xml::File ) _setFile( XmlString( value ) );
         else if( name == Xml::Comments ) setComments( XmlString( value ) );
         else if( name == Xml::Valid ) setIsValid( (bool) value.toInt() );
         else if( name == Xml::IsLink ) setIsLink( (LinkState) value.toInt() );
+        else if( name == Xml::IsUrl ) setIsUrl( (bool) value.toInt() );
         else Debug::Throw(0) << "unrecognized attachment attribute: \"" << name << "\"\n";
     }
 
@@ -87,8 +85,7 @@ Attachment::Attachment( const QDomElement& element):
     }
 
     // by default all URL attachments are valid, provided that the SOURCE_FILE is not empty
-    if( type() == AttachmentType::Url && !sourceFile().isEmpty() )
-    { setIsValid( true ); }
+    if( isUrl_ && !sourceFile().isEmpty() ) setIsValid( true );
 
 }
 
@@ -100,9 +97,9 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
     QDomElement out( parent.createElement( Xml::Attachment ) );
     if( file().size() ) out.setAttribute( Xml::File, file() );
     if( sourceFile().size() ) out.setAttribute( Xml::SourceFile, sourceFile() );
-    out.setAttribute( Xml::Type, type().key() );
     out.setAttribute( Xml::Valid, QString::number( isValid() ) );
     out.setAttribute( Xml::IsLink, QString::number( isLink() ) );
+    out.setAttribute( Xml::IsUrl, QString::number( isUrl() ) );
     if( comments().size())
     {
         out.
@@ -118,20 +115,6 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 
 }
 
-//_______________________________________
-bool Attachment::setType( const AttachmentType& type )
-{
-
-    Debug::Throw() << "Attachment::setType.\n";
-    if( type_ == type ) return false;
-    type_  = type;
-
-    if( Attachment::type() == AttachmentType::Url )
-    { setIsLink( Yes ); }
-
-    return true;
-}
-
 //___________________________________
 bool Attachment::operator < ( const Attachment &attachment ) const
 { return shortFile().compare( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }
@@ -143,7 +126,7 @@ void Attachment::updateSize( void )
     Debug::Throw( "Attachment::updateSize.\n" );
 
     // check type
-    if( type() == AttachmentType::Url || size() != 0 || !isValid() ) return;
+    if( isUrl_ || size() != 0 || !isValid() ) return;
     size_ = file().fileSize();
     sizeString_ = file().sizeString();
 
@@ -156,9 +139,12 @@ bool Attachment::updateTimeStamps( void )
 
     Debug::Throw( "Attachment::updateTimeStamps.\n" );
     bool changed( false );
-    if( type() == AttachmentType::Url ) {
+    if( isUrl_ )
+    {
+
         if( !creation().isValid() ) changed |= _setCreation( TimeStamp::now() );
         changed |= _setModification( TimeStamp() );
+
     } else {
 
         if( file().exists() )
@@ -198,7 +184,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     }
 
     // for URL attachments, just copy origin to file, whatever the command
-    if( type() == AttachmentType::Url )
+    if( isUrl_ )
     {
         _setFile( sourceFile_ );
         _setCreation( TimeStamp::now() );
@@ -216,8 +202,8 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
 
     // generate expanded source name
     File fullname( sourceFile_ .expand() );
-    if( !( type() == AttachmentType::Url || fullname.exists() ) ) return SourceNotFound;
-    else if( !( type() == AttachmentType::Url ) && fullname.isDirectory() ) return SourceIsDir;
+    if( !( isUrl_ || fullname.exists() ) ) return SourceNotFound;
+    else if( !isUrl_ && fullname.isDirectory() ) return SourceIsDir;
 
     // destination filename
     File destname( fullname.localName().addPath( destdir ).expand() );

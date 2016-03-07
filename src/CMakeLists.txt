@@ -35,7 +35,6 @@ configure_file(SystemOptions.h.cmake SystemOptions.h)
 ########### next target ###############
 set(elogbook_lib_SOURCES
   Attachment.cpp
-  AttachmentType.cpp
   Backup.cpp
   FileCheck.cpp
   Keyword.cpp

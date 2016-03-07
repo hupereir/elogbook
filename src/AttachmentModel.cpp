@@ -20,24 +20,14 @@
 #include "AttachmentModel.h"
 
 #include "Attachment.h"
+#include "MimeTypeIconProvider.h"
 #include "IconEngine.h"
-#include "Singleton.h"
 #include "TimeStamp.h"
-#include "XmlOptions.h"
-
-//__________________________________________________________________
-AttachmentModel::IconCache& AttachmentModel::_icons()
-{
-    static IconCache cache;
-    return cache;
-}
 
 //_______________________________________________
 const QString AttachmentModel::columnTitles_[ AttachmentModel::nColumns ] =
 {
-    QString(),
     tr( "File" ),
-    tr( "Type" ),
     tr( "Size" ),
     tr( "Creation" ),
     tr( "Modification" )
@@ -49,7 +39,7 @@ AttachmentModel::AttachmentModel( QObject* parent ):
     Counter( "AttachmentModel" )
 {
     Debug::Throw( "AttachmentModel::AttachmentModel.\n" );
-    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    iconProvider_ = new MimeTypeIconProvider( this );
 }
 
 //__________________________________________________________________
@@ -89,11 +79,7 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
         {
 
             case Filename:
-            return
-                attachment->type() == AttachmentType::Url ?
-                attachment->file() : attachment->shortFile();
-
-            case Type: return attachment->type().name();
+            return attachment->isUrl() ? attachment->file() : attachment->shortFile();
 
             case Size: return attachment->sizeString();
 
@@ -106,8 +92,7 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
             default: return QVariant();
         }
     } else if( role == Qt::ToolTipRole ) return attachment->file();
-    else if( role == Qt::DecorationRole && index.column() == Icon ) return _icon( attachment->type().icon() );
-    else if( role == Qt::TextAlignmentRole && index.column() == Icon ) return Qt::AlignCenter;
+    else if( role == Qt::DecorationRole && index.column() == Filename ) return _icon( index );
 
     return QVariant();
 
@@ -130,13 +115,6 @@ QVariant AttachmentModel::headerData(int section, Qt::Orientation orientation, i
 }
 
 //____________________________________________________________
-void AttachmentModel::_updateConfiguration( void )
-{
-    Debug::Throw( "AttachmentModel::_updateConfiguration.\n" );
-    _icons().clear();
-}
-
-//____________________________________________________________
 void AttachmentModel::_sort( int column, Qt::SortOrder order )
 {
     Debug::Throw() << "AttachmentModel::sort - column: " << column << " order: " << order << endl;
@@ -154,8 +132,6 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
 
         default:
         case Filename: return first->shortFile() < second->shortFile();
-        case Icon: return first->type().name() < second->type().name();
-        case Type: return first->type().name() < second->type().name();
         case Size: return  first->size() < second->size();
         case Creation: return first->creation() < second->creation();
         case Modification: return first->modification() < second->modification();
@@ -164,11 +140,10 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
 
 }
 //________________________________________________________
-const QIcon& AttachmentModel::_icon( QString type )
+QIcon AttachmentModel::_icon( const QModelIndex& index ) const
 {
 
-    IconCache::const_iterator iter( _icons().find( type ) );
-    if( iter != _icons().end() ) return iter.value();
-    else return _icons().insert( type, IconEngine::get( type ) ).value();
-
+    Attachment* attachment( get()[index.row()] );
+    if( attachment->isUrl() ) return IconEngine::get( "text-html.png" );
+    else return iconProvider_->icon( attachment->file().extension() );
 }

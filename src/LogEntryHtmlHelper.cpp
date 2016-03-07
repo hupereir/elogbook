@@ -270,10 +270,6 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( tr( "Type" ) ) );
-
-    row.appendChild( document.createElement( "td" ) ).
-        appendChild( document.createElement( "b" ) ).
         appendChild( document.createTextNode( tr( "Comments" ) ) );
 
     // attachments
@@ -286,13 +282,9 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
             appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).
             toElement();
-        if( attachment->type() == AttachmentType::Url ) ref.setAttribute( "href", attachment->file() );
+        if( attachment->isUrl() ) ref.setAttribute( "href", attachment->file() );
         else ref.setAttribute( "href", QString("file:") + attachment->file() );
         ref.appendChild( document.createTextNode( attachment->file() ) );
-
-        // type
-        row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( attachment->type().name() ) );
 
         // comments
         if( !attachment->comments().isEmpty() )

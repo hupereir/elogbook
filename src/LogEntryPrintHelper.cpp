@@ -324,9 +324,6 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     cell.firstCursorPosition().insertText( tr( "Location" ) );
 
     ( cell = table->cellAt( row, 1 ) ).setFormat( cellFormat );
-    cell.firstCursorPosition().insertText( tr( "Type" ) );
-
-    ( cell = table->cellAt( row, 2 ) ).setFormat( cellFormat );
     cell.firstCursorPosition().insertText( tr( "Comments" ) );
     row++;
 
@@ -334,8 +331,7 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     foreach( Attachment* attachment, attachments )
     {
         table->cellAt( row, 0 ).firstCursorPosition().insertText( attachment->file() );
-        table->cellAt( row, 1 ).firstCursorPosition().insertText( attachment->type().name() );
-        table->cellAt( row, 2 ).firstCursorPosition().insertText( attachment->comments() );
+        table->cellAt( row, 1 ).firstCursorPosition().insertText( attachment->comments() );
     }
 
     // check for new page

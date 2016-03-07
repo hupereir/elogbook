@@ -21,15 +21,14 @@
 #include "Debug.h"
 #include "ElidedLabel.h"
 #include "File.h"
-#include "LineEditor.h"
 #include "OpenAttachmentDialog.h"
+#include "OpenWithComboBox.h"
 #include "TextEditor.h"
+#include "XmlOptions.h"
 
 #include <QButtonGroup>
-#include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
-#include <QTextStream>
 
 //_____________________________________________________
 OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& attachment ):
@@ -46,17 +45,13 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     mainLayout().addLayout( gridLayout, 0 );
 
     // attachment full name
-    File fullname( ( attachment.type() == AttachmentType::Url ) ? attachment.file() : attachment.file().expand() );
+    File fullname( ( attachment.isUrl() ) ? attachment.file() : attachment.file().expand() );
 
     // file name
     QLabel* label;
     gridLayout->addWidget( label = new QLabel( tr( "File:" ), this ) );
     gridLayout->addWidget( label = new ElidedLabel( fullname, this ) );
     label->setTextInteractionFlags( Qt::TextSelectableByMouse|Qt::TextSelectableByKeyboard );
-
-    // attachment type
-    gridLayout->addWidget(new QLabel( tr( "Type:" ), this ) );
-    gridLayout->addWidget( new QLabel( attachment.type().name(), this ) );
 
     // creation
     gridLayout->addWidget( new QLabel( tr( "Created:" ), this ) );
@@ -87,15 +82,26 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     openRadioButton_->setToolTip( tr( "Select this button to open attachment using the selected application" ) );
     group->addButton( openRadioButton_ );
 
-    gridLayout->addWidget( commandEditor_ = new BrowsedLineEditor( this ) );
-    commandEditor_->setFile( attachment.type().editCommand() );
-    commandEditor_->setToolTip( tr( "Application to be used to display the attachment" ) );
+    gridLayout->addWidget( comboBox_ = new OpenWithComboBox( this ) );
+    comboBox_->setToolTip( tr( "Application to be used to display the attachment" ) );
+
+    // retrieve applications from options
+    const QString optionName = "OPEN_ATTACHMENT_APPLICATIONS";
+    const auto applications( XmlOptions::get().specialOptions( optionName ) );
+    foreach( auto option, applications )
+    { comboBox_->addItem( File( option.raw() ) ); }
+
+    // sytem default
+    comboBox_->insertItem(0, tr( "System Default" ) );
+    comboBox_->setCurrentIndex( 0 );
+
+    gridLayout->setColumnStretch( 1, 1 );
 
     gridLayout->addWidget( saveRadioButton_ = new QRadioButton( tr( "Save to disk" ), this ) );
     saveRadioButton_->setToolTip( tr( "Select this button to save a copy of the attachment on disk" ) );
     group->addButton( saveRadioButton_ );
 
-    if( attachment.type() == AttachmentType::Url )
+    if( attachment.isUrl() )
     {
 
         openRadioButton_->setChecked( true );
@@ -122,12 +128,33 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
 
     adjustSize();
 
+    // connection
+    connect( &okButton(), SIGNAL(clicked()), this, SLOT(_saveCommands()) );
+
 }
+
+//____________________________________________________________________________
+bool OpenAttachmentDialog::isCommandValid( void ) const
+{ return comboBox_->isItemValid(); }
+
+//____________________________________________________________________________
+bool OpenAttachmentDialog::isCommandDefault( void ) const
+{ return comboBox_->currentIndex() == 0; }
 
 //______________________________________________________
 QString OpenAttachmentDialog::command( void ) const
-{ return commandEditor_->editor().text(); }
+{ return comboBox_->command(); }
 
 //______________________________________________________
 OpenAttachmentDialog::Action OpenAttachmentDialog::action( void ) const
 { return openRadioButton_->isChecked() ? Open:SaveAs; }
+
+//____________________________________________________________________________
+void OpenAttachmentDialog::_saveCommands( void )
+{
+
+    const QString optionName = "OPEN_ATTACHMENT_APPLICATIONS";
+    foreach( auto command, comboBox_->newItems() )
+    { XmlOptions::get().add( optionName, Option( command, Option::Recordable|Option::Current ) ); }
+
+}

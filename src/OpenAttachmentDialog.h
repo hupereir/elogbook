@@ -21,10 +21,11 @@
 *******************************************************************************/
 
 #include "Attachment.h"
-#include "BrowsedLineEditor.h"
 #include "CustomDialog.h"
 
 #include <QRadioButton>
+
+class OpenWithComboBox;
 
 //* open attachment popup dialog
 class OpenAttachmentDialog: public CustomDialog
@@ -36,6 +37,18 @@ class OpenAttachmentDialog: public CustomDialog
 
     //* constructor
     OpenAttachmentDialog( QWidget*, const Attachment& );
+
+    //* destructor
+    virtual ~OpenAttachmentDialog( void ) = default;
+
+    //*@name accessors
+    //@{
+
+    //* true if command is valid
+    bool isCommandValid( void ) const;
+
+    //* true if command is default
+    bool isCommandDefault( void ) const;
 
     //* get command
     QString command( void ) const;
@@ -50,10 +63,17 @@ class OpenAttachmentDialog: public CustomDialog
     //* get action
     Action action( void ) const;
 
+    //@}
+
+    protected Q_SLOTS:
+
+    //* save commands added to combobox
+    void _saveCommands( void );
+
     private:
 
     //* command browsed line editor
-    BrowsedLineEditor *commandEditor_ = nullptr;
+    OpenWithComboBox *comboBox_ = nullptr;
 
     //* open with radio button
     QRadioButton* openRadioButton_ = nullptr;

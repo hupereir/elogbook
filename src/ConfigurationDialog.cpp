@@ -54,55 +54,16 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     OptionCheckBox *checkbox;
     OptionSpinBox* spinbox;
 
-    // attachment editors
-    QWidget* page = &addPage( IconEngine::get( IconNames::PreferencesFileAssociations ), tr( "Applications" ), tr( "Third-party applications used to edit attachments" ) );
-    page->layout()->addWidget( box = new QGroupBox( tr( "Attachment Editors" ), page ));
-
-    GridLayout* gridLayout = new GridLayout();
-    gridLayout->setSpacing(5);
-    gridLayout->setMargin(5);
-    gridLayout->setMaxCount( 2 );
-    gridLayout->setColumnAlignment( 0, Qt::AlignRight|Qt::AlignVCenter );
-    box->setLayout( gridLayout );
-
-    OptionBrowsedLineEditor *editor;
-
-    gridLayout->addWidget( new QLabel( tr( "Default:" ), box ) );
-    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_UNKNOWN_ATC" ) );
-    addOptionWidget( editor );
-
-    gridLayout->addWidget( new QLabel( tr( "HTML:" ), box ) );
-    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_HTML_ATC" ) );
-    addOptionWidget( editor );
-
-    gridLayout->addWidget( new QLabel( tr( "URL:" ), box ) );
-    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_URL_ATC" ) );
-    addOptionWidget( editor );
-
-    gridLayout->addWidget( new QLabel( tr( "Text:" ), box ) );
-    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_PLAIN_TEXT_ATC" ) );
-    addOptionWidget( editor );
-
-    gridLayout->addWidget( new QLabel( tr( "Postscript:" ), box ) );
-    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_POSTSCRIPT_ATC" ) );
-    addOptionWidget( editor );
-
-    gridLayout->addWidget( new QLabel( tr( "Image:" ), box ) );
-    gridLayout->addWidget( editor =  new OptionBrowsedLineEditor( box, "EDIT_IMAGE_ATC" ) );
-    addOptionWidget( editor );
-
-    gridLayout->setColumnStretch( 1, 1 );
-
-    gridLayout->addWidget( new QLabel( tr( "Icon size:" ), box ) );
-    gridLayout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
-    spinbox->setSuffix( tr( "px" ) );
-    spinbox->setMinimum( 8 );
-    spinbox->setMaximum( 96 );
-    spinbox->setToolTip( tr( "Icon size in attachment lists" ) );
-    addOptionWidget( spinbox );
+//     gridLayout->addWidget( new QLabel( tr( "Icon size:" ), box ) );
+//     gridLayout->addWidget( spinbox = new OptionSpinBox( box, "ATTACHMENT_LIST_ICON_SIZE" ) );
+//     spinbox->setSuffix( tr( "px" ) );
+//     spinbox->setMinimum( 8 );
+//     spinbox->setMaximum( 96 );
+//     spinbox->setToolTip( tr( "Icon size in attachment lists" ) );
+//     addOptionWidget( spinbox );
 
     // colors
-    page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
+    QWidget* page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
     box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);
@@ -126,7 +87,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     // auto save
     page = &addPage( IconEngine::get( IconNames::PreferencesBackup ), tr( "Backup" ), tr( "Logbook backup configuration" ) );
-    gridLayout = new GridLayout();
+    GridLayout* gridLayout = new GridLayout();
     gridLayout->setSpacing(5);
     gridLayout->setMargin(0);
     page->layout()->addItem( gridLayout );

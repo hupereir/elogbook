@@ -43,8 +43,10 @@
 #include "TreeView.h"
 #include "InformationDialog.h"
 
+#include <QDesktopServices>
 #include <QHeaderView>
 #include <QShortcut>
+#include <QUrl>
 
 //_____________________________________________
 AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
@@ -181,20 +183,19 @@ void AttachmentFrame::_new( void )
         { dialog.setDestinationDirectory( mainwindow.logbook()->directory() ); }
     }
 
-    // type and action
-    dialog.setType( AttachmentType::Unknown );
+    // action
     dialog.setAction( Attachment::CopyVersion );
     dialog.resize( 400, 350 );
     if( dialog.centerOnWidget( AttachmentFrame::window() ).exec() == QDialog::Rejected ) return;
 
     // retrieve Attachment type
-    AttachmentType type( dialog.type() );
+    const bool isUrl( dialog.isUrl() );
 
     // retrieve destination directory
     File fullDirectory = dialog.destinationDirectory();
 
     // check destination directory (if file is not URL)
-    if( !(type == AttachmentType::Url) )
+    if( !isUrl )
     {
         // check if destination directory is not a non directory existsing file
         if( fullDirectory.exists() && !fullDirectory.isDirectory() )
@@ -218,9 +219,8 @@ void AttachmentFrame::_new( void )
     }
 
     // create attachment with correct type
-    Attachment *attachment = new Attachment( file, type );
-
-    // retrieve check comments
+    Attachment *attachment = new Attachment( file );
+    attachment->setIsUrl( isUrl );
     attachment->setComments( dialog.comments() );
 
     // retrieve command
@@ -306,7 +306,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
     foreach( Attachment* attachment, attachments )
     {
 
-        if( attachment->type() == AttachmentType::Url ) continue;
+        if( attachment->isUrl() ) continue;
         if( attachment->file().isEmpty() ) continue;
 
         records << FileRecord( attachment->file() );
@@ -336,7 +336,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
     foreach( Attachment* attachment, model_.get() )
     {
 
-        if( attachment->type() == AttachmentType::Url ) continue;
+        if( attachment->isUrl() ) continue;
         if( attachment->file().isEmpty() ) continue;
 
         Debug::Throw() << "AttachmentFrame::_processRecords - checking: " << attachment->file() << endl;
@@ -452,9 +452,9 @@ void AttachmentFrame::_open( void )
 
         if( attachment->updateTimeStamps() ) modifiedAttachments << attachment;
 
-        AttachmentType type = attachment->type();
-        File fullname( ( type == AttachmentType::Url ) ? attachment->file():attachment->file().expand() );
-        if( !( type == AttachmentType::Url || fullname.exists() ) )
+        const bool isUrl( attachment->isUrl() );
+        File fullname( isUrl ? attachment->file():attachment->file().expand() );
+        if( !( isUrl || fullname.exists() ) )
         {
             InformationDialog( this, QString( tr( "Cannot find file '%1'. <Open Attachment> canceled." ) ).arg( fullname ) ).exec();
             continue;
@@ -463,8 +463,28 @@ void AttachmentFrame::_open( void )
         OpenAttachmentDialog dialog( this, *attachment );
         if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted )
         {
-            if( dialog.action() == OpenAttachmentDialog::Open ) ( Command( dialog.command() ) << fullname ).run();
-            else  {
+            if( dialog.action() == OpenAttachmentDialog::Open )
+            {
+
+                if( !dialog.isCommandValid() || (dialog.command().isEmpty() && !dialog.isCommandDefault() ) )
+                {
+                    InformationDialog( this, QString( tr( "Specified command is invalid. <Open Attachment> canceled." ) ).arg( fullname ) ).exec();
+                    continue;
+                }
+
+                if( dialog.isCommandDefault() )
+                {
+
+                    if( isUrl ) QDesktopServices::openUrl( QUrl::fromEncoded( fullname.toLatin1() ) );
+                    else QDesktopServices::openUrl( QUrl::fromEncoded( QString( "file://%1" ).arg( fullname ).toLatin1() ) );
+
+                } else {
+
+                    ( Command( dialog.command() ) << fullname ).run();
+
+                }
+
+            } else  {
 
                 // create and configure SaveAs dialog
                 FileDialog dialog( this );
@@ -519,9 +539,6 @@ void AttachmentFrame::_edit( void )
         // map dialog
         if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted )
         {
-
-            // change attachment type
-            attachmentChanged |= attachment->setType( dialog.type() );
 
             // retrieve comments
             attachmentChanged |= attachment->setComments( dialog.comments() );
@@ -607,7 +624,7 @@ void AttachmentFrame::_delete( void )
 
             // remove file from disk, if required
             File file( attachment->file().expand() );
-            if( fromDisk && ( !( attachment->type() == AttachmentType::Url ) ) && file.isWritable() )
+            if( fromDisk && !attachment->isUrl() && file.isWritable() )
             { file.remove(); }
 
             // delete attachment
@@ -673,9 +690,9 @@ void AttachmentFrame::_saveAs( void )
     foreach( Attachment* attachment, selection )
     {
 
-        const AttachmentType type = attachment->type();
-        File fullname( ( type == AttachmentType::Url ) ? attachment->file():attachment->file().expand() );
-        if( type == AttachmentType::Url )
+        const bool isUrl( attachment->isUrl() );
+        File fullname( isUrl ? attachment->file():attachment->file().expand() );
+        if( isUrl )
         {
 
             InformationDialog( this, QString( tr( "Selected attachement is URL. <Save Attachment As> canceled." ) ) ).exec();

@@ -21,12 +21,8 @@
 *******************************************************************************/
 
 #include "Attachment.h"
-#include "AttachmentType.h"
 #include "TextEditor.h"
 #include "CustomDialog.h"
-
-#include <QComboBox>
-#include <QString>
 
 //* edit attachment popup dialog
 class EditAttachmentDialog: public CustomDialog
@@ -39,16 +35,13 @@ class EditAttachmentDialog: public CustomDialog
     //* constructor
     EditAttachmentDialog( QWidget*, const Attachment& );
 
-    //* attachment type
-    AttachmentType type( void ) const;
+    //* destructor
+    virtual ~EditAttachmentDialog( void ) = default;
 
     //* get comments
     QString comments( void ) const;
 
     private:
-
-    //* file type combo box
-    QComboBox *fileTypeComboBox_ = nullptr;
 
     //* comments editor
     TextEditor *commentsEditor_ = nullptr;

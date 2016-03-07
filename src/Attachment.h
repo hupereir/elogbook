@@ -20,7 +20,6 @@
 *
 *******************************************************************************/
 
-#include "AttachmentType.h"
 #include "Counter.h"
 #include "File.h"
 #include "Key.h"
@@ -50,7 +49,7 @@ class Attachment: public Counter, public Base::Key
     static const QString NoSize;
 
     //* contructor
-    Attachment( const QString = QString(), const AttachmentType& = AttachmentType::Unknown );
+    Attachment( const QString = QString() );
 
     //* creator from DomElement
     Attachment( const QDomElement& element );
@@ -92,17 +91,16 @@ class Attachment: public Counter, public Base::Key
 
     };
 
-    //* validity
-    bool setIsValid( bool value )
-    {
-        if( valid_ == value ) return false;
-        valid_ = value;
-        return true;
-    }
+    //*@name accessors
+    //@{
 
     //* validity
     bool isValid( void ) const
-    { return valid_; }
+    { return isValid_; }
+
+    //* url
+    bool isUrl( void ) const
+    { return isUrl_; }
 
     //* link state
     enum LinkState
@@ -113,19 +111,8 @@ class Attachment: public Counter, public Base::Key
     };
 
     //* link
-    bool setIsLink( const LinkState& value )
-    {
-        if( isLink_ == value ) return false;
-        isLink_ = value;
-        return true;
-    }
-
-    //* link
     LinkState isLink( void ) const
     { return isLink_; }
-
-    //* read file size
-    void updateSize( void );
 
     //* retrieves local file size
     double size( void ) const
@@ -137,9 +124,6 @@ class Attachment: public Counter, public Base::Key
 
     //* retrieves associated entry
     LogEntry* entry() const;
-
-    //* update time stamps
-    bool updateTimeStamps( void );
 
     //* file creation
     TimeStamp creation( void ) const
@@ -164,6 +148,41 @@ class Attachment: public Counter, public Base::Key
     const QString& comments( void ) const
     { return comments_; }
 
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    //* validity
+    bool setIsValid( bool value )
+    {
+        if( isValid_ == value ) return false;
+        isValid_ = value;
+        return true;
+    }
+
+    //* url
+    bool setIsUrl( bool value )
+    {
+        if( isUrl_ == value ) return false;
+        isUrl_ = value;
+        return true;
+    }
+
+    //* link
+    bool setIsLink( const LinkState& value )
+    {
+        if( isLink_ == value ) return false;
+        isLink_ = value;
+        return true;
+    }
+
+    //* read file size
+    void updateSize( void );
+
+    //* update time stamps
+    bool updateTimeStamps( void );
+
     //* appends string to attachment comments
     bool setComments( const QString& buf )
     {
@@ -171,13 +190,6 @@ class Attachment: public Counter, public Base::Key
         comments_ = buf;
         return true;
     }
-
-    //* retrieves attachment type
-    const AttachmentType& type( void ) const
-    { return type_; }
-
-    //* changes attachment type
-    bool setType( const AttachmentType& type );
 
     //* command enum to tell who original file should be transformed into attached file
     enum Command
@@ -214,6 +226,8 @@ class Attachment: public Counter, public Base::Key
     */
     ErrorCode copy( const Attachment::Command& command, const QString& destdir );
 
+    //@}
+
     private:
 
     //* set original attachment file name
@@ -239,9 +253,6 @@ class Attachment: public Counter, public Base::Key
         return true;
     }
 
-    //* attached file type
-    AttachmentType type_ = AttachmentType::Unknown;
-
     //* attached file name
     File sourceFile_;
 
@@ -263,11 +274,14 @@ class Attachment: public Counter, public Base::Key
     //* file last modification timestamp
     TimeStamp modification_;
 
+    //* is url
+    bool isUrl_ = false;
+
     //* is link
     LinkState isLink_ = Unknown;
 
     //* true for URL or if file exist
-    bool valid_ = false;
+    bool isValid_ = false;
 
 };
 

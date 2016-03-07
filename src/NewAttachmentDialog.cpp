@@ -51,15 +51,11 @@ CustomDialog( parent )
     destinationDirectoryEditor_->setFileMode( QFileDialog::DirectoryOnly );
     destinationDirectoryEditor_->setToolTip( tr( "Attachment directory where attached file is stored (either copied or linked)" ) );
 
-    gridLayout->addWidget( new QLabel( tr( "Type:" ), this ) );
-    gridLayout->addWidget( fileTypeComboBox_ = new QComboBox( this ) );
-    for(
-        AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
-    iter != AttachmentType::types().end();
-    iter ++ )
-    { fileTypeComboBox_->addItem( iter.value().name() ); }
-    fileTypeComboBox_->setToolTip( tr( "Attachment type. Defines the default application used to display the attachment" ) );
-    connect( fileTypeComboBox_, SIGNAL(activated(int)), SLOT(_attachmentTypeChanged(int)) );
+    gridLayout->addWidget(
+        urlCheckBox_ = new QCheckBox( tr( "Selected attachment is a web adress" ), this ),
+        gridLayout->currentRow(), gridLayout->currentColumn(), 1, 2 );
+
+    connect( urlCheckBox_, SIGNAL(toggled(bool)), SLOT(_urlChanged(bool)) );
 
     // action
     gridLayout->addWidget( new QLabel( tr( "Action:" ), this ) );
@@ -83,19 +79,38 @@ CustomDialog( parent )
 }
 
 //____________________________________________________
+File NewAttachmentDialog::file( void ) const
+{
+    File out( fileEditor_->editor().text() );
+    return isUrl() ? out : out.expand();
+}
+
+//____________________________________________________
+File NewAttachmentDialog::destinationDirectory( void ) const
+{ return File( destinationDirectoryEditor_->editor().text() ).expand(); }
+
+//____________________________________________________
+bool NewAttachmentDialog::isUrl( void ) const
+{ return urlCheckBox_->isChecked(); }
+
+//____________________________________________________
+QString NewAttachmentDialog::comments( void ) const
+{
+    Debug::Throw( "NewAttachmentDialog::GetComments.\n" );
+    return commentsEditor_->toPlainText();
+}
+
+//____________________________________________________
+Attachment::Command NewAttachmentDialog::action( void ) const
+{ return actionComboBox_->currentText() == tr( "Copy" ) ? Attachment::CopyVersion: Attachment::LinkVersion; }
+
+//____________________________________________________
 void NewAttachmentDialog::setFile( const File& file )
 {
 
     Debug::Throw( "NewAttachmentDialog::SetFile.\n" );
     fileEditor_->setFile( file );
 
-}
-
-//____________________________________________________
-File NewAttachmentDialog::file( void ) const
-{
-    File out( fileEditor_->editor().text() );
-    return type() == AttachmentType::Url ? out : out.expand();
 }
 
 //____________________________________________________
@@ -106,29 +121,10 @@ void NewAttachmentDialog::setDestinationDirectory( const File& file )
 }
 
 //____________________________________________________
-File NewAttachmentDialog::destinationDirectory( void ) const
-{ return File( destinationDirectoryEditor_->editor().text() ).expand(); }
-
-//____________________________________________________
-void NewAttachmentDialog::setType( const AttachmentType& type )
+void NewAttachmentDialog::setIsUrl( bool value )
 {
     Debug::Throw( "NewAttachmentDialog::setType.\n" );
-    fileTypeComboBox_->setCurrentIndex( fileTypeComboBox_->findText( type.name() ) );
-}
-
-//____________________________________________________
-AttachmentType NewAttachmentDialog::type( void ) const
-{
-
-    Debug::Throw( "NewAttachmentDialog::GetType.\n" );
-    QString type( fileTypeComboBox_->currentText() );
-    for(
-        AttachmentType::Map::const_iterator iter = AttachmentType::types().begin();
-    iter != AttachmentType::types().end();
-    ++iter )
-    { if( iter.value().name() == type ) return iter.value(); }
-    return AttachmentType::Unknown;
-
+    urlCheckBox_->setChecked( value );
 }
 
 //____________________________________________________
@@ -140,10 +136,6 @@ void NewAttachmentDialog::setAction( const Attachment::Command& command )
 }
 
 //____________________________________________________
-Attachment::Command NewAttachmentDialog::action( void ) const
-{ return actionComboBox_->currentText() == tr( "Copy" ) ? Attachment::CopyVersion: Attachment::LinkVersion; }
-
-//____________________________________________________
 void NewAttachmentDialog::setComments( const QString& comments )
 {
     Debug::Throw( "NewAttachmentDialog::SetComments.\n" );
@@ -151,16 +143,9 @@ void NewAttachmentDialog::setComments( const QString& comments )
 }
 
 //____________________________________________________
-QString NewAttachmentDialog::comments( void ) const
+void NewAttachmentDialog::_urlChanged( bool value )
 {
-    Debug::Throw( "NewAttachmentDialog::GetComments.\n" );
-    return commentsEditor_->toPlainText();
-}
-
-//____________________________________________________
-void NewAttachmentDialog::_attachmentTypeChanged( int )
-{
-    bool enabled = !( type() == AttachmentType::Url );
+    bool enabled = !value;
     destinationDirectoryEditor_->setEnabled( enabled );
     actionComboBox_->setEnabled( enabled );
     return;
