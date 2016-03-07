@@ -23,7 +23,6 @@
 #include "SystemOptions.h"
 #include "Singleton.h"
 #include "XmlFileRecord.h"
-#include "XmlMigration.h"
 #include "XmlOptions.h"
 
 #include <QApplication>
@@ -42,9 +41,6 @@ int main (int argc, char *argv[])
     // debug level
     Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
     if( Debug::level() ) Debug::Throw() << XmlOptions::get() << endl;
-
-    // migration
-    XmlMigration( File(".elogbook_db").addPath(Util::home() ), "DB_FILE", Base::Xml::FileList ).run();
 
     // resources
     Q_INIT_RESOURCE( basePixmaps );
