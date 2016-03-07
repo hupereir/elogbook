@@ -54,7 +54,7 @@
 #include "RecentFilesMenu.h"
 #include "SelectLineWidget.h"
 #include "Singleton.h"
-#include "OpenLinkDialog.h"
+#include "OpenWithDialog.h"
 #include "Util.h"
 
 #if USE_ASPELL
@@ -1451,29 +1451,12 @@ void EditionWindow::_openLink( void )
     QString anchor( activeEditor_->anchor() );
     if( anchor.isEmpty() ) return;
 
-    OpenLinkDialog dialog( this, anchor );
-    dialog.setWindowTitle( tr( "Open Link - Elogbook" ) );
-
-    // retrieve applications from options
-    Options::List applications( XmlOptions::get().specialOptions( "OPEN_LINK_APPLICATIONS" ) );
-    foreach( const Option& option, applications )
-    { dialog.actionComboBox().addItem( option.raw() ); }
-
-    if( dialog.centerOnParent().exec() == QDialog::Rejected ) return;
-
-    // retrieve application from combobox and add as options
-    QString command( dialog.actionComboBox().currentText() );
-    if( command.isEmpty() )
-    {
-        InformationDialog( this, tr( "No command specified to open the selected files. <Open> canceled." ) ).exec();
-        return;
-    }
-
-    // update options
-    XmlOptions::get().add( "OPEN_LINK_APPLICATIONS", Option( command, Option::Recordable|Option::Current ) );
-
-    // execute
-    ( Command( command ) << anchor ).run();
+    OpenWithDialog dialog( this );
+    dialog.setWindowTitle( tr( "Open Link - Homechat" ) );
+    dialog.setLink( anchor );
+    dialog.setOptionName( "OPEN_LINK_APPLICATIONS" );
+    dialog.realizeWidget();
+    dialog.exec();
 
 }
 

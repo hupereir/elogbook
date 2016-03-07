@@ -85,7 +85,6 @@ set(elogbook_SOURCES
   OpenAttachmentDialog.cpp
   ProgressBar.cpp
   SearchWidget.cpp
-  OpenLinkDialog.cpp
   main.cpp
 )
 
