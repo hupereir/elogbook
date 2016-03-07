@@ -17,11 +17,14 @@
 *
 *******************************************************************************/
 
-#include "GridLayout.h"
+#include "OpenAttachmentDialog.h"
+
+#include "BaseIconNames.h"
 #include "Debug.h"
 #include "ElidedLabel.h"
 #include "File.h"
-#include "OpenAttachmentDialog.h"
+#include "GridLayout.h"
+#include "IconEngine.h"
 #include "OpenWithComboBox.h"
 #include "TextEditor.h"
 #include "XmlOptions.h"
@@ -38,11 +41,31 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     Debug::Throw( "OpenAttachmentDialog::OpenAttachmentDialog.\n" );
     setOptionName( "OPEN_ATTACHMENT_DIALOG" );
 
+    // try load Question icon
+    QHBoxLayout *hLayout( new QHBoxLayout() );
+    hLayout->setSpacing(10);
+    hLayout->setMargin(0);
+    mainLayout().addLayout( hLayout );
+    {
+        // icon
+        QLabel* label = new QLabel( this );
+        QIcon icon = IconEngine::get( IconNames::DialogWarning );
+        label->setPixmap( icon.pixmap( iconSize() ) );
+        hLayout->addWidget( label, 0 );
+
+    }
+
+    QVBoxLayout* vLayout = new QVBoxLayout();
+    vLayout->setMargin(0);
+    hLayout->addLayout( vLayout, 1 );
+
     GridLayout* gridLayout = new GridLayout();
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
-    mainLayout().addLayout( gridLayout, 0 );
+    vLayout->addStretch();
+    vLayout->addLayout( gridLayout );
+    vLayout->addStretch();
 
     // attachment full name
     File fullname( ( attachment.isUrl() ) ? attachment.file() : attachment.file().expand() );
@@ -51,6 +74,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     QLabel* label;
     gridLayout->addWidget( label = new QLabel( tr( "File:" ), this ) );
     gridLayout->addWidget( label = new ElidedLabel( fullname, this ) );
+    static_cast<ElidedLabel*>(label)->setElideMode( Qt::ElideMiddle );
     label->setTextInteractionFlags( Qt::TextSelectableByMouse|Qt::TextSelectableByKeyboard );
 
     // creation
