@@ -118,8 +118,8 @@ MainWindow::MainWindow( QWidget *parent ):
     _installActions();
 
     // aditional actions from application
-    Application& application( *Singleton::get().application<Application>() );
-    addAction( &application.closeAction() );
+    auto application( Singleton::get().application<Application>() );
+    addAction( &application->closeAction() );
 
     // Keyword container
     keywordContainer_ = new QWidget();
@@ -292,7 +292,7 @@ MainWindow::MainWindow( QWidget *parent ):
     connect( menu_, SIGNAL(entrySelected(LogEntry*)), SLOT(_displayEntry(LogEntry*)) );
 
     // configuration
-    connect( &application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
     _updateKeywordActions();
     _updateEntryActions();

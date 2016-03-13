@@ -96,8 +96,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     menu->addSeparator();
     if( editionWindow ) menu->addAction( &editionWindow->closeAction() );
 
-    Application& application( *Singleton::get().application<Application>() );
-    menu->addAction( &application.closeAction() );
+    auto application( Singleton::get().application<Application>() );
+    menu->addAction( &application->closeAction() );
 
     // edition menu
     if( parent == mainWindow )
@@ -141,8 +141,8 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     menu = addMenu( tr( "Help" ) );
     menu->addAction( &help->displayAction() );
     menu->addSeparator();
-    menu->addAction( &application.aboutAction() );
-    menu->addAction( &application.aboutQtAction() );
+    menu->addAction( &application->aboutAction() );
+    menu->addAction( &application->aboutQtAction() );
 
     // debug menu
     menu->addSeparator();
@@ -251,10 +251,10 @@ void Menu::_updatePreferenceMenu( void )
     preferenceMenu_->clear();
 
     // Settings menu
-    Application& application( *Singleton::get().application<Application>() );
+    auto application( Singleton::get().application<Application>() );
 
     // additional Settings in case parent is a selection frame
-    MainWindow *mainWindow = qobject_cast<MainWindow*>( parentWidget() );
+    auto mainWindow = qobject_cast<MainWindow*>( parentWidget() );
     if( mainWindow ) preferenceMenu_->addAction( &mainWindow->treeModeAction() );
 
     // additional Settings in case parent is an edition frame
@@ -270,6 +270,6 @@ void Menu::_updatePreferenceMenu( void )
     }
 
     preferenceMenu_->addSeparator();
-    preferenceMenu_->addAction( &application.configurationAction() );
+    preferenceMenu_->addAction( &application->configurationAction() );
 
 }

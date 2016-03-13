@@ -177,8 +177,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // actions
     _installActions();
-    Application& application( *Singleton::get().application<Application>() );
-    addAction( &application.closeAction() );
+    auto application( Singleton::get().application<Application>() );
+    addAction( &application->closeAction() );
 
     // toolbars
     // lock toolbar is visible only when window is not editable
@@ -254,7 +254,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Navigation" ), this, "NAVIGATION_TOOLBAR" );
-    toolbar->addAction( &application.mainWindow().uniconifyAction() );
+    toolbar->addAction( &application->mainWindow().uniconifyAction() );
     toolbar->addAction( previousEntryAction_ );
     toolbar->addAction( nextEntryAction_ );
 
@@ -269,7 +269,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     _modifiersChanged( activeEditor_->modifiers() );
 
     // configuration
-    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
 
 }
