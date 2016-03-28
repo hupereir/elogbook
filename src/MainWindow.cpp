@@ -1630,7 +1630,7 @@ void MainWindow::_manageBackups( void )
     Debug::Throw( "MainWindow::_manageBackups.\n");
 
     BackupManagerDialog dialog( this );
-    Key::associate( &dialog.managerWidget(), logbook_ );
+    Base::Key::associate( &dialog.managerWidget(), logbook_ );
     dialog.managerWidget().updateBackups();
 
     // connections
@@ -2257,7 +2257,7 @@ void MainWindow::_reorganize( void )
     foreach( LogEntry* entry, entryList )
     {
         Logbook *logbook( MainWindow::logbook_->latestChild() );
-        Key::associate( entry, logbook );
+        Base::Key::associate( entry, logbook );
         logbook->setModified( true );
     }
 
@@ -2462,7 +2462,7 @@ void MainWindow::_newEntry( void )
         // create new EditionWindow
         editionWindow = new EditionWindow( 0, false );
         editionWindow->setColorMenu( colorMenu_ );
-        Key::associate( this, editionWindow );
+        Base::Key::associate( this, editionWindow );
         connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
         connect( logbook_, SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
 
@@ -2624,7 +2624,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     {
         editionWindow = new EditionWindow( 0, false );
         editionWindow->setColorMenu( colorMenu_ );
-        Key::associate( this, editionWindow );
+        Base::Key::associate( this, editionWindow );
         editionWindow->displayEntry( entry );
 
         connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );

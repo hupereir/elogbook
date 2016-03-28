@@ -75,7 +75,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     connect( newBackupButton_, SIGNAL(clicked()), SIGNAL(backupRequested()) );
     connect( newBackupButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
 
-    if( logbook ) Key::associate( this, logbook );
+    if( logbook ) Base::Key::associate( this, logbook );
 
     _updateActions();
 

@@ -168,7 +168,7 @@ bool Logbook::read( void )
             LogEntry* entry = new LogEntry( element );
             if( entry->keyword().isRoot() ) entry->setKeyword( Keyword::Default );
 
-            Key::associate( this, entry );
+            Base::Key::associate( this, entry );
             entryCount++;
             if( !(entryCount%progress) ) emit progressAvailable( progress );
 
@@ -392,7 +392,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
         LogEntry *copy( entry->clone() );
 
         // associate entry with logbook
-        Key::associate( copy, child );
+        Base::Key::associate( copy, child );
 
         // set child as modified
         child->setModified( true );

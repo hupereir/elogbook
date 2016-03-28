@@ -81,7 +81,7 @@ LogEntry::LogEntry( const QDomElement& element ):
         else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( childElement ) );
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( childElement ) );
         else if( tagName == Format::Xml::Tag ) addFormat( Format::XmlTextFormatBlock( childElement ) );
-        else if( tagName == Xml::Attachment ) Key::associate( this, new Attachment( childElement ) );
+        else if( tagName == Xml::Attachment ) Base::Key::associate( this, new Attachment( childElement ) );
         else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized child " << childElement.tagName() << endl;
     }
 
@@ -156,7 +156,7 @@ LogEntry* LogEntry::clone( void ) const
         // copy attachment, associate to entry
         Attachment *copy( new Attachment( *attachment ) );
         copy->clearAssociations();
-        Key::associate( copy, out );
+        Base::Key::associate( copy, out );
 
     }
 

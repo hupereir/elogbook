@@ -255,7 +255,7 @@ void AttachmentFrame::_new( void )
         case Attachment::Success:
 
         // associate attachment to entry
-        Key::associate( entry, attachment );
+        Base::Key::associate( entry, attachment );
 
         // update all windows edition windows associated to entry
         windows = Base::KeySet<EditionWindow>( entry );

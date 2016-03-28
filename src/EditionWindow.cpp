@@ -167,7 +167,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     frame->visibilityAction().setChecked( false );
     frame->setDefaultHeight( XmlOptions::get().get<int>( "ATTACHMENT_FRAME_HEIGHT" ) );
     splitter->addWidget( frame );
-    Key::associate( this, frame );
+    Base::Key::associate( this, frame );
 
     // status bar for tooltips
     setStatusBar( statusBar_ = new BaseStatusBar( this ) );
@@ -290,7 +290,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
     if( !entry ) return;
 
     // update current entry
-    Key::associate( entry, this );
+    Base::Key::associate( entry, this );
 
     // update all display
     displayKeyword();
@@ -1079,7 +1079,7 @@ void EditionWindow::_save( bool updateSelection )
     statusBar_->label().setText( tr( "writting entry to logbook..." ) );
 
     // add entry to logbook, if needed
-    if( entryIsNew ) Key::associate( entry, logbook->latestChild() );
+    if( entryIsNew ) Base::Key::associate( entry, logbook->latestChild() );
 
     // update this window title, set unmodified.
     setModified( false );
@@ -1531,7 +1531,7 @@ void EditionWindow::_cloneWindow( void )
 
     // create new EditionWindow
     EditionWindow *edition_window( new EditionWindow( &mainWindow ) );
-    Key::associate( edition_window, &mainWindow );
+    Base::Key::associate( edition_window, &mainWindow );
     edition_window->displayEntry( entry );
 
     // raise EditionWindow
