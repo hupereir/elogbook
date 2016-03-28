@@ -33,7 +33,7 @@ Qt::ItemFlags BackupModel::flags(const QModelIndex &index) const
 
     // default flags
     Qt::ItemFlags flags;
-    if( !index.isValid() ) return flags;
+    if( !contains( index ) ) return flags;
 
     // check associated record validity
     const Backup& backup( get(index) );
@@ -50,8 +50,8 @@ Qt::ItemFlags BackupModel::flags(const QModelIndex &index) const
 QVariant BackupModel::data( const QModelIndex& index, int role ) const
 {
 
-    // check index, role and column
-    if( !index.isValid() ) return QVariant();
+    // check index
+    if( !contains( index ) ) return QVariant();
 
     const Backup backup( get( index ) );
     if( role == Qt::DisplayRole )

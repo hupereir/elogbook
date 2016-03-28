@@ -34,8 +34,8 @@ const QString LogbookModel::columnTitles_[ LogbookModel::nColumns ] =
 QVariant LogbookModel::data( const QModelIndex& index, int role ) const
 {
 
-    // check index, role and column
-    if( !index.isValid() ) return QVariant();
+    // check index
+    if( !contains( index ) ) return QVariant();
 
     // retrieve associated file info
     Logbook& logbook( *get()[index.row()] );

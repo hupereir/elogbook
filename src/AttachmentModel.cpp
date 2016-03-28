@@ -65,8 +65,8 @@ Qt::ItemFlags AttachmentModel::flags(const QModelIndex &index) const
 QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
 {
 
-    // check index, role and column
-    if( !index.isValid() ) return QVariant();
+    // check index
+    if( !contains( index ) ) return QVariant();
 
     // retrieve associated file info
     Attachment* attachment( get()[index.row()] );

@@ -71,7 +71,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
 {
 
-    if (!index.isValid()) return 0;
+    if( contains(index.isValid() ) return 0;
 
     // default flags
     Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
@@ -90,8 +90,8 @@ Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
 QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 {
 
-    // check index, role and column
-    if( !index.isValid() ) return QVariant();
+    // check index
+    if( !contains( index ) ) return QVariant();
 
     // retrieve associated file info
     LogEntry* entry( get()[index.row()] );

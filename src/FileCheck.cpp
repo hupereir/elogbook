@@ -185,8 +185,8 @@ const QString FileCheck::Model::columnTitles_[ FileCheck::Model::nColumns ] =
 QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
 {
 
-    // check index, role and column
-    if( !index.isValid() ) return QVariant();
+    // check index
+    if( !contains( index ) ) return QVariant();
 
     // retrieve associated file info
     const Data& data( get()[index.row()] );
