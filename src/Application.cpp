@@ -48,7 +48,6 @@ Application::~Application( void )
 {
     if( mainWindow_ ) delete mainWindow_;
     if( recentFiles_ ) delete recentFiles_;
-
 }
 
 //____________________________________________
