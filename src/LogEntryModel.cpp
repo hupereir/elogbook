@@ -71,7 +71,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
 {
 
-    if( contains(index) ) return 0;
+    if( !contains(index) ) return 0;
 
     // default flags
     Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
