@@ -232,7 +232,7 @@ bool Logbook::write( File file )
     emit maximumProgressAvailable( xmlEntries() );
 
     // write logbook if filename differs from origin or logbook is modified
-    if( file != Logbook::file() || modified_ )
+    if( file != this->file() || modified_ )
     {
 
         // gets last saved timestamp
@@ -247,8 +247,7 @@ bool Logbook::write( File file )
         QTextStream( &buffer ) << "Writing " << file.localName();
         emit messageAvailable( buffer );
 
-        QFile out( file );
-        if( !out.open( QIODevice::WriteOnly ) )
+        if( !QFile( file ).open( QIODevice::WriteOnly ) )
         {
             Debug::Throw(0) << "Logbook::write - unable to write to file " << file << endl;
             return false;
@@ -322,22 +321,24 @@ bool Logbook::write( File file )
         }
 
         // finish
+        QFile out( file );
+        out.open( QIODevice::WriteOnly );
         out.write( document.toByteArray() );
         out.close();
 
         // gets/check new saved timestamp
         TimeStamp savedNew( file.lastModified() );
         if( !( lastSaved < savedNew ) ) completed = false;
-        else if( file == Logbook::file() )  modified_ = false;
+        else if( file == this->file() )  modified_ = false;
 
         // assign new filename
-        if( file != Logbook::file() ) setFile( file );
+        if( file != this->file() ) setFile( file );
 
     } else { emit progressAvailable( Base::KeySet<LogEntry>( this ).size() ); }
 
 
     // update saved timeStamp
-    saved_ = Logbook::file().lastModified();
+    saved_ = this->file().lastModified();
 
     // write children
     unsigned int childCount=0;
