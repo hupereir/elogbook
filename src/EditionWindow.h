@@ -42,6 +42,8 @@
 
 class Attachment;
 class BaseContextMenu;
+class BaseFindWidget;
+class BaseReplaceWidget;
 class BaseStatusBar;
 class ColorMenu;
 class CustomToolBar;
@@ -49,6 +51,7 @@ class FormatBar;
 class LogEntryPrintHelper;
 class MainWindow;
 class Menu;
+class SelectLineWidget;
 
 namespace Private
 {
@@ -254,6 +257,23 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* emitted when new scratch file is created
     void scratchFileCreated( const File& );
 
+    //*@name re-implemented from text editor
+    //@{
+
+    //* emitted from TextDisplay when no match is found for find/replace request
+    void noMatchFound( void );
+
+    //* emitted from TextDisplay when no match is found for find/replace request
+    void matchFound( void );
+
+    //* emitted when selected line is not found
+    void lineNotFound( void );
+
+    //* emitted when selected line is found
+    void lineFound( void );
+
+    //@}
+
     public Q_SLOTS:
 
     //* update read-only state
@@ -262,6 +282,20 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* change window title
     void updateWindowTitle()
     { setWindowTitle( windowTitle() ); }
+
+    //*@name reimplemented from TextEditor
+    //@{
+
+    //* find text from dialog
+    virtual void findFromDialog( void );
+
+    //* replace text from dialog
+    virtual void replaceFromDialog( void );
+
+    //* select line from dialog
+    virtual void selectLineFromDialog( void );
+
+    //@}
 
     protected:
 
@@ -363,6 +397,30 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* clone editor
     void _cloneWindow( void );
 
+    //* find
+    void _find( TextSelection selection )
+    { activeEditor().find( selection ); }
+
+    //* find
+    void _replace( TextSelection selection )
+    { activeEditor().replace( selection ); }
+
+    //* find
+    void _replaceInSelection( TextSelection selection )
+    { activeEditor().replaceInSelection( selection ); }
+
+    //* find
+    void _replaceInWindow( TextSelection selection )
+    { activeEditor().replaceInWindow( selection ); }
+
+    //* select line
+    void _selectLine( int value )
+    { activeEditor().selectLine( value ); }
+
+    //* restore focus on active display, when closing embedded dialog
+    void _restoreFocus( void )
+    { activeEditor().setFocus(); }
+
     //* unlock read-only editors
     void _unlock( void );
 
@@ -380,6 +438,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* view link
     void _openLink( QString );
+
+    //* update replace in selection action
+    void _updateReplaceInSelection( void );
 
     //* read only actions
     void _updateReadOnlyActions( void );
@@ -441,6 +502,15 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* install actions
     void _installActions( void );
 
+    //* create find dialog
+    void _createFindWidget( void );
+
+    //* create replace dialog
+    void _createReplaceWidget( void );
+
+    //* create select line widget
+    void _createSelectLineWidget( void );
+
     //* if true, LogEntry associated to EditionWindow cannot be modified
     bool readOnly_ = false;
 
@@ -497,6 +567,20 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* menu
     Menu* menu_ = nullptr;
+
+    //*@name widgets (re-implemented from TextEditor)
+    //@{
+
+    //* find widget
+    BaseFindWidget* findWidget_ = nullptr;
+
+    //* replace widget
+    BaseReplaceWidget* replaceWidget_ = nullptr;
+
+    //* line number dialog
+    SelectLineWidget* selectLineWidget_ = nullptr;
+
+    //@}
 
     //*@name actions
     //@{

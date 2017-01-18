@@ -79,7 +79,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnly_( readOnly )
 {
     Debug::Throw("EditionWindow::EditionWindow.\n" );
-    setOptionName( "EDITION_WINDOW" );
+    setOptionName( "editionWindow" );
     setObjectName( "EDITFRAME" );
 
     QWidget* main( new QWidget( this ) );
@@ -146,6 +146,11 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     container_->layout()->setMargin(0);
     container_->layout()->setSpacing(0);
     static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( container_, 0 );
+
+    // embedded widgets
+    _createFindWidget();
+    _createReplaceWidget();
+    _createSelectLineWidget();
 
     // first editor
     auto& editor( _newTextEditor( editorContainer ) );
@@ -618,6 +623,90 @@ void EditionWindow::updateReadOnlyState( void )
 
 }
 
+//_____________________________________________________________________
+void EditionWindow::findFromDialog( void )
+{
+    Debug::Throw( "EditionWindow::findFromDialog.\n" );
+
+    // create find widget
+    if( !findWidget_ ) _createFindWidget();
+    findWidget_->show();
+    findWidget_->editor().setFocus();
+    activeEditor().ensureCursorVisible();
+
+    /*
+    setting the default text values
+    must be done after the dialog is shown
+    otherwise it may be automatically resized
+    to very large sizes due to the input text
+    */
+    QString text( activeEditor().selection().text() );
+    if( !text.isEmpty() )
+    {
+        const int maxLength( 1024 );
+        text = text.left( maxLength );
+    }
+
+    findWidget_->enableRegExp( true );
+    findWidget_->synchronize();
+    findWidget_->matchFound();
+    findWidget_->setText( text );
+
+    return;
+}
+
+//_____________________________________________________________________
+void EditionWindow::replaceFromDialog( void )
+{
+    Debug::Throw( "EditionWindow::replaceFromDialog.\n" );
+
+    // create replace widget
+    if( !replaceWidget_ ) _createReplaceWidget();
+
+    // show replace widget and set focus
+    replaceWidget_->show();
+    replaceWidget_->editor().setFocus();
+    activeEditor().ensureCursorVisible();
+
+    /*
+    setting the default text values
+    must be done after the dialog is shown
+    otherwise it may be automatically resized
+    to very large sizes due to the input text
+    */
+
+    // synchronize combo-boxes
+    replaceWidget_->synchronize();
+    replaceWidget_->matchFound();
+
+    // update find text
+    QString text;
+    if( !( text = qApp->clipboard()->text( QClipboard::Selection) ).isEmpty() ) replaceWidget_->setText( text );
+    else if( activeEditor().textCursor().hasSelection() ) replaceWidget_->setText( activeEditor().textCursor().selectedText() );
+    else if( !( text = TextEditor::lastSelection().text() ).isEmpty() ) replaceWidget_->setText( text );
+
+    // update replace text
+    if( !TextEditor::lastSelection().replaceText().isEmpty() ) replaceWidget_->setReplaceText( TextEditor::lastSelection().replaceText() );
+
+    return;
+}
+
+//________________________________________________
+void EditionWindow::selectLineFromDialog( void )
+{
+
+    Debug::Throw( "TextEditor::selectLineFromDialog.\n" );
+
+    // create select line widget
+    if( !selectLineWidget_ ) _createSelectLineWidget();
+
+    selectLineWidget_->show();
+    selectLineWidget_->matchFound();
+    selectLineWidget_->editor().clear();
+    selectLineWidget_->editor().setFocus();
+
+}
+
 //____________________________________________
 void EditionWindow::closeEvent( QCloseEvent *event )
 {
@@ -761,6 +850,68 @@ void EditionWindow::_installActions( void )
     insertLinkAction_->setEnabled( false );
 }
 
+
+//______________________________________________________________________
+void EditionWindow::_createFindWidget( void )
+{
+
+    Debug::Throw( "EditionWindow::_createFindWidget.\n" );
+    if( !findWidget_ )
+    {
+
+        findWidget_ = new BaseFindWidget( container_ );
+        container_->layout()->addWidget( findWidget_ );
+        connect( findWidget_, SIGNAL(find(TextSelection)), SLOT(_find(TextSelection)) );
+        connect( this, SIGNAL(matchFound()), findWidget_, SLOT(matchFound()) );
+        connect( this, SIGNAL(noMatchFound()), findWidget_, SLOT(noMatchFound()) );
+        connect( &findWidget_->closeButton(), SIGNAL(clicked()), this, SLOT(_restoreFocus()) );
+        findWidget_->hide();
+
+    }
+
+    return;
+
+}
+
+//_____________________________________________________________________
+void EditionWindow::_createReplaceWidget( void )
+{
+    Debug::Throw( "EditionWindow::_CreateReplaceDialog.\n" );
+    if( !( replaceWidget_ ) )
+    {
+
+        replaceWidget_ = new BaseReplaceWidget( container_ );
+        container_->layout()->addWidget( replaceWidget_ );
+        connect( replaceWidget_, SIGNAL(find(TextSelection)), SLOT(_find(TextSelection)) );
+        connect( replaceWidget_, SIGNAL(replace(TextSelection)), SLOT(_replace(TextSelection)) );
+        connect( replaceWidget_, SIGNAL(replaceInWindow(TextSelection)), SLOT(_replaceInWindow(TextSelection)) );
+        connect( replaceWidget_, SIGNAL(replaceInSelection(TextSelection)), SLOT(_replaceInSelection(TextSelection)) );
+        connect( replaceWidget_, SIGNAL(menuAboutToShow()), SLOT(_updateReplaceInSelection()) );
+        connect( &replaceWidget_->closeButton(), SIGNAL(clicked()), this, SLOT(_restoreFocus()) );
+        replaceWidget_->hide();
+
+        connect( this, SIGNAL(matchFound()), replaceWidget_, SLOT(matchFound()) );
+        connect( this, SIGNAL(noMatchFound()), replaceWidget_, SLOT(noMatchFound()) );
+
+    }
+
+}
+
+//_________________________________________________________________
+void EditionWindow::_createSelectLineWidget( void )
+{
+    if( !selectLineWidget_ )
+    {
+        selectLineWidget_ = new SelectLineWidget( this, true );
+        container_->layout()->addWidget( selectLineWidget_ );
+        connect( selectLineWidget_, SIGNAL(lineSelected(int)), SLOT(_selectLine(int)) );
+        connect( this, SIGNAL(lineFound()), selectLineWidget_, SLOT(matchFound()) );
+        connect( this, SIGNAL(lineNotFound()), selectLineWidget_, SLOT(noMatchFound()) );
+        connect( &selectLineWidget_->closeButton(), SIGNAL(clicked()), this, SLOT(_restoreFocus()) );
+        selectLineWidget_->hide();
+    }
+}
+
 //___________________________________________________________
 Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
 {
@@ -887,7 +1038,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 {
     Debug::Throw( "EditionWindow::_newTextEditor.\n" );
 
-    // create textDisplay
+    // create TextEditor
     Private::LocalTextEditor* editor = new Private::LocalTextEditor( parent );
 
     // connections
@@ -903,33 +1054,29 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( editor, SIGNAL(selectionChanged()), SLOT(_updateInsertLinkActions()) );
     connect( editor->document(), SIGNAL(modificationChanged(bool)), SLOT(_updateSaveAction()) );
 
+    // customize display actions
+    /* this is needed to be able to handle a single dialog for stacked windows */
+    // goto line number
+    editor->gotoLineAction().disconnect();
+    connect( &editor->gotoLineAction(), SIGNAL(triggered()), this, SLOT(selectLineFromDialog()) );
+
+    // find
+    editor->findAction().disconnect();
+    connect( &editor->findAction(), SIGNAL(triggered()), this, SLOT(findFromDialog()) );
+    connect( editor, SIGNAL(noMatchFound()), this, SIGNAL(noMatchFound()) );
+    connect( editor, SIGNAL(matchFound()), this, SIGNAL(matchFound()) );
+    connect( editor, SIGNAL(lineNotFound()), this, SIGNAL(lineNotFound()) );
+    connect( editor, SIGNAL(lineFound()), this, SIGNAL(lineFound()) );
+
+    // replace
+    editor->replaceAction().disconnect();
+    connect( &editor->replaceAction(), SIGNAL(triggered()), this, SLOT(replaceFromDialog()) );
+
     if( formatBar_ )
     {
         connect(
             editor, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
             formatBar_, SLOT(updateState(QTextCharFormat)) );
-    }
-
-    // create embedded widgets and insert in container
-    if( container_ )
-    {
-        editor->setUseEmbeddedWidgets( true );
-
-        editor->createFindWidget( true );
-        editor->findWidget().setParent( container_ );
-        container_->layout()->addWidget( &editor->findWidget() );
-        editor->findWidget().hide();
-
-        editor->createReplaceWidget( true );
-        editor->replaceWidget().setParent( container_ );
-        container_->layout()->addWidget( &editor->replaceWidget() );
-        editor->replaceWidget().hide();
-
-        editor->createSelectLineWidget( true );
-        editor->selectLineWidget().setParent( container_ );
-        container_->layout()->addWidget( &editor->selectLineWidget() );
-        editor->selectLineWidget().hide();
-
     }
 
     // associate display to this editFrame
@@ -1530,12 +1677,12 @@ void EditionWindow::_cloneWindow( void )
     MainWindow &mainWindow( _mainWindow() );
 
     // create new EditionWindow
-    EditionWindow *edition_window( new EditionWindow( &mainWindow ) );
-    Base::Key::associate( edition_window, &mainWindow );
-    edition_window->displayEntry( entry );
+    EditionWindow *editionWindow( new EditionWindow( &mainWindow ) );
+    Base::Key::associate( editionWindow, &mainWindow );
+    editionWindow->displayEntry( entry );
 
     // raise EditionWindow
-    edition_window->show();
+    editionWindow->show();
 
     return;
 }
@@ -1556,6 +1703,9 @@ void EditionWindow::_unlock( void )
 
 }
 
+//_____________________________________________
+void EditionWindow::_updateReplaceInSelection( void )
+{ if( replaceWidget_ ) replaceWidget_->enableReplaceInSelection( activeEditor().hasSelection() ); }
 
 //_____________________________________________
 void EditionWindow::_updateReadOnlyActions( void )
