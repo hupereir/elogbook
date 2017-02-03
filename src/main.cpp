@@ -20,6 +20,7 @@
 #include "Application.h"
 #include "Debug.h"
 #include "DefaultOptions.h"
+#include "ResourceMigration.h"
 #include "SystemOptions.h"
 #include "Singleton.h"
 #include "XmlFileRecord.h"
@@ -35,7 +36,14 @@ int main (int argc, char *argv[])
     // options
     installDefaultOptions();
     installSystemOptions();
-    XmlOptions::setFile( XmlOptions::get().raw( "RC_FILE" ) );
+
+    // migrate old rc files
+    File oldRCFile( XmlOptions::get().raw( "OLD_RC_FILE" ) );
+    File rcFile( XmlOptions::get().raw( "RC_FILE" ) );
+    ResourceMigration( oldRCFile ).migrate( rcFile );
+
+    // assign and read
+    XmlOptions::setFile( rcFile );
     XmlOptions::read();
 
     // debug level

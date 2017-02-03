@@ -20,8 +20,9 @@
 #include "Debug.h"
 #include "DefaultOptions.h"
 #include "Logbook.h"
-#include "XmlOptions.h"
+#include "ResourceMigration.h"
 #include "Util.h"
+#include "XmlOptions.h"
 
 #include <QCoreApplication>
 #include <QString>
@@ -63,8 +64,13 @@ int main (int argc, char *argv[])
     installDefaultOptions();
 
     // user options
-    const QString rcfile( Util::env( "HOME", "." ) + "/.eLogbookrc" );
-    XmlOptions::setFile( rcfile );
+    // migrate old rc files
+    File oldRCFile( XmlOptions::get().raw( "OLD_RC_FILE" ) );
+    File rcFile( XmlOptions::get().raw( "RC_FILE" ) );
+    ResourceMigration( oldRCFile ).migrate( rcFile );
+
+    // assign and read
+    XmlOptions::setFile( rcFile );
     XmlOptions::read();
 
     // force debug level to 0

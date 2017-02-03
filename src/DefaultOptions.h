@@ -22,14 +22,13 @@
 
 #include "LogEntryModel.h"
 #include "AttachmentModel.h"
-#include "XmlOptions.h"
 #include "Color.h"
 #include "File.h"
-#include "Util.h"
-
 #include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryPrintSelectionWidget.h"
+#include "Util.h"
+#include "XmlOptions.h"
 
 #include <QString>
 
@@ -131,7 +130,11 @@ void installDefaultOptions( void )
     QString user( Util::user( ) );
     QString host( Util::host() );
     XmlOptions::get().set( "USER", Option( user+"@"+host, Option::None ) );
-    XmlOptions::get().set( "RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::None ) );
+
+    // resource file
+    XmlOptions::get().set( "OLD_RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::None ) );
+    XmlOptions::get().set( "RC_FILE", Option(  File("elogbookrc").addPath(Util::config()), Option::None ) );
+
     XmlOptions::get().setAutoDefault( false );
 
 };
