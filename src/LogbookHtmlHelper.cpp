@@ -207,7 +207,7 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
         appendChild( document.createTextNode( tr( "Last Modified" ) ) );
 
     // loop over entries
-    foreach( LogEntry* entry, entries_ )
+    for( auto entry:entries_ )
     {
         QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
 
@@ -256,7 +256,7 @@ void LogbookHtmlHelper::_appendEntries( QDomDocument& document, QDomElement& par
     if( !( mask_ & Logbook::ContentMask ) ) return;
 
     LogEntryHtmlHelper helper;
-    foreach( LogEntry* entry, entries_ )
+    for( auto entry:entries_ )
     {
 
         helper.setEntry( entry );
