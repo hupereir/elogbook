@@ -168,7 +168,7 @@ void Menu::_updateRecentEntriesMenu( void )
     MainWindow &mainWindow( Singleton::get().application<Application>()->mainWindow() );
     if( !mainWindow.logbook() ) return;
 
-    foreach( LogEntry* entry, mainWindow.logbook()->recentEntries() )
+    for( auto entry:mainWindow.logbook()->recentEntries() )
     {
         QAction* action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title() ).arg( entry->keyword().get() ) );
         actions_.insert( action, entry );
@@ -213,7 +213,7 @@ void Menu::_updateEditorMenu( void )
     {
 
         windowsMenu_->addSeparator();
-        foreach( EditionWindow* window, windows )
+        for( auto window:windows )
         {
 
             // ignore if frame is to be deleted

@@ -421,7 +421,7 @@ AskForSaveDialog::ReturnCode EditionWindow::askForSave( bool enableCancel )
         */
         if( _mainWindow().logbook()->file().isEmpty() )
         {
-            foreach( EditionWindow* window, editionwindows )
+            for( auto window:editionwindows )
             { if( window->modified() && !window->isReadOnly() ) window->_save(enableCancel); }
         } else _mainWindow().save( false );
     }
@@ -598,7 +598,7 @@ void EditionWindow::setActiveEditor( TextEditor& editor )
     if( !activeEditor_->isActive() )
     {
 
-        foreach( auto editor, Base::KeySet<TextEditor>( this ) )
+        for( auto editor:Base::KeySet<TextEditor>( this ) )
         { editor->setActive( false ); }
 
         activeEditor_->setActive( true );
@@ -956,7 +956,7 @@ Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orie
 
     // perform associations
     // check if active editors has associates and propagate to new
-    foreach( auto iter, editors )
+    for( auto iter:editors )
     { Base::Key::associate( &editor, iter ); }
 
     // associate new display to active
@@ -1233,8 +1233,7 @@ void EditionWindow::_save( bool updateSelection )
     updateWindowTitle();
 
     // update associated EditionWindows
-    Base::KeySet<EditionWindow> windows( entry );
-    foreach( EditionWindow* window, windows )
+    for( auto window:Base::KeySet<EditionWindow> ( entry ) )
     {
         Q_ASSERT( window == this || window->isReadOnly() || window->isClosed() );
         if( window != this ) window->displayEntry( entry );
@@ -1245,8 +1244,7 @@ void EditionWindow::_save( bool updateSelection )
     mainWindow.updateWindowTitle();
 
     // set logbook as modified
-    Base::KeySet<Logbook> logbooks( entry );
-    foreach( Logbook* logbook, logbooks )
+    for( auto logbook:Base::KeySet<Logbook>( entry ) )
     { logbook->setModified( true ); }
 
     // add to main logbook recent entries
@@ -1718,7 +1716,7 @@ void EditionWindow::_updateReadOnlyActions( void )
     const bool readOnly( readOnly_ || logbookReadOnly );
 
     // changes button state
-    foreach( QAction* action, readOnlyActions_ )
+    for( auto action:readOnlyActions_ )
     { action->setEnabled( !readOnly ); }
 
     // changes lock button state
@@ -1736,7 +1734,7 @@ void EditionWindow::_updateReadOnlyActions( void )
     titleEditor_->setReadOnly( readOnly );
 
     // update editors
-    foreach( auto editor, Base::KeySet<Private::LocalTextEditor>( this ) )
+    for( auto editor:Base::KeySet<Private::LocalTextEditor>( this ) )
     { editor->setReadOnly( readOnly ); }
 
     // changes attachment list status
@@ -1813,7 +1811,7 @@ void EditionWindow::_updateInsertLinkActions( void )
 
     // also disable editors action
     Base::KeySet<Private::LocalTextEditor> editors( this );
-    foreach( auto editor, editors )
+    for( auto editor:editors )
     { editor->insertLinkAction().setEnabled( enabled ); }
 
 }

@@ -273,7 +273,7 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
         appendChild( document.createTextNode( tr( "Comments" ) ) );
 
     // attachments
-    foreach( Attachment* attachment, attachments )
+    for( auto attachment:attachments )
     {
 
         // file

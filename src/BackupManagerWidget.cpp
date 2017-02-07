@@ -153,7 +153,7 @@ void BackupManagerWidget::_remove( void )
     else {
 
         Backup::List backups;
-        foreach( const QModelIndex& index, selectedIndexes )
+        for( auto index:selectedIndexes )
         { backups.append( model_.get( index ) ); }
 
         emit removeBackupsRequested( backups );

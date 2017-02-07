@@ -324,7 +324,7 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     helper.setSheetNumber( sheetNumber() );
 
     connect( &helper, SIGNAL(pageCountChanged(int)), this, SIGNAL(pageCountChanged(int)) );
-    foreach( LogEntry* entry, entries_ )
+    for( auto entry:entries_ )
     {
 
         helper.setEntry( entry );

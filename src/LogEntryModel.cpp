@@ -310,7 +310,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     // retrieve associated entry
     QString buffer;
     QTextStream what( &buffer );
-    foreach( const QModelIndex& index, indexes )
+    for( auto index:indexes )
     {
         if( !( index.isValid() && index.column() == Title ) ) continue;
         LogEntry* entry( get( index ) );

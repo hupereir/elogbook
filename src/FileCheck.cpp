@@ -52,7 +52,7 @@ void FileCheck::registerLogbook( Logbook* logbook )
     }
 
     // loop over children and register
-    foreach( Logbook* iter, logbook->children() )
+    for( auto iter:logbook->children() )
     {
         if( !iter->file().isEmpty() )
         {

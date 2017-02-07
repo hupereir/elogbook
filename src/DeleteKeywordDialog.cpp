@@ -42,7 +42,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
         buffer = QString( tr( "Delete following keywords ?\n  " ) );
         unsigned int max_keywords = 10;
         unsigned int index(0);
-        foreach( const Keyword& keyword, keywords )
+        for( auto keyword:keywords )
         {
             buffer += keyword.get() + " ";
             index++;

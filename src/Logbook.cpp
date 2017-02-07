@@ -61,12 +61,12 @@ Logbook::~Logbook( void )
     Debug::Throw( "Logbook::~Logbook.\n" );
 
     // delete log children
-    foreach( Logbook* logbook, children_ ) delete logbook;
+    for( auto logbook:children_ ) delete logbook;
     children_.clear();
 
     // delete associated entries
     Base::KeySet<LogEntry> entries( this );
-    foreach( LogEntry* entry, entries ) delete entry;
+    for( auto entry:entries ) delete entry;
 
 }
 
@@ -92,7 +92,7 @@ bool Logbook::read( void )
     }
 
     // delete associated entries
-    foreach( LogEntry* entry, Logbook::entries() )
+    for( auto entry:this->entries() )
     { delete entry; }
 
     // parse the file
@@ -293,14 +293,14 @@ bool Logbook::write( File file )
         if( !recentEntries_.empty() ) top.appendChild( _recentEntriesElement( document ) );
 
         // write backup files
-        foreach( const Backup& backup, backupFiles_ )
+        for( auto backup:backupFiles_ )
         { top.appendChild( backup.domElement( document ) ); }
 
         // write all entries
         static unsigned int progress( 10 );
         unsigned int entryCount( 0 );
         Base::KeySet<LogEntry> entries( this );
-        foreach( LogEntry* entry, entries )
+        for( auto entry:entries )
         {
 
             top.appendChild( entry->domElement( document ) );
@@ -342,7 +342,7 @@ bool Logbook::write( File file )
 
     // write children
     unsigned int childCount=0;
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     {
 
         File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
@@ -374,7 +374,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     QHash< LogEntry*, LogEntry* > duplicates;
 
     // merge new entries into current entries
-    foreach( LogEntry* entry, newEntries )
+    for( auto entry:newEntries )
     {
 
         // check if there is an entry with matching creation and modification time
@@ -403,8 +403,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
         {
             // set logbooks as modified
             // and disassociate with entry
-            Base::KeySet<Logbook> logbooks( *duplicate );
-            foreach( Logbook* logbook, logbooks )
+            for( auto logbook:Base::KeySet<Logbook>( *duplicate ) )
             {
                 logbook->setModified( true );
                 Base::Key::disassociate( logbook, *duplicate );
@@ -430,7 +429,7 @@ XmlError::List Logbook::xmlErrors( void ) const
     Debug::Throw( "Logbook::xmlErrors.\n" );
     XmlError::List out;
     if( error_ ) out.append( error_ );
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     { out <<  logbook->xmlErrors(); }
 
     return out;
@@ -440,7 +439,7 @@ XmlError::List Logbook::xmlErrors( void ) const
 Logbook::List Logbook::children( void ) const
 {
     List out;
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     {
         out << logbook;
         List children( logbook->children() );
@@ -463,7 +462,7 @@ Logbook* Logbook::latestChild( void )
     if( Base::KeySet<LogEntry>(this).size() < MaxEntries ) dest = this;
 
     // check if one existsing child is not complete
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     {
         if( logbook && Base::KeySet<LogEntry>(logbook).size() < MaxEntries )
         {
@@ -504,7 +503,8 @@ Base::KeySet<LogEntry> Logbook::entries( void ) const
 {
 
     Base::KeySet<LogEntry> out( this );
-    foreach( Logbook* logbook, children_ ) out.merge( logbook->entries() );
+    for( auto logbook:children_ )
+    { out.merge( logbook->entries() ); }
     return out;
 
 }
@@ -516,11 +516,12 @@ Base::KeySet<Attachment> Logbook::attachments( void ) const
     Base::KeySet<Attachment> out;
 
     // loop over associated entries, add entries associated attachments
-    Base::KeySet<LogEntry> entries( this );
-    foreach( LogEntry* entry, entries ) out.merge( Base::KeySet<Attachment>(entry) );
+    for( auto entry:Base::KeySet<LogEntry>( this ) )
+    { out.merge( Base::KeySet<Attachment>(entry) ); }
 
     // loop over children, add associated attachments
-    foreach( Logbook* logbook, children_ ) out.merge( logbook->attachments() );
+    for( auto logbook:children_ )
+    { out.merge( logbook->attachments() ); }
 
     return out;
 
@@ -543,7 +544,7 @@ void Logbook::removeEmptyChildren( void )
 
     // loop over children
     List tmp;
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     {
         logbook->removeEmptyChildren();
         if( logbook->empty() )
@@ -568,8 +569,8 @@ QList<LogEntry*> Logbook::recentEntries( void ) const
     QList<LogEntry*> out;
     if( recentEntries_.empty() ) return out;
 
-    Base::KeySet<LogEntry> entries( Logbook::entries() );
-    foreach( const TimeStamp& timeStamp, recentEntries_ )
+    Base::KeySet<LogEntry> entries( this->entries() );
+    for( auto timeStamp:recentEntries_ )
     {
         Base::KeySet<LogEntry>::const_iterator entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( timeStamp ) ) );
         if( entryIter != entries.end() ) out << *entryIter;
@@ -612,7 +613,7 @@ void Logbook::setFile( const File& file, bool recursive )
 
         // write children
         unsigned int childCount=0;
-        foreach( Logbook* logbook, children_ )
+        for( auto logbook:children_ )
         {
             File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
             logbook->setParentFile( file );
@@ -672,7 +673,7 @@ bool Logbook::setReadOnly( bool value )
     }
 
     // also change permission on children
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     { changed |= logbook->setReadOnly( value ); }
 
     return changed;
@@ -694,7 +695,7 @@ bool Logbook::setIsBackup( bool value )
     }
 
     // also change permission on children
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     { changed |= logbook->setIsBackup( value ); }
 
     return changed;
@@ -715,7 +716,7 @@ void Logbook::setModifiedRecursive( bool value )
     Debug::Throw( "Logbook::SetModifiedRecursive.\n" );
     modified_ = value;
     if( value ) setModification( TimeStamp::now() );
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     { logbook->setModifiedRecursive( value ); }
 
 }
@@ -734,7 +735,7 @@ bool Logbook::modified( void ) const
 
     if( modified_ ) return true;
 
-    foreach( Logbook* logbook, children_ )
+    for( auto logbook:children_ )
     { if( logbook->modified() ) return true; }
 
     return false;
@@ -854,7 +855,7 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
     Debug::Throw( "Logbook::_recentEntriesElement.\n" );
 
     QDomElement out( document.createElement( Xml::RecentEntries ) );
-    foreach( const TimeStamp& timeStamp, recentEntries_ )
+    for( auto timeStamp:recentEntries_ )
     { out.appendChild( XmlTimeStamp( timeStamp ).domElement( Xml::Creation, document ) ); }
 
     return out;

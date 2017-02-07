@@ -112,7 +112,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     // retrieve applications from options
     const QString optionName = "OPEN_ATTACHMENT_APPLICATIONS";
     const auto applications( XmlOptions::get().specialOptions( optionName ) );
-    foreach( auto option, applications )
+    for( auto option:applications )
     { comboBox_->addItem( File( option.raw() ) ); }
 
     // sytem default
@@ -178,7 +178,7 @@ void OpenAttachmentDialog::_saveCommands( void )
 {
 
     const QString optionName = "OPEN_ATTACHMENT_APPLICATIONS";
-    foreach( auto command, comboBox_->newItems() )
+    for( auto command:comboBox_->newItems() )
     { XmlOptions::get().add( optionName, Option( command, Option::Recordable|Option::Current ) ); }
 
 }
