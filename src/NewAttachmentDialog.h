@@ -41,9 +41,6 @@ class NewAttachmentDialog: public CustomDialog
     //* constructor
     NewAttachmentDialog( QWidget* );
 
-    //* destuctor
-    virtual ~NewAttachmentDialog( void ) = default;
-
     //*@name accessors
     //@{
 

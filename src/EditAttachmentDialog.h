@@ -35,9 +35,6 @@ class EditAttachmentDialog: public CustomDialog
     //* constructor
     EditAttachmentDialog( QWidget*, const Attachment& );
 
-    //* destructor
-    virtual ~EditAttachmentDialog( void ) = default;
-
     //* get comments
     QString comments( void ) const;
 
