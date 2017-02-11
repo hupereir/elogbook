@@ -92,7 +92,7 @@ LogEntry::~LogEntry( void )
 {
 
     // delete associated attachments
-    for( auto attachment:Base::KeySet<Attachment>( this ) )
+    for( const auto& attachment:Base::KeySet<Attachment>( this ) )
     { delete attachment; }
 
 }
@@ -125,14 +125,14 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
     }
 
     // dump text format
-    for( auto format:formats() )
+    for( const auto& format:formats() )
     {
         if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != Format::Default ) )
         { out.appendChild( Format::XmlTextFormatBlock( format ).domElement( parent ) ); }
      }
 
     // dump attachments
-    for( auto attachment:Base::KeySet<Attachment>( this ) )
+    for( const auto& attachment:Base::KeySet<Attachment>( this ) )
     { out.appendChild( attachment->domElement( parent ) ); }
 
     return out;
@@ -150,7 +150,7 @@ LogEntry* LogEntry::clone( void ) const
     out->clearAssociations();
 
     // copy all Attachments
-    for( auto attachment:Base::KeySet<Attachment>( this ) )
+    for( const auto& attachment:Base::KeySet<Attachment>( this ) )
     {
 
         // copy attachment, associate to entry
@@ -189,7 +189,7 @@ bool LogEntry::matchAttachment( const QString& buffer ) const
     Debug::Throw( "LogEntry::matchAttachment.\n" );
 
     // retrieve associated attachments
-    for( auto attachment:Base::KeySet<Attachment>( this ) )
+    for( const auto& attachment:Base::KeySet<Attachment>( this ) )
     {
         if( attachment->file().contains( buffer, _caseSensitive() ) )
         { return true; }

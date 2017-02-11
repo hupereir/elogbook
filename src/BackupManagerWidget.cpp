@@ -153,7 +153,7 @@ void BackupManagerWidget::_remove( void )
     else {
 
         Backup::List backups;
-        for( auto index:selectedIndexes )
+        for( const auto& index:selectedIndexes )
         { backups.append( model_.get( index ) ); }
 
         emit removeBackupsRequested( backups );

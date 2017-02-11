@@ -100,12 +100,12 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     QMimeData *mime = new QMimeData();
 
     // add keywords mimetype
-    for( auto index:indexes )
+    for( const auto& index:indexes )
     { if( index.isValid() ) mime->setData( Keyword::MimeType, qPrintable( get( index ).get() ) ); }
 
     // add plain text mimetype
     QString buffer;
-    for( auto index:indexes )
+    for( const auto& index:indexes )
     {
         if( !index.isValid() ) continue;
         buffer += get(index).get();

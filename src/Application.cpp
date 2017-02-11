@@ -164,7 +164,7 @@ void Application::_exit( void )
     {
         // check if editable EditionWindows needs save
         Base::KeySet<EditionWindow> windows( mainWindow_ );
-        for( auto window:windows )
+        for( const auto& window:windows )
         {
             if( !( window->isReadOnly() || window->isClosed() ) && window->modified() && window->askForSave() == AskForSaveDialog::Cancel )
             { return; }

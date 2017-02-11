@@ -161,7 +161,7 @@ void FormatBar::load( const Format::TextFormatBlock::List& formatList ) const
 
     QTextCursor cursor( editor_->document() );
     cursor.beginEditBlock();
-    for( auto block:formatList )
+    for( const auto& block:formatList )
     {
 
         // define cursor
@@ -264,7 +264,7 @@ void FormatBar::_updateConfiguration( void )
             << "black";
 
         XmlOptions::get().keep( "TEXT_COLOR" );
-        for( auto color:defaultColors )
+        for( const auto& color:defaultColors )
         {
             XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( color ) );
             colorMenu_->add( color );
@@ -272,7 +272,7 @@ void FormatBar::_updateConfiguration( void )
 
     } else {
 
-        for( auto color:colors )
+        for( const auto& color:colors )
         { colorMenu_->add( color.get<Base::Color>() ); }
 
     }
@@ -286,7 +286,7 @@ void FormatBar::_saveConfiguration( void )
     XmlOptions::get().keep( "TEXT_COLOR" );
 
     const Base::Color::Set colors( colorMenu_->colors() );
-    for( auto color:colors )
+    for( const auto& color:colors )
     { XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( color ) ); }
 
     return;

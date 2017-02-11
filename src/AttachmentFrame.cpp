@@ -111,7 +111,7 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
 {
 
     Debug::Throw( "AttachmentFrame::add.\n" );
-    for( auto attachment:attachments )
+    for( const auto& attachment:attachments )
     { Base::Key::associate( this, attachment ); }
 
     model_.add( attachments );
@@ -259,7 +259,7 @@ void AttachmentFrame::_new( void )
 
         // update all windows edition windows associated to entry
         windows = Base::KeySet<EditionWindow>( entry );
-        for( auto window:windows )
+        for( const auto& window:windows )
         {
 
             window->attachmentFrame().visibilityAction_->setChecked( true );
@@ -271,7 +271,7 @@ void AttachmentFrame::_new( void )
         Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
 
         // update logbooks destination directory
-        for( auto logbook:logbooks )
+        for( const auto& logbook:logbooks )
         {
             logbook->setModified( true );
             logbook->setDirectory( fullDirectory );
@@ -303,7 +303,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
 
     // retrieve all attachments from model
     AttachmentModel::List attachments( model_.get() );
-    for( auto attachment:attachments )
+    for( const auto& attachment:attachments )
     {
 
         if( attachment->isUrl() ) continue;
@@ -333,7 +333,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
     // retrieve all attachments from model
     // true if some modifications are to be saved
     bool modified( false );
-    for( auto attachment:model_.get() )
+    for( const auto& attachment:model_.get() )
     {
 
         if( attachment->isUrl() ) continue;
@@ -378,7 +378,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
 
             // get associated logbooks
             Base::KeySet<Logbook> logbooks( &entry );
-            for( auto logbook:logbooks ) logbook->setModified( true );
+            for( const auto& logbook:logbooks ) logbook->setModified( true );
 
             modified = true;
 
@@ -447,7 +447,7 @@ void AttachmentFrame::_open( void )
 
     // loop over attachments
     AttachmentModel::List modifiedAttachments;
-    for( auto attachment:selection )
+    for( const auto& attachment:selection )
     {
 
         if( attachment->updateTimeStamps() ) modifiedAttachments << attachment;
@@ -528,7 +528,7 @@ void AttachmentFrame::_edit( void )
 
     // loop over attachments
     AttachmentModel::List modifiedAttachments;
-    for( auto attachment:selection )
+    for( const auto& attachment:selection )
     {
 
         // update time stamps
@@ -581,7 +581,7 @@ void AttachmentFrame::_delete( void )
 
     // loop over attachments
     bool logbookChanged( false );
-    for( auto attachment:selection )
+    for( const auto& attachment:selection )
     {
 
         // dialog
@@ -596,7 +596,7 @@ void AttachmentFrame::_delete( void )
 
             // retrieve associated attachment frames and remove item
             Base::KeySet<AttachmentFrame> frames( attachment );
-            for( auto frame:frames )
+            for( const auto& frame:frames )
             { frame->model_.remove( attachment ); }
 
             // retrieve associated entries
@@ -665,7 +665,7 @@ void AttachmentFrame::_reload( void )
 
     // loop over attachments
     AttachmentModel::List modifiedAttachments;
-    for( auto attachment:selection )
+    for( const auto& attachment:selection )
     { if( attachment->updateTimeStamps() ) modifiedAttachments << attachment; }
 
     _saveAttachments( modifiedAttachments );
@@ -688,7 +688,7 @@ void AttachmentFrame::_saveAs( void )
     }
 
     // loop over attachments
-    for( auto attachment:selection )
+    for( const auto& attachment:selection )
     {
 
         const bool isUrl( attachment->isUrl() );
@@ -738,7 +738,7 @@ void AttachmentFrame::_clean( void )
     // retrieve all attachments from model
     // true if some modifications are to be saved
     bool modified( false );
-    for( auto attachment:model_.get() )
+    for( const auto& attachment:model_.get() )
     {
 
         // skip attachment if valid
@@ -748,7 +748,7 @@ void AttachmentFrame::_clean( void )
 
         // retrieve associated attachment frames and remove item
         Base::KeySet<AttachmentFrame> frames( attachment );
-        for( auto frame:frames )
+        for( const auto& frame:frames )
         { frame->model_.remove( attachment ); }
 
         // retrieve associated entries
@@ -759,7 +759,7 @@ void AttachmentFrame::_clean( void )
 
         // retrieve associated logbooks
         Base::KeySet<Logbook> logbooks( &entry );
-        for( auto logbook:logbooks )
+        for( const auto& logbook:logbooks )
         { logbook->setModified( true ); }
 
         // delete attachment
@@ -843,7 +843,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     Base::KeySet<LogEntry> entries;
 
     // loop over attachments
-    for( auto attachment:attachments )
+    for( const auto& attachment:attachments )
     {
 
         // get associated entries and store
@@ -852,7 +852,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
 
         // get associated attachment frames and store
         Base::KeySet<AttachmentFrame> localFrames( attachment );
-        for( auto frame:localFrames )
+        for( const auto& frame:localFrames )
         { frame->update( *attachment ); }
 
         Debug::Throw( "AttachmentFrame::_saveAttachments - frames.\n" );
@@ -863,7 +863,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     Base::KeySet<EditionWindow> editionWindows;
 
     // loop over entries
-    for( auto entry:entries )
+    for( const auto& entry:entries )
     {
 
         // get associated logbooks and store
@@ -878,11 +878,11 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     }
 
     // loop over logbook and set modified
-    for( auto logbook:logbooks )
+    for( const auto& logbook:logbooks )
     { logbook->setModified( true ); }
 
     // loop over edition windows and trigger save action
-    for( auto window:editionWindows )
+    for( const auto& window:editionWindows )
     { window->saveAction().trigger(); }
 
     MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );

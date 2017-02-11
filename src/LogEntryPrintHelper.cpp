@@ -184,7 +184,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     QTextCursor cursor( &document );
     cursor.beginEditBlock();
 
-    for( auto format:entry_->formats() )
+    for( const auto& format:entry_->formats() )
     {
 
         // define cursor
@@ -328,7 +328,7 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     row++;
 
     // loop over attachments
-    for( auto attachment:attachments )
+    for( const auto& attachment:attachments )
     {
         table->cellAt( row, 0 ).firstCursorPosition().insertText( attachment->file() );
         table->cellAt( row, 1 ).firstCursorPosition().insertText( attachment->comments() );
