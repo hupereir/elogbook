@@ -101,6 +101,11 @@ class Application: public BaseApplication, public Counter
     //* process request from application manager
     virtual bool _processCommand( Server::ServerCommand );
 
+    private Q_SLOTS:
+
+    //* update configuration
+    void _updateConfiguration( void );
+
     private:
 
     //* recent files

@@ -58,8 +58,8 @@ bool Application::initApplicationManager( void )
     // retrieve files from arguments and expand if needed
     CommandLineParser parser( commandLineParser( _arguments() ) );
     QStringList& orphans( parser.orphans() );
-    for( QStringList::iterator iter = orphans.begin(); iter != orphans.end(); ++iter )
-    { if( !iter->isEmpty() ) (*iter) = File( *iter ).expand(); }
+    for( auto& file:orphans )
+    { if( !file.isEmpty() ) file = File( file ).expand(); }
 
     // replace arguments
     _setArguments( parser.arguments() );
@@ -94,6 +94,7 @@ bool Application::realizeWidget( void )
     connect( &attachmentWindow(), SIGNAL(entrySelected(LogEntry*)), mainWindow_, SLOT(selectEntry(LogEntry*)) );
 
     // update configuration
+    connect( this, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     emit configurationChanged();
 
     mainWindow_->centerOnDesktop();
@@ -151,6 +152,14 @@ void Application::_configuration( void )
     dialog.centerOnWidget( qApp->activeWindow() );
     dialog.exec();
 
+}
+
+//_________________________________________________
+void Application::_updateConfiguration( void )
+{
+    Debug::Throw( "Application::_updateConfiguration.\n" );
+    static_cast<XmlFileList*>(recentFiles_)->setDBFile( File( XmlOptions::get().raw( "RC_FILE" ) ) );
+    recentFiles_->setMaxSize( XmlOptions::get().get<int>( "DB_SIZE" ) );
 }
 
 //_________________________________________________
