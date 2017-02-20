@@ -215,7 +215,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnlyActions_ << insertLinkAction_;
 
     const FormatBar::ActionMap& actions( formatBar_->actions() );
-    for( FormatBar::ActionMap::const_iterator iter = actions.begin(); iter != actions.end(); ++iter )
+    for( auto&& iter = actions.begin(); iter != actions.end(); ++iter )
     { readOnlyActions_ << iter.value(); }
 
     // set proper connection for first editor
@@ -1531,7 +1531,7 @@ void EditionWindow::_editLink( void )
     QTextBlock block( cursor.block() );
 
     // loop over text fragments and find the one that matches cursor
-    for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+    for( auto&& it = block.begin(); !(it.atEnd()); ++it)
     {
         QTextFragment fragment = it.fragment();
         if( !fragment.isValid() ) continue;
@@ -1562,7 +1562,7 @@ void EditionWindow::_removeLink( void )
     QTextBlock block( cursor.block() );
 
     // loop over text fragments and find the one that matches cursor
-    for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+    for( auto&& it = block.begin(); !(it.atEnd()); ++it)
     {
         QTextFragment fragment = it.fragment();
         if( !fragment.isValid() ) continue;

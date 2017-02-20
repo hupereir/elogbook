@@ -211,7 +211,7 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
     const QFontMetrics metrics( font, printer );
     const QRect pageRect( _pageRect() );
 
-    LogEntryModel::List::const_iterator iter = entries_.begin();
+    auto&& iter = entries_.begin();
     while( iter != entries_.end() )
     {
 

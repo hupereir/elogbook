@@ -43,7 +43,7 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
     radioButtons_.insert( SelectedEntries, new QRadioButton( tr( "Selected entries" ), this ) );
 
     // insert in layout
-    for( RadioButtonMap::const_iterator iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
+    for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     {
         layout->addWidget( iter.value() );
         group->addButton( iter.value() );
@@ -60,7 +60,7 @@ void LogEntryPrintSelectionWidget::read( const Options& options )
 {
 
     unsigned int mode( options.get<unsigned int>( optionName() ) );
-    for( RadioButtonMap::const_iterator iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
+    for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { iter.value()->setChecked( iter.key() == mode ); }
 
     _setConnected();
@@ -74,7 +74,7 @@ void LogEntryPrintSelectionWidget::write( Options& options ) const
 //_________________________________________________________________
 LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode( void ) const
 {
-    for( RadioButtonMap::const_iterator iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
+    for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { if( iter.value()->isChecked() ) return iter.key(); }
 
     return AllEntries;

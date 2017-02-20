@@ -48,7 +48,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     checkBoxes_.insert( Logbook::ContentMask, new QCheckBox( tr( "Selected logbook entries" ), this ) );
 
     // insert in layout
-    for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
+    for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     {
         connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_updateMask()) );
         layout->addWidget( iter.value() );
@@ -63,7 +63,7 @@ void LogbookPrintOptionWidget::read( const Options& options )
 {
 
     unsigned int mask( options.get<unsigned int>( optionName() ) );
-    for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
+    for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { iter.value()->setChecked( mask&iter.key() ); }
 
     _setConnected();
@@ -78,7 +78,7 @@ void LogbookPrintOptionWidget::write( Options& options ) const
 Logbook::Mask LogbookPrintOptionWidget::mask( void ) const
 {
     Logbook::Mask out(0);
-    for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
+    for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { if( iter.value()->isChecked() ) out |= iter.key(); }
 
     return out;

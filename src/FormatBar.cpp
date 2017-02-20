@@ -204,7 +204,7 @@ Format::TextFormatBlock::List FormatBar::get( void ) const
     {
 
         // iterator over text fragments
-        for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+        for( auto&& it = block.begin(); !(it.atEnd()); ++it)
         {
             QTextFragment fragment = it.fragment();
             if( !fragment.isValid() ) continue;

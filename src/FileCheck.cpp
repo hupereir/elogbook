@@ -140,7 +140,7 @@ void FileCheck::_fileChanged( const QString& file )
 
     // find associated display with matching file
     Base::KeySet<Logbook> logbooks( this );
-    Base::KeySet<Logbook>::iterator iter( std::find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
+    auto&& iter( std::find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
     if( iter != logbooks.end() )
     {
 

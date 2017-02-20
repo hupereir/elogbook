@@ -121,7 +121,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
 
     checkboxes_[Text]->setChecked( true );
 
-    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
+    for( auto&& iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
     { connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_saveMask()) ); }
 
     // configuration
@@ -184,7 +184,7 @@ void SearchWidget::_updateConfiguration( void )
     if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
     {
         unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
-        for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+        for( auto&& iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
         { iter.value()->setChecked( mask & iter.key() ); }
     }
 
@@ -198,7 +198,7 @@ void SearchWidget::_saveMask( void )
 
     // store mask
     unsigned int mask(0);
-    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+    for( auto&& iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { if( iter.value()->isChecked() ) mask |= iter.key(); }
 
     XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
@@ -212,7 +212,7 @@ void SearchWidget::_selectionRequest( void )
 
     // build mode
     SearchModes mode = None;
-    for( CheckBoxMap::iterator iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
+    for( auto&& iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { if( iter.value()->isChecked() ) mode |= iter.key(); }
 
     // text selection

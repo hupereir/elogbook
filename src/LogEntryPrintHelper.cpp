@@ -215,7 +215,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
     const int leading( metrics.leading() );
 
     // get list of blocks from document
-    for( QTextBlock block( document.begin() ); block.isValid(); block = block.next() )
+    for( auto&& block = document.begin(); block.isValid(); block = block.next() )
     {
 
         // construct text layout
@@ -239,7 +239,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
         QList<QTextLayout::FormatRange> formatRanges;
 
         // iterator over text fragments
-        for( QTextBlock::iterator it = block.begin(); !(it.atEnd()); ++it)
+        for( auto&& it = block.begin(); !(it.atEnd()); ++it)
         {
             QTextFragment fragment = it.fragment();
             if( !fragment.isValid() ) continue;

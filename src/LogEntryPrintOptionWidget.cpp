@@ -45,7 +45,7 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     checkBoxes_.insert( LogEntry::AttachmentsMask, new QCheckBox( tr( "Attachments" ), this ) );
 
     // insert in layout
-    for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
+    for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     {
         connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_updateMask()) );
         layout->addWidget( iter.value() );
@@ -60,7 +60,7 @@ void LogEntryPrintOptionWidget::read( const Options& options )
 {
 
     unsigned int mask( options.get<unsigned int>( optionName() ) );
-    for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
+    for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { iter.value()->setChecked( mask&iter.key() ); }
 
     _setConnected();
@@ -75,7 +75,7 @@ void LogEntryPrintOptionWidget::write( Options& options ) const
 LogEntry::Mask LogEntryPrintOptionWidget::mask( void ) const
 {
     LogEntry::Mask out(0);
-    for( CheckBoxMap::const_iterator iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
+    for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { if( iter.value()->isChecked() ) out |= iter.key(); }
 
     return out;
