@@ -40,7 +40,7 @@
 #include <QTextEdit>
 #include <QTextFragment>
 
-//* used for customized color button
+// used for customized color button
 class FormatColorButton: public CustomToolButton
 {
 
