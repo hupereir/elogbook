@@ -35,9 +35,9 @@ void installSystemOptions( void )
     XmlOptions::get().setAutoDefault( true );
 
     #ifdef USE_ASPELL
-    XmlOptions::get().set( "ASPELL", Option( "@ASPELL@", "aspell command" ) );
-    XmlOptions::get().set( "DICTIONARY", Option( "en" , "default dictionary"  ) );
-    XmlOptions::get().set( "DICTIONARY_FILTER", Option( "none" , "default filter"  ) );
+    XmlOptions::get().set( "ASPELL", "@ASPELL@" );
+    XmlOptions::get().set( "DICTIONARY", "en" );
+    XmlOptions::get().set( "DICTIONARY_FILTER", "none" );
     #endif
     XmlOptions::get().setAutoDefault( false );
 
