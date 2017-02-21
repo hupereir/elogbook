@@ -416,7 +416,7 @@ bool MainWindow::setLogbook( File file )
 
     // retrieve last modified entry
     Base::KeySet<LogEntry> entries( logbook_->entries() );
-    auto&& iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
@@ -1967,7 +1967,7 @@ void MainWindow::_synchronize( void )
 
     // retrieve last modified entry
     Base::KeySet<LogEntry> entries( logbook_->entries() );
-    auto&& iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
@@ -2032,7 +2032,7 @@ void MainWindow::_removeBackups( Backup::List backups )
 
         // clean logbook backups
         Backup::List backups( logbook_->backupFiles() );
-        auto&& iter = std::find( backups.begin(), backups.end(), backup );
+        auto iter = std::find( backups.begin(), backups.end(), backup );
         if( iter != backups.end() )
         {
             backups.erase( iter );
@@ -2200,7 +2200,7 @@ void MainWindow::_mergeBackup( Backup backup )
 
     // retrieve last modified entry
     Base::KeySet<LogEntry> entries( logbook_->entries() );
-    auto&& iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+    auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
 
@@ -2595,7 +2595,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
             if( editors.size() > 1 )
             {
 
-                auto&& localIter( editors.begin() );
+                auto localIter( editors.begin() );
                 ++localIter;
                 for( ;localIter != editors.end(); ++localIter )
                 { editionWindow->closeEditor( **localIter ); }

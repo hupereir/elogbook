@@ -378,7 +378,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
     {
 
         // check if there is an entry with matching creation and modification time
-        auto&& duplicate( std::find_if( currentEntries.begin(), currentEntries.end(), LogEntry::DuplicateFTor( entry ) ) );
+        auto duplicate( std::find_if( currentEntries.begin(), currentEntries.end(), LogEntry::DuplicateFTor( entry ) ) );
 
         // if duplicate entry found and modified more recently, skip the new entry
         if( duplicate != currentEntries.end() && (*duplicate)->modification() >= entry->modification() ) continue;
@@ -569,7 +569,7 @@ QList<LogEntry*> Logbook::recentEntries( void ) const
     Base::KeySet<LogEntry> entries( this->entries() );
     for( const auto& timeStamp:recentEntries_ )
     {
-        auto&& entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( timeStamp ) ) );
+        auto entryIter( std::find_if( entries.begin(), entries.end(), LogEntry::SameCreationFTor( timeStamp ) ) );
         if( entryIter != entries.end() ) out << *entryIter;
     }
 
