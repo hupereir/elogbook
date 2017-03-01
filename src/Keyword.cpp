@@ -39,7 +39,9 @@ Keyword::Keyword( QString value):
 Keyword::Keyword( const QDomElement& element ):
     Counter( "Keyword" ),
     value_( _format( XmlString( element.text() ) ) )
-{}
+{
+    Debug::Throw(0) << "Keyword::Keyword - value: " << value_ << " root: " << isRoot() << endl;
+}
 
 //_________________________________________________________________
 QDomElement Keyword::domElement( QDomDocument& document ) const
@@ -104,6 +106,9 @@ QString Keyword::_format( QString value ) const
 
     // make sure value is not empty
     if( value.isEmpty() ) return QString('/');
+
+    // keep "root" unchanged
+    if( value == "/" ) return value;
 
     QString out( value );
 
