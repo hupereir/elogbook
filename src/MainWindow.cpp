@@ -2516,22 +2516,21 @@ void MainWindow::_deleteEntries( void )
 
     // convert into LogEntry list
     LogEntryModel::List selection;
-    bool hasEditedIndex( false );
     for( const auto& index:selectedIndexes )
     {
         // check if index is not being edited
         if( entryModel_.editionEnabled() && index ==  entryModel_.editionIndex() )
         {
 
-            hasEditedIndex = true;
             InformationDialog( this, tr( "Software limitation: cannot delete an entry that is being edited. <Delete Entries> canceled." ) ).exec();
+            return;
 
         } else selection << entryModel_.get( index );
 
     }
 
     // check selection size
-    if( selection.empty() && !hasEditedIndex )
+    if( selection.empty() )
     {
         InformationDialog( this, tr( "No entry selected. <Delete Entries> canceled." ) ).exec();
         return;
@@ -2545,8 +2544,27 @@ void MainWindow::_deleteEntries( void )
     if( !dialog.exec() ) return;
 
     // retrieve associated entry
+    const auto currentKeyword( this->currentKeyword() );
     for( const auto& entry:selection )
-    { deleteEntry( entry, false ); }
+    {
+        if( treeModeAction_->isChecked() )
+        {
+
+            entry->removeKeyword( currentKeyword );
+            if( !entry->hasKeywords() ) deleteEntry( entry, false );
+            else {
+
+                // make sure entry is not selected any more
+                entry->setKeywordSelected( false );
+
+                // set associated logbooks as modified
+                for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
+                { logbook->setModified( true ); }
+
+            }
+
+        } else deleteEntry( entry, false );
+    }
 
     // Save logbook if needed
     if( !logbook_->file().isEmpty() ) save();
@@ -2781,8 +2799,7 @@ void MainWindow::_deleteKeyword( void )
 
     // create dialog
     DeleteKeywordDialog dialog( this, keywords, !associatedEntries.empty() );
-    if( !dialog.centerOnParent().exec() )
-    { return; }
+    if( !dialog.centerOnParent().exec() ) return;
 
     if( dialog.moveEntries() && associatedEntries.size() )
     {
@@ -2798,17 +2815,32 @@ void MainWindow::_deleteKeyword( void )
         for( const auto& entry:associatedEntries )
         {
             for( const auto& keyword:keywords )
-                for( const auto& entryKeyword:entry->keywords() )
             {
-                if( entryKeyword.inherits( keyword ) )
-                { entry->removeKeyword( entryKeyword ); }
+                auto entryKeywords( entry->keywords() );
+                for( const auto& entryKeyword:entryKeywords )
+                {
+                    if( entryKeyword.inherits( keyword ) )
+                    { entry->removeKeyword( entryKeyword ); }
+                }
+
             }
 
             if( !entry->hasKeywords() ) deleteEntry( entry, false );
+            else {
+
+                // make sure entry is not selected any more
+                // (this will be re-updated later, if needed when selecting updated keyword)
+                entry->setKeywordSelected( false );
+
+                // set associated logbooks as modified
+                for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
+                { logbook->setModified( true ); }
+
+            }
+
         }
 
     }
-
 
     // reset keywords
     _resetKeywordList();
@@ -2827,11 +2859,13 @@ void MainWindow::_deleteKeyword( void )
         {
             keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
             keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-            _resetLogEntryList();
             break;
         }
 
     }
+
+    // reset log entry list
+    _resetLogEntryList();
 
     // Save logbook
     if( !logbook_->file().isEmpty() ) save();
