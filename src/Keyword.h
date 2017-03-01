@@ -75,7 +75,7 @@ class Keyword: public Counter
 
     //* true if is root
     bool isRoot( void ) const
-    { return value_ == QString( '/' ); }
+    { return value_.isEmpty() || value_ == QString( '/' ); }
 
     //* current keyword
     QString current( void ) const;
