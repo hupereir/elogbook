@@ -109,13 +109,26 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     QDomElement row;
 
     // keyword
-    if( !entry_->keyword().get().isEmpty() && (mask_&LogEntry::KeywordMask) )
+    if( mask_&LogEntry::KeywordMask )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( tr( "Keyword:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry_->keyword().get() ) );
+        bool first( true );
+        for( const auto& keyword:entry_->keywords() )
+        {
+            row = table.appendChild( document.createElement( "tr" ) ).toElement();
+            row.appendChild( document.createElement( "td" ) );
+
+            if( first )
+            {
+
+                row.appendChild( document.createElement( "td" ) )
+                    .appendChild( document.createTextNode( tr( "Keyword:" ) ) );
+                first = false;
+
+            } else row.appendChild( document.createElement( "td" ) );
+
+            row.appendChild( document.createElement( "td" ) ).
+                appendChild( document.createTextNode( keyword.get() ) );
+        }
 
     }
 

@@ -568,7 +568,7 @@ void MainWindow::selectEntry( LogEntry* entry )
     if( !entry ) return;
 
     // select entry keyword
-    QModelIndex index = keywordModel_.index( entry->keyword() );
+    QModelIndex index = entry->hasKeywords() ? keywordModel_.index( *entry->keywords().begin() ):keywordModel_.index( Keyword::Default );
     keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     keywordList_->scrollTo( index );
@@ -587,13 +587,18 @@ void MainWindow::updateEntry( LogEntry* entry, bool updateSelection )
 
     Debug::Throw( "MainWindow::updateEntry.\n" );
 
-    // add entry into frame list or update existsing
-    if( entry->keyword() != currentKeyword() )
+    // make sure keyword model contains all entry keywords
+    for( const auto& keyword:entry->keywords() ) { keywordModel_.add( keyword ); }
+
+    // update keyword model if needed
+    if( !entry->keywords().contains( currentKeyword() ) )
     {
-        keywordModel_.add( entry->keyword() );
-        QModelIndex index = keywordModel_.index( entry->keyword() );
+
+        // update keyword model
+        QModelIndex index = keywordModel_.index( entry->hasKeywords() ? *entry->keywords().begin():Keyword::Default );
         keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+
     }
 
     // umdate logEntry model
@@ -1240,8 +1245,13 @@ void MainWindow::_resetKeywordList( void )
     {
         if( entry->isFindSelected() )
         {
-            for( Keyword keyword = entry->keyword(); keyword != root; keyword = keyword.parent() )
-            { newKeywords.insert( keyword ); }
+
+            for( auto keyword:entry->keywords() )
+            {
+                for( ; keyword != root; keyword = keyword.parent() )
+                { newKeywords.insert( keyword ); }
+            }
+
         }
     }
 
@@ -2745,7 +2755,18 @@ void MainWindow::_deleteKeyword( void )
     for( const auto& keyword:keywords )
     {
         for( const auto& entry:entries )
-        { if( entry->keyword().inherits( keyword ) ) associatedEntries.insert( entry );  }
+        {
+            for( const auto& entryKeyword:entry->keywords() )
+            {
+                if( entryKeyword.inherits( keyword ) )
+                {
+                    associatedEntries.insert( entry );
+                    break;
+                }
+            }
+
+        }
+
     }
 
     // create dialog
@@ -2763,8 +2784,18 @@ void MainWindow::_deleteKeyword( void )
     } else if( dialog.deleteEntries() ) {
 
         Debug::Throw( "MainWindow::_deleteKeyword - deleting entries.\n" );
+
         for( const auto& entry:associatedEntries )
-        { deleteEntry( entry, false ); }
+        {
+            for( const auto& keyword:keywords )
+                for( const auto& entryKeyword:entry->keywords() )
+            {
+                if( entryKeyword.inherits( keyword ) )
+                { entry->removeKeyword( entryKeyword ); }
+            }
+
+            if( !entry->hasKeywords() ) deleteEntry( entry, false );
+        }
 
     }
 
@@ -2834,10 +2865,20 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
         if keyword to modify is a leading subset of current entry keyword,
         update entry with new keyword
         */
-        if( entry->keyword().inherits( keyword ) )
+        bool modified = false;
+        for( const auto& entryKeyword:entry->keywords() )
         {
 
-            entry->setKeyword( Keyword( QString( entry->keyword().get() ).replace( keyword.get(), newKeyword.get() ) ) );
+            if( entryKeyword.inherits( keyword ) )
+            {
+
+                entry->replaceKeyword( entryKeyword, Keyword( QString( entryKeyword.get() ).replace( keyword.get(), newKeyword.get() ) ) );
+                modified = true;
+            }
+        }
+
+        if( modified )
+        {
 
             /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the
             keyword change when synchronizing logbooks, without having all entries modification time
@@ -2928,6 +2969,10 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
 
     Debug::Throw() << "MainWindow::_renameEntryKeyword - newKeyword: " << newKeyword << endl;
 
+    const auto currentKeyword( this->currentKeyword() );
+    if( treeModeAction_->isChecked() && newKeyword == currentKeyword ) return;
+
+
     // keep track of modified entries
     Base::KeySet<LogEntry> entries;
 
@@ -2935,11 +2980,20 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
     for( const auto& entry:entryModel_.get( entryList_->selectionModel()->selectedRows() ) )
     {
 
-        // check if entry keyword has changed
-        if( entry->keyword() == newKeyword ) continue;
-
         // change keyword and set as modified
-        entry->setKeyword( newKeyword );
+        if( treeModeAction_->isChecked() ) entry->replaceKeyword( currentKeyword, newKeyword );
+        else {
+
+            // check if entry keyword has changed
+            if( entry->hasKeywords() )
+            {
+
+                if( *entry->keywords().begin() == newKeyword ) continue;
+                entry->replaceKeyword( *entry->keywords().begin(), newKeyword );
+
+            } else entry->addKeyword( newKeyword );
+
+        }
 
         /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the
         keyword change when synchronizing logbooks, without having all entries modification time
@@ -3032,7 +3086,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
     // retrieve all logbook entries
     Base::KeySet<LogEntry> turnedOffEntries;
     for( const auto& entry:logbook_->entries() )
-    { entry->setKeywordSelected( entry->keyword() == keyword ); }
+    { entry->setKeywordSelected( entry->keywords().contains( keyword ) ); }
 
     // reinitialize logEntry list
     _resetLogEntryList();
@@ -3270,10 +3324,10 @@ void MainWindow::_toggleTreeMode( bool value )
     // make sure entry is visible
     if( currentEntry )
     {
-        if( value )
+        if( value && currentEntry->hasKeywords() )
         {
             // select keyword
-            QModelIndex index( keywordModel_.index( currentEntry->keyword() ) );
+            QModelIndex index( keywordModel_.index( *currentEntry->keywords().begin() ) );
             keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
             keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
             keywordList_->scrollTo( index );

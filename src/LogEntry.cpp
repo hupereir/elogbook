@@ -56,7 +56,7 @@ LogEntry::LogEntry( const QDomElement& element ):
         QString name( attribute.name() );
         QString value( attribute.value() );
         if( name == Xml::Title ) setTitle( XmlString( value ) );
-        else if( name == Xml::Keyword ) setKeyword( Keyword( XmlString( value ) ) );
+        else if( name == Xml::Keyword ) addKeyword( Keyword( XmlString( value ) ) );
         else if( name == Xml::Author ) setAuthor( XmlString( value ) );
 
         // kept for backward compatibility
@@ -71,7 +71,7 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( childElement.isNull() ) continue;
 
         QString tagName( childElement.tagName() );
-        if( tagName == Xml::Keyword ) setKeyword( Keyword( childElement ) );
+        if( tagName == Xml::Keyword ) addKeyword( Keyword( childElement ) );
         else if( tagName == Base::Xml::Color ) {
 
             XmlColor color( childElement );
@@ -104,19 +104,24 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
     QDomElement out( document.createElement( Xml::Entry ) );
 
     // title and author
-    if( !title().isEmpty() ) out.setAttribute( Xml::Title, title() );
-    if( !author().isEmpty() ) out.setAttribute( Xml::Author, author() );
+    if( !title_.isEmpty() ) out.setAttribute( Xml::Title, title_ );
+    if( !author_.isEmpty() ) out.setAttribute( Xml::Author, author_ );
 
     // keyword
-    // if( !keyword().get().isEmpty() ) out.setAttribute( Xml::Keyword, keyword().get() );
-    if( !keyword().get().isEmpty() ) out.appendChild( keyword().domElement( document ) );
+    if( keywords_.size() == 1 && !keywords_.begin()->get().isEmpty() ) out.setAttribute( Xml::Keyword, keywords_.begin()->get() );
+    else {
+
+        for( const auto& keyword:keywords_ )
+        { if( !keyword.get().isEmpty() ) out.appendChild( keyword.domElement( document ) ); }
+
+    }
 
     // color
     if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( document ) );
 
     // dump timeStamp
-    if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( Xml::Creation, document ) );
-    if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, document ) );
+    if( creation_.isValid() ) out.appendChild( XmlTimeStamp( creation_ ).domElement( Xml::Creation, document ) );
+    if( modification_.isValid() ) out.appendChild( XmlTimeStamp( modification_ ).domElement( Xml::Modification, document ) );
 
 
     // dump text
@@ -131,7 +136,7 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
     }
 
     // dump text format
-    for( const auto& format:formats() )
+    for( const auto& format:formats_ )
     {
         if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != Format::Default ) )
         { out.appendChild( Format::XmlTextFormatBlock( format ).domElement( document ) ); }
@@ -171,11 +176,16 @@ LogEntry* LogEntry::copy( void ) const
 
 //__________________________________
 bool LogEntry::matchTitle( QString buffer ) const
-{ return title().contains( buffer, _caseSensitive() ); }
+{ return title_.contains( buffer, _caseSensitive() ); }
 
 //__________________________________
 bool LogEntry::matchKeyword( QString buffer ) const
-{ return keyword().get().contains( buffer, _caseSensitive() ); }
+{
+    for( const auto& keyword:keywords_ )
+    { if( keyword.get().contains( buffer, _caseSensitive() ) ) return true; }
+
+    return false;
+}
 
 //__________________________________
 bool LogEntry::matchText(  QString buffer ) const
@@ -209,6 +219,37 @@ void LogEntry::setModified( void )
 { modification_ = TimeStamp::now(); }
 
 //__________________________________
+void LogEntry::clearKeywords( void )
+{ keywords_.clear(); }
+
+//__________________________________
+void LogEntry::addKeyword( Keyword keyword )
+{
+    if( !keywords_.contains( keyword ) && !keyword.get().isEmpty() )
+    { keywords_.insert( keyword ); }
+}
+
+//__________________________________
+void LogEntry::replaceKeyword( Keyword oldKeyword, Keyword newKeyword )
+{
+    if( keywords_.contains( oldKeyword ) )
+    {
+        keywords_.remove( oldKeyword );
+        if( !newKeyword.get().isEmpty() )
+        { keywords_.insert( newKeyword ); }
+
+    } else {
+
+        Debug::Throw(0) << "LogEntry::replaceKeyword - unable to find old keyword " << oldKeyword.get() << endl;
+    }
+
+}
+
+//__________________________________
+void LogEntry::removeKeyword( Keyword keyword )
+{ keywords_.remove( keyword ); }
+
+//__________________________________
 void LogEntry::_init( void )
 {
     findSelected_ = true;
@@ -216,7 +257,7 @@ void LogEntry::_init( void )
     creation_ = TimeStamp::now();
     modification_ = TimeStamp::now();
     title_.clear();
-    keyword_.clear();
+    keywords_.clear();
     author_.clear();
     text_.clear();
     color_ = Base::Color();

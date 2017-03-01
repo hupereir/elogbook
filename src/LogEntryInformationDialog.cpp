@@ -67,9 +67,12 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     item->setText( entry->title() );
 
     // keyword
-    item = new GridLayoutItem( this, gridLayout );
-    item->setKey( tr( "Keyword:" ) );
-    item->setText( entry->keyword().get() );
+    for( const auto& keyword:entry->keywords() )
+    {
+        item = new GridLayoutItem( this, gridLayout );
+        item->setKey( tr( "Keyword:" ) );
+        item->setText( keyword.get() );
+    }
 
     // author
     item = new GridLayoutItem( this, gridLayout );

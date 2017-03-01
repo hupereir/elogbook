@@ -110,7 +110,12 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     using StringPair=QPair<QString, QString> ;
     using StringList=QList<StringPair>;
     StringList values;
-    if( mask_&LogEntry::KeywordMask ) values << StringPair( tr( "Keyword:" ), entry_->keyword().get() );
+    if( mask_&LogEntry::KeywordMask )
+    {
+        for( const auto& keyword:entry_->keywords() )
+        { values << StringPair( tr( "Keyword:" ), keyword.get() ); }
+    }
+
     if( mask_&LogEntry::TitleMask ) values << StringPair( tr( "Title:" ), entry_->title() );
     if( mask_&LogEntry::AuthorMask ) values << StringPair( tr( "Author:" ), entry_->author() );
     if( mask_&LogEntry::CreationMask ) values << StringPair( tr( "Created:" ), entry_->creation().toString() );

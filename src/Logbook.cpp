@@ -166,7 +166,7 @@ bool Logbook::read( void )
 
             // create entry. Make sure it has a non zero keyword
             LogEntry* entry = new LogEntry( element );
-            if( entry->keyword().isRoot() ) entry->setKeyword( Keyword::Default );
+            if( entry->keywords().empty() ) entry->addKeyword( Keyword::Default );
 
             Base::Key::associate( this, entry );
             entryCount++;
@@ -789,7 +789,13 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
         break;
 
         case Logbook::SortKeyword:
-        return (first->keyword() < second->keyword());
+        {
+            auto firstKeywords( first->keywords() );
+            auto secondKeywords( second->keywords() );
+            if( firstKeywords.empty() ) return true;
+            else if( secondKeywords.empty() ) return false;
+            else return *firstKeywords.begin() < *secondKeywords.begin();
+        }
 
         case Logbook::SortAuthor:
         return (first->author() < second->author());

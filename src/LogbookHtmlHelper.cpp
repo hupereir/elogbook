@@ -215,7 +215,10 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
         QDomElement ref = row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation() ) );
-        ref.appendChild( document.createTextNode( entry->keyword().get() ) );
+
+        // FIXME: should add either all keywords or current
+        if( entry->hasKeywords() )
+        { ref.appendChild( document.createTextNode( entry->keywords().begin()->get() ) ); }
 
         // title
         ref = row.appendChild( document.createElement( "td" ) ).

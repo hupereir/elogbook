@@ -86,9 +86,13 @@ class LogEntry:public Counter, public Base::Key
     QString title( void ) const
     { return title_; }
 
+    //* true if has keywords
+    bool hasKeywords( void ) const
+    { return !keywords_.empty(); }
+
     //* Log entry keyword
-    Keyword keyword( void ) const
-    { return keyword_; }
+    const Keyword::Set& keywords( void ) const
+    { return keywords_; }
 
     //* Log entry last author
     QString author( void ) const
@@ -99,7 +103,7 @@ class LogEntry:public Counter, public Base::Key
     { return color_; }
 
     //* entry text format
-    const Format::TextFormatBlock::List& formats( void ) const
+    Format::TextFormatBlock::List formats( void ) const
     { return formats_; }
 
     //* LogEntry text
@@ -108,19 +112,19 @@ class LogEntry:public Counter, public Base::Key
 
 
     //* returns true if entry title matches buffer
-    bool matchTitle( QString buf ) const;
+    bool matchTitle( QString ) const;
 
     //* returns true if entry keyword matches buffer
-    bool matchKeyword( QString buf ) const;
+    bool matchKeyword( QString ) const;
 
     //* returns true if entry text matches buffer
-    bool matchText(  QString buf ) const;
+    bool matchText( QString ) const;
 
     //* returns true if entry text matches buffer
-    bool matchColor(  QString buf ) const;
+    bool matchColor( QString ) const;
 
     //* returns true if any entry attachment file name matches buffer
-    bool matchAttachment( QString buf ) const;
+    bool matchAttachment( QString ) const;
 
     //* returns true if entry is visible (i.e. selected by the find bar and keyword list)
     bool isSelected( void ) const
@@ -154,9 +158,17 @@ class LogEntry:public Counter, public Base::Key
     void setTitle( QString title )
     { title_ = title; }
 
-    //* Log entry keyword
-    void setKeyword( const Keyword& keyword )
-    { keyword_ = keyword; }
+    //* clear keywords
+    void clearKeywords( void );
+
+    //* add a keyword to the list
+    void addKeyword( Keyword );
+
+    //* replace a keyword in the list
+    void replaceKeyword( Keyword, Keyword );
+
+    //* remove keyword
+    void removeKeyword( Keyword );
 
     //* Log entry author
     void setAuthor( QString author )
@@ -264,13 +276,18 @@ class LogEntry:public Counter, public Base::Key
         public:
 
         //* constructor
-        MatchKeywordFTor( const Keyword& keyword ):
+        MatchKeywordFTor( Keyword keyword ):
             keyword_( keyword )
         {}
 
         //* predicate
         bool operator() (const LogEntry* entry ) const
-        { return entry->keyword().inherits( keyword_ );}
+        {
+            for( const auto& keyword:entry->keywords_ )
+            { if( keyword.inherits( keyword_ ) ) return true; }
+
+            return false;
+        }
 
         private:
 
@@ -300,8 +317,8 @@ class LogEntry:public Counter, public Base::Key
     //* log entry title
     QString title_;
 
-    //* log entry keywords
-    Keyword keyword_;
+    //* log entry keywords list
+    Keyword::Set keywords_;
 
     //* last user name who had access to the entry
     QString author_;

@@ -251,11 +251,12 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
 
             table->appendRows( 1 );
 
-            const LogEntry& entry( **iter );
-            table->cellAt(row,0).firstCursorPosition().insertText( entry.keyword().get() + "  " );
-            table->cellAt(row,1).firstCursorPosition().insertText( entry.title() + "  " );
-            table->cellAt(row,2).firstCursorPosition().insertText( entry.creation().toString() + "  " );
-            table->cellAt(row,3).firstCursorPosition().insertText( entry.modification().toString() + "  " );
+            auto entry( *iter );
+            if( entry->hasKeywords() )
+            { table->cellAt(row,0).firstCursorPosition().insertText( entry->keywords().begin()->get() + "  " ); }
+            table->cellAt(row,1).firstCursorPosition().insertText( entry->title() + "  " );
+            table->cellAt(row,2).firstCursorPosition().insertText( entry->creation().toString() + "  " );
+            table->cellAt(row,3).firstCursorPosition().insertText( entry->modification().toString() + "  " );
 
             // update progress
             if( progressDialog_ )

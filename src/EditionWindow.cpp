@@ -436,7 +436,12 @@ void EditionWindow::displayKeyword( void )
     Debug::Throw( "EditionWindow::displayKeyword.\n" );
 
     LogEntry* entry( this->entry() );
-    if( entry ) keywordEditor_->setText( entry->keyword().get() );
+    if( entry )
+    {
+        auto keywords( entry->keywords() );
+        if( !keywords.empty() ) keywordEditor_->setText( keywords.begin()->get() );
+    }
+
     keywordEditor_->setCursorPosition( 0 );
     return;
 }
@@ -1210,8 +1215,9 @@ void EditionWindow::_save( bool updateSelection )
     entry->setFormats( formatBar_->get() );
 
     // update entry keyword
-    entry->setKeyword( keywordEditor_->text() );
-    if( entry->keyword().isRoot() ) entry->setKeyword( Keyword::Default );
+    // FIXME: should keep track of which keyword is to be replaced, not only the first
+    if( entry->hasKeywords() ) entry->replaceKeyword( *entry->keywords().begin(), keywordEditor_->text() );
+    else entry->addKeyword( keywordEditor_->text() );
 
     // update entry title
     entry->setTitle( titleEditor_->text() );
@@ -1414,7 +1420,7 @@ void EditionWindow::_newEntry( void )
     // create new entry, set author, set keyword
     LogEntry* entry = new LogEntry();
     entry->setAuthor( XmlOptions::get().raw( "USER" ) );
-    entry->setKeyword( _mainWindow().currentKeyword() );
+    entry->addKeyword( _mainWindow().currentKeyword() );
 
     // display new entry
     displayEntry( entry );

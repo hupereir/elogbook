@@ -107,11 +107,18 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 
                 case Keyword:
                 {
-                    QString keyword( entry->keyword().get() );
-                    if( keyword.size() > 1 && keyword[0] == '/' )
-                    { keyword = keyword.mid( 1 ); }
 
-                    return keyword;
+                    auto keywords = entry->keywords();
+                    if( !keywords.empty() )
+                    {
+
+                        auto keyword( keywords.begin()->get() );
+                        if( keyword.size() > 1 && keyword[0] == '/' )
+                        { keyword = keyword.mid( 1 ); }
+
+                        return keyword;
+
+                    } else return QVariant();
                 }
 
                 case Title: return entry->title();
@@ -212,14 +219,24 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
         entry->setTitle( value.toString() );
         emit dataChanged( index, index );
 
-    } else if( index.column() == Keyword && value != entry->keyword().get() )  {
+    } else if( index.column() == Keyword ) {
 
-        entry->setKeyword( value.toString() );
-        emit dataChanged( index, index );
+        auto keywords( entry->keywords() );
+        if( keywords.empty() )
+        {
+            entry->addKeyword( value.toString() );
+            emit dataChanged( index, index );
+
+        } else if( keywords.begin()->get() != value ) {
+
+            entry->replaceKeyword( *keywords.begin(), value.toString() );
+            emit dataChanged( index, index );
+
+        }
 
     }
 
-     return true;
+    return true;
 
 }
 
@@ -314,7 +331,12 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     {
         if( !( index.isValid() && index.column() == Title ) ) continue;
         LogEntry* entry( get( index ) );
-        what << entry->keyword() << "/" << entry->title() << endl;
+        auto keywords( entry->keywords() );
+
+        // FIXME: this is broken. In case of split keyword/title mode, one must get the selected keyword instead
+        if( keywords.empty() ) what << Keyword::Default << "/" << entry->title() << endl;
+        else what << keywords.begin()->get() << "/" << entry->title() << endl;
+
     }
 
     // set plain text data
@@ -401,7 +423,14 @@ bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) 
     switch( type_ )
     {
 
-        case Keyword: return first->keyword() < second->keyword();
+        case Keyword:
+        {
+            auto firstKeywords( first->keywords() );
+            auto secondKeywords( second->keywords() );
+            if( firstKeywords.empty() ) return true;
+            else if( secondKeywords.empty() ) return false;
+            else return *firstKeywords.begin() < *secondKeywords.begin();
+        }
         case Title: return first->title() < second->title();
         case Creation: return first->creation() < second->creation();
         case Modification: return first->modification() < second->modification();
