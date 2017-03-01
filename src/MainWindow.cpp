@@ -860,8 +860,8 @@ void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mod
     LogEntry *lastVisibleEntry( 0 );
 
     // keep track of the current selected entry
-    QModelIndex current_index( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
+    QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
 
     // check is selection is a valid color when Color search is requested.
     bool colorValid = ( mode&SearchWidget::Color && QColor( selection ).isValid() );
@@ -939,8 +939,8 @@ void MainWindow::showAllEntries( void )
     Debug::Throw( "MainWindow::showAllEntries.\n" );
 
     // keep track of the current selected entry
-    QModelIndex current_index( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
+    QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
 
     // set all logbook entries to find_visible
     for( const auto& entry:logbook_->entries() )
@@ -2288,8 +2288,8 @@ void MainWindow::_showDuplicatedEntries( void )
     LogEntry *lastVisibleEntry( 0 );
 
     // keep track of current index
-    QModelIndex current_index( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
+    QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
 
     // keep track of found entries
     int found( 0 );
@@ -3124,8 +3124,8 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
     Debug::Throw() << "MainWindow::_keywordSelectionChanged - keyword: " << keyword << endl;
 
     // keep track of the current selected entry
-    QModelIndex current_index( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( current_index.isValid() ? entryModel_.get( current_index ):0 );
+    QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
 
     // retrieve all logbook entries
     Base::KeySet<LogEntry> turnedOffEntries;
