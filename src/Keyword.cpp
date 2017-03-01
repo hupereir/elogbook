@@ -21,6 +21,7 @@
 
 #include "Debug.h"
 #include "XmlDef.h"
+#include "XmlString.h"
 
 #include <QObject>
 
@@ -29,27 +30,23 @@ const QString Keyword::Default( QObject::tr( "New entries" ) );
 const QString Keyword::MimeType( "logbook/keyword-list" );
 
 //_________________________________________________________________
-Keyword::Keyword( const QString& value):
+Keyword::Keyword( QString value):
     Counter( "Keyword" ),
     value_( _format( value ) )
 {}
 
 //_________________________________________________________________
-Keyword& Keyword::append( const QString& value )
+Keyword::Keyword( const QDomElement& element ):
+    Counter( "Keyword" ),
+    value_( _format( XmlString( element.text() ) ) )
+{}
+
+//_________________________________________________________________
+QDomElement Keyword::domElement( QDomDocument& document ) const
 {
-
-    // check string to append
-    if( value.isEmpty() || value == "/" ) return *this;
-
-    // make sure leading "/" is added
-    if( value.startsWith( '/' ) || value_.endsWith( '/' ) ) value_ += value;
-    else value_ += QString( '/' ) + value;
-
-    // reformat
-    value_ = _format( value_ );
-
-    return *this;
-
+    QDomElement out( document.createElement( Xml::Keyword ) );
+    out.appendChild( document.createTextNode( value_ ) );
+    return out;
 }
 
 //_________________________________________________________________
@@ -83,9 +80,26 @@ bool Keyword::inherits( const Keyword& keyword ) const
 
 }
 
+//_________________________________________________________________
+Keyword& Keyword::append( QString value )
+{
+
+    // check string to append
+    if( value.isEmpty() || value == "/" ) return *this;
+
+    // make sure leading "/" is added
+    if( value.startsWith( '/' ) || value_.endsWith( '/' ) ) value_ += value;
+    else value_ += QString( '/' ) + value;
+
+    // reformat
+    value_ = _format( value_ );
+
+    return *this;
+
+}
 
 //_________________________________________________________________
-QString Keyword::_format( const QString& value ) const
+QString Keyword::_format( QString value ) const
 {
 
     // make sure value is not empty

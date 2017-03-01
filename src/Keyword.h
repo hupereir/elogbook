@@ -22,6 +22,8 @@
 
 #include "Counter.h"
 
+#include <QDomElement>
+#include <QDomDocument>
 #include <QList>
 #include <QSet>
 #include <QString>
@@ -40,7 +42,10 @@ class Keyword: public Counter
     static const QString MimeType;
 
     //* constructor
-    Keyword( const QString& = QString() );
+    Keyword( QString = QString() );
+
+    //* constructor from DOM
+    Keyword( const QDomElement& );
 
     //* keyword set
     using Set = QSet<Keyword>;
@@ -61,8 +66,11 @@ class Keyword: public Counter
     //*@name accessors
     //@{
 
+    //* DomElement
+    QDomElement domElement( QDomDocument& ) const;
+
     //* full keyword
-    const QString& get( void ) const
+    QString get( void ) const
     { return value_; }
 
     //* true if is root
@@ -91,18 +99,18 @@ class Keyword: public Counter
     { value_ = _format( QString() ); }
 
     //* set full keyword
-    void set( const QString& value )
+    void set( QString value )
     { value_ = _format( value ); }
 
     //* append
-    Keyword& append( const QString& value );
+    Keyword& append( QString value );
 
     //@}
 
     private:
 
     //* format keyword
-    QString _format( const QString& ) const;
+    QString _format( QString ) const;
 
     //* full value
     QString value_;

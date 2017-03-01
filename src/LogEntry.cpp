@@ -71,8 +71,8 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( childElement.isNull() ) continue;
 
         QString tagName( childElement.tagName() );
-        if( tagName == Base::Xml::Color )
-        {
+        if( tagName == Xml::Keyword ) setKeyword( Keyword( childElement ) );
+        else if( tagName == Base::Xml::Color ) {
 
             XmlColor color( childElement );
             if( color.isValid() ) setColor( color );
@@ -98,20 +98,26 @@ LogEntry::~LogEntry( void )
 }
 
 //__________________________________
-QDomElement LogEntry::domElement( QDomDocument& parent ) const
+QDomElement LogEntry::domElement( QDomDocument& document ) const
 {
     Debug::Throw( "LogEntry::domElement.\n" );
-    QDomElement out( parent.createElement( Xml::Entry ) );
+    QDomElement out( document.createElement( Xml::Entry ) );
+
+    // title and author
     if( !title().isEmpty() ) out.setAttribute( Xml::Title, title() );
-    if( !keyword().get().isEmpty() ) out.setAttribute( Xml::Keyword, keyword().get() );
     if( !author().isEmpty() ) out.setAttribute( Xml::Author, author() );
 
+    // keyword
+    // if( !keyword().get().isEmpty() ) out.setAttribute( Xml::Keyword, keyword().get() );
+    if( !keyword().get().isEmpty() ) out.appendChild( keyword().domElement( document ) );
+
     // color
-    if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( parent ) );
+    if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( document ) );
 
     // dump timeStamp
-    if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( Xml::Creation, parent ) );
-    if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, parent ) );
+    if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( Xml::Creation, document ) );
+    if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, document ) );
+
 
     // dump text
     if( !text_.isEmpty() )
@@ -120,20 +126,20 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
         if( !text.endsWith('\n') ) text+='\n';
 
         out.
-            appendChild( parent.createElement( Xml::Text ) ).
-            appendChild( parent.createTextNode( text ) );
+            appendChild( document.createElement( Xml::Text ) ).
+            appendChild( document.createTextNode( text ) );
     }
 
     // dump text format
     for( const auto& format:formats() )
     {
         if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != Format::Default ) )
-        { out.appendChild( Format::XmlTextFormatBlock( format ).domElement( parent ) ); }
+        { out.appendChild( Format::XmlTextFormatBlock( format ).domElement( document ) ); }
      }
 
     // dump attachments
     for( const auto& attachment:Base::KeySet<Attachment>( this ) )
-    { out.appendChild( attachment->domElement( parent ) ); }
+    { out.appendChild( attachment->domElement( document ) ); }
 
     return out;
 
