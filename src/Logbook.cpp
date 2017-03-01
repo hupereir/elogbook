@@ -166,6 +166,11 @@ bool Logbook::read( void )
 
             // create entry. Make sure it has a non zero keyword
             LogEntry* entry = new LogEntry( element );
+
+            // make sure there is at least one valid keyword
+            auto keywords( entry->keywords() );
+            for( const auto& keyword:keywords )
+            { if( keyword.isRoot() ) entry->removeKeyword( keyword ); }
             if( entry->keywords().empty() ) entry->addKeyword( Keyword::Default );
 
             Base::Key::associate( this, entry );
