@@ -568,12 +568,16 @@ void MainWindow::selectEntry( LogEntry* entry )
     if( !entry ) return;
 
     // select entry keyword
-    QModelIndex index = entry->hasKeywords() ? keywordModel_.index( *entry->keywords().begin() ):keywordModel_.index( Keyword::Default );
-    keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-    keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-    keywordList_->scrollTo( index );
+    const auto currentKeyword( this->currentKeyword() );
+    if( !entry->keywords().contains( currentKeyword ) )
+    {
+        QModelIndex index = entry->hasKeywords() ? keywordModel_.index( *entry->keywords().begin() ):keywordModel_.index( Keyword::Default );
+        keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        keywordList_->scrollTo( index );
+    }
 
-    index = entryModel_.index( entry );
+    QModelIndex index = entryModel_.index( entry );
     entryList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     entryList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     entryList_->scrollTo( index );
