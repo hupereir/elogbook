@@ -140,9 +140,9 @@ QDomElement LogEntry::domElement( QDomDocument& parent ) const
 }
 
 //__________________________________
-LogEntry* LogEntry::clone( void ) const
+LogEntry* LogEntry::copy( void ) const
 {
-    Debug::Throw( "LogEntry::clone.\n" );
+    Debug::Throw( "LogEntry::copy.\n" );
 
     LogEntry *out( new LogEntry( *this ) );
 
@@ -164,19 +164,19 @@ LogEntry* LogEntry::clone( void ) const
 }
 
 //__________________________________
-bool LogEntry::matchTitle( const QString& buffer ) const
+bool LogEntry::matchTitle( QString buffer ) const
 { return title().contains( buffer, _caseSensitive() ); }
 
 //__________________________________
-bool LogEntry::matchKeyword( const QString& buffer ) const
+bool LogEntry::matchKeyword( QString buffer ) const
 { return keyword().get().contains( buffer, _caseSensitive() ); }
 
 //__________________________________
-bool LogEntry::matchText(  const QString& buffer ) const
+bool LogEntry::matchText(  QString buffer ) const
 { return text_.contains( buffer, _caseSensitive() ); }
 
 //__________________________________
-bool LogEntry::matchColor( const QString& buffer ) const
+bool LogEntry::matchColor( QString buffer ) const
 {
     if( !color_.isValid() && !QColor( buffer ).isValid() ) return true;
     else if( !color_.isValid() ) return false;
@@ -184,7 +184,7 @@ bool LogEntry::matchColor( const QString& buffer ) const
 }
 
 //__________________________________
-bool LogEntry::matchAttachment( const QString& buffer ) const
+bool LogEntry::matchAttachment( QString buffer ) const
 {
     Debug::Throw( "LogEntry::matchAttachment.\n" );
 
@@ -199,11 +199,8 @@ bool LogEntry::matchAttachment( const QString& buffer ) const
 }
 
 //__________________________________
-void LogEntry::modified( void )
-{
-    Debug::Throw( "LogEntry::modified.\n" );
-    modification_ = TimeStamp::now();
-}
+void LogEntry::setModified( void )
+{ modification_ = TimeStamp::now(); }
 
 //__________________________________
 void LogEntry::_init( void )

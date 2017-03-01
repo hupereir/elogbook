@@ -1220,7 +1220,7 @@ void EditionWindow::_save( bool updateSelection )
     entry->setAuthor( XmlOptions::get().raw( "USER" ) );
 
     // add _now_ to entry modification timestamps
-    entry->modified();
+    entry->setModified();
 
     // status bar
     statusBar_->label().setText( tr( "writting entry to logbook..." ) );

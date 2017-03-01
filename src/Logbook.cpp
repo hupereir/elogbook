@@ -387,7 +387,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
         Logbook* child( latestChild() );
 
         // create a new entry
-        LogEntry *copy( entry->clone() );
+        LogEntry *copy( entry->copy() );
 
         // associate entry with logbook
         Base::Key::associate( copy, child );

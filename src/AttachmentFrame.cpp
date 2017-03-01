@@ -373,11 +373,12 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
             // get associated entry
             Base::KeySet<LogEntry> entries( attachment );
             Q_ASSERT( entries.size() == 1 );
-            LogEntry& entry( **entries.begin() );
-            entry.modified();
+
+            auto entry( *entries.begin() );
+            entry->setModified();
 
             // get associated logbooks
-            Base::KeySet<Logbook> logbooks( &entry );
+            Base::KeySet<Logbook> logbooks( entry );
             for( const auto& logbook:logbooks ) logbook->setModified( true );
 
             modified = true;
@@ -602,11 +603,12 @@ void AttachmentFrame::_delete( void )
             // retrieve associated entries
             Base::KeySet<LogEntry> entries( attachment );
             Q_ASSERT( entries.size() == 1 );
-            LogEntry& entry( **entries.begin() );
-            entry.modified();
+
+            auto entry( *entries.begin() );
+            entry->setModified();
 
             // retrieve associated logbooks
-            Base::KeySet<Logbook> logbooks( &entry );
+            Base::KeySet<Logbook> logbooks( entry );
 
             // check sharing attachments to avoid fromDisk deletion
             if( fromDisk && logbooks.size() )
@@ -754,11 +756,12 @@ void AttachmentFrame::_clean( void )
         // retrieve associated entries
         Base::KeySet<LogEntry> entries( attachment );
         Q_ASSERT( entries.size() == 1 );
-        LogEntry& entry( **entries.begin() );
-        entry.modified();
+
+        auto entry( *entries.begin() );
+        entry->setModified();
 
         // retrieve associated logbooks
-        Base::KeySet<Logbook> logbooks( &entry );
+        Base::KeySet<Logbook> logbooks( entry );
         for( const auto& logbook:logbooks )
         { logbook->setModified( true ); }
 

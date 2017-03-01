@@ -62,111 +62,65 @@ class LogEntry:public Counter, public Base::Key
     //* destructor
     ~LogEntry( void );
 
-    //* DomElement
-    QDomElement domElement( QDomDocument& ) const;
-
-    //* return a new entry cloned from this
-    LogEntry *clone( void ) const;
-
     //* mime type (for drag and drop)
     static const QString MimeType;
 
-    //*@name attributes
+    //*@name accessors
     //@{
 
-    //* set modification_ to _now_
-    void modified( void );
+    //* DomElement
+    QDomElement domElement( QDomDocument& ) const;
 
-    //* creation TimeStamp
-    void setCreation( const TimeStamp stamp )
-    { creation_ = stamp; }
+    //* return a new entry copy from this
+    LogEntry *copy( void ) const;
 
     //* creation TimeStamp
     TimeStamp creation() const
     { return creation_; }
 
     //* modification TimeStamp
-    void setModification( const TimeStamp stamp )
-    { modification_ = stamp; }
-
-    //* modification TimeStamp
     TimeStamp modification() const
     { return modification_; }
-
-    //* Log entry title
-    void setTitle( const QString& title )
-    { title_ = title; }
 
     //* LogEntry title
     QString title( void ) const
     { return title_; }
 
     //* Log entry keyword
-    void setKeyword( const Keyword& keyword )
-    { keyword_ = keyword; }
-
-    //* Log entry keyword
-    const Keyword& keyword( void ) const
+    Keyword keyword( void ) const
     { return keyword_; }
-
-    //* Log entry author
-    void setAuthor( const QString& author )
-    { author_ = author; }
 
     //* Log entry last author
     QString author( void ) const
     { return author_; }
 
     //* LogEntry color
-    void setColor(  QColor color )
-    { color_ = color; }
-
-    //* LogEntry color
     Base::Color color( void ) const
     { return color_; }
-
-    //* add TextFormatBlock
-    void addFormat( const Format::TextFormatBlock& format )
-    { formats_.append(format); }
-
-    //* entry text format
-    void setFormats( const Format::TextFormatBlock::List& formats )
-    { formats_ = formats; }
 
     //* entry text format
     const Format::TextFormatBlock::List& formats( void ) const
     { return formats_; }
 
-    //* clears LogEntry text
-    void setText( const QString& text )
-    { text_ = text; }
-
     //* LogEntry text
-    const QString& text( void ) const
+    QString text( void ) const
     { return text_; }
 
+
     //* returns true if entry title matches buffer
-    bool matchTitle( const QString& buf ) const;
+    bool matchTitle( QString buf ) const;
 
     //* returns true if entry keyword matches buffer
-    bool matchKeyword( const QString& buf ) const;
+    bool matchKeyword( QString buf ) const;
 
     //* returns true if entry text matches buffer
-    bool matchText(  const QString& buf ) const;
+    bool matchText(  QString buf ) const;
 
     //* returns true if entry text matches buffer
-    bool matchColor(  const QString& buf ) const;
+    bool matchColor(  QString buf ) const;
 
     //* returns true if any entry attachment file name matches buffer
-    bool matchAttachment( const QString& buf ) const;
-
-    //* set if entry is said visible by the find bar
-    void setFindSelected( bool value )
-    { findSelected_ = value; }
-
-    //* set if entry is said vidible by the keyword list
-    void setKeywordSelected( bool value )
-    { keywordSelected_ = value; }
+    bool matchAttachment( QString buf ) const;
 
     //* returns true if entry is visible (i.e. selected by the find bar and keyword list)
     bool isSelected( void ) const
@@ -179,6 +133,60 @@ class LogEntry:public Counter, public Base::Key
     //* returns true if entry is selected by the keyword list
     bool isKeywordSelected( void ) const
     { return keywordSelected_; }
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    //* creation TimeStamp
+    void setCreation( const TimeStamp stamp )
+    { creation_ = stamp; }
+
+    //* set modification_ to _now_
+    void setModified( void );
+
+    //* modification TimeStamp
+    void setModification( const TimeStamp stamp )
+    { modification_ = stamp; }
+
+    //* Log entry title
+    void setTitle( QString title )
+    { title_ = title; }
+
+    //* Log entry keyword
+    void setKeyword( const Keyword& keyword )
+    { keyword_ = keyword; }
+
+    //* Log entry author
+    void setAuthor( QString author )
+    { author_ = author; }
+
+    //* LogEntry color
+    void setColor(  QColor color )
+    { color_ = color; }
+
+    //* add TextFormatBlock
+    void addFormat( const Format::TextFormatBlock& format )
+    { formats_.append(format); }
+
+    //* entry text format
+    void setFormats( const Format::TextFormatBlock::List& formats )
+    { formats_ = formats; }
+
+    //* LogEntry text
+    void setText( QString text )
+    { text_ = text; }
+
+    //* set if entry is said visible by the find bar
+    void setFindSelected( bool value )
+    { findSelected_ = value; }
+
+    //* set if entry is said vidible by the keyword list
+    void setKeywordSelected( bool value )
+    { keywordSelected_ = value; }
+
+    //@}
 
     //* use to get last modified entry
     class LastModifiedFTor
