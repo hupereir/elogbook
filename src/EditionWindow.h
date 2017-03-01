@@ -75,6 +75,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     EditionWindow( QWidget*, bool readOnly = true );
 
     //* display all entries informations
+    void displayEntry( Keyword, LogEntry* = nullptr );
+
+    //* display all entries informations
     void displayEntry( LogEntry* = nullptr );
 
     //* returns current entry
@@ -333,10 +336,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* retrieve associated MainWindow
     MainWindow& _mainWindow( void ) const;
 
-    //* menu
-    Menu& _menu( void ) const
-    { return *menu_; }
-
     //* update text Widget from current entry
     void _displayText( void );
 
@@ -514,12 +513,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* if true, LogEntry associated to EditionWindow cannot be modified
     bool readOnly_ = false;
 
-    //* list of buttons to disactivate in case of read-only
-    using ActionList = QList< QAction* >;
-
-    //* list of buttons to disactivate in case of read-only
-    ActionList readOnlyActions_;
-
     //* "closed" flag
     /** this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
     bool closed_ = false;
@@ -527,13 +520,11 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* true if keyword is forced visible
     bool forceShowKeyword_ = false;
 
-    //*@name stored actions to toggle visibility
-    //@{
+    //* keyword
+    Keyword keyword_;
 
     //* lock toolbar
     CustomToolBar* lock_ = nullptr;
-
-    //@}
 
     //* keyword label
     QLabel* keywordLabel_ = nullptr;
@@ -584,6 +575,12 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //*@name actions
     //@{
+
+    //* list of buttons to disactivate in case of read-only
+    using ActionList = QList< QAction* >;
+
+    //* list of buttons to disactivate in case of read-only
+    ActionList readOnlyActions_;
 
     //* undo
     QAction* undoAction_ = nullptr;

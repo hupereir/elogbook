@@ -2602,7 +2602,9 @@ void MainWindow::_displayEntry( LogEntry* entry )
             editionWindow->setModified( false );
 
             // need to display entry before deleting sub views.
-            editionWindow->displayEntry( entry );
+            if( treeModeAction_->isChecked() ) editionWindow->displayEntry( currentKeyword(), entry );
+            else if( entry->hasKeywords() ) editionWindow->displayEntry( *entry->keywords().begin(), entry );
+            else editionWindow->displayEntry( Keyword::Default, entry );
 
             // also kill all frames but one
             Base::KeySet< TextEditor > editors( editionWindow );
@@ -2630,7 +2632,11 @@ void MainWindow::_displayEntry( LogEntry* entry )
         editionWindow = new EditionWindow( 0, false );
         editionWindow->setColorMenu( colorMenu_ );
         Base::Key::associate( this, editionWindow );
-        editionWindow->displayEntry( entry );
+
+        // need to display entry before deleting sub views.
+        if( treeModeAction_->isChecked() ) editionWindow->displayEntry( currentKeyword(), entry );
+        else if( entry->hasKeywords() ) editionWindow->displayEntry( *entry->keywords().begin(), entry );
+        else editionWindow->displayEntry( Keyword::Default, entry );
 
         connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
         connect( logbook_, SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );

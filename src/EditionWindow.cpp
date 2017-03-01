@@ -280,6 +280,16 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 }
 
 //____________________________________________
+void EditionWindow::displayEntry( Keyword keyword, LogEntry *entry )
+{
+
+    Debug::Throw( "EditionWindow::displayEntry.\n" );
+    keyword_ =  _mainWindow().currentKeyword() ;
+    displayEntry( entry );
+
+}
+
+//____________________________________________
 void EditionWindow::displayEntry( LogEntry *entry )
 {
     Debug::Throw( "EditionWindow::displayEntry.\n" );
@@ -287,15 +297,18 @@ void EditionWindow::displayEntry( LogEntry *entry )
     // disassociate with existing entries, if any
     clearAssociations<LogEntry>();
 
-    // retrieve selection frame
+    // retrieve current file
     MainWindow &mainWindow( _mainWindow() );
-    _menu().recentFilesMenu().setCurrentFile( mainWindow.menu().recentFilesMenu().currentFile() );
+    menu_->recentFilesMenu().setCurrentFile( mainWindow.menu().recentFilesMenu().currentFile() );
 
     // check entry
     if( !entry ) return;
 
     // update current entry
     Base::Key::associate( entry, this );
+
+    if( !entry->keywords().contains( keyword_ ) )
+    { keyword_ = entry->hasKeywords() ? *entry->keywords().begin():Keyword::Default; }
 
     // update all display
     displayKeyword();
@@ -435,15 +448,10 @@ void EditionWindow::displayKeyword( void )
 {
     Debug::Throw( "EditionWindow::displayKeyword.\n" );
 
-    LogEntry* entry( this->entry() );
-    if( entry )
-    {
-        auto keywords( entry->keywords() );
-        if( !keywords.empty() ) keywordEditor_->setText( keywords.begin()->get() );
-    }
-
+    keywordEditor_->setText( keyword_.get() );
     keywordEditor_->setCursorPosition( 0 );
     return;
+
 }
 
 //_____________________________________________
@@ -1215,9 +1223,13 @@ void EditionWindow::_save( bool updateSelection )
     entry->setFormats( formatBar_->get() );
 
     // update entry keyword
-    // FIXME: should keep track of which keyword is to be replaced, not only the first
-    if( entry->hasKeywords() ) entry->replaceKeyword( *entry->keywords().begin(), keywordEditor_->text() );
-    else entry->addKeyword( keywordEditor_->text() );
+    Keyword newKeyword( keywordEditor_->text() );
+    if( keyword_ != newKeyword )
+    {
+        if( entry->keywords().contains( keyword_ ) ) entry->replaceKeyword( keyword_, newKeyword );
+        else entry->addKeyword( newKeyword );
+        keyword_ = newKeyword;
+    }
 
     // update entry title
     entry->setTitle( titleEditor_->text() );
