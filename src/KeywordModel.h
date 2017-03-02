@@ -90,6 +90,16 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
     //* sort
     virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
 
+    private Q_SLOTS:
+
+    //* keyword changed
+    void _requestEntryKeywordChanged( void )
+    { emit entryKeywordChanged( keywordChangedData_.newKeyword() ); }
+
+    //* keyword changed
+    void _requestKeywordChanged( void )
+    { emit keywordChanged( keywordChangedData_.oldKeyword(), keywordChangedData_.newKeyword() ); }
+
     private:
 
     //* list column names
@@ -119,6 +129,48 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
         Qt::SortOrder order_ = Qt::AscendingOrder;
 
     };
+
+    //* data structure used for drag and drop
+    class KeywordChangedData
+    {
+        public:
+
+        //*@name modifiers
+        //@{
+
+        //* set keywords
+        void set( Keyword oldKeyword, Keyword newKeyword )
+        {
+            oldKeyword_ = oldKeyword;
+            newKeyword_ = newKeyword;
+        }
+
+        //* set keywords
+        void set( Keyword newKeyword )
+        {
+            oldKeyword_ = Keyword();
+            newKeyword_ = newKeyword;
+        }
+
+        //@}
+
+        //*@name accessors
+        //@{
+
+        Keyword oldKeyword( void ) const { return oldKeyword_; }
+        Keyword newKeyword( void ) const { return newKeyword_; }
+
+        //@}
+
+        private:
+
+        Keyword oldKeyword_;
+        Keyword newKeyword_;
+
+    };
+
+    //* keyword changed data
+    KeywordChangedData keywordChangedData_;
 
 };
 

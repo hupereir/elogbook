@@ -148,8 +148,10 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
         // append new keyword to old
         newKeyword.append( oldKeyword.current() );
 
-        // emit keyword modification signal
-        emit keywordChanged( oldKeyword, newKeyword );
+        // delay keyword changed emission to fix issues with nested event loops
+        keywordChangedData_.set(  oldKeyword, newKeyword );
+        QMetaObject::invokeMethod( this, "_requestKeywordChanged", Qt::QueuedConnection );
+
         return true;
     }
 
@@ -163,8 +165,10 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
         // retrieve new location
         Keyword newKeyword = get( parent );
 
-        // emit logEntry keyword changed signal
-        emit entryKeywordChanged( newKeyword );
+        // delay keyword changed emission to fix issues with nested event loops
+        keywordChangedData_.set(  newKeyword );
+        QMetaObject::invokeMethod( this, "_requestEntryKeywordChanged", Qt::QueuedConnection );
+
         return true;
 
     }
