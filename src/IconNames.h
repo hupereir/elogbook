@@ -49,7 +49,7 @@ namespace IconNames
     static const QString Merge = "merge";
 
     static const QString Move = "go-jump";
-    static const QString Link = "insert-link";
+    static const QString Link = "edit-link";
 
 };
 
