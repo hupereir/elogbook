@@ -586,20 +586,21 @@ void MainWindow::selectEntry( LogEntry* entry )
 }
 
 //_______________________________________________
-void MainWindow::updateEntry( LogEntry* entry, bool updateSelection )
+void MainWindow::updateEntry( Keyword keyword, LogEntry* entry, bool updateSelection )
 {
 
     Debug::Throw( "MainWindow::updateEntry.\n" );
 
     // make sure keyword model contains all entry keywords
-    for( const auto& keyword:entry->keywords() ) { keywordModel_.add( keyword ); }
+    for( const auto& keyword:entry->keywords() )
+    { keywordModel_.add( keyword ); }
 
     // update keyword model if needed
-    if( !entry->keywords().contains( currentKeyword() ) )
+    if( keyword != currentKeyword() )
     {
 
         // update keyword model
-        QModelIndex index = keywordModel_.index( entry->hasKeywords() ? *entry->keywords().begin():Keyword::Default );
+        QModelIndex index = keywordModel_.index( keyword );
         keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
 
@@ -672,14 +673,14 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
 bool MainWindow::lockEntry( LogEntry* entry ) const
 {
     Debug::Throw( "MainWindow::lockEntry.\n" );
-
     if( !entry ) return true;
 
+    // check whether there are modified editors around and ask for save
     Base::KeySet<EditionWindow> windows( entry );
     if( _checkModifiedEntries( windows, true ) == AskForSaveDialog::Cancel ) return false;
 
-    for( const auto& window:windows )
-    { window->setReadOnly( true ); }
+    // mark modified editors as read only
+    for( const auto& window:windows ) window->setReadOnly( true );
 
     return true;
 }

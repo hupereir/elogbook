@@ -102,7 +102,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void clearSelection( void );
 
     //* update entry (create new if not found )
-    virtual void updateEntry( LogEntry*, bool );
+    virtual void updateEntry( Keyword, LogEntry*, bool );
 
     //* delete entry
     virtual void deleteEntry( LogEntry*, bool save = true );

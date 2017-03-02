@@ -284,7 +284,7 @@ void EditionWindow::displayEntry( Keyword keyword, LogEntry *entry )
 {
 
     Debug::Throw( "EditionWindow::displayEntry.\n" );
-    keyword_ =  _mainWindow().currentKeyword() ;
+    keyword_ =  keyword;
     displayEntry( entry );
 
 }
@@ -297,16 +297,15 @@ void EditionWindow::displayEntry( LogEntry *entry )
     // disassociate with existing entries, if any
     clearAssociations<LogEntry>();
 
-    // retrieve current file
+    // update recentFiles menu
     MainWindow &mainWindow( _mainWindow() );
     menu_->recentFilesMenu().setCurrentFile( mainWindow.menu().recentFilesMenu().currentFile() );
 
-    // check entry
+    // check entry and associate to this editor
     if( !entry ) return;
-
-    // update current entry
     Base::Key::associate( entry, this );
 
+    // check saved keyword
     if( !entry->keywords().contains( keyword_ ) )
     { keyword_ = entry->hasKeywords() ? *entry->keywords().begin():Keyword::Default; }
 
@@ -1212,11 +1211,11 @@ void EditionWindow::_save( bool updateSelection )
     // check logbook
     MainWindow &mainWindow( _mainWindow() );
     Logbook *logbook( mainWindow.logbook() );
-    if( !logbook ) {
+    if( !logbook )
+    {
         InformationDialog( this, tr( "No logbook opened. <Save> canceled." ) ).exec();
         return;
     }
-    Debug::Throw( "EditionWindow::_save - logbook checked.\n" );
 
     // update entry text
     entry->setText( activeEditor_->toPlainText() );
@@ -1258,7 +1257,7 @@ void EditionWindow::_save( bool updateSelection )
     }
 
     // update main window
-    mainWindow.updateEntry( entry, updateSelection );
+    mainWindow.updateEntry( keyword_, entry, updateSelection );
     mainWindow.updateWindowTitle();
 
     // set logbook as modified
