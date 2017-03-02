@@ -192,7 +192,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 //__________________________________________________________________
 bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int role )
 {
-    Debug::Throw( 0, "LogEntryModel::setData.\n" );
+    Debug::Throw( "LogEntryModel::setData.\n" );
 
     if( !editionEnabled() ) return false;
     if( !(index.isValid() && ( index.column() == Title || index.column() == Keyword ) && role == Qt::EditRole ) ) return false;
