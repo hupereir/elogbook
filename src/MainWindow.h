@@ -27,9 +27,11 @@
 #include "FileCheck.h"
 #include "FileRecord.h"
 #include "Key.h"
+#include "KeywordList.h"
 #include "KeywordModel.h"
 #include "Logbook.h"
 #include "LogEntry.h"
+#include "LogEntryList.h"
 #include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
 #include "SearchWidget.h"
@@ -465,7 +467,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     this is triggered by drag and drop in the keyword list,
     **/
     void _confirmRenameKeyword( const Keyword& oldKeyword, const Keyword& newKeyword );
-    
+
     //* rename keyword for all entries that match old keyword.
     /**
     this is triggered by renaming a keyword directly from the keyword list,
@@ -482,11 +484,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _renameEntryKeyword( void );
 
     //* change selected entries keyword using argument
-    /**
-    this is triggered by drag and drop from the logEntry list
-    to the keyword list, and it is also called by the slot above
-    */
-    void _renameEntryKeyword( Keyword newKeyword, bool updateSelection = true );
+    void _confirmRenameEntryKeyword( Keyword );
 
     //* keyword selection changed
     void _keywordSelectionChanged( const QModelIndex& );
@@ -535,6 +533,17 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* install actions
     void _installActions( void );
 
+    //* change selected entries keyword using argument
+    /** it is called by the renameEntry keyword slots **/
+    void _renameEntryKeyword( Keyword );
+
+    //* change selected entries keyword using argument
+    /** it is called by the confirmRenameEntry keyword slots **/
+    void _linkEntryKeyword( Keyword );
+
+    //* update selection and entries
+    void _updateSelection( Keyword, Base::KeySet<LogEntry> );
+
     //* main menu
     Menu* menu_ = nullptr;
 
@@ -551,34 +560,10 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     LogEntryModel entryModel_;
 
     //* logEntry list
-    TreeView* entryList_ = nullptr;
+    LogEntryList* entryList_ = nullptr;
 
     //* file check
     FileCheck* fileCheck_ = nullptr;
-
-    //* local TreeView to store size hint
-    class KeywordList: public TreeView
-    {
-
-        public:
-
-        //* constructor
-        KeywordList( QWidget* parent = nullptr ):
-            TreeView( parent )
-        {}
-
-        //* default size
-        void setDefaultWidth( int );
-
-        //* size
-        QSize sizeHint( void ) const;
-
-        private:
-
-        //* default width;
-        int defaultWidth_ = -1;
-
-    };
 
     //* Keyword list
     KeywordList *keywordList_ = nullptr;

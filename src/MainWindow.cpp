@@ -167,7 +167,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // rename selected entries when KeywordChanged is emitted with a single argument.
     // this correspond to drag and drop action from the logEntryList in the KeywordList
-    connect( &keywordModel_, SIGNAL(entryKeywordChanged(Keyword)), SLOT(_renameEntryKeyword(Keyword)) );
+    connect( &keywordModel_, SIGNAL(entryKeywordChangeRequest(Keyword)), SLOT(_confirmRenameEntryKeyword(Keyword)) );
 
     // rename all entries matching first keyword the second. This correspond to
     // drag and drop inside the keyword list, or to direct edition of a keyword list item.
@@ -223,7 +223,7 @@ MainWindow::MainWindow( QWidget *parent ):
     entryToolBar_->addAction( printAction_ );
 
     // create logEntry list
-    vLayout->addWidget( entryList_ = new TreeView( right ), 1 );
+    vLayout->addWidget( entryList_ = new LogEntryList( right ), 1 );
     entryList_->setFindEnabled( false );
     entryList_->setModel( &entryModel_ );
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
@@ -2572,8 +2572,8 @@ void MainWindow::_deleteEntries( void )
             if( !entry->hasKeywords() ) deleteEntry( entry, false );
             else {
 
-                // make sure entry is not selected any more
-                entry->setKeywordSelected( false );
+                // remove from entry model
+                entryModel_.remove( entry );
 
                 // set associated logbooks as modified
                 for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
@@ -3044,14 +3044,29 @@ void MainWindow::_renameEntryKeyword( void )
 }
 
 //_______________________________________________
-void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
+void MainWindow::_confirmRenameEntryKeyword( Keyword newKeyword )
+{
+
+    Debug::Throw() << "MainWindow::_confirmRenameEntryKeyword - newKeyword: " << newKeyword << endl;
+
+    QMenu menu( this );
+    menu.addActions( entryKeywordChangedMenuActions_ );
+    menu.ensurePolished();
+    QAction* action( menu.exec( QCursor::pos() ) );
+    if( action == entryKeywordChangedMenuActions_[0] ) _renameEntryKeyword( newKeyword );
+    else if( action == entryKeywordChangedMenuActions_[1] ) _linkEntryKeyword( newKeyword );
+    else return;
+
+}
+
+//_______________________________________________
+void MainWindow::_renameEntryKeyword( Keyword newKeyword )
 {
 
     Debug::Throw() << "MainWindow::_renameEntryKeyword - newKeyword: " << newKeyword << endl;
 
     const auto currentKeyword( this->currentKeyword() );
     if( treeModeAction_->isChecked() && newKeyword == currentKeyword ) return;
-
 
     // keep track of modified entries
     Base::KeySet<LogEntry> entries;
@@ -3092,57 +3107,103 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword, bool updateSelection )
 
     }
 
-    // check if at least one entry was changed
+    // update selection
+    _updateSelection( newKeyword, entries );
+
+    // Save logbook if needed
+    if( !logbook_->file().isEmpty() ) save();
+
+    return;
+
+}
+
+//_______________________________________________
+void MainWindow::_linkEntryKeyword( Keyword newKeyword )
+{
+
+    Debug::Throw() << "MainWindow::_linkEntryKeyword - newKeyword: " << newKeyword << endl;
+
+    const auto currentKeyword( this->currentKeyword() );
+    if( treeModeAction_->isChecked() && newKeyword == currentKeyword ) return;
+
+    // keep track of modified entries
+    Base::KeySet<LogEntry> entries;
+
+    // retrieve current selection
+    for( const auto& entry:entryModel_.get( entryList_->selectionModel()->selectedRows() ) )
+    {
+
+        // change keyword and set as modified
+        if( entry->keywords().contains( newKeyword ) ) continue;
+        else entry->addKeyword( newKeyword );
+
+        /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the
+        keyword change when synchronizing logbooks, without having all entries modification time
+        set to now() */
+        entry->setModification( entry->modification()+1 );
+
+        // keep track of modified entries
+        entries.insert( entry );
+
+        // set associated logbooks as modified
+        for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
+        { logbook->setModified( true ); }
+
+    }
+
+    _updateSelection( newKeyword, entries );
+
+    // Save logbook if needed
+    if( !logbook_->file().isEmpty() ) save();
+
+    return;
+
+}
+
+//_______________________________________________
+void MainWindow::_updateSelection( Keyword newKeyword, Base::KeySet<LogEntry> entries )
+{
+
+    // check if at least one entry is selected
     if( entries.empty() ) return;
 
     // reset lists
     _resetKeywordList();
 
-    // update keyword selection
-    if( updateSelection )
-    {
+    // make sure parent keyword index is expanded
+    QModelIndex parentIndex( keywordModel_.index( newKeyword.parent() ) );
+    if( parentIndex.isValid() ) keywordList_->setExpanded( parentIndex, true );
 
-        // make sure parent keyword index is expanded
-        QModelIndex parentIndex( keywordModel_.index( newKeyword.parent() ) );
-        if( parentIndex.isValid() ) keywordList_->setExpanded( parentIndex, true );
-
-        // retrieve current index, and select
-        QModelIndex index( keywordModel_.index( newKeyword ) );
-        keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-        keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
-        keywordList_->scrollTo( index );
-    }
+    // retrieve current index, and select
+    QModelIndex index( keywordModel_.index( newKeyword ) );
+    keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    keywordList_->scrollTo( index );
 
     // update entry selection
     _resetLogEntryList();
 
-    if( updateSelection )
+    // clear current selection
+    entryList_->clearSelection();
+
+    // select all modified entries
+    QModelIndex lastIndex;
+    for( const auto& entry:entries )
     {
-        // clear current selection
-        entryList_->clearSelection();
-
-        // select all modified entries
-        QModelIndex lastIndex;
-        for( const auto& entry:entries )
+        QModelIndex index( entryModel_.index( entry ) );
+        if( index.isValid() )
         {
-            QModelIndex index( entryModel_.index( entry ) );
-            if( index.isValid() )
-            {
-                lastIndex = index;
-                entryList_->selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows );
-            }
-        }
-
-        // update current index
-        if( lastIndex.isValid() )
-        {
-            entryList_->selectionModel()->setCurrentIndex( lastIndex,  QItemSelectionModel::Select|QItemSelectionModel::Rows );
-            entryList_->scrollTo( lastIndex );
+            lastIndex = index;
+            entryList_->selectionModel()->select( index, QItemSelectionModel::Select|QItemSelectionModel::Rows );
         }
     }
 
-    // Save logbook if needed
-    if( !logbook_->file().isEmpty() ) save();
+    // update current index
+    if( lastIndex.isValid() )
+    {
+        entryList_->selectionModel()->setCurrentIndex( lastIndex,  QItemSelectionModel::Select|QItemSelectionModel::Rows );
+        entryList_->scrollTo( lastIndex );
+    }
 
     return;
 
@@ -3453,14 +3514,6 @@ void MainWindow::_updateConfiguration( void )
     treeModeAction().setChecked( XmlOptions::get().get<bool>( "USE_TREE" ) );
 
 }
-
-//______________________________________________________________________
-void MainWindow::KeywordList::setDefaultWidth( int value )
-{ defaultWidth_ = value; }
-
-//____________________________________________
-QSize MainWindow::KeywordList::sizeHint( void ) const
-{ return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):TreeView::sizeHint(); }
 
 //_______________________________________________
 LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mode )

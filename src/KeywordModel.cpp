@@ -56,13 +56,13 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
     if( !(index.isValid() && role == Qt::EditRole ) ) return false;
 
     // retrieve parent index
-    Keyword parent_keyword( get( parent( index ) ) );
+    Keyword parentKeyword( get( parent( index ) ) );
 
     Keyword keyword( get( index ) );
     if( value.toString() != keyword.current() )
     {
         // generate new keyword from value
-        Keyword newKeyword( parent_keyword.append( value.toString() ) );
+        Keyword newKeyword( parentKeyword.append( value.toString() ) );
         Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << newKeyword << endl;
         emit keywordChanged( keyword, newKeyword );
         emit dataChanged( index, index );

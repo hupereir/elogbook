@@ -62,6 +62,7 @@ set(elogbook_SOURCES
   FormatBar.cpp
   HtmlHeaderNode.cpp
   InsertLinkDialog.cpp
+  KeywordList.cpp
   KeywordModel.cpp
   LogbookHtmlHelper.cpp
   LogbookInformationDialog.cpp
@@ -72,6 +73,7 @@ set(elogbook_SOURCES
   LogbookStatisticsDialog.cpp
   LogEntryHtmlHelper.cpp
   LogEntryInformationDialog.cpp
+  LogEntryList.cpp
   LogEntryModel.cpp
   LogEntryPrintHelper.cpp
   LogEntryPrintOptionWidget.cpp

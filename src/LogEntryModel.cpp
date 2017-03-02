@@ -192,26 +192,13 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 //__________________________________________________________________
 bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int role )
 {
-    Debug::Throw( "LogEntryModel::setData.\n" );
+    Debug::Throw( 0, "LogEntryModel::setData.\n" );
 
-    if( !editionEnabled() )
-    {
-        Debug::Throw(0, "LogEntryModel::setData - edition is disabled. setData canceled.\n" );
-        return false;
-    }
+    if( !editionEnabled() ) return false;
+    if( !(index.isValid() && ( index.column() == Title || index.column() == Keyword ) && role == Qt::EditRole ) ) return false;
 
-    if( !(index.isValid() && ( index.column() == Title || index.column() == Keyword ) && role == Qt::EditRole ) )
-    {
-        Debug::Throw(0, "LogEntryModel::setData - invalid index/role. setData canceled.\n" );
-        return false;
-    }
-
-    LogEntry* entry( get( index ) );
-    if( !entry )
-    {
-        Debug::Throw(0, "LogEntryModel::setData - entry is null. setData canceled.\n" );
-        return false;
-    }
+    auto entry = get( index );
+    if( !entry ) return false;
 
     if( index.column() == Title && value != entry->title() )
     {
