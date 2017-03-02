@@ -171,6 +171,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // rename all entries matching first keyword the second. This correspond to
     // drag and drop inside the keyword list, or to direct edition of a keyword list item.
+    connect( &keywordModel_, SIGNAL(keywordChangeRequest(Keyword,Keyword)), SLOT(_confirmRenameKeyword(Keyword,Keyword)) );
     connect( &keywordModel_, SIGNAL(keywordChanged(Keyword,Keyword)), SLOT(_renameKeyword(Keyword,Keyword)) );
 
     {
@@ -1191,6 +1192,22 @@ void MainWindow::_installActions( void )
     treeModeAction_->setCheckable( true );
     treeModeAction_->setChecked( true );
     connect( treeModeAction_, SIGNAL(toggled(bool)), SLOT(_toggleTreeMode(bool)) );
+
+    // menu actions
+    QAction* action;
+    keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Move ), tr( "Move Here" ), this ) );
+    keywordChangedMenuActions_.append( action = new QAction( this ) );
+    action->setSeparator( true );
+    keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
+    action->setShortcut( Qt::Key_Escape );
+
+    // keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Here" ), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Move ), tr( "Move Here" ), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Link ), tr( "Link Here" ), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( this ) );
+    action->setSeparator( true );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
+    action->setShortcut( Qt::Key_Escape );
 
 }
 
@@ -2892,6 +2909,24 @@ void MainWindow::_renameKeyword( void )
     return;
 
 }
+
+//____________________________________________
+void MainWindow::_confirmRenameKeyword( const Keyword& keyword, const Keyword& newKeyword )
+{
+    Debug::Throw("MainWindow::_confirmRenameKeyword.\n" );
+
+    // check keywords are different
+    if( keyword == newKeyword ) return;
+
+    QMenu menu( this );
+    menu.addActions( keywordChangedMenuActions_ );
+    menu.ensurePolished();
+    QAction* action( menu.exec( QCursor::pos() ) );
+    if( action == keywordChangedMenuActions_[0] ) _renameKeyword( keyword, newKeyword, true );
+    else return;
+
+}
+
 
 //____________________________________________
 void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeyword, bool updateSelection )

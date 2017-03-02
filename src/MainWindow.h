@@ -463,7 +463,12 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* rename keyword for all entries that match old keyword.
     /**
     this is triggered by drag and drop in the keyword list,
-    by renaming a keyword directly from the keyword list,
+    **/
+    void _confirmRenameKeyword( const Keyword& oldKeyword, const Keyword& newKeyword );
+    
+    //* rename keyword for all entries that match old keyword.
+    /**
+    this is triggered by renaming a keyword directly from the keyword list,
     or by deleting a keyword in the list, and moving entries to the parent.
     It is also called by the renameKeyword slot above.
     */
@@ -720,6 +725,12 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* entry color button
     QToolButton* entryColorButton_ = nullptr;
+
+    //* static menu actions
+    QList<QAction*> keywordChangedMenuActions_;
+
+    //* static menu actions
+    QList<QAction*> entryKeywordChangedMenuActions_;
 
     //@}
 

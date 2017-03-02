@@ -73,16 +73,13 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
 
     Q_SIGNALS:
 
-    /** \brief
-    emitted when a logEntryList drag is accepted.
-    Sends the new keyword
-    */
-    void entryKeywordChanged( Keyword );
+    //* emitted when a logEntryList drag is accepted. Sends the new keyword
+    void entryKeywordChangeRequest( Keyword );
 
-    /** \brief
-    emitted when a Keyword drag is accepted, or when keyword item
-    is emitted directly in the list. Sends old keyword, new keyword
-    */
+    //* emitted when a keyword drag is accepted. Sends the new keyword
+    void keywordChangeRequest( Keyword, Keyword );
+
+    //* emitted when a keyword is changed directly in editor
     void keywordChanged( Keyword, Keyword );
 
     protected:
@@ -94,11 +91,11 @@ class KeywordModel : public TreeModel<Keyword>, public Counter
 
     //* keyword changed
     void _requestEntryKeywordChanged( void )
-    { emit entryKeywordChanged( keywordChangedData_.newKeyword() ); }
+    { emit entryKeywordChangeRequest( keywordChangedData_.newKeyword() ); }
 
     //* keyword changed
     void _requestKeywordChanged( void )
-    { emit keywordChanged( keywordChangedData_.oldKeyword(), keywordChangedData_.newKeyword() ); }
+    { emit keywordChangeRequest( keywordChangedData_.oldKeyword(), keywordChangedData_.newKeyword() ); }
 
     private:
 

@@ -48,6 +48,9 @@ namespace IconNames
     static const QString PreferencesBackup = "configure-backups";
     static const QString Merge = "merge";
 
+    static const QString Move = "go-jump";
+    static const QString Link = "insert-link";
+
 };
 
 #endif
