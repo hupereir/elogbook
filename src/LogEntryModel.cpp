@@ -77,7 +77,7 @@ Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
     Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
 
     // check against edition index
-    if( index == editionIndex() && editionEnabled() )
+    if( index == editionIndex_ && editionEnabled_ )
     { out |= Qt::ItemIsEditable; }
 
     // check column
@@ -194,7 +194,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
 {
     Debug::Throw( "LogEntryModel::setData.\n" );
 
-    if( !editionEnabled() ) return false;
+    if( !editionEnabled_ ) return false;
     if( !(index.isValid() && ( index.column() == Title || index.column() == Keyword ) && role == Qt::EditRole ) ) return false;
 
     auto entry = get( index );

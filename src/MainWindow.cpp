@@ -1013,10 +1013,10 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 
     // get child under widget
     bool accepted( false );
-    QWidget *child = childAt(event->pos());
+    auto child = childAt(event->pos());
     while (child && child != this)
     {
-        if( child == &keywordToolBar() || child == &entryToolBar() )
+        if( child == keywordToolBar_ || child == entryToolBar_ )
         {
             accepted = true;
             break;
@@ -1026,7 +1026,7 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
     }
 
     if( !accepted ) return;
-    QMenu* menu = createPopupMenu();
+    auto menu = createPopupMenu();
     menu->exec( event->globalPos() );
     menu->deleteLater();
     event->accept();
@@ -3393,11 +3393,13 @@ void MainWindow::_startEntryEdition( void )
     Debug::Throw( "MainWindow::_startEntryEdition\n" );
 
     // get current index and check validity
-    QModelIndex index( entryList_->currentIndex() );
+    const auto& index = entryList_->currentIndex();
     if( !index.isValid() ) return;
 
     // make sure 'title' index is selected
-    index = entryModel_.index( index.row(), LogEntryModel::Title );
+    // index = entryModel_.index( index.row(), LogEntryModel::Title );
+    if( !( index.column() == LogEntryModel::Keyword || index.column() == LogEntryModel::Title ) )
+    { return; }
 
     // enable model edition
     entryModel_.setEditionIndex( index );
@@ -3447,7 +3449,7 @@ void MainWindow::_toggleTreeMode( bool value )
     entryList_->resizeColumns();
 
     // keyword toolbar visibility action
-    keywordToolBar().visibilityAction().setEnabled( value );
+    keywordToolBar_->visibilityAction().setEnabled( value );
 
     // force show keyword
     for( const auto& window:Base::KeySet<EditionWindow>( this ) )
