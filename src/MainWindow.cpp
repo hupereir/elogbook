@@ -47,6 +47,7 @@
 #include "LogbookStatisticsDialog.h"
 #include "LogbookPrintOptionWidget.h"
 #include "LogbookPrintHelper.h"
+#include "LogEntryInformationDialog.h"
 #include "LogEntryPrintOptionWidget.h"
 #include "LogEntryPrintSelectionDialog.h"
 #include "LogEntryPrintSelectionWidget.h"
@@ -273,6 +274,8 @@ MainWindow::MainWindow( QWidget *parent ):
         menu->addAction( entryKeywordAction_ );
         menu->addAction( deleteEntryAction_ );
         menu->addAction( entryColorAction_ );
+        menu->addSeparator();
+        menu->addAction( entryInformationAction_ );
         menu->setHideDisabledActions( true );
     }
 
@@ -463,7 +466,7 @@ bool MainWindow::setLogbook( File file )
     emit ready();
 
     // check errors
-    XmlError::List errors( logbook_->xmlErrors() );
+    auto errors( logbook_->xmlErrors() );
     if( errors.size() )
     {
         QString buffer( errors.size() > 1 ? tr( "Errors occured while parsing files.\n" ):tr("An error occured while parsing files.\n") );
@@ -1108,6 +1111,11 @@ void MainWindow::_installActions( void )
     entryKeywordAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Change Keyword..." ), this );
     entryKeywordAction_->setToolTip( tr( "Edit selected entries keyword" ) );
     connect( entryKeywordAction_, SIGNAL(triggered()), SLOT(_renameEntryKeyword()) );
+
+    // entry information
+    addAction( entryInformationAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Entry Properties..." ), this ) );
+    entryInformationAction_->setToolTip( tr( "Show current entry properties" ) );
+    connect( entryInformationAction_, SIGNAL(triggered()), SLOT(_entryInformation()) );
 
     newLogbookAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Logbook..." ), this );
     newLogbookAction_->setToolTip( tr( "Create a new logbook" ) );
@@ -2509,7 +2517,7 @@ void MainWindow::_editEntries( void )
     Debug::Throw( "MainWindow::_EditEntries .\n" );
 
     // retrieve selected items; make sure they do not include the navigator
-    LogEntryModel::List selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
+    auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
     if( selection.empty() )
     {
         InformationDialog( this, tr( "No entry selected. <Edit Entries> canceled." ) ).exec();
@@ -2714,7 +2722,7 @@ void MainWindow::_changeEntryColor( QColor color )
     Debug::Throw( "MainWindow::_changeEntryColor.\n" );
 
     // retrieve current selection
-    LogEntryModel::List selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
+    auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
     if( selection.empty() )
     {
         InformationDialog( this, tr( "No entry selected. <Change Entry Color> canceled." ) ).exec();
@@ -2744,6 +2752,18 @@ void MainWindow::_changeEntryColor( QColor color )
 
     // save Logbook
     if( !logbook_->file().isEmpty() ) save();
+
+}
+
+//____________________________________________
+void MainWindow::_entryInformation( void )
+{
+    // retrieve current selection
+    auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
+    if( selection.size() != 1 ) return;
+
+    // create dialog
+    LogEntryInformationDialog( this, selection.front() ).centerOnParent().exec();
 
 }
 
@@ -2783,7 +2803,7 @@ void MainWindow::_deleteKeyword( void )
     Debug::Throw("MainWindow::_deleteKeyword.\n" );
 
     // check that keywordlist has selected item
-    QModelIndexList selectedIndexes( keywordList_->selectionModel()->selectedRows() );
+    auto selectedIndexes( keywordList_->selectionModel()->selectedRows() );
     if( selectedIndexes.empty() )
     {
         InformationDialog( this, tr( "No keyword selected. <Delete Keyword> canceled" ) ).exec();
@@ -3005,7 +3025,7 @@ void MainWindow::_renameEntryKeyword( void )
     Debug::Throw("MainWindow::_renameEntryKeyword.\n" );
 
     // retrieve current selection
-    LogEntryModel::List selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
+    auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
     if( selection.empty() )
     {
         InformationDialog( this, tr( "No entry selected. <Rename Entry Keyword> canceled." ) ).exec();
@@ -3280,6 +3300,9 @@ void MainWindow::_updateEntryActions( void )
     entryColorButton_->setEnabled( !readOnly && hasSelection );
     entryKeywordAction_->setEnabled( !readOnly && hasSelection );
     editEntryTitleAction_->setEnabled( !readOnly && hasSelection );
+
+    entryInformationAction_->setEnabled( selectedEntries == 1 );
+
     newEntryAction_->setEnabled( !readOnly );
 
 

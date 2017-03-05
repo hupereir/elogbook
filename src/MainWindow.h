@@ -196,6 +196,10 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     QAction& entryKeywordAction( void ) const
     { return *entryKeywordAction_; }
 
+    //* show entry properties
+    QAction& entryInformationAction( void ) const
+    { return *entryInformationAction_; }
+
     //* create new logbook
     QAction& newLogbookAction( void ) const
     { return *newLogbookAction_; }
@@ -449,6 +453,9 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* change selected entries color
     virtual void _changeEntryColor( QColor );
 
+    //* show entry information
+    virtual void _entryInformation( void );
+
     //* create new keyword
     void _newKeyword( void );
 
@@ -650,6 +657,9 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* change selected entries keyword
     QAction* entryKeywordAction_ = nullptr;
+
+    //* entry information action
+    QAction* entryInformationAction_ = nullptr;
 
     //* create new logbook
     QAction* newLogbookAction_ = nullptr;

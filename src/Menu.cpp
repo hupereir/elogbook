@@ -207,7 +207,7 @@ void Menu::_updateEditorMenu( void )
     windowsMenu_->addAction( &mainWindow.logbookStatisticsAction() );
     windowsMenu_->addAction( &mainWindow.logbookInformationsAction() );
 
-    if( editionWindow ) { windowsMenu_->addAction( &editionWindow->entryInfoAction() ); }
+    if( editionWindow ) { windowsMenu_->addAction( &editionWindow->entryInformationAction() ); }
 
     Base::KeySet<EditionWindow> windows( mainWindow );
     bool hasAliveFrame( std::find_if( windows.begin(), windows.end(), EditionWindow::aliveFTor() ) != windows.end() );

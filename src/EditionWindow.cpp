@@ -248,7 +248,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     #endif
 
     toolbar->addAction( printAction_ );
-    toolbar->addAction( entryInfoAction_ );
+    toolbar->addAction( entryInformationAction_ );
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Multiple Views" ), this, "MULTIPLE_VIEW_TOOLBAR" );
@@ -801,11 +801,11 @@ void EditionWindow::_installActions( void )
     spellcheckAction_->setEnabled( !SpellCheck::SpellInterface().dictionaries().empty() );
     #endif
 
-    // entry_info
-    addAction( entryInfoAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Entry Properties..." ), this ) );
-    entryInfoAction_->setIconText( tr( "Properties" ) );
-    entryInfoAction_->setToolTip( tr( "Show current entry properties" ) );
-    connect( entryInfoAction_, SIGNAL(triggered()), SLOT(_entryInfo()) );
+    // entry information
+    addAction( entryInformationAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Entry Properties..." ), this ) );
+    entryInformationAction_->setIconText( tr( "Properties" ) );
+    entryInformationAction_->setToolTip( tr( "Show current entry properties" ) );
+    connect( entryInformationAction_, SIGNAL(triggered()), SLOT(_entryInformation()) );
 
     // print
     addAction( printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this ) );
@@ -1476,7 +1476,7 @@ void EditionWindow::_nextEntry( void )
 }
 
 //_____________________________________________
-void EditionWindow::_entryInfo( void )
+void EditionWindow::_entryInformation( void )
 {
 
     Debug::Throw( "EditionWindow::_EntryInfo.\n" );

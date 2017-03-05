@@ -200,8 +200,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     #endif
 
     //* entry information
-    QAction& entryInfoAction( void ) const
-    { return *entryInfoAction_; }
+    QAction& entryInformationAction( void ) const
+    { return *entryInformationAction_; }
 
     //* print
     QAction& printAction( void ) const
@@ -379,7 +379,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     void _nextEntry( void );
 
     //* show entry info
-    void _entryInfo( void );
+    void _entryInformation( void );
 
     //* Delete Current entry
     void _deleteEntry( void );
@@ -605,7 +605,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     #endif
 
     //* entry information
-    QAction* entryInfoAction_ = nullptr;
+    QAction* entryInformationAction_ = nullptr;
 
     //* print
     QAction* printAction_ = nullptr;

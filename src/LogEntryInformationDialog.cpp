@@ -67,11 +67,24 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     item->setText( entry->title() );
 
     // keyword
-    for( const auto& keyword:entry->keywords() )
+    if( entry->keywords().size() == 1 )
     {
-        item = new GridLayoutItem( this, gridLayout );
-        item->setKey( tr( "Keyword:" ) );
-        item->setText( keyword.get() );
+            item = new GridLayoutItem( this, gridLayout );
+            item->setKey( tr( "Keyword:" ) );
+            item->setText( entry->keywords().begin()->get() );
+
+    } else {
+
+        bool first = true;
+        for( const auto& keyword:entry->keywords() )
+        {
+            item = new GridLayoutItem( this, gridLayout );
+            item->setKey( first ? tr( "Keywords:" ):QString() );
+            item->setText( keyword.get() );
+            first = false;
+
+        }
+
     }
 
     // author
