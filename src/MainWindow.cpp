@@ -572,16 +572,41 @@ void MainWindow::selectEntry( LogEntry* entry )
     if( !entry ) return;
 
     // select entry keyword
-    const auto currentKeyword( this->currentKeyword() );
-    if( !entry->keywords().contains( currentKeyword ) )
+    if( !entry->keywords().contains( currentKeyword() ) )
     {
-        QModelIndex index = entry->hasKeywords() ? keywordModel_.index( *entry->keywords().begin() ):keywordModel_.index( Keyword::Default );
+        const auto index = keywordModel_.index( entry->hasKeywords() ?  *entry->keywords().begin():Keyword::Default );
         keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         keywordList_->scrollTo( index );
     }
 
-    QModelIndex index = entryModel_.index( entry );
+    const auto index = entryModel_.index( entry );
+    entryList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    entryList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    entryList_->scrollTo( index );
+    return;
+
+}
+
+//_______________________________________________
+void MainWindow::selectEntry( const Keyword& keyword, LogEntry* entry )
+{
+    Debug::Throw("MainWindow::selectEntry.\n" );
+
+    if( !entry ) return;
+    if( !entry->keywords().contains( keyword ) )
+    { return selectEntry( entry ); }
+
+    // select entry keyword
+    if( !(keyword == currentKeyword() ) )
+    {
+        const auto index = keywordModel_.index( keyword );
+        keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+        keywordList_->scrollTo( index );
+    }
+
+    const auto index = entryModel_.index( entry );
     entryList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     entryList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     entryList_->scrollTo( index );

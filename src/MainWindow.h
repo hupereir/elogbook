@@ -304,6 +304,9 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* select entry
     virtual void selectEntry( LogEntry* );
 
+    //* select entry
+    virtual void selectEntry( const Keyword&, LogEntry* );
+
     //* select entries using selection criterions
     virtual void selectEntries( QString, SearchWidget::SearchModes );
 
