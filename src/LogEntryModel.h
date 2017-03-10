@@ -22,6 +22,7 @@
 
 #include "Counter.h"
 #include "Color.h"
+#include "Keyword.h"
 #include "ListModel.h"
 
 #include <QMap>
@@ -44,7 +45,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     enum ColumnType
     {
         Color,
-        Keyword,
+        Key,
         Title,
         HasAttachment,
         Creation,
@@ -53,7 +54,7 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
         nColumns
     };
 
-    //*@name methods reimplemented from base class
+    //*@name accessors
     //@{
 
     //* flags
@@ -61,9 +62,6 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
 
     //* return data
     virtual QVariant data( const QModelIndex&, int ) const;
-
-    // modify data
-    virtual bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole );
 
     //* header data
     virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
@@ -78,22 +76,25 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     virtual int columnCount( const QModelIndex& = QModelIndex() ) const
     { return nColumns; }
 
-    //@}
-
-    //*@name edition
-    //@{
-
     //* enable edition
     bool editionEnabled( void ) const
     { return editionEnabled_; }
 
-    //* enable edition
-    void setEditionEnabled( bool value )
-    { editionEnabled_ = value; }
-
     //* edition index
     const QModelIndex& editionIndex( void ) const
     { return editionIndex_; }
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    // modify data
+    virtual bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole );
+
+    //* enable edition
+    void setEditionEnabled( bool value )
+    { editionEnabled_ = value; }
 
     //* edition index
     void setEditionIndex( const QModelIndex& index )
@@ -101,6 +102,10 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
         editionEnabled_ = false;
         editionIndex_ = index;
     }
+
+    //* current keyword
+    void setCurrentKeyword( Keyword value )
+    { currentKeyword_ = value; }
 
     //@}
 
@@ -151,6 +156,9 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
         bool operator() ( LogEntry*, LogEntry* ) const;
 
     };
+
+    //* current keyword, in tree mode
+    Keyword currentKeyword_;
 
     //* edition flag
     bool editionEnabled_ = false;

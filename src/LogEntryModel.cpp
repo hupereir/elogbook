@@ -105,7 +105,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
             switch( index.column() )
             {
 
-                case Keyword:
+                case Key:
                 {
 
                     auto keywords = entry->keywords();
@@ -195,7 +195,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
     Debug::Throw( "LogEntryModel::setData.\n" );
 
     if( !editionEnabled_ ) return false;
-    if( !(index.isValid() && ( index.column() == Title || index.column() == Keyword ) && role == Qt::EditRole ) ) return false;
+    if( !(index.isValid() && ( index.column() == Title || index.column() == Key ) && role == Qt::EditRole ) ) return false;
 
     auto entry = get( index );
     if( !entry ) return false;
@@ -206,7 +206,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
         entry->setTitle( value.toString() );
         emit dataChanged( index, index );
 
-    } else if( index.column() == Keyword ) {
+    } else if( index.column() == Key ) {
 
         auto keywords( entry->keywords() );
         if( keywords.empty() )
@@ -322,6 +322,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
 
         // FIXME: this is broken. In case of split keyword/title mode, one must get the selected keyword instead
         if( keywords.empty() ) what << Keyword::Default << "/" << entry->title() << endl;
+        else if( keywords.contains( currentKeyword_ ) ) what << currentKeyword_ << "/" << entry->title() << endl;
         else what << keywords.begin()->get() << "/" << entry->title() << endl;
 
     }
@@ -410,7 +411,7 @@ bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) 
     switch( type_ )
     {
 
-        case Keyword:
+        case Key:
         {
             auto firstKeywords( first->keywords() );
             auto secondKeywords( second->keywords() );
