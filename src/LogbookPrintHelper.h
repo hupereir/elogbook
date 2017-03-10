@@ -22,6 +22,7 @@
 #include "Counter.h"
 #include "BasePrintHelper.h"
 #include "Debug.h"
+#include "Keyword.h"
 #include "Logbook.h"
 #include "LogEntryModel.h"
 #include "LogEntry.h"
@@ -46,21 +47,25 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
         Counter( "LogbookPrintHelper" )
     { Debug::Throw( "LogbookPrintHelper::LogbookPrintHelper.\n" ); };
 
+    //*@name accessors
+    //@{
+
+    //* abort
+    bool isAborted( void ) const
+    { return aborted_; }
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
     //* logbook
     void setLogbook( Logbook* logbook )
     { logbook_ = logbook; }
 
-    //* entries
-    void setEntries(
-        const LogEntryModel::List& allEntries,
-        const LogEntryModel::List& visibleEntries,
-        const LogEntryModel::List& selectedEntries )
-    {
-        allEntries_ = allEntries;
-        visibleEntries_ = visibleEntries;
-        selectedEntries_ = selectedEntries;
-        _updateEntries();
-    }
+    //* set entries
+    void setEntries( const LogEntryModel::List& entries )
+    { entries_ = entries; }
 
     //* abort
     void setAborted( bool value )
@@ -70,12 +75,13 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     void abort( void )
     { aborted_ = true; }
 
-    //* abort
-    bool isAborted( void ) const
-    { return aborted_; }
+    //* current keyword
+    void setCurrentKeyword( Keyword value )
+    { currentKeyword_ = value; }
+
+    //@}
 
     public Q_SLOTS:
-
 
     //* mask
     void setMask( Logbook::Mask value )
@@ -84,13 +90,6 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     //* entry mask
     void setEntryMask( LogEntry::Mask value )
     { entryMask_ = value; }
-
-    //* set entry selection mode
-    void setSelectionMode( LogEntryPrintSelectionWidget::Mode mode )
-    {
-        selectionMode_ = mode;
-        _updateEntries();
-    }
 
     //* print
     void print( QPrinter* );
@@ -117,21 +116,14 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     //* entry mask
     LogEntry::Mask entryMask_ = LogEntry::All;
 
-    //* selection mode
-    LogEntryPrintSelectionWidget::Mode selectionMode_ = LogEntryPrintSelectionWidget::VisibleEntries;
-
     //* logbook
     Logbook* logbook_ = nullptr;
 
-    //*@name logbook entries
-    //@{
-
-    LogEntryModel::List allEntries_;
-    LogEntryModel::List visibleEntries_;
-    LogEntryModel::List selectedEntries_;
+    //* logbook entries
     LogEntryModel::List entries_;
 
-    //@}
+    //* current keyword, in tree mode
+    Keyword currentKeyword_;
 
     //* progress dialog
     QProgressDialog* progressDialog_ = nullptr;

@@ -86,30 +86,6 @@ void LogbookPrintHelper::print( QPrinter* printer )
 }
 
 //__________________________________________________________________________________
-void LogbookPrintHelper::_updateEntries( void )
-{
-
-    Debug::Throw( "LogbookPrintHelper::_updateEntries.\n" );
-    switch( selectionMode_ )
-    {
-        case LogEntryPrintSelectionWidget::AllEntries:
-        entries_ = allEntries_;
-        break;
-
-        default:
-        case LogEntryPrintSelectionWidget::VisibleEntries:
-        entries_ = visibleEntries_;
-        break;
-
-        case LogEntryPrintSelectionWidget::SelectedEntries:
-        entries_ = selectedEntries_;
-        break;
-    }
-
-}
-
-
-//__________________________________________________________________________________
 void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
@@ -240,23 +216,53 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
         QTextTableCellFormat cellFormat;
         cellFormat.setFontWeight( QFont::Bold );
         QTextTableCell cell;
-        (cell = table->cellAt(0,0)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Keyword" ) );
-        (cell = table->cellAt(0,1)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Title" ) );
+        (cell = table->cellAt(0,0)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Title" ) );
+        (cell = table->cellAt(0,1)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Keyword" ) );
         (cell = table->cellAt(0,2)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Created" ) );
         (cell = table->cellAt(0,3)).setFormat( cellFormat ); cell.firstCursorPosition().insertText( tr( "Modified" ) );
 
         int row(1);
-        for( ;iter != entries_.end() && row < nRows; ++iter, ++row )
+        for( ;iter != entries_.end() && row < nRows; ++iter, row++ )
         {
 
+            auto entry( *iter );
+
+            // make sure there is room to print the full entry
+            if( currentKeyword_.get().isEmpty() && entry->keywords().size() > nRows )
+            { break; }
+
+            // add new row
             table->appendRows( 1 );
 
-            auto entry( *iter );
-            if( entry->hasKeywords() )
-            { table->cellAt(row,0).firstCursorPosition().insertText( entry->keywords().begin()->get() + "  " ); }
-            table->cellAt(row,1).firstCursorPosition().insertText( entry->title() + "  " );
+            // assign title, creation and modification time
+            table->cellAt(row,0).firstCursorPosition().insertText( entry->title() + "  " );
             table->cellAt(row,2).firstCursorPosition().insertText( entry->creation().toString() + "  " );
             table->cellAt(row,3).firstCursorPosition().insertText( entry->modification().toString() + "  " );
+
+            // assign keyword
+            if( entry->keywords().contains( currentKeyword_ ) )
+            {
+
+                table->cellAt(row,1).firstCursorPosition().insertText( currentKeyword_.get() + "  " );
+
+            } else if( entry->hasKeywords() ) {
+
+                int i=0;
+                const int keywordCount( entry->keywords().size() );
+                for( const auto& keyword:entry->keywords() )
+                {
+                    table->cellAt(row,1).firstCursorPosition().insertText( keyword.get() + "  " );
+                    if( i < keywordCount-1 )
+                    {
+                        table->appendRows( 1 );
+                        row++;
+                    }
+
+                    // increment counter
+                    ++i;
+                }
+
+            }
 
             // update progress
             if( progressDialog_ )

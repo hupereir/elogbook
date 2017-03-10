@@ -230,8 +230,8 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
     entryList_->setDragEnabled(true);
     entryList_->setOptionName( "ENTRY_LIST" );
-    entryList_->setColumnHidden( LogEntryModel::Keyword, true );
-    entryList_->lockColumnVisibility( LogEntryModel::Keyword );
+    entryList_->setColumnHidden( LogEntryModel::Key, true );
+    entryList_->lockColumnVisibility( LogEntryModel::Key );
     entryList_->setColumnHidden( LogEntryModel::Title, false );
     entryList_->lockColumnVisibility( LogEntryModel::Title );
 
@@ -1220,6 +1220,34 @@ void MainWindow::_installActions( void )
 }
 
 //_______________________________________________
+void MainWindow::_resetKeywordList( void )
+{
+
+    Debug::Throw( "MainWindow::_resetKeywordList.\n" );
+    Q_CHECK_PTR( logbook_ );
+
+    // retrieve new list of keywords (from logbook)
+    Keyword::Set newKeywords;
+    Keyword root;
+    for( const auto& entry:logbook_->entries() )
+    {
+        if( entry->isFindSelected() )
+        {
+
+            for( auto keyword:entry->keywords() )
+            {
+                for( ; keyword != root; keyword = keyword.parent() )
+                { newKeywords.insert( keyword ); }
+            }
+
+        }
+    }
+
+    keywordModel_.set( newKeywords.toList() );
+
+}
+
+//_______________________________________________
 void MainWindow::_resetLogEntryList( void )
 {
 
@@ -1258,34 +1286,6 @@ void MainWindow::_resetLogEntryList( void )
     }
 
     return;
-
-}
-
-//_______________________________________________
-void MainWindow::_resetKeywordList( void )
-{
-
-    Debug::Throw( "MainWindow::_resetKeywordList.\n" );
-    Q_CHECK_PTR( logbook_ );
-
-    // retrieve new list of keywords (from logbook)
-    Keyword::Set newKeywords;
-    Keyword root;
-    for( const auto& entry:logbook_->entries() )
-    {
-        if( entry->isFindSelected() )
-        {
-
-            for( auto keyword:entry->keywords() )
-            {
-                for( ; keyword != root; keyword = keyword.parent() )
-                { newKeywords.insert( keyword ); }
-            }
-
-        }
-    }
-
-    keywordModel_.set( newKeywords.toList() );
 
 }
 
@@ -1724,12 +1724,31 @@ void MainWindow::_print( void )
     // create helper
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook_ );
-    helper.setEntries(
-        Base::KeySet<LogEntry>( logbook_->entries() ).toList(),
-        entryModel_.get(),
-        entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
-    helper.setSelectionMode( selectionDialog.mode() );
+    auto selectionMode( selectionDialog.mode() );
+
+    if( treeModeAction_->isChecked() &&
+        ( selectionMode == LogEntryPrintSelectionWidget::VisibleEntries ||
+        selectionMode == LogEntryPrintSelectionWidget::SelectedEntries ) )
+    { helper.setCurrentKeyword( currentKeyword() ); }
+
+    switch( selectionDialog.mode() )
+    {
+
+        case LogEntryPrintSelectionWidget::AllEntries:
+        helper.setEntries( Base::KeySet<LogEntry>( logbook_->entries() ).toList() );
+        break;
+
+        default:
+        case LogEntryPrintSelectionWidget::VisibleEntries:
+        helper.setEntries( entryModel_.get() );
+        break;
+
+        case LogEntryPrintSelectionWidget::SelectedEntries:
+        helper.setEntries( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
+        break;
+
+    }
 
     _print( helper );
 }
@@ -1816,12 +1835,31 @@ void MainWindow::_printPreview( void )
     // create helper
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook_ );
-    helper.setEntries(
-        Base::KeySet<LogEntry>( logbook_->entries() ).toList(),
-        entryModel_.get(),
-        entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
 
-    helper.setSelectionMode( selectionDialog.mode() );
+    auto selectionMode( selectionDialog.mode() );
+
+    if( treeModeAction_->isChecked() &&
+        ( selectionMode == LogEntryPrintSelectionWidget::VisibleEntries ||
+        selectionMode == LogEntryPrintSelectionWidget::SelectedEntries ) )
+    { helper.setCurrentKeyword( currentKeyword() ); }
+
+    switch( selectionMode )
+    {
+
+        case LogEntryPrintSelectionWidget::AllEntries:
+        helper.setEntries( Base::KeySet<LogEntry>( logbook_->entries() ).toList() );
+        break;
+
+        default:
+        case LogEntryPrintSelectionWidget::VisibleEntries:
+        helper.setEntries( entryModel_.get() );
+        break;
+
+        case LogEntryPrintSelectionWidget::SelectedEntries:
+        helper.setEntries( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
+        break;
+
+    }
 
     // masks
     helper.setMask( (Logbook::Mask) XmlOptions::get().get<int>( "LOGBOOK_PRINT_OPTION_MASK" ) );
@@ -3240,6 +3278,8 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
     Keyword keyword( keywordModel_.get( index ) );
     Debug::Throw() << "MainWindow::_keywordSelectionChanged - keyword: " << keyword << endl;
 
+    if( treeModeAction_->isChecked() ) entryModel_.setCurrentKeyword( keyword );
+
     // keep track of the current selected entry
     QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
     LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
@@ -3376,7 +3416,7 @@ void MainWindow::_entryItemClicked( const QModelIndex& index )
     // do nothing if index is not already selected
     if( !entryList_->selectionModel()->isSelected( index ) ) return;
 
-    if( !( index.column() == LogEntryModel::Title ||  index.column() == LogEntryModel::Keyword ) )
+    if( !( index.column() == LogEntryModel::Title ||  index.column() == LogEntryModel::Key ) )
     { return; }
 
     // compare to model edition index
@@ -3395,7 +3435,7 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
 
     Mask mask;
     if( index.column() == LogEntryModel::Title ) mask |= TitleMask;
-    else if( index.column() == LogEntryModel::Keyword ) mask |= KeywordMask;
+    else if( index.column() == LogEntryModel::Key ) mask |= KeywordMask;
 
     // update associated EditionWindows
     _updateEntryFrames( entry, mask );
@@ -3421,7 +3461,7 @@ void MainWindow::_startEntryEdition( void )
 
     // make sure 'title' index is selected
     // index = entryModel_.index( index.row(), LogEntryModel::Title );
-    if( !( index.column() == LogEntryModel::Keyword || index.column() == LogEntryModel::Title ) )
+    if( !( index.column() == LogEntryModel::Key || index.column() == LogEntryModel::Title ) )
     { return; }
 
     // enable model edition
@@ -3463,12 +3503,13 @@ void MainWindow::_toggleTreeMode( bool value )
 
     // update keyword list
     if( value ) _resetKeywordList();
+    else entryModel_.setCurrentKeyword( Keyword() );
 
     // update log entry list
     _resetLogEntryList();
 
     // change keyword column visibility
-    entryList_->setColumnHidden( LogEntryModel::Keyword, value );
+    entryList_->setColumnHidden( LogEntryModel::Key, value );
     entryList_->resizeColumns();
 
     // keyword toolbar visibility action

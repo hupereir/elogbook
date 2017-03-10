@@ -322,10 +322,10 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void contextMenuEvent( QContextMenuEvent* );
 
     //* clear list and reinitialize from logbook entries
-    virtual void _resetLogEntryList( void );
+    virtual void _resetKeywordList( void );
 
     //* clear list and reinitialize from logbook entries
-    virtual void _resetKeywordList( void );
+    virtual void _resetLogEntryList( void );
 
     //* load colors (from current logbook)
     void _loadColors( void );
