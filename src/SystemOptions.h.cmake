@@ -39,6 +39,12 @@ void installSystemOptions( void )
     XmlOptions::get().set( "DICTIONARY", "en" );
     XmlOptions::get().set( "DICTIONARY_FILTER", "none" );
     #endif
+
+    #if !defined(Q_OS_WIN)
+    XmlOptions::get().keep( "HTML_COMMAND" );
+    XmlOptions::get().add( "HTML_COMMAND", "@XDG_OPEN@" );
+    #endif
+
     XmlOptions::get().setAutoDefault( false );
 
 };

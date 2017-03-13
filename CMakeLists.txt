@@ -33,6 +33,9 @@ else()
   add_definitions(-DUSE_ASPELL=0)
 endif()
 
+########### external applications ###############
+find_program(XDG_OPEN xdg-open)
+
 ########### subdirectories ###############
 if(ENABLE_SHARED)
 
