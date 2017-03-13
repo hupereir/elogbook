@@ -96,25 +96,25 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     gridLayout->setMargin(0);
     layout->addLayout( gridLayout );
 
-    // keywoard label and editor
-    gridLayout->addWidget( keywordLabel_ = new QLabel( tr( " Keyword:" ), main ), 0, 0, 1, 1 );
-    gridLayout->addWidget( keywordEditor_ = new Editor( main ), 0, 1, 1, 2 );
-    keywordEditor_->setPlaceholderText( tr( "Entry keyword" ) );
-    keywordLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
-    keywordLabel_->setBuddy( keywordEditor_ );
-
     // title label and editor
-    gridLayout->addWidget( titleLabel_ = new QLabel( tr( "Subject:" ), main ), 1, 0, 1, 1 );
-    gridLayout->addWidget( titleEditor_ = new Editor( main ), 1, 1, 1, 1 );
+    gridLayout->addWidget( titleLabel_ = new QLabel( tr( "Subject:" ), main ), 0, 0, 1, 1 );
+    gridLayout->addWidget( titleEditor_ = new Editor( main ), 0, 1, 1, 1 );
     titleEditor_->setPlaceholderText( tr( "Entry subject" ) );
     titleLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     titleLabel_->setBuddy( titleEditor_ );
 
     // colorWidget
-    gridLayout->addWidget( colorWidget_ = new Private::ColorWidget( main ), 1, 2, 1, 1 );
+    gridLayout->addWidget( colorWidget_ = new Private::ColorWidget( main ), 0, 2, 1, 1 );
     colorWidget_->setToolTip( tr( "Change entry color.\nThis is used to tag entries in the main window list" ) );
     colorWidget_->setAutoRaise( true );
     colorWidget_->setPopupMode( QToolButton::InstantPopup );
+
+    // keywoard label and editor
+    gridLayout->addWidget( keywordLabel_ = new QLabel( tr( " Keyword:" ), main ), 1, 0, 1, 1 );
+    gridLayout->addWidget( keywordEditor_ = new Editor( main ), 1, 1, 1, 2 );
+    keywordEditor_->setPlaceholderText( tr( "Entry keyword" ) );
+    keywordLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
+    keywordLabel_->setBuddy( keywordEditor_ );
 
     gridLayout->setColumnStretch( 1, 1 );
 
