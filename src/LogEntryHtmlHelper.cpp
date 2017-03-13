@@ -109,25 +109,37 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     QDomElement row;
 
     // keyword
-    if( mask_&LogEntry::KeywordMask )
+    if( (mask_&LogEntry::KeywordMask) && entry_->hasKeywords() )
     {
-        bool first( true );
-        for( const auto& keyword:entry_->keywords() )
+
+        const auto& keywords( entry_->keywords() );
+        if( keywords.size() > 1 )
         {
-            row = table.appendChild( document.createElement( "tr" ) ).toElement();
-            row.appendChild( document.createElement( "td" ) );
-
-            if( first )
+            bool first( true );
+            for( const auto& keyword:entry_->keywords() )
             {
+                row = table.appendChild( document.createElement( "tr" ) ).toElement();
+                if( first )
+                {
 
-                row.appendChild( document.createElement( "td" ) )
-                    .appendChild( document.createTextNode( tr( "Keyword:" ) ) );
-                first = false;
+                    row.appendChild( document.createElement( "td" ) )
+                        .appendChild( document.createTextNode( tr( "Keywords:" ) ) );
+                    first = false;
 
-            } else row.appendChild( document.createElement( "td" ) );
+                } else row.appendChild( document.createElement( "td" ) );
 
+                row.appendChild( document.createElement( "td" ) ).
+                    appendChild( document.createTextNode( keyword.get().toUtf8() ) );
+            }
+        } else {
+
+            const auto& keyword( *entry_->keywords().begin() );
+            row = table.appendChild( document.createElement( "tr" ) ).toElement();
+            row.appendChild( document.createElement( "td" ) )
+                .appendChild( document.createTextNode( tr( "Keyword:" ) ) );
             row.appendChild( document.createElement( "td" ) ).
-                appendChild( document.createTextNode( keyword.get() ) );
+                appendChild( document.createTextNode( keyword.get().toUtf8() ) );
+
         }
 
     }
@@ -144,7 +156,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
             appendChild( document.createElement( "a" ) ).
             toElement();
         ref.setAttribute( "name", QString::number( entry_->creation() ) );
-        ref.appendChild( document.createTextNode( entry_->title() ) );
+        ref.appendChild( document.createTextNode( entry_->title().toUtf8() ) );
     }
 
     // author
@@ -154,7 +166,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Author:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry_->author() ) );
+            appendChild( document.createTextNode( entry_->author().toUtf8() ) );
 
     }
 
@@ -165,7 +177,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Created:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry_->creation().toString() ) );
+            appendChild( document.createTextNode( entry_->creation().toString().toUtf8() ) );
 
     }
 
@@ -176,7 +188,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Modified:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry_->modification().toString() ) );
+            appendChild( document.createTextNode( entry_->modification().toString().toUtf8() ) );
 
     }
 
@@ -297,7 +309,7 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
             toElement();
         if( attachment->isUrl() ) ref.setAttribute( "href", attachment->file() );
         else ref.setAttribute( "href", QString("file:") + attachment->file() );
-        ref.appendChild( document.createTextNode( attachment->file() ) );
+        ref.appendChild( document.createTextNode( attachment->file().toUtf8() ) );
 
         // comments
         if( !attachment->comments().isEmpty() )

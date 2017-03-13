@@ -27,6 +27,7 @@
 #include "LogEntryModel.h"
 #include "LogEntry.h"
 #include "LogEntryPrintSelectionWidget.h"
+#include "WeakPointer.h"
 
 #include <QObject>
 #include <QPainter>
@@ -126,7 +127,7 @@ class LogbookPrintHelper: public BasePrintHelper, public Counter
     Keyword currentKeyword_;
 
     //* progress dialog
-    QProgressDialog* progressDialog_ = nullptr;
+    Base::WeakPointer<QProgressDialog> progressDialog_;
 
     //* progress
     int progress_ = 0;

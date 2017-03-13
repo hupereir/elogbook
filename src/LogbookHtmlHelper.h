@@ -21,6 +21,7 @@
 
 #include "Counter.h"
 #include "Debug.h"
+#include "Keyword.h"
 #include "Logbook.h"
 #include "LogEntryModel.h"
 #include "LogEntry.h"
@@ -44,6 +45,9 @@ class LogbookHtmlHelper: public QObject, public Counter
         Counter( "LogbookHtmlHelper" )
     { Debug::Throw( "LogbookHtmlHelper::LogbookHtmlHelper.\n" ); };
 
+    //*@name modifiers
+    //@{
+
     //* logbook
     void setLogbook( Logbook* logbook )
     { logbook_ = logbook; }
@@ -59,6 +63,12 @@ class LogbookHtmlHelper: public QObject, public Counter
     //* entry mask
     void setEntryMask( LogEntry::Mask value )
     { entryMask_ = value; }
+
+    //* current keyword
+    void setCurrentKeyword( Keyword value )
+    { currentKeyword_ = value; }
+
+    //@}
 
     public Q_SLOTS:
 
@@ -89,6 +99,9 @@ class LogbookHtmlHelper: public QObject, public Counter
 
     //* logbook entries
     LogEntryModel::List entries_;
+
+    //* current keyword, in tree mode
+    Keyword currentKeyword_;
 
 };
 

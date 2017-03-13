@@ -85,7 +85,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Title:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( logbook_->title() ) );
+            appendChild( document.createTextNode( logbook_->title().toUtf8() ) );
     }
 
     // comments
@@ -106,7 +106,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Author:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( logbook_->author() ) );
+            appendChild( document.createTextNode( logbook_->author().toUtf8() ) );
     }
 
     // file
@@ -118,7 +118,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
         QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", logbook_->file() );
-        ref.appendChild( document.createTextNode( logbook_->file() ) );
+        ref.appendChild( document.createTextNode( logbook_->file().toUtf8() ) );
     }
 
     // directory
@@ -130,7 +130,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
         QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", logbook_->directory() );
-        ref.appendChild( document.createTextNode( logbook_->directory() ) );
+        ref.appendChild( document.createTextNode( logbook_->directory().toUtf8() ) );
 
         if( !logbook_->checkDirectory() )
         { column.appendChild( document.createTextNode( tr( " (not found)" ) ) ); }
@@ -144,7 +144,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Created:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( logbook_->creation().toString() ) );
+            appendChild( document.createTextNode( logbook_->creation().toString().toUtf8() ) );
     }
 
     // modification
@@ -154,7 +154,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Modified:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( logbook_->modification().toString() ) );
+            appendChild( document.createTextNode( logbook_->modification().toString().toUtf8() ) );
     }
 
     // backup
@@ -164,7 +164,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createTextNode( tr( "Backup:" ) ) );
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( logbook_->modification().toString() ) );
+            appendChild( document.createTextNode( logbook_->modification().toString().toUtf8() ) );
     }
 
     parent.appendChild( document.createElement( "p" ) );
@@ -192,11 +192,11 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
     QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( tr( "Keyword" ) ) );
+        appendChild( document.createTextNode( tr( "Title" ) ) );
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
-        appendChild( document.createTextNode( tr( "Title" ) ) );
+        appendChild( document.createTextNode( tr( "Keyword" ) ) );
 
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
@@ -211,28 +211,41 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
     {
         QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
 
-        // keyword
+        // title
         QDomElement ref = row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation() ) );
+        ref.appendChild( document.createTextNode( entry->title().toUtf8() ) );
 
-        // FIXME: should add either all keywords or current
-        if( entry->hasKeywords() )
-        { ref.appendChild( document.createTextNode( entry->keywords().begin()->get() ) ); }
+        // keywords
+        ref = row.appendChild( document.createElement( "td" ) ).toElement();
+        if( entry->keywords().contains( currentKeyword_ ) )
+        {
 
-        // title
-        ref = row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation() ) );
-        ref.appendChild( document.createTextNode( entry->title() ) );
+            ref.appendChild( document.createTextNode( currentKeyword_.get().toUtf8() ) );
+
+        } else if( entry->hasKeywords() ) {
+
+            int i=0;
+            const int keywordCount( entry->keywords().size() );
+            for( const auto& keyword:entry->keywords() )
+            {
+                ref.appendChild( document.createTextNode( keyword.get().toUtf8() ) );
+                if( i < keywordCount-1 ) ref.appendChild( document.createElement( "br" ) );
+
+                // increment counter
+                ++i;
+            }
+
+        }
 
         // creation
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry->creation().toString() ) );
+            appendChild( document.createTextNode( entry->creation().toString().toUtf8() ) );
 
         // modification
         row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createTextNode( entry->modification().toString() ) );
+            appendChild( document.createTextNode( entry->modification().toString().toUtf8() ) );
 
     }
 

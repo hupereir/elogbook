@@ -81,7 +81,7 @@ void LogbookPrintHelper::print( QPrinter* printer )
     {
         progressDialog_->setValue( maxValue );
         progressDialog_->deleteLater();
-        progressDialog_ = 0;
+        progressDialog_ = nullptr;
     }
 }
 

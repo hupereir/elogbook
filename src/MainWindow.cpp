@@ -1750,32 +1750,18 @@ void MainWindow::_print( void )
     LogbookPrintHelper helper( this );
     helper.setLogbook( logbook_ );
 
+    // assign entries and keyword
     auto selectionMode( selectionDialog.mode() );
+    helper.setEntries( _entries( selectionMode ) );
 
     if( treeModeAction_->isChecked() &&
         ( selectionMode == LogEntryPrintSelectionWidget::VisibleEntries ||
         selectionMode == LogEntryPrintSelectionWidget::SelectedEntries ) )
     { helper.setCurrentKeyword( currentKeyword() ); }
 
-    switch( selectionDialog.mode() )
-    {
-
-        case LogEntryPrintSelectionWidget::AllEntries:
-        helper.setEntries( Base::KeySet<LogEntry>( logbook_->entries() ).toList() );
-        break;
-
-        default:
-        case LogEntryPrintSelectionWidget::VisibleEntries:
-        helper.setEntries( entryModel_.get() );
-        break;
-
-        case LogEntryPrintSelectionWidget::SelectedEntries:
-        helper.setEntries( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
-        break;
-
-    }
-
+    // print
     _print( helper );
+
 }
 
 //___________________________________________________________
@@ -1967,8 +1953,14 @@ void MainWindow::_toHtml( void )
     LogbookHtmlHelper helper( this );
     helper.setLogbook( logbook_ );
 
-    // select entries
-    helper.setEntries( _entries( logEntrySelectionWidget->mode() ) );
+    // assign entries and keyword
+    auto selectionMode( logEntrySelectionWidget->mode() );
+    helper.setEntries( _entries( selectionMode ) );
+
+    if( treeModeAction_->isChecked() &&
+        ( selectionMode == LogEntryPrintSelectionWidget::VisibleEntries ||
+        selectionMode == LogEntryPrintSelectionWidget::SelectedEntries ) )
+    { helper.setCurrentKeyword( currentKeyword() ); }
 
     // retrieve mask and assign
     helper.setMask( logbookOptionWidget->mask() );
@@ -3614,7 +3606,7 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     {
         default:
         case LogEntryPrintSelectionWidget::AllEntries:
-        { Base::KeySet<LogEntry>( logbook_->entries() ).toList(); }
+        return Base::KeySet<LogEntry>( logbook_->entries() ).toList();
 
         case LogEntryPrintSelectionWidget::VisibleEntries:
         return entryModel_.get();
