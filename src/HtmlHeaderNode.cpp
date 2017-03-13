@@ -26,7 +26,7 @@ HtmlHeaderNode::HtmlHeaderNode( QDomElement& parent, QDomDocument& document )
     Debug::Throw( "HtmlHeaderNode::Header.\n" );
     QDomElement head = parent.appendChild( document.createElement( "head" ) ).toElement();
     QDomElement meta = head.appendChild( document.createElement( "meta" ) ).toElement();
-    meta.setAttribute( "content", "text/html; charset=iso-8859-1" );
+    meta.setAttribute( "content", "text/html; charset=utf8" );
     meta.setAttribute( "http-equiv", "Content-Type" );
 
     meta = head.appendChild( document.createElement( "meta" ) ).toElement();
