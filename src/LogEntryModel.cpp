@@ -46,8 +46,8 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
 const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
 {
     QString(),
-    tr( "Keyword" ),
     tr( "Subject" ),
+    tr( "Keyword" ),
     QString(),
     tr( "Creation" ),
     tr( "Modification" ),

@@ -45,8 +45,8 @@ class LogEntryModel : public ListModel<LogEntry*>, public Counter
     enum ColumnType
     {
         Color,
-        Key,
         Title,
+        Key,
         HasAttachment,
         Creation,
         Modification,
