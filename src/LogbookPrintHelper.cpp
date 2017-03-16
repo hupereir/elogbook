@@ -65,8 +65,8 @@ void LogbookPrintHelper::print( QPrinter* printer )
     {
         progress_ = 0;
         progressDialog_ = new QProgressDialog( tr( "Generating print output..." ), tr( "Cancel" ), 0, maxValue );
-        progressDialog_->setWindowTitle( tr( "Print Logbook - Elogbook" ) );
-        progressDialog_->setWindowModality(Qt::WindowModal);
+        progressDialog_.data()->setWindowTitle( tr( "Print Logbook - Elogbook" ) );
+        progressDialog_.data()->setWindowModality(Qt::WindowModal);
     }
 
     // print everything
@@ -79,9 +79,8 @@ void LogbookPrintHelper::print( QPrinter* printer )
 
     if( progressDialog_ )
     {
-        progressDialog_->setValue( maxValue );
-        progressDialog_->deleteLater();
-        progressDialog_ = nullptr;
+        progressDialog_.data()->setValue( maxValue );
+        progressDialog_.clear();
     }
 }
 
@@ -267,8 +266,8 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
             // update progress
             if( progressDialog_ )
             {
-                progressDialog_->setValue( ++progress_ );
-                if( progressDialog_->wasCanceled() )
+                progressDialog_.data()->setValue( ++progress_ );
+                if( progressDialog_.data()->wasCanceled() )
                 {
                     abort();
                     return;
@@ -341,8 +340,8 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
         // update progress
         if( progressDialog_ )
         {
-            progressDialog_->setValue( ++progress_ );
-            if( progressDialog_->wasCanceled() )
+            progressDialog_.data()->setValue( ++progress_ );
+            if( progressDialog_.data()->wasCanceled() )
             {
                 abort();
                 return;
