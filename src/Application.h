@@ -20,18 +20,18 @@
 *
 *******************************************************************************/
 
+#include "AttachmentWindow.h"
 #include "BaseApplication.h"
 #include "CommandLineArguments.h"
 #include "CommandLineParser.h"
 #include "Config.h"
 #include "Counter.h"
+#include "FileList.h"
 #include "IconEngine.h"
+#include "ScratchFileMonitor.h"
+#include "MainWindow.h"
 
-class AttachmentWindow;
-class FileList;
-class LogEntry;
-class MainWindow;
-class ScratchFileMonitor;
+#include <memory>
 
 //* application
 class Application: public BaseApplication, public Counter
@@ -44,9 +44,6 @@ class Application: public BaseApplication, public Counter
 
     //* constructor
     Application( CommandLineArguments );
-
-    //* destructor
-    ~Application( void );
 
     //* application manager
     virtual bool initApplicationManager( void );
@@ -109,16 +106,16 @@ class Application: public BaseApplication, public Counter
     private:
 
     //* recent files
-    FileList* recentFiles_ = nullptr;
+    std::unique_ptr<FileList> recentFiles_;
 
     //* toplevel attachment frame
-    AttachmentWindow* attachmentWindow_ = nullptr;
+    std::unique_ptr<AttachmentWindow> attachmentWindow_;
 
     //* main window entry selection frame
-    MainWindow* mainWindow_ = nullptr;
+    std::unique_ptr<MainWindow> mainWindow_;
 
     //* scratch files
-    ScratchFileMonitor* scratchFileMonitor_ = nullptr;
+    std::unique_ptr<ScratchFileMonitor> scratchFileMonitor_;
 
 };
 

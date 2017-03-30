@@ -44,13 +44,6 @@ Application::Application( CommandLineArguments arguments ) :
 {}
 
 //____________________________________________
-Application::~Application( void )
-{
-    if( mainWindow_ ) delete mainWindow_;
-    if( recentFiles_ ) delete recentFiles_;
-}
-
-//____________________________________________
 bool Application::initApplicationManager( void )
 {
     Debug::Throw( "Application::initApplicationManager.\n" );
@@ -82,16 +75,16 @@ bool Application::realizeWidget( void )
     connect( &closeAction(), SIGNAL(triggered()), SLOT(_exit()) );
 
     // recent files
-    recentFiles_ = new XmlFileList();
+    recentFiles_.reset( new XmlFileList() );
     recentFiles_->setCheck( true );
 
     // create attachment window
-    attachmentWindow_ = new AttachmentWindow();
-    attachmentWindow().centerOnDesktop();
+    attachmentWindow_.reset( new AttachmentWindow() );
+    attachmentWindow_->centerOnDesktop();
 
     // create selection frame
-    mainWindow_ = new MainWindow();
-    connect( &attachmentWindow(), SIGNAL(entrySelected(LogEntry*)), mainWindow_, SLOT(selectEntry(LogEntry*)) );
+    mainWindow_.reset( new MainWindow() );
+    connect( attachmentWindow_.get(), SIGNAL(entrySelected(LogEntry*)), mainWindow_.get(), SLOT(selectEntry(LogEntry*)) );
 
     // update configuration
     connect( this, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
@@ -101,9 +94,9 @@ bool Application::realizeWidget( void )
     mainWindow_->show();
 
     // scratch files
-    scratchFileMonitor_ = new ScratchFileMonitor( this );
-    connect( qApp, SIGNAL(aboutToQuit()), scratchFileMonitor_, SLOT(deleteScratchFiles()) );
-    connect( mainWindow_, SIGNAL(scratchFileCreated(File)), scratchFileMonitor_, SLOT(add(File)) );
+    scratchFileMonitor_.reset( new ScratchFileMonitor() );
+    connect( qApp, SIGNAL(aboutToQuit()), scratchFileMonitor_.get(), SLOT(deleteScratchFiles()) );
+    connect( mainWindow_.get(), SIGNAL(scratchFileCreated(File)), scratchFileMonitor_.get(), SLOT(add(File)) );
 
     // update
     qApp->processEvents();
@@ -121,7 +114,7 @@ bool Application::realizeWidget( void )
         if( !file.isEmpty() )
         {
             const QString buffer = QString( tr( "Unable to open file '%1'." ) ).arg( file );
-            InformationDialog( mainWindow_, buffer ).exec();
+            InformationDialog( mainWindow_.get(), buffer ).exec();
         }
 
         // create a default, empty logbook
@@ -158,7 +151,7 @@ void Application::_configuration( void )
 void Application::_updateConfiguration( void )
 {
     Debug::Throw( "Application::_updateConfiguration.\n" );
-    static_cast<XmlFileList*>(recentFiles_)->setDBFile( File( XmlOptions::get().raw( "RC_FILE" ) ) );
+    static_cast<XmlFileList*>(recentFiles_.get())->setDBFile( File( XmlOptions::get().raw( "RC_FILE" ) ) );
     recentFiles_->setMaxSize( XmlOptions::get().get<int>( "DB_SIZE" ) );
 }
 
@@ -172,7 +165,7 @@ void Application::_exit( void )
     if( mainWindow_ )
     {
         // check if editable EditionWindows needs save
-        Base::KeySet<EditionWindow> windows( mainWindow_ );
+        Base::KeySet<EditionWindow> windows( mainWindow_.get() );
         for( const auto& window:windows )
         {
             if( !( window->isReadOnly() || window->isClosed() ) && window->modified() && window->askForSave() == AskForSaveDialog::Cancel )
@@ -207,7 +200,7 @@ bool Application::_processCommand( Server::ServerCommand command )
         {
 
             const QString buffer = QString( tr( "Accept request for file '%1'?" ) ).arg( filenames.front() );
-            if( QuestionDialog( mainWindow_, buffer ).centerOnParent().exec() )
+            if( QuestionDialog( mainWindow_.get(), buffer ).centerOnParent().exec() )
             { mainWindow_->setLogbook( File( filenames.front() ) ); }
 
         }
