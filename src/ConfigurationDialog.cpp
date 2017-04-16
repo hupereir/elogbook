@@ -63,7 +63,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 //     addOptionWidget( spinbox );
 
     // colors
-    QWidget* page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
+    auto page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
     box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
     box->setLayout( new QVBoxLayout() );
     box->layout()->setMargin(5);

@@ -1905,6 +1905,37 @@ Private::LocalTextEditor::LocalTextEditor( QWidget* parent ):
 }
 
 //___________________________________________________________________________________
+void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
+{
+    Debug::Throw( "Private::LocalTextEditor::insertFromMimeData.\n" );
+
+    if( source->hasFormat(QLatin1String("application/x-qrichtext") ) )
+    { return TextEditor::insertFromMimeData( source ); }
+
+    // get source text
+    QString text;
+    if( source->hasHtml() ) text = source->html();
+    else text = source->text();
+    if( text.isNull() ) return TextEditor::insertFromMimeData( source );
+
+    // try build an url from text
+    QUrl url( text );
+    if( !url.isValid() || url.isRelative() ) return TextEditor::insertFromMimeData( source );
+
+    // check scheme
+    static QStringList schemes = { "http", "https", "file" };
+    if( !schemes.contains( url.scheme() ) ) return TextEditor::insertFromMimeData( source );
+
+    // copy mime type
+    // redo html addind the proper href
+    QMimeData copy;
+    copy.setText( source->text() );
+    copy.setHtml( QString( "<a href=\"%1\">%2</a> " ).arg( text ).arg( text ) );
+    return TextEditor::insertFromMimeData( &copy );
+
+}
+
+//___________________________________________________________________________________
 void Private::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, bool allActions )
 {
     Debug::Throw( "Private::LocalTextEditor::installContextMenuActions.\n" );

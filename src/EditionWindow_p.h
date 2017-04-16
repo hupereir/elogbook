@@ -93,6 +93,9 @@ namespace Private
 
         protected:
 
+        //* insert from mime data
+        virtual void insertFromMimeData( const QMimeData* );
+
         //* install actions in context menu
         virtual void installContextMenuActions( BaseContextMenu*, bool = true );
 

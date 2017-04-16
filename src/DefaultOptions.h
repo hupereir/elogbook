@@ -60,7 +60,7 @@ void installDefaultOptions( void )
     XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#3333FF" ) ) );
     XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#993399" ) ) );
 
-    // normal (overwritten) options
+    // normal options
 
     // window sizes
     XmlOptions::get().set<int>( "ATTACHMENT_WINDOW_HEIGHT",400 );
@@ -82,14 +82,7 @@ void installDefaultOptions( void )
     XmlOptions::get().set<int>( "BACKUP_ITV", 30 );
     XmlOptions::get().set<bool>( "CASE_SENSITIVE", false );
     XmlOptions::get().set<int>( "DB_SIZE", 10 );
-
-    XmlOptions::get().set<bool>( "SIDE_EDITOR_TOOLBAR", true );
-
     XmlOptions::get().set<bool>( "SEARCH_PANEL", false );
-    XmlOptions::get().set<int>( "SEARCH_PANEL_LOCATION", Qt::BottomToolBarArea );
-
-    XmlOptions::get().set<int>( "SEARCH_PANEL_ICON_SIZE", 16 );
-    XmlOptions::get().set<int>( "SEARCH_PANEL_TEXT_POSITION", 0 );
 
     XmlOptions::get().set<bool>( "MAIN_TOOLBAR", true );
     XmlOptions::get().set<bool>( "FORMAT_TOOLBAR", true );
@@ -104,8 +97,6 @@ void installDefaultOptions( void )
     XmlOptions::get().set<bool>( "SHOW_SEARCHPANEL", true );
 
     XmlOptions::get().set<int>( "MAX_RECENT_ENTRIES", 30 );
-
-
     XmlOptions::get().set<bool>( "SHOW_KEYWORD", false );
     XmlOptions::get().set<bool>( "USE_TREE", true );
 
