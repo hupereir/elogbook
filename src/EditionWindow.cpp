@@ -199,9 +199,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     action->setToolTip( tr( "Remove read-only lock for current editor" ) );
 
     // main toolbar
-    CustomToolBar* toolbar;
-    toolbar = new CustomToolBar( tr( "Main Toolbar" ), this, "MAIN_TOOLBAR" );
-
+    auto toolbar = new CustomToolBar( tr( "Main Toolbar" ), this, "MAIN_TOOLBAR" );
     toolbar->addAction( newEntryAction_ );
     toolbar->addAction( saveAction_ );
     toolbar->addAction( deleteEntryAction_ );
@@ -214,7 +212,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     formatBar_->addAction( insertLinkAction_ );
     readOnlyActions_ << insertLinkAction_;
 
-    const FormatBar::ActionMap& actions( formatBar_->actions() );
+    const auto& actions( formatBar_->actions() );
     for( auto&& iter = actions.begin(); iter != actions.end(); ++iter )
     { readOnlyActions_ << iter.value(); }
 
@@ -264,7 +262,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( nextEntryAction_ );
 
     // create menu if requested
-    menu_ = new Menu( this, &Singleton::get().application<Application>()->mainWindow() );
+    menu_ = new Menu( this, &application->mainWindow() );
     setMenuBar( menu_ );
 
     // changes display according to readOnly flag
@@ -1902,6 +1900,12 @@ Private::LocalTextEditor::LocalTextEditor( QWidget* parent ):
 {
     setTrackAnchors( true );
     _installActions();
+
+    // configuration
+    auto application( Singleton::get().application<Application>() );
+    connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    _updateConfiguration();
+
 }
 
 //___________________________________________________________________________________
@@ -1909,6 +1913,11 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
 {
     Debug::Throw( "Private::LocalTextEditor::insertFromMimeData.\n" );
 
+    // check option
+    if( !autoInsertLinks_ )
+    { return TextEditor::insertFromMimeData( source ); }
+
+    // do nothing in case of rich text
     if( source->hasFormat(QLatin1String("application/x-qrichtext") ) )
     { return TextEditor::insertFromMimeData( source ); }
 
@@ -1956,6 +1965,10 @@ void Private::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu,
     menu->insertSeparator( &showLineNumberAction() );
 
 }
+
+//_____________________________________________
+void Private::LocalTextEditor::_updateConfiguration( void )
+{ autoInsertLinks_ = XmlOptions::get().get<bool>( "AUTO_INSERT_LINK" ); }
 
 //___________________________________________________________________________________
 void Private::LocalTextEditor::_installActions( void )
@@ -2034,3 +2047,6 @@ void Private::ColorWidget::paintEvent( QPaintEvent* )
     painter.drawComplexControl(QStyle::CC_ToolButton, option);
 
 }
+
+#include "moc_EditionWindow_p.cpp"
+

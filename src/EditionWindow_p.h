@@ -27,6 +27,8 @@ namespace Private
     class ColorWidget: public QToolButton, public Counter
     {
 
+        Q_OBJECT
+
         public:
 
         //* constructor
@@ -52,6 +54,8 @@ namespace Private
     class LocalSplitter: public QSplitter, public Counter
     {
 
+        Q_OBJECT
+
         public:
 
         //* constructor
@@ -65,6 +69,8 @@ namespace Private
     //* local text editor, to deal with HTML edition
     class LocalTextEditor: public TextEditor
     {
+
+        Q_OBJECT
 
         public:
 
@@ -99,10 +105,18 @@ namespace Private
         //* install actions in context menu
         virtual void installContextMenuActions( BaseContextMenu*, bool = true );
 
+        private Q_SLOTS:
+
+        //* configuration
+        void _updateConfiguration( void );
+
         private:
 
         //* install actions
         void _installActions( void );
+
+        //* true when links are to be inserted automatically
+        bool autoInsertLinks_ = true;
 
         //* insert link
         QAction* insertLinkAction_ = nullptr;

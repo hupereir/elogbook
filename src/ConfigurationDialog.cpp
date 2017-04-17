@@ -123,7 +123,42 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     connect( checkbox, SIGNAL(toggled(bool)), spinbox, SLOT(setEnabled(bool)) );
 
     // edition
-    textEditConfiguration();
+    page = textEditConfiguration( nullptr, TabEmulation|ParagraphHighlight )->parentWidget();
+    {
+      // misc
+      QGroupBox* box;
+      page->layout()->addWidget( box = new QGroupBox( tr( "Options" ), page ) );
+      QVBoxLayout* layout = new QVBoxLayout();
+      box->setLayout( layout );
+
+      OptionCheckBox* checkbox = new OptionCheckBox( tr( "Wrap text " ), box, "WRAP_TEXT" );
+      checkbox->setToolTip( tr( "Turn on/off line wrapping at editor border" ) );
+      layout->addWidget( checkbox );
+      addOptionWidget( checkbox );
+
+      layout->addWidget( checkbox = new OptionCheckBox( tr( "Show line numbers" ), box, "SHOW_LINE_NUMBERS" ) );
+      checkbox->setToolTip( tr( "Turn on/off display of line numbers" ) );
+      addOptionWidget( checkbox );
+
+      layout->addWidget( checkbox = new OptionCheckBox( tr( "Insert hyperlinks automatically" ), box, "AUTO_INSERT_LINK" ) );
+      addOptionWidget( checkbox );
+
+      QLabel* label;
+      OptionSpinBox* spinbox;
+      QHBoxLayout* hLayout = new QHBoxLayout();
+      layout->addLayout( hLayout );
+      hLayout->setMargin(0);
+      hLayout->addWidget( label = new QLabel( tr( "Automatically hide mouse cursor after: " ), box ) );
+      hLayout->addWidget( spinbox = new OptionSpinBox( box, "AUTOHIDE_CURSOR_DELAY" ) );
+      spinbox->setSuffix( tr( "s" ) );
+      addOptionWidget( spinbox );
+
+      spinbox->setSpecialValueText( tr( " Never" ) );
+      spinbox->setMinimum( 0 );
+      spinbox->setMaximum( 10 );
+
+    }
+
 
     // printing
     page = &addPage( IconEngine::get( IconNames::PreferencesPrinting ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );

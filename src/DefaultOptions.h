@@ -104,6 +104,8 @@ void installDefaultOptions( void )
     XmlOptions::get().set<int>( "LOGENTRY_PRINT_SELECTION", LogEntryPrintSelectionWidget::AllEntries );
     XmlOptions::get().set<int>( "LOGBOOK_PRINT_OPTION_MASK", Logbook::All );
 
+    XmlOptions::get().set<bool>( "AUTO_INSERT_LINK", true );
+
     // masks
     XmlOptions::get().set<int>( "ENTRY_LIST_MASK",
         (1<< LogEntryModel::Color)|
