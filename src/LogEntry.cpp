@@ -250,6 +250,15 @@ void LogEntry::removeKeyword( Keyword keyword )
 { keywords_.remove( keyword ); }
 
 //__________________________________
+void LogEntry::addFormat( Format::TextFormatBlock format )
+{
+    if( format.isEmpty() ) return;
+    if( format.color() == Qt::black ) format.unsetColor();
+    if( format.format() == Format::Default && !format.color().isValid() ) return;
+    formats_.append(format);
+}
+
+//__________________________________
 void LogEntry::_init( void )
 {
     findSelected_ = true;
