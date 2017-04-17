@@ -346,6 +346,9 @@ void FormatBar::_color( QColor color )
     Debug::Throw( "FormatBar::_color.\n" );
     if( editor_ && enabled_ )
     {
+
+        if( !color.isValid() ) color = palette().color( QPalette::Active, QPalette::Text );
+
         QTextCharFormat format;
         format.setForeground( color );
         editor_->mergeCurrentCharFormat( format );
