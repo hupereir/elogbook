@@ -89,7 +89,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     Q_DECLARE_FLAGS( Mask, MaskFlag )
 
     //* constructor from file
-    Logbook( const File& file = File("") );
+    Logbook( File = File() );
 
     //* destructor
     virtual ~Logbook( void );
@@ -123,11 +123,11 @@ class Logbook:public QObject, public Counter, public Base::Key
     { return entries().empty(); }
 
     //* logbook filename
-    const File& file( void ) const
+    File file( void ) const
     { return file_; }
 
     //* parent logbook filename
-    const File& parentFile( void ) const
+    File parentFile( void ) const
     { return parentFile_; }
 
     //* logbook title
@@ -139,11 +139,11 @@ class Logbook:public QObject, public Counter, public Base::Key
     { return author_; }
 
     //* retrieves attachment comments
-    const QString& comments( void ) const
+    QString comments( void ) const
     { return comments_; }
 
     //* logbook directory
-    const File& directory( void ) const
+    File directory( void ) const
     { return directory_; }
 
     //* checks if logbook directory is set, exists and is a directory
@@ -226,6 +226,9 @@ class Logbook:public QObject, public Counter, public Base::Key
     //*@name modifiers
     //@{
 
+    //* compression [recursive]
+    void setUseCompression( bool value );
+
     //* read from file
     /**
     reads all xml based objects in the input file and chlids,
@@ -234,7 +237,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     bool read( void );
 
     //* writes all xml based objects in given|input file, if any [recursive]
-    bool write( File file = File("") );
+    bool write( File = File() );
 
     //* synchronize logbook with remote
     /**
@@ -269,14 +272,14 @@ class Logbook:public QObject, public Counter, public Base::Key
     { saved_ = stamp; }
 
     //* logbook filename
-    void setFile( const File&, bool recursive = false );
+    void setFile( File, bool recursive = false );
 
     //* parent logbook filename
-    void setParentFile( const QString& file )
+    void setParentFile( QString file )
     { parentFile_ = file; }
 
     //* logbook title. Returns true if changed.
-    bool setTitle( const QString& title )
+    bool setTitle( QString title )
     {
         if( title_ == title ) return false;
         title_ = title;
@@ -284,7 +287,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     }
 
     //* logbook author. Returns true if changed.
-    bool setAuthor( const QString& author )
+    bool setAuthor( QString author )
     {
         if( author_ == author ) return false;
         author_ = author;
@@ -292,7 +295,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     }
 
     //* appends string to attachment comments. Returns true if changed.
-    bool setComments( const QString& comments )
+    bool setComments( QString comments )
     {
         if( comments == comments_ ) return false;
         comments_ = comments ;
@@ -300,7 +303,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     }
 
     //* logbook directory. Returns true if changed.
-    bool setDirectory( const File& directory )
+    bool setDirectory( File directory )
     {
         if( directory_ == directory ) return false;
         directory_ = directory;
@@ -356,7 +359,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     bool setSortOrder( int order );
 
     //* add backup
-    void addBackup( const File& );
+    void addBackup( File );
 
     //* set backup
     void setBackupFiles( const Backup::List& );
@@ -395,7 +398,7 @@ class Logbook:public QObject, public Counter, public Base::Key
         public:
 
         //* constructor
-        SameFileFTor( const QString& file ):
+        SameFileFTor( QString file ):
             file_( file )
         {}
 
@@ -413,7 +416,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     Q_SIGNALS:
 
     //* message emission for logbook status during reading/writting
-    void messageAvailable( const QString& message );
+    void messageAvailable( QString message );
 
     //* emit maximum progress
     /** argument is the maximum number of entries to read */
@@ -435,7 +438,7 @@ class Logbook:public QObject, public Counter, public Base::Key
     QDomElement _recentEntriesElement( QDomDocument& ) const;
 
     //* generate tagged backup filename
-    File _childFilename( const File& file, int ) const;
+    File _childFilename( File, int ) const;
 
     private:
 
@@ -468,6 +471,9 @@ class Logbook:public QObject, public Counter, public Base::Key
 
     //* true if this logbook is a backup
     bool isBackup_ = false;
+
+    //* true if logbook uses compression
+    bool useCompression_ = false;
 
     //* logbook creation time
     TimeStamp creation_;

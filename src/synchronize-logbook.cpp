@@ -19,6 +19,7 @@
 
 #include "Debug.h"
 #include "DefaultOptions.h"
+#include "ErrorHandler.h"
 #include "Logbook.h"
 #include "Options.h"
 #include "ResourceMigration.h"
@@ -49,8 +50,8 @@ int main (int argc, char *argv[])
     }
 
     // load argument
-    const QString local( argv[1] );
-    const QString remote( argv[2] );
+    File local( argv[1] );
+    File remote( argv[2] );
 
     // load options
     QString user( Util::user( ) );
@@ -76,14 +77,22 @@ int main (int argc, char *argv[])
     Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
     if( Debug::level() ) Debug::Throw() << XmlOptions::get() << endl;
 
+    // compression
+    bool useCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
+
     // the core application is needed to have locale, fonts, etc. set properly, notably for QSting
     // not having it might result in lost accents and special characters.
     QCoreApplication application( argc, argv );
 
-    // try open localLogbook
+    // install error handler
+    ErrorHandler::get().disableMessage( "qUncompress: Z_DATA_ERROR: Input data is corrupted file" );
+    ErrorHandler::initialize();
+
+    // try open local Logbook
     Debug::Throw(0) << "synchronize-logbook - reading local logbook from: " << local << endl;
     Logbook localLogbook;
-    localLogbook.setFile( File( local ).expand() );
+    localLogbook.setFile( local.expand() );
+    localLogbook.setUseCompression( useCompression );
     if( !localLogbook.read() )
     {
         Debug::Throw(0) << "synchronize-logbook - error reading local logbook" << endl;
@@ -97,7 +106,8 @@ int main (int argc, char *argv[])
     // try open localLogbook
     Debug::Throw(0) << "synchronize-logbook - reading remote logbook from: " << remote << endl;
     Logbook remoteLogbook;
-    remoteLogbook.setFile( File( remote ).expand() );
+    remoteLogbook.setFile( remote.expand() );
+    remoteLogbook.setUseCompression( useCompression );
     if( !remoteLogbook.read() )
     {
         Debug::Throw(0) << "synchronize-logbook - error reading remote logbook" << endl;

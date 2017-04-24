@@ -130,7 +130,6 @@ if(USE_QT5)
 
 endif()
 
-
 ########### next target ###############
 if(UNIX)
 
@@ -150,6 +149,54 @@ if(UNIX)
   if(USE_QT5)
 
     qt5_use_modules(copy-logbook Widgets Xml)
+
+  endif()
+
+endif()
+
+########### next target ###############
+if(UNIX)
+
+  set(compress_logbook_SOURCES compress-logbook.cpp)
+  add_executable(compress-logbook
+    ${elogbook_lib_SOURCES}
+    ${compress_logbook_SOURCES})
+
+  target_link_libraries(compress-logbook ${QT_LIBRARIES})
+  target_link_libraries(compress-logbook
+    base
+    base-qt
+    base-server)
+
+  install(TARGETS compress-logbook DESTINATION ${BIN_INSTALL_DIR})
+
+  if(USE_QT5)
+
+    qt5_use_modules(compress-logbook Widgets Xml)
+
+  endif()
+
+endif()
+
+########### next target ###############
+if(UNIX)
+
+  set(uncompress_logbook_SOURCES uncompress-logbook.cpp)
+  add_executable(uncompress-logbook
+    ${elogbook_lib_SOURCES}
+    ${uncompress_logbook_SOURCES})
+
+  target_link_libraries(uncompress-logbook ${QT_LIBRARIES})
+  target_link_libraries(uncompress-logbook
+    base
+    base-qt
+    base-server)
+
+  install(TARGETS uncompress-logbook DESTINATION ${BIN_INSTALL_DIR})
+
+  if(USE_QT5)
+
+    qt5_use_modules(uncompress-logbook Widgets Xml)
 
   endif()
 

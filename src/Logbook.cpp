@@ -42,7 +42,7 @@ const QString Logbook::NoFile;
 const QString Logbook::NoDirectory;
 
 //________________________________
-Logbook::Logbook( const File& file ):
+Logbook::Logbook( File file ):
     Counter( "Logbook" ),
     directory_( NoDirectory ),
     title_( NoTitle ),
@@ -68,6 +68,14 @@ Logbook::~Logbook( void )
     Base::KeySet<LogEntry> entries( this );
     for( const auto& entry:entries ) delete entry;
 
+}
+
+//_________________________________
+void Logbook::setUseCompression( bool value )
+{
+    useCompression_ = value;
+    for( const auto& logbook:children_ )
+    { logbook->setUseCompression( value ); }
 }
 
 //_________________________________
@@ -103,9 +111,17 @@ bool Logbook::read( void )
         return false;
     }
 
+    // read everything from file
+    // try read compressed and try uncompress
+    auto content = file.readAll();
+    auto uncompressed = qUncompress( content );
+
+    // try read raw if failed
+    if( !uncompressed.size() ) uncompressed = content;
+
     // create document
     XmlDocument document;
-    if( !document.setContent( &file, error_ ) ) return false;
+    if( !document.setContent( uncompressed, error_ ) ) return false;
 
     // read first child
     QDomElement docElement = document.documentElement();
@@ -191,6 +207,7 @@ bool Logbook::read( void )
             if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
             Logbook* child = new Logbook();
             child->setFile( file );
+            child->setUseCompression( useCompression_ );
 
             // propagate progressAvailable signal.
             connect( child, SIGNAL(progressAvailable(int)), SIGNAL(progressAvailable(int)) );
@@ -328,7 +345,8 @@ bool Logbook::write( File file )
         // finish
         QFile out( file );
         out.open( QIODevice::WriteOnly );
-        out.write( document.toByteArray() );
+        if( useCompression_ ) out.write( qCompress( document.toByteArray() ) );
+        else out.write( document.toByteArray() );
         out.close();
 
         // gets/check new saved timestamp
@@ -482,6 +500,7 @@ Logbook* Logbook::latestChild( void )
         dest->setDirectory( directory() );
         dest->setAuthor( author() );
         dest->setFile( _childFilename( file(), children_.size() ).addPath( file().path() ) );
+        dest->setUseCompression( useCompression_ );
         dest->setModified( true );
 
         children_ << dest;
@@ -601,7 +620,7 @@ void Logbook::addRecentEntry( const LogEntry* entry )
 }
 
 //_________________________________
-void Logbook::setFile( const File& file, bool recursive )
+void Logbook::setFile( File file, bool recursive )
 {
     Debug::Throw( "Logbook::setFile.\n" );
 
@@ -813,7 +832,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 }
 
 //______________________________________________________________________
-void Logbook::addBackup( const File& file )
+void Logbook::addBackup( File file )
 {
     Debug::Throw( "Logbook::addBackup.\n" );
     backupFiles_ << Backup( file );
@@ -871,7 +890,7 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 }
 
 //______________________________________________________________________
-File Logbook::_childFilename( const File& file, int childCount ) const
+File Logbook::_childFilename( File file, int childCount ) const
 {
 
     const File head( file.localName().truncatedName() );

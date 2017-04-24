@@ -60,7 +60,6 @@ void installDefaultOptions( void )
     XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#3333FF" ) ) );
     XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#993399" ) ) );
 
-    // normal options
 
     // window sizes
     XmlOptions::get().set<int>( "ATTACHMENT_WINDOW_HEIGHT",400 );
@@ -75,6 +74,7 @@ void installDefaultOptions( void )
     XmlOptions::get().set<int>( "LIST_ICON_SIZE", 10 );
     XmlOptions::get().set<int>( "ATTACHMENT_LIST_ICON_SIZE", 22 );
 
+    XmlOptions::get().set<bool>( "USE_COMPRESSION", true );
     XmlOptions::get().set<bool>( "FILE_BACKUP", false );
     XmlOptions::get().set<bool>( "AUTO_BACKUP", true );
     XmlOptions::get().set<bool>( "AUTO_SAVE", false );

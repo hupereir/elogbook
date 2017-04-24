@@ -46,15 +46,14 @@ int main (int argc, char *argv[])
 
     // read argument
     // TODO use command-line arguments
-    if( argc < 3 )
+    if( argc < 2 )
     {
-        Debug::Throw(0) << "usage: copy-logbook <input file> <output file>" << endl;
+        Debug::Throw(0) << "usage: compress-logbook <input file>" << endl;
         return 0;
     }
 
     // load argument
     File input( argv[1] );
-    File output( argv[2] );
 
     // load options
     QString user( Util::user( ) );
@@ -81,9 +80,6 @@ int main (int argc, char *argv[])
     Debug::setLevel( XmlOptions::get().get<int>( "DEBUG_LEVEL" ) );
     if( Debug::level() ) Debug::Throw() << XmlOptions::get() << endl;
 
-    // compression
-    bool useCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
-
     // the core application is needed to have locale, fonts, etc. set properly, notably for QSting
     // not having it might result in lost accents and special characters.
     QCoreApplication application( argc, argv );
@@ -93,55 +89,27 @@ int main (int argc, char *argv[])
     ErrorHandler::initialize();
 
     // try open input logbook
-    Debug::Throw(0) << "copy-logbook - reading from: " << input << endl;
+    Debug::Throw(0) << "compress-logbook - reading from: " << input << endl;
     Logbook logbook;
     logbook.setFile( input.expand() );
-    logbook.setUseCompression( useCompression );
     if( !logbook.read() )
     {
-        Debug::Throw(0) << "copy-logbook - error reading logbook" << endl;
+        Debug::Throw(0) << "compress-logbook - error reading logbook" << endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "copy-logbook - number of files: " << logbook.children().size() << endl;
-    Debug::Throw(0) << "copy-logbook - number of entries: " << logbook.entries().size() << endl;
+    Debug::Throw(0) << "compress-logbook - number of files: " << logbook.children().size() << endl;
+    Debug::Throw(0) << "compress-logbook - number of entries: " << logbook.entries().size() << endl;
 
     // perform copy
-    Debug::Throw(0) << "copy-logbook - writing to: " << output << endl;
-    logbook.setFile( output.expand() );
+    Debug::Throw(0) << "compress-logbook - compressing" << endl;
+    logbook.setUseCompression( true );
     logbook.setModifiedRecursive( true );
-
-    // check logbook filename is writable
-    File fullname = logbook.file().expand();
-    if( fullname.exists() ) {
-
-        // check file is not a directory
-        if( fullname.isDirectory() )
-        {
-            Debug::Throw(0) << "copy-logbook - selected file is a directory. <Save Logbook> canceled." << endl;
-            return 0;
-        }
-
-        // check file is writable
-        if( !fullname.isWritable() ) {
-            Debug::Throw(0) << "copy-logbook - selected file is not writable. <Save Logbook> canceled." << endl;
-            return 0;
-        }
-
-    } else {
-
-        File path( fullname.path() );
-        if( !path.isDirectory() ) {
-            Debug::Throw(0) << "copy-logbook - selected path is not valid. <Save Logbook> canceled." << endl;
-            return 0;
-        }
-
-    }
 
     // copy logbook to ouput
     if( !logbook.write() )
-    { Debug::Throw(0) << "copy-logbook - error writing to file " << output << endl; }
+    { Debug::Throw(0) << "compress-logbook - error writing to file " << input << endl; }
 
     return 0;
 }
@@ -149,6 +117,6 @@ int main (int argc, char *argv[])
 //_____________________________________________
 void interrupt( int sig )
 {
-    Debug::Throw() << "copy-logbook::interrupt - Recieved signal " << sig << endl;
+    Debug::Throw() << "compress-logbook::interrupt - Recieved signal " << sig << endl;
     exit(0);
 }

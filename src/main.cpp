@@ -20,6 +20,7 @@
 #include "Application.h"
 #include "Debug.h"
 #include "DefaultOptions.h"
+#include "ErrorHandler.h"
 #include "ResourceMigration.h"
 #include "SystemOptions.h"
 #include "Singleton.h"
@@ -36,6 +37,9 @@ int main (int argc, char *argv[])
     // options
     installDefaultOptions();
     installSystemOptions();
+
+    //
+    ErrorHandler::get().disableMessage( "qUncompress: Z_DATA_ERROR: Input data is corrupted file" );
 
     // migrate old rc files
     File oldRCFile( XmlOptions::get().raw( "OLD_RC_FILE" ) );

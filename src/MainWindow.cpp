@@ -345,6 +345,7 @@ bool MainWindow::setLogbook( File file )
 
     // create new logbook
     logbook_ = new Logbook();
+    logbook_->setUseCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
 
     // if filename is empty, return
     if( file.isEmpty() )
@@ -1287,7 +1288,7 @@ void MainWindow::_resetLogEntryList( void )
         LogEntryModel::List modelEntries;
         for( const auto& entry:logbook_->entries() )
         {
-            if( (!treeModeAction().isChecked() && entry->isFindSelected()) || entry->isSelected() )
+            if( (!treeModeAction_->isChecked() && entry->isFindSelected()) || entry->isSelected() )
             { modelEntries << entry; }
         }
 
@@ -1642,14 +1643,14 @@ void MainWindow::_saveBackup( void )
     }
 
     // generate backup fileName
-    QString filename( logbook_->backupFilename( ) );
+    auto filename( logbook_->backupFilename( ) );
     if( filename.isEmpty() ) {
         InformationDialog( this, tr( "No valid filename. Use <Save As> first." ) ).exec();
         return;
     }
 
     // stores current logbook filename
-    const QString currentFilename( logbook_->file() );
+    auto currentFilename( logbook_->file() );
     const bool readOnlyState( logbook_->isReadOnly() );
     const bool backupState( logbook_->isBackup() );
 
@@ -1670,7 +1671,8 @@ void MainWindow::_saveBackup( void )
     // restore initial filename
     logbook_->setFile( currentFilename, true );
 
-    if( saved ) {
+    if( saved )
+    {
 
         logbook_->addBackup( filename );
         logbook_->setModified( true );
@@ -2555,7 +2557,7 @@ void MainWindow::_newEntry( void )
     }
 
     // force editionWindow show keyword flag
-    editionWindow->setForceShowKeyword( !treeModeAction().isChecked() );
+    editionWindow->setForceShowKeyword( !treeModeAction_->isChecked() );
 
     // call NewEntry for the selected frame
     editionWindow->newEntryAction().trigger();
@@ -2742,7 +2744,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
 
     }
 
-    editionWindow->setForceShowKeyword( !treeModeAction().isChecked() );
+    editionWindow->setForceShowKeyword( !treeModeAction_->isChecked() );
     editionWindow->centerOnWidget( this );
     editionWindow->show();
 
@@ -3579,6 +3581,9 @@ void MainWindow::_updateConfiguration( void )
 
     resize( sizeHint() );
 
+    // compression
+    if( logbook_ ) logbook_->setUseCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
+    
     // autoSave
     autoSaveDelay_ = 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" );
     bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
@@ -3594,7 +3599,7 @@ void MainWindow::_updateConfiguration( void )
     maxRecentEntries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );
 
     // tree mode
-    treeModeAction().setChecked( XmlOptions::get().get<bool>( "USE_TREE" ) );
+    treeModeAction_->setChecked( XmlOptions::get().get<bool>( "USE_TREE" ) );
 
 }
 
