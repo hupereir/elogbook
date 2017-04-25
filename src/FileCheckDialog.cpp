@@ -54,7 +54,8 @@ void FileCheckDialog::setFiles( const QStringList& files )
     Debug::Throw( "FileCheckDialog::setFiles.\n" );
     FileRecordModel::List records;
     for( const auto& file:files )
-    { records << Singleton::get().application<Application>()->recentFiles().get( file ); }
+    { records << FileRecord( File(file) ); }
+
     model_.set( records );
 
     list_->updateMask();
