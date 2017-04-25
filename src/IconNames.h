@@ -45,7 +45,7 @@ namespace IconNames
     static const QString InsertSymbolicLink = "insert-link";
 
     static const QString PreferencesSpellCheck = "tools-check-spelling";
-    static const QString PreferencesBackup = "configure-backups";
+    static const QString PreferencesBackup = "document-save";
     static const QString Merge = "merge";
 
     static const QString Move = "go-jump";

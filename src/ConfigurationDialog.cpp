@@ -53,32 +53,44 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     OptionCheckBox *checkbox = nullptr;
     OptionSpinBox* spinbox = nullptr;
 
-    // colors
-    auto page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
+    // edition
+    auto page = textEditConfiguration( nullptr, TabEmulation|ParagraphHighlight )->parentWidget();
     {
-        auto box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
-        box->setLayout( new QVBoxLayout() );
-        box->layout()->setMargin(5);
-        box->layout()->setSpacing(5);
-        page->layout()->addWidget( box );
+      // misc
+      QGroupBox* box;
+      page->layout()->addWidget( box = new QGroupBox( tr( "Options" ), page ) );
+      QVBoxLayout* layout = new QVBoxLayout();
+      box->setLayout( layout );
 
-        OptionListBox* listbox;
-        box->layout()->addWidget( listbox = new ColorOptionListBox( box, "COLOR" ) );
-        listbox->setToolTip( tr( "Colors used for logbook entry display" ) );
-        addOptionWidget( listbox );
+      OptionCheckBox* checkbox = new OptionCheckBox( tr( "Wrap text " ), box, "WRAP_TEXT" );
+      checkbox->setToolTip( tr( "Turn on/off line wrapping at editor border" ) );
+      layout->addWidget( checkbox );
+      addOptionWidget( checkbox );
 
-        box = new QGroupBox( tr( "Text Colors" ), page );
-        box->setLayout( new QVBoxLayout() );
-        box->layout()->setMargin(5);
-        box->layout()->setSpacing(5);
-        page->layout()->addWidget( box );
+      layout->addWidget( checkbox = new OptionCheckBox( tr( "Show line numbers" ), box, "SHOW_LINE_NUMBERS" ) );
+      checkbox->setToolTip( tr( "Turn on/off display of line numbers" ) );
+      addOptionWidget( checkbox );
 
-        box->layout()->addWidget( listbox = new ColorOptionListBox( box, "TEXT_COLOR" ) );
-        listbox->setToolTip(tr(  "Colors used for text formatting" ) );
-        addOptionWidget( listbox );
+      layout->addWidget( checkbox = new OptionCheckBox( tr( "Insert hyperlinks automatically" ), box, "AUTO_INSERT_LINK" ) );
+      addOptionWidget( checkbox );
+
+      QLabel* label;
+      OptionSpinBox* spinbox;
+      QHBoxLayout* hLayout = new QHBoxLayout();
+      layout->addLayout( hLayout );
+      hLayout->setMargin(0);
+      hLayout->addWidget( label = new QLabel( tr( "Automatically hide mouse cursor after: " ), box ) );
+      hLayout->addWidget( spinbox = new OptionSpinBox( box, "AUTOHIDE_CURSOR_DELAY" ) );
+      spinbox->setSuffix( tr( "s" ) );
+      addOptionWidget( spinbox );
+
+      spinbox->setSpecialValueText( tr( " Never" ) );
+      spinbox->setMinimum( 0 );
+      spinbox->setMaximum( 10 );
+
     }
 
-    // auto save
+    // saving and backup
     page = &addPage( IconEngine::get( IconNames::PreferencesBackup ), tr( "Saving and Backup" ), tr( "Logbook saving and backup configuration" ) );
     {
         auto gridLayout = new GridLayout();
@@ -122,43 +134,6 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
     }
 
-    // edition
-    page = textEditConfiguration( nullptr, TabEmulation|ParagraphHighlight )->parentWidget();
-    {
-      // misc
-      QGroupBox* box;
-      page->layout()->addWidget( box = new QGroupBox( tr( "Options" ), page ) );
-      QVBoxLayout* layout = new QVBoxLayout();
-      box->setLayout( layout );
-
-      OptionCheckBox* checkbox = new OptionCheckBox( tr( "Wrap text " ), box, "WRAP_TEXT" );
-      checkbox->setToolTip( tr( "Turn on/off line wrapping at editor border" ) );
-      layout->addWidget( checkbox );
-      addOptionWidget( checkbox );
-
-      layout->addWidget( checkbox = new OptionCheckBox( tr( "Show line numbers" ), box, "SHOW_LINE_NUMBERS" ) );
-      checkbox->setToolTip( tr( "Turn on/off display of line numbers" ) );
-      addOptionWidget( checkbox );
-
-      layout->addWidget( checkbox = new OptionCheckBox( tr( "Insert hyperlinks automatically" ), box, "AUTO_INSERT_LINK" ) );
-      addOptionWidget( checkbox );
-
-      QLabel* label;
-      OptionSpinBox* spinbox;
-      QHBoxLayout* hLayout = new QHBoxLayout();
-      layout->addLayout( hLayout );
-      hLayout->setMargin(0);
-      hLayout->addWidget( label = new QLabel( tr( "Automatically hide mouse cursor after: " ), box ) );
-      hLayout->addWidget( spinbox = new OptionSpinBox( box, "AUTOHIDE_CURSOR_DELAY" ) );
-      spinbox->setSuffix( tr( "s" ) );
-      addOptionWidget( spinbox );
-
-      spinbox->setSpecialValueText( tr( " Never" ) );
-      spinbox->setMinimum( 0 );
-      spinbox->setMaximum( 10 );
-
-    }
-
 
     // printing
     page = &addPage( IconEngine::get( IconNames::PreferencesPrinting ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );
@@ -182,6 +157,31 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         logEntryPrintOptionWidget->layout()->setMargin(0);
         box->layout()->addWidget( logEntryPrintOptionWidget );
         addOptionWidget( logEntryPrintOptionWidget );
+    }
+
+    // colors
+    page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
+    {
+        auto box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
+        box->setLayout( new QVBoxLayout() );
+        box->layout()->setMargin(5);
+        box->layout()->setSpacing(5);
+        page->layout()->addWidget( box );
+
+        OptionListBox* listbox;
+        box->layout()->addWidget( listbox = new ColorOptionListBox( box, "COLOR" ) );
+        listbox->setToolTip( tr( "Colors used for logbook entry display" ) );
+        addOptionWidget( listbox );
+
+        box = new QGroupBox( tr( "Text Colors" ), page );
+        box->setLayout( new QVBoxLayout() );
+        box->layout()->setMargin(5);
+        box->layout()->setSpacing(5);
+        page->layout()->addWidget( box );
+
+        box->layout()->addWidget( listbox = new ColorOptionListBox( box, "TEXT_COLOR" ) );
+        listbox->setToolTip(tr(  "Colors used for text formatting" ) );
+        addOptionWidget( listbox );
     }
 
     // recent files
