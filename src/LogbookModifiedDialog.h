@@ -47,6 +47,14 @@ class LogbookModifiedDialog: public BaseDialog, public Counter
     //* constructor
     LogbookModifiedDialog( QWidget*, const FileCheck::DataSet& );
 
+    //*@name modifiers
+    //@{
+
+    //* add files
+    void addFiles( const FileCheck::DataSet& );
+
+    //@}
+
     private Q_SLOTS:
 
     //* re-saved removed file

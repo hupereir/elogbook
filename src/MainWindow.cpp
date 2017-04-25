@@ -1433,17 +1433,24 @@ void MainWindow::_filesModified( FileCheck::DataSet files )
     if( ignoreWarnings_ ) return;
     if( files.empty() ) return;
 
-    // ask dialog and take action accordinly
-    int state = LogbookModifiedDialog( this, files ).exec();
-    if( state == LogbookModifiedDialog::SaveAgain ) { save(); }
-    else if( state == LogbookModifiedDialog::SaveAs ) { _saveAs(); }
-    else if( state == LogbookModifiedDialog::Reload )
-    {
+    // check if there is already a dialog open, and update list of files if yes
+    auto dialog = findChild<LogbookModifiedDialog*>();
+    if( dialog ) dialog->addFiles( files );
+    else {
 
-        logbook_->setModifiedRecursive( false );
-        _revertToSaved();
+        // create dialog and take action accordingly
+        int state = LogbookModifiedDialog( this, files ).exec();
+        if( state == LogbookModifiedDialog::SaveAgain ) { save(); }
+        else if( state == LogbookModifiedDialog::SaveAs ) { _saveAs(); }
+        else if( state == LogbookModifiedDialog::Reload )
+        {
 
-    } else if( state == LogbookModifiedDialog::Ignore ) { ignoreWarnings_ = true; }
+            logbook_->setModifiedRecursive( false );
+            _revertToSaved();
+
+        } else if( state == LogbookModifiedDialog::Ignore ) { ignoreWarnings_ = true; }
+
+    }
 
     return;
 }
@@ -3583,7 +3590,7 @@ void MainWindow::_updateConfiguration( void )
 
     // compression
     if( logbook_ ) logbook_->setUseCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
-    
+
     // autoSave
     autoSaveDelay_ = 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" );
     bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );

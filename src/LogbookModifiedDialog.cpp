@@ -92,3 +92,7 @@ Counter( "LogbookModifiedDialog" )
     button->setToolTip( tr( "Ignore warning" ) );
 
 }
+
+//___________________________________________________________________
+void LogbookModifiedDialog::addFiles( const FileCheck::DataSet& files )
+{ model_.add( files.toList() ); }
