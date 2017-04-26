@@ -34,12 +34,13 @@
 int main (int argc, char *argv[])
 {
 
+    // error handler
+    ErrorHandler::initialize();
+    ErrorHandler::get().disableMessage( "qUncompress: Z_DATA_ERROR: Input data is corrupted file" );
+
     // options
     installDefaultOptions();
     installSystemOptions();
-
-    //
-    ErrorHandler::get().disableMessage( "qUncompress: Z_DATA_ERROR: Input data is corrupted file" );
 
     // migrate old rc files
     File oldRCFile( XmlOptions::get().raw( "OLD_RC_FILE" ) );
