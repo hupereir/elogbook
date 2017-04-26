@@ -113,11 +113,11 @@ bool Logbook::read( void )
 
     // read everything from file
     // try read compressed and try uncompress
-    auto content = file.readAll();
-    auto uncompressed = qUncompress( content );
+    auto content( file.readAll() );
+    auto uncompressed( qUncompress( content ) );
 
     // try read raw if failed
-    if( !uncompressed.size() ) uncompressed = content;
+    if( uncompressed.isEmpty() ) uncompressed = content;
 
     // create document
     XmlDocument document;
