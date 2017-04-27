@@ -74,11 +74,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* creator
     EditionWindow( QWidget*, bool readOnly = true );
 
-    //* display all entries informations
-    void displayEntry( Keyword, LogEntry* = nullptr );
-
-    //* display all entries informations
-    void displayEntry( LogEntry* = nullptr );
+    //*@name accessors
+    //@{
 
     //* returns current entry
     LogEntry* entry( void ) const
@@ -87,6 +84,40 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
         Q_ASSERT( entries.size() <= 1 );
         return( entries.size() ) ? *entries.begin():nullptr;
     }
+
+    //* retrieve active display
+    const TextEditor& activeEditor( void ) const;
+
+    //* check if this editor is readOnly or not
+    bool isReadOnly( void ) const
+    { return readOnly_; }
+
+    //* closed flag
+    bool isClosed( void ) const
+    { return closed_; }
+
+    //* check if current entry has been modified or not
+    bool modified( void ) const
+    {
+        return
+            keywordEditor_->isModified() ||
+            titleEditor_->isModified() ||
+            activeEditor().document()->isModified();
+    }
+
+    //* computes window title
+    QString windowTitle() const;
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    //* display all entries informations
+    void displayEntry( Keyword, LogEntry* = nullptr );
+
+    //* display all entries informations
+    void displayEntry( LogEntry* = nullptr );
 
     //* retrieve attachment list
     AttachmentFrame& attachmentFrame( void )
@@ -103,15 +134,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* retrieve active display
     TextEditor& activeEditor( void );
 
-    //* retrieve active display
-    const TextEditor& activeEditor( void ) const;
-
-    //@}
-
-    //* check if this editor is readOnly or not
-    bool isReadOnly( void ) const
-    { return readOnly_; }
-
     //* set readOnly state of the EditionWindow
     void setReadOnly( bool );
 
@@ -119,26 +141,10 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     void setColorMenu( ColorMenu* );
 
     //* closed flag
-    bool isClosed( void ) const
-    { return closed_; }
-
-    //* closed flag
     void setIsClosed( bool );
 
-    //* check if current entry has been modified or not
-    bool modified( void ) const
-    {
-        return
-            keywordEditor_->isModified() ||
-            titleEditor_->isModified() ||
-            activeEditor().document()->isModified();
-    }
-
-    //* computes window title
-    QString windowTitle() const;
-
     //* creates dialog to ask for LogEntry save.
-    AskForSaveDialog::ReturnCode askForSave( bool = true );
+    AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
 
     //* update keyword Widget from current entry
     void displayKeyword( void );
@@ -151,6 +157,23 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* check if current entry has been modified or not
     void setModified( bool );
+
+    //* force keyword visibility
+    void setForceShowKeyword( bool value );
+
+    //* close view
+    /** Ask for save if view is modified */
+    void closeEditor( TextEditor& );
+
+    //* change active display manualy
+    void setActiveEditor( TextEditor& );
+
+    //* save to logbook
+    /** logbook is updated with the content of the current entry,
+    but the logbook itself is not saved */
+    void writeEntryToLogbook( bool updateSelection );
+
+    //@}
 
     //* used to count modified EditionWindows
     class ModifiedFTor
@@ -245,16 +268,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //@}
 
-    //* force keyword visibility
-    void setForceShowKeyword( bool value );
-
-    //* close view
-    /** Ask for save if view is modified */
-    void closeEditor( TextEditor& );
-
-    //* change active display manualy
-    void setActiveEditor( TextEditor& );
-
     Q_SIGNALS:
 
     //* emitted when new scratch file is created
@@ -348,6 +361,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* change keyword (and other widgets) visibility
     void _setKeywordVisible( bool );
+
+    //* creates dialog to ask for LogEntry save.
+    AskForSaveDialog::ReturnCode _askForSave( void );
 
     protected Q_SLOTS:
 

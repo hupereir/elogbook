@@ -403,7 +403,7 @@ QString EditionWindow::windowTitle( void ) const
 
 }
 
-//____________________________________________
+//________________________________________________________________________
 AskForSaveDialog::ReturnCode EditionWindow::askForSave( bool enableCancel )
 {
 
@@ -621,6 +621,83 @@ void EditionWindow::setActiveEditor( TextEditor& editor )
 }
 
 //_____________________________________________
+void EditionWindow::writeEntryToLogbook( bool updateSelection )
+{
+    if( readOnly_ ) return;
+
+    // retrieve associated entry
+    auto entry( this->entry() );
+
+    // see if entry is new
+    const bool entryIsNew( !entry || Base::KeySet<Logbook>( entry ).empty() );
+
+    // create entry if none set
+    if( !entry ) entry = new LogEntry();
+
+    // check logbook
+    auto&& mainWindow( _mainWindow() );
+    auto&& logbook( mainWindow.logbook() );
+    if( !logbook )
+    {
+        InformationDialog( this, tr( "No logbook opened. <Save> canceled." ) ).exec();
+        return;
+    }
+
+    // update entry text
+    entry->setText( activeEditor_->toPlainText() );
+    entry->setFormats( formatBar_->get() );
+
+    // update entry keyword
+    Keyword newKeyword( keywordEditor_->text() );
+    if( keyword_ != newKeyword )
+    {
+        if( entry->keywords().contains( keyword_ ) ) entry->replaceKeyword( keyword_, newKeyword );
+        else entry->addKeyword( newKeyword );
+        keyword_ = newKeyword;
+    }
+
+    // update entry title
+    entry->setTitle( titleEditor_->text() );
+
+    // update author
+    entry->setAuthor( XmlOptions::get().raw( "USER" ) );
+
+    // add _now_ to entry modification timestamps
+    entry->setModified();
+
+    // status bar
+    statusBar_->label().setText( tr( "writting entry to logbook..." ) );
+
+    // add entry to logbook, if needed
+    if( entryIsNew ) Base::Key::associate( entry, logbook->latestChild() );
+
+    // update this window title, set unmodified.
+    setModified( false );
+    updateWindowTitle();
+
+    // update associated EditionWindows
+    for( const auto& window:Base::KeySet<EditionWindow> ( entry ) )
+    {
+        Q_ASSERT( window == this || window->isReadOnly() || window->isClosed() );
+        if( window != this ) window->displayEntry( entry );
+    }
+
+    // update main window
+    mainWindow.updateEntry( keyword_, entry, updateSelection );
+    mainWindow.updateWindowTitle();
+
+    // set logbook as modified
+    for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
+    { logbook->setModified( true ); }
+
+    // add to main logbook recent entries
+    logbook->addRecentEntry( entry );
+
+    return;
+
+}
+
+//_____________________________________________
 void EditionWindow::updateReadOnlyState( void )
 {
 
@@ -723,7 +800,7 @@ void EditionWindow::closeEvent( QCloseEvent *event )
     Debug::Throw( "EditionWindow::closeEvent.\n" );
 
     // ask for save if entry is modified
-    if( !(readOnly_ || closed_ ) && modified() && askForSave() == AskForSaveDialog::Cancel ) event->ignore();
+    if( !(readOnly_ || closed_ ) && modified() && _askForSave() == AskForSaveDialog::Cancel ) event->ignore();
     else
     {
         setIsClosed( true );
@@ -1190,86 +1267,40 @@ void EditionWindow::_setKeywordVisible( bool value )
     titleLabel_->setVisible( value );
 }
 
+//________________________________________________________________________
+AskForSaveDialog::ReturnCode EditionWindow::_askForSave( void )
+{
+
+    Debug::Throw( "EditionWindow::askForSave.\n" );
+
+    // create dialog
+    AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No  | AskForSaveDialog::Cancel );
+    AskForSaveDialog dialog( this, tr( "Entry has been modified. Save ?" ), buttons );
+
+    // exec and check return code
+    int state = dialog.centerOnParent().exec();
+    if( state == AskForSaveDialog::Yes ) _save();
+
+    return AskForSaveDialog::ReturnCode(state);
+
+}
+
 //_____________________________________________
 void EditionWindow::_save( bool updateSelection )
 {
 
     Debug::Throw( "EditionWindow::_save.\n" );
-    if( readOnly_ ) return;
 
-    // retrieve associated entry
-    auto entry( this->entry() );
-
-    // see if entry is new
-    const bool entryIsNew( !entry || Base::KeySet<Logbook>( entry ).empty() );
-
-    // create entry if none set
-    if( !entry ) entry = new LogEntry();
-
-    // check logbook
-    auto&& mainWindow( _mainWindow() );
-    auto&& logbook( mainWindow.logbook() );
-    if( !logbook )
-    {
-        InformationDialog( this, tr( "No logbook opened. <Save> canceled." ) ).exec();
-        return;
-    }
-
-    // update entry text
-    entry->setText( activeEditor_->toPlainText() );
-    entry->setFormats( formatBar_->get() );
-
-    // update entry keyword
-    Keyword newKeyword( keywordEditor_->text() );
-    if( keyword_ != newKeyword )
-    {
-        if( entry->keywords().contains( keyword_ ) ) entry->replaceKeyword( keyword_, newKeyword );
-        else entry->addKeyword( newKeyword );
-        keyword_ = newKeyword;
-    }
-
-    // update entry title
-    entry->setTitle( titleEditor_->text() );
-
-    // update author
-    entry->setAuthor( XmlOptions::get().raw( "USER" ) );
-
-    // add _now_ to entry modification timestamps
-    entry->setModified();
-
-    // status bar
-    statusBar_->label().setText( tr( "writting entry to logbook..." ) );
-
-    // add entry to logbook, if needed
-    if( entryIsNew ) Base::Key::associate( entry, logbook->latestChild() );
-
-    // update this window title, set unmodified.
-    setModified( false );
-    updateWindowTitle();
-
-    // update associated EditionWindows
-    for( const auto& window:Base::KeySet<EditionWindow> ( entry ) )
-    {
-        Q_ASSERT( window == this || window->isReadOnly() || window->isClosed() );
-        if( window != this ) window->displayEntry( entry );
-    }
-
-    // update main window
-    mainWindow.updateEntry( keyword_, entry, updateSelection );
-    mainWindow.updateWindowTitle();
-
-    // set logbook as modified
-    for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
-    { logbook->setModified( true ); }
-
-    // add to main logbook recent entries
-    logbook->addRecentEntry( entry );
+    // save this entry to the logbook
+    writeEntryToLogbook( updateSelection );
 
     // Save logbook
-    if( !logbook->file().isEmpty() )
+    auto&& mainWindow( _mainWindow() );
+    auto&& logbook( mainWindow.logbook() );
+    if( logbook && !logbook->file().isEmpty() )
     { mainWindow.saveUnchecked(); }
 
-    statusBar_->label().setText( "" );
+    statusBar_->label().clear();
 
     return;
 
@@ -1281,8 +1312,7 @@ void EditionWindow::_print( void )
     Debug::Throw( "EditionWindow::_print.\n" );
 
     // check if entry is modified
-    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
-
+    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create helper
     LogEntryPrintHelper helper( this );
@@ -1342,7 +1372,7 @@ void EditionWindow::_printPreview( void )
     Debug::Throw( "EditionWindow::_printPreview.\n" );
 
     // check if entry is modified
-    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
+    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create helper
     LogEntryPrintHelper helper( this );
@@ -1365,7 +1395,7 @@ void EditionWindow::_toHtml( void )
     Debug::Throw( "EditionWindow::_toHtml.\n" );
 
     // check if entry is modified
-    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
+    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create option widget
     LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
@@ -1425,7 +1455,7 @@ void EditionWindow::_newEntry( void )
     Debug::Throw( "EditionWindow::_newEntry.\n" );
 
     // check if entry is modified
-    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
+    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create new entry, set author, set keyword
     LogEntry* entry = new LogEntry();
