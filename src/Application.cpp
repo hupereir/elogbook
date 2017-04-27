@@ -162,18 +162,10 @@ void Application::_exit( void )
     Debug::Throw( "Application::_exit.\n" );
 
     // ensure everything is saved properly
-    if( mainWindow_ && mainWindow_->logbook() )
+    if( mainWindow_ )
     {
-
-        if( mainWindow_->checkModifiedEntries() == AskForSaveDialog::Cancel )
-        { return; }
-
-        // check if current logbook is modified
-        if(
-            mainWindow_->logbook() &&
-            mainWindow_->logbook()->modified() &&
-            mainWindow_->askForSave() == AskForSaveDialog::Cancel )
-        { return; }
+        if( mainWindow_->checkModifiedEntries() == AskForSaveDialog::Cancel ) return;
+        mainWindow_->saveUnchecked();
     }
 
     qApp->quit();
