@@ -162,17 +162,11 @@ void Application::_exit( void )
     Debug::Throw( "Application::_exit.\n" );
 
     // ensure everything is saved properly
-    if( mainWindow_ )
+    if( mainWindow_ && mainWindow_->logbook() )
     {
-        // check if editable EditionWindows needs save
-        Base::KeySet<EditionWindow> windows( mainWindow_.get() );
-        for( const auto& window:windows )
-        {
-            if( !( window->isReadOnly() || window->isClosed() ) && window->modified() && window->askForSave() == AskForSaveDialog::Cancel )
-            { return; }
-        }
 
-        Debug::Throw( "EditionWindows saved.\n" );
+        if( mainWindow_->checkModifiedEntries() == AskForSaveDialog::Cancel )
+        { return; }
 
         // check if current logbook is modified
         if(

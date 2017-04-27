@@ -81,9 +81,12 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     LogEntry* entry( void ) const
     {
         Base::KeySet<LogEntry> entries( this );
-        Q_ASSERT( entries.size() <= 1 );
         return( entries.size() ) ? *entries.begin():nullptr;
     }
+
+    //* entry title
+    QString title( void ) const
+    { return titleLabel_->text(); }
 
     //* retrieve active display
     const TextEditor& activeEditor( void ) const;
@@ -143,8 +146,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     //* closed flag
     void setIsClosed( bool );
 
-    //* creates dialog to ask for LogEntry save.
-    AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
+//     //* creates dialog to ask for LogEntry save.
+//     AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
 
     //* update keyword Widget from current entry
     void displayKeyword( void );
@@ -167,6 +170,9 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* change active display manualy
     void setActiveEditor( TextEditor& );
+
+    //* creates dialog to ask for LogEntry save.
+    AskForSaveDialog::ReturnCode askForSave( void );
 
     //* save to logbook
     /** logbook is updated with the content of the current entry,
@@ -361,9 +367,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* change keyword (and other widgets) visibility
     void _setKeywordVisible( bool );
-
-    //* creates dialog to ask for LogEntry save.
-    AskForSaveDialog::ReturnCode _askForSave( void );
 
     protected Q_SLOTS:
 

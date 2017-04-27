@@ -64,69 +64,33 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* destructor
     virtual ~MainWindow( void );
 
+    //*@name accessors
+    //@{
+
     //* retrive menu
-    Menu& menu( void )
+    Menu& menu( void ) const
     { return *menu_; }
 
     //* retrive state frame
     ProgressStatusBar& statusBar( void ) const
     { return *statusbar_; }
 
-    //* creates a new default logbook
-    virtual void createDefaultLogbook( void );
-
-    //* deletes old logbook, if any. Set the new one an display
-    /*
-    note: don't pass a const File& here cause it crashes the application
-    when the file that is passed is from the currently opened logbook,
-    since the later gets deleted in the method and the file is being re-used
-    */
-    virtual bool setLogbook( File );
-
-    //* check if logbook needs a backup, ask for it if needed
-    virtual void checkLogbookBackup( void );
-
-    //* deletes old logbook, if any
-    virtual void reset( void );
 
     //* returns pointer to selected Logbook, if any
-    virtual Logbook* logbook( void ) const
+    Logbook* logbook( void ) const
     { return logbook_; }
 
-    //* creates dialog to ask for Logbook save.
-    AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
-
     //* retrieve working directory
-    virtual const File& workingDirectory( void ) const
+    File workingDirectory( void ) const
     { return workingDirectory_; }
 
-    //* clear entry selection
-    virtual void clearSelection( void );
-
-    //* update entry (create new if not found )
-    virtual void updateEntry( Keyword, LogEntry*, bool );
-
-    //* delete entry
-    virtual void deleteEntry( LogEntry*, bool save = true );
-
-    //* look for EditionWindows matching entry, set readonly
-    virtual bool lockEntry( LogEntry* ) const;
-
-    //* retrieve previous entry (if any)
-    virtual LogEntry* previousEntry( LogEntry*, bool );
-
-    //* retrieve next entry (if any)
-    virtual LogEntry* nextEntry( LogEntry*, bool );
-
-    //* reset attachment frame
-    virtual void resetAttachmentWindow( void ) const;
 
     //* return keyword list
     TreeView& keywordList( void ) const
     { return *keywordList_; }
 
     //* log entry list
-    virtual TreeView& logEntryList( void ) const
+    TreeView& logEntryList( void ) const
     { return *entryList_; }
 
     //* current keyword
@@ -136,9 +100,6 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     FileCheck& fileCheck( void ) const
     { return *fileCheck_; }
 
-    //*@name toolbars
-    //@{
-
     //* keyword toolbar
     CustomToolBar& keywordToolBar( void ) const
     { return *keywordToolBar_; }
@@ -146,6 +107,58 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* entry toolbar
     CustomToolBar& entryToolBar( void ) const
     { return *entryToolBar_; }
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    //* creates a new default logbook
+    void createDefaultLogbook( void );
+
+    //* deletes old logbook, if any. Set the new one an display
+    /*
+    note: don't pass a const File& here cause it crashes the application
+    when the file that is passed is from the currently opened logbook,
+    since the later gets deleted in the method and the file is being re-used
+    */
+    bool setLogbook( File );
+
+    //* check if logbook needs a backup, ask for it if needed
+    void checkLogbookBackup( void );
+
+    //* deletes old logbook, if any
+    void reset( void );
+
+    //* check modified entries
+    AskForSaveDialog::ReturnCode checkModifiedEntries( void );
+
+    //* creates dialog to ask for Logbook save.
+    AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
+
+    //* clear entry selection
+    void clearSelection( void );
+
+    //* update entry (create new if not found )
+    void updateEntry( Keyword, LogEntry*, bool );
+
+    //* delete entry
+    void deleteEntry( LogEntry*, bool save = true );
+
+    //* look for EditionWindows matching entry, set readonly
+    bool lockEntry( LogEntry* );
+
+    //* retrieve previous entry (if any)
+    LogEntry* previousEntry( LogEntry*, bool );
+
+    //* retrieve next entry (if any)
+    LogEntry* nextEntry( LogEntry*, bool );
+
+    //* reset attachment frame
+    void resetAttachmentWindow( void ) const;
+
+    //* update window title
+    void updateWindowTitle( void );
 
     //@}
 
@@ -278,9 +291,6 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //@}
 
-    //* update window title
-    void updateWindowTitle( void );
-
     Q_SIGNALS:
 
     //* emitted when new scratch file is created
@@ -295,11 +305,11 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     public Q_SLOTS:
 
     //* open existing logbook
-    virtual void open( FileRecord file = FileRecord() );
+    void open( FileRecord file = FileRecord() );
 
     //* save current logbook
     /** pending entry modifications are ignored */
-    virtual void saveUnchecked( void );
+    void saveUnchecked( void );
 
     //* save current logbook
     /**
@@ -307,19 +317,19 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     then the logbook is saved.
     if argument is false, all modified entries will be saved without asking
     */
-    virtual void save( bool confirmEntries = true );
+    void save( void );
 
     //* select entry
-    virtual void selectEntry( LogEntry* );
+    void selectEntry( LogEntry* );
 
     //* select entry
-    virtual void selectEntry( const Keyword&, LogEntry* );
+    void selectEntry( const Keyword&, LogEntry* );
 
     //* select entries using selection criterions
-    virtual void selectEntries( QString, SearchWidget::SearchModes );
+    void selectEntries( QString, SearchWidget::SearchModes );
 
     //* show all entries
-    virtual void showAllEntries( void );
+    void showAllEntries( void );
 
     protected:
 
@@ -333,10 +343,10 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void contextMenuEvent( QContextMenuEvent* );
 
     //* clear list and reinitialize from logbook entries
-    virtual void _resetKeywordList( void );
+    void _resetKeywordList( void );
 
     //* clear list and reinitialize from logbook entries
-    virtual void _resetLogEntryList( void );
+    void _resetLogEntryList( void );
 
     //* load colors (from current logbook)
     void _loadColors( void );
@@ -351,7 +361,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _autoSave( void );
 
     //* check modified entries
-    AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow>, bool ) const;
+    AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow> );
 
     enum MaskFlag
     {
@@ -432,40 +442,40 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     is needed to remove duplicate entries in case of
     wrong logbook merging. This is a Debugging tool
     */
-    virtual void _showDuplicatedEntries( void );
+    void _showDuplicatedEntries( void );
 
     //* view logbook statistics
-    virtual void _viewLogbookStatistics( void );
+    void _viewLogbookStatistics( void );
 
     //* edit current logbook informations
-    virtual void _editLogbookInformations( void );
+    void _editLogbookInformations( void );
 
     //* close EditionWindows
-    virtual void _closeEditionWindows( bool askForSave = true ) const;
+    void _closeEditionWindows( bool askForSave = true );
 
     //* find entries
     void _findEntries( void ) const;
 
     //* create new entry
-    virtual void _newEntry( void );
+    void _newEntry( void );
 
     //* edit selected entries
-    virtual void _editEntries( void );
+    void _editEntries( void );
 
     //* delete selected entries
-    virtual void _deleteEntries ( void );
+    void _deleteEntries ( void );
 
     //* show EditionWindow associated to a given name
-    virtual void _displayEntry( LogEntry* );
+    void _displayEntry( LogEntry* );
 
     //* rename entry with current title
-    virtual void _changeEntryTitle( LogEntry*, QString );
+    void _changeEntryTitle( LogEntry*, QString );
 
     //* change selected entries color
-    virtual void _changeEntryColor( QColor );
+    void _changeEntryColor( QColor );
 
     //* show entry information
-    virtual void _entryInformation( void );
+    void _entryInformation( void );
 
     //* create new keyword
     void _newKeyword( void );
@@ -517,14 +527,14 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _updateReadOnlyState( void );
 
     //* store sorting method when changed via list header
-    virtual void _storeSortMethod( void )
+    void _storeSortMethod( void )
     { _storeSortMethod( entryModel_.sortColumn(), entryModel_.sortOrder() ); }
 
     //* store sorting method when changed via list header
-    virtual void _storeSortMethod( int, Qt::SortOrder );
+    void _storeSortMethod( int, Qt::SortOrder );
 
     //* item clicked
-    virtual void _entryItemClicked( const QModelIndex& index );
+    void _entryItemClicked( const QModelIndex& index );
 
     //* activare item
     void _entryItemActivated( const QModelIndex& index );
@@ -617,9 +627,6 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* ignore file modified warnings if true
     bool ignoreWarnings_ = false;
-
-    //* ask entries for confirmation before saving
-    bool confirmEntries_ = true;
 
     //* keyword container
     QWidget* keywordContainer_ = nullptr;

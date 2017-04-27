@@ -403,43 +403,6 @@ QString EditionWindow::windowTitle( void ) const
 
 }
 
-//________________________________________________________________________
-AskForSaveDialog::ReturnCode EditionWindow::askForSave( bool enableCancel )
-{
-
-    Debug::Throw( "EditionWindow::askForSave.\n" );
-
-    // retrieve other editFrames
-    Base::KeySet<EditionWindow> editionwindows( &_mainWindow() );
-    unsigned int count( std::count_if( editionwindows.begin(), editionwindows.end(), ModifiedFTor() ) );
-
-    // create dialog
-    AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No );
-    if( enableCancel ) buttons |= AskForSaveDialog::Cancel;
-    if( count > 1 ) buttons |= AskForSaveDialog::All;
-    AskForSaveDialog dialog( this, tr( "Entry has been modified. Save ?" ), buttons );
-
-    // exec and check return code
-    int state = dialog.centerOnParent().exec();
-    if( state == AskForSaveDialog::Yes ) _save( false );
-    else if( state == AskForSaveDialog::All )
-    {
-        /*
-        save_all: if the logbook has no valid file one save the modified editionwindows one by one
-        otherwise one directly save the loogbook, while disabling the confirmation for modified
-        entries
-        */
-        if( _mainWindow().logbook()->file().isEmpty() )
-        {
-            for( const auto& window:editionwindows )
-            { if( window->modified() && !window->isReadOnly() ) window->_save(enableCancel); }
-        } else _mainWindow().save( false );
-    }
-
-    return AskForSaveDialog::ReturnCode(state);
-
-}
-
 //_____________________________________________
 void EditionWindow::displayKeyword( void )
 {
@@ -617,6 +580,24 @@ void EditionWindow::setActiveEditor( TextEditor& editor )
 
     // associate with toolbar
     if( formatBar_ ) formatBar_->setTarget( *activeEditor_ );
+
+}
+
+//________________________________________________________________________
+AskForSaveDialog::ReturnCode EditionWindow::askForSave( void )
+{
+
+    Debug::Throw( "EditionWindow::askForSave.\n" );
+
+    // create dialog
+    AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No  | AskForSaveDialog::Cancel );
+    AskForSaveDialog dialog( this, tr( "Entry has been modified. Save ?" ), buttons );
+
+    // exec and check return code
+    int state = dialog.centerOnParent().exec();
+    if( state == AskForSaveDialog::Yes ) _save();
+
+    return AskForSaveDialog::ReturnCode(state);
 
 }
 
@@ -800,7 +781,7 @@ void EditionWindow::closeEvent( QCloseEvent *event )
     Debug::Throw( "EditionWindow::closeEvent.\n" );
 
     // ask for save if entry is modified
-    if( !(readOnly_ || closed_ ) && modified() && _askForSave() == AskForSaveDialog::Cancel ) event->ignore();
+    if( !(readOnly_ || closed_ ) && modified() && askForSave() == AskForSaveDialog::Cancel ) event->ignore();
     else
     {
         setIsClosed( true );
@@ -1267,24 +1248,6 @@ void EditionWindow::_setKeywordVisible( bool value )
     titleLabel_->setVisible( value );
 }
 
-//________________________________________________________________________
-AskForSaveDialog::ReturnCode EditionWindow::_askForSave( void )
-{
-
-    Debug::Throw( "EditionWindow::askForSave.\n" );
-
-    // create dialog
-    AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No  | AskForSaveDialog::Cancel );
-    AskForSaveDialog dialog( this, tr( "Entry has been modified. Save ?" ), buttons );
-
-    // exec and check return code
-    int state = dialog.centerOnParent().exec();
-    if( state == AskForSaveDialog::Yes ) _save();
-
-    return AskForSaveDialog::ReturnCode(state);
-
-}
-
 //_____________________________________________
 void EditionWindow::_save( bool updateSelection )
 {
@@ -1312,7 +1275,7 @@ void EditionWindow::_print( void )
     Debug::Throw( "EditionWindow::_print.\n" );
 
     // check if entry is modified
-    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
+    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create helper
     LogEntryPrintHelper helper( this );
@@ -1372,7 +1335,7 @@ void EditionWindow::_printPreview( void )
     Debug::Throw( "EditionWindow::_printPreview.\n" );
 
     // check if entry is modified
-    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
+    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create helper
     LogEntryPrintHelper helper( this );
@@ -1395,7 +1358,7 @@ void EditionWindow::_toHtml( void )
     Debug::Throw( "EditionWindow::_toHtml.\n" );
 
     // check if entry is modified
-    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
+    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create option widget
     LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
@@ -1455,7 +1418,7 @@ void EditionWindow::_newEntry( void )
     Debug::Throw( "EditionWindow::_newEntry.\n" );
 
     // check if entry is modified
-    if( modified() && _askForSave() == AskForSaveDialog::Cancel ) return;
+    if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create new entry, set author, set keyword
     LogEntry* entry = new LogEntry();

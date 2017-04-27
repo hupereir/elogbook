@@ -546,6 +546,10 @@ void MainWindow::reset( void )
 }
 
 //____________________________________________
+AskForSaveDialog::ReturnCode MainWindow::checkModifiedEntries( void )
+{ return _checkModifiedEntries( this ); }
+
+//____________________________________________
 AskForSaveDialog::ReturnCode MainWindow::askForSave( bool enableCancel )
 {
 
@@ -700,14 +704,14 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
 }
 
 //_______________________________________________
-bool MainWindow::lockEntry( LogEntry* entry ) const
+bool MainWindow::lockEntry( LogEntry* entry )
 {
     Debug::Throw( "MainWindow::lockEntry.\n" );
     if( !entry ) return true;
 
     // check whether there are modified editors around and ask for save
     Base::KeySet<EditionWindow> windows( entry );
-    if( _checkModifiedEntries( windows, true ) == AskForSaveDialog::Cancel ) return false;
+    if( _checkModifiedEntries( windows ) == AskForSaveDialog::Cancel ) return false;
 
     // mark modified editors as read only
     for( const auto& window:windows ) window->setReadOnly( true );
@@ -786,7 +790,7 @@ Keyword MainWindow::currentKeyword( void ) const
 void MainWindow::saveUnchecked( void )
 {
 
-    Debug::Throw( "MainWindow::save.\n" );
+    Debug::Throw( "MainWindow::saveUnchecked.\n" );
     // check logbook
     if( !logbook_ )
     {
@@ -853,7 +857,7 @@ void MainWindow::saveUnchecked( void )
 }
 
 //_______________________________________________
-void MainWindow::save( bool confirmEntries )
+void MainWindow::save()
 {
 
     Debug::Throw( "MainWindow::save.\n" );
@@ -865,11 +869,9 @@ void MainWindow::save( bool confirmEntries )
         return;
     }
 
-    if( !confirmEntries ) confirmEntries_ = false;
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::Cancel ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ) ) == AskForSaveDialog::Cancel ) return;
 
     saveUnchecked();
-    confirmEntries_ = true;
 
 }
 
@@ -1392,19 +1394,48 @@ void MainWindow::_autoSave( void )
 }
 
 //__________________________________________________________________
-AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<EditionWindow> windows, bool confirmEntries ) const
+AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<EditionWindow> windows )
 {
     Debug::Throw( "_MainWindow::checkModifiedEntries.\n" );
 
     // check if editable EditionWindows needs save
     // cancel if required
+    int count = 0;
+    for( const auto& window:windows )
+    {  if( !( window->isReadOnly() || window->isClosed()) && window->modified() ) count++; }
+
+    // do nothing if no window needs saving
+    if( !count ) return AskForSaveDialog::Yes;
+
+    // loop over windows and ask for confirmation
+    bool confirm = true;
     for( const auto& window:windows )
     {
-        if( !(window->isReadOnly() || window->isClosed()) && window->modified() )
-        {
-            if( !confirmEntries ) { window->saveAction().trigger(); }
-            else if( window->askForSave() == AskForSaveDialog::Cancel ) return AskForSaveDialog::Cancel;
+        // skip unmodified windows
+        if( window->isReadOnly() || window->isClosed() || !window->modified() ) continue;
+
+        if( !confirm ) window->writeEntryToLogbook( false );
+        else {
+
+            AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No  | AskForSaveDialog::Cancel );
+            if( count > 1 ) buttons |= AskForSaveDialog::All;
+
+            QString message = tr( "Entry '%1' has been modified. Save ?" ).arg( window->title() );
+            AskForSaveDialog dialog( this, message, buttons );
+            int state = dialog.centerOnParent().exec();
+            if( state == AskForSaveDialog::Yes ) window->writeEntryToLogbook( false );
+            else if( state == AskForSaveDialog::All )
+            {
+
+                confirm = false;
+                window->writeEntryToLogbook( false );
+
+            } else if( state == AskForSaveDialog::Cancel ) return AskForSaveDialog::Cancel;
+
+            count--;
+
         }
+
     }
 
     return  AskForSaveDialog::Yes;
@@ -1429,7 +1460,7 @@ void MainWindow::_updateEntryFrames( LogEntry* entry, Mask mask )
         if( mask&KeywordMask ) window->displayKeyword();
 
         // save if needed [title/keyword changes are discarded since saved here anyway]
-        if( windowModified ) window->askForSave( false );
+        if( windowModified ) window->askForSave();
         else window->setModified( false );
 
     }
@@ -1546,7 +1577,7 @@ void MainWindow::open( FileRecord record )
     Debug::Throw( "MainWindow::open.\n" );
 
     // check if current logbook needs save
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::Cancel ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ) ) == AskForSaveDialog::Cancel ) return;
     if( logbook_ && logbook_->modified()  && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // open file from dialog if not set as argument
@@ -1756,7 +1787,7 @@ void MainWindow::_print( void )
 {
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ) ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -1853,7 +1884,7 @@ void MainWindow::_printPreview( void )
     Debug::Throw( "MainWindow::_printPreview.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ) ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -1917,7 +1948,7 @@ void MainWindow::_toHtml( void )
     Debug::Throw( "MainWindow::_toHtml.\n" );
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ) ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -2010,7 +2041,7 @@ void MainWindow::_synchronize( void )
     }
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ) ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -2247,7 +2278,7 @@ void MainWindow::_mergeBackup( Backup backup )
     }
 
     // save EditionWindows
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), true ) == AskForSaveDialog::Cancel ) return;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ) ) == AskForSaveDialog::Cancel ) return;
 
     // save current logbook
     if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -2504,13 +2535,13 @@ void MainWindow::_editLogbookInformations( void )
 }
 
 //_______________________________________________
-void MainWindow::_closeEditionWindows( bool askForSave ) const
+void MainWindow::_closeEditionWindows( bool askForSave )
 {
     Debug::Throw( "MainWindow::_closeEditionWindows.\n" );
 
     // get all EditionWindows from MainWindow
     Base::KeySet<EditionWindow> windows( this );
-    if( askForSave && _checkModifiedEntries( windows, true ) == AskForSaveDialog::Cancel ) return;
+    if( askForSave && _checkModifiedEntries( windows ) == AskForSaveDialog::Cancel ) return;
     for( const auto& window:windows )  window->deleteLater();
 
     return;
@@ -3553,18 +3584,16 @@ void MainWindow::_toggleTreeMode( bool value )
     // keyword toolbar visibility action
     keywordToolBar_->visibilityAction().setEnabled( value );
 
-    // force show keyword
-    for( const auto& window:Base::KeySet<EditionWindow>( this ) )
+    // if hiding keyword, first need ask for save
+    auto windows( Base::KeySet<EditionWindow>( this ) );
+    if( value )
     {
-
-        // if hiding keyword, first need ask for save
-        if( value && !window->isClosed() && window->modified() && !window->isReadOnly() )
-        { window->askForSave( false ); }
-
-        // update force flag
-        window->setForceShowKeyword( !value );
-
+        _checkModifiedEntries( windows );
+        save();
     }
+
+    for( const auto& window:windows )
+    { window->setForceShowKeyword( !value ); }
 
     // make sure entry is visible
     if( currentEntry )
