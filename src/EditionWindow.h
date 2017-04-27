@@ -85,8 +85,8 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     }
 
     //* entry title
-    QString title( void ) const
-    { return titleLabel_->text(); }
+    QString entryTitle( void ) const
+    { return titleEditor_ ? titleEditor_->text():QString(); }
 
     //* retrieve active display
     const TextEditor& activeEditor( void ) const;
@@ -145,9 +145,6 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
 
     //* closed flag
     void setIsClosed( bool );
-
-//     //* creates dialog to ask for LogEntry save.
-//     AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
 
     //* update keyword Widget from current entry
     void displayKeyword( void );
