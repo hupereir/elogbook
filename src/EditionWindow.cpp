@@ -1198,7 +1198,7 @@ void EditionWindow::_save( bool updateSelection )
     if( readOnly_ ) return;
 
     // retrieve associated entry
-    LogEntry *entry( this->entry() );
+    auto entry( this->entry() );
 
     // see if entry is new
     const bool entryIsNew( !entry || Base::KeySet<Logbook>( entry ).empty() );
@@ -1207,8 +1207,8 @@ void EditionWindow::_save( bool updateSelection )
     if( !entry ) entry = new LogEntry();
 
     // check logbook
-    MainWindow &mainWindow( _mainWindow() );
-    Logbook *logbook( mainWindow.logbook() );
+    auto&& mainWindow( _mainWindow() );
+    auto&& logbook( mainWindow.logbook() );
     if( !logbook )
     {
         InformationDialog( this, tr( "No logbook opened. <Save> canceled." ) ).exec();
@@ -1263,10 +1263,11 @@ void EditionWindow::_save( bool updateSelection )
     { logbook->setModified( true ); }
 
     // add to main logbook recent entries
-    mainWindow.logbook()->addRecentEntry( entry );
+    logbook->addRecentEntry( entry );
 
     // Save logbook
-    if( !mainWindow.logbook()->file().isEmpty() ) mainWindow.save();
+    if( !logbook->file().isEmpty() )
+    { mainWindow.saveUnchecked(); }
 
     statusBar_->label().setText( "" );
 

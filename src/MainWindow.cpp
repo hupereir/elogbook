@@ -783,11 +783,10 @@ Keyword MainWindow::currentKeyword( void ) const
 }
 
 //_______________________________________________
-void MainWindow::save( bool confirmEntries )
+void MainWindow::saveUnchecked( void )
 {
 
-    Debug::Throw( "MainWindow::_save.\n" );
-
+    Debug::Throw( "MainWindow::save.\n" );
     // check logbook
     if( !logbook_ )
     {
@@ -795,31 +794,25 @@ void MainWindow::save( bool confirmEntries )
         return;
     }
 
-    if( !confirmEntries ) confirmEntries_ = false;
-
-    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::Cancel ) return;
-
-    // check logbook filename, go to Save As if no file is given and redirect is true
+        // check logbook filename, go to Save As if no file is given and redirect is true
     if( logbook_->file().isEmpty() ) {
         _saveAs();
         return;
     }
 
     // check logbook filename is writable
-    File fullname = File( logbook_->file() ).expand();
+    File fullname = logbook_->file().expand();
     if( fullname.exists() ) {
 
         // check file is not a directory
         if( fullname.isDirectory() ) {
             InformationDialog( this, tr( "Selected file is a directory. <Save Logbook> canceled." ) ).exec();
-            confirmEntries_ = true;
             return;
         }
 
         // check file is writable
         if( !fullname.isWritable() ) {
             InformationDialog( this, tr( "Selected file is not writable. <Save Logbook> canceled." ) ).exec();
-            confirmEntries_ = true;
             return;
         }
 
@@ -828,7 +821,6 @@ void MainWindow::save( bool confirmEntries )
         File path( fullname.path() );
         if( !path.isDirectory() ) {
             InformationDialog( this, tr( "Selected path is not vallid. <Save Logbook> canceled." ) ).exec();
-            confirmEntries_ = true;
             return;
         }
 
@@ -856,9 +848,29 @@ void MainWindow::save( bool confirmEntries )
     // reset ignore_warning flag
     ignoreWarnings_ = false;
 
-    // reset confirm entries
-    confirmEntries_ = true;
     return;
+
+}
+
+//_______________________________________________
+void MainWindow::save( bool confirmEntries )
+{
+
+    Debug::Throw( "MainWindow::save.\n" );
+
+    // check logbook
+    if( !logbook_ )
+    {
+        InformationDialog( this, tr( "No Logbook opened. <Save> canceled." ) ).exec();
+        return;
+    }
+
+    if( !confirmEntries ) confirmEntries_ = false;
+    if( _checkModifiedEntries( Base::KeySet<EditionWindow>( this ), confirmEntries_ ) == AskForSaveDialog::Cancel ) return;
+
+    saveUnchecked();
+    confirmEntries_ = true;
+
 }
 
 //_______________________________________________

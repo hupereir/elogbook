@@ -298,7 +298,15 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     virtual void open( FileRecord file = FileRecord() );
 
     //* save current logbook
-    /** if argument is false, all modified entries will be saved without asking */
+    /** pending entry modifications are ignored */
+    virtual void saveUnchecked( void );
+
+    //* save current logbook
+    /**
+    if there are pending enry modifications, they are first saved to the logbook,
+    then the logbook is saved.
+    if argument is false, all modified entries will be saved without asking
+    */
     virtual void save( bool confirmEntries = true );
 
     //* select entry

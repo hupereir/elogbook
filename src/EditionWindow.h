@@ -85,7 +85,7 @@ class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
     {
         Base::KeySet<LogEntry> entries( this );
         Q_ASSERT( entries.size() <= 1 );
-        return( entries.size() ) ? *entries.begin():0;
+        return( entries.size() ) ? *entries.begin():nullptr;
     }
 
     //* retrieve attachment list
