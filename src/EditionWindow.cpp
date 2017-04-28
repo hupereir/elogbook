@@ -674,6 +674,8 @@ void EditionWindow::writeEntryToLogbook( bool updateSelection )
     // add to main logbook recent entries
     logbook->addRecentEntry( entry );
 
+    statusBar_->label().clear();
+
     return;
 
 }
@@ -1262,8 +1264,6 @@ void EditionWindow::_save( bool updateSelection )
     auto&& logbook( mainWindow.logbook() );
     if( logbook && !logbook->file().isEmpty() )
     { mainWindow.saveUnchecked(); }
-
-    statusBar_->label().clear();
 
     return;
 

@@ -96,10 +96,6 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     //* current keyword
     Keyword currentKeyword( void ) const;
 
-    //* file checker
-    FileCheck& fileCheck( void ) const
-    { return *fileCheck_; }
-
     //* keyword toolbar
     CustomToolBar& keywordToolBar( void ) const
     { return *keywordToolBar_; }
