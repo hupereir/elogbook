@@ -381,7 +381,7 @@ QString EditionWindow::windowTitle( void ) const
     LogEntry* entry( this->entry() );
 
     // read only flag
-    const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) );
+    const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbookIsReadOnly() ) );
 
     QString buffer;
     if( entry && !entry->title().isEmpty() )
@@ -1721,7 +1721,7 @@ void EditionWindow::_updateReadOnlyActions( void )
     Debug::Throw( "EditionWindow::_updateReadOnlyActions.\n" );
 
     // add flag from logbook read only
-    const bool logbookReadOnly( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() );
+    const bool logbookReadOnly( _hasMainWindow() && _mainWindow().logbookIsReadOnly() );
     const bool readOnly( readOnly_ || logbookReadOnly );
 
     // changes button state
@@ -1760,7 +1760,7 @@ void EditionWindow::_updateReadOnlyActions( void )
 
 //_____________________________________________
 void EditionWindow::_updateSaveAction( void )
-{ saveAction_->setEnabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && modified() ); }
+{ saveAction_->setEnabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbookIsReadOnly() ) && modified() ); }
 
 //_____________________________________________
 void EditionWindow::_updateUndoRedoActions( void )
@@ -1813,7 +1813,7 @@ void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 void EditionWindow::_updateInsertLinkActions( void )
 {
     Debug::Throw( "EditionWindow::_updateInsertLinkActions.\n" );
-    const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbook()->isReadOnly() ) && activeEditor_->textCursor().hasSelection() );
+    const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbookIsReadOnly() ) && activeEditor_->textCursor().hasSelection() );
 
     // disable main window action
     if( insertLinkAction_ ) insertLinkAction_->setEnabled( enabled );

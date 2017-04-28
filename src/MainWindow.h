@@ -75,10 +75,17 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     ProgressStatusBar& statusBar( void ) const
     { return *statusbar_; }
 
+    //* true if main window has logbook
+    bool hasLogbook( void ) const
+    { return logbook_ != nullptr; }
 
     //* returns pointer to selected Logbook, if any
     Logbook* logbook( void ) const
     { return logbook_; }
+
+    //* true if logbook exists and is readonly
+    bool logbookIsReadOnly( void )
+    { return logbook_ && logbook_->isReadOnly(); }
 
     //* retrieve working directory
     File workingDirectory( void ) const
