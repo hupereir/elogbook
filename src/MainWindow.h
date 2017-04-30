@@ -87,10 +87,13 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     bool logbookIsReadOnly( void )
     { return logbook_ && logbook_->isReadOnly(); }
 
+    //* true if logbook exists and is modified
+    bool logbookIsModified( void )
+    { return logbook_ && logbook_->modified(); }
+
     //* retrieve working directory
     File workingDirectory( void ) const
     { return workingDirectory_; }
-
 
     //* return keyword list
     TreeView& keywordList( void ) const

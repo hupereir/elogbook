@@ -167,7 +167,7 @@ void Application::_exit( void )
         auto reply = mainWindow_->checkModifiedEntries();
         if( reply == AskForSaveDialog::Cancel ) return;
         else if( reply == AskForSaveDialog::Yes ) mainWindow_->saveUnchecked();
-        else if( mainWindow_->logbook() && mainWindow_->logbook()->modified() && mainWindow_->askForSave() == AskForSaveDialog::Cancel ) return;
+        else if( mainWindow_->logbookIsModified() && mainWindow_->askForSave() == AskForSaveDialog::Cancel ) return;
     }
 
     qApp->quit();

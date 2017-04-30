@@ -317,7 +317,7 @@ void MainWindow::createDefaultLogbook( void )
     Debug::Throw( "MainWindow::_newLogbook.\n" );
 
     // check current logbook
-    if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
+    if( logbookIsModified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create a new logbook, with no file
     setLogbook( File() );
@@ -1021,10 +1021,7 @@ void MainWindow::closeEvent( QCloseEvent *event )
         return;
 
     } else if( reply == AskForSaveDialog::Yes ) saveUnchecked();
-    else if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
-
-    // save
-    saveUnchecked();
+    else if( logbookIsModified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // quit application
     qApp->quit();
@@ -1537,7 +1534,7 @@ void MainWindow::_newLogbook( void )
     auto reply = checkModifiedEntries();
     if( reply == AskForSaveDialog::Cancel ) return;
     else if( reply == AskForSaveDialog::Yes ) saveUnchecked();
-    else if( logbook_ && logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
+    else if( logbookIsModified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // new logbook
     NewLogbookDialog dialog( this );
@@ -1606,7 +1603,7 @@ void MainWindow::open( FileRecord record )
     auto reply = checkModifiedEntries();
     if( reply == AskForSaveDialog::Cancel ) return;
     else if( reply == AskForSaveDialog::Yes ) saveUnchecked();
-    else if( logbook_ && logbook_->modified()  && askForSave() == AskForSaveDialog::Cancel ) return;
+    else if( logbookIsModified()  && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // open file from dialog if not set as argument
     if( record.file().isEmpty() )
