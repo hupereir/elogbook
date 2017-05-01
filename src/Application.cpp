@@ -50,8 +50,9 @@ bool Application::initApplicationManager( void )
 
     // retrieve files from arguments and expand if needed
     CommandLineParser parser( commandLineParser( _arguments() ) );
-    QStringList& orphans( parser.orphans() );
-    for( auto& file:orphans )
+
+    auto&& orphans( parser.orphans() );
+    for( auto&& file:orphans )
     { if( !file.isEmpty() ) file = File( file ).expand(); }
 
     // replace arguments
@@ -182,18 +183,20 @@ bool Application::_processCommand( Server::ServerCommand command )
     if( BaseApplication::_processCommand( command ) ) return true;
     if( command.command() == Server::ServerCommand::Raise )
     {
+
         if( mainWindow_ ) mainWindow_->uniconifyAction().trigger();
-        QStringList filenames( commandLineParser( command.arguments() ).orphans() );
+        auto filenames( commandLineParser( command.arguments() ).orphans() );
         if( !filenames.isEmpty() )
         {
 
-            const QString buffer = QString( tr( "Accept request for file '%1'?" ) ).arg( filenames.front() );
+            auto buffer = QString( tr( "Accept request for file '%1'?" ) ).arg( filenames.front() );
             if( QuestionDialog( mainWindow_.get(), buffer ).centerOnParent().exec() )
             { mainWindow_->setLogbook( File( filenames.front() ) ); }
 
         }
 
         return true;
+
     } else return false;
 
 }
