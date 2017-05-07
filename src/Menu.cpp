@@ -171,8 +171,8 @@ void Menu::_updateRecentEntriesMenu( void )
     for( const auto& entry:mainWindow.logbook()->recentEntries() )
     {
         QAction* action = nullptr;
-        if( entry->hasKeywords() ) action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title() ).arg( entry->keywords().begin()->get() ) );
-        else action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title() ).arg( Keyword::Default ) );
+        if( entry->hasKeywords() ) action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), entry->keywords().begin()->get() ) );
+        else action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), Keyword::Default ) );
         actions_.insert( action, entry );
     }
 

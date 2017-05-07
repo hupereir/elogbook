@@ -1933,7 +1933,7 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
     // redo html addind the proper href
     QMimeData copy;
     copy.setText( source->text() );
-    copy.setHtml( QString( "<a href=\"%1\">%2</a> " ).arg( text ).arg( text ) );
+    copy.setHtml( QString( "<a href=\"%1\">%1</a> " ).arg( text ) );
     return TextEditor::insertFromMimeData( &copy );
 
 }

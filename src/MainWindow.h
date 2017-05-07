@@ -511,10 +511,7 @@ class MainWindow: public BaseMainWindow, public Counter, public Base::Key
     void _renameKeyword( const Keyword& oldKeyword, const Keyword& newKeyword, bool updateSelection = true );
 
     //* rename keyword for selected entries using dialog
-    /**
-    this is triggered by the rename entry keyword action in the
-    logEntry list.
-    */
+    /** this is triggered by the rename entry keyword action in the logEntry list. */
     void _renameEntryKeyword( void );
 
     //* change selected entries keyword using argument
