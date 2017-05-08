@@ -5,6 +5,7 @@ if(USE_QT5)
   find_package(Qt5Widgets REQUIRED)
   find_package(Qt5Network REQUIRED)
   find_package(Qt5Xml REQUIRED)
+  find_package(Qt5PrintSupport REQUIRED)
 
 else()
 
@@ -126,7 +127,7 @@ install(TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR})
 
 if(USE_QT5)
 
-  qt5_use_modules(elogbook Widgets Network PrintSupport Xml)
+  target_link_libraries(elogbook Qt5::Widgets Qt5::Network Qt5::PrintSupport Qt5::Xml)
 
 endif()
 
@@ -148,7 +149,7 @@ if(UNIX)
 
   if(USE_QT5)
 
-    qt5_use_modules(copy-logbook Widgets Xml)
+    target_link_libraries(copy-logbook Qt5::Widgets Qt5::Xml)
 
   endif()
 
@@ -172,7 +173,7 @@ if(UNIX)
 
   if(USE_QT5)
 
-    qt5_use_modules(compress-logbook Widgets Xml)
+    target_link_libraries(compress-logbook Qt5::Widgets Qt5::Xml)
 
   endif()
 
@@ -196,7 +197,7 @@ if(UNIX)
 
   if(USE_QT5)
 
-    qt5_use_modules(uncompress-logbook Widgets Xml)
+    target_link_libraries(uncompress-logbook Qt5::Widgets Qt5::Xml)
 
   endif()
 
@@ -220,7 +221,7 @@ if(UNIX)
 
   if(USE_QT5)
 
-    qt5_use_modules(synchronize-logbook Widgets Xml)
+    target_link_libraries(synchronize-logbook Qt5::Widgets Qt5::Xml)
 
   endif()
 
