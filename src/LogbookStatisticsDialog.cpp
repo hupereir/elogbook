@@ -43,16 +43,16 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     setWindowTitle( tr( "Logbook Statistics - Elogbook" ) );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    auto hLayout = new QHBoxLayout();
     hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
-    QLabel* label = new QLabel(this);
+    auto label = new QLabel(this);
     label->setPixmap( IconEngine::get( IconNames::DialogInformation ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
     hLayout->addStretch();
 
-    GridLayout* gridLayout = new GridLayout();
+    auto gridLayout = new GridLayout();
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);
     hLayout->addLayout( gridLayout );
@@ -64,12 +64,12 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     if( !logbook->file().isEmpty() )
     {
         // file
-        item = new GridLayoutItem( this, gridLayout, GridLayoutItem::All );
+        item = new GridLayoutItem( this, gridLayout );
         item->setKey( tr( "File name:" ) );
         item->setText( logbook->file().localName() );
 
         // path
-        item = new GridLayoutItem( this, gridLayout, GridLayoutItem::Selectable|GridLayoutItem::Elide );
+        item = new GridLayoutItem( this, gridLayout, GridLayoutItem::Flag::Selectable|GridLayoutItem::Flag::Elide );
         item->setKey( tr( "Path:" ) );
         item->setText( logbook->file().path() );
     }
@@ -102,7 +102,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     gridLayout->setColumnStretch( 1, 1 );
 
     // detail
-    TreeView *listView( new TreeView( this ) );
+    auto listView( new TreeView( this ) );
     listView->setModel( &model_ );
     listView->setSortingEnabled( false );
     listView->setOptionName( "LOGBOOK_STATISTICS" );
@@ -116,7 +116,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     listView->header()->setResizeMode( LogbookModel::Modified, QHeaderView::Stretch);
     #endif
 
-    Logbook::List all( logbook->children() );
+    auto&& all( logbook->children() );
     all.prepend( logbook );
     model_.set( all );
 

@@ -1858,10 +1858,10 @@ void EditionWindow::_modifiersChanged( TextEditor::Modifiers modifiers )
 {
     if( !_hasStatusBar() ) return;
     QStringList buffer;
-    if( modifiers & TextEditor::ModifierWrap ) buffer << "WRAP";
-    if( modifiers & TextEditor::ModifierInsert ) buffer << "INS";
-    if( modifiers & TextEditor::ModifierCapsLock ) buffer << "CAPS";
-    if( modifiers & TextEditor::ModifierNumLock ) buffer << "NUM";
+    if( modifiers & TextEditor::Modifier::Wrap ) buffer << "WRAP";
+    if( modifiers & TextEditor::Modifier::Insert ) buffer << "INS";
+    if( modifiers & TextEditor::Modifier::CapsLock ) buffer << "CAPS";
+    if( modifiers & TextEditor::Modifier::NumLock ) buffer << "NUM";
     statusBar_->label(1).setText( buffer.join( " " ) );
 }
 
@@ -2012,7 +2012,7 @@ QSize Private::ColorWidget::sizeHint( void ) const
     // the const_cast is use to temporarily remove the menu
     // in order to keep the size of the toolbutton minimum
     QMenu* menu( ColorWidget::menu() );
-    const_cast<Private::ColorWidget*>( this )->setMenu(0);
+    const_cast<Private::ColorWidget*>( this )->setMenu( nullptr );
     QSize out( QToolButton::sizeHint() );
     const_cast<Private::ColorWidget*>( this )->setMenu(menu);
     return out;

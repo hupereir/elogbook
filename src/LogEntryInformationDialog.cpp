@@ -62,7 +62,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     GridLayoutItem* item;
 
     // title
-    item = new GridLayoutItem( this, gridLayout, GridLayoutItem::None );
+    item = new GridLayoutItem( this, gridLayout );
     item->setKey( tr( "Title:" ) );
     item->setText( entry->title() );
 

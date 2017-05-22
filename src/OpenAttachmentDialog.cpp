@@ -179,6 +179,6 @@ void OpenAttachmentDialog::_saveCommands( void )
 
     const QString optionName = "OPEN_ATTACHMENT_APPLICATIONS";
     for( const auto& command:comboBox_->newItems() )
-    { XmlOptions::get().add( optionName, Option( command, Option::Recordable|Option::Current ) ); }
+    { XmlOptions::get().add( optionName, Option( command, Option::Flag::Recordable|Option::Flag::Current ) ); }
 
 }

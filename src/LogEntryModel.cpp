@@ -370,7 +370,7 @@ const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
     const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
     const double offset = 0.5*( iconSize_ - pixmapSize );
 
-    CustomPixmap pixmap( CustomPixmap( QSize( iconSize_, iconSize_ ), CustomPixmap::AllFlags ) );
+    CustomPixmap pixmap( CustomPixmap( QSize( iconSize_, iconSize_ ), CustomPixmap::Flag::All ) );
 
     if( color.isValid() )
     {

@@ -54,7 +54,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     OptionSpinBox* spinbox = nullptr;
 
     // edition
-    auto page = textEditConfiguration( nullptr, TabEmulation|ParagraphHighlight )->parentWidget();
+    auto page = textEditConfiguration( nullptr, Flag::TabEmulation|Flag::ParagraphHighlight )->parentWidget();
     {
       // misc
       QGroupBox* box;

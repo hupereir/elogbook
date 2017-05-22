@@ -122,11 +122,11 @@ void installDefaultOptions( void )
     // add run-time non recordable options
     QString user( Util::user( ) );
     QString host( Util::host() );
-    XmlOptions::get().set( "USER", Option( user+"@"+host, Option::None ) );
+    XmlOptions::get().set( "USER", Option( user+"@"+host, Option::Flag::None ) );
 
     // resource file
-    XmlOptions::get().set( "OLD_RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::None ) );
-    XmlOptions::get().set( "RC_FILE", Option(  File("elogbookrc").addPath(Util::config()), Option::None ) );
+    XmlOptions::get().set( "OLD_RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::Flag::None ) );
+    XmlOptions::get().set( "RC_FILE", Option(  File("elogbookrc").addPath(Util::config()), Option::Flag::None ) );
 
     XmlOptions::get().setAutoDefault( false );
 

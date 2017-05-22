@@ -327,7 +327,7 @@ void MainWindow::createDefaultLogbook( void )
     logbook_->setAuthor( XmlOptions::get().raw( "USER" ) );
     logbook_->setDirectory( workingDirectory() );
 
-    logbook_->setComments( QString( tr( "Default logbook created automatically on %1" ) ).arg( TimeStamp::now().toString( TimeStamp::Long ) ) );
+    logbook_->setComments( QString( tr( "Default logbook created automatically on %1" ) ).arg( TimeStamp::now().toString( TimeStamp::Format::Long ) ) );
 
 }
 

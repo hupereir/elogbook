@@ -661,7 +661,7 @@ QString Logbook::backupFilename( void ) const
     QString head( File( file_ ).truncatedName() );
     QString foot( File( file_ ).extension() );
     if( !foot.isEmpty() ) foot = QString(".") + foot;
-    QString tag( TimeStamp::now().toString( TimeStamp::DateTag ) );
+    QString tag( TimeStamp::now().toString( TimeStamp::Format::DateTag ) );
 
     QString out;
     QTextStream( &out ) << head << "_backup_" << tag << foot;
