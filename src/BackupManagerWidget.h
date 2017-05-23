@@ -33,7 +33,7 @@
 
 class TreeView;
 
-class BackupManagerWidget: public QWidget, public Counter, public Base::Key
+class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWidget>, public Base::Key
 {
 
     Q_OBJECT

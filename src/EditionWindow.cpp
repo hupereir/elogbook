@@ -2043,4 +2043,3 @@ void Private::ColorWidget::paintEvent( QPaintEvent* )
 }
 
 #include "moc_EditionWindow_p.cpp"
-

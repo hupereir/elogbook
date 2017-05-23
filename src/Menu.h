@@ -35,7 +35,7 @@ class RecentFilesMenu;
 \brief main menu
 */
 
-class Menu:public QMenuBar, public Counter
+class Menu:public QMenuBar, private Base::Counter<Menu>
 {
 
     //* Qt meta object declaration

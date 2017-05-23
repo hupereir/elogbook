@@ -35,7 +35,7 @@
 #include <QProgressDialog>
 
 //* printing utilityclass
-class LogbookPrintHelper: public BasePrintHelper, public Counter
+class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookPrintHelper>
 {
 
     Q_OBJECT

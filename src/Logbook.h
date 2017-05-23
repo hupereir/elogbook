@@ -43,7 +43,7 @@ class XmlTextFormatInfo;
 \class Logbook
 \brief log file parser based on xml
 */
-class Logbook:public QObject, public Counter, public Base::Key
+class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
 {
 
     Q_OBJECT

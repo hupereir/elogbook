@@ -29,7 +29,7 @@ s*
 class CustomComboBox;
 
 //* selects entries from keyword/title/text/...
-class SearchWidget: public QWidget, public Counter
+class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
 {
 
     //* Qt meta object declaration

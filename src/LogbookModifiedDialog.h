@@ -27,7 +27,7 @@
 class TreeView;
 
 //* QDialog used to ask if a new file should be created
-class LogbookModifiedDialog: public BaseDialog, public Counter
+class LogbookModifiedDialog: public BaseDialog, private Base::Counter<LogbookModifiedDialog>
 {
 
     //* Qt macro

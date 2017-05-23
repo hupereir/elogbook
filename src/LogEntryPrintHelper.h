@@ -29,7 +29,7 @@
 #include <QPrinter>
 
 //* printing utility
-class LogEntryPrintHelper: public BasePrintHelper, public Counter
+class LogEntryPrintHelper: public BasePrintHelper, private Base::Counter<LogEntryPrintHelper>
 {
 
     Q_OBJECT

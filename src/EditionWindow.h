@@ -61,7 +61,7 @@ namespace Private
 }
 
 //* log entry edition/creation object
-class EditionWindow: public BaseMainWindow, public Counter, public Base::Key
+class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>, public Base::Key
 {
 
     //* Qt meta object declaration

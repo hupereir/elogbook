@@ -30,7 +30,7 @@
 #include <QTextStream>
 
 //* log entry keyword
-class Keyword: public Counter
+class Keyword: private Base::Counter<Keyword>
 {
 
     public:

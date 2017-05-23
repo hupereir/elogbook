@@ -32,7 +32,7 @@
 #include <QDomElement>
 
 //* printing utilityclass
-class LogbookHtmlHelper: public QObject, public Counter
+class LogbookHtmlHelper: public QObject, private Base::Counter<LogbookHtmlHelper>
 {
 
     Q_OBJECT

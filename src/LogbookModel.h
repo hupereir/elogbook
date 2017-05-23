@@ -26,7 +26,7 @@
 class Logbook;
 
 //* logbook information model
-class LogbookModel: public ListModel<Logbook*>, public Counter
+class LogbookModel: public ListModel<Logbook*>, private Base::Counter<LogbookModel>
 {
 
     Q_OBJECT

@@ -33,7 +33,7 @@
 class Logbook;
 
 //* handles threads for file auto-save
-class FileCheck: public QObject, public Base::Key, public Counter
+class FileCheck: public QObject, public Base::Key, private Base::Counter<FileCheck>
 {
 
     //* Qt meta object declaration
@@ -116,7 +116,7 @@ class FileCheck: public QObject, public Base::Key, public Counter
     };
 
     //* logbook information model
-    class Model: public ListModel<Data>, public Counter
+    class Model: public ListModel<Data>, private Base::Counter<Model>
     {
 
         public:

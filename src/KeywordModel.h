@@ -27,7 +27,7 @@
 #include <QMimeData>
 
 //* Job model. Stores job information for display in lists
-class KeywordModel : public TreeModel<Keyword>, public Counter
+class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordModel>
 {
 
     //* Qt meta object declaration

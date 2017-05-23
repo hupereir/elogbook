@@ -28,7 +28,7 @@
 #include <QDomElement>
 
 //* store backup information
-class Backup: public Counter
+class Backup: private Base::Counter<Backup>
 {
 
     public:

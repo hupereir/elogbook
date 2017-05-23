@@ -27,7 +27,7 @@ class Attachment;
 class MimeTypeIconProvider;
 
 //* Job model. Stores job information for display in lists
-class AttachmentModel : public ListModel<Attachment*>, public Counter
+class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<AttachmentModel>
 {
 
     Q_OBJECT

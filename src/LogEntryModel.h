@@ -30,7 +30,7 @@
 class LogEntry;
 
 //* Job model. Stores job information for display in lists
-class LogEntryModel : public ListModel<LogEntry*>, public Counter
+class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntryModel>
 {
 
     //* Qt meta object declaration

@@ -50,7 +50,7 @@ class Menu;
 class ProgressStatusBar;
 
 //* display a set of log entries, allows selection of one
-class MainWindow: public BaseMainWindow, public Counter, public Base::Key
+class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, public Base::Key
 {
 
     //* Qt meta object declaration

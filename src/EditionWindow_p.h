@@ -24,7 +24,7 @@ namespace Private
 {
 
     //* color widget
-    class ColorWidget: public QToolButton, public Counter
+    class ColorWidget: public QToolButton, private Base::Counter<ColorWidget>
     {
 
         Q_OBJECT
@@ -51,7 +51,7 @@ namespace Private
     };
 
     //* local QSplitter object, derived from Counter
-    class LocalSplitter: public QSplitter, public Counter
+    class LocalSplitter: public QSplitter, private Base::Counter<LocalSplitter>
     {
 
         Q_OBJECT

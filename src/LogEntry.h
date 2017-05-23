@@ -32,7 +32,7 @@
 #include <QDomDocument>
 
 //* log file entry manipulation object
-class LogEntry:public Counter, public Base::Key
+class LogEntry:private Base::Counter<LogEntry>, public Base::Key
 {
 
     public:

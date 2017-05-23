@@ -24,7 +24,7 @@
 #include "Counter.h"
 
 //* display command progress and remaining time
-class ProgressBar:public BaseProgressBar, public Counter
+class ProgressBar:public BaseProgressBar, private Base::Counter<ProgressBar>
 {
 
     Q_OBJECT

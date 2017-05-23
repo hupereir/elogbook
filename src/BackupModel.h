@@ -25,7 +25,7 @@
 #include "ListModel.h"
 
 //* model
-class BackupModel: public ListModel< Backup >, public Counter
+class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel>
 {
 
     Q_OBJECT

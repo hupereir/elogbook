@@ -34,7 +34,7 @@
 #include <memory>
 
 //* application
-class Application: public BaseApplication, public Counter
+class Application: public BaseApplication, private Base::Counter<Application>
 {
 
     //* Qt meta object declaration
