@@ -48,7 +48,7 @@ int main (int argc, char *argv[])
     // TODO use command-line arguments
     if( argc < 3 )
     {
-        Debug::Throw(0) << "usage: copy-logbook <input file> <output file>" << endl;
+        Debug::Throw(0) << "usage: copy-logbook <input logbook> <output logbook>" << endl;
         return 0;
     }
 

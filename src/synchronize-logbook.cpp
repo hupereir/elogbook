@@ -45,13 +45,13 @@ int main (int argc, char *argv[])
     // read argument
     if( argc < 3 )
     {
-        Debug::Throw(0) << "usage: synchronize-logbook <local file> <remote file>" << endl;
+        Debug::Throw(0) << "usage: synchronize-logbook <first logbook> <second logbook>" << endl;
         return 0;
     }
 
     // load argument
-    File local( argv[1] );
-    File remote( argv[2] );
+    File first( argv[1] );
+    File second( argv[2] );
 
     // load options
     QString user( Util::user( ) );
@@ -88,72 +88,72 @@ int main (int argc, char *argv[])
     ErrorHandler::get().disableMessage( "qUncompress: Z_DATA_ERROR: Input data is corrupted file" );
     ErrorHandler::initialize();
 
-    // try open local Logbook
-    Debug::Throw(0) << "synchronize-logbook - reading local logbook from: " << local << endl;
-    Logbook localLogbook;
-    localLogbook.setFile( local.expand() );
-    localLogbook.setUseCompression( useCompression );
-    if( !localLogbook.read() )
+    // try open first Logbook
+    Debug::Throw(0) << "synchronize-logbook - reading first logbook from: " << first << endl;
+    Logbook firstLogbook;
+    firstLogbook.setFile( first.expand() );
+    firstLogbook.setUseCompression( useCompression );
+    if( !firstLogbook.read() )
     {
-        Debug::Throw(0) << "synchronize-logbook - error reading local logbook" << endl;
+        Debug::Throw(0) << "synchronize-logbook - error reading first logbook" << endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "synchronize-logbook - number of local files: " << localLogbook.children().size() << endl;
-    Debug::Throw(0) << "synchronize-logbook - number of local entries: " << localLogbook.entries().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of files in first logbook: " << firstLogbook.children().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of entries in first logbook: " << firstLogbook.entries().size() << endl;
 
-    // try open localLogbook
-    Debug::Throw(0) << "synchronize-logbook - reading remote logbook from: " << remote << endl;
-    Logbook remoteLogbook;
-    remoteLogbook.setFile( remote.expand() );
-    remoteLogbook.setUseCompression( useCompression );
-    if( !remoteLogbook.read() )
+    // try open second logbook
+    Debug::Throw(0) << "synchronize-logbook - reading second logbook from: " << second << endl;
+    Logbook secondLogbook;
+    secondLogbook.setFile( second.expand() );
+    secondLogbook.setUseCompression( useCompression );
+    if( !secondLogbook.read() )
     {
-        Debug::Throw(0) << "synchronize-logbook - error reading remote logbook" << endl;
+        Debug::Throw(0) << "synchronize-logbook - error reading second logbook" << endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "synchronize-logbook - number of remote files: " << remoteLogbook.children().size() << endl;
-    Debug::Throw(0) << "synchronize-logbook - number of remote entries: " << remoteLogbook.entries().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of files in second logbook: " << secondLogbook.children().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of entries in second logbook: " << secondLogbook.entries().size() << endl;
 
-    // check whether local logbook is read-only
-    if( localLogbook.isReadOnly() )
+    // check whether first logbook is read-only
+    if( firstLogbook.isReadOnly() )
     {
 
-        Debug::Throw(0) << "synchronize-logbook - local logbook is read-only. It will not be synchronized to the remote logbook." << endl;
+        Debug::Throw(0) << "synchronize-logbook - first logbook is read-only. It will not be synchronized to the second logbook." << endl;
 
     } else {
 
-        Debug::Throw(0) << "synchronize-logbook - updating local from remote" << endl;
-        const int nDuplicated( localLogbook.synchronize( remoteLogbook ).size() );
+        Debug::Throw(0) << "synchronize-logbook - updating first logbook from second" << endl;
+        const int nDuplicated( firstLogbook.synchronize( secondLogbook ).size() );
         Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << endl;
 
-        if( !localLogbook.write() )
+        if( !firstLogbook.write() )
         {
-            Debug::Throw(0) << "synchronize-logbook - error writing local logbook" << endl;
+            Debug::Throw(0) << "synchronize-logbook - error writing first logbook" << endl;
             return 0;
         }
 
     }
 
-    // check whether remote logbook is read-only
-    if( remoteLogbook.isReadOnly() )
+    // check whether second logbook is read-only
+    if( secondLogbook.isReadOnly() )
     {
 
-        Debug::Throw(0) << "synchronize-logbook - remote logbook is read-only. It will not be synchronized to the local logbook." << endl;
+        Debug::Throw(0) << "synchronize-logbook - second logbook is read-only. It will not be synchronized to the first logbook." << endl;
 
     } else {
 
-        Debug::Throw(0) << "synchronize-logbook - updating remote from local" << endl;
-        const int nDuplicated( remoteLogbook.synchronize( localLogbook ).size() );
+        Debug::Throw(0) << "synchronize-logbook - updating second logbook from first" << endl;
+        const int nDuplicated( secondLogbook.synchronize( firstLogbook ).size() );
 
         Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << endl;
 
-        if( !remoteLogbook.write() )
+        if( !secondLogbook.write() )
         {
-            Debug::Throw(0) << "error writting to remote logbook" << endl;
+            Debug::Throw(0) << "error writting to second logbook" << endl;
             return 0;
         }
 
