@@ -244,9 +244,6 @@ bool Logbook::write( File file )
 
     bool completed = true;
 
-    // update stateFrame
-    emit messageAvailable( QString( tr( "Writing '%1'" ) ).arg( file.localName() ) );
-
     // check number of entries and children to save in header
     if( setXmlEntries( entries().size() ) || setXmlChildren( children().size() ) )
     { setModified( true ); }
@@ -265,9 +262,7 @@ bool Logbook::write( File file )
         { file.backup(); }
 
         // update stateFrame
-        QString buffer;
-        QTextStream( &buffer ) << "Writing " << file.localName();
-        emit messageAvailable( buffer );
+        emit messageAvailable( QString( tr( "Writing '%1'" ) ).arg( file.localName() ) );
 
         if( !QFile( file ).open( QIODevice::WriteOnly ) )
         {
@@ -370,11 +365,8 @@ bool Logbook::write( File file )
 
         File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
 
-        // update stateFrame
-        emit messageAvailable( QString( tr( "Writing '%1'" ) ).arg( childFilename.localName() ) );
-
         logbook->setParentFile( file );
-        completed &= logbook->write( childFilename );
+        if( !logbook->write( childFilename ) ) completed = false;
 
         ++childCount;
 
