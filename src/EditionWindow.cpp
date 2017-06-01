@@ -82,16 +82,16 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     setOptionName( "editionWindow" );
     setObjectName( "EDITFRAME" );
 
-    QWidget* main( new QWidget( this ) );
+    auto main( new QWidget( this ) );
     setCentralWidget( main );
 
-    QVBoxLayout *layout = new QVBoxLayout();
+    auto layout = new QVBoxLayout();
     layout->setMargin(0);
     layout->setSpacing(2);
     main->setLayout( layout );
 
     // header layout
-    QGridLayout* gridLayout( new QGridLayout() );
+    auto gridLayout( new QGridLayout() );
     gridLayout->setSpacing(0);
     gridLayout->setMargin(0);
     layout->addLayout( gridLayout );
@@ -123,18 +123,18 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     colorWidget_->hide();
 
     // splitter for EditionWindow and attachment list
-    QSplitter* splitter = new QSplitter( main );
+    auto splitter = new QSplitter( main );
     splitter->setOrientation( Qt::Vertical );
     layout->addWidget( splitter, 1 );
 
     // create text
-    QWidget* splitterWidget = new QWidget();
+    auto splitterWidget = new QWidget();
     splitterWidget->setLayout( new QVBoxLayout() );
     splitterWidget->layout()->setMargin(0);
     splitterWidget->layout()->setSpacing(0);
     splitter->addWidget( splitterWidget );
 
-    QWidget* editorContainer = new QWidget( splitterWidget );
+    auto editorContainer = new QWidget( splitterWidget );
     editorContainer->setLayout( new QVBoxLayout() );
     editorContainer->layout()->setMargin(0);
     editorContainer->layout()->setSpacing(0);
@@ -168,7 +168,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     connect( activeEditor_->document(), SIGNAL(modificationChanged(bool)), SLOT(_textModified(bool)) );
 
     // create attachment list
-    AttachmentFrame *frame = new AttachmentFrame( 0, readOnly_ );
+    auto frame = new AttachmentFrame( 0, readOnly_ );
     frame->visibilityAction().setChecked( false );
     frame->setDefaultHeight( XmlOptions::get().get<int>( "ATTACHMENT_FRAME_HEIGHT" ) );
     splitter->addWidget( frame );
@@ -296,7 +296,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
     clearAssociations<LogEntry>();
 
     // update recentFiles menu
-    MainWindow &mainWindow( _mainWindow() );
+    auto&& mainWindow( _mainWindow() );
     menu_->recentFilesMenu().setCurrentFile( mainWindow.menu().recentFilesMenu().currentFile() );
 
     // check entry and associate to this editor
@@ -366,7 +366,7 @@ void EditionWindow::setIsClosed( bool value )
         setModified( false );
 
         // delete associated entry if it is 'new'
-        LogEntry *entry( this->entry() );
+        auto entry( this->entry() );
         if( entry && Base::KeySet<Logbook>( entry ).empty() )
         { delete entry; }
 
@@ -378,7 +378,7 @@ QString EditionWindow::windowTitle( void ) const
 {
 
     Debug::Throw( "EditionWindow::windowTitle.\n" );
-    LogEntry* entry( this->entry() );
+    auto entry( this->entry() );
 
     // read only flag
     const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbookIsReadOnly() ) );
@@ -419,7 +419,7 @@ void EditionWindow::displayTitle( void )
 {
     Debug::Throw( "EditionWindow::displayTitle.\n" );
 
-    LogEntry* entry( this->entry() );
+    auto entry( this->entry() );
     if( entry ) titleEditor_->setText( entry->title() );
     titleEditor_->setCursorPosition( 0 );
     return;
@@ -1196,7 +1196,7 @@ void EditionWindow::_displayText( void )
     Debug::Throw( "EditionWindow::_displayText.\n" );
     if( !activeEditor_ ) return;
 
-    LogEntry* entry( this->entry() );
+    auto entry( this->entry() );
     activeEditor_->setCurrentCharFormat( QTextCharFormat() );
     activeEditor_->setPlainText( (entry) ? entry->text() : QString() );
     formatBar_->load( entry->formats() );
@@ -1215,7 +1215,7 @@ void EditionWindow::_displayAttachments( void )
     AttachmentFrame &frame( attachmentFrame() );
     frame.clear();
 
-    LogEntry* entry( this->entry() );
+    auto entry( this->entry() );
     if( !entry ) {
 
         frame.visibilityAction().setChecked( false );
@@ -1421,7 +1421,7 @@ void EditionWindow::_newEntry( void )
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create new entry, set author, set keyword
-    LogEntry* entry = new LogEntry();
+    auto entry = new LogEntry();
     entry->setAuthor( XmlOptions::get().raw( "USER" ) );
     entry->addKeyword( _mainWindow().currentKeyword() );
 
@@ -1447,7 +1447,7 @@ void EditionWindow::_previousEntry( void )
     Debug::Throw( "EditionWindow::_previousEntry.\n" );
 
     MainWindow &mainWindow( _mainWindow() );
-    LogEntry* entry( mainWindow.previousEntry( this->entry(), true ) );
+    auto entry( mainWindow.previousEntry( this->entry(), true ) );
     if( !( entry  && mainWindow.lockEntry( entry ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
@@ -1460,7 +1460,7 @@ void EditionWindow::_nextEntry( void )
     Debug::Throw( "EditionWindow::_nextEntry.\n" );
 
     MainWindow &mainWindow( _mainWindow() );
-    LogEntry* entry( mainWindow.nextEntry( this->entry(), true ) );
+    auto entry( mainWindow.nextEntry( this->entry(), true ) );
     if( !( entry && mainWindow.lockEntry( entry ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
@@ -1474,7 +1474,7 @@ void EditionWindow::_entryInformation( void )
     Debug::Throw( "EditionWindow::_EntryInfo.\n" );
 
     // check entry
-    LogEntry *entry( this->entry() );
+    auto entry( this->entry() );
     if( !entry ) {
         InformationDialog( this, tr( "No valid entry." ) ).exec();
         return;
@@ -1628,7 +1628,7 @@ void EditionWindow::_deleteEntry( void )
     Debug::Throw( "EditionWindow::_deleteEntry.\n" );
 
     // check current entry
-    LogEntry *entry( this->entry() );
+    auto entry( this->entry() );
 
     if( !entry )
     {
@@ -1674,7 +1674,7 @@ void EditionWindow::_cloneWindow( void )
 {
 
     Debug::Throw( "EditionWindow::_cloneWindow.\n" );
-    LogEntry *entry( this->entry() );
+    auto entry( this->entry() );
     if( !entry ) {
         InformationDialog( this, tr( "No valid entry found. <New window> canceled." ) ).exec();
         return;
@@ -1701,7 +1701,7 @@ void EditionWindow::_unlock( void )
     Debug::Throw( "EditionWindow::_unlock.\n" );
 
     if( !readOnly_ ) return;
-    LogEntry *entry( this->entry() );
+    auto entry( this->entry() );
 
     if( entry && ! _mainWindow().lockEntry( entry ) ) return;
     setReadOnly( false );
@@ -1926,7 +1926,7 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
     if( !url.isValid() || url.isRelative() ) return TextEditor::insertFromMimeData( source );
 
     // check scheme
-    static QStringList schemes = { "http", "https", "file" };
+    static QStringList schemes = { "file", "ftp", "http", "https" };
     if( !schemes.contains( url.scheme() ) ) return TextEditor::insertFromMimeData( source );
 
     // copy mime type
@@ -1988,7 +1988,7 @@ void Private::ColorWidget::setColor( const QColor& color )
 {
 
     // create pixmap
-    QPixmap pixmap = QPixmap( IconSize( IconSize::Huge ) );
+    QPixmap pixmap( IconSize( IconSize::Huge ) );
     pixmap.fill( Qt::transparent );
 
     QPainter painter( &pixmap );
