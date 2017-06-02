@@ -47,10 +47,10 @@ class AttachmentFrame: public QWidget, public Base::Key
     AttachmentFrame( QWidget*, bool );
 
     //* default size
-    void setDefaultHeight( const int& );
+    void setDefaultHeight( int );
 
     //* default height
-    const int& defaultHeight( void ) const
+    int defaultHeight( void ) const
     { return defaultHeight_; }
 
     //* size

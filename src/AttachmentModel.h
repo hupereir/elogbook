@@ -68,7 +68,7 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
     protected:
 
     //* sort
-    virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
+    void _sort( int, Qt::SortOrder ) override;
 
     //* icon matching given model index
     virtual QIcon _icon( const QModelIndex& ) const;
@@ -83,7 +83,7 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
         public:
 
         //* constructor
-        SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
+        SortFTor( int type, Qt::SortOrder order ):
             ItemModel::SortFTor( type, order )
         {}
 

@@ -99,7 +99,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
 
 
 //______________________________________________________________________
-void AttachmentFrame::setDefaultHeight( const int& value )
+void AttachmentFrame::setDefaultHeight( int value )
 { defaultHeight_ = value; }
 
 //____________________________________________

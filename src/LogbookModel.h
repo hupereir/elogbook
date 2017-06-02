@@ -70,10 +70,6 @@ class LogbookModel: public ListModel<Logbook*>, private Base::Counter<LogbookMod
 
     protected:
 
-    //* sort
-    virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder )
-    {}
-
     //* list column names
     static const QString columnTitles_[nColumns];
 

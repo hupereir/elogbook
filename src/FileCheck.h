@@ -143,7 +143,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
 
         //* return data
-        virtual QVariant data( const QModelIndex&, int ) const;
+        QVariant data( const QModelIndex&, int ) const override;
 
         //* header data
         virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
@@ -157,7 +157,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         }
 
         //* number of columns for a given index
-        virtual int columnCount(const QModelIndex& = QModelIndex()) const
+        int columnCount(const QModelIndex& = QModelIndex()) const override
         { return nColumns; }
 
         //@}
@@ -172,7 +172,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
             public:
 
             //* constructor
-            SortFTor( const int& type, Qt::SortOrder order ):
+            SortFTor( int type, Qt::SortOrder order ):
                 ItemModel::SortFTor( type, order )
             {}
 
@@ -182,7 +182,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         };
 
         //* sort
-        virtual void _sort( int column, Qt::SortOrder order = Qt::AscendingOrder )
+        void _sort( int column, Qt::SortOrder order ) override
         { std::sort( _get().begin(), _get().end(), SortFTor( column, order ) ); }
 
         //* list column names

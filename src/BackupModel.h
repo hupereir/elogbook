@@ -50,19 +50,19 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
     virtual Qt::ItemFlags flags( const QModelIndex& ) const;
 
     //* return data
-    virtual QVariant data( const QModelIndex&, int ) const;
+    QVariant data( const QModelIndex&, int ) const override;
 
     //* header data
-    virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
+    QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const override;
 
     //* number of columns for a given index
-    virtual int columnCount( const QModelIndex& = QModelIndex() ) const
+    int columnCount( const QModelIndex& = QModelIndex() ) const override
     { return nColumns; }
 
     protected:
 
     //* sort
-    virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
+    void _sort( int column, Qt::SortOrder order ) override;
 
     private:
 
@@ -76,7 +76,7 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
         public:
 
         //* constructor
-        SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
+        SortFTor( int type, Qt::SortOrder order ):
             ItemModel::SortFTor( type, order )
         {}
 

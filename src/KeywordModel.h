@@ -45,29 +45,29 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     //@{
 
     //* flags
-    virtual Qt::ItemFlags flags( const QModelIndex& ) const;
+    Qt::ItemFlags flags( const QModelIndex& ) const override;
 
     //* return data
-    virtual QVariant data( const QModelIndex&, int ) const;
+    QVariant data( const QModelIndex&, int ) const override;
 
     // modify data
-    virtual bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole );
+    bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole ) override;
 
     //* header data
-    virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
+    QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const override;
 
     //* number of columns for a given index
-    virtual int columnCount( const QModelIndex& = QModelIndex() ) const
+    int columnCount( const QModelIndex& = QModelIndex() ) const override
     { return nColumns; }
 
     //* mime type
-    virtual QStringList mimeTypes( void ) const;
+    QStringList mimeTypes( void ) const override;
 
     //* mime data
-    virtual QMimeData* mimeData( const QModelIndexList& ) const;
+    QMimeData* mimeData( const QModelIndexList& ) const override;
 
     //* drop mine data
-    virtual bool dropMimeData(const QMimeData*, Qt::DropAction, int, int, const QModelIndex&);
+    bool dropMimeData(const QMimeData*, Qt::DropAction, int, int, const QModelIndex&) override;
 
     //@}
 
@@ -85,7 +85,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     protected:
 
     //* sort
-    virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
+    void _sort( int, Qt::SortOrder ) override;
 
     private Q_SLOTS:
 
@@ -109,7 +109,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
         public:
 
         //* constructor
-        SortFTor( Qt::SortOrder order = Qt::AscendingOrder ):
+        SortFTor( Qt::SortOrder order ):
             order_( order )
             {}
 

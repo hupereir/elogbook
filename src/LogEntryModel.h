@@ -58,13 +58,13 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     //@{
 
     //* flags
-    virtual Qt::ItemFlags flags( const QModelIndex& ) const;
+    Qt::ItemFlags flags( const QModelIndex& ) const override;
 
     //* return data
-    virtual QVariant data( const QModelIndex&, int ) const;
+    QVariant data( const QModelIndex&, int ) const override;
 
     //* header data
-    virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const;
+    QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const override;
 
     //* mime type
     virtual QStringList mimeTypes( void ) const;
@@ -73,7 +73,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     virtual QMimeData* mimeData( const QModelIndexList& ) const;
 
     //* number of columns for a given index
-    virtual int columnCount( const QModelIndex& = QModelIndex() ) const
+    int columnCount( const QModelIndex& = QModelIndex() ) const override
     { return nColumns; }
 
     //* enable edition
@@ -90,7 +90,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     //@{
 
     // modify data
-    virtual bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole );
+    bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole ) override;
 
     //* enable edition
     void setEditionEnabled( bool value )
@@ -113,7 +113,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     protected:
 
     //* sort
-    virtual void _sort( int, Qt::SortOrder = Qt::AscendingOrder );
+    void _sort( int, Qt::SortOrder ) override;
 
     private Q_SLOTS:
 
@@ -148,7 +148,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
         public:
 
         //* constructor
-        SortFTor( const int& type, Qt::SortOrder order = Qt::AscendingOrder ):
+        SortFTor( int type, Qt::SortOrder order ):
             ItemModel::SortFTor( type, order )
         {}
 
