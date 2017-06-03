@@ -171,7 +171,16 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     int iconSize_ = 8;
 
     //* list column names
-    static const QString columnTitles_[nColumns];
+    const std::array<QString, nColumns> columnTitles_ =
+    {
+        QString(),
+        tr( "Subject" ),
+        tr( "Keyword" ),
+        QString(),
+        tr( "Creation" ),
+        tr( "Modification" ),
+        tr( "Author" )
+    };
 
 };
 

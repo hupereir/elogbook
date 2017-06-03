@@ -42,18 +42,6 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
     return cache;
 }
 
-//_______________________________________________
-const QString LogEntryModel::columnTitles_[ LogEntryModel::nColumns ] =
-{
-    QString(),
-    tr( "Subject" ),
-    tr( "Keyword" ),
-    QString(),
-    tr( "Creation" ),
-    tr( "Modification" ),
-    tr( "Author" )
-};
-
 //_______________________________________________________________
 LogEntryModel::LogEntryModel( QObject* parent ):
     ListModel<LogEntry*>( parent ),

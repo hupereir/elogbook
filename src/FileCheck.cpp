@@ -172,15 +172,6 @@ void FileCheck::_fileChanged( const QString& file )
 
 }
 
-
-//_______________________________________________
-const QString FileCheck::Model::columnTitles_[ FileCheck::Model::nColumns ] =
-{
-    tr( "file" ),
-    tr( "flag" ),
-    tr( "time stamp" )
-};
-
 //_______________________________________________________________________________________
 QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
 {

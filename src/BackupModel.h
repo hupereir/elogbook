@@ -67,7 +67,12 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
     private:
 
     //* list column names
-    static const QString columnTitles_[nColumns];
+    const std::array<QString, nColumns> columnTitles_ =
+    {
+        tr( "File" ),
+        tr( "Path" ),
+        tr( "Created" )
+    };
 
     //* used to sort IconCaches
     class SortFTor: public ItemModel::SortFTor

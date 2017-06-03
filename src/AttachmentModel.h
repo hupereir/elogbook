@@ -93,7 +93,13 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
     };
 
     //* list column names
-    static const QString columnTitles_[nColumns];
+    const std::array<QString, nColumns> columnTitles_ =
+    {
+        tr( "File" ),
+        tr( "Size" ),
+        tr( "Creation" ),
+        tr( "Modification" )
+    };
 
     //* icon provider
     MimeTypeIconProvider* iconProvider_ = nullptr;

@@ -100,7 +100,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     private:
 
     //* list column names
-    static const QString columnTitles_[nColumns];
+    const std::array<QString, nColumns> columnTitles_ = { tr( "Keywords" ) };
 
     //* used to sort Jobs
     class SortFTor

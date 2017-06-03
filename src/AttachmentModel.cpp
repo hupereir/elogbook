@@ -24,15 +24,6 @@
 #include "IconEngine.h"
 #include "TimeStamp.h"
 
-//_______________________________________________
-const QString AttachmentModel::columnTitles_[ AttachmentModel::nColumns ] =
-{
-    tr( "File" ),
-    tr( "Size" ),
-    tr( "Creation" ),
-    tr( "Modification" )
-};
-
 //_______________________________________________________________
 AttachmentModel::AttachmentModel( QObject* parent ):
     ListModel<Attachment*>( parent ),

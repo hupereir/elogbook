@@ -21,15 +21,6 @@
 #include "Logbook.h"
 #include "LogEntry.h"
 
-//_______________________________________________
-const QString LogbookModel::columnTitles_[ LogbookModel::nColumns ] =
-{
-    tr( "File" ),
-    tr( "Entries" ),
-    tr( "Created" ),
-    tr( "Modified" )
-};
-
 //_______________________________________________________________________________________
 QVariant LogbookModel::data( const QModelIndex& index, int role ) const
 {

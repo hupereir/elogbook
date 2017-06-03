@@ -186,7 +186,12 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         { std::sort( _get().begin(), _get().end(), SortFTor( column, order ) ); }
 
         //* list column names
-        static const QString columnTitles_[nColumns];
+        const std::array<QString, nColumns> columnTitles_ =
+        {
+            tr( "file" ),
+            tr( "flag" ),
+            tr( "time stamp" )
+        };
 
     };
 

@@ -21,9 +21,6 @@
 #include "LogEntry.h"
 
 //______________________________________________________________
-const QString KeywordModel::columnTitles_[ KeywordModel::nColumns ] = { "Keywords" };
-
-//______________________________________________________________
 KeywordModel::KeywordModel( QObject* parent ):
     TreeModel<Keyword>( parent ),
     Counter( "KeywordModel" )

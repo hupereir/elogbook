@@ -19,14 +19,6 @@
 
 #include "BackupModel.h"
 
-//_______________________________________________
-const QString BackupModel::columnTitles_[ BackupModel::nColumns ] =
-{
-    tr( "File" ),
-    tr( "Path" ),
-    tr( "Created" )
-};
-
 //__________________________________________________________________
 Qt::ItemFlags BackupModel::flags(const QModelIndex &index) const
 {
