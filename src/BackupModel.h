@@ -68,11 +68,11 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
 
     //* list column names
     const std::array<QString, nColumns> columnTitles_ =
-    {
+    {{
         tr( "File" ),
         tr( "Path" ),
         tr( "Created" )
-    };
+    }};
 
     //* used to sort IconCaches
     class SortFTor: public ItemModel::SortFTor

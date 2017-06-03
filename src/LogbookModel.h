@@ -72,12 +72,12 @@ class LogbookModel: public ListModel<Logbook*>, private Base::Counter<LogbookMod
 
     //* list column names
     const std::array<QString, nColumns> columnTitles_ =
-    {
+    {{
         tr( "File" ),
         tr( "Entries" ),
         tr( "Created" ),
         tr( "Modified" )
-    };
+    }};
 
 };
 

@@ -172,7 +172,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
 
     //* list column names
     const std::array<QString, nColumns> columnTitles_ =
-    {
+    {{
         QString(),
         tr( "Subject" ),
         tr( "Keyword" ),
@@ -180,7 +180,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
         tr( "Creation" ),
         tr( "Modification" ),
         tr( "Author" )
-    };
+    }};
 
 };
 

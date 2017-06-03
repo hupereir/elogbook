@@ -187,11 +187,11 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
 
         //* list column names
         const std::array<QString, nColumns> columnTitles_ =
-        {
+        {{
             tr( "file" ),
             tr( "flag" ),
             tr( "time stamp" )
-        };
+        }};
 
     };
 
