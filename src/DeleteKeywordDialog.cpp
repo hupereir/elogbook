@@ -40,13 +40,13 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     else {
 
         buffer = QString( tr( "Delete following keywords ?\n  " ) );
-        unsigned int max_keywords = 10;
-        unsigned int index(0);
+        int maxKeywords = 10;
+        int index(0);
         for( const auto& keyword:keywords )
         {
             buffer += keyword.get() + " ";
             index++;
-            if( index >= max_keywords )
+            if( index >= maxKeywords )
             {
                 index = 0;
                 buffer += "\n ";

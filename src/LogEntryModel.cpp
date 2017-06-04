@@ -335,7 +335,7 @@ void LogEntryModel::_sort( int column, Qt::SortOrder order )
 void LogEntryModel::_updateConfiguration( void )
 {
     Debug::Throw( "LogEntryModel::_updateConfiguration.\n" );
-    iconSize_ =XmlOptions::get().get<unsigned int>( "LIST_ICON_SIZE" );
+    iconSize_ =XmlOptions::get().get<int>( "LIST_ICON_SIZE" );
     _resetIcons();
 }
 

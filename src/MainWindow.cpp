@@ -901,8 +901,8 @@ void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mod
     }
 
     // number of found items
-    unsigned int found( 0 );
-    unsigned int total( 0 );
+    int found( 0 );
+    int total( 0 );
 
     // keep track of the last visible entry
     LogEntry *lastVisibleEntry( 0 );
@@ -1833,8 +1833,8 @@ void MainWindow::_print( void )
     helper.setEntries( _entries( selectionMode ) );
 
     if( treeModeAction_->isChecked() &&
-        ( selectionMode == LogEntryPrintSelectionWidget::VisibleEntries ||
-        selectionMode == LogEntryPrintSelectionWidget::SelectedEntries ) )
+        ( selectionMode == LogEntryPrintSelectionWidget::Mode::VisibleEntries ||
+        selectionMode == LogEntryPrintSelectionWidget::Mode::SelectedEntries ) )
     { helper.setCurrentKeyword( currentKeyword() ); }
 
     // print
@@ -1928,23 +1928,23 @@ void MainWindow::_printPreview( void )
     auto selectionMode( selectionDialog.mode() );
 
     if( treeModeAction_->isChecked() &&
-        ( selectionMode == LogEntryPrintSelectionWidget::VisibleEntries ||
-        selectionMode == LogEntryPrintSelectionWidget::SelectedEntries ) )
+        ( selectionMode == LogEntryPrintSelectionWidget::Mode::VisibleEntries ||
+        selectionMode == LogEntryPrintSelectionWidget::Mode::SelectedEntries ) )
     { helper.setCurrentKeyword( currentKeyword() ); }
 
     switch( selectionMode )
     {
 
-        case LogEntryPrintSelectionWidget::AllEntries:
+        case LogEntryPrintSelectionWidget::Mode::AllEntries:
         helper.setEntries( Base::KeySet<LogEntry>( logbook_->entries() ).toList() );
         break;
 
         default:
-        case LogEntryPrintSelectionWidget::VisibleEntries:
+        case LogEntryPrintSelectionWidget::Mode::VisibleEntries:
         helper.setEntries( entryModel_.get() );
         break;
 
-        case LogEntryPrintSelectionWidget::SelectedEntries:
+        case LogEntryPrintSelectionWidget::Mode::SelectedEntries:
         helper.setEntries( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
         break;
 
@@ -2036,8 +2036,8 @@ void MainWindow::_toHtml( void )
     helper.setEntries( _entries( selectionMode ) );
 
     if( treeModeAction_->isChecked() &&
-        ( selectionMode == LogEntryPrintSelectionWidget::VisibleEntries ||
-        selectionMode == LogEntryPrintSelectionWidget::SelectedEntries ) )
+        ( selectionMode == LogEntryPrintSelectionWidget::Mode::VisibleEntries ||
+        selectionMode == LogEntryPrintSelectionWidget::Mode::SelectedEntries ) )
     { helper.setCurrentKeyword( currentKeyword() ); }
 
     // retrieve mask and assign
@@ -2149,7 +2149,7 @@ void MainWindow::_synchronize( void )
 
     // synchronize remove with local
     Debug::Throw() << "MainWindow::_synchronize - updating remote from local" << endl;
-    unsigned int nDuplicated = remoteLogbook.synchronize( *logbook_ ).size();
+    int nDuplicated = remoteLogbook.synchronize( *logbook_ ).size();
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << nDuplicated << endl;
 
     // save remote logbook
@@ -3674,7 +3674,7 @@ void MainWindow::_updateConfiguration( void )
     { colorMenu_->add( color.get<Base::Color>() ); }
 
     // max number of recent entries
-    maxRecentEntries_ = XmlOptions::get().get<unsigned int>( "MAX_RECENT_ENTRIES" );
+    maxRecentEntries_ = XmlOptions::get().get<int>( "MAX_RECENT_ENTRIES" );
 
     // tree mode
     treeModeAction_->setChecked( XmlOptions::get().get<bool>( "USE_TREE" ) );
@@ -3688,13 +3688,13 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     switch( mode )
     {
         default:
-        case LogEntryPrintSelectionWidget::AllEntries:
+        case LogEntryPrintSelectionWidget::Mode::AllEntries:
         return Base::KeySet<LogEntry>( logbook_->entries() ).toList();
 
-        case LogEntryPrintSelectionWidget::VisibleEntries:
+        case LogEntryPrintSelectionWidget::Mode::VisibleEntries:
         return entryModel_.get();
 
-        case LogEntryPrintSelectionWidget::SelectedEntries:
+        case LogEntryPrintSelectionWidget::Mode::SelectedEntries:
         return entryModel_.get( entryList_->selectionModel()->selectedRows() );
 
     }

@@ -29,7 +29,7 @@
 #include <QFont>
 #include <QTextCharFormat>
 #include <QToolButton>
-#include <QMap>
+#include <QHash>
 
 class ColorMenu;
 class TextEditor;
@@ -66,7 +66,7 @@ class FormatBar: public CustomToolBar
     Format::TextFormatBlock::List get( void ) const;
 
     //* button map
-    using ActionMap = QMap< ActionId, QAction* >;
+    using ActionMap = QHash< ActionId, QAction* >;
 
     //* actions
     const ActionMap& actions( void ) const

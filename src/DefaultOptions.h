@@ -23,6 +23,7 @@
 #include "LogEntryModel.h"
 #include "AttachmentModel.h"
 #include "Color.h"
+#include "CppUtil.h"
 #include "File.h"
 #include "Logbook.h"
 #include "LogEntry.h"
@@ -101,7 +102,7 @@ void installDefaultOptions( void )
     XmlOptions::get().set<bool>( "USE_TREE", true );
 
     XmlOptions::get().set<int>( "LOGENTRY_PRINT_OPTION_MASK", LogEntry::All );
-    XmlOptions::get().set<int>( "LOGENTRY_PRINT_SELECTION", LogEntryPrintSelectionWidget::AllEntries );
+    XmlOptions::get().set<int>( "LOGENTRY_PRINT_SELECTION", Base::toIntegralType(LogEntryPrintSelectionWidget::Mode::AllEntries) );
     XmlOptions::get().set<int>( "LOGBOOK_PRINT_OPTION_MASK", Logbook::All );
 
     XmlOptions::get().set<bool>( "AUTO_INSERT_LINK", true );

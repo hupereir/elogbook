@@ -22,7 +22,7 @@
 
 #include "OptionWidget.h"
 
-#include <QMap>
+#include <QHash>
 #include <QWidget>
 #include <QRadioButton>
 
@@ -43,7 +43,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     virtual void write( Options& ) const;
 
     //* mask
-    enum Mode
+    enum class Mode
     {
         AllEntries,
         VisibleEntries,
@@ -72,7 +72,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     private:
 
     //* checkboxes
-    using RadioButtonMap = QMap<Mode, QRadioButton* >;
+    using RadioButtonMap = QHash<Mode, QRadioButton* >;
     RadioButtonMap radioButtons_;
 
 };

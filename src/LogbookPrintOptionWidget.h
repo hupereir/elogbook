@@ -23,7 +23,7 @@
 #include "Logbook.h"
 #include "OptionWidget.h"
 
-#include <QMap>
+#include <QHash>
 #include <QWidget>
 #include <QCheckBox>
 
@@ -66,7 +66,7 @@ class LogbookPrintOptionWidget: public QWidget, public OptionWidget
     private:
 
     //* checkboxes
-    using CheckBoxMap = QMap<Logbook::MaskFlag, QCheckBox* >;
+    using CheckBoxMap = QHash<Logbook::MaskFlag, QCheckBox* >;
     CheckBoxMap checkBoxes_;
 
 };

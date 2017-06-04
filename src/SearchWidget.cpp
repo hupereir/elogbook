@@ -183,7 +183,7 @@ void SearchWidget::_updateConfiguration( void )
     // load mask
     if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
     {
-        unsigned int mask( XmlOptions::get().get<unsigned int>( "SEARCH_PANEL_MASK" ) );
+        int mask( XmlOptions::get().get<int>( "SEARCH_PANEL_MASK" ) );
         for( auto&& iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
         { iter.value()->setChecked( mask & iter.key() ); }
     }
@@ -197,11 +197,11 @@ void SearchWidget::_saveMask( void )
     Debug::Throw( "SearchWidget::_saveMask.\n" );
 
     // store mask
-    unsigned int mask(0);
+    int mask(0);
     for( auto&& iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { if( iter.value()->isChecked() ) mask |= iter.key(); }
 
-    XmlOptions::get().set<unsigned int>( "SEARCH_PANEL_MASK", mask );
+    XmlOptions::get().set<int>( "SEARCH_PANEL_MASK", mask );
 
 }
 

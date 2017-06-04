@@ -62,7 +62,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
 void LogbookPrintOptionWidget::read( const Options& options )
 {
 
-    unsigned int mask( options.get<unsigned int>( optionName() ) );
+    int mask( options.get<int>( optionName() ) );
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     { iter.value()->setChecked( mask&iter.key() ); }
 
@@ -72,7 +72,7 @@ void LogbookPrintOptionWidget::read( const Options& options )
 
 //_________________________________________________________________
 void LogbookPrintOptionWidget::write( Options& options ) const
-{ options.set<unsigned int>( optionName(), mask() ); }
+{ options.set<int>( optionName(), mask() ); }
 
 //_________________________________________________________________
 Logbook::Mask LogbookPrintOptionWidget::mask( void ) const

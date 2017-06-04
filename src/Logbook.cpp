@@ -162,8 +162,8 @@ bool Logbook::read( void )
     }
 
     // parse children
-    static unsigned int progress( 10 );
-    unsigned int entryCount( 0 );
+    static int progress( 10 );
+    int entryCount( 0 );
     for(QDomNode node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() )
     {
         QDomElement element = node.toElement();
@@ -314,8 +314,8 @@ bool Logbook::write( File file )
         { top.appendChild( backup.domElement( document ) ); }
 
         // write all entries
-        static unsigned int progress( 10 );
-        unsigned int entryCount( 0 );
+        static int progress( 10 );
+        int entryCount( 0 );
         Base::KeySet<LogEntry> entries( this );
         for( const auto& entry:entries )
         {
@@ -359,7 +359,7 @@ bool Logbook::write( File file )
     saved_ = this->file().lastModified();
 
     // write children
-    unsigned int childCount=0;
+    int childCount=0;
     for( const auto& logbook:children_ )
     {
 
@@ -625,7 +625,7 @@ void Logbook::setFile( File file, bool recursive )
     {
 
         // write children
-        unsigned int childCount=0;
+        int childCount=0;
         for( const auto& logbook:children_ )
         {
             File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );

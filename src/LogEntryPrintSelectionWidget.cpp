@@ -19,6 +19,7 @@
 
 
 #include "LogEntryPrintSelectionWidget.h"
+#include "CppUtil.h"
 #include "XmlOptions.h"
 
 #include <QLayout>
@@ -38,9 +39,9 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
     QButtonGroup* group = new QButtonGroup( this );
 
     // insert checkboxes
-    radioButtons_.insert( AllEntries, new QRadioButton( tr( "All entries" ), this ) );
-    radioButtons_.insert( VisibleEntries, new QRadioButton( tr( "Visible entries" ), this ) );
-    radioButtons_.insert( SelectedEntries, new QRadioButton( tr( "Selected entries" ), this ) );
+    radioButtons_.insert( Mode::AllEntries, new QRadioButton( tr( "All entries" ), this ) );
+    radioButtons_.insert( Mode::VisibleEntries, new QRadioButton( tr( "Visible entries" ), this ) );
+    radioButtons_.insert( Mode::SelectedEntries, new QRadioButton( tr( "Selected entries" ), this ) );
 
     // insert in layout
     for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
@@ -59,9 +60,9 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
 void LogEntryPrintSelectionWidget::read( const Options& options )
 {
 
-    unsigned int mode( options.get<unsigned int>( optionName() ) );
+    int mode( options.get<int>( optionName() ) );
     for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
-    { iter.value()->setChecked( iter.key() == mode ); }
+    { iter.value()->setChecked( Base::toIntegralType(iter.key()) == mode ); }
 
     _setConnected();
 
@@ -69,7 +70,7 @@ void LogEntryPrintSelectionWidget::read( const Options& options )
 
 //_________________________________________________________________
 void LogEntryPrintSelectionWidget::write( Options& options ) const
-{ options.set<Mode>( optionName(), mode() ); }
+{ options.set<int>( optionName(), Base::toIntegralType(mode()) ); }
 
 //_________________________________________________________________
 LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode( void ) const
@@ -77,5 +78,5 @@ LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode( void ) co
     for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { if( iter.value()->isChecked() ) return iter.key(); }
 
-    return AllEntries;
+    return Mode::AllEntries;
 }

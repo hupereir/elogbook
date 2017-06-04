@@ -23,7 +23,7 @@
 #include "LogEntry.h"
 #include "OptionWidget.h"
 
-#include <QMap>
+#include <QHash>
 #include <QWidget>
 #include <QCheckBox>
 
@@ -66,7 +66,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     private:
 
     //* checkboxes
-    using CheckBoxMap = QMap<LogEntry::MaskFlag, QCheckBox* >;
+    using CheckBoxMap = QHash<LogEntry::MaskFlag, QCheckBox* >;
     CheckBoxMap checkBoxes_;
 
 };

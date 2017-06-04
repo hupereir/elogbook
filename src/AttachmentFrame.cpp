@@ -615,8 +615,8 @@ void AttachmentFrame::_delete( void )
             {
 
                 Base::KeySet<Attachment> attachments( (*logbooks.begin())->attachments() );
-                unsigned int n_share = std::count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) );
-                if( n_share > 1 ) {
+                auto nShare = std::count_if( attachments.begin(), attachments.end(), Attachment::SameFileFTor( attachment ) );
+                if( nShare > 1 ) {
 
                     InformationDialog( this, tr( "Attachment still in use by other entries. Kept on disk." ) ).exec();
                     fromDisk = false;
