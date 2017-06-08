@@ -40,7 +40,7 @@ class LogbookHtmlHelper: public QObject, private Base::Counter<LogbookHtmlHelper
     public:
 
     //* constructor
-    LogbookHtmlHelper( QObject* parent = nullptr ):
+    explicit LogbookHtmlHelper( QObject* parent = nullptr ):
         QObject( parent ),
         Counter( "LogbookHtmlHelper" )
     { Debug::Throw( "LogbookHtmlHelper::LogbookHtmlHelper.\n" ); };

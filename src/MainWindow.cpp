@@ -547,7 +547,7 @@ void MainWindow::reset( void )
 
 //____________________________________________
 AskForSaveDialog::ReturnCode MainWindow::checkModifiedEntries( void )
-{ return _checkModifiedEntries( this ); }
+{ return _checkModifiedEntries( Base::KeySet<EditionWindow>(this) ); }
 
 //____________________________________________
 AskForSaveDialog::ReturnCode MainWindow::askForSave( bool enableCancel )
@@ -1609,8 +1609,8 @@ void MainWindow::open( FileRecord record )
     if( record.file().isEmpty() )
     {
 
-        const QString file( FileDialog(this).selectFile( workingDirectory() ).getFile() );
-        if( file.isNull() ) return;
+        auto file( FileDialog(this).selectFile( workingDirectory() ).getFile() );
+        if( file.isEmpty() ) return;
         else record = FileRecord( file );
 
     }
@@ -1883,7 +1883,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
 
     // add output file to scratch files, if any
     if( !printer.outputFileName().isEmpty() )
-    { emit scratchFileCreated( printer.outputFileName() ); }
+    { emit scratchFileCreated( File( printer.outputFileName() ) ); }
 
     // write options
     logbookOptionWidget->write( XmlOptions::get() );
@@ -2166,7 +2166,7 @@ void MainWindow::_synchronize( void )
 
 //_______________________________________________
 void MainWindow::_removeBackup( Backup backup )
-{ _removeBackups( Backup::List() << backup ); }
+{ _removeBackups( Backup::List({ backup }) ); }
 
 //_______________________________________________
 void MainWindow::_removeBackups( Backup::List backups )
@@ -2871,7 +2871,7 @@ void MainWindow::_changeEntryColor( QColor color )
     {
 
         entry->setColor( color );
-        entry->setModification( entry->modification()+1 );
+        entry->setModification( TimeStamp( entry->modification().unixTime()+1 ) );
 
         // update EditionWindow color
         for( const auto& window:Base::KeySet<EditionWindow>( entry ) )
@@ -3120,7 +3120,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
             /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the
             keyword change when synchronizing logbooks, without having all entries modification time
             set to now() */
-            entry->setModification( entry->modification()+1 );
+            entry->setModification( TimeStamp( entry->modification().unixTime()+1 ) );
 
             // update frames
             _updateEntryFrames( entry, KeywordMask );
@@ -3250,7 +3250,7 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword )
         /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the
         keyword change when synchronizing logbooks, without having all entries modification time
         set to now() */
-        entry->setModification( entry->modification()+1 );
+        entry->setModification( TimeStamp( entry->modification().unixTime()+1 ) );
 
         // keep track of modified entries
         entries.insert( entry );
@@ -3297,7 +3297,7 @@ void MainWindow::_linkEntryKeyword( Keyword newKeyword )
         /* this is a kludge: add 1 second to the entry modification timeStamp to avoid loosing the
         keyword change when synchronizing logbooks, without having all entries modification time
         set to now() */
-        entry->setModification( entry->modification()+1 );
+        entry->setModification( TimeStamp( entry->modification().unixTime() + 1 ) );
 
         // keep track of modified entries
         entries.insert( entry );

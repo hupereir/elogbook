@@ -89,7 +89,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     Q_DECLARE_FLAGS( Mask, MaskFlag )
 
     //* constructor from file
-    Logbook( File = File() );
+    explicit Logbook( File = File() );
 
     //* destructor
     virtual ~Logbook( void );
@@ -195,7 +195,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     bool needsBackup( void ) const;
 
     //* generate tagged backup filename
-    QString backupFilename( void ) const;
+    File backupFilename( void ) const;
 
     //* sort method enumeration
     enum SortMethod
@@ -275,7 +275,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     void setFile( File, bool recursive = false );
 
     //* parent logbook filename
-    void setParentFile( QString file )
+    void setParentFile( const File& file )
     { parentFile_ = file; }
 
     //* logbook title. Returns true if changed.
@@ -373,7 +373,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
         public:
 
         //* constructor
-        EntryLessFTor( Logbook::SortMethod sortMethod, int order = 0 ):
+        explicit EntryLessFTor( Logbook::SortMethod sortMethod, int order = 0 ):
             sortMethod_( sortMethod ),
             order_(order)
         {}
@@ -398,7 +398,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
         public:
 
         //* constructor
-        SameFileFTor( QString file ):
+        explicit SameFileFTor( QString file ):
             file_( file )
         {}
 

@@ -36,7 +36,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     public:
 
     //* constructor
-    KeywordModel( QObject* = nullptr );
+    explicit KeywordModel( QObject* = nullptr );
 
     //* column type enumeration
     enum { nColumns = 1 };
@@ -109,7 +109,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
         public:
 
         //* constructor
-        SortFTor( Qt::SortOrder order ):
+        explicit SortFTor( Qt::SortOrder order ):
             order_( order )
             {}
 

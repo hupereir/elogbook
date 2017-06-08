@@ -54,7 +54,7 @@ class FormatBar: public CustomToolBar
     };
 
     //* constructor
-    FormatBar( QWidget*, const QString& );
+    explicit FormatBar( QWidget*, const QString& );
 
     //* set target editor
     void setTarget( TextEditor& );

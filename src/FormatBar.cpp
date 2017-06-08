@@ -266,7 +266,7 @@ void FormatBar::_updateConfiguration( void )
         XmlOptions::get().keep( "TEXT_COLOR" );
         for( const auto& color:defaultColors )
         {
-            XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( color ) );
+            XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( color ) ) );
             colorMenu_->add( color );
         }
 
@@ -287,7 +287,7 @@ void FormatBar::_saveConfiguration( void )
 
     const Base::Color::Set colors( colorMenu_->colors() );
     for( const auto& color:colors )
-    { XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( color ) ); }
+    { XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( color ) ) ); }
 
     return;
 }

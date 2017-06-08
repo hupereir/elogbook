@@ -172,7 +172,7 @@ void Menu::_updateRecentEntriesMenu( void )
     {
         QAction* action = nullptr;
         if( entry->hasKeywords() ) action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), entry->keywords().begin()->get() ) );
-        else action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), Keyword::Default ) );
+        else action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), Keyword::Default.get() ) );
         actions_.insert( action, entry );
     }
 

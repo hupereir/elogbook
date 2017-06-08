@@ -34,7 +34,7 @@ class LogEntryInformationDialog: public CustomDialog
     public:
 
     //* constructor
-    LogEntryInformationDialog( QWidget*, LogEntry*  );
+    explicit LogEntryInformationDialog( QWidget*, LogEntry*  );
 
 };
 

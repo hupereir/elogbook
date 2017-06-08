@@ -72,7 +72,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     using Editor = LineEditor;
 
     //* creator
-    EditionWindow( QWidget*, bool readOnly = true );
+    explicit EditionWindow( QWidget*, bool readOnly = true );
 
     //*@name accessors
     //@{

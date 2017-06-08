@@ -31,7 +31,7 @@ class LogEntryList: public TreeView
     public:
 
     //* constructor
-    LogEntryList( QWidget* parent = nullptr ):
+    explicit LogEntryList( QWidget* parent = nullptr ):
         TreeView( parent )
         {}
 };

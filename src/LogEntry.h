@@ -54,10 +54,10 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     Q_DECLARE_FLAGS( Mask, MaskFlag )
 
     //* empty creator
-    LogEntry( void );
+    explicit LogEntry( void );
 
     //* constructor from DOM
-    LogEntry( const QDomElement& );
+    explicit LogEntry( const QDomElement& );
 
     //* destructor
     ~LogEntry( void );
@@ -175,8 +175,8 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { author_ = author; }
 
     //* LogEntry color
-    void setColor(  QColor color )
-    { color_ = color; }
+    void setColor(  const QColor& color )
+    { color_ = Base::Color(color); }
 
     //* add TextFormatBlock
     void addFormat( Format::TextFormatBlock );
@@ -229,7 +229,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
         public:
 
         //* constructor
-        SameCreationFTor( const TimeStamp& stamp ):
+        explicit SameCreationFTor( const TimeStamp& stamp ):
             stamp_( stamp )
         {}
 
@@ -250,7 +250,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
         public:
 
         //* constructor
-        DuplicateFTor( LogEntry* entry ):
+        explicit DuplicateFTor( LogEntry* entry ):
             entry_( entry )
         {}
 
@@ -275,7 +275,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
         public:
 
         //* constructor
-        MatchKeywordFTor( Keyword keyword ):
+        explicit MatchKeywordFTor( Keyword keyword ):
             keyword_( keyword )
         {}
 

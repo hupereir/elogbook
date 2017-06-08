@@ -32,7 +32,7 @@ class ProgressBar:public BaseProgressBar, private Base::Counter<ProgressBar>
     public:
 
     //* constructor
-    ProgressBar( QWidget* parent = nullptr ):
+    explicit ProgressBar( QWidget* parent = nullptr ):
         BaseProgressBar( parent ),
         Counter( "ProgressBar" )
     {}

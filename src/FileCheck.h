@@ -42,7 +42,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
     public:
 
     //* constructor
-    FileCheck( QObject* = nullptr );
+    explicit FileCheck( QObject* = nullptr );
 
     //* register logbook and children
     void registerLogbook( Logbook* );
@@ -64,7 +64,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         };
 
         //* constructor
-        Data( QString file = QString(), Flag flag = None, TimeStamp stamp = TimeStamp() ):
+        explicit Data( QString file = QString(), Flag flag = None, TimeStamp stamp = TimeStamp() ):
             file_( file ),
             flag_( flag ),
             timeStamp_( stamp )
@@ -130,7 +130,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         };
 
         //* constructor
-        Model( QObject* parent = nullptr ):
+        explicit Model( QObject* parent = nullptr ):
             ListModel<Data>( parent ),
             Counter( "FileCheck::Model" )
         {}
@@ -172,7 +172,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
             public:
 
             //* constructor
-            SortFTor( int type, Qt::SortOrder order ):
+            explicit SortFTor( int type, Qt::SortOrder order ):
                 ItemModel::SortFTor( type, order )
             {}
 

@@ -34,7 +34,7 @@ class LogbookStatisticsDialog: public CustomDialog
     public:
 
     //* constructor
-    LogbookStatisticsDialog( QWidget*, Logbook* );
+    explicit LogbookStatisticsDialog( QWidget*, Logbook* );
 
     private:
 

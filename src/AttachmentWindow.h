@@ -39,7 +39,7 @@ class AttachmentWindow: public CustomDialog
     public:
 
     //* creator
-    AttachmentWindow( QWidget* = nullptr );
+    explicit AttachmentWindow( QWidget* = nullptr );
 
     //* display widget
     void show( void );

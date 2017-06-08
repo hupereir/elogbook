@@ -35,7 +35,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     public:
 
     //* constructor
-    LogEntryPrintOptionWidget( QWidget* = nullptr );
+    explicit LogEntryPrintOptionWidget( QWidget* = nullptr );
 
     //* read
     virtual void read( const Options& );

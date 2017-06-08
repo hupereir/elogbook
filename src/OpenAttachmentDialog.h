@@ -36,7 +36,7 @@ class OpenAttachmentDialog: public CustomDialog
     public:
 
     //* constructor
-    OpenAttachmentDialog( QWidget*, const Attachment& );
+    explicit OpenAttachmentDialog( QWidget*, const Attachment& );
 
     //*@name accessors
     //@{

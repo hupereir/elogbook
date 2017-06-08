@@ -39,7 +39,7 @@ class NewAttachmentDialog: public CustomDialog
     public:
 
     //* constructor
-    NewAttachmentDialog( QWidget* );
+    explicit NewAttachmentDialog( QWidget* );
 
     //*@name accessors
     //@{

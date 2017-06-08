@@ -39,7 +39,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     public:
 
     //* constructor
-    LogEntryModel(QObject* = nullptr );
+    explicit LogEntryModel(QObject* = nullptr );
 
     //* column type enumeration
     enum ColumnType
@@ -148,7 +148,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
         public:
 
         //* constructor
-        SortFTor( int type, Qt::SortOrder order ):
+        explicit SortFTor( int type, Qt::SortOrder order ):
             ItemModel::SortFTor( type, order )
         {}
 

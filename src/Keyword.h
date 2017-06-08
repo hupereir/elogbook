@@ -36,16 +36,16 @@ class Keyword: private Base::Counter<Keyword>
     public:
 
     //* default keyword
-    static const QString Default;
+    static const Keyword Default;
 
     //* used when LogEntry keyword is not defined
     static const QString MimeType;
 
     //* constructor
-    Keyword( QString = QString() );
+    explicit Keyword( QString = QString() );
 
     //* constructor from DOM
-    Keyword( const QDomElement& );
+    explicit Keyword( const QDomElement& );
 
     //* keyword set
     using Set = QSet<Keyword>;

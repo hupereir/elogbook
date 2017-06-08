@@ -59,7 +59,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     public:
 
     //* constructor
-    MainWindow( QWidget* = nullptr );
+    explicit MainWindow( QWidget* = nullptr );
 
     //* destructor
     virtual ~MainWindow( void );

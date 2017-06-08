@@ -35,7 +35,7 @@ class FileCheckDialog: public CustomDialog
     public:
 
     //* constructor
-    FileCheckDialog( QWidget* );
+    explicit FileCheckDialog( QWidget* );
 
     //* set files
     void setFiles( const QStringList& );

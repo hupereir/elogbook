@@ -34,7 +34,7 @@ Backup::Backup( const QDomElement& element ):
     {
         QDomAttr attribute( attributes.item( i ).toAttr() );
         if( attribute.isNull() ) continue;
-        if( attribute.name() == Xml::Creation ) setCreation( attribute.value().toUInt() );
+        if( attribute.name() == Xml::Creation ) setCreation( TimeStamp(attribute.value().toInt()) );
         else if( attribute.name() == Xml::File ) setFile( File( attribute.value() ) );
         else Debug::Throw(0) << "Backup::Backup - unknown attribute name: " << attribute.name() << endl;
     }
@@ -45,7 +45,7 @@ QDomElement Backup::domElement( QDomDocument& document ) const
 {
     Debug::Throw( "Backup::domElement.\n" );
     QDomElement out( document.createElement( Xml::BackupMask ) );
-    out.setAttribute( Xml::Creation, QString::number( creation() ) );
+    out.setAttribute( Xml::Creation, QString::number( creation_.unixTime() ) );
     out.setAttribute( Xml::File, file() );
     return out;
 }

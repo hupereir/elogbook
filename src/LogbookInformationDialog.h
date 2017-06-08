@@ -38,7 +38,7 @@ class LogbookInformationDialog: public CustomDialog
     public:
 
     //* constructor
-    LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
+    explicit LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
 
     //* title
     QString title( void ) const
@@ -50,7 +50,7 @@ class LogbookInformationDialog: public CustomDialog
 
     //* attachment directory
     File attachmentDirectory( void ) const
-    { return attachmentDirectory_->editor().text(); }
+    { return File( attachmentDirectory_->editor().text() ); }
 
     //* read only
     bool readOnly( void ) const

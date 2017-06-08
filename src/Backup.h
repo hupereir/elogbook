@@ -34,7 +34,7 @@ class Backup: private Base::Counter<Backup>
     public:
 
     //* constructor
-    Backup( const File& file = File(), const TimeStamp& creation = TimeStamp::now() ):
+    explicit Backup( const File& file = File(), const TimeStamp& creation = TimeStamp::now() ):
         Counter( "Backup" ),
         file_( file ),
         creation_( creation ),
@@ -42,7 +42,7 @@ class Backup: private Base::Counter<Backup>
     {}
 
     //* constructor from Dom
-    Backup( const QDomElement& );
+    explicit Backup( const QDomElement& );
 
     //* equal to operator
     bool operator == (const Backup& other ) const
@@ -97,11 +97,11 @@ class Backup: private Base::Counter<Backup>
         public:
 
         //* constructor
-        List( void )
+        explicit List( void )
         {}
 
         //* constructor
-        List( const QList<Backup>& other ):
+        explicit List( const QList<Backup>& other ):
             QList<Backup>( other )
         {}
 

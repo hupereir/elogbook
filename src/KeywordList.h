@@ -32,7 +32,7 @@ class KeywordList: public TreeView
     public:
 
     //* constructor
-    KeywordList( QWidget* parent = nullptr ):
+    explicit KeywordList( QWidget* parent = nullptr ):
         TreeView( parent )
         {}
 

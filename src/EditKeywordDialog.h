@@ -33,7 +33,7 @@ class EditKeywordDialog: public CustomDialog
     public:
 
     //* constructor
-    EditKeywordDialog( QWidget* );
+    explicit EditKeywordDialog( QWidget* );
 
     //* keyword
     void add( const Keyword& keyword )

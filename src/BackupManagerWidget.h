@@ -41,7 +41,7 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     public:
 
     //* constructor
-    BackupManagerWidget( QWidget*, Logbook* = nullptr );
+    explicit BackupManagerWidget( QWidget*, Logbook* = nullptr );
 
     //* button layout
     QVBoxLayout& buttonLayout( void )

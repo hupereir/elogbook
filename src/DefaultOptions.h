@@ -45,21 +45,21 @@ void installDefaultOptions( void )
 
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( "COLOR" );
-    XmlOptions::get().add( "COLOR", Option().set<Base::Color>( QColor( "#aa0000" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set<Base::Color>( QColor( "#FF9900" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set<Base::Color>( QColor( "#FF8C00" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set<Base::Color>( QColor( "#009900" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set<Base::Color>( QColor( "#3333FF" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set<Base::Color>( QColor( "#993399" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#aa0000" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#FF9900" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#FF8C00" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#009900" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#3333FF" ) ) );
+    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#993399" ) ) );
 
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( "TEXT_COLOR" );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#aa0000" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#FF9900" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#FF8C00" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#009900" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#3333FF" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set<Base::Color>( QColor( "#993399" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#aa0000" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#FF9900" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#FF8C00" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#009900" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#3333FF" ) ) );
+    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#993399" ) ) );
 
 
     // window sizes

@@ -34,7 +34,7 @@ class DeleteAttachmentDialog: public CustomDialog
     public:
 
     //* constructor
-    DeleteAttachmentDialog( QWidget*, const Attachment& );
+    explicit DeleteAttachmentDialog( QWidget*, const Attachment& );
 
     //* action
     enum Action

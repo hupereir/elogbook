@@ -38,19 +38,12 @@ const QString Attachment::NoSize( " - " );
 //_______________________________________
 Attachment::Attachment( const QString orig ):
     Counter( "Attachment" ),
-    sourceFile_( orig ),
-    file_( NoFile ),
-    comments_( NoComments ),
-    sizeString_( NoSize )
+    sourceFile_( orig )
 { Debug::Throw( "Attachment::Attachment.\n" ); }
 
 //_______________________________________
 Attachment::Attachment( const QDomElement& element):
-    Counter( "Attachment" ),
-    sourceFile_( NoFile ),
-    file_( NoFile ),
-    comments_( NoComments ),
-    sizeString_( NoSize )
+    Counter( "Attachment" )
 {
     Debug::Throw() << "Attachment::Attachment.\n";
 
@@ -63,9 +56,9 @@ Attachment::Attachment( const QDomElement& element):
         QString name( attribute.name() );
         QString value( attribute.value() );
 
-        if( name == Xml::SourceFile ) _setSourceFile( XmlString( value ) );
+        if( name == Xml::SourceFile ) _setSourceFile( File( XmlString( value ) ) );
+        else if( name == Xml::File ) _setFile( File( XmlString( value ) ) );
         else if( name == Xml::Type ) setIsUrl( XmlString( value ) == "URL" );
-        else if( name == Xml::File ) _setFile( XmlString( value ) );
         else if( name == Xml::Comments ) setComments( XmlString( value ) );
         else if( name == Xml::Valid ) setIsValid( (bool) value.toInt() );
         else if( name == Xml::IsLink ) setIsLink( (LinkState) value.toInt() );
@@ -85,7 +78,7 @@ Attachment::Attachment( const QDomElement& element):
     }
 
     // by default all URL attachments are valid, provided that the SOURCE_FILE is not empty
-    if( isUrl_ && !sourceFile().isEmpty() ) setIsValid( true );
+    if( isUrl_ && !sourceFile_.isEmpty() ) setIsValid( true );
 
 }
 
@@ -95,8 +88,8 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 
     Debug::Throw( "Attachment::DomElement.\n" );
     QDomElement out( parent.createElement( Xml::Attachment ) );
-    if( file().size() ) out.setAttribute( Xml::File, file() );
-    if( sourceFile().size() ) out.setAttribute( Xml::SourceFile, sourceFile() );
+    if( file_.size() ) out.setAttribute( Xml::File, file_ );
+    if( sourceFile_.size() ) out.setAttribute( Xml::SourceFile, sourceFile_ );
     out.setAttribute( Xml::Valid, QString::number( isValid() ) );
     out.setAttribute( Xml::IsLink, QString::number( isLink() ) );
     out.setAttribute( Xml::IsUrl, QString::number( isUrl() ) );
@@ -127,8 +120,8 @@ void Attachment::updateSize( void )
 
     // check type
     if( isUrl_ || size() != 0 || !isValid() ) return;
-    size_ = file().fileSize();
-    sizeString_ = file().sizeString();
+    size_ = file_.fileSize();
+    sizeString_ = file_.sizeString();
 
 }
 
@@ -147,13 +140,17 @@ bool Attachment::updateTimeStamps( void )
 
     } else {
 
-        if( file().exists() )
+        if( file_.exists() )
         {
-            if( !creation().isValid() ) changed |= _setCreation( file().created() );
-            changed |= _setModification( file().lastModified() );
+
+            if( !creation_.isValid() ) changed |= _setCreation( file_.created() );
+            changed |= _setModification( file_.lastModified() );
+
         } else {
+
             changed |= _setCreation( TimeStamp() );
             changed |= _setModification( TimeStamp() );
+
         }
 
     }
@@ -206,7 +203,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     else if( !isUrl_ && fullname.isDirectory() ) return SourceIsDir;
 
     // destination filename
-    File destname( fullname.localName().addPath( destdir ).expand() );
+    File destname( fullname.localName().addPath( File( destdir ) ).expand() );
     sourceFile_ = fullname;
 
     // for other process command
@@ -266,10 +263,10 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
 
     // update long/short filenames.
     _setFile( destname );
-    if( file().exists() )
+    if( file_.exists() )
     {
-        _setCreation( file().created() );
-        _setModification( file().lastModified() );
+        _setCreation( file_.created() );
+        _setModification( file_.lastModified() );
     }
 
     setIsValid( true );
@@ -300,7 +297,7 @@ void Attachment::_setFile( const File& file )
     // remove trailing spaces
     static QRegExp regexp( "\\s+$" );
     if( regexp.indexIn( file_ ) >= 0 )
-    { file_ = file_.left( file_.size() - regexp.matchedLength() ); }
+    { file_ = File( file_.left( file_.size() - regexp.matchedLength() ) ); }
 
     return;
 }

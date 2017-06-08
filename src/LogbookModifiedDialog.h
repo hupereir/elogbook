@@ -45,7 +45,7 @@ class LogbookModifiedDialog: public BaseDialog, private Base::Counter<LogbookMod
     };
 
     //* constructor
-    LogbookModifiedDialog( QWidget*, const FileCheck::DataSet& );
+    explicit LogbookModifiedDialog( QWidget*, const FileCheck::DataSet& );
 
     //*@name modifiers
     //@{

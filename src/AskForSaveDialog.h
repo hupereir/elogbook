@@ -50,7 +50,7 @@ class AskForSaveDialog: public BaseDialog, private Base::Counter<AskForSaveDialo
     Q_DECLARE_FLAGS( ReturnCodes, ReturnCode )
 
     //* constructor
-    AskForSaveDialog( QWidget*, const QString&, ReturnCodes = Default );
+    explicit AskForSaveDialog( QWidget*, const QString&, ReturnCodes = Default );
 
     private Q_SLOTS:
 

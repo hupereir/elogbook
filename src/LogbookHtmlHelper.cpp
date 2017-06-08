@@ -214,7 +214,7 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
         // title
         QDomElement ref = row.appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation() ) );
+        ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation().unixTime() ) );
         ref.appendChild( document.createTextNode( entry->title().toUtf8() ) );
 
         // keywords

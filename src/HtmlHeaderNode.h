@@ -40,7 +40,7 @@ class HtmlHeaderNode
   public:
 
   //* constructor
-  HtmlHeaderNode( QDomElement& parent, QDomDocument& document );
+  explicit HtmlHeaderNode( QDomElement& parent, QDomDocument& document );
 
 };
 

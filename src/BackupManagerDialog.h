@@ -34,7 +34,7 @@ class BackupManagerDialog: public BaseDialog
     public:
 
     //* constructor
-    BackupManagerDialog( QWidget* );
+    explicit BackupManagerDialog( QWidget* );
 
     //* widget
     BackupManagerWidget& managerWidget( void ) const

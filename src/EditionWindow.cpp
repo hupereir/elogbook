@@ -1317,7 +1317,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
 
     // add output file to scratch files, if any
     if( !printer.outputFileName().isEmpty() )
-    { emit scratchFileCreated( printer.outputFileName() ); }
+    { emit scratchFileCreated( File( printer.outputFileName() ) ); }
 
     // write options
     logEntryOptionWidget->write( XmlOptions::get() );
@@ -1607,7 +1607,7 @@ void EditionWindow::_openLink( void )
 
     OpenWithDialog dialog( this );
     dialog.setWindowTitle( tr( "Open Link - Homechat" ) );
-    dialog.setLink( anchor );
+    dialog.setLink( File( anchor ) );
     dialog.setOptionName( "OPEN_LINK_APPLICATIONS" );
     dialog.realizeWidget();
     dialog.exec();

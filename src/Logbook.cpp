@@ -144,7 +144,7 @@ bool Logbook::read( void )
 
         if( name == Xml::Title ) setTitle( XmlString( value ) );
         else if( name == Xml::File ) setFile( File( XmlString( value ) ) );
-        else if( name == Xml::ParentFile ) setParentFile( XmlString( value ) );
+        else if( name == Xml::ParentFile ) setParentFile( File( XmlString( value ) ) );
         else if( name == Xml::Directory ) setDirectory( File( XmlString( value ) ) );
         else if( name == Xml::Author ) setAuthor( XmlString( value ) );
         else if( name == Xml::SortMethod ) setSortMethod( (SortMethod) value.toInt() );
@@ -643,27 +643,23 @@ bool Logbook::needsBackup( void ) const
 {
     Debug::Throw( "Logbook::needsBackup.\n" );
     if( !backup().isValid() ) return true;
-    return( int(TimeStamp::now())-int(backup()) > (24*3600)*XmlOptions::get().get<double>( "BACKUP_ITV" ) );
+    return( TimeStamp::now().unixTime() > backup().unixTime() + (24*3600)*XmlOptions::get().get<double>( "BACKUP_ITV" ) );
 }
 
 //_________________________________
-QString Logbook::backupFilename( void ) const
+File Logbook::backupFilename( void ) const
 {
     Debug::Throw( "Logbook::MakeBackupFilename.\n" );
-    QString head( File( file_ ).truncatedName() );
-    QString foot( File( file_ ).extension() );
-    if( !foot.isEmpty() ) foot = QString(".") + foot;
+    auto head( File( file_ ).truncatedName() );
+    auto foot( File( file_ ).extension() );
+    if( !foot.isEmpty() ) foot = File( QString(".") + foot );
     QString tag( TimeStamp::now().toString( TimeStamp::Format::DateTag ) );
 
-    QString out;
-    QTextStream( &out ) << head << "_backup_" << tag << foot;
+    File out( QString( "%1_backup_%2%3" ).arg( head, tag, foot ) );
 
     // check if file exists, add index
     for( int index = 1; File( out ).exists(); ++index )
-    {
-        out.clear();
-        QTextStream( &out ) << head << "_backup_" << tag << "_" << index << foot;
-    }
+    { out = File( QString( "%1_backup_%2_%4%3" ).arg( head, tag, foot ).arg(index) ); }
 
     return out;
 }
@@ -889,10 +885,10 @@ File Logbook::_childFilename( File file, int childCount ) const
     QString foot( file.extension() );
     if( !foot.isEmpty() ) foot = QString(".") + foot;
 
-    const QString out = QString( "%1_include_%2%3" )
+    File out( QString( "%1_include_%2%3" )
         .arg( head )
         .arg( childCount )
-        .arg( foot );
+        .arg( foot ) );
 
     Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
     return out;

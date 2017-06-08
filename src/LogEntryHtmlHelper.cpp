@@ -155,7 +155,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
             appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).
             toElement();
-        ref.setAttribute( "name", QString::number( entry_->creation() ) );
+        ref.setAttribute( "name", QString::number( entry_->creation().unixTime() ) );
         ref.appendChild( document.createTextNode( entry_->title().toUtf8() ) );
     }
 

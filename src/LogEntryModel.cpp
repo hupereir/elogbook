@@ -199,12 +199,12 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
         auto keywords( entry->keywords() );
         if( keywords.empty() )
         {
-            entry->addKeyword( value.toString() );
+            entry->addKeyword( Keyword( value.toString() ) );
             emit dataChanged( index, index );
 
         } else if( keywords.begin()->get() != value ) {
 
-            entry->replaceKeyword( *keywords.begin(), value.toString() );
+            entry->replaceKeyword( *keywords.begin(), Keyword( value.toString() ) );
             emit dataChanged( index, index );
 
         }
@@ -352,7 +352,7 @@ void LogEntryModel::_resetIcons( void )
 const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
 {
 
-    IconCache::iterator iter( _icons().find( color.name() ) );
+    IconCache::iterator iter( _icons().find( color ) );
     if( iter != _icons().end() ) return iter.value();
 
     const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );

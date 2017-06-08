@@ -38,7 +38,7 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     public:
 
     //* constructor
-    SearchWidget( QWidget* );
+    explicit SearchWidget( QWidget* );
 
     //* search mode enumeration
     enum SearchMode

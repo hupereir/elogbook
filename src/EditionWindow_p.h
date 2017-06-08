@@ -32,7 +32,7 @@ namespace Private
         public:
 
         //* constructor
-        ColorWidget( QWidget* );
+        explicit ColorWidget( QWidget* );
 
         //* color
         void setColor( const QColor& );
@@ -59,7 +59,7 @@ namespace Private
         public:
 
         //* constructor
-        LocalSplitter( QWidget* parent ):
+        explicit LocalSplitter( QWidget* parent ):
             QSplitter( parent ),
             Counter( "LocalSplitter" )
         {}
@@ -75,7 +75,7 @@ namespace Private
         public:
 
         //* constructor
-        LocalTextEditor( QWidget* );
+        explicit LocalTextEditor( QWidget* );
 
         //* insert link action
         QAction& insertLinkAction( void ) const

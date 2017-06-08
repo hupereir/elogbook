@@ -38,7 +38,7 @@ class NewLogbookDialog: public CustomDialog
     public:
 
     //* constructor
-    NewLogbookDialog( QWidget* );
+    explicit NewLogbookDialog( QWidget* );
 
     //* title
     void setTitle( const QString& title )

@@ -49,10 +49,10 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     static const QString NoSize;
 
     //* contructor
-    Attachment( const QString = QString() );
+    explicit Attachment( const QString = QString() );
 
     //* creator from DomElement
-    Attachment( const QDomElement& element );
+    explicit Attachment( const QDomElement& element );
 
     //* domElement
     QDomElement domElement( QDomDocument& parent ) const;
@@ -68,7 +68,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     \param attachment the attachment to which this is to be compared
     */
     bool operator == (const Attachment& attachment ) const
-    { return file() == attachment.file(); }
+    { return file_ == attachment.file_; }
 
     //* used to check attachment filenames
     class SameFileFTor
@@ -76,7 +76,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
         public:
 
         //* constructor
-        SameFileFTor( Attachment* attachment ):
+        explicit SameFileFTor( Attachment* attachment ):
             attachment_( attachment )
         {}
 
@@ -254,19 +254,19 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     }
 
     //* attached file name
-    File sourceFile_;
+    File sourceFile_ = File( NoFile );
 
     //* attached file name
-    File file_;
+    File file_ = File( NoFile );
 
     //* comments
-    QString comments_;
+    QString comments_ = NoComments;
 
     //* file size (0 if not valid | URL )
     double size_ = 0;
 
     //* corresponding size_string
-    QString sizeString_;
+    QString sizeString_ = NoSize;
 
     //* creation
     TimeStamp creation_;

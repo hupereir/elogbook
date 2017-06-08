@@ -35,7 +35,7 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
     public:
 
     //* constructor
-    AttachmentModel( QObject* = nullptr );
+    explicit AttachmentModel( QObject* = nullptr );
 
     //* column type enumeration
     enum ColumnType
@@ -83,7 +83,7 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
         public:
 
         //* constructor
-        SortFTor( int type, Qt::SortOrder order ):
+        explicit SortFTor( int type, Qt::SortOrder order ):
             ItemModel::SortFTor( type, order )
         {}
 

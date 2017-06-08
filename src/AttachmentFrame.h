@@ -44,7 +44,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     public:
 
     //* constructor
-    AttachmentFrame( QWidget*, bool );
+    explicit AttachmentFrame( QWidget*, bool );
 
     //* default size
     void setDefaultHeight( int );

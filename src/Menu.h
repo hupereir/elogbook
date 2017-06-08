@@ -44,7 +44,7 @@ class Menu:public QMenuBar, private Base::Counter<Menu>
     public:
 
     //* creator
-    Menu( QWidget*, MainWindow* );
+    explicit Menu( QWidget*, MainWindow* );
 
     //* recent files menu
     RecentFilesMenu& recentFilesMenu( void ) const

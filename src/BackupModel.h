@@ -33,7 +33,7 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
     public:
 
     //* constructor
-    BackupModel( void ):
+    explicit BackupModel( void ):
         Counter( "BackupModel" )
     {}
 
@@ -81,7 +81,7 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
         public:
 
         //* constructor
-        SortFTor( int type, Qt::SortOrder order ):
+        explicit SortFTor( int type, Qt::SortOrder order ):
             ItemModel::SortFTor( type, order )
         {}
 
