@@ -92,7 +92,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     explicit Logbook( File = File() );
 
     //* destructor
-    virtual ~Logbook( void );
+    ~Logbook( void ) override;
 
     //*@name accessors
     //@{

@@ -62,7 +62,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     explicit MainWindow( QWidget* = nullptr );
 
     //* destructor
-    virtual ~MainWindow( void );
+    ~MainWindow( void ) override;
 
     //*@name accessors
     //@{
