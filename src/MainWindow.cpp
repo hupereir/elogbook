@@ -91,7 +91,7 @@ MainWindow::MainWindow( QWidget *parent ):
     setCentralWidget( main );
 
     // local layout
-    QVBoxLayout *layout = new QVBoxLayout();
+    QVBoxLayout *layout = new QVBoxLayout;
     layout->setMargin(0);
     layout->setSpacing(2);
     main->setLayout( layout );
@@ -110,7 +110,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // status bar
     setStatusBar( statusbar_ = new ProgressStatusBar( this ) );
-    statusbar_->setProgressBar( new ProgressBar() );
+    statusbar_->setProgressBar( new ProgressBar );
     statusbar_->addClock();
     connect( this, SIGNAL(messageAvailable(QString)), &statusbar_->label(), SLOT(setTextAndUpdate(QString)) );
     connect( this, SIGNAL(messageAvailable(QString)), &statusbar_->progressBar(), SLOT(setText(QString)) );
@@ -123,10 +123,10 @@ MainWindow::MainWindow( QWidget *parent ):
     addAction( &application->closeAction() );
 
     // Keyword container
-    keywordContainer_ = new QWidget();
+    keywordContainer_ = new QWidget;
 
     // set layout
-    QVBoxLayout* vLayout = new QVBoxLayout();
+    QVBoxLayout* vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
     vLayout->setSpacing( 5 );
     keywordContainer_->setLayout( vLayout );
@@ -195,9 +195,9 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList_->addAction( editKeywordAction_ );
 
     // right box for entries and buttons
-    QWidget* right = new QWidget();
+    QWidget* right = new QWidget;
 
-    vLayout = new QVBoxLayout();
+    vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
     vLayout->setSpacing( 5 );
     right->setLayout( vLayout );
@@ -344,7 +344,7 @@ bool MainWindow::setLogbook( File file )
     fileCheck_->clear();
 
     // create new logbook
-    logbook_ = new Logbook();
+    logbook_ = new Logbook;
     logbook_->setUseCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
 
     // if filename is empty, return
@@ -1856,17 +1856,17 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     printer.setDocName( buffer );
 
     // create options widget
-    PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
+    PrinterOptionWidget* optionWidget( new PrinterOptionWidget );
     optionWidget->setHelper( &helper );
     connect( optionWidget, SIGNAL(orientationChanged(QPrinter::Orientation)), &helper, SLOT(setOrientation(QPrinter::Orientation)) );
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
-    LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
+    LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget;
     logbookOptionWidget->setWindowTitle( "Logbook Configuration" );
     connect( logbookOptionWidget, SIGNAL(maskChanged(Logbook::Mask)), &helper, SLOT(setMask(Logbook::Mask)) );
     logbookOptionWidget->read( XmlOptions::get() );
 
-    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget;
     logEntryOptionWidget->setWindowTitle( "Logbook Entry Configuration" );
     connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setEntryMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
@@ -1980,13 +1980,13 @@ void MainWindow::_toHtml( void )
     else if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create options widget
-    LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget();
+    LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget;
     logbookOptionWidget->read( XmlOptions::get() );
 
-    LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget();
+    LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget;
     logEntrySelectionWidget->read( XmlOptions::get() );
 
-    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget;
     logEntryOptionWidget->read( XmlOptions::get() );
 
     // create dialog

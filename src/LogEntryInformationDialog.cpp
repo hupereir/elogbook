@@ -41,7 +41,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     setOptionName( "ENTRY_INFORMATION_DIALOG" );
 
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->setSpacing(10);
     hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
@@ -50,7 +50,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     label->setPixmap( IconEngine::get( IconNames::DialogInformation ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
-    GridLayout *gridLayout = new GridLayout();
+    GridLayout *gridLayout = new GridLayout;
     gridLayout->setMargin(0);
     gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);

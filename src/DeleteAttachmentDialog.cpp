@@ -38,7 +38,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     QButtonGroup* group = new QButtonGroup( this );
     group->setExclusive( true );
 
-    QHBoxLayout *hLayout( new QHBoxLayout() );
+    QHBoxLayout *hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
     hLayout->setMargin(0);
     mainLayout().addLayout( hLayout );
@@ -50,7 +50,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
 
     QWidget *groupBox = new QWidget( this );
     mainLayout().addWidget( groupBox );
-    groupBox->setLayout( new QVBoxLayout() );
+    groupBox->setLayout( new QVBoxLayout );
     groupBox->layout()->setMargin(5);
     groupBox->layout()->setSpacing(5);
 

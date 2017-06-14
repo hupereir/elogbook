@@ -39,12 +39,12 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     setWindowModality( Qt::ApplicationModal );
 
     // create vbox layout
-    QVBoxLayout* layout=new QVBoxLayout();
+    QVBoxLayout* layout=new QVBoxLayout;
     layout->setSpacing(5);
     layout->setMargin(10);
     setLayout( layout );
 
-    QHBoxLayout *hLayout( new QHBoxLayout() );
+    QHBoxLayout *hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
     hLayout->setMargin(10);
     layout->addLayout( hLayout, 1 );

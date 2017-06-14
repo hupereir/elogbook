@@ -32,7 +32,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
 
     setWindowTitle( "Logbook Configuration - Elogbook" );
 
-    QVBoxLayout* layout = new QVBoxLayout();
+    QVBoxLayout* layout = new QVBoxLayout;
     setLayout( layout );
 
     // insert checkboxes

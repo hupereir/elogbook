@@ -94,7 +94,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 {
 
     // create mime data
-    QMimeData *mime = new QMimeData();
+    QMimeData *mime = new QMimeData;
 
     // add keywords mimetype
     for( const auto& index:indexes )

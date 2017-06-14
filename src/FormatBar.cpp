@@ -49,7 +49,7 @@ class FormatColorButton: public CustomToolButton
     public:
 
     //* constructor
-    FormatColorButton( QWidget* parent ):
+    explicit FormatColorButton( QWidget* parent ):
         CustomToolButton( parent )
     {}
 

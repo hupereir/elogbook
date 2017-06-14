@@ -29,7 +29,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
 {
     Debug::Throw( "InsertLinkDialog::InsertLinkDialog.\n" );
     setOptionName( "INSERT_LINK_DIALOG" );
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->setMargin(0);
     mainLayout().addLayout( hLayout );
     QLabel* label;

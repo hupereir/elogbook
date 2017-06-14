@@ -31,7 +31,7 @@ CustomDialog( parent )
 
     Debug::Throw( "NewLogbookDialog::NewLogbookDialog.\n" );
     setWindowTitle( tr( "New Logbook - Elogbook" ) );
-    QGridLayout *gridLayout( new QGridLayout() );
+    QGridLayout *gridLayout( new QGridLayout );
     gridLayout->setMargin(0);
     gridLayout->setSpacing(5);
     mainLayout().addLayout( gridLayout, 0 );
@@ -64,7 +64,7 @@ CustomDialog( parent )
 
     // separator
     QFrame* frame;
-    mainLayout().addWidget( frame = new QFrame() );
+    mainLayout().addWidget( frame = new QFrame );
     frame->setFrameStyle( QFrame::HLine );
 
     // comments

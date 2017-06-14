@@ -44,7 +44,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     _updateNotFoundPalette();
 
     // editor layout
-    QGridLayout* gridLayout = new QGridLayout();
+    QGridLayout* gridLayout = new QGridLayout;
     gridLayout->setMargin(2);
     gridLayout->setSpacing(5);
     setLayout( gridLayout );
@@ -54,7 +54,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     gridLayout->addWidget( label, 0, 0, 1, 1 );
 
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->setMargin(0);
     hLayout->setSpacing(5);
     gridLayout->addLayout( hLayout, 0, 1, 1, 1 );
@@ -106,7 +106,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     label->setAlignment( Qt::AlignRight|Qt::AlignVCenter );
     gridLayout->addWidget( label, 1, 0, 1, 1 );
 
-    hLayout = new QHBoxLayout();
+    hLayout = new QHBoxLayout;
     hLayout->setMargin(0);
     hLayout->setSpacing(5);
     gridLayout->addLayout( hLayout, 1, 1, 1, 1 );

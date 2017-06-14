@@ -38,7 +38,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     setWindowTitle( tr( "Logbook Informations - Elogbook" ) );
     setOptionName( "LOGBOOK_INFORMATION_DIALOG" );
 
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
@@ -46,7 +46,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     label->setPixmap( IconEngine::get( IconNames::DialogInformation ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
-    QGridLayout *gridLayout( new QGridLayout() );
+    QGridLayout *gridLayout( new QGridLayout );
     gridLayout->setMargin(0);
     hLayout->addLayout( gridLayout, 0 );
 

@@ -33,7 +33,7 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
 
     setWindowTitle( "Logbook Entry Selection" );
 
-    QVBoxLayout* layout = new QVBoxLayout();
+    QVBoxLayout* layout = new QVBoxLayout;
     setLayout( layout );
 
     QButtonGroup* group = new QButtonGroup( this );

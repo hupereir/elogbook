@@ -40,7 +40,7 @@ Counter( "LogbookModifiedDialog" )
     Q_ASSERT( !files.empty() );
 
     // create vbox layout
-    QVBoxLayout* layout=new QVBoxLayout();
+    QVBoxLayout* layout=new QVBoxLayout;
     layout->setSpacing(10);
     layout->setMargin(10);
     setLayout( layout );
@@ -48,7 +48,7 @@ Counter( "LogbookModifiedDialog" )
     // create message
     QString buffer( tr( "Following files have been modified by another application: \n" ) );
 
-    QHBoxLayout *hLayout( new QHBoxLayout() );
+    QHBoxLayout *hLayout( new QHBoxLayout );
     layout->addLayout( hLayout, 0 );
     QLabel* label = new QLabel( this );
     label->setPixmap( IconEngine::get( IconNames::DialogWarning ).pixmap( iconSize() ) );
@@ -64,7 +64,7 @@ Counter( "LogbookModifiedDialog" )
     list_->resizeColumns();
 
     // button layout
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setSpacing(5);
     buttonLayout->setMargin(0);
     layout->addLayout( buttonLayout );

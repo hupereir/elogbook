@@ -42,7 +42,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     setOptionName( "OPEN_ATTACHMENT_DIALOG" );
 
     // try load Question icon
-    QHBoxLayout *hLayout( new QHBoxLayout() );
+    QHBoxLayout *hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
     hLayout->setMargin(0);
     mainLayout().addLayout( hLayout );
@@ -55,11 +55,11 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
 
     }
 
-    QVBoxLayout* vLayout = new QVBoxLayout();
+    QVBoxLayout* vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
     hLayout->addLayout( vLayout, 1 );
 
-    GridLayout* gridLayout = new GridLayout();
+    GridLayout* gridLayout = new GridLayout;
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
@@ -97,7 +97,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     QButtonGroup* group = new QButtonGroup( this );
     group->setExclusive( true );
 
-    gridLayout = new GridLayout();
+    gridLayout = new GridLayout;
     mainLayout().addLayout( gridLayout );
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);

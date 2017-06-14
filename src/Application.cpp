@@ -76,15 +76,15 @@ bool Application::realizeWidget( void )
     connect( &closeAction(), SIGNAL(triggered()), SLOT(_exit()) );
 
     // recent files
-    recentFiles_.reset( new XmlFileList() );
+    recentFiles_.reset( new XmlFileList );
     recentFiles_->setCheck( true );
 
     // create attachment window
-    attachmentWindow_.reset( new AttachmentWindow() );
+    attachmentWindow_.reset( new AttachmentWindow );
     attachmentWindow_->centerOnDesktop();
 
     // create selection frame
-    mainWindow_.reset( new MainWindow() );
+    mainWindow_.reset( new MainWindow );
     connect( attachmentWindow_.get(), SIGNAL(entrySelected(LogEntry*)), mainWindow_.get(), SLOT(selectEntry(LogEntry*)) );
 
     // update configuration
@@ -95,7 +95,7 @@ bool Application::realizeWidget( void )
     mainWindow_->show();
 
     // scratch files
-    scratchFileMonitor_.reset( new ScratchFileMonitor() );
+    scratchFileMonitor_.reset( new ScratchFileMonitor );
     connect( qApp, SIGNAL(aboutToQuit()), scratchFileMonitor_.get(), SLOT(deleteScratchFiles()) );
     connect( mainWindow_.get(), SIGNAL(scratchFileCreated(File)), scratchFileMonitor_.get(), SLOT(add(File)) );
 

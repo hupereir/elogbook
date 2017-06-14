@@ -34,7 +34,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 
     Debug::Throw( "EditAttachmentDialog::EditAttachmentDialog.\n" );
 
-    GridLayout* gridLayout = new GridLayout();
+    GridLayout* gridLayout = new GridLayout;
     gridLayout->setMargin(0);
     gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
@@ -69,7 +69,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 
     gridLayout->setColumnStretch( 1, 1 );
 
-    QVBoxLayout* boxLayout = new QVBoxLayout();
+    QVBoxLayout* boxLayout = new QVBoxLayout;
     boxLayout->setMargin(0);
     boxLayout->setSpacing(5);
     mainLayout().addLayout( boxLayout, 1 );

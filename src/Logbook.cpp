@@ -205,7 +205,7 @@ bool Logbook::read( void )
 
             File file( file_attribute );
             if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
-            Logbook* child = new Logbook();
+            Logbook* child = new Logbook;
             child->setFile( file );
             child->setUseCompression( useCompression_ );
 
@@ -487,7 +487,7 @@ Logbook* Logbook::latestChild( void )
     if( !dest )
     {
 
-        dest = new Logbook();
+        dest = new Logbook;
         dest->setTitle( title() );
         dest->setDirectory( directory() );
         dest->setAuthor( author() );

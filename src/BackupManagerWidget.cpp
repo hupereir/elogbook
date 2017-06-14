@@ -30,7 +30,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     Counter( "BackupManagerWidget" )
 {
     Debug::Throw( "BackupManagerWidget::BackupManagerWidget" );
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->setMargin(0);
     setLayout( hLayout );
 
@@ -41,7 +41,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     list_->setOptionName( "BACKUP_MANAGER_LIST" );
 
     // buttons
-    buttonLayout_ = new QVBoxLayout();
+    buttonLayout_ = new QVBoxLayout;
     buttonLayout_->setMargin(0);
     hLayout->addLayout( buttonLayout_ );
 

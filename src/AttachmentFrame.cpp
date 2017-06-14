@@ -62,12 +62,12 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     connect( &thread_, SIGNAL(recordsAvailable(const FileRecord::List&,bool)), this, SLOT(_processRecords(const FileRecord::List&,bool)) );
 
     // default layout
-    setLayout( new QVBoxLayout() );
+    setLayout( new QVBoxLayout );
     layout()->setMargin(0);
     layout()->setSpacing(5);
 
     // create list
-    treeView_ = new TreeView();
+    treeView_ = new TreeView;
     layout()->addWidget( new TreeView::Container( this, treeView_ ) );
     treeView_->setModel( &_model() );
     treeView_->setSelectionMode( QAbstractItemView::ContiguousSelection );

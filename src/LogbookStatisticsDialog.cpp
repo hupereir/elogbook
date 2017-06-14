@@ -43,7 +43,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     setWindowTitle( tr( "Logbook Statistics - Elogbook" ) );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
-    auto hLayout = new QHBoxLayout();
+    auto hLayout = new QHBoxLayout;
     hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
@@ -52,7 +52,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     hLayout->addWidget( label, 0, Qt::AlignTop );
     hLayout->addStretch();
 
-    auto gridLayout = new GridLayout();
+    auto gridLayout = new GridLayout;
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);
     hLayout->addLayout( gridLayout );

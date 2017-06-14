@@ -59,7 +59,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
       // misc
       QGroupBox* box;
       page->layout()->addWidget( box = new QGroupBox( tr( "Options" ), page ) );
-      QVBoxLayout* layout = new QVBoxLayout();
+      QVBoxLayout* layout = new QVBoxLayout;
       box->setLayout( layout );
 
       OptionCheckBox* checkbox = new OptionCheckBox( tr( "Wrap text " ), box, "WRAP_TEXT" );
@@ -76,7 +76,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
       QLabel* label;
       OptionSpinBox* spinbox;
-      QHBoxLayout* hLayout = new QHBoxLayout();
+      QHBoxLayout* hLayout = new QHBoxLayout;
       layout->addLayout( hLayout );
       hLayout->setMargin(0);
       hLayout->addWidget( label = new QLabel( tr( "Automatically hide mouse cursor after: " ), box ) );
@@ -93,7 +93,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     // saving and backup
     page = &addPage( IconEngine::get( IconNames::PreferencesBackup ), tr( "Saving and Backup" ), tr( "Logbook saving and backup configuration" ) );
     {
-        auto gridLayout = new GridLayout();
+        auto gridLayout = new GridLayout;
         gridLayout->setSpacing(5);
         gridLayout->setMargin(0);
         page->layout()->addItem( gridLayout );
@@ -138,21 +138,21 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     // printing
     page = &addPage( IconEngine::get( IconNames::PreferencesPrinting ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );
     {
-        auto hLayout = new QHBoxLayout();
+        auto hLayout = new QHBoxLayout;
         hLayout->setMargin(0);
         hLayout->setSpacing(5);
         page->layout()->addItem( hLayout );
 
         auto box = new QGroupBox( tr( "Logbook" ), page );
         hLayout->addWidget( box );
-        box->setLayout( new QVBoxLayout() );
+        box->setLayout( new QVBoxLayout );
         LogbookPrintOptionWidget* logbookPrintOptionWidget = new LogbookPrintOptionWidget( box );
         logbookPrintOptionWidget->layout()->setMargin(0);
         box->layout()->addWidget( logbookPrintOptionWidget );
         addOptionWidget( logbookPrintOptionWidget );
 
         hLayout->addWidget( box = new QGroupBox( tr( "Logbook Entries" ), page ) );
-        box->setLayout( new QVBoxLayout() );
+        box->setLayout( new QVBoxLayout );
         LogEntryPrintOptionWidget* logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
         logEntryPrintOptionWidget->layout()->setMargin(0);
         box->layout()->addWidget( logEntryPrintOptionWidget );
@@ -163,7 +163,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page = &addPage( IconEngine::get( IconNames::PreferencesColors ), tr( "Colors" ), tr( "Color settings for entry tagging and text highlighting" ) );
     {
         auto box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
-        box->setLayout( new QVBoxLayout() );
+        box->setLayout( new QVBoxLayout );
         box->layout()->setMargin(5);
         box->layout()->setSpacing(5);
         page->layout()->addWidget( box );
@@ -174,7 +174,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         addOptionWidget( listbox );
 
         box = new QGroupBox( tr( "Text Colors" ), page );
-        box->setLayout( new QVBoxLayout() );
+        box->setLayout( new QVBoxLayout );
         box->layout()->setMargin(5);
         box->layout()->setSpacing(5);
         page->layout()->addWidget( box );
@@ -201,7 +201,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page = &addPage( IconEngine::get( IconNames::PreferencesUnsorted ), tr( "Unsorted" ), tr( "Additional unsorted settings" ) );
     {
         auto box = new QWidget( page );
-        auto gridLayout = new GridLayout();
+        auto gridLayout = new GridLayout;
         gridLayout->setSpacing(5);
         gridLayout->setMargin(0);
         gridLayout->setMaxCount( 2 );

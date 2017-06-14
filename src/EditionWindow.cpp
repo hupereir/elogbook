@@ -85,13 +85,13 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     auto main( new QWidget( this ) );
     setCentralWidget( main );
 
-    auto layout = new QVBoxLayout();
+    auto layout = new QVBoxLayout;
     layout->setMargin(0);
     layout->setSpacing(2);
     main->setLayout( layout );
 
     // header layout
-    auto gridLayout( new QGridLayout() );
+    auto gridLayout( new QGridLayout );
     gridLayout->setSpacing(0);
     gridLayout->setMargin(0);
     layout->addLayout( gridLayout );
@@ -128,21 +128,21 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     layout->addWidget( splitter, 1 );
 
     // create text
-    auto splitterWidget = new QWidget();
-    splitterWidget->setLayout( new QVBoxLayout() );
+    auto splitterWidget = new QWidget;
+    splitterWidget->setLayout( new QVBoxLayout );
     splitterWidget->layout()->setMargin(0);
     splitterWidget->layout()->setSpacing(0);
     splitter->addWidget( splitterWidget );
 
     auto editorContainer = new QWidget( splitterWidget );
-    editorContainer->setLayout( new QVBoxLayout() );
+    editorContainer->setLayout( new QVBoxLayout );
     editorContainer->layout()->setMargin(0);
     editorContainer->layout()->setSpacing(0);
     static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( editorContainer, 1 );
 
     // container for embedded widgets
     container_ = new QWidget( splitterWidget );
-    container_->setLayout( new QVBoxLayout() );
+    container_->setLayout( new QVBoxLayout );
     container_->layout()->setMargin(0);
     container_->layout()->setSpacing(0);
     static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( container_, 0 );
@@ -613,7 +613,7 @@ void EditionWindow::writeEntryToLogbook( bool updateSelection )
     const bool entryIsNew( !entry || Base::KeySet<Logbook>( entry ).empty() );
 
     // create entry if none set
-    if( !entry ) entry = new LogEntry();
+    if( !entry ) entry = new LogEntry;
 
     // check logbook
     auto&& mainWindow( _mainWindow() );
@@ -1298,13 +1298,13 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
     printer.setDocName( buffer );
 
     // create option widget
-    PrinterOptionWidget* optionWidget( new PrinterOptionWidget() );
+    PrinterOptionWidget* optionWidget( new PrinterOptionWidget );
     optionWidget->setHelper( &helper );
 
     connect( optionWidget, SIGNAL(orientationChanged(QPrinter::Orientation)), &helper, SLOT(setOrientation(QPrinter::Orientation)) );
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
-    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget();
+    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget;
     logEntryOptionWidget->setWindowTitle( "Logbook Entry Configuration" );
     connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
@@ -1361,7 +1361,7 @@ void EditionWindow::_toHtml( void )
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create option widget
-    LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget();
+    LogEntryPrintOptionWidget* optionWidget = new LogEntryPrintOptionWidget;
     optionWidget->read( XmlOptions::get() );
 
     // create dialog
@@ -1421,7 +1421,7 @@ void EditionWindow::_newEntry( void )
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create new entry, set author, set keyword
-    auto entry = new LogEntry();
+    auto entry = new LogEntry;
     entry->setAuthor( XmlOptions::get().raw( "USER" ) );
     entry->addKeyword( _mainWindow().currentKeyword() );
 

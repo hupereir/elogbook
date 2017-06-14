@@ -294,7 +294,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     Q_ASSERT( !indexes.empty() );
 
     // create mime data
-    QMimeData *mime = new QMimeData();
+    QMimeData *mime = new QMimeData;
 
     // set drag type
     mime->setData( LogEntry::MimeType, 0 );
