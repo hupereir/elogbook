@@ -306,13 +306,13 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* find text from dialog
-    virtual void findFromDialog( void );
+    void findFromDialog( void );
 
     //* replace text from dialog
-    virtual void replaceFromDialog( void );
+    void replaceFromDialog( void );
 
     //* select line from dialog
-    virtual void selectLineFromDialog( void );
+    void selectLineFromDialog( void );
 
     //@}
 
@@ -322,10 +322,10 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* close window event handler
-    virtual void closeEvent( QCloseEvent* );
+    void closeEvent( QCloseEvent* ) override;
 
     //* timer event
-    virtual void timerEvent( QTimerEvent* );
+    void timerEvent( QTimerEvent* ) override;
 
     //@}
 

@@ -153,7 +153,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     protected:
 
     //* enter event
-    virtual void enterEvent( QEvent* );
+    void enterEvent( QEvent* ) override;
 
     protected Q_SLOTS:
 

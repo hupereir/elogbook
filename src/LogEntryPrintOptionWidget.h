@@ -38,10 +38,10 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     explicit LogEntryPrintOptionWidget( QWidget* = nullptr );
 
     //* read
-    virtual void read( const Options& );
+    void read( const Options& ) override;
 
     //* write
-    virtual void write( Options& ) const;
+    void write( Options& ) const override;
 
     //* mask
     LogEntry::Mask mask( void ) const;

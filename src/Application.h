@@ -46,10 +46,10 @@ class Application: public BaseApplication, private Base::Counter<Application>
     explicit Application( CommandLineArguments );
 
     //* application manager
-    virtual bool initApplicationManager( void );
+    bool initApplicationManager( void ) override;
 
     //* create all widgets
-    virtual bool realizeWidget( void );
+    bool realizeWidget( void ) override;
 
     //* file list
     FileList& recentFiles( void ) const
@@ -71,18 +71,18 @@ class Application: public BaseApplication, private Base::Counter<Application>
     //@{
 
     //* command line help
-    void usage( void ) const;
+    void usage( void ) const override;
 
     //* application name
-    virtual QString applicationName( void ) const
+    QString applicationName( void ) const override
     { return "Elogbook"; }
 
     //* application name
-    virtual QIcon applicationIcon( void ) const
+    QIcon applicationIcon( void ) const override
     { return IconEngine::get( ":/elogbook.png" ); }
 
     // application version
-    virtual QString applicationVersion( void ) const
+    QString applicationVersion( void ) const override
     { return VERSION; }
 
     //@}
@@ -90,13 +90,13 @@ class Application: public BaseApplication, private Base::Counter<Application>
     protected Q_SLOTS:
 
     //* configuration
-    virtual void _configuration( void );
+    void _configuration( void ) override;
 
     //* exit safely
     void _exit( void );
 
     //* process request from application manager
-    virtual bool _processCommand( Server::ServerCommand );
+    bool _processCommand( Server::ServerCommand ) override;
 
     private Q_SLOTS:
 

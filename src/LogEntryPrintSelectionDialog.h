@@ -32,7 +32,7 @@ class LogEntryPrintSelectionDialog: public CustomDialog
     explicit LogEntryPrintSelectionDialog( QWidget* = nullptr );
 
     //* destructor
-    virtual ~LogEntryPrintSelectionDialog( void );
+    ~LogEntryPrintSelectionDialog( void ) override;
 
     //* selection widget
     LogEntryPrintSelectionWidget::Mode mode( void ) const

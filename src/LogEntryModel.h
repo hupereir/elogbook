@@ -67,10 +67,10 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const override;
 
     //* mime type
-    virtual QStringList mimeTypes( void ) const;
+    QStringList mimeTypes( void ) const override;
 
     //* mime data
-    virtual QMimeData* mimeData( const QModelIndexList& ) const;
+    QMimeData* mimeData( const QModelIndexList& ) const override;
 
     //* number of columns for a given index
     int columnCount( const QModelIndex& = QModelIndex() ) const override

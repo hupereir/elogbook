@@ -81,18 +81,18 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     public Q_SLOTS:
 
     //* take action when at least one match is found
-    virtual void matchFound( void );
+    void matchFound( void );
 
     //* take action when no match is found
-    virtual void noMatchFound( void );
+    void noMatchFound( void );
 
     protected Q_SLOTS:
 
     //* find button
-    virtual void _updateFindButton( const QString& );
+    void _updateFindButton( const QString& );
 
     //* restore palette
-    virtual void _restorePalette( void );
+    void _restorePalette( void );
 
     private Q_SLOTS:
 
@@ -116,7 +116,7 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     protected:
 
     //* change event
-    virtual void changeEvent( QEvent* );
+    void changeEvent( QEvent* ) override;
 
     private:
 

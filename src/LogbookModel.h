@@ -53,17 +53,17 @@ class LogbookModel: public ListModel<Logbook*>, private Base::Counter<LogbookMod
     //@{
 
     //* flags
-    virtual Qt::ItemFlags flags( const QModelIndex& ) const
+    Qt::ItemFlags flags( const QModelIndex& ) const override
     { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
 
     //* return data
-    virtual QVariant data( const QModelIndex&, int ) const;
+    QVariant data( const QModelIndex&, int ) const override;
 
     //* header data
-    virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole) const;
+    QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole) const override;
 
     //* number of columns for a given index
-    virtual int columnCount( const QModelIndex& = QModelIndex() ) const
+    int columnCount( const QModelIndex& = QModelIndex() ) const override
     { return nColumns; }
 
     //@}

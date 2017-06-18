@@ -100,10 +100,10 @@ namespace Private
         protected:
 
         //* insert from mime data
-        virtual void insertFromMimeData( const QMimeData* );
+        void insertFromMimeData( const QMimeData* ) override;
 
         //* install actions in context menu
-        virtual void installContextMenuActions( BaseContextMenu*, bool = true );
+        void installContextMenuActions( BaseContextMenu*, bool = true ) override;
 
         private Q_SLOTS:
 

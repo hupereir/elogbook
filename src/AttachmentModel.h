@@ -51,16 +51,16 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
     //@{
 
     //* flags
-    virtual Qt::ItemFlags flags( const QModelIndex& ) const;
+    Qt::ItemFlags flags( const QModelIndex& ) const override;
 
     //* return data
-    virtual QVariant data( const QModelIndex&, int ) const;
+    QVariant data( const QModelIndex&, int ) const override;
 
     //* header data
-    virtual QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole) const;
+    QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole) const override;
 
     //* number of columns for a given index
-    virtual int columnCount( const QModelIndex& = QModelIndex() ) const
+    int columnCount( const QModelIndex& = QModelIndex() ) const override
     { return nColumns; }
 
     //@}
@@ -71,7 +71,7 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
     void _sort( int, Qt::SortOrder ) override;
 
     //* icon matching given model index
-    virtual QIcon _icon( const QModelIndex& ) const;
+    QIcon _icon( const QModelIndex& ) const;
 
     private:
 

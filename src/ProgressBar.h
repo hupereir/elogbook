@@ -40,7 +40,7 @@ class ProgressBar:public BaseProgressBar, private Base::Counter<ProgressBar>
     public Q_SLOTS:
 
     //* set maximum
-    virtual void setMaximum( int value )
+    void setMaximum( int value ) override
     {
         BaseProgressBar::setMaximum( value );
         current_ = 0;

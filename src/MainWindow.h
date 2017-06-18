@@ -340,13 +340,13 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     protected:
 
     //* close event
-    virtual void closeEvent( QCloseEvent* );
+    void closeEvent( QCloseEvent* ) override;
 
     //* timer event
-    virtual void timerEvent( QTimerEvent* );
+    void timerEvent( QTimerEvent* ) override;
 
     //* context menu event [overloaded]
-    virtual void contextMenuEvent( QContextMenuEvent* );
+    void contextMenuEvent( QContextMenuEvent* ) override;
 
     //* clear list and reinitialize from logbook entries
     void _resetKeywordList( void );

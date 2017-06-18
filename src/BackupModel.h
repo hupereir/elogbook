@@ -47,7 +47,7 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
     };
 
     //* flags
-    virtual Qt::ItemFlags flags( const QModelIndex& ) const;
+    Qt::ItemFlags flags( const QModelIndex& ) const override;
 
     //* return data
     QVariant data( const QModelIndex&, int ) const override;

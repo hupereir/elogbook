@@ -139,14 +139,14 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         //@{
 
         //* flags
-        virtual Qt::ItemFlags flags( const QModelIndex& ) const
+        Qt::ItemFlags flags( const QModelIndex& ) const override
         { return Qt::ItemIsEnabled |  Qt::ItemIsSelectable; }
 
         //* return data
         QVariant data( const QModelIndex&, int ) const override;
 
         //* header data
-        virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const
+        QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override
         {
             if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < nColumns )
             { return columnTitles_[section]; }
@@ -210,7 +210,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
     protected:
 
     //* timer event, to handle multiple file modification at once
-    virtual void timerEvent( QTimerEvent* event );
+    void timerEvent( QTimerEvent* ) override;
 
     private Q_SLOTS:
 
