@@ -153,7 +153,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     adjustSize();
 
     // connection
-    connect( &okButton(), SIGNAL(clicked()), this, SLOT(_saveCommands()) );
+    connect( &okButton(), SIGNAL(clicked()), SLOT(_saveCommands()) );
 
 }
 

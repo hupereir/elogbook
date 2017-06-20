@@ -45,7 +45,6 @@
 
 #include <QDesktopServices>
 #include <QHeaderView>
-#include <QShortcut>
 #include <QUrl>
 
 //_____________________________________________
@@ -59,7 +58,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     // tell validFile thread not to check duplicates
     // this is needed when checking files that are links
     thread_.setCheckDuplicates( false );
-    connect( &thread_, SIGNAL(recordsAvailable(const FileRecord::List&,bool)), this, SLOT(_processRecords(const FileRecord::List&,bool)) );
+    connect( &thread_, SIGNAL(recordsAvailable(const FileRecord::List&,bool)), SLOT(_processRecords(const FileRecord::List&,bool)) );
 
     // default layout
     setLayout( new QVBoxLayout );

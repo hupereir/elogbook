@@ -114,7 +114,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
         menu->addAction( &mainWindow->deleteEntryAction() );
 
         menu->addMenu( recentEntriesMenu_ = new QMenu( tr( "Recent Entries" ) ) );
-        connect( recentEntriesMenu_, SIGNAL(aboutToShow()), this, SLOT(_updateRecentEntriesMenu()) );
+        connect( recentEntriesMenu_, SIGNAL(aboutToShow()), SLOT(_updateRecentEntriesMenu()) );
         connect( recentEntriesMenu_, SIGNAL(triggered(QAction*)), SLOT(_selectEntry(QAction*)) );
 
     }
@@ -129,7 +129,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 
     // Settings
     preferenceMenu_ = addMenu( tr( "Settings" ) );
-    connect( preferenceMenu_, SIGNAL(aboutToShow()), this, SLOT(_updatePreferenceMenu()) );
+    connect( preferenceMenu_, SIGNAL(aboutToShow()), SLOT(_updatePreferenceMenu()) );
 
     // help manager
     Base::HelpManager* help( new Base::HelpManager( this ) );

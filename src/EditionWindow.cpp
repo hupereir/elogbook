@@ -934,7 +934,7 @@ void EditionWindow::_createFindWidget( void )
         connect( findWidget_, SIGNAL(find(TextSelection)), SLOT(_find(TextSelection)) );
         connect( this, SIGNAL(matchFound()), findWidget_, SLOT(matchFound()) );
         connect( this, SIGNAL(noMatchFound()), findWidget_, SLOT(noMatchFound()) );
-        connect( &findWidget_->closeButton(), SIGNAL(clicked()), this, SLOT(_restoreFocus()) );
+        connect( &findWidget_->closeButton(), SIGNAL(clicked()), SLOT(_restoreFocus()) );
         findWidget_->hide();
 
     }
@@ -957,7 +957,7 @@ void EditionWindow::_createReplaceWidget( void )
         connect( replaceWidget_, SIGNAL(replaceInWindow(TextSelection)), SLOT(_replaceInWindow(TextSelection)) );
         connect( replaceWidget_, SIGNAL(replaceInSelection(TextSelection)), SLOT(_replaceInSelection(TextSelection)) );
         connect( replaceWidget_, SIGNAL(menuAboutToShow()), SLOT(_updateReplaceInSelection()) );
-        connect( &replaceWidget_->closeButton(), SIGNAL(clicked()), this, SLOT(_restoreFocus()) );
+        connect( &replaceWidget_->closeButton(), SIGNAL(clicked()), SLOT(_restoreFocus()) );
         replaceWidget_->hide();
 
         connect( this, SIGNAL(matchFound()), replaceWidget_, SLOT(matchFound()) );
@@ -977,7 +977,7 @@ void EditionWindow::_createSelectLineWidget( void )
         connect( selectLineWidget_, SIGNAL(lineSelected(int)), SLOT(_selectLine(int)) );
         connect( this, SIGNAL(lineFound()), selectLineWidget_, SLOT(matchFound()) );
         connect( this, SIGNAL(lineNotFound()), selectLineWidget_, SLOT(noMatchFound()) );
-        connect( &selectLineWidget_->closeButton(), SIGNAL(clicked()), this, SLOT(_restoreFocus()) );
+        connect( &selectLineWidget_->closeButton(), SIGNAL(clicked()), SLOT(_restoreFocus()) );
         selectLineWidget_->hide();
     }
 }
@@ -1128,11 +1128,11 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     /* this is needed to be able to handle a single dialog for stacked windows */
     // goto line number
     editor->gotoLineAction().disconnect();
-    connect( &editor->gotoLineAction(), SIGNAL(triggered()), this, SLOT(selectLineFromDialog()) );
+    connect( &editor->gotoLineAction(), SIGNAL(triggered()), SLOT(selectLineFromDialog()) );
 
     // find
     editor->findAction().disconnect();
-    connect( &editor->findAction(), SIGNAL(triggered()), this, SLOT(findFromDialog()) );
+    connect( &editor->findAction(), SIGNAL(triggered()), SLOT(findFromDialog()) );
     connect( editor, SIGNAL(noMatchFound()), this, SIGNAL(noMatchFound()) );
     connect( editor, SIGNAL(matchFound()), this, SIGNAL(matchFound()) );
     connect( editor, SIGNAL(lineNotFound()), this, SIGNAL(lineNotFound()) );
@@ -1140,7 +1140,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 
     // replace
     editor->replaceAction().disconnect();
-    connect( &editor->replaceAction(), SIGNAL(triggered()), this, SLOT(replaceFromDialog()) );
+    connect( &editor->replaceAction(), SIGNAL(triggered()), SLOT(replaceFromDialog()) );
 
     if( formatBar_ )
     {
