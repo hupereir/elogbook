@@ -24,6 +24,8 @@
 #include "Counter.h"
 #include "ListModel.h"
 
+#include <array>
+
 //* model
 class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel>
 {

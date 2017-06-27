@@ -26,6 +26,8 @@
 
 #include <QMimeData>
 
+#include <array>
+
 //* Job model. Stores job information for display in lists
 class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordModel>
 {

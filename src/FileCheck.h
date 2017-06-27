@@ -30,6 +30,8 @@
 #include <QTimerEvent>
 #include <QSet>
 
+#include <array>
+
 class Logbook;
 
 //* handles threads for file auto-save

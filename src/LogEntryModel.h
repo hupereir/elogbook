@@ -27,6 +27,8 @@
 
 #include <QMap>
 
+#include <array>
+
 class LogEntry;
 
 //* Job model. Stores job information for display in lists

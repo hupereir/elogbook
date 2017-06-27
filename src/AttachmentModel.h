@@ -23,6 +23,8 @@
 #include "Counter.h"
 #include "ListModel.h"
 
+#include <array>
+
 class Attachment;
 class MimeTypeIconProvider;
 
