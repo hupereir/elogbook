@@ -54,13 +54,13 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     Q_DECLARE_FLAGS( Mask, MaskFlag )
 
     //* empty creator
-    explicit LogEntry( void );
+    explicit LogEntry();
 
     //* constructor from DOM
     explicit LogEntry( const QDomElement& );
 
     //* destructor
-    ~LogEntry( void );
+    ~LogEntry();
 
     //* mime type (for drag and drop)
     static const QString MimeType;
@@ -72,7 +72,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     QDomElement domElement( QDomDocument& ) const;
 
     //* return a new entry copy from this
-    LogEntry *copy( void ) const;
+    LogEntry *copy() const;
 
     //* creation TimeStamp
     TimeStamp creation() const
@@ -83,31 +83,31 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { return modification_; }
 
     //* LogEntry title
-    QString title( void ) const
+    QString title() const
     { return title_; }
 
     //* true if has keywords
-    bool hasKeywords( void ) const
+    bool hasKeywords() const
     { return !keywords_.empty(); }
 
     //* Log entry keyword
-    const Keyword::Set& keywords( void ) const
+    const Keyword::Set& keywords() const
     { return keywords_; }
 
     //* Log entry last author
-    QString author( void ) const
+    QString author() const
     { return author_; }
 
     //* LogEntry color
-    Base::Color color( void ) const
+    Base::Color color() const
     { return color_; }
 
     //* entry text format
-    Format::TextFormatBlock::List formats( void ) const
+    Format::TextFormatBlock::List formats() const
     { return formats_; }
 
     //* LogEntry text
-    QString text( void ) const
+    QString text() const
     { return text_; }
 
 
@@ -127,15 +127,15 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     bool matchAttachment( QString ) const;
 
     //* returns true if entry is visible (i.e. selected by the find bar and keyword list)
-    bool isSelected( void ) const
+    bool isSelected() const
     { return findSelected_ && keywordSelected_; }
 
     //* returns true if entry is selected by the find bar
-    bool isFindSelected( void ) const
+    bool isFindSelected() const
     { return findSelected_; }
 
     //* returns true if entry is selected by the keyword list
-    bool isKeywordSelected( void ) const
+    bool isKeywordSelected() const
     { return keywordSelected_; }
 
     //@}
@@ -148,7 +148,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { creation_ = stamp; }
 
     //* set modification_ to _now_
-    void setModified( void );
+    void setModified();
 
     //* modification TimeStamp
     void setModification( const TimeStamp stamp )
@@ -159,7 +159,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { title_ = title; }
 
     //* clear keywords
-    void clearKeywords( void );
+    void clearKeywords();
 
     //* add a keyword to the list
     void addKeyword( Keyword );
@@ -302,10 +302,10 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     void setColor( QString );
 
     //* initialize fields (default values)
-    void _init( void );
+    void _init();
 
     //* case sensitivity
-    Qt::CaseSensitivity _caseSensitive( void ) const;
+    Qt::CaseSensitivity _caseSensitive() const;
 
     //* log entry creation time
     TimeStamp creation_;

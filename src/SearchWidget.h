@@ -57,7 +57,7 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     //@{
 
     //* editor
-    CustomComboBox& editor( void ) const
+    CustomComboBox& editor() const
     { return *editor_; }
 
     //@}
@@ -76,15 +76,15 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     void selectEntries( QString, SearchWidget::SearchModes );
 
     //* emitted when the Show All button is pressed
-    void showAllEntries( void );
+    void showAllEntries();
 
     public Q_SLOTS:
 
     //* take action when at least one match is found
-    void matchFound( void );
+    void matchFound();
 
     //* take action when no match is found
-    void noMatchFound( void );
+    void noMatchFound();
 
     protected Q_SLOTS:
 
@@ -92,25 +92,25 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     void _updateFindButton( const QString& );
 
     //* restore palette
-    void _restorePalette( void );
+    void _restorePalette();
 
     private Q_SLOTS:
 
     //* configuration
-    void _updateConfiguration( void );
+    void _updateConfiguration();
 
     //* save configuration
-    void _saveMask( void );
+    void _saveMask();
 
     //* send SelectEntries request
-    void _selectionRequest( void );
+    void _selectionRequest();
 
     //* enable all entries button
-    void _enableAllEntriesButton( void )
+    void _enableAllEntriesButton()
     { allEntriesButton_->setEnabled( true ); }
 
     //* disable all entries button
-    void _disableAllEntriesButton( void )
+    void _disableAllEntriesButton()
     { allEntriesButton_->setEnabled( false ); }
 
     protected:
@@ -121,7 +121,7 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     private:
 
     //* create not found palette
-    void _updateNotFoundPalette( void );
+    void _updateNotFoundPalette();
 
     //* checkboxes
     using CheckBoxMap = QHash<SearchMode, QCheckBox* >;

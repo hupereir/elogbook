@@ -82,7 +82,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
 }
 
 //____________________________________________________________________________
-void BackupManagerWidget::updateBackups( void )
+void BackupManagerWidget::updateBackups()
 {
     Debug::Throw( "BackupManagerWidget::updateBackups" );
     model_.clear();
@@ -104,7 +104,7 @@ void BackupManagerWidget::updateBackups( void )
 }
 
 //____________________________________________________________________________
-void BackupManagerWidget::_clean( void )
+void BackupManagerWidget::_clean()
 {
     Debug::Throw( "BackupManagerWidget::_clean.\n" );
 
@@ -122,7 +122,7 @@ void BackupManagerWidget::_clean( void )
 }
 
 //____________________________________________________________________________
-void BackupManagerWidget::_remove( void )
+void BackupManagerWidget::_remove()
 {
     Debug::Throw( "BackupManagerWidget::_remove.\n" );
     QModelIndexList selectedIndexes( list_->selectionModel()->selectedRows() );
@@ -163,7 +163,7 @@ void BackupManagerWidget::_remove( void )
 }
 
 //____________________________________________________________________________
-void BackupManagerWidget::_restore( void )
+void BackupManagerWidget::_restore()
 {
     Debug::Throw( "BackupManagerWidget::_restore.\n" );
     QModelIndex index( list_->selectionModel()->currentIndex() );
@@ -181,7 +181,7 @@ void BackupManagerWidget::_restore( void )
 }
 
 //____________________________________________________________________________
-void BackupManagerWidget::_merge( void )
+void BackupManagerWidget::_merge()
 {
     Debug::Throw( "BackupManagerWidget::_merge.\n" );
     QModelIndex index( list_->selectionModel()->currentIndex() );
@@ -199,7 +199,7 @@ void BackupManagerWidget::_merge( void )
 }
 
 //____________________________________________________________________________
-void BackupManagerWidget::_updateActions( void )
+void BackupManagerWidget::_updateActions()
 {
     Debug::Throw( "BackupManagerWidget::_updateActions" );
     bool hasSelection( !list_->selectionModel()->selectedRows().isEmpty() );

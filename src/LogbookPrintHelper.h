@@ -52,7 +52,7 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     //@{
 
     //* abort
-    bool isAborted( void ) const
+    bool isAborted() const
     { return aborted_; }
 
     //@}
@@ -73,7 +73,7 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     { aborted_ = value; }
 
     //* abort
-    void abort( void )
+    void abort()
     { aborted_ = true; }
 
     //* current keyword
@@ -98,7 +98,7 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     protected:
 
     //* update entries
-    void _updateEntries( void );
+    void _updateEntries();
 
     //* print header
     void _printHeader( QPrinter*, QPainter*, QPointF& );

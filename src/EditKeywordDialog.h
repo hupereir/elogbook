@@ -44,7 +44,7 @@ class EditKeywordDialog: public CustomDialog
     { combobox_->setEditText( keyword.get() ); }
 
     //* keyword
-    Keyword keyword( void ) const
+    Keyword keyword() const
     { return Keyword( combobox_->currentText() ); }
 
     private:

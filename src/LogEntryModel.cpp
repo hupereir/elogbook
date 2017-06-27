@@ -49,7 +49,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 {
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
 
-    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     connect( this, SIGNAL(layoutChanged()), SLOT(_disableEdition()) );
     _updateConfiguration();
 
@@ -280,7 +280,7 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
 }
 
 //______________________________________________________________________
-QStringList LogEntryModel::mimeTypes( void ) const
+QStringList LogEntryModel::mimeTypes() const
 {
     QStringList types;
     types << LogEntry::MimeType << "text/plain";
@@ -332,7 +332,7 @@ void LogEntryModel::_sort( int column, Qt::SortOrder order )
 }
 
 //________________________________________________________
-void LogEntryModel::_updateConfiguration( void )
+void LogEntryModel::_updateConfiguration()
 {
     Debug::Throw( "LogEntryModel::_updateConfiguration.\n" );
     iconSize_ =XmlOptions::get().get<int>( "LIST_ICON_SIZE" );
@@ -340,7 +340,7 @@ void LogEntryModel::_updateConfiguration( void )
 }
 
 //________________________________________________________
-void LogEntryModel::_resetIcons( void )
+void LogEntryModel::_resetIcons()
 {
 
     Debug::Throw( "LogEntryModel::_resetIcons" );
@@ -379,7 +379,7 @@ const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
 }
 
 //________________________________________________________
-const QIcon& LogEntryModel::_attachmentIcon( void ) const
+const QIcon& LogEntryModel::_attachmentIcon() const
 {
 
     Debug::Throw( "LogEntryModel::_attachmentIcon" );

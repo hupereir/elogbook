@@ -72,7 +72,7 @@ void LogEntryPrintOptionWidget::write( Options& options ) const
 { options.set<int>( optionName(), mask() ); }
 
 //_________________________________________________________________
-LogEntry::Mask LogEntryPrintOptionWidget::mask( void ) const
+LogEntry::Mask LogEntryPrintOptionWidget::mask() const
 {
     LogEntry::Mask out(0);
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

@@ -55,19 +55,19 @@ class AskForSaveDialog: public BaseDialog, private Base::Counter<AskForSaveDialo
     private Q_SLOTS:
 
     //* save changes
-    void _yes( void )
+    void _yes()
     { done( Yes ); }
 
     //* discard changes
-    void _no( void )
+    void _no()
     { done( No ); }
 
     //* save for all modified entries
-    void _all( void )
+    void _all()
     { done( All ); }
 
     //* cancel action
-    void _cancel( void )
+    void _cancel()
     { done( Cancel ); }
 
 };

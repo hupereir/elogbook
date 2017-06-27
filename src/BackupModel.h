@@ -33,7 +33,7 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
     public:
 
     //* constructor
-    explicit BackupModel( void ):
+    explicit BackupModel():
         Counter( "BackupModel" )
     {}
 

@@ -35,7 +35,7 @@ class InsertLinkDialog: public CustomDialog
     //* constructor
     explicit InsertLinkDialog( QWidget*, QString = QString() );
 
-    QString link( void )
+    QString link()
     { return editor_->editor().text(); }
 
     private:

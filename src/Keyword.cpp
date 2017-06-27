@@ -50,7 +50,7 @@ QDomElement Keyword::domElement( QDomDocument& document ) const
 }
 
 //_________________________________________________________________
-QString Keyword::current( void ) const
+QString Keyword::current() const
 {
 
     int pos = value_.lastIndexOf( '/' );
@@ -59,7 +59,7 @@ QString Keyword::current( void ) const
 }
 
 //_________________________________________________________________
-Keyword Keyword::parent( void ) const
+Keyword Keyword::parent() const
 {
     int pos = value_.lastIndexOf( '/' );
     return Keyword( value_.left( pos ) );

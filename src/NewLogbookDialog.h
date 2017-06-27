@@ -45,7 +45,7 @@ class NewLogbookDialog: public CustomDialog
     { title_->setText( title ); }
 
     //* title
-    QString title( void ) const
+    QString title() const
     { return title_->text(); }
 
     //* author
@@ -53,7 +53,7 @@ class NewLogbookDialog: public CustomDialog
     { author_->setText( author ); }
 
     //* filename
-    QString author( void ) const
+    QString author() const
     { return author_->text(); }
 
     //* attachment directory
@@ -61,7 +61,7 @@ class NewLogbookDialog: public CustomDialog
     { attachmentDirectory_->setFile( file ); }
 
     //* attachment directory
-    File attachmentDirectory( void ) const
+    File attachmentDirectory() const
     { return File( attachmentDirectory_->editor().text() ).expand(); }
 
     //* comments
@@ -72,7 +72,7 @@ class NewLogbookDialog: public CustomDialog
     }
 
     //* comments
-    QString comments( void ) const
+    QString comments() const
     { return comments_->toPlainText(); }
 
     private:

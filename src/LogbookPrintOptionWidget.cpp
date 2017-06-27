@@ -75,7 +75,7 @@ void LogbookPrintOptionWidget::write( Options& options ) const
 { options.set<int>( optionName(), mask() ); }
 
 //_________________________________________________________________
-Logbook::Mask LogbookPrintOptionWidget::mask( void ) const
+Logbook::Mask LogbookPrintOptionWidget::mask() const
 {
     Logbook::Mask out(0);
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

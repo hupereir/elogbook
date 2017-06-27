@@ -44,12 +44,12 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     void write( Options& ) const override;
 
     //* mask
-    LogEntry::Mask mask( void ) const;
+    LogEntry::Mask mask() const;
 
     Q_SIGNALS:
 
     //* modified
-    void modified( void );
+    void modified();
 
     //* mask changed
     void maskChanged( LogEntry::Mask );
@@ -57,7 +57,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     protected Q_SLOTS:
 
     //* update mask
-    void _updateMask( void )
+    void _updateMask()
     {
         emit maskChanged( mask() );
         if( _connected() ) emit modified();

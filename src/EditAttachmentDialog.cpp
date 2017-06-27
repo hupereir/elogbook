@@ -82,7 +82,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 }
 
 //____________________________________________________
-QString EditAttachmentDialog::comments( void ) const
+QString EditAttachmentDialog::comments() const
 {
     Debug::Throw( "EditAttachmentDialog::comments.\n" );
     return commentsEditor_->toPlainText();

@@ -47,7 +47,7 @@ class Menu:public QMenuBar, private Base::Counter<Menu>
     explicit Menu( QWidget*, MainWindow* );
 
     //* recent files menu
-    RecentFilesMenu& recentFilesMenu( void ) const
+    RecentFilesMenu& recentFilesMenu() const
     { return *recentFilesMenu_; }
 
     Q_SIGNALS:
@@ -58,16 +58,16 @@ class Menu:public QMenuBar, private Base::Counter<Menu>
     private Q_SLOTS:
 
     //* recent entries
-    void _updateRecentEntriesMenu( void );
+    void _updateRecentEntriesMenu();
 
     //* select entry from recent entries menu
     void _selectEntry( QAction* );
 
     //* get list of editor windows into menu
-    void _updateEditorMenu( void );
+    void _updateEditorMenu();
 
     //* update preference menu
-    void _updatePreferenceMenu( void );
+    void _updatePreferenceMenu();
 
     private:
 

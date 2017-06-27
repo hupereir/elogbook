@@ -42,13 +42,13 @@ class OpenAttachmentDialog: public CustomDialog
     //@{
 
     //* true if command is valid
-    bool isCommandValid( void ) const;
+    bool isCommandValid() const;
 
     //* true if command is default
-    bool isCommandDefault( void ) const;
+    bool isCommandDefault() const;
 
     //* get command
-    QString command( void ) const;
+    QString command() const;
 
     //* action
     enum Action
@@ -58,14 +58,14 @@ class OpenAttachmentDialog: public CustomDialog
     };
 
     //* get action
-    Action action( void ) const;
+    Action action() const;
 
     //@}
 
     protected Q_SLOTS:
 
     //* save commands added to combobox
-    void _saveCommands( void );
+    void _saveCommands();
 
     private:
 

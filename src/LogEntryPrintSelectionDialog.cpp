@@ -31,5 +31,5 @@ LogEntryPrintSelectionDialog::LogEntryPrintSelectionDialog( QWidget* parent ):
 }
 
 //_____________________________________________________________________
-LogEntryPrintSelectionDialog::~LogEntryPrintSelectionDialog( void )
+LogEntryPrintSelectionDialog::~LogEntryPrintSelectionDialog()
 { selectionWidget_->write( XmlOptions::get() ); }

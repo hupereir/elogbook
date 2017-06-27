@@ -44,13 +44,13 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     explicit BackupManagerWidget( QWidget*, Logbook* = nullptr );
 
     //* button layout
-    QVBoxLayout& buttonLayout( void )
+    QVBoxLayout& buttonLayout()
     { return *buttonLayout_; }
 
     Q_SIGNALS:
 
     //* emitted when backups are changed (from clean action)
-    void saveLogbookRequested( void );
+    void saveLogbookRequested();
 
     //* emitted when backup is removed
     void removeBackupRequested( Backup );
@@ -65,17 +65,17 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     void mergeBackupRequested( Backup );
 
     //* emitted when backup is requested
-    void backupRequested( void );
+    void backupRequested();
 
     public Q_SLOTS:
 
     //* update
-    void updateBackups( void );
+    void updateBackups();
 
     protected:
 
     //* get associated logbook
-    Logbook* _logbook( void ) const
+    Logbook* _logbook() const
     {
         Base::KeySet<Logbook> logbooks( this );
         return logbooks.empty() ? 0L:*logbooks.begin();
@@ -84,19 +84,19 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     protected Q_SLOTS:
 
     //* update actions
-    void _updateActions( void );
+    void _updateActions();
 
     //* clean
-    void _clean( void );
+    void _clean();
 
     //* remove backup
-    void _remove( void );
+    void _remove();
 
     //* restore
-    void _restore( void );
+    void _restore();
 
     //* merge
-    void _merge( void );
+    void _merge();
 
     private:
 

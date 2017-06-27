@@ -91,7 +91,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     connect( treeView_->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(_itemSelected(QModelIndex)) );
     connect( treeView_, SIGNAL(activated(QModelIndex)), SLOT(_open()) );
 
-    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
     _updateActions();
 }
@@ -102,7 +102,7 @@ void AttachmentFrame::setDefaultHeight( int value )
 { defaultHeight_ = value; }
 
 //____________________________________________
-QSize AttachmentFrame::sizeHint( void ) const
+QSize AttachmentFrame::sizeHint() const
 { return (defaultHeight_ ) >= 0 ? QSize( 0, defaultHeight_ ):QWidget::sizeHint(); }
 
 //_____________________________________________
@@ -150,7 +150,7 @@ void AttachmentFrame::select( Attachment& attachment )
 }
 
 //_____________________________________________
-void AttachmentFrame::_new( void )
+void AttachmentFrame::_new()
 {
 
     Debug::Throw( "AttachmentFrame::_new.\n" );
@@ -177,7 +177,7 @@ void AttachmentFrame::_new( void )
     // update destination directory
     if( logbooks.size() && !(*logbooks.begin())->directory().isEmpty() ) { dialog.setDestinationDirectory( (*logbooks.begin())->directory() ); }
     else {
-        MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
+        MainWindow& mainwindow( Base::Singleton::get().application<Application>()->mainWindow() );
         if( mainwindow.logbook() && !mainwindow.logbook()->directory().isEmpty() )
         { dialog.setDestinationDirectory( mainwindow.logbook()->directory() ); }
     }
@@ -267,7 +267,7 @@ void AttachmentFrame::_new( void )
         }
 
         // update attachment frame
-        Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
+        Base::Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
 
         // update logbooks destination directory
         for( const auto& logbook:logbooks )
@@ -277,7 +277,7 @@ void AttachmentFrame::_new( void )
         }
 
         // change Application window title
-        Singleton::get().application<Application>()->mainWindow().updateWindowTitle();
+        Base::Singleton::get().application<Application>()->mainWindow().updateWindowTitle();
 
         // save EditionWindow entry
         window.saveAction().trigger();
@@ -394,7 +394,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
     {
 
         // set main window title
-        MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
+        MainWindow& mainwindow( Base::Singleton::get().application<Application>()->mainWindow() );
         mainwindow.updateWindowTitle();
         if( mainwindow.logbook()->file().size() ) mainwindow.save();
 
@@ -406,7 +406,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
 }
 
 //_____________________________________________
-void AttachmentFrame::_updateConfiguration( void )
+void AttachmentFrame::_updateConfiguration()
 {
 
     Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
@@ -416,7 +416,7 @@ void AttachmentFrame::_updateConfiguration( void )
 }
 
 //_____________________________________________
-void AttachmentFrame::_updateActions( void )
+void AttachmentFrame::_updateActions()
 {
 
     bool hasSelection( !treeView_->selectionModel()->selectedRows().isEmpty() );
@@ -431,7 +431,7 @@ void AttachmentFrame::_updateActions( void )
 }
 
 //_____________________________________________
-void AttachmentFrame::_open( void )
+void AttachmentFrame::_open()
 {
     Debug::Throw( "AttachmentFrame::_open.\n" );
 
@@ -511,7 +511,7 @@ void AttachmentFrame::_open( void )
 }
 
 //_____________________________________________
-void AttachmentFrame::_edit( void )
+void AttachmentFrame::_edit()
 {
     Debug::Throw( "AttachmentFrame::_edit.\n" );
 
@@ -559,7 +559,7 @@ void AttachmentFrame::_edit( void )
 }
 
 //_____________________________________________
-void AttachmentFrame::_delete( void )
+void AttachmentFrame::_delete()
 {
     Debug::Throw( "AttachmentFrame::_delete.\n" );
 
@@ -638,7 +638,7 @@ void AttachmentFrame::_delete( void )
 
     if( logbookChanged )
     {
-        Singleton::get().application<Application>()->mainWindow().updateWindowTitle();
+        Base::Singleton::get().application<Application>()->mainWindow().updateWindowTitle();
         window.saveAction().trigger();
 
         // resize columns
@@ -650,7 +650,7 @@ void AttachmentFrame::_delete( void )
 }
 
 //_____________________________________________
-void AttachmentFrame::_reload( void )
+void AttachmentFrame::_reload()
 {
     Debug::Throw( "AttachmentFrame::_reload.\n" );
 
@@ -674,7 +674,7 @@ void AttachmentFrame::_reload( void )
 }
 
 //_____________________________________________
-void AttachmentFrame::_saveAs( void )
+void AttachmentFrame::_saveAs()
 {
     Debug::Throw( "AttachmentFrame::_saveAs.\n" );
 
@@ -729,7 +729,7 @@ void AttachmentFrame::_saveAs( void )
 
 
 //_________________________________________________________________________
-void AttachmentFrame::_clean( void )
+void AttachmentFrame::_clean()
 {
     Debug::Throw( "AttachmentFrame::clean.\n" );
 
@@ -773,7 +773,7 @@ void AttachmentFrame::_clean( void )
     {
 
         // set main window title
-        MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
+        MainWindow& mainwindow( Base::Singleton::get().application<Application>()->mainWindow() );
         mainwindow.updateWindowTitle();
         if( mainwindow.logbook()->file().size() ) mainwindow.save();
 
@@ -792,7 +792,7 @@ void AttachmentFrame::_itemSelected( const QModelIndex& index )
 }
 
 //_______________________________________________________________________
-void AttachmentFrame::_installActions( void )
+void AttachmentFrame::_installActions()
 {
     Debug::Throw( "AttachmentFrame::_installActions.\n" );
 
@@ -887,7 +887,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     for( const auto& window:editionWindows )
     { window->saveAction().trigger(); }
 
-    MainWindow& mainwindow( Singleton::get().application<Application>()->mainWindow() );
+    MainWindow& mainwindow( Base::Singleton::get().application<Application>()->mainWindow() );
     if( mainwindow.logbook()->file().size() )
     { mainwindow.save(); }
 

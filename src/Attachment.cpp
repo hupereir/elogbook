@@ -113,7 +113,7 @@ bool Attachment::operator < ( const Attachment &attachment ) const
 { return shortFile().compare( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }
 
 //__________________________________
-void Attachment::updateSize( void )
+void Attachment::updateSize()
 {
 
     Debug::Throw( "Attachment::updateSize.\n" );
@@ -127,7 +127,7 @@ void Attachment::updateSize( void )
 
 
 //__________________________________
-bool Attachment::updateTimeStamps( void )
+bool Attachment::updateTimeStamps()
 {
 
     Debug::Throw( "Attachment::updateTimeStamps.\n" );
@@ -161,7 +161,7 @@ bool Attachment::updateTimeStamps( void )
 
 
 //__________________________________
-LogEntry* Attachment::entry( void ) const
+LogEntry* Attachment::entry() const
 {
     Base::KeySet<LogEntry> entries( this );
     Q_ASSERT( entries.size() == 1 );
@@ -274,7 +274,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
 }
 
 //________________________________________
-File Attachment::shortFile( void ) const
+File Attachment::shortFile() const
 {
     Debug::Throw( "Attachment::shortFile.\n" );
 

@@ -80,29 +80,29 @@ CustomDialog( parent )
 }
 
 //____________________________________________________
-File NewAttachmentDialog::file( void ) const
+File NewAttachmentDialog::file() const
 {
     File out( fileEditor_->editor().text() );
     return isUrl() ? out : out.expand();
 }
 
 //____________________________________________________
-File NewAttachmentDialog::destinationDirectory( void ) const
+File NewAttachmentDialog::destinationDirectory() const
 { return File( destinationDirectoryEditor_->editor().text() ).expand(); }
 
 //____________________________________________________
-bool NewAttachmentDialog::isUrl( void ) const
+bool NewAttachmentDialog::isUrl() const
 { return urlCheckBox_->isChecked(); }
 
 //____________________________________________________
-QString NewAttachmentDialog::comments( void ) const
+QString NewAttachmentDialog::comments() const
 {
     Debug::Throw( "NewAttachmentDialog::GetComments.\n" );
     return commentsEditor_->toPlainText();
 }
 
 //____________________________________________________
-Attachment::Command NewAttachmentDialog::action( void ) const
+Attachment::Command NewAttachmentDialog::action() const
 { return actionComboBox_->currentText() == tr( "Copy" ) ? Attachment::CopyVersion: Attachment::LinkVersion; }
 
 //____________________________________________________

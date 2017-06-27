@@ -119,7 +119,7 @@ MainWindow::MainWindow( QWidget *parent ):
     _installActions();
 
     // aditional actions from application
-    auto application( Singleton::get().application<Application>() );
+    auto application( Base::Singleton::get().application<Application>() );
     addAction( &application->closeAction() );
 
     // Keyword container
@@ -304,14 +304,14 @@ MainWindow::MainWindow( QWidget *parent ):
 }
 
 //___________________________________________________________
-MainWindow::~MainWindow( void )
+MainWindow::~MainWindow()
 {
     Debug::Throw( "MainWindow::~MainWindow.\n" );
     if( logbook_ ) delete logbook_;
 }
 
 //___________________________________________________________
-void MainWindow::createDefaultLogbook( void )
+void MainWindow::createDefaultLogbook()
 {
 
     Debug::Throw( "MainWindow::_newLogbook.\n" );
@@ -477,7 +477,7 @@ bool MainWindow::setLogbook( File file )
 
     // add opened file to OpenPrevious mennu.
     if( !logbook_->file().isEmpty() )
-    { Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
+    { Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
 
     ignoreWarnings_ = false;
 
@@ -490,7 +490,7 @@ bool MainWindow::setLogbook( File file )
 }
 
 //_____________________________________________
-void MainWindow::checkLogbookBackup( void )
+void MainWindow::checkLogbookBackup()
 {
     Debug::Throw( "MainWindow::checkLogbookBackup.\n" );
 
@@ -515,7 +515,7 @@ void MainWindow::checkLogbookBackup( void )
 }
 
 //_____________________________________________
-void MainWindow::reset( void )
+void MainWindow::reset()
 {
 
     Debug::Throw( "MainWindow::reset.\n" );
@@ -532,7 +532,7 @@ void MainWindow::reset( void )
     entryModel_.clear();
 
     // clear the AttachmentWindow
-    Singleton::get().application<Application>()->attachmentWindow().frame().clear();
+    Base::Singleton::get().application<Application>()->attachmentWindow().frame().clear();
 
     // make all EditionWindows for deletion
     for( const auto& window:Base::KeySet<EditionWindow>( this ) )
@@ -546,7 +546,7 @@ void MainWindow::reset( void )
 }
 
 //____________________________________________
-AskForSaveDialog::ReturnCode MainWindow::checkModifiedEntries( void )
+AskForSaveDialog::ReturnCode MainWindow::checkModifiedEntries()
 { return _checkModifiedEntries( Base::KeySet<EditionWindow>(this) ); }
 
 //____________________________________________
@@ -567,7 +567,7 @@ AskForSaveDialog::ReturnCode MainWindow::askForSave( bool enableCancel )
 }
 
 //_______________________________________________
-void MainWindow::clearSelection( void )
+void MainWindow::clearSelection()
 { entryList_->clearSelection(); }
 
 //_______________________________________________
@@ -761,13 +761,13 @@ LogEntry* MainWindow::nextEntry( LogEntry* entry, bool updateSelection )
 }
 
 //_______________________________________________
-void MainWindow::resetAttachmentWindow( void ) const
+void MainWindow::resetAttachmentWindow() const
 {
 
     Debug::Throw( "MainWindow::resetAttachmentWindow.\n" );
 
     // clear the AttachmentWindow
-    AttachmentWindow &attachmentWindow( Singleton::get().application<Application>()->attachmentWindow() );
+    AttachmentWindow &attachmentWindow( Base::Singleton::get().application<Application>()->attachmentWindow() );
     attachmentWindow.frame().clear();
 
     // check current logbook
@@ -782,7 +782,7 @@ void MainWindow::resetAttachmentWindow( void ) const
 }
 
 //_______________________________________________
-Keyword MainWindow::currentKeyword( void ) const
+Keyword MainWindow::currentKeyword() const
 {
     Debug::Throw( "MainWindow::currentKeyword.\n" );
     QModelIndex index( keywordList_->selectionModel()->currentIndex() );
@@ -790,7 +790,7 @@ Keyword MainWindow::currentKeyword( void ) const
 }
 
 //_______________________________________________
-void MainWindow::saveUnchecked( void )
+void MainWindow::saveUnchecked()
 {
 
     Debug::Throw( "MainWindow::saveUnchecked.\n" );
@@ -834,13 +834,13 @@ void MainWindow::saveUnchecked( void )
     }
 
     // write logbook to file, retrieve result
-    Singleton::get().application<Application>()->busy();
+    Base::Singleton::get().application<Application>()->busy();
     _setEnabled( false );
 
     logbook_->truncateRecentEntriesList( maxRecentEntries_ );
 
     logbook_->write();
-    Singleton::get().application<Application>()->idle();
+    Base::Singleton::get().application<Application>()->idle();
     _setEnabled( true );
 
     updateWindowTitle();
@@ -850,7 +850,7 @@ void MainWindow::saveUnchecked( void )
     statusbar_->showLabel();
 
     // add new file to openPreviousMenu
-    if( !logbook_->file().isEmpty() ) Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
+    if( !logbook_->file().isEmpty() ) Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
 
     // reset ignore_warning flag
     ignoreWarnings_ = false;
@@ -982,7 +982,7 @@ void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mod
 }
 
 //_______________________________________________
-void MainWindow::showAllEntries( void )
+void MainWindow::showAllEntries()
 {
     Debug::Throw( "MainWindow::showAllEntries.\n" );
 
@@ -1093,7 +1093,7 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 }
 
 //_______________________________________________
-void MainWindow::_installActions( void )
+void MainWindow::_installActions()
 {
 
     Debug::Throw( "MainWindow::_installActions.\n" );
@@ -1274,7 +1274,7 @@ void MainWindow::_installActions( void )
 }
 
 //_______________________________________________
-void MainWindow::_resetKeywordList( void )
+void MainWindow::_resetKeywordList()
 {
 
     Debug::Throw( "MainWindow::_resetKeywordList.\n" );
@@ -1302,7 +1302,7 @@ void MainWindow::_resetKeywordList( void )
 }
 
 //_______________________________________________
-void MainWindow::_resetLogEntryList( void )
+void MainWindow::_resetLogEntryList()
 {
 
     Debug::Throw( "MainWindow::_resetLogEntryList.\n" );
@@ -1344,7 +1344,7 @@ void MainWindow::_resetLogEntryList( void )
 }
 
 //_______________________________________________
-void MainWindow::_loadColors( void )
+void MainWindow::_loadColors()
 {
 
     Debug::Throw( "MainWindow::_loadColors.\n" );
@@ -1375,14 +1375,14 @@ void MainWindow::_setEnabled( bool value )
 
 
 //__________________________________________________________________
-bool MainWindow::_hasModifiedEntries( void ) const
+bool MainWindow::_hasModifiedEntries() const
 {
     Base::KeySet<EditionWindow> frames( this );
     return std::find_if( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() ) != frames.end();
 }
 
 //_______________________________________________
-void MainWindow::_autoSave( void )
+void MainWindow::_autoSave()
 {
 
     if( logbook_ && !logbook_->file().isEmpty() )
@@ -1519,14 +1519,14 @@ void MainWindow::_filesModified( FileCheck::DataSet files )
 }
 
 //________________________________________________________
-void MainWindow::_splitterMoved( void )
+void MainWindow::_splitterMoved()
 {
     Debug::Throw( "MainWindow::_splitterMoved.\n" );
     resizeTimer_.start( 200, this );
 }
 
 //_______________________________________________
-void MainWindow::_newLogbook( void )
+void MainWindow::_newLogbook()
 {
     Debug::Throw( "MainWindow::_newLogbook.\n" );
 
@@ -1566,7 +1566,7 @@ void MainWindow::_newLogbook( void )
 }
 
 //_______________________________________________
-void MainWindow::updateWindowTitle( void )
+void MainWindow::updateWindowTitle()
 {
 
     Debug::Throw( "MainWindow::updateWindowTitle.\n" );
@@ -1616,9 +1616,9 @@ void MainWindow::open( FileRecord record )
     }
 
     // create logbook from file
-    Singleton::get().application<Application>()->busy();
+    Base::Singleton::get().application<Application>()->busy();
     setLogbook( record.file() );
-    Singleton::get().application<Application>()->idle();
+    Base::Singleton::get().application<Application>()->idle();
 
     // check if backup is needed
     // no need to do that for read-only logbooks
@@ -1672,7 +1672,7 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
 
     // add new file to openPreviousMenu
     if( !logbook_->file().isEmpty() )
-    { Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
+    { Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
 
     // redo file check registration
     if( registerLogbook )
@@ -1689,7 +1689,7 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
 
 
 //_____________________________________________
-void MainWindow::_saveForced( void )
+void MainWindow::_saveForced()
 {
     Debug::Throw( "MainWindow::_saveForced.\n" );
 
@@ -1707,7 +1707,7 @@ void MainWindow::_saveForced( void )
 }
 
 //_______________________________________________
-void MainWindow::_saveBackup( void )
+void MainWindow::_saveBackup()
 {
     Debug::Throw( "MainWindow::_saveBackup.\n");
 
@@ -1741,7 +1741,7 @@ void MainWindow::_saveBackup( void )
 
     // remove the "backup" filename from the openPrevious list
     // to avoid confusion
-    Singleton::get().application<Application>()->recentFiles().remove( File(filename).expand() );
+    Base::Singleton::get().application<Application>()->recentFiles().remove( File(filename).expand() );
 
     // restore initial filename
     logbook_->setFile( currentFilename, true );
@@ -1760,7 +1760,7 @@ void MainWindow::_saveBackup( void )
 }
 
 //_______________________________________________
-void MainWindow::_manageBackups( void )
+void MainWindow::_manageBackups()
 {
     Debug::Throw( "MainWindow::_manageBackups.\n");
 
@@ -1780,7 +1780,7 @@ void MainWindow::_manageBackups( void )
 }
 
 //_____________________________________________
-void MainWindow::_revertToSaved( void )
+void MainWindow::_revertToSaved()
 {
     Debug::Throw( "MainWindow::_revertToSaved.\n" );
 
@@ -1796,9 +1796,9 @@ void MainWindow::_revertToSaved( void )
     { return; }
 
     // reinit MainWindow
-    Singleton::get().application<Application>()->busy();
+    Base::Singleton::get().application<Application>()->busy();
     setLogbook( logbook_->file() );
-    Singleton::get().application<Application>()->idle();
+    Base::Singleton::get().application<Application>()->idle();
 
     // check if backup is needed
     // no need to do that for read-only logbooks
@@ -1808,7 +1808,7 @@ void MainWindow::_revertToSaved( void )
 }
 
 //___________________________________________________________
-void MainWindow::_print( void )
+void MainWindow::_print()
 {
 
     // save EditionWindows
@@ -1905,7 +1905,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
 }
 
 //___________________________________________________________
-void MainWindow::_printPreview( void )
+void MainWindow::_printPreview()
 {
     Debug::Throw( "MainWindow::_printPreview.\n" );
 
@@ -1969,7 +1969,7 @@ void MainWindow::_printPreview( void )
 }
 
 //___________________________________________________________
-void MainWindow::_toHtml( void )
+void MainWindow::_toHtml()
 {
     Debug::Throw( "MainWindow::_toHtml.\n" );
 
@@ -2056,7 +2056,7 @@ void MainWindow::_toHtml( void )
 }
 
 //_______________________________________________
-void MainWindow::_synchronize( void )
+void MainWindow::_synchronize()
 {
     Debug::Throw( "MainWindow::_synchronize.\n" );
 
@@ -2081,7 +2081,7 @@ void MainWindow::_synchronize( void )
     Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << logbook_->entries().size() << endl;
 
     // set busy flag
-    Singleton::get().application<Application>()->busy();
+    Base::Singleton::get().application<Application>()->busy();
     statusbar_->label().setText( "Reading remote logbook ... " );
 
     // opens file in remote logbook
@@ -2101,7 +2101,7 @@ void MainWindow::_synchronize( void )
         buffer += errors.toString();
         InformationDialog( 0, buffer ).exec();
 
-        Singleton::get().application<Application>()->idle();
+        Base::Singleton::get().application<Application>()->idle();
         return;
 
     }
@@ -2157,7 +2157,7 @@ void MainWindow::_synchronize( void )
     remoteLogbook.write();
 
     // idle
-    Singleton::get().application<Application>()->idle();
+    Base::Singleton::get().application<Application>()->idle();
     statusbar_->label().clear();
 
     return;
@@ -2174,7 +2174,7 @@ void MainWindow::_removeBackups( Backup::List backups )
 
     Debug::Throw( "MainWindow::_removeBackups.\n" );
 
-    Singleton::get().application<Application>()->busy();
+    Base::Singleton::get().application<Application>()->busy();
 
     File::List invalidFiles;
     bool modified( false );
@@ -2214,7 +2214,7 @@ void MainWindow::_removeBackups( Backup::List backups )
         }
     }
 
-    Singleton::get().application<Application>()->idle();
+    Base::Singleton::get().application<Application>()->idle();
 
     if( modified && !logbook_->file().isEmpty() )
     { save(); }
@@ -2265,7 +2265,7 @@ void MainWindow::_restoreBackup( Backup backup )
 
     // remove the "backup" filename from the openPrevious list
     // to avoid confusion
-    Singleton::get().application<Application>()->recentFiles().remove( backup.file().expand() );
+    Base::Singleton::get().application<Application>()->recentFiles().remove( backup.file().expand() );
 
     // change filename
     logbook_->setFile( oldName );
@@ -2281,7 +2281,7 @@ void MainWindow::_restoreBackup( Backup backup )
     if( !logbook_->file().isEmpty() )
     {
         save();
-        Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
+        Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
     }
 
 }
@@ -2314,7 +2314,7 @@ void MainWindow::_mergeBackup( Backup backup )
     Debug::Throw() << "MainWindow::_mergeBackup - number of local entries: " << logbook_->entries().size() << endl;
 
     // set busy flag
-    Singleton::get().application<Application>()->busy();
+    Base::Singleton::get().application<Application>()->busy();
     statusbar_->label().setText( tr( "Reading remote logbook..." ) );
 
     // opens file in remote logbook
@@ -2334,7 +2334,7 @@ void MainWindow::_mergeBackup( Backup backup )
         buffer += errors.toString();
         InformationDialog( 0, buffer ).exec();
 
-        Singleton::get().application<Application>()->idle();
+        Base::Singleton::get().application<Application>()->idle();
         return;
 
     }
@@ -2381,7 +2381,7 @@ void MainWindow::_mergeBackup( Backup backup )
     if( !logbook_->file().isEmpty() ) save();
 
     // idle
-    Singleton::get().application<Application>()->idle();
+    Base::Singleton::get().application<Application>()->idle();
     statusbar_->label().clear();
 
     return;
@@ -2389,7 +2389,7 @@ void MainWindow::_mergeBackup( Backup backup )
 }
 
 //_______________________________________________
-void MainWindow::_reorganize( void )
+void MainWindow::_reorganize()
 {
     Debug::Throw( "MainWindow::_reorganize.\n" );
 
@@ -2439,7 +2439,7 @@ void MainWindow::_reorganize( void )
 }
 
 //_______________________________________________
-void MainWindow::_showDuplicatedEntries( void )
+void MainWindow::_showDuplicatedEntries()
 {
     Debug::Throw( "MainWindow::_showDuplicatedEntries.\n" );
 
@@ -2502,7 +2502,7 @@ void MainWindow::_showDuplicatedEntries( void )
 }
 
 //_______________________________________________
-void MainWindow::_viewLogbookStatistics( void )
+void MainWindow::_viewLogbookStatistics()
 {
     Debug::Throw( "MainWindow::_viewLogbookStatistics.\n" );
 
@@ -2517,7 +2517,7 @@ void MainWindow::_viewLogbookStatistics( void )
 }
 
 //_______________________________________________
-void MainWindow::_editLogbookInformations( void )
+void MainWindow::_editLogbookInformations()
 {
     Debug::Throw( "MainWindow::_editLogbookInformations.\n" );
 
@@ -2579,7 +2579,7 @@ void MainWindow::_closeEditionWindows( bool askForSave )
 }
 
 //____________________________________________
-void MainWindow::_findEntries( void ) const
+void MainWindow::_findEntries() const
 {
 
     Debug::Throw( "MainWindow::_findEntries.\n" );
@@ -2603,7 +2603,7 @@ void MainWindow::_findEntries( void ) const
 }
 
 //____________________________________________
-void MainWindow::_newEntry( void )
+void MainWindow::_newEntry()
 {
 
     Debug::Throw( "MainWindow::_NewEntry.\n" );
@@ -2649,7 +2649,7 @@ void MainWindow::_newEntry( void )
 }
 
 //____________________________________________
-void MainWindow::_editEntries( void )
+void MainWindow::_editEntries()
 {
     Debug::Throw( "MainWindow::_EditEntries .\n" );
 
@@ -2670,7 +2670,7 @@ void MainWindow::_editEntries( void )
 }
 
 //____________________________________________
-void MainWindow::_deleteEntries( void )
+void MainWindow::_deleteEntries()
 {
     Debug::Throw( "MainWindow::_DeleteEntries .\n" );
 
@@ -2893,7 +2893,7 @@ void MainWindow::_changeEntryColor( QColor color )
 }
 
 //____________________________________________
-void MainWindow::_entryInformation( void )
+void MainWindow::_entryInformation()
 {
     // retrieve current selection
     auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
@@ -2905,7 +2905,7 @@ void MainWindow::_entryInformation( void )
 }
 
 //____________________________________________
-void MainWindow::_newKeyword( void )
+void MainWindow::_newKeyword()
 {
 
     Debug::Throw( "MainWindow::_newKeyword.\n" );
@@ -2935,7 +2935,7 @@ void MainWindow::_newKeyword( void )
 
 
 //____________________________________________
-void MainWindow::_deleteKeyword( void )
+void MainWindow::_deleteKeyword()
 {
     Debug::Throw("MainWindow::_deleteKeyword.\n" );
 
@@ -3050,7 +3050,7 @@ void MainWindow::_deleteKeyword( void )
 }
 
 //____________________________________________
-void MainWindow::_renameKeyword( void )
+void MainWindow::_renameKeyword()
 {
     Debug::Throw("MainWindow::_renameKeyword.\n" );
 
@@ -3157,7 +3157,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
 }
 
 //____________________________________________
-void MainWindow::_renameEntryKeyword( void )
+void MainWindow::_renameEntryKeyword()
 {
     Debug::Throw("MainWindow::_renameEntryKeyword.\n" );
 
@@ -3400,7 +3400,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
 }
 
 //_____________________________________________
-void MainWindow::_updateKeywordActions( void )
+void MainWindow::_updateKeywordActions()
 {
     Debug::Throw( "MainWindow::_updateKeywordActions.\n" );
 
@@ -3413,7 +3413,7 @@ void MainWindow::_updateKeywordActions( void )
 }
 
 //_____________________________________________
-void MainWindow::_updateEntryActions( void )
+void MainWindow::_updateEntryActions()
 {
     Debug::Throw( "MainWindow::_updateEntryActions.\n" );
     const bool readOnly( logbook_ && logbook_->isReadOnly() );
@@ -3449,7 +3449,7 @@ void MainWindow::_updateEntryActions( void )
 }
 
 //_____________________________________________
-void MainWindow::_updateReadOnlyState( void )
+void MainWindow::_updateReadOnlyState()
 {
     Debug::Throw( "MainWindow::_updateReadOnlyState.\n" );
 
@@ -3460,7 +3460,7 @@ void MainWindow::_updateReadOnlyState( void )
     saveForcedAction_->setEnabled( !readOnly );
 
     // clear the AttachmentWindow
-    AttachmentWindow &attachmentWindow( Singleton::get().application<Application>()->attachmentWindow() );
+    AttachmentWindow &attachmentWindow( Base::Singleton::get().application<Application>()->attachmentWindow() );
     attachmentWindow.frame().setReadOnly( readOnly );
 
 }
@@ -3549,7 +3549,7 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
 }
 
 //________________________________________
-void MainWindow::_startEntryEdition( void )
+void MainWindow::_startEntryEdition()
 {
 
     Debug::Throw( "MainWindow::_startEntryEdition\n" );
@@ -3573,7 +3573,7 @@ void MainWindow::_startEntryEdition( void )
 }
 
 //_____________________________________________
-void MainWindow::_showMonitoredFiles( void )
+void MainWindow::_showMonitoredFiles()
 {
 
     Debug::Throw( "MainWindow::_showMonitoredFiles.\n" );
@@ -3652,7 +3652,7 @@ void MainWindow::_toggleTreeMode( bool value )
 }
 
 //_______________________________________________
-void MainWindow::_updateConfiguration( void )
+void MainWindow::_updateConfiguration()
 {
 
     Debug::Throw( "MainWindow::_updateConfiguration.\n" );

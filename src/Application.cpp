@@ -44,7 +44,7 @@ Application::Application( CommandLineArguments arguments ) :
 {}
 
 //____________________________________________
-bool Application::initApplicationManager( void )
+bool Application::initApplicationManager()
 {
     Debug::Throw( "Application::initApplicationManager.\n" );
 
@@ -64,7 +64,7 @@ bool Application::initApplicationManager( void )
 }
 
 //____________________________________________
-bool Application::realizeWidget( void )
+bool Application::realizeWidget()
 {
     Debug::Throw( "Application::realizeWidget.\n" );
 
@@ -128,7 +128,7 @@ bool Application::realizeWidget( void )
 }
 
 //____________________________________________
-void Application::usage( void ) const
+void Application::usage() const
 {
     _usage( "elogbook", tr( "[options] [file]" ) );
     commandLineParser().usage();
@@ -136,7 +136,7 @@ void Application::usage( void ) const
 }
 
 //_________________________________________________
-void Application::_configuration( void )
+void Application::_configuration()
 {
 
     Debug::Throw( "Application::_configuration" );
@@ -149,7 +149,7 @@ void Application::_configuration( void )
 }
 
 //_________________________________________________
-void Application::_updateConfiguration( void )
+void Application::_updateConfiguration()
 {
     Debug::Throw( "Application::_updateConfiguration.\n" );
     static_cast<XmlFileList*>(recentFiles_.get())->setDBFile( File( XmlOptions::get().raw( "RC_FILE" ) ) );
@@ -157,7 +157,7 @@ void Application::_updateConfiguration( void )
 }
 
 //_________________________________________________
-void Application::_exit( void )
+void Application::_exit()
 {
 
     Debug::Throw( "Application::_exit.\n" );

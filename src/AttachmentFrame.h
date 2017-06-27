@@ -50,22 +50,22 @@ class AttachmentFrame: public QWidget, public Base::Key
     void setDefaultHeight( int );
 
     //* default height
-    int defaultHeight( void ) const
+    int defaultHeight() const
     { return defaultHeight_; }
 
     //* size
-    QSize sizeHint( void ) const;
+    QSize sizeHint() const;
 
     //* list
-    bool hasList( void ) const
+    bool hasList() const
     { return (bool) treeView_; }
 
     //* list
-    TreeView& list( void ) const
+    TreeView& list() const
     { return *treeView_; }
 
     //* clear
-    void clear( void )
+    void clear()
     {
         // clear model and associations
         _model().clear();
@@ -101,46 +101,46 @@ class AttachmentFrame: public QWidget, public Base::Key
     }
 
     //* read only state
-    bool readOnly( void ) const
+    bool readOnly() const
     { return readOnly_; }
 
     //* context menu
-    QMenu& contextMenu( void ) const
+    QMenu& contextMenu() const
     { return *contextMenu_; }
 
     //*@name actions
     //@{
 
     //* visibility action
-    QAction& visibilityAction( void ) const
+    QAction& visibilityAction() const
     { return *visibilityAction_; }
 
     //* new attachment action
-    QAction& newAction( void ) const
+    QAction& newAction() const
     { return *newAction_; }
 
     //* view attachment action
-    QAction& openAction( void ) const
+    QAction& openAction() const
     { return *openAction_; }
 
     //* edit attachment action
-    QAction& editAction( void ) const
+    QAction& editAction() const
     { return *editAction_; }
 
     //* update attachment action
-    QAction& reloadAction( void ) const
+    QAction& reloadAction() const
     { return *reloadAction_; }
 
     //* update attachment action
-    QAction& saveAsAction( void ) const
+    QAction& saveAsAction() const
     { return *saveAsAction_; }
 
     //* delete attachment action
-    QAction& deleteAction( void ) const
+    QAction& deleteAction() const
     { return *deleteAction_; }
 
     //* clean action
-    QAction& cleanAction( void ) const
+    QAction& cleanAction() const
     { return *cleanAction_; }
 
     //@}
@@ -163,31 +163,31 @@ class AttachmentFrame: public QWidget, public Base::Key
     private Q_SLOTS:
 
     //* update configuration
-    void _updateConfiguration( void );
+    void _updateConfiguration();
 
     //* update context menu
-    void _updateActions( void );
+    void _updateActions();
 
     //* create new attachment
-    void _new( void );
+    void _new();
 
     //* display current attachment
-    void _open( void );
+    void _open();
 
     //* edit current attachment
-    void _edit( void );
+    void _edit();
 
     //* delete current attachment
-    void _delete( void );
+    void _delete();
 
     //* reload attachment time stamps
-    void _reload( void );
+    void _reload();
 
     //* save current attachment
-    void _saveAs( void );
+    void _saveAs();
 
     //* clean
-    void _clean( void );
+    void _clean();
 
     //*@name selections
     //@{
@@ -200,10 +200,10 @@ class AttachmentFrame: public QWidget, public Base::Key
     private:
 
     //* install actions
-    void _installActions( void );
+    void _installActions();
 
     //* model
-    AttachmentModel& _model( void )
+    AttachmentModel& _model()
     { return model_; }
 
     //* save attachment

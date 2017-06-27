@@ -48,7 +48,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
     void registerLogbook( Logbook* );
 
     //* clear all
-    void clear( void );
+    void clear();
 
     //* used to monitor file changes
     class Data
@@ -83,7 +83,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         { file_ = file; }
 
         //* file
-        const QString& file( void ) const
+        const QString& file() const
         { return file_; }
 
         //* flag
@@ -91,7 +91,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         { flag_ = flag; }
 
         //* flag
-        const Flag& flag( void ) const
+        const Flag& flag() const
         { return flag_; }
 
         //* timestamp
@@ -99,7 +99,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         { timeStamp_ = stamp; }
 
         //* timestamp
-        const TimeStamp& timeStamp( void ) const
+        const TimeStamp& timeStamp() const
         { return timeStamp_; }
 
         private:
@@ -199,7 +199,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
     using DataSet = QSet<Data>;
 
     //* file system watcher
-    const QFileSystemWatcher& fileSystemWatcher( void ) const
+    const QFileSystemWatcher& fileSystemWatcher() const
     { return fileSystemWatcher_; }
 
     Q_SIGNALS:
@@ -226,7 +226,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
     void _removeFile( const QString&, bool = false );
 
     //* file system watcher
-    QFileSystemWatcher& _fileSystemWatcher( void )
+    QFileSystemWatcher& _fileSystemWatcher()
     { return fileSystemWatcher_; }
 
     //* file system watcher

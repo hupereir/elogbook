@@ -32,10 +32,10 @@ class LogEntryPrintSelectionDialog: public CustomDialog
     explicit LogEntryPrintSelectionDialog( QWidget* = nullptr );
 
     //* destructor
-    ~LogEntryPrintSelectionDialog( void ) override;
+    ~LogEntryPrintSelectionDialog() override;
 
     //* selection widget
-    LogEntryPrintSelectionWidget::Mode mode( void ) const
+    LogEntryPrintSelectionWidget::Mode mode() const
     { return selectionWidget_->mode(); }
 
     private:

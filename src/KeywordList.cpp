@@ -24,5 +24,5 @@ void KeywordList::setDefaultWidth( int value )
 { defaultWidth_ = value; }
 
 //____________________________________________
-QSize KeywordList::sizeHint( void ) const
+QSize KeywordList::sizeHint() const
 { return (defaultWidth_ ) >= 0 ? QSize( defaultWidth_, 0 ):TreeView::sizeHint(); }

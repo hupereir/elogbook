@@ -82,7 +82,7 @@ QVariant KeywordModel::headerData(int section, Qt::Orientation orientation, int 
 }
 
 //______________________________________________________________________
-QStringList KeywordModel::mimeTypes( void ) const
+QStringList KeywordModel::mimeTypes() const
 {
     QStringList types;
     types << Keyword::MimeType << "text/plain";

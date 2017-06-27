@@ -28,7 +28,7 @@
 #include <QDomElement>
 
 //* store backup information
-class Backup: private Base::Counter<Backup>
+class Backup final: private Base::Counter<Backup>
 {
 
     public:
@@ -62,15 +62,15 @@ class Backup: private Base::Counter<Backup>
     QDomElement domElement( QDomDocument& ) const;
 
     //* creation
-    const TimeStamp& creation( void ) const
+    const TimeStamp& creation() const
     { return creation_; }
 
     //* file
-    const File& file( void ) const
+    const File& file() const
     { return file_; }
 
     //* validity
-    bool isValid( void ) const
+    bool isValid() const
     { return valid_; }
 
     //@}
@@ -86,7 +86,7 @@ class Backup: private Base::Counter<Backup>
     { file_ = file; }
 
     //* check validity
-    void checkValidity( void )
+    void checkValidity()
     { valid_ = file_.exists(); }
 
     //@}
@@ -97,7 +97,7 @@ class Backup: private Base::Counter<Backup>
         public:
 
         //* constructor
-        explicit List( void )
+        explicit List()
         {}
 
         //* constructor
@@ -106,7 +106,7 @@ class Backup: private Base::Counter<Backup>
         {}
 
         //* validity
-        void checkValidity( void )
+        void checkValidity()
         {
             for( iterator iter = begin(); iter != end(); ++iter )
             { iter->checkValidity(); }

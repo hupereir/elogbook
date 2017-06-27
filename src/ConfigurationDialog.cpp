@@ -187,7 +187,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     // recent files
     page = &addPage( IconEngine::get( IconNames::PreferencesRecentFiles ), tr( "Recent Files" ), tr( "Recent files list settings" ), true );
     {
-        auto recentFilesConfiguration = new RecentFilesConfiguration( page, Singleton::get().application<Application>()->recentFiles() );
+        auto recentFilesConfiguration = new RecentFilesConfiguration( page, Base::Singleton::get().application<Application>()->recentFiles() );
         page->layout()->addWidget( recentFilesConfiguration );
         addOptionWidget( recentFilesConfiguration );
 

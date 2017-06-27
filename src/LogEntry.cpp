@@ -33,7 +33,7 @@
 const QString LogEntry::MimeType = "logbook/log-entry-list";
 
 //__________________________________
-LogEntry::LogEntry( void ):
+LogEntry::LogEntry():
     Counter( "LogEntry" )
 {
     Debug::Throw( "LogEntry::LogEntry.\n" );
@@ -88,7 +88,7 @@ LogEntry::LogEntry( const QDomElement& element ):
 }
 
 //__________________________________
-LogEntry::~LogEntry( void )
+LogEntry::~LogEntry()
 {
 
     // delete associated attachments
@@ -151,7 +151,7 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
 }
 
 //__________________________________
-LogEntry* LogEntry::copy( void ) const
+LogEntry* LogEntry::copy() const
 {
     Debug::Throw( "LogEntry::copy.\n" );
 
@@ -215,11 +215,11 @@ bool LogEntry::matchAttachment( QString buffer ) const
 }
 
 //__________________________________
-void LogEntry::setModified( void )
+void LogEntry::setModified()
 { modification_ = TimeStamp::now(); }
 
 //__________________________________
-void LogEntry::clearKeywords( void )
+void LogEntry::clearKeywords()
 { keywords_.clear(); }
 
 //__________________________________
@@ -259,7 +259,7 @@ void LogEntry::addFormat( Format::TextFormatBlock format )
 }
 
 //__________________________________
-void LogEntry::_init( void )
+void LogEntry::_init()
 {
     findSelected_ = true;
     keywordSelected_ = false;
@@ -273,5 +273,5 @@ void LogEntry::_init( void )
 }
 
 //________________________________________________________
-Qt::CaseSensitivity LogEntry::_caseSensitive( void ) const
+Qt::CaseSensitivity LogEntry::_caseSensitive() const
 { return XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive: Qt::CaseInsensitive; }

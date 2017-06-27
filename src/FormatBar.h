@@ -63,13 +63,13 @@ class FormatBar: public CustomToolBar
     void load( const Format::TextFormatBlock::List& ) const;
 
     //* get text formats
-    Format::TextFormatBlock::List get( void ) const;
+    Format::TextFormatBlock::List get() const;
 
     //* button map
     using ActionMap = QHash< ActionId, QAction* >;
 
     //* actions
-    const ActionMap& actions( void ) const
+    const ActionMap& actions() const
     { return actions_; }
 
     public Q_SLOTS:
@@ -80,10 +80,10 @@ class FormatBar: public CustomToolBar
     private Q_SLOTS:
 
     //* update configuration
-    void _updateConfiguration( void );
+    void _updateConfiguration();
 
     //* save configuration
-    void _saveConfiguration( void );
+    void _saveConfiguration();
 
     //* bold
     void _bold( bool );
@@ -101,7 +101,7 @@ class FormatBar: public CustomToolBar
     void _color( QColor );
 
     //* last selected color
-    void _lastColor( void );
+    void _lastColor();
 
     private:
 

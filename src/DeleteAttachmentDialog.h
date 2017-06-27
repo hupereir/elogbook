@@ -44,7 +44,7 @@ class DeleteAttachmentDialog: public CustomDialog
     };
 
     //* get action
-    Action action( void ) const;
+    Action action() const;
 
     private:
 

@@ -38,10 +38,10 @@ namespace Private
         void setColor( const QColor& );
 
         //* size hint
-        QSize sizeHint( void ) const;
+        QSize sizeHint() const;
 
         //* size hint
-        QSize minimumSizeHint( void ) const;
+        QSize minimumSizeHint() const;
 
         protected:
 
@@ -78,23 +78,23 @@ namespace Private
         explicit LocalTextEditor( QWidget* );
 
         //* insert link action
-        QAction& insertLinkAction( void ) const
+        QAction& insertLinkAction() const
         { return *insertLinkAction_; }
 
         //* edit link action
-        QAction& editLinkAction( void ) const
+        QAction& editLinkAction() const
         { return *editLinkAction_; }
 
         //* remove link action
-        QAction& removeLinkAction( void ) const
+        QAction& removeLinkAction() const
         { return *removeLinkAction_; }
 
         //* view link action
-        QAction& openLinkAction( void ) const
+        QAction& openLinkAction() const
         { return *openLinkAction_; }
 
         //* return cursor at context menu
-        QTextCursor cursorAtContextMenu( void ) const
+        QTextCursor cursorAtContextMenu() const
         { return cursorForPosition( _contextMenuPosition() );  }
 
         protected:
@@ -108,12 +108,12 @@ namespace Private
         private Q_SLOTS:
 
         //* configuration
-        void _updateConfiguration( void );
+        void _updateConfiguration();
 
         private:
 
         //* install actions
-        void _installActions( void );
+        void _installActions();
 
         //* true when links are to be inserted automatically
         bool autoInsertLinks_ = true;

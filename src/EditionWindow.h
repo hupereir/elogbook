@@ -78,29 +78,29 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* returns current entry
-    LogEntry* entry( void ) const
+    LogEntry* entry() const
     {
         Base::KeySet<LogEntry> entries( this );
         return( entries.size() ) ? *entries.begin():nullptr;
     }
 
     //* entry title
-    QString entryTitle( void ) const
+    QString entryTitle() const
     { return titleEditor_ ? titleEditor_->text():QString(); }
 
     //* retrieve active display
-    const TextEditor& activeEditor( void ) const;
+    const TextEditor& activeEditor() const;
 
     //* check if this editor is readOnly or not
-    bool isReadOnly( void ) const
+    bool isReadOnly() const
     { return readOnly_; }
 
     //* closed flag
-    bool isClosed( void ) const
+    bool isClosed() const
     { return closed_; }
 
     //* check if current entry has been modified or not
-    bool modified( void ) const
+    bool modified() const
     {
         return
             keywordEditor_->isModified() ||
@@ -123,7 +123,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void displayEntry( LogEntry* = nullptr );
 
     //* retrieve attachment list
-    AttachmentFrame& attachmentFrame( void )
+    AttachmentFrame& attachmentFrame()
     {
         Base::KeySet<AttachmentFrame> frames( this );
         Q_ASSERT( frames.size() == 1 );
@@ -131,11 +131,11 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     }
 
     //* status bar
-    BaseStatusBar& statusBar( void )
+    BaseStatusBar& statusBar()
     { return *statusBar_; }
 
     //* retrieve active display
-    TextEditor& activeEditor( void );
+    TextEditor& activeEditor();
 
     //* set readOnly state of the EditionWindow
     void setReadOnly( bool );
@@ -147,13 +147,13 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void setIsClosed( bool );
 
     //* update keyword Widget from current entry
-    void displayKeyword( void );
+    void displayKeyword();
 
     //* update title Widget from current entry
-    void displayTitle( void );
+    void displayTitle();
 
     //* update color Widget from current entry
-    void displayColor( void );
+    void displayColor();
 
     //* check if current entry has been modified or not
     void setModified( bool );
@@ -169,7 +169,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void setActiveEditor( TextEditor& );
 
     //* creates dialog to ask for LogEntry save.
-    AskForSaveDialog::ReturnCode askForSave( void );
+    AskForSaveDialog::ReturnCode askForSave();
 
     //* save to logbook
     /** logbook is updated with the content of the current entry,
@@ -204,69 +204,69 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* new entry action
-    QAction& newEntryAction( void ) const
+    QAction& newEntryAction() const
     { return *newEntryAction_; }
 
     //* previous entry action
-    QAction& previousEntryAction( void ) const
+    QAction& previousEntryAction() const
     { return *previousEntryAction_; }
 
     //* next entry action
-    QAction& nextEntryAction( void ) const
+    QAction& nextEntryAction() const
     { return *nextEntryAction_; }
 
     //* save
-    QAction& saveAction( void ) const
+    QAction& saveAction() const
     { return *saveAction_; }
 
     #if USE_ASPELL
     //* check spelling of current entry
-    QAction& spellcheckAction( void ) const
+    QAction& spellcheckAction() const
     { return *spellcheckAction_; }
     #endif
 
     //* entry information
-    QAction& entryInformationAction( void ) const
+    QAction& entryInformationAction() const
     { return *entryInformationAction_; }
 
     //* print
-    QAction& printAction( void ) const
+    QAction& printAction() const
     { return *printAction_; }
 
     //* print preview
-    QAction& printPreviewAction( void ) const
+    QAction& printPreviewAction() const
     { return *printPreviewAction_; }
 
     //* html
-    QAction& htmlAction( void ) const
+    QAction& htmlAction() const
     { return *htmlAction_; }
 
     //* split view horizontal
-    QAction& splitViewHorizontalAction( void ) const
+    QAction& splitViewHorizontalAction() const
     { return *splitViewHorizontalAction_; }
 
     //* split view vertical
-    QAction& splitViewVerticalAction( void ) const
+    QAction& splitViewVerticalAction() const
     { return *splitViewVerticalAction_; }
 
     //* split view vertical
-    QAction& cloneWindowAction( void ) const
+    QAction& cloneWindowAction() const
     { return *cloneWindowAction_; }
 
     //* close view
-    QAction& closeAction( void ) const
+    QAction& closeAction() const
     { return *closeAction_; }
 
     //* uniconify
-    QAction& uniconifyAction( void ) const
+    QAction& uniconifyAction() const
     { return *uniconifyAction_; }
 
     //* show keyword
-    QAction& showKeywordAction( void ) const
+    QAction& showKeywordAction() const
     { return *showKeywordAction_; }
 
     //* add hyperLink
-    QAction& insertLinkAction( void ) const
+    QAction& insertLinkAction() const
     { return *insertLinkAction_; }
 
     //@}
@@ -280,23 +280,23 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* emitted from TextDisplay when no match is found for find/replace request
-    void noMatchFound( void );
+    void noMatchFound();
 
     //* emitted from TextDisplay when no match is found for find/replace request
-    void matchFound( void );
+    void matchFound();
 
     //* emitted when selected line is not found
-    void lineNotFound( void );
+    void lineNotFound();
 
     //* emitted when selected line is found
-    void lineFound( void );
+    void lineFound();
 
     //@}
 
     public Q_SLOTS:
 
     //* update read-only state
-    void updateReadOnlyState( void );
+    void updateReadOnlyState();
 
     //* change window title
     void updateWindowTitle()
@@ -306,13 +306,13 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* find text from dialog
-    void findFromDialog( void );
+    void findFromDialog();
 
     //* replace text from dialog
-    void replaceFromDialog( void );
+    void replaceFromDialog();
 
     //* select line from dialog
-    void selectLineFromDialog( void );
+    void selectLineFromDialog();
 
     //@}
 
@@ -347,19 +347,19 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void _displayCursorPosition( const TextPosition& position );
 
     //* true if has associated main window
-    bool _hasMainWindow( void ) const;
+    bool _hasMainWindow() const;
 
     //* retrieve associated MainWindow
-    MainWindow& _mainWindow( void ) const;
+    MainWindow& _mainWindow() const;
 
     //* update text Widget from current entry
-    void _displayText( void );
+    void _displayText();
 
     //* update attachment list Widget from current entry
-    void _displayAttachments( void );
+    void _displayAttachments();
 
     //* true if status bar is set
-    bool _hasStatusBar( void ) const
+    bool _hasStatusBar() const
     { return (bool) statusBar_; }
 
     //* change keyword (and other widgets) visibility
@@ -371,46 +371,46 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void _save( bool updateSelection = true );
 
     //* Print current document
-    void _print( void );
+    void _print();
 
     //* Print current document
     void _print( LogEntryPrintHelper& );
 
     //* Print current document
-    void _printPreview( void );
+    void _printPreview();
 
     //* export to html
-    void _toHtml( void );
+    void _toHtml();
 
     //* creates a new entry
-    void _newEntry( void );
+    void _newEntry();
 
     //* splitter moved
-    void _splitterMoved( void );
+    void _splitterMoved();
 
     //* select previous entry
-    void _previousEntry( void );
+    void _previousEntry();
 
     //* select next entry
-    void _nextEntry( void );
+    void _nextEntry();
 
     //* show entry info
-    void _entryInformation( void );
+    void _entryInformation();
 
     //* Delete Current entry
-    void _deleteEntry( void );
+    void _deleteEntry();
 
     //* check spelling of current entry
-    void _spellCheck( void );
+    void _spellCheck();
 
     //* undo in focused editor (text/title/keyword)
-    void _undo( void );
+    void _undo();
 
     //* redo in focused editor (text/title/keyword);
-    void _redo( void );
+    void _redo();
 
     //* clone editor
-    void _cloneWindow( void );
+    void _cloneWindow();
 
     //* find
     void _find( TextSelection selection )
@@ -433,50 +433,50 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     { activeEditor().selectLine( value ); }
 
     //* restore focus on active display, when closing embedded dialog
-    void _restoreFocus( void )
+    void _restoreFocus()
     { activeEditor().setFocus(); }
 
     //* unlock read-only editors
-    void _unlock( void );
+    void _unlock();
 
     //* insert link
-    void _insertLink( void );
+    void _insertLink();
 
     //* insert link
-    void _editLink( void );
+    void _editLink();
 
     //* insert link
-    void _removeLink( void );
+    void _removeLink();
 
     //* view link
-    void _openLink( void );
+    void _openLink();
 
     //* view link
     void _openLink( QString );
 
     //* update replace in selection action
-    void _updateReplaceInSelection( void );
+    void _updateReplaceInSelection();
 
     //* read only actions
-    void _updateReadOnlyActions( void );
+    void _updateReadOnlyActions();
 
     //* update (enable/disable) save action
-    void _updateSaveAction( void );
+    void _updateSaveAction();
 
     //* update (enable/disable) redo action
-    void _updateUndoRedoActions( void );
+    void _updateUndoRedoActions();
 
     //* update (enable/disable) redo action
     void _updateUndoRedoActions( QWidget*, QWidget* );
 
     //* update (enable/disable) insert link action
-    void _updateInsertLinkActions( void );
+    void _updateInsertLinkActions();
 
     //* Set entry as modified, change window title
     void _textModified( bool );
 
     //* display cursor position
-    void _displayCursorPosition( void )
+    void _displayCursorPosition()
     { _displayCursorPosition( activeEditor().textPosition() ); }
 
     //* display cursor position
@@ -484,18 +484,18 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     { _displayCursorPosition( TextPosition( 0, new_position ) ); }
 
     //* close
-    void _close( void );
+    void _close();
 
     //* clone current file
-    void _splitView( void )
+    void _splitView()
     { _splitView( Qt::Vertical ); }
 
     //* clone current file horizontal
-    void _splitViewHorizontal( void )
+    void _splitViewHorizontal()
     { _splitView( Qt::Horizontal ); }
 
     //* clone current file horizontal
-    void _splitViewVertical( void )
+    void _splitViewVertical()
     { _splitView( Qt::Vertical ); }
 
     //* display focus changed
@@ -510,21 +510,21 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     private Q_SLOTS:
 
     //* configuration
-    void _updateConfiguration( void );
+    void _updateConfiguration();
 
     private:
 
     //* install actions
-    void _installActions( void );
+    void _installActions();
 
     //* create find dialog
-    void _createFindWidget( void );
+    void _createFindWidget();
 
     //* create replace dialog
-    void _createReplaceWidget( void );
+    void _createReplaceWidget();
 
     //* create select line widget
-    void _createSelectLineWidget( void );
+    void _createSelectLineWidget();
 
     //* if true, LogEntry associated to EditionWindow cannot be modified
     bool readOnly_ = false;

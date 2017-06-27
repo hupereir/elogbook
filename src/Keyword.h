@@ -30,7 +30,7 @@
 #include <QTextStream>
 
 //* log entry keyword
-class Keyword: private Base::Counter<Keyword>
+class Keyword final: private Base::Counter<Keyword>
 {
 
     public:
@@ -70,18 +70,18 @@ class Keyword: private Base::Counter<Keyword>
     QDomElement domElement( QDomDocument& ) const;
 
     //* full keyword
-    QString get( void ) const
+    QString get() const
     { return value_; }
 
     //* true if is root
-    bool isRoot( void ) const
+    bool isRoot() const
     { return value_.isEmpty() || value_ == QString( '/' ); }
 
     //* current keyword
-    QString current( void ) const;
+    QString current() const;
 
     //* parent keyword
-    Keyword parent( void ) const;
+    Keyword parent() const;
 
     /** true if this keyword is direct child of this one */
     bool isChild( const Keyword& keyword ) const;
@@ -95,7 +95,7 @@ class Keyword: private Base::Counter<Keyword>
     //@{
 
     //* clear
-    void clear( void )
+    void clear()
     { value_ = _format( QString() ); }
 
     //* set full keyword

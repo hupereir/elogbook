@@ -61,7 +61,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     { return nColumns; }
 
     //* mime type
-    QStringList mimeTypes( void ) const override;
+    QStringList mimeTypes() const override;
 
     //* mime data
     QMimeData* mimeData( const QModelIndexList& ) const override;
@@ -90,11 +90,11 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     private Q_SLOTS:
 
     //* keyword changed
-    void _requestEntryKeywordChanged( void )
+    void _requestEntryKeywordChanged()
     { emit entryKeywordChangeRequest( keywordChangedData_.newKeyword() ); }
 
     //* keyword changed
-    void _requestKeywordChanged( void )
+    void _requestKeywordChanged()
     { emit keywordChangeRequest( keywordChangedData_.oldKeyword(), keywordChangedData_.newKeyword() ); }
 
     private:
@@ -154,8 +154,8 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
         //*@name accessors
         //@{
 
-        Keyword oldKeyword( void ) const { return oldKeyword_; }
-        Keyword newKeyword( void ) const { return newKeyword_; }
+        Keyword oldKeyword() const { return oldKeyword_; }
+        Keyword newKeyword() const { return newKeyword_; }
 
         //@}
 

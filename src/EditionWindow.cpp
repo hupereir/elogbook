@@ -182,7 +182,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // actions
     _installActions();
-    auto application( Singleton::get().application<Application>() );
+    auto application( Base::Singleton::get().application<Application>() );
     addAction( &application->closeAction() );
 
     // toolbars
@@ -331,11 +331,11 @@ void EditionWindow::displayEntry( LogEntry *entry )
 }
 
 //____________________________________________
-TextEditor& EditionWindow::activeEditor( void )
+TextEditor& EditionWindow::activeEditor()
 { return *activeEditor_; }
 
 //____________________________________________
-const TextEditor& EditionWindow::activeEditor( void ) const
+const TextEditor& EditionWindow::activeEditor() const
 { return *activeEditor_; }
 
 //____________________________________________
@@ -374,7 +374,7 @@ void EditionWindow::setIsClosed( bool value )
 }
 
 //_____________________________________________
-QString EditionWindow::windowTitle( void ) const
+QString EditionWindow::windowTitle() const
 {
 
     Debug::Throw( "EditionWindow::windowTitle.\n" );
@@ -404,7 +404,7 @@ QString EditionWindow::windowTitle( void ) const
 }
 
 //_____________________________________________
-void EditionWindow::displayKeyword( void )
+void EditionWindow::displayKeyword()
 {
     Debug::Throw( "EditionWindow::displayKeyword.\n" );
 
@@ -415,7 +415,7 @@ void EditionWindow::displayKeyword( void )
 }
 
 //_____________________________________________
-void EditionWindow::displayTitle( void )
+void EditionWindow::displayTitle()
 {
     Debug::Throw( "EditionWindow::displayTitle.\n" );
 
@@ -426,7 +426,7 @@ void EditionWindow::displayTitle( void )
 }
 
 //_____________________________________________
-void EditionWindow::displayColor( void )
+void EditionWindow::displayColor()
 {
     Debug::Throw( "EditionWindow::DisplayColor.\n" );
 
@@ -584,7 +584,7 @@ void EditionWindow::setActiveEditor( TextEditor& editor )
 }
 
 //________________________________________________________________________
-AskForSaveDialog::ReturnCode EditionWindow::askForSave( void )
+AskForSaveDialog::ReturnCode EditionWindow::askForSave()
 {
 
     Debug::Throw( "EditionWindow::askForSave.\n" );
@@ -681,7 +681,7 @@ void EditionWindow::writeEntryToLogbook( bool updateSelection )
 }
 
 //_____________________________________________
-void EditionWindow::updateReadOnlyState( void )
+void EditionWindow::updateReadOnlyState()
 {
 
     Debug::Throw( "EditionWindow::updateReadOnlyState\n" );
@@ -694,7 +694,7 @@ void EditionWindow::updateReadOnlyState( void )
 }
 
 //_____________________________________________________________________
-void EditionWindow::findFromDialog( void )
+void EditionWindow::findFromDialog()
 {
     Debug::Throw( "EditionWindow::findFromDialog.\n" );
 
@@ -726,7 +726,7 @@ void EditionWindow::findFromDialog( void )
 }
 
 //_____________________________________________________________________
-void EditionWindow::replaceFromDialog( void )
+void EditionWindow::replaceFromDialog()
 {
     Debug::Throw( "EditionWindow::replaceFromDialog.\n" );
 
@@ -762,7 +762,7 @@ void EditionWindow::replaceFromDialog( void )
 }
 
 //________________________________________________
-void EditionWindow::selectLineFromDialog( void )
+void EditionWindow::selectLineFromDialog()
 {
 
     Debug::Throw( "TextEditor::selectLineFromDialog.\n" );
@@ -812,7 +812,7 @@ void EditionWindow::timerEvent( QTimerEvent* event )
 }
 
 //_____________________________________________
-void EditionWindow::_installActions( void )
+void EditionWindow::_installActions()
 {
     Debug::Throw( "EditionWindow::_installActions.\n" );
 
@@ -922,7 +922,7 @@ void EditionWindow::_installActions( void )
 
 
 //______________________________________________________________________
-void EditionWindow::_createFindWidget( void )
+void EditionWindow::_createFindWidget()
 {
 
     Debug::Throw( "EditionWindow::_createFindWidget.\n" );
@@ -944,7 +944,7 @@ void EditionWindow::_createFindWidget( void )
 }
 
 //_____________________________________________________________________
-void EditionWindow::_createReplaceWidget( void )
+void EditionWindow::_createReplaceWidget()
 {
     Debug::Throw( "EditionWindow::_CreateReplaceDialog.\n" );
     if( !( replaceWidget_ ) )
@@ -968,7 +968,7 @@ void EditionWindow::_createReplaceWidget( void )
 }
 
 //_________________________________________________________________
-void EditionWindow::_createSelectLineWidget( void )
+void EditionWindow::_createSelectLineWidget()
 {
     if( !selectLineWidget_ )
     {
@@ -1178,11 +1178,11 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
 }
 
 //_______________________________________________
-bool EditionWindow::_hasMainWindow( void ) const
+bool EditionWindow::_hasMainWindow() const
 { return Base::KeySet<MainWindow>( this ).size() > 0; }
 
 //_______________________________________________
-MainWindow& EditionWindow::_mainWindow( void ) const
+MainWindow& EditionWindow::_mainWindow() const
 {
     Debug::Throw( "EditionWindow::_mainWindow.\n" );
     Base::KeySet<MainWindow> mainWindows( this );
@@ -1191,7 +1191,7 @@ MainWindow& EditionWindow::_mainWindow( void ) const
 }
 
 //_____________________________________________
-void EditionWindow::_displayText( void )
+void EditionWindow::_displayText()
 {
     Debug::Throw( "EditionWindow::_displayText.\n" );
     if( !activeEditor_ ) return;
@@ -1208,7 +1208,7 @@ void EditionWindow::_displayText( void )
 }
 
 //_____________________________________________
-void EditionWindow::_displayAttachments( void )
+void EditionWindow::_displayAttachments()
 {
     Debug::Throw( "EditionWindow::_DisplayAttachments.\n" );
 
@@ -1270,7 +1270,7 @@ void EditionWindow::_save( bool updateSelection )
 }
 
 //___________________________________________________________
-void EditionWindow::_print( void )
+void EditionWindow::_print()
 {
     Debug::Throw( "EditionWindow::_print.\n" );
 
@@ -1330,7 +1330,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
 }
 
 //___________________________________________________________
-void EditionWindow::_printPreview( void )
+void EditionWindow::_printPreview()
 {
     Debug::Throw( "EditionWindow::_printPreview.\n" );
 
@@ -1353,7 +1353,7 @@ void EditionWindow::_printPreview( void )
 }
 
 //___________________________________________________________
-void EditionWindow::_toHtml( void )
+void EditionWindow::_toHtml()
 {
     Debug::Throw( "EditionWindow::_toHtml.\n" );
 
@@ -1412,7 +1412,7 @@ void EditionWindow::_toHtml( void )
 }
 
 //_____________________________________________
-void EditionWindow::_newEntry( void )
+void EditionWindow::_newEntry()
 {
 
     Debug::Throw( "EditionWindow::_newEntry.\n" );
@@ -1435,14 +1435,14 @@ void EditionWindow::_newEntry( void )
 }
 
 //_____________________________________________
-void EditionWindow::_splitterMoved( void )
+void EditionWindow::_splitterMoved()
 {
     Debug::Throw( "MainWindow::_splitterMoved.\n" );
     resizeTimer_.start( 200, this );
 }
 
 //_______________________________________________
-void EditionWindow::_previousEntry( void )
+void EditionWindow::_previousEntry()
 {
     Debug::Throw( "EditionWindow::_previousEntry.\n" );
 
@@ -1455,7 +1455,7 @@ void EditionWindow::_previousEntry( void )
 }
 
 //_______________________________________________
-void EditionWindow::_nextEntry( void )
+void EditionWindow::_nextEntry()
 {
     Debug::Throw( "EditionWindow::_nextEntry.\n" );
 
@@ -1468,7 +1468,7 @@ void EditionWindow::_nextEntry( void )
 }
 
 //_____________________________________________
-void EditionWindow::_entryInformation( void )
+void EditionWindow::_entryInformation()
 {
 
     Debug::Throw( "EditionWindow::_EntryInfo.\n" );
@@ -1486,7 +1486,7 @@ void EditionWindow::_entryInformation( void )
 }
 
 //_____________________________________________
-void EditionWindow::_undo( void )
+void EditionWindow::_undo()
 {
     Debug::Throw( "EditionWindow::_undo.\n" );
     if( activeEditor_->QWidget::hasFocus() ) activeEditor_->document()->undo();
@@ -1496,7 +1496,7 @@ void EditionWindow::_undo( void )
 }
 
 //_____________________________________________
-void EditionWindow::_redo( void )
+void EditionWindow::_redo()
 {
     Debug::Throw( "EditionWindow::_redo.\n" );
     if( activeEditor_->QWidget::hasFocus() ) activeEditor_->document()->redo();
@@ -1506,7 +1506,7 @@ void EditionWindow::_redo( void )
 }
 
 //_____________________________________________
-void EditionWindow::_insertLink( void )
+void EditionWindow::_insertLink()
 {
     Debug::Throw( "EditionWindow::_insertLink.\n" );
 
@@ -1533,7 +1533,7 @@ void EditionWindow::_insertLink( void )
 }
 
 //_____________________________________________
-void EditionWindow::_editLink( void )
+void EditionWindow::_editLink()
 {
     Debug::Throw( "EditionWindow::_editLink.\n" );
     QTextCursor cursor( activeEditor_->cursorAtContextMenu() );
@@ -1564,7 +1564,7 @@ void EditionWindow::_editLink( void )
 }
 
 //_____________________________________________
-void EditionWindow::_removeLink( void )
+void EditionWindow::_removeLink()
 {
     Debug::Throw( "EditionWindow::_removeLink.\n" );
     QTextCursor cursor( activeEditor_->cursorAtContextMenu() );
@@ -1599,7 +1599,7 @@ void EditionWindow::_removeLink( void )
     }
 }
 //_____________________________________________
-void EditionWindow::_openLink( void )
+void EditionWindow::_openLink()
 {
     Debug::Throw( "EditionWindow::_openLink.\n" );
     QString anchor( activeEditor_->anchor() );
@@ -1622,7 +1622,7 @@ void EditionWindow::_openLink( QString anchor )
 }
 
 //_____________________________________________
-void EditionWindow::_deleteEntry( void )
+void EditionWindow::_deleteEntry()
 {
 
     Debug::Throw( "EditionWindow::_deleteEntry.\n" );
@@ -1647,7 +1647,7 @@ void EditionWindow::_deleteEntry( void )
 }
 
 //_____________________________________________
-void EditionWindow::_spellCheck( void )
+void EditionWindow::_spellCheck()
 {
     #if USE_ASPELL
     Debug::Throw( "EditionWindow::_spellCheck.\n" );
@@ -1670,7 +1670,7 @@ void EditionWindow::_spellCheck( void )
 
 
 //_____________________________________________
-void EditionWindow::_cloneWindow( void )
+void EditionWindow::_cloneWindow()
 {
 
     Debug::Throw( "EditionWindow::_cloneWindow.\n" );
@@ -1695,7 +1695,7 @@ void EditionWindow::_cloneWindow( void )
 }
 
 //_____________________________________________
-void EditionWindow::_unlock( void )
+void EditionWindow::_unlock()
 {
 
     Debug::Throw( "EditionWindow::_unlock.\n" );
@@ -1711,11 +1711,11 @@ void EditionWindow::_unlock( void )
 }
 
 //_____________________________________________
-void EditionWindow::_updateReplaceInSelection( void )
+void EditionWindow::_updateReplaceInSelection()
 { if( replaceWidget_ ) replaceWidget_->enableReplaceInSelection( activeEditor().hasSelection() ); }
 
 //_____________________________________________
-void EditionWindow::_updateReadOnlyActions( void )
+void EditionWindow::_updateReadOnlyActions()
 {
 
     Debug::Throw( "EditionWindow::_updateReadOnlyActions.\n" );
@@ -1759,11 +1759,11 @@ void EditionWindow::_updateReadOnlyActions( void )
 }
 
 //_____________________________________________
-void EditionWindow::_updateSaveAction( void )
+void EditionWindow::_updateSaveAction()
 { saveAction_->setEnabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbookIsReadOnly() ) && modified() ); }
 
 //_____________________________________________
-void EditionWindow::_updateUndoRedoActions( void )
+void EditionWindow::_updateUndoRedoActions()
 {
 
     Debug::Throw( "EditionWindow::_updateRedoAction.\n" );
@@ -1810,7 +1810,7 @@ void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 }
 
 //_____________________________________________
-void EditionWindow::_updateInsertLinkActions( void )
+void EditionWindow::_updateInsertLinkActions()
 {
     Debug::Throw( "EditionWindow::_updateInsertLinkActions.\n" );
     const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbookIsReadOnly() ) && activeEditor_->textCursor().hasSelection() );
@@ -1836,7 +1836,7 @@ void EditionWindow::_textModified( bool state )
 }
 
 //_____________________________________________
-void EditionWindow::_close( void )
+void EditionWindow::_close()
 {
     Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
     Base::KeySet< Private::LocalTextEditor > editors( this );
@@ -1876,7 +1876,7 @@ void EditionWindow::_toggleShowKeyword( bool value )
 }
 
 //_____________________________________________
-void EditionWindow::_updateConfiguration( void )
+void EditionWindow::_updateConfiguration()
 {
 
     // one should check whether this is needed or not.
@@ -1896,7 +1896,7 @@ Private::LocalTextEditor::LocalTextEditor( QWidget* parent ):
     _installActions();
 
     // configuration
-    auto application( Singleton::get().application<Application>() );
+    auto application( Base::Singleton::get().application<Application>() );
     connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
 
@@ -1961,11 +1961,11 @@ void Private::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu,
 }
 
 //_____________________________________________
-void Private::LocalTextEditor::_updateConfiguration( void )
+void Private::LocalTextEditor::_updateConfiguration()
 { autoInsertLinks_ = XmlOptions::get().get<bool>( "AUTO_INSERT_LINK" ); }
 
 //___________________________________________________________________________________
-void Private::LocalTextEditor::_installActions( void )
+void Private::LocalTextEditor::_installActions()
 {
     Debug::Throw( "Private::LocalTextEditor::_installActions.\n" );
     addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
@@ -2007,7 +2007,7 @@ void Private::ColorWidget::setColor( const QColor& color )
 }
 
 //___________________________________________________________________________________
-QSize Private::ColorWidget::sizeHint( void ) const
+QSize Private::ColorWidget::sizeHint() const
 {
     // the const_cast is use to temporarily remove the menu
     // in order to keep the size of the toolbutton minimum
@@ -2019,7 +2019,7 @@ QSize Private::ColorWidget::sizeHint( void ) const
 }
 
 //___________________________________________________________________________________
-QSize Private::ColorWidget::minimumSizeHint( void ) const
+QSize Private::ColorWidget::minimumSizeHint() const
 {
     // this is an ugly hack to keep the size of the toolbutton minimum
     QMenu* menu( ColorWidget::menu() );

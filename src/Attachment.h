@@ -95,11 +95,11 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     //@{
 
     //* validity
-    bool isValid( void ) const
+    bool isValid() const
     { return isValid_; }
 
     //* url
-    bool isUrl( void ) const
+    bool isUrl() const
     { return isUrl_; }
 
     //* link state
@@ -111,41 +111,41 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     };
 
     //* link
-    LinkState isLink( void ) const
+    LinkState isLink() const
     { return isLink_; }
 
     //* retrieves local file size
-    double size( void ) const
+    double size() const
     { return size_; }
 
     //* retrieves local file size
-    QString sizeString( void ) const
+    QString sizeString() const
     { return sizeString_; }
 
     //* retrieves associated entry
     LogEntry* entry() const;
 
     //* file creation
-    TimeStamp creation( void ) const
+    TimeStamp creation() const
     { return creation_; }
 
     //* retrieves file last modification
-    TimeStamp modification( void ) const
+    TimeStamp modification() const
     { return modification_; }
 
     //* retrieves original file name
-    const File& sourceFile( void ) const
+    const File& sourceFile() const
     { return sourceFile_; }
 
     //* retrieves attachment file name
-    const File& file( void ) const
+    const File& file() const
     { return file_; }
 
     //* retrieves attachment short file name
-    File shortFile( void ) const;
+    File shortFile() const;
 
     //* retrieves attachment comments
-    const QString& comments( void ) const
+    const QString& comments() const
     { return comments_; }
 
     //@}
@@ -178,10 +178,10 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     }
 
     //* read file size
-    void updateSize( void );
+    void updateSize();
 
     //* update time stamps
-    bool updateTimeStamps( void );
+    bool updateTimeStamps();
 
     //* appends string to attachment comments
     bool setComments( const QString& buf )

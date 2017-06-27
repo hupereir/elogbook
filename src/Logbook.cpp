@@ -56,7 +56,7 @@ Logbook::Logbook( File file ):
 }
 
 //_________________________________
-Logbook::~Logbook( void )
+Logbook::~Logbook()
 {
     Debug::Throw( "Logbook::~Logbook.\n" );
 
@@ -79,7 +79,7 @@ void Logbook::setUseCompression( bool value )
 }
 
 //_________________________________
-bool Logbook::read( void )
+bool Logbook::read()
 {
 
     Debug::Throw( "Logbook::read.\n" );
@@ -436,7 +436,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
 }
 
 //_________________________________
-XmlError::List Logbook::xmlErrors( void ) const
+XmlError::List Logbook::xmlErrors() const
 {
     Debug::Throw( "Logbook::xmlErrors.\n" );
     XmlError::List out;
@@ -448,7 +448,7 @@ XmlError::List Logbook::xmlErrors( void ) const
 }
 
 //_________________________________
-Logbook::List Logbook::children( void ) const
+Logbook::List Logbook::children() const
 {
     List out;
     for( const auto& logbook:children_ )
@@ -462,7 +462,7 @@ Logbook::List Logbook::children( void ) const
 }
 
 //_________________________________
-Logbook* Logbook::latestChild( void )
+Logbook* Logbook::latestChild()
 {
 
     Debug::Throw( "Logbook::latestChild.\n" );
@@ -512,7 +512,7 @@ Logbook* Logbook::latestChild( void )
 }
 
 //_________________________________
-Base::KeySet<LogEntry> Logbook::entries( void ) const
+Base::KeySet<LogEntry> Logbook::entries() const
 {
 
     Base::KeySet<LogEntry> out( this );
@@ -523,7 +523,7 @@ Base::KeySet<LogEntry> Logbook::entries( void ) const
 }
 
 //_________________________________
-Base::KeySet<Attachment> Logbook::attachments( void ) const
+Base::KeySet<Attachment> Logbook::attachments() const
 {
 
     Base::KeySet<Attachment> out;
@@ -551,7 +551,7 @@ void Logbook::truncateRecentEntriesList( int maxCount )
 }
 
 //_________________________________
-void Logbook::removeEmptyChildren( void )
+void Logbook::removeEmptyChildren()
 {
     Debug::Throw( "Logbook::removeEmptyChildren.\n" );
 
@@ -576,7 +576,7 @@ void Logbook::removeEmptyChildren( void )
 }
 
 //_________________________________
-QList<LogEntry*> Logbook::recentEntries( void ) const
+QList<LogEntry*> Logbook::recentEntries() const
 {
 
     QList<LogEntry*> out;
@@ -639,7 +639,7 @@ void Logbook::setFile( File file, bool recursive )
 }
 
 //_________________________________
-bool Logbook::needsBackup( void ) const
+bool Logbook::needsBackup() const
 {
     Debug::Throw( "Logbook::needsBackup.\n" );
     if( !backup().isValid() ) return true;
@@ -647,7 +647,7 @@ bool Logbook::needsBackup( void ) const
 }
 
 //_________________________________
-File Logbook::backupFilename( void ) const
+File Logbook::backupFilename() const
 {
     Debug::Throw( "Logbook::MakeBackupFilename.\n" );
     auto head( File( file_ ).truncatedName() );
@@ -738,7 +738,7 @@ void Logbook::setModification( const TimeStamp& stamp )
 }
 
 //_________________________________
-bool Logbook::modified( void ) const
+bool Logbook::modified() const
 {
     Debug::Throw( "Logbook::modified.\n" );
 

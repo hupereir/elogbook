@@ -73,7 +73,7 @@ void LogEntryPrintSelectionWidget::write( Options& options ) const
 { options.set<int>( optionName(), Base::toIntegralType(mode()) ); }
 
 //_________________________________________________________________
-LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode( void ) const
+LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode() const
 {
     for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { if( iter.value()->isChecked() ) return iter.key(); }

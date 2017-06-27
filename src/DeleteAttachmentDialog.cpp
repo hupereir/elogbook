@@ -74,5 +74,5 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
 }
 
 //______________________________________________________
-DeleteAttachmentDialog::Action DeleteAttachmentDialog::action( void ) const
+DeleteAttachmentDialog::Action DeleteAttachmentDialog::action() const
 { return fromDiskButton_->isChecked() ? DeleteFromDisk:DeleteFromLogbook; }

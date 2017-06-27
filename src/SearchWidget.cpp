@@ -125,7 +125,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     { connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_saveMask()) ); }
 
     // configuration
-    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
     _updateConfiguration();
 
 }
@@ -138,14 +138,14 @@ void SearchWidget::setText( const QString& text )
 }
 
 //________________________________________________________________________
-void SearchWidget::matchFound( void )
+void SearchWidget::matchFound()
 {
     allEntriesButton_->setEnabled(true);
     _restorePalette();
 }
 
 //________________________________________________________________________
-void SearchWidget::noMatchFound( void )
+void SearchWidget::noMatchFound()
 {
     if( !editor_->currentText().isEmpty() )
     { editor_->setPalette( notFoundPalette_ ); }
@@ -167,7 +167,7 @@ void SearchWidget::changeEvent( QEvent* event )
 }
 
 //___________________________________________________________
-void SearchWidget::_restorePalette( void )
+void SearchWidget::_restorePalette()
 { editor_->setPalette( palette() ); }
 
 //___________________________________________________________
@@ -175,7 +175,7 @@ void SearchWidget::_updateFindButton( const QString& value )
 { findButton_->setEnabled( !value.isEmpty() ); }
 
 //___________________________________________________________
-void SearchWidget::_updateConfiguration( void )
+void SearchWidget::_updateConfiguration()
 {
 
     Debug::Throw( "SearchWidget::_updateConfiguration.\n" );
@@ -191,7 +191,7 @@ void SearchWidget::_updateConfiguration( void )
 }
 
 //___________________________________________________________
-void SearchWidget::_saveMask( void )
+void SearchWidget::_saveMask()
 {
 
     Debug::Throw( "SearchWidget::_saveMask.\n" );
@@ -206,7 +206,7 @@ void SearchWidget::_saveMask( void )
 }
 
 //___________________________________________________________
-void SearchWidget::_selectionRequest( void )
+void SearchWidget::_selectionRequest()
 {
     Debug::Throw( "SearchWidget::_selectionRequest.\n" );
 
@@ -221,7 +221,7 @@ void SearchWidget::_selectionRequest( void )
 }
 
 //________________________________________________________________________
-void SearchWidget::_updateNotFoundPalette( void )
+void SearchWidget::_updateNotFoundPalette()
 {
     notFoundPalette_ = palette();
     notFoundPalette_.setColor( QPalette::Base,

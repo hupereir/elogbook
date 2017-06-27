@@ -45,19 +45,19 @@ class NewAttachmentDialog: public CustomDialog
     //@{
 
     //* filename
-    File file( void ) const;
+    File file() const;
 
     //* destination directory
-    File destinationDirectory( void ) const;
+    File destinationDirectory() const;
 
     //* url
-    bool isUrl( void ) const;
+    bool isUrl() const;
 
     //* Action
-    Attachment::Command action( void ) const;
+    Attachment::Command action() const;
 
     //* comments
-    QString comments( void ) const;
+    QString comments() const;
 
     //@}
 

@@ -158,23 +158,23 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
 }
 
 //____________________________________________________________________________
-bool OpenAttachmentDialog::isCommandValid( void ) const
+bool OpenAttachmentDialog::isCommandValid() const
 { return comboBox_->isItemValid(); }
 
 //____________________________________________________________________________
-bool OpenAttachmentDialog::isCommandDefault( void ) const
+bool OpenAttachmentDialog::isCommandDefault() const
 { return comboBox_->currentIndex() == 0; }
 
 //______________________________________________________
-QString OpenAttachmentDialog::command( void ) const
+QString OpenAttachmentDialog::command() const
 { return comboBox_->command(); }
 
 //______________________________________________________
-OpenAttachmentDialog::Action OpenAttachmentDialog::action( void ) const
+OpenAttachmentDialog::Action OpenAttachmentDialog::action() const
 { return openRadioButton_->isChecked() ? Open:SaveAs; }
 
 //____________________________________________________________________________
-void OpenAttachmentDialog::_saveCommands( void )
+void OpenAttachmentDialog::_saveCommands()
 {
 
     const QString optionName = "OPEN_ATTACHMENT_APPLICATIONS";

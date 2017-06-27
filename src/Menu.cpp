@@ -61,7 +61,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     menu->addAction( &mainWindow->openAction() );
 
     // file menu
-    recentFilesMenu_ = new RecentFilesMenu( this, Singleton::get().application<Application>()->recentFiles() );
+    recentFilesMenu_ = new RecentFilesMenu( this, Base::Singleton::get().application<Application>()->recentFiles() );
     connect( recentFilesMenu_, SIGNAL(fileSelected(FileRecord)), mainWindow, SLOT(open(FileRecord)) );
     menu->addMenu( recentFilesMenu_ );
 
@@ -96,7 +96,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
     menu->addSeparator();
     if( editionWindow ) menu->addAction( &editionWindow->closeAction() );
 
-    auto application( Singleton::get().application<Application>() );
+    auto application( Base::Singleton::get().application<Application>() );
     menu->addAction( &application->closeAction() );
 
     // edition menu
@@ -157,7 +157,7 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 }
 
 //_______________________________________________
-void Menu::_updateRecentEntriesMenu( void )
+void Menu::_updateRecentEntriesMenu()
 {
     Debug::Throw( "Menu::_updateRecentEntriesMenu.\n" );
 
@@ -165,7 +165,7 @@ void Menu::_updateRecentEntriesMenu( void )
     recentEntriesMenu_->clear();
     actions_.clear();
 
-    MainWindow &mainWindow( Singleton::get().application<Application>()->mainWindow() );
+    MainWindow &mainWindow( Base::Singleton::get().application<Application>()->mainWindow() );
     if( !mainWindow.logbook() ) return;
 
     for( const auto& entry:mainWindow.logbook()->recentEntries() )
@@ -189,7 +189,7 @@ void Menu::_selectEntry( QAction* action )
 }
 
 //_______________________________________________
-void Menu::_updateEditorMenu( void )
+void Menu::_updateEditorMenu()
 {
     Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
 
@@ -197,8 +197,8 @@ void Menu::_updateEditorMenu( void )
     // retrieve parent editFream if any
     EditionWindow* editionWindow = qobject_cast<EditionWindow*>( parentWidget() );
 
-    MainWindow &mainWindow( Singleton::get().application<Application>()->mainWindow() );
-    AttachmentWindow &attachmentWindow( Singleton::get().application<Application>()->attachmentWindow() );
+    MainWindow &mainWindow( Base::Singleton::get().application<Application>()->mainWindow() );
+    AttachmentWindow &attachmentWindow( Base::Singleton::get().application<Application>()->attachmentWindow() );
 
     // editor attachments and logbook information
     if( editionWindow ) { windowsMenu_->addAction( &mainWindow.uniconifyAction() ); }
@@ -245,7 +245,7 @@ void Menu::_updateEditorMenu( void )
 
 
 //_______________________________________________
-void Menu::_updatePreferenceMenu( void )
+void Menu::_updatePreferenceMenu()
 {
 
     Debug::Throw( "Menu::_updatePreferenceMenu.\n" );
@@ -253,7 +253,7 @@ void Menu::_updatePreferenceMenu( void )
     preferenceMenu_->clear();
 
     // Settings menu
-    auto application( Singleton::get().application<Application>() );
+    auto application( Base::Singleton::get().application<Application>() );
 
     // additional Settings in case parent is a selection frame
     auto mainWindow = qobject_cast<MainWindow*>( parentWidget() );

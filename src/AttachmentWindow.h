@@ -42,14 +42,14 @@ class AttachmentWindow: public CustomDialog
     explicit AttachmentWindow( QWidget* = nullptr );
 
     //* display widget
-    void show( void );
+    void show();
 
     //* retrieve associated List
     AttachmentFrame& frame()
     { return *frame_; }
 
     //* uniconify window
-    QAction& uniconifyAction( void )
+    QAction& uniconifyAction()
     { return *uniconifyAction_; }
 
     Q_SIGNALS:
@@ -59,7 +59,7 @@ class AttachmentWindow: public CustomDialog
     public Q_SLOTS:
 
     //* uniconify
-    void uniconify( void );
+    void uniconify();
 
     protected Q_SLOTS:
 

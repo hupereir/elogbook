@@ -92,110 +92,110 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     explicit Logbook( File = File() );
 
     //* destructor
-    ~Logbook( void ) override;
+    ~Logbook() override;
 
     //*@name accessors
     //@{
 
     //* retrieve Xml parsing errors [recursive]
-    XmlError::List xmlErrors( void ) const;
+    XmlError::List xmlErrors() const;
 
     //* shortcut for logbook children list
     using List = QList< Logbook* >;
 
     //* retrieves list of all child logbook [recursive]
-    List children( void ) const;
+    List children() const;
 
     //* retrieves first not full child.
-    Logbook* latestChild( void );
+    Logbook* latestChild();
 
     //* retrieve all associated entries [recursive]
-    Base::KeySet<LogEntry> entries( void ) const;
+    Base::KeySet<LogEntry> entries() const;
 
     //* recent entries
-    QList<LogEntry*> recentEntries( void ) const;
+    QList<LogEntry*> recentEntries() const;
 
     //* retrieve all associated attachments [recursive]
-    Base::KeySet<Attachment> attachments( void ) const;
+    Base::KeySet<Attachment> attachments() const;
 
     //* returns true if logbook is empty (no recursive entries found)
-    bool empty( void ) const
+    bool empty() const
     { return entries().empty(); }
 
     //* logbook filename
-    File file( void ) const
+    File file() const
     { return file_; }
 
     //* parent logbook filename
-    File parentFile( void ) const
+    File parentFile() const
     { return parentFile_; }
 
     //* logbook title
-    QString title( void ) const
+    QString title() const
     { return title_; }
 
     //* logbook last author
-    QString author( void ) const
+    QString author() const
     { return author_; }
 
     //* retrieves attachment comments
-    QString comments( void ) const
+    QString comments() const
     { return comments_; }
 
     //* logbook directory
-    File directory( void ) const
+    File directory() const
     { return directory_; }
 
     //* checks if logbook directory is set, exists and is a directory
-    bool checkDirectory( void ) const
+    bool checkDirectory() const
     { return File( directory_ ).isDirectory(); }
 
     //* tells if logbook or children has been modified since last call [recursive]
-    bool modified( void ) const;
+    bool modified() const;
 
     //* read only
-    bool isReadOnly( void ) const
+    bool isReadOnly() const
     { return readOnly_; }
 
     //* backup
-    bool isBackup( void ) const
+    bool isBackup() const
     { return isBackup_; }
 
     //* creation TimeStamp
-    TimeStamp creation( void ) const
+    TimeStamp creation() const
     { return creation_; }
 
     //* modification TimeStamp
-    TimeStamp modification( void ) const
+    TimeStamp modification() const
     { return modification_; }
 
     //* backup TimeStamp
-    TimeStamp backup( void ) const
+    TimeStamp backup() const
     { return backup_; }
 
     //* saved TimeStamp
-    TimeStamp saved( void ) const
+    TimeStamp saved() const
     { return saved_; }
 
     /** \brief
     number of entries in logbook as read from xml
     it is not supposed to be synchronized with current list of entries
     */
-    int xmlEntries( void ) const
+    int xmlEntries() const
     { return xmlEntries_; }
 
     /** \brief
     number of children in logbook as read from xml
     it is not supposed to be synchronized with current list of children
     */
-    int xmlChildren( void ) const
+    int xmlChildren() const
     { return xmlChildren_; }
 
     //* true if last backup is too old
-    bool needsBackup( void ) const;
+    bool needsBackup() const;
 
     //* generate tagged backup filename
-    File backupFilename( void ) const;
+    File backupFilename() const;
 
     //* sort method enumeration
     enum SortMethod
@@ -210,15 +210,15 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     };
 
     //* retrieves current sort method associated to oldest parent
-    SortMethod sortMethod( void )
+    SortMethod sortMethod()
     { return sortMethod_; }
 
     //* sort order
-    int sortOrder( void ) const
+    int sortOrder() const
     { return sortOrder_; }
 
     //* backup files
-    const Backup::List& backupFiles( void ) const
+    const Backup::List& backupFiles() const
     { return backupFiles_; }
 
     //@}
@@ -234,7 +234,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     reads all xml based objects in the input file and chlids,
     if any [recursive]
     */
-    bool read( void );
+    bool read();
 
     //* writes all xml based objects in given|input file, if any [recursive]
     bool write( File = File() );
@@ -251,7 +251,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     void truncateRecentEntriesList( int );
 
     //* remove empty children logbooks from list [recursive]
-    void removeEmptyChildren( void );
+    void removeEmptyChildren();
 
     //* recent entries
     void addRecentEntry( const LogEntry* );

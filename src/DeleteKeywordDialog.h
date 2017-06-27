@@ -44,15 +44,15 @@ class DeleteKeywordDialog: public CustomDialog
     };
 
     //* get action
-    Action action( void ) const
+    Action action() const
     { return moveRadioButton_->isChecked() ? MoveEntries:DeleteEntries; }
 
     //* move netries
-    bool moveEntries( void ) const
+    bool moveEntries() const
     { return action() == MoveEntries; }
 
     //* delete entries
-    bool deleteEntries( void ) const
+    bool deleteEntries() const
     { return action() == DeleteEntries; }
 
     private:

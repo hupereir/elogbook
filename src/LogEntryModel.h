@@ -67,7 +67,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const override;
 
     //* mime type
-    QStringList mimeTypes( void ) const override;
+    QStringList mimeTypes() const override;
 
     //* mime data
     QMimeData* mimeData( const QModelIndexList& ) const override;
@@ -77,11 +77,11 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     { return nColumns; }
 
     //* enable edition
-    bool editionEnabled( void ) const
+    bool editionEnabled() const
     { return editionEnabled_; }
 
     //* edition index
-    const QModelIndex& editionIndex( void ) const
+    const QModelIndex& editionIndex() const
     { return editionIndex_; }
 
     //@}
@@ -118,10 +118,10 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     private Q_SLOTS:
 
     //* update configuration
-    void _updateConfiguration( void );
+    void _updateConfiguration();
 
     //* used to disable edition when model is changed while editing
-    void _disableEdition( void )
+    void _disableEdition()
     { setEditionEnabled( false ); }
 
     private:
@@ -130,16 +130,16 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     using IconCache = QMap<Base::Color, QIcon>;
 
     //* color icon cache
-    static IconCache& _icons( void );
+    static IconCache& _icons();
 
     //* reset icons
-    void _resetIcons( void );
+    void _resetIcons();
 
     //* create icon for a given color
     const QIcon& _icon( const Base::Color& ) const;
 
     //* attachment icon
-    const QIcon& _attachmentIcon( void ) const;
+    const QIcon& _attachmentIcon() const;
 
     //* used to sort IconCaches
     class SortFTor: public ItemModel::SortFTor

@@ -46,43 +46,43 @@ class Application: public BaseApplication, private Base::Counter<Application>
     explicit Application( CommandLineArguments );
 
     //* application manager
-    bool initApplicationManager( void ) override;
+    bool initApplicationManager() override;
 
     //* create all widgets
-    bool realizeWidget( void ) override;
+    bool realizeWidget() override;
 
     //* file list
-    FileList& recentFiles( void ) const
+    FileList& recentFiles() const
     { return *recentFiles_; }
 
     //* retrieve AttachmentWindow singleton
-    AttachmentWindow & attachmentWindow( void ) const
+    AttachmentWindow & attachmentWindow() const
     { return *attachmentWindow_; }
 
     //* retrieve MainWindow singleton
-    MainWindow& mainWindow( void ) const
+    MainWindow& mainWindow() const
     { return *mainWindow_; }
 
     //* scratch files
-    ScratchFileMonitor& scratchFileMonitor( void ) const
+    ScratchFileMonitor& scratchFileMonitor() const
     { return *scratchFileMonitor_; }
 
     //*@name application information
     //@{
 
     //* command line help
-    void usage( void ) const override;
+    void usage() const override;
 
     //* application name
-    QString applicationName( void ) const override
+    QString applicationName() const override
     { return "Elogbook"; }
 
     //* application name
-    QIcon applicationIcon( void ) const override
+    QIcon applicationIcon() const override
     { return IconEngine::get( ":/elogbook.png" ); }
 
     // application version
-    QString applicationVersion( void ) const override
+    QString applicationVersion() const override
     { return VERSION; }
 
     //@}
@@ -90,10 +90,10 @@ class Application: public BaseApplication, private Base::Counter<Application>
     protected Q_SLOTS:
 
     //* configuration
-    void _configuration( void ) override;
+    void _configuration() override;
 
     //* exit safely
-    void _exit( void );
+    void _exit();
 
     //* process request from application manager
     bool _processCommand( Server::ServerCommand ) override;
@@ -101,7 +101,7 @@ class Application: public BaseApplication, private Base::Counter<Application>
     private Q_SLOTS:
 
     //* update configuration
-    void _updateConfiguration( void );
+    void _updateConfiguration();
 
     private:
 

@@ -58,7 +58,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 };
 
 //________________________________________
-void AttachmentWindow::show( void )
+void AttachmentWindow::show()
 {
     Debug::Throw( "AttachmentWindow::show.\n" );
     centerOnWidget( qApp->activeWindow());
@@ -67,7 +67,7 @@ void AttachmentWindow::show( void )
 }
 
 //________________________________________
-void AttachmentWindow::uniconify( void )
+void AttachmentWindow::uniconify()
 {
     CustomDialog::uniconify();
     frame_->list().setFocus();

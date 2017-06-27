@@ -41,23 +41,23 @@ class LogbookInformationDialog: public CustomDialog
     explicit LogbookInformationDialog( QWidget* parent, Logbook* logbook  );
 
     //* title
-    QString title( void ) const
+    QString title() const
     { return title_->text(); }
 
     //* author
-    QString author( void ) const
+    QString author() const
     { return author_->text(); }
 
     //* attachment directory
-    File attachmentDirectory( void ) const
+    File attachmentDirectory() const
     { return File( attachmentDirectory_->editor().text() ); }
 
     //* read only
-    bool readOnly( void ) const
+    bool readOnly() const
     { return readOnlyCheckBox_->isChecked(); }
 
     //* comments
-    QString comments( void ) const
+    QString comments() const
     { return comments_->toPlainText(); }
 
     private:

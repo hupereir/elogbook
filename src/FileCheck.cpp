@@ -69,7 +69,7 @@ void FileCheck::registerLogbook( Logbook* logbook )
 }
 
 //______________________________________________________
-void FileCheck::clear( void )
+void FileCheck::clear()
 {
 
     Debug::Throw( "FileCheck::clear.\n" );

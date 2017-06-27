@@ -62,56 +62,56 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     explicit MainWindow( QWidget* = nullptr );
 
     //* destructor
-    ~MainWindow( void ) override;
+    ~MainWindow() override;
 
     //*@name accessors
     //@{
 
     //* retrive menu
-    Menu& menu( void ) const
+    Menu& menu() const
     { return *menu_; }
 
     //* retrive state frame
-    ProgressStatusBar& statusBar( void ) const
+    ProgressStatusBar& statusBar() const
     { return *statusbar_; }
 
     //* true if main window has logbook
-    bool hasLogbook( void ) const
+    bool hasLogbook() const
     { return logbook_ != nullptr; }
 
     //* returns pointer to selected Logbook, if any
-    Logbook* logbook( void ) const
+    Logbook* logbook() const
     { return logbook_; }
 
     //* true if logbook exists and is readonly
-    bool logbookIsReadOnly( void )
+    bool logbookIsReadOnly()
     { return logbook_ && logbook_->isReadOnly(); }
 
     //* true if logbook exists and is modified
-    bool logbookIsModified( void )
+    bool logbookIsModified()
     { return logbook_ && logbook_->modified(); }
 
     //* retrieve working directory
-    File workingDirectory( void ) const
+    File workingDirectory() const
     { return workingDirectory_; }
 
     //* return keyword list
-    TreeView& keywordList( void ) const
+    TreeView& keywordList() const
     { return *keywordList_; }
 
     //* log entry list
-    TreeView& logEntryList( void ) const
+    TreeView& logEntryList() const
     { return *entryList_; }
 
     //* current keyword
-    Keyword currentKeyword( void ) const;
+    Keyword currentKeyword() const;
 
     //* keyword toolbar
-    CustomToolBar& keywordToolBar( void ) const
+    CustomToolBar& keywordToolBar() const
     { return *keywordToolBar_; }
 
     //* entry toolbar
-    CustomToolBar& entryToolBar( void ) const
+    CustomToolBar& entryToolBar() const
     { return *entryToolBar_; }
 
     //@}
@@ -120,7 +120,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //@{
 
     //* creates a new default logbook
-    void createDefaultLogbook( void );
+    void createDefaultLogbook();
 
     //* deletes old logbook, if any. Set the new one an display
     /*
@@ -131,19 +131,19 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     bool setLogbook( File );
 
     //* check if logbook needs a backup, ask for it if needed
-    void checkLogbookBackup( void );
+    void checkLogbookBackup();
 
     //* deletes old logbook, if any
-    void reset( void );
+    void reset();
 
     //* check modified entries
-    AskForSaveDialog::ReturnCode checkModifiedEntries( void );
+    AskForSaveDialog::ReturnCode checkModifiedEntries();
 
     //* creates dialog to ask for Logbook save.
     AskForSaveDialog::ReturnCode askForSave( bool enableCancel = true );
 
     //* clear entry selection
-    void clearSelection( void );
+    void clearSelection();
 
     //* update entry (create new if not found )
     void updateEntry( Keyword, LogEntry*, bool );
@@ -161,10 +161,10 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     LogEntry* nextEntry( LogEntry*, bool );
 
     //* reset attachment frame
-    void resetAttachmentWindow( void ) const;
+    void resetAttachmentWindow() const;
 
     //* update window title
-    void updateWindowTitle( void );
+    void updateWindowTitle();
 
     //@}
 
@@ -172,127 +172,127 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //@{
 
     //* uniconify window
-    QAction& uniconifyAction( void ) const
+    QAction& uniconifyAction() const
     { return *uniconifyAction_; }
 
     //* new keyword action
-    QAction& newKeywordAction( void ) const
+    QAction& newKeywordAction() const
     { return *newKeywordAction_; }
 
     //* edit keyword action
-    QAction& editKeywordAction( void ) const
+    QAction& editKeywordAction() const
     { return *editKeywordAction_; }
 
     //* delete keyword action
-    QAction& deleteKeywordAction( void ) const
+    QAction& deleteKeywordAction() const
     { return *deleteKeywordAction_; }
 
     //* find entries action
-    QAction& findEntriesAction( void ) const
+    QAction& findEntriesAction() const
     { return *findEntriesAction_; }
 
     //* new entry action
-    QAction& newEntryAction( void ) const
+    QAction& newEntryAction() const
     { return *newEntryAction_; }
 
     //* edit entry action
-    QAction& editEntryAction( void ) const
+    QAction& editEntryAction() const
     { return *editEntryAction_; }
 
     //* edit entry action
-    QAction& editEntryTitleAction( void ) const
+    QAction& editEntryTitleAction() const
     { return *editEntryTitleAction_; }
 
     //* delete entry action
-    QAction& deleteEntryAction( void ) const
+    QAction& deleteEntryAction() const
     { return *deleteEntryAction_; }
 
     //* change entry color action
-    QAction& entryColorAction( void ) const
+    QAction& entryColorAction() const
     { return *entryColorAction_; }
 
     //* change entry keyword action
-    QAction& entryKeywordAction( void ) const
+    QAction& entryKeywordAction() const
     { return *entryKeywordAction_; }
 
     //* show entry properties
-    QAction& entryInformationAction( void ) const
+    QAction& entryInformationAction() const
     { return *entryInformationAction_; }
 
     //* create new logbook
-    QAction& newLogbookAction( void ) const
+    QAction& newLogbookAction() const
     { return *newLogbookAction_; }
 
     //* open existing logbook
-    QAction& openAction( void ) const
+    QAction& openAction() const
     { return *openAction_; }
 
     //* synchronize logbooks
-    QAction& synchronizeAction( void ) const
+    QAction& synchronizeAction() const
     { return *synchronizeAction_; }
 
     //* reorganize logbook
-    QAction& reorganizeAction( void ) const
+    QAction& reorganizeAction() const
     { return *reorganizeAction_; }
 
     //* save logbook
-    QAction& saveAction( void ) const
+    QAction& saveAction() const
     { return *saveAction_; }
 
     //* save logbook
-    QAction& saveForcedAction( void ) const
+    QAction& saveForcedAction() const
     { return *saveForcedAction_; }
 
     //* save logbook with a different name
-    QAction& saveAsAction( void ) const
+    QAction& saveAsAction() const
     { return *saveAsAction_; }
 
     //* save logbook backup
-    QAction& saveBackupAction( void ) const
+    QAction& saveBackupAction() const
     { return *saveBackupAction_; }
 
     //* backup manager
-    QAction& backupManagerAction( void ) const
+    QAction& backupManagerAction() const
     { return *backupManagerAction_; }
 
     //* revert logbook to saved version
-    QAction& revertToSaveAction( void ) const
+    QAction& revertToSaveAction() const
     { return *revertToSaveAction_; }
 
     //* print
-    QAction& printAction( void ) const
+    QAction& printAction() const
     { return *printAction_; }
 
     //* print preview
-    QAction& printPreviewAction( void ) const
+    QAction& printPreviewAction() const
     { return *printPreviewAction_; }
 
     //* export to html
-    QAction& htmlAction( void ) const
+    QAction& htmlAction() const
     { return *htmlAction_; }
 
     //* logbook information
-    QAction& logbookInformationsAction( void ) const
+    QAction& logbookInformationsAction() const
     { return *logbookInformationsAction_; }
 
     //* logbook information
-    QAction& logbookStatisticsAction( void ) const
+    QAction& logbookStatisticsAction() const
     { return *logbookStatisticsAction_; }
 
     //* close editionwindows
-    QAction& closeFramesAction( void ) const
+    QAction& closeFramesAction() const
     { return *closeFramesAction_; }
 
     //* show duplicates
-    QAction& showDuplicatesAction( void ) const
+    QAction& showDuplicatesAction() const
     { return *showDuplicatesAction_; }
 
     //* monitored files
-    QAction& monitoredFilesAction( void ) const
+    QAction& monitoredFilesAction() const
     { return *monitoredFilesAction_; }
 
     //* tree mode action
-    QAction& treeModeAction( void ) const
+    QAction& treeModeAction() const
     { return *treeModeAction_; }
 
     //@}
@@ -306,7 +306,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void messageAvailable( const QString& );
 
     //* emitted at the end of SetLogbook
-    void ready( void );
+    void ready();
 
     public Q_SLOTS:
 
@@ -315,7 +315,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
 
     //* save current logbook
     /** pending entry modifications are ignored */
-    void saveUnchecked( void );
+    void saveUnchecked();
 
     //* save current logbook
     /**
@@ -323,7 +323,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     then the logbook is saved.
     if argument is false, all modified entries will be saved without asking
     */
-    void save( void );
+    void save();
 
     //* select entry
     void selectEntry( LogEntry* );
@@ -335,7 +335,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void selectEntries( QString, SearchWidget::SearchModes );
 
     //* show all entries
-    void showAllEntries( void );
+    void showAllEntries();
 
     protected:
 
@@ -349,22 +349,22 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void contextMenuEvent( QContextMenuEvent* ) override;
 
     //* clear list and reinitialize from logbook entries
-    void _resetKeywordList( void );
+    void _resetKeywordList();
 
     //* clear list and reinitialize from logbook entries
-    void _resetLogEntryList( void );
+    void _resetLogEntryList();
 
     //* load colors (from current logbook)
-    void _loadColors( void );
+    void _loadColors();
 
     //* enable state
     void _setEnabled( bool );
 
     //* returns true if logbook has modified entries
-    bool _hasModifiedEntries( void ) const;
+    bool _hasModifiedEntries() const;
 
     //* perform autoSave
-    void _autoSave( void );
+    void _autoSave();
 
     //* check modified entries
     AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow> );
@@ -390,13 +390,13 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _filesModified( FileCheck::DataSet );
 
     //* splitter moved
-    void _splitterMoved( void );
+    void _splitterMoved();
 
     //* create a new logbook
-    void _newLogbook( void );
+    void _newLogbook();
 
     //* save logbook and children whether they are modified or not
-    void _saveForced( void );
+    void _saveForced();
 
     /** \brief
     save current logbook with a given filename
@@ -405,28 +405,28 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     bool _saveAs( File defaultFile = File(), bool registerLogbook = true );
 
     //* save current logbook with a given filename
-    void _saveBackup( void );
+    void _saveBackup();
 
     //* manage backups
-    void _manageBackups( void );
+    void _manageBackups();
 
     //* revert logbook to saved version
-    void _revertToSaved( void );
+    void _revertToSaved();
 
     //* Print current document
-    void _print( void );
+    void _print();
 
     //* Print current document
     void _print( LogbookPrintHelper& );
 
     //* Print current document
-    void _printPreview( void );
+    void _printPreview();
 
     //* export to html
-    void _toHtml( void );
+    void _toHtml();
 
     //* opens a logbook merge it to the existing onecomments
-    void _synchronize( void );
+    void _synchronize();
 
     //* remove backup
     void _removeBackup( Backup );
@@ -441,35 +441,35 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _mergeBackup( Backup );
 
     //* reorganize logbook to entries associations
-    void _reorganize( void );
+    void _reorganize();
 
     /** \brief
     show all entries which have equal creation time
     is needed to remove duplicate entries in case of
     wrong logbook merging. This is a Debugging tool
     */
-    void _showDuplicatedEntries( void );
+    void _showDuplicatedEntries();
 
     //* view logbook statistics
-    void _viewLogbookStatistics( void );
+    void _viewLogbookStatistics();
 
     //* edit current logbook informations
-    void _editLogbookInformations( void );
+    void _editLogbookInformations();
 
     //* close EditionWindows
     void _closeEditionWindows( bool askForSave = true );
 
     //* find entries
-    void _findEntries( void ) const;
+    void _findEntries() const;
 
     //* create new entry
-    void _newEntry( void );
+    void _newEntry();
 
     //* edit selected entries
-    void _editEntries( void );
+    void _editEntries();
 
     //* delete selected entries
-    void _deleteEntries ( void );
+    void _deleteEntries ();
 
     //* show EditionWindow associated to a given name
     void _displayEntry( LogEntry* );
@@ -481,20 +481,20 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _changeEntryColor( QColor );
 
     //* show entry information
-    void _entryInformation( void );
+    void _entryInformation();
 
     //* create new keyword
-    void _newKeyword( void );
+    void _newKeyword();
 
     //* delete keyword from keyword list using dialog
-    void _deleteKeyword( void );
+    void _deleteKeyword();
 
     //* change selected entries keyword using dialog
     /**
     this is triggered by the rename keyword action from
     the keyword list
     */
-    void _renameKeyword( void );
+    void _renameKeyword();
 
     //* rename keyword for all entries that match old keyword.
     /**
@@ -512,7 +512,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
 
     //* rename keyword for selected entries using dialog
     /** this is triggered by the rename entry keyword action in the logEntry list. */
-    void _renameEntryKeyword( void );
+    void _renameEntryKeyword();
 
     //* change selected entries keyword using argument
     void _confirmRenameEntryKeyword( Keyword );
@@ -521,16 +521,16 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _keywordSelectionChanged( const QModelIndex& );
 
     //* update keyword-list related actions
-    void _updateKeywordActions( void );
+    void _updateKeywordActions();
 
     //* update entry-list related actions
-    void _updateEntryActions( void );
+    void _updateEntryActions();
 
     //* read-only actions
-    void _updateReadOnlyState( void );
+    void _updateReadOnlyState();
 
     //* store sorting method when changed via list header
-    void _storeSortMethod( void )
+    void _storeSortMethod()
     { _storeSortMethod( entryModel_.sortColumn(), entryModel_.sortOrder() ); }
 
     //* store sorting method when changed via list header
@@ -546,10 +546,10 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _entryDataChanged( const QModelIndex& index );
 
     //* edit entry title
-    void _startEntryEdition( void );
+    void _startEntryEdition();
 
     //* monitored files
-    void _showMonitoredFiles( void );
+    void _showMonitoredFiles();
 
     //* tree mode
     void _toggleTreeMode( bool );
@@ -557,12 +557,12 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     private Q_SLOTS:
 
     //* configuration
-    void _updateConfiguration( void );
+    void _updateConfiguration();
 
     private:
 
     //* install actions
-    void _installActions( void );
+    void _installActions();
 
     //* change selected entries keyword using argument
     /** it is called by the renameEntry keyword slots **/

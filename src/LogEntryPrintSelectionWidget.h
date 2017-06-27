@@ -50,12 +50,12 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
         SelectedEntries
     };
 
-    Mode mode( void ) const;
+    Mode mode() const;
 
     Q_SIGNALS:
 
     //* modified
-    void modified( void );
+    void modified();
 
     //* emited when selection mode is changed
     void modeChanged( LogEntryPrintSelectionWidget::Mode );
@@ -63,7 +63,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     protected Q_SLOTS:
 
     //* update mode
-    void _updateMode( void )
+    void _updateMode()
     {
         emit modeChanged( mode() );
         if( _connected() ) emit modified();

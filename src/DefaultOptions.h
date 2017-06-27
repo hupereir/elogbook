@@ -35,7 +35,7 @@
 
 //_____________________________________________________
 //* Default options installer
-void installDefaultOptions( void )
+void installDefaultOptions()
 {
     // set options default values
     XmlOptions::get().setAutoDefault( true );

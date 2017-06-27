@@ -131,8 +131,8 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
     connect( colorMenu_, SIGNAL(selected(QColor)), button, SLOT(setColor(QColor)) );
 
     // configuration
-    connect( Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
-    connect( Singleton::get().application(), SIGNAL(saveConfiguration()), SLOT(_saveConfiguration()) );
+    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application(), SIGNAL(saveConfiguration()), SLOT(_saveConfiguration()) );
     _updateConfiguration();
 
 }
@@ -192,7 +192,7 @@ void FormatBar::load( const Format::TextFormatBlock::List& formatList ) const
 
 }
 //________________________________________
-Format::TextFormatBlock::List FormatBar::get( void ) const
+Format::TextFormatBlock::List FormatBar::get() const
 {
     Debug::Throw( "FormatBar::get.\n" );
     Q_CHECK_PTR( editor_ );
@@ -245,7 +245,7 @@ Format::TextFormatBlock::List FormatBar::get( void ) const
 }
 
 //________________________________________
-void FormatBar::_updateConfiguration( void )
+void FormatBar::_updateConfiguration()
 {
     Debug::Throw( "FormatBar::_updateConfiguration.\n" );
 
@@ -280,7 +280,7 @@ void FormatBar::_updateConfiguration( void )
 
 
 //________________________________________
-void FormatBar::_saveConfiguration( void )
+void FormatBar::_saveConfiguration()
 {
     Debug::Throw( "FormatBar::_saveConfiguration.\n" );
     XmlOptions::get().keep( "TEXT_COLOR" );
@@ -356,7 +356,7 @@ void FormatBar::_color( QColor color )
 }
 
 //______________________________________
-void FormatBar::_lastColor( void )
+void FormatBar::_lastColor()
 {
     Debug::Throw( "FormatBar::_lastColor.\n" );
     _color( colorMenu_->lastColor() );
