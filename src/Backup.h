@@ -92,27 +92,7 @@ class Backup final: private Base::Counter<Backup>
     //@}
 
     //* list
-    class List: public QList<Backup>
-    {
-        public:
-
-        //* constructor
-        explicit List()
-        {}
-
-        //* constructor
-        explicit List( const QList<Backup>& other ):
-            QList<Backup>( other )
-        {}
-
-        //* validity
-        void checkValidity()
-        {
-            for( iterator iter = begin(); iter != end(); ++iter )
-            { iter->checkValidity(); }
-        }
-
-    };
+    using List = QList<Backup>;
 
     //* test validity
     class InvalidFTor

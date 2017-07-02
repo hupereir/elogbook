@@ -471,7 +471,7 @@ bool MainWindow::setLogbook( File file )
     if( errors.size() )
     {
         QString buffer( errors.size() > 1 ? tr( "Errors occured while parsing files.\n" ):tr("An error occured while parsing files.\n") );
-        buffer += errors.toString();
+        buffer += XmlError::toString( errors );
         InformationDialog( 0, buffer ).exec();
     }
 
@@ -2098,7 +2098,7 @@ void MainWindow::_synchronize()
     {
 
         QString buffer = QString( errors.size() > 1 ? tr( "Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
-        buffer += errors.toString();
+        buffer += XmlError::toString( errors );
         InformationDialog( 0, buffer ).exec();
 
         Base::Singleton::get().application<Application>()->idle();
@@ -2331,7 +2331,7 @@ void MainWindow::_mergeBackup( Backup backup )
     {
 
         QString buffer = QString( errors.size() > 1 ? tr( "Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
-        buffer += errors.toString();
+        buffer += XmlError::toString( errors );
         InformationDialog( 0, buffer ).exec();
 
         Base::Singleton::get().application<Application>()->idle();
@@ -2611,7 +2611,7 @@ void MainWindow::_newEntry()
     // retrieve associated EditionWindows, check if one matches the selected entry
     EditionWindow *editionWindow( 0 );
     Base::KeySet<EditionWindow> frames( this );
-    Base::KeySetIterator<EditionWindow> iterator( frames );
+    Base::KeySetIterator<EditionWindow> iterator( frames.get() );
     iterator.toBack();
     while( iterator.hasPrevious() )
     {
@@ -2766,7 +2766,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     {
 
         // the order is reversed to start from latest
-        Base::KeySetIterator<EditionWindow> iterator( windows );
+        Base::KeySetIterator<EditionWindow> iterator( windows.get() );
         iterator.toBack();
         while( iterator.hasPrevious() )
         {

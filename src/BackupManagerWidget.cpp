@@ -91,10 +91,11 @@ void BackupManagerWidget::updateBackups()
     Logbook* logbook( _logbook() );
     if( !logbook ) return;
 
-    Backup::List backups( logbook->backupFiles() );
-    backups.checkValidity();
+    // load backups and check validity
+    auto backups( logbook->backupFiles() );
+    for( auto&& backup:backups ) { backup.checkValidity(); }
 
-    // clear model
+    // assign to model
     model_.set( backups );
     list_->resizeColumns();
 

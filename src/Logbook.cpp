@@ -517,7 +517,7 @@ Base::KeySet<LogEntry> Logbook::entries() const
 
     Base::KeySet<LogEntry> out( this );
     for( const auto& logbook:children_ )
-    { out.merge( logbook->entries() ); }
+    { out.unite( logbook->entries() ); }
     return out;
 
 }
@@ -530,11 +530,11 @@ Base::KeySet<Attachment> Logbook::attachments() const
 
     // loop over associated entries, add entries associated attachments
     for( const auto& entry:Base::KeySet<LogEntry>( this ) )
-    { out.merge( Base::KeySet<Attachment>(entry) ); }
+    { out.unite( Base::KeySet<Attachment>(entry) ); }
 
     // loop over children, add associated attachments
     for( const auto& logbook:children_ )
-    { out.merge( logbook->attachments() ); }
+    { out.unite( logbook->attachments() ); }
 
     return out;
 

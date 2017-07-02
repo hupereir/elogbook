@@ -540,7 +540,7 @@ void EditionWindow::closeEditor( TextEditor& editor )
 
     // update activeEditor
     bool activeFound( false );
-    Base::KeySetIterator<TextEditor> iterator( editors );
+    Base::KeySetIterator<TextEditor> iterator( editors.get() );
     iterator.toBack();
     while( iterator.hasPrevious() )
     {
