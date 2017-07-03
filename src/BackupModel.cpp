@@ -51,8 +51,8 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
 
         switch( index.column() )
         {
-            case Filename: return backup.file().localName();
-            case Path: return backup.file().path();
+            case Filename: return backup.file().localName().get();
+            case Path: return backup.file().path().get();
             case Creation: return backup.creation().toString();
 
             default:

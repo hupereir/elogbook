@@ -52,8 +52,8 @@ bool Application::initApplicationManager()
     CommandLineParser parser( commandLineParser( _arguments() ) );
 
     auto&& orphans( parser.orphans() );
-    for( auto&& file:orphans )
-    { if( !file.isEmpty() ) file = File( file ).expand(); }
+    for( auto&& orphan:orphans )
+    { if( !orphan.isEmpty() ) File::expand( orphan ); }
 
     // replace arguments
     _setArguments( parser.arguments() );

@@ -21,7 +21,6 @@
 
 #include "Debug.h"
 #include "XmlDef.h"
-#include "XmlString.h"
 
 #include <QObject>
 
@@ -38,7 +37,7 @@ Keyword::Keyword( QString value):
 //_________________________________________________________________
 Keyword::Keyword( const QDomElement& element ):
     Counter( "Keyword" ),
-    value_( _format( XmlString( element.text() ) ) )
+    value_( _format( element.text() ) )
 {}
 
 //_________________________________________________________________

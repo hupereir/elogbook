@@ -91,7 +91,7 @@ int main (int argc, char *argv[])
     // try open input logbook
     Debug::Throw(0) << "compress-logbook - reading from: " << input << endl;
     Logbook logbook;
-    logbook.setFile( input.expand() );
+    logbook.setFile( input.expanded() );
     if( !logbook.read() )
     {
         Debug::Throw(0) << "compress-logbook - error reading logbook" << endl;

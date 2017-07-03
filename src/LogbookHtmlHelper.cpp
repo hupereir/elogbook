@@ -118,7 +118,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
         QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", logbook_->file() );
-        ref.appendChild( document.createTextNode( logbook_->file().toUtf8() ) );
+        ref.appendChild( document.createTextNode( logbook_->file().get().toUtf8() ) );
     }
 
     // directory
@@ -130,7 +130,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
         QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
         QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
         ref.setAttribute( "href", logbook_->directory() );
-        ref.appendChild( document.createTextNode( logbook_->directory().toUtf8() ) );
+        ref.appendChild( document.createTextNode( logbook_->directory().get().toUtf8() ) );
 
         if( !logbook_->checkDirectory() )
         { column.appendChild( document.createTextNode( tr( " (not found)" ) ) ); }

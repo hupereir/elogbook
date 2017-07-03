@@ -27,7 +27,6 @@
 #include "XmlDef.h"
 #include "XmlTextFormatBlock.h"
 #include "XmlTimeStamp.h"
-#include "XmlString.h"
 
 //__________________________________
 const QString LogEntry::MimeType = "logbook/log-entry-list";
@@ -55,9 +54,9 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( attribute.isNull() ) continue;
         QString name( attribute.name() );
         QString value( attribute.value() );
-        if( name == Xml::Title ) setTitle( XmlString( value ) );
-        else if( name == Xml::Keyword ) addKeyword( Keyword( XmlString( value ) ) );
-        else if( name == Xml::Author ) setAuthor( XmlString( value ) );
+        if( name == Xml::Title ) setTitle( value );
+        else if( name == Xml::Keyword ) addKeyword( Keyword( value ) );
+        else if( name == Xml::Author ) setAuthor( value );
 
         // kept for backward compatibility
         else if( name == Xml::Color ) setColor( QColor( value ) );
@@ -77,7 +76,7 @@ LogEntry::LogEntry( const QDomElement& element ):
             XmlColor color( childElement );
             if( color.isValid() ) setColor( color );
 
-        } else if( tagName == Xml::Text ) setText( XmlString( childElement.text() ) );
+        } else if( tagName == Xml::Text ) setText( childElement.text() );
         else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( childElement ) );
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( childElement ) );
         else if( tagName == Format::Xml::Tag ) addFormat( Format::XmlTextFormatBlock( childElement ) );

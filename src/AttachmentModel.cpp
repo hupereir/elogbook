@@ -70,7 +70,7 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
         {
 
             case Filename:
-            return attachment->isUrl() ? attachment->file() : attachment->shortFile();
+            return attachment->isUrl() ? attachment->file().get() : attachment->shortFile().get();
 
             case Size: return attachment->sizeString();
 
@@ -82,7 +82,7 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
 
             default: return QVariant();
         }
-    } else if( role == Qt::ToolTipRole ) return attachment->file();
+    } else if( role == Qt::ToolTipRole ) return attachment->file().get();
     else if( role == Qt::DecorationRole && index.column() == Filename ) return _icon( index );
 
     return QVariant();

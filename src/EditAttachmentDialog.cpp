@@ -50,7 +50,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     gridLayout->addWidget( fileLineEdit );
     label->setBuddy( fileLineEdit );
 
-    File fullname( ( attachment.isUrl() ) ? attachment.file():attachment.file().expand() );
+    File fullname( ( attachment.isUrl() ) ? attachment.file():attachment.file().expanded() );
     fileLineEdit->setText( fullname );
 
     // creation

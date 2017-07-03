@@ -396,7 +396,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         // set main window title
         MainWindow& mainwindow( Base::Singleton::get().application<Application>()->mainWindow() );
         mainwindow.updateWindowTitle();
-        if( mainwindow.logbook()->file().size() ) mainwindow.save();
+        if( !mainwindow.logbook()->file().isEmpty() ) mainwindow.save();
 
     }
 
@@ -453,7 +453,7 @@ void AttachmentFrame::_open()
         if( attachment->updateTimeStamps() ) modifiedAttachments << attachment;
 
         const bool isUrl( attachment->isUrl() );
-        File fullname( isUrl ? attachment->file():attachment->file().expand() );
+        File fullname( isUrl ? attachment->file():attachment->file().expanded() );
         if( !( isUrl || fullname.exists() ) )
         {
             InformationDialog( this, QString( tr( "Cannot find file '%1'. <Open Attachment> canceled." ) ).arg( fullname ) ).exec();
@@ -475,7 +475,7 @@ void AttachmentFrame::_open()
                 if( dialog.isCommandDefault() )
                 {
 
-                    if( isUrl ) QDesktopServices::openUrl( QUrl::fromEncoded( fullname.toLatin1() ) );
+                    if( isUrl ) QDesktopServices::openUrl( QUrl::fromEncoded( fullname.get().toLatin1() ) );
                     else QDesktopServices::openUrl( QUrl::fromEncoded( QString( "file://%1" ).arg( fullname ).toLatin1() ) );
 
                 } else {
@@ -494,7 +494,7 @@ void AttachmentFrame::_open()
                 File destname( dialog.getFile() );
 
                 // check filename and copy if accepted
-                if( destname.isNull() || (destname.exists() && !QuestionDialog( this, tr( "Selected file already exists. Overwrite ?" ) ).exec() ) ) return;
+                if( destname.isEmpty() || (destname.exists() && !QuestionDialog( this, tr( "Selected file already exists. Overwrite ?" ) ).exec() ) ) return;
                 else ( Command("cp") << fullname << destname ).run();
 
             }
@@ -625,7 +625,7 @@ void AttachmentFrame::_delete()
             }
 
             // remove file from disk, if required
-            File file( attachment->file().expand() );
+            File file( attachment->file().expanded() );
             if( fromDisk && !attachment->isUrl() && file.isWritable() )
             { file.remove(); }
 
@@ -693,7 +693,7 @@ void AttachmentFrame::_saveAs()
     {
 
         const bool isUrl( attachment->isUrl() );
-        File fullname( isUrl ? attachment->file():attachment->file().expand() );
+        File fullname( isUrl ? attachment->file():attachment->file().expanded() );
         if( isUrl )
         {
 
@@ -716,7 +716,7 @@ void AttachmentFrame::_saveAs()
             File destname( dialog.getFile() );
 
             // check filename and copy if accepted
-            if( destname.isNull() || (destname.exists() && !QuestionDialog( this, tr( "selected file already exists. Overwrite ?" ) ).exec() ) ) return;
+            if( destname.isEmpty() || (destname.exists() && !QuestionDialog( this, tr( "selected file already exists. Overwrite ?" ) ).exec() ) ) return;
             else ( Command("cp") << fullname << destname ).run();
 
         }
@@ -775,7 +775,7 @@ void AttachmentFrame::_clean()
         // set main window title
         MainWindow& mainwindow( Base::Singleton::get().application<Application>()->mainWindow() );
         mainwindow.updateWindowTitle();
-        if( mainwindow.logbook()->file().size() ) mainwindow.save();
+        if( !mainwindow.logbook()->file().isEmpty() ) mainwindow.save();
 
     }
 
@@ -888,7 +888,7 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
     { window->saveAction().trigger(); }
 
     MainWindow& mainwindow( Base::Singleton::get().application<Application>()->mainWindow() );
-    if( mainwindow.logbook()->file().size() )
+    if( !mainwindow.logbook()->file().isEmpty() )
     { mainwindow.save(); }
 
 }

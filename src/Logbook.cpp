@@ -27,7 +27,6 @@
 #include "Util.h"
 #include "XmlDocument.h"
 #include "XmlDef.h"
-#include "XmlString.h"
 #include "XmlTimeStamp.h"
 
 #include <QFile>
@@ -142,11 +141,11 @@ bool Logbook::read()
         QString name( attribute.name() );
         QString value( attribute.value() );
 
-        if( name == Xml::Title ) setTitle( XmlString( value ) );
-        else if( name == Xml::File ) setFile( File( XmlString( value ) ) );
-        else if( name == Xml::ParentFile ) setParentFile( File( XmlString( value ) ) );
-        else if( name == Xml::Directory ) setDirectory( File( XmlString( value ) ) );
-        else if( name == Xml::Author ) setAuthor( XmlString( value ) );
+        if( name == Xml::Title ) setTitle( value );
+        else if( name == Xml::File ) setFile( File( value ) );
+        else if( name == Xml::ParentFile ) setParentFile( File( value ) );
+        else if( name == Xml::Directory ) setDirectory( File( value ) );
+        else if( name == Xml::Author ) setAuthor( value );
         else if( name == Xml::SortMethod ) setSortMethod( (SortMethod) value.toInt() );
         else if( name == Xml::SortOrder ) setSortOrder( value.toInt() );
         else if( name == Xml::ReadOnly ) setReadOnly( value.toInt() );
@@ -172,7 +171,7 @@ bool Logbook::read()
         QString tagName( element.tagName() );
 
         // children
-        if( tagName == Xml::Comments ) setComments( XmlString( element.text() ) );
+        if( tagName == Xml::Comments ) setComments( element.text() );
         else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( element ) );
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( element ) );
         else if( tagName == Xml::Backup ) setBackup( XmlTimeStamp( element ) );
@@ -204,7 +203,7 @@ bool Logbook::read()
             }
 
             File file( file_attribute );
-            if( !file.isAbsolute() ) file = file.addPath( Logbook::file().path() );
+            if( !file.isAbsolute() ) file.addPath( Logbook::file().path() );
             Logbook* child = new Logbook;
             child->setFile( file );
             child->setUseCompression( useCompression_ );

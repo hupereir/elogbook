@@ -428,7 +428,7 @@ bool MainWindow::setLogbook( File file )
     Debug::Throw( "MainWindow::setLogbook - entry selected.\n" );
 
     // see if logbook has parent file
-    if( logbook_->parentFile().size() )
+    if( !logbook_->parentFile().isEmpty() )
     {
         const QString buffer = QString( tr( "Warning: this logbook should be oppened via '%1' only." ) ).arg( logbook_->parentFile() );
         WarningDialog( this, buffer ).exec();
@@ -477,7 +477,7 @@ bool MainWindow::setLogbook( File file )
 
     // add opened file to OpenPrevious mennu.
     if( !logbook_->file().isEmpty() )
-    { Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
+    { Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expanded() ); }
 
     ignoreWarnings_ = false;
 
@@ -808,7 +808,7 @@ void MainWindow::saveUnchecked()
     }
 
     // check logbook filename is writable
-    File fullname = logbook_->file().expand();
+    File fullname = logbook_->file().expanded();
     if( fullname.exists() ) {
 
         // check file is not a directory
@@ -850,7 +850,7 @@ void MainWindow::saveUnchecked()
     statusbar_->showLabel();
 
     // add new file to openPreviousMenu
-    if( !logbook_->file().isEmpty() ) Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
+    if( !logbook_->file().isEmpty() ) Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expanded() );
 
     // reset ignore_warning flag
     ignoreWarnings_ = false;
@@ -1650,8 +1650,8 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
 
     // get file
     File fullname( dialog.getFile() );
-    if( fullname.isNull() ) return false;
-    else  fullname = fullname.expand();
+    if( fullname.isEmpty() ) return false;
+    else fullname.expand();
 
     // update working directory
     workingDirectory_ = fullname.path();
@@ -1672,7 +1672,7 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
 
     // add new file to openPreviousMenu
     if( !logbook_->file().isEmpty() )
-    { Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() ); }
+    { Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expanded() ); }
 
     // redo file check registration
     if( registerLogbook )
@@ -1741,7 +1741,7 @@ void MainWindow::_saveBackup()
 
     // remove the "backup" filename from the openPrevious list
     // to avoid confusion
-    Base::Singleton::get().application<Application>()->recentFiles().remove( File(filename).expand() );
+    Base::Singleton::get().application<Application>()->recentFiles().remove( File(filename).expanded() );
 
     // restore initial filename
     logbook_->setFile( currentFilename, true );
@@ -2074,7 +2074,7 @@ void MainWindow::_synchronize()
 
     // create file dialog
     File remoteFile( FileDialog(this).getFile() );
-    if( remoteFile.isNull() ) return;
+    if( remoteFile.isEmpty() ) return;
 
     // debug
     Debug::Throw() << "MainWindow::_synchronize - number of local files: " << logbook_->children().size() << endl;
@@ -2265,7 +2265,7 @@ void MainWindow::_restoreBackup( Backup backup )
 
     // remove the "backup" filename from the openPrevious list
     // to avoid confusion
-    Base::Singleton::get().application<Application>()->recentFiles().remove( backup.file().expand() );
+    Base::Singleton::get().application<Application>()->recentFiles().remove( backup.file().expanded() );
 
     // change filename
     logbook_->setFile( oldName );
@@ -2281,7 +2281,7 @@ void MainWindow::_restoreBackup( Backup backup )
     if( !logbook_->file().isEmpty() )
     {
         save();
-        Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expand() );
+        Base::Singleton::get().application<Application>()->recentFiles().add( logbook_->file().expanded() );
     }
 
 }

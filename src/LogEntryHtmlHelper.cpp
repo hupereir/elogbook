@@ -309,7 +309,7 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
             toElement();
         if( attachment->isUrl() ) ref.setAttribute( "href", attachment->file() );
         else ref.setAttribute( "href", QString("file:") + attachment->file() );
-        ref.appendChild( document.createTextNode( attachment->file().toUtf8() ) );
+        ref.appendChild( document.createTextNode( attachment->file().get().toUtf8() ) );
 
         // comments
         if( !attachment->comments().isEmpty() )

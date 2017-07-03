@@ -91,7 +91,7 @@ int main (int argc, char *argv[])
     // try open first Logbook
     Debug::Throw(0) << "synchronize-logbook - reading first logbook from: " << first << endl;
     Logbook firstLogbook;
-    firstLogbook.setFile( first.expand() );
+    firstLogbook.setFile( first.expanded() );
     firstLogbook.setUseCompression( useCompression );
     if( !firstLogbook.read() )
     {
@@ -106,7 +106,7 @@ int main (int argc, char *argv[])
     // try open second logbook
     Debug::Throw(0) << "synchronize-logbook - reading second logbook from: " << second << endl;
     Logbook secondLogbook;
-    secondLogbook.setFile( second.expand() );
+    secondLogbook.setFile( second.expanded() );
     secondLogbook.setUseCompression( useCompression );
     if( !secondLogbook.read() )
     {

@@ -95,7 +95,7 @@ int main (int argc, char *argv[])
     // try open input logbook
     Debug::Throw(0) << "copy-logbook - reading from: " << input << endl;
     Logbook logbook;
-    logbook.setFile( input.expand() );
+    logbook.setFile( input.expanded() );
     logbook.setUseCompression( useCompression );
     if( !logbook.read() )
     {
@@ -109,11 +109,11 @@ int main (int argc, char *argv[])
 
     // perform copy
     Debug::Throw(0) << "copy-logbook - writing to: " << output << endl;
-    logbook.setFile( output.expand() );
+    logbook.setFile( output.expanded() );
     logbook.setModifiedRecursive( true );
 
     // check logbook filename is writable
-    File fullname = logbook.file().expand();
+    File fullname = logbook.file().expanded();
     if( fullname.exists() ) {
 
         // check file is not a directory

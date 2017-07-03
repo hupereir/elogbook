@@ -24,7 +24,6 @@
 #include "LogEntry.h"
 #include "XmlDef.h"
 #include "XmlOptions.h"
-#include "XmlString.h"
 #include "XmlTimeStamp.h"
 
 #include <cstdio>
@@ -56,10 +55,10 @@ Attachment::Attachment( const QDomElement& element):
         QString name( attribute.name() );
         QString value( attribute.value() );
 
-        if( name == Xml::SourceFile ) _setSourceFile( File( XmlString( value ) ) );
-        else if( name == Xml::File ) _setFile( File( XmlString( value ) ) );
-        else if( name == Xml::Type ) setIsUrl( XmlString( value ) == "URL" );
-        else if( name == Xml::Comments ) setComments( XmlString( value ) );
+        if( name == Xml::SourceFile ) _setSourceFile( File( value ) );
+        else if( name == Xml::File ) _setFile( File( value ) );
+        else if( name == Xml::Type ) setIsUrl( value == "URL" );
+        else if( name == Xml::Comments ) setComments( value );
         else if( name == Xml::Valid ) setIsValid( (bool) value.toInt() );
         else if( name == Xml::IsLink ) setIsLink( (LinkState) value.toInt() );
         else if( name == Xml::IsUrl ) setIsUrl( (bool) value.toInt() );
@@ -71,7 +70,7 @@ Attachment::Attachment( const QDomElement& element):
     {
         QDomElement child_element = child_node.toElement();
         QString tag_name( child_element.tagName() );
-        if( tag_name == Xml::Comments ) setComments( XmlString( child_element.text() ) );
+        if( tag_name == Xml::Comments ) setComments( child_element.text() );
         else if( tag_name == Xml::Creation ) _setCreation( XmlTimeStamp( child_element ) );
         else if( tag_name == Xml::Modification ) _setModification( XmlTimeStamp( child_element ) );
         else Debug::Throw(0) << "Attachment::Attachment - unrecognized child " << child_element.tagName() << ".\n";
@@ -88,8 +87,8 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 
     Debug::Throw( "Attachment::DomElement.\n" );
     QDomElement out( parent.createElement( Xml::Attachment ) );
-    if( file_.size() ) out.setAttribute( Xml::File, file_ );
-    if( sourceFile_.size() ) out.setAttribute( Xml::SourceFile, sourceFile_ );
+    if( !file_.isEmpty() ) out.setAttribute( Xml::File, file_ );
+    if( !sourceFile_.isEmpty() ) out.setAttribute( Xml::SourceFile, sourceFile_ );
     out.setAttribute( Xml::Valid, QString::number( isValid() ) );
     out.setAttribute( Xml::IsLink, QString::number( isLink() ) );
     out.setAttribute( Xml::IsUrl, QString::number( isUrl() ) );
@@ -110,7 +109,7 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 
 //___________________________________
 bool Attachment::operator < ( const Attachment &attachment ) const
-{ return shortFile().compare( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }
+{ return shortFile().get().compare( attachment.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }
 
 //__________________________________
 void Attachment::updateSize()
@@ -198,7 +197,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     }
 
     // generate expanded source name
-    File fullname( sourceFile_ .expand() );
+    File fullname( sourceFile_ .expanded() );
     if( !( isUrl_ || fullname.exists() ) ) return SourceNotFound;
     else if( !isUrl_ && fullname.isDirectory() ) return SourceIsDir;
 
@@ -279,10 +278,7 @@ File Attachment::shortFile() const
     Debug::Throw( "Attachment::shortFile.\n" );
 
     File file( file_ );
-
-    // remove trailing slash
-    if( file.size() && file[file.size()-1] == '/' ) { file = File( file.left( file.size()-1 ) ); }
-
+    file.removeTrailingSlash();
     return file.localName();
 }
 
@@ -297,7 +293,7 @@ void Attachment::_setFile( const File& file )
     // remove trailing spaces
     static QRegExp regexp( "\\s+$" );
     if( regexp.indexIn( file_ ) >= 0 )
-    { file_ = File( file_.left( file_.size() - regexp.matchedLength() ) ); }
+    { file_ = File( file_.get().left( file_.get().size() - regexp.matchedLength() ) ); }
 
     return;
 }

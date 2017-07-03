@@ -68,7 +68,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     vLayout->addStretch();
 
     // attachment full name
-    File fullname( ( attachment.isUrl() ) ? attachment.file() : attachment.file().expand() );
+    File fullname( ( attachment.isUrl() ) ? attachment.file() : attachment.file().expanded() );
 
     // file name
     QLabel* label;
