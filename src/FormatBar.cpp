@@ -26,7 +26,6 @@
 #include "FormatBarIconNames.h"
 #include "IconEngine.h"
 #include "PixmapEngine.h"
-#include "RoundedPath.h"
 #include "Singleton.h"
 #include "TextEditor.h"
 #include "TextPosition.h"

@@ -25,10 +25,10 @@
 #include "LogEntry.h"
 #include "XmlOptions.h"
 #include "Util.h"
-#include "XmlDocument.h"
 #include "XmlDef.h"
 #include "XmlTimeStamp.h"
 
+#include <QDomDocument>
 #include <QFile>
 #include <QTextStream>
 
@@ -119,7 +119,7 @@ bool Logbook::read()
     if( uncompressed.isEmpty() ) uncompressed = content;
 
     // create document
-    XmlDocument document;
+    QDomDocument document;
     if( !document.setContent( uncompressed, error_ ) ) return false;
 
     // read first child
@@ -270,7 +270,7 @@ bool Logbook::write( File file )
         }
 
         // create document
-        XmlDocument document;
+        QDomDocument document;
 
         // create main element
         QDomElement top = document.createElement( Xml::Logbook );

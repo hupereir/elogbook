@@ -368,7 +368,7 @@ const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
         painter.setPen( Qt::NoPen );
 
         QRectF rect( QPointF( offset, offset ), QSizeF( pixmapSize, pixmapSize ) );
-        painter.setBrush( color );
+        painter.setBrush( color.get() );
         painter.drawEllipse( rect );
         painter.end();
 
