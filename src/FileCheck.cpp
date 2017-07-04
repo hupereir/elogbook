@@ -139,12 +139,12 @@ void FileCheck::_fileChanged( const QString& file )
     Data data( file );
 
     // find associated display with matching file
+    File local( file );
     Base::KeySet<Logbook> logbooks( this );
-    auto iter( std::find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( file ) ) );
+    auto iter( std::find_if( logbooks.begin(), logbooks.end(), Logbook::SameFileFTor( local ) ) );
     if( iter != logbooks.end() )
     {
 
-        File local( file );
         if( !local.exists() )
         {
 

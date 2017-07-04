@@ -398,7 +398,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
         public:
 
         //* constructor
-        explicit SameFileFTor( QString file ):
+        explicit SameFileFTor( File file ):
             file_( file )
         {}
 
@@ -409,7 +409,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
         private:
 
         //* predicted file
-        QString file_;
+        File file_;
 
     };
 
