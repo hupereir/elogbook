@@ -1988,7 +1988,7 @@ void Private::ColorWidget::setColor( const QColor& color )
 {
 
     // create pixmap
-    QPixmap pixmap( IconSize( IconSize::Huge ) );
+    QPixmap pixmap( IconSize::get( IconSize::Huge ) );
     pixmap.fill( Qt::transparent );
 
     QPainter painter( &pixmap );
