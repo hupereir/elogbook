@@ -58,7 +58,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     QDomElement domElement( QDomDocument& parent ) const;
 
     /**\fn bool operator < (const Attachment& attachment ) const
-    \brief inferior to operator, based on Attachment Short name lexicographic order
+    \brief less than operator, based on Attachment Short name lexicographic order
     \param attachment the attachment to which this is to be compared
     */
     bool operator < (const Attachment& attachment ) const;
