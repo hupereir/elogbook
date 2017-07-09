@@ -2422,50 +2422,42 @@ void MainWindow::_reorganize()
         return;
     }
 
+    // retrieve all entries
+    Base::KeySet<LogEntry> entries( logbook_->entries() );
+    for( const auto& entry:entries )
+    {
+
+        Base::KeySet<Logbook> logbooks( entry );
+        for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
+        { logbook->setModified( true ); }
+
+        entry->clearAssociations<Logbook>();
+
+    }
+
     // put entry set into a list and sort by creation time.
     // First entry must the oldest
-    QList<LogEntry*> entryList( logbook_->entries().toList() );
+    QList<LogEntry*> entryList( entries.toList() );
     std::sort( entryList.begin(), entryList.end(), LogEntry::FirstCreatedFTor() );
 
     // put entries in logbook
-    bool modified( false );
     for( const auto& entry:entryList )
     {
-        Logbook *child( logbook_->latestChild() );
-
-        // do nothing if already associated
-        if( entry->isAssociated( child ) ) continue;
-
-        // mark as modified
-        modified = true;
-
-        // disassociate from current logbooks
-        for( const auto& logbook:Base::KeySet<Logbook>(entry) )
-        {
-            Base::Key::disassociate( entry, logbook );
-            logbook->setModified(true);
-        }
-
-        // reassociate to new logbook
-        Base::Key::associate( entry, child );
-        child->setModified( true );
+        Logbook *logbook( MainWindow::logbook_->latestChild() );
+        Base::Key::associate( entry, logbook );
+        logbook->setModified( true );
     }
 
-    if( modified )
-    {
+    // remove empty logbooks
+    logbook_->removeEmptyChildren();
 
-        // remove empty logbooks
-        logbook_->removeEmptyChildren();
+    // redo fileChecker registration
+    fileCheck_->clear();
+    fileCheck_->registerLogbook( logbook_ );
 
-        // redo fileChecker registration
-        fileCheck_->clear();
-        fileCheck_->registerLogbook( logbook_ );
-
-        // save
-        logbook_->setModified( true );
-        if( !logbook_->file().isEmpty() ) save();
-
-    }
+    // save
+    logbook_->setModified( true );
+    if( !logbook_->file().isEmpty() ) save();
 
 }
 
