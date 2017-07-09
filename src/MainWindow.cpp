@@ -456,6 +456,29 @@ bool MainWindow::setLogbook( File file )
 
     }
 
+    // cleanup
+    // make sure top-level logbook has no associated entries
+    entries = Base::KeySet<LogEntry>(logbook_);
+    if( !entries.empty() )
+    {
+
+        Debug::Throw(0) << "MainWindow::setLogbook - moving " << entries.size() << " entries" << endl;
+        for( const auto& entry : entries )
+        {
+            // dissassociate
+            Base::Key::disassociate( entry, logbook_ );
+
+            // reassociate to latest child
+            auto child = logbook_->latestChild();
+            child->setModified(true);
+            Base::Key::associate( entry, child );
+        }
+
+        logbook_->setModified(true);
+        if( !logbook_->file().isEmpty() ) save();
+    }
+
+
     // store logbook directory for next open, save comment
     workingDirectory_ = File( logbook_->file() ).path();
     statusbar_->label().clear();
@@ -2399,42 +2422,50 @@ void MainWindow::_reorganize()
         return;
     }
 
-    // retrieve all entries
-    Base::KeySet<LogEntry> entries( logbook_->entries() );
-    for( const auto& entry:entries )
-    {
-
-        Base::KeySet<Logbook> logbooks( entry );
-        for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
-        { logbook->setModified( true ); }
-
-        entry->clearAssociations<Logbook>();
-
-    }
-
     // put entry set into a list and sort by creation time.
     // First entry must the oldest
-    QList<LogEntry*> entryList( entries.toList() );
+    QList<LogEntry*> entryList( logbook_->entries().toList() );
     std::sort( entryList.begin(), entryList.end(), LogEntry::FirstCreatedFTor() );
 
     // put entries in logbook
+    bool modified( false );
     for( const auto& entry:entryList )
     {
-        Logbook *logbook( MainWindow::logbook_->latestChild() );
-        Base::Key::associate( entry, logbook );
-        logbook->setModified( true );
+        Logbook *child( logbook_->latestChild() );
+
+        // do nothing if already associated
+        if( entry->isAssociated( child ) ) continue;
+
+        // mark as modified
+        modified = true;
+
+        // disassociate from current logbooks
+        for( const auto& logbook:Base::KeySet<Logbook>(entry) )
+        {
+            Base::Key::disassociate( entry, logbook );
+            logbook->setModified(true);
+        }
+
+        // reassociate to new logbook
+        Base::Key::associate( entry, child );
+        child->setModified( true );
     }
 
-    // remove empty logbooks
-    logbook_->removeEmptyChildren();
+    if( modified )
+    {
 
-    // redo fileChecker registration
-    fileCheck_->clear();
-    fileCheck_->registerLogbook( logbook_ );
+        // remove empty logbooks
+        logbook_->removeEmptyChildren();
 
-    // save
-    logbook_->setModified( true );
-    if( !logbook_->file().isEmpty() ) save();
+        // redo fileChecker registration
+        fileCheck_->clear();
+        fileCheck_->registerLogbook( logbook_ );
+
+        // save
+        logbook_->setModified( true );
+        if( !logbook_->file().isEmpty() ) save();
+
+    }
 
 }
 

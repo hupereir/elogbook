@@ -83,18 +83,18 @@ bool Logbook::read()
 
     Debug::Throw( "Logbook::read.\n" );
 
-    if( file().isEmpty() )
+    if( file_.isEmpty() )
     {
         Debug::Throw( "Logbook::read - file is empty.\n" );
         return false;
     }
 
     // update StateFrame
-    emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( file().localName() ) );
+    emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( file_.localName() ) );
 
     // check input file
-    if( !file().exists() ) {
-        Debug::Throw(0) << "Logbook::read - ERROR: cannot access file \"" << file() << "\".\n";
+    if( !file_.exists() ) {
+        Debug::Throw(0) << "Logbook::read - ERROR: cannot access file \"" << file_ << "\".\n";
         return false;
     }
 
@@ -103,7 +103,7 @@ bool Logbook::read()
     { delete entry; }
 
     // parse the file
-    QFile file( Logbook::file() );
+    QFile file( Logbook::file_ );
     if ( !file.open( QIODevice::ReadOnly ) )
     {
         Debug::Throw(0, "Logbook::read - cannot open file.\n" );
@@ -195,15 +195,15 @@ bool Logbook::read()
         } else if( tagName == Xml::Child ) {
 
             // try retrieve file from attributes
-            QString file_attribute( element.attribute( Xml::File ) );
-            if( file_attribute.isNull() )
+            QString fileAttribute( element.attribute( Xml::File ) );
+            if( fileAttribute.isEmpty() )
             {
                 Debug::Throw(0) << "Logbook::read - no file given for child" << endl;
                 continue;
             }
 
-            File file( file_attribute );
-            if( !file.isAbsolute() ) file.addPath( Logbook::file().path() );
+            File file( fileAttribute );
+            if( !file.isAbsolute() ) file.addPath( Logbook::file_.path() );
             Logbook* child = new Logbook;
             child->setFile( file );
             child->setUseCompression( useCompression_ );
@@ -212,11 +212,11 @@ bool Logbook::read()
             connect( child, SIGNAL(progressAvailable(int)), SIGNAL(progressAvailable(int)) );
 
             QString buffer;
-            QTextStream( &buffer ) << "Reading " << child->file().localName();
-            emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( child->file().localName() ) );
+            QTextStream( &buffer ) << "Reading " << child->file_.localName();
+            emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( child->file_.localName() ) );
 
             child->read();
-            children_ << child;
+            children_.append( child );
 
         } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << endl;
 
@@ -226,7 +226,7 @@ bool Logbook::read()
 
     // discard modifications
     setModified( false );
-    saved_ = Logbook::file().lastModified();
+    saved_ = Logbook::file_.lastModified();
     return true;
 
 }
@@ -238,7 +238,7 @@ bool Logbook::write( File file )
     Debug::Throw( "Logbook::write.\n" );
 
     // check filename
-    if( file.isEmpty() ) file = Logbook::file();
+    if( file.isEmpty() ) file = Logbook::file_;
     if( file.isEmpty() ) return false;
 
     bool completed = true;
@@ -250,7 +250,7 @@ bool Logbook::write( File file )
     emit maximumProgressAvailable( xmlEntries() );
 
     // write logbook if filename differs from origin or logbook is modified
-    if( file != this->file() || modified_ )
+    if( file != file_ || modified_ )
     {
 
         // gets last saved timestamp
@@ -346,16 +346,16 @@ bool Logbook::write( File file )
         // gets/check new saved timestamp
         TimeStamp savedNew( file.lastModified() );
         if( !( lastSaved < savedNew ) ) completed = false;
-        else if( file == this->file() )  modified_ = false;
+        else if( file == file_ )  modified_ = false;
 
         // assign new filename
-        if( file != this->file() ) setFile( file );
+        if( file != file_ ) setFile( file );
 
     } else { emit progressAvailable( Base::KeySet<LogEntry>( this ).size() ); }
 
 
     // update saved timeStamp
-    saved_ = this->file().lastModified();
+    saved_ = file_.lastModified();
 
     // write children
     int childCount=0;
@@ -466,48 +466,41 @@ Logbook* Logbook::latestChild()
 
     Debug::Throw( "Logbook::latestChild.\n" );
 
-    // get older parent
-    Logbook* dest = 0;
-
-    // check parent number of entries
-    if( Base::KeySet<LogEntry>(this).size() < MaxEntries ) dest = this;
+    Logbook* out = nullptr;
 
     // check if one existsing child is not complete
     for( const auto& logbook:children_ )
     {
         if( logbook && Base::KeySet<LogEntry>(logbook).size() < MaxEntries )
         {
-            dest = logbook;
+            out = logbook;
             break;
         }
     }
 
     // add a new child if nothing found
-    if( !dest )
+    if( !out )
     {
 
-        dest = new Logbook;
-        dest->setTitle( title() );
-        dest->setDirectory( directory() );
-        dest->setAuthor( author() );
-        dest->setFile( _childFilename( file(), children_.size() ).addPath( file().path() ) );
-        dest->setUseCompression( useCompression_ );
-        dest->setModified( true );
+        out = new Logbook;
+        out->setTitle( title() );
+        out->setDirectory( directory() );
+        out->setAuthor( author() );
+        out->setFile( _childFilename( file_, children_.size() ).addPath( file_.path() ) );
+        out->setUseCompression( useCompression_ );
+        out->setModified( true );
 
-        children_ << dest;
+        children_ << out;
         setModified( true );
 
         // associate to existing FileCheck if any
         Base::KeySet<FileCheck> fileChecks( this );
         if( !fileChecks.empty() )
-        {
-            Q_ASSERT( fileChecks.size() == 1 );
-            (*fileChecks.begin())->registerLogbook( dest );
-        }
+        { (*fileChecks.begin())->registerLogbook( out ); }
 
     }
 
-    return dest;
+    return out;
 }
 
 //_________________________________
@@ -515,8 +508,10 @@ Base::KeySet<LogEntry> Logbook::entries() const
 {
 
     Base::KeySet<LogEntry> out( this );
+
     for( const auto& logbook:children_ )
     { out.unite( logbook->entries() ); }
+
     return out;
 
 }
@@ -563,7 +558,7 @@ void Logbook::removeEmptyChildren()
         {
 
             // remove file
-            if( !logbook->file().isEmpty() ) logbook->file().remove();
+            if( !logbook->file_.isEmpty() ) logbook->file_.remove();
 
             delete logbook;
 
