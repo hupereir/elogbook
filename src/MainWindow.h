@@ -742,10 +742,10 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* entry color button
     QToolButton* entryColorButton_ = nullptr;
 
-    //* static menu actions
+    //* menu actions
     QList<QAction*> keywordChangedMenuActions_;
 
-    //* static menu actions
+    //* menu actions
     QList<QAction*> entryKeywordChangedMenuActions_;
 
     //@}
