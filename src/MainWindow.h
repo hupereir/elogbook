@@ -41,6 +41,8 @@
 #include <QTimerEvent>
 #include <QContextMenuEvent>
 
+#include <memory>
+
 class ColorMenu;
 class CustomToolBar;
 class EditionWindow;
@@ -61,9 +63,6 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* constructor
     explicit MainWindow( QWidget* = nullptr );
 
-    //* destructor
-    ~MainWindow() override;
-
     //*@name accessors
     //@{
 
@@ -80,7 +79,8 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     { return logbook_ != nullptr; }
 
     //* returns pointer to selected Logbook, if any
-    Logbook* logbook() const
+    using LogbookPointer = std::unique_ptr<Logbook>;
+    const LogbookPointer& logbook() const
     { return logbook_; }
 
     //* true if logbook exists and is readonly
@@ -623,7 +623,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     int maxRecentEntries_ = 0;
 
     //* associated logbook
-    Logbook* logbook_ = nullptr;
+    LogbookPointer logbook_;
 
     //* last directory in which logbook was opened, saved.
     File workingDirectory_;

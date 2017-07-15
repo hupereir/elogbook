@@ -304,13 +304,6 @@ MainWindow::MainWindow( QWidget *parent ):
 }
 
 //___________________________________________________________
-MainWindow::~MainWindow()
-{
-    Debug::Throw( "MainWindow::~MainWindow.\n" );
-    if( logbook_ ) delete logbook_;
-}
-
-//___________________________________________________________
 void MainWindow::createDefaultLogbook()
 {
 
@@ -344,7 +337,7 @@ bool MainWindow::setLogbook( File file )
     fileCheck_->clear();
 
     // create new logbook
-    logbook_ = new Logbook;
+    logbook_.reset( new Logbook );
     logbook_->setUseCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
 
     // if filename is empty, return
@@ -375,14 +368,14 @@ bool MainWindow::setLogbook( File file )
         return false;
     }
 
-    connect( logbook_, SIGNAL(maximumProgressAvailable(int)), statusbar_, SLOT(showProgressBar()) );
-    connect( logbook_, SIGNAL(maximumProgressAvailable(int)), &statusbar_->progressBar(), SLOT(setMaximum(int)) );
-    connect( logbook_, SIGNAL(progressAvailable(int)), &statusbar_->progressBar(), SLOT(addToProgress(int)) );
-    connect( logbook_, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
+    connect( logbook_.get(), SIGNAL(maximumProgressAvailable(int)), statusbar_, SLOT(showProgressBar()) );
+    connect( logbook_.get(), SIGNAL(maximumProgressAvailable(int)), &statusbar_->progressBar(), SLOT(setMaximum(int)) );
+    connect( logbook_.get(), SIGNAL(progressAvailable(int)), &statusbar_->progressBar(), SLOT(addToProgress(int)) );
+    connect( logbook_.get(), SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
 
-    connect( logbook_, SIGNAL(readOnlyChanged(bool)), SLOT(_updateEntryActions()) );
-    connect( logbook_, SIGNAL(readOnlyChanged(bool)), SLOT(_updateKeywordActions()) );
-    connect( logbook_, SIGNAL(readOnlyChanged(bool)), SLOT(_updateReadOnlyState()) );
+    connect( logbook_.get(), SIGNAL(readOnlyChanged(bool)), SLOT(_updateEntryActions()) );
+    connect( logbook_.get(), SIGNAL(readOnlyChanged(bool)), SLOT(_updateKeywordActions()) );
+    connect( logbook_.get(), SIGNAL(readOnlyChanged(bool)), SLOT(_updateReadOnlyState()) );
 
     // one need to disable everything in the window
     // to prevent user to interact with the application while loading
@@ -458,7 +451,7 @@ bool MainWindow::setLogbook( File file )
 
     // cleanup
     // make sure top-level logbook has no associated entries
-    entries = Base::KeySet<LogEntry>(logbook_);
+    entries = Base::KeySet<LogEntry>(logbook_.get());
     if( !entries.empty() )
     {
 
@@ -466,7 +459,7 @@ bool MainWindow::setLogbook( File file )
         for( const auto& entry : entries )
         {
             // dissassociate
-            Base::Key::disassociate( entry, logbook_ );
+            Base::Key::disassociate( entry, logbook_.get() );
 
             // reassociate to latest child
             auto child = logbook_->latestChild();
@@ -485,7 +478,7 @@ bool MainWindow::setLogbook( File file )
     statusbar_->showLabel();
 
     // register logbook to fileCheck
-    fileCheck_->registerLogbook( logbook_ );
+    fileCheck_->registerLogbook( logbook_.get() );
 
     emit ready();
 
@@ -542,13 +535,7 @@ void MainWindow::reset()
 {
 
     Debug::Throw( "MainWindow::reset.\n" );
-    if( logbook_ ) {
-
-        // delete the logbook, all corresponding entries
-        delete logbook_;
-        logbook_ = 0;
-
-    }
+    if( logbook_ ) logbook_.reset();
 
     // clear list of entries
     keywordModel_.clear();
@@ -1701,7 +1688,7 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
     if( registerLogbook )
     {
         fileCheck_->clear();
-        fileCheck_->registerLogbook( logbook_ );
+        fileCheck_->registerLogbook( logbook_.get() );
     }
 
     // reset ignore_warning flag
@@ -1788,7 +1775,7 @@ void MainWindow::_manageBackups()
     Debug::Throw( "MainWindow::_manageBackups.\n");
 
     BackupManagerDialog dialog( this );
-    Base::Key::associate( &dialog.managerWidget(), logbook_ );
+    Base::Key::associate( &dialog.managerWidget(), logbook_.get() );
     dialog.managerWidget().updateBackups();
 
     // connections
@@ -1849,7 +1836,7 @@ void MainWindow::_print()
 
     // create helper
     LogbookPrintHelper helper( this );
-    helper.setLogbook( logbook_ );
+    helper.setLogbook( logbook_.get() );
 
     // assign entries and keyword
     auto selectionMode( selectionDialog.mode() );
@@ -1946,7 +1933,7 @@ void MainWindow::_printPreview()
 
     // create helper
     LogbookPrintHelper helper( this );
-    helper.setLogbook( logbook_ );
+    helper.setLogbook( logbook_.get() );
 
     auto selectionMode( selectionDialog.mode() );
 
@@ -2052,7 +2039,7 @@ void MainWindow::_toHtml()
 
     // create print helper
     LogbookHtmlHelper helper( this );
-    helper.setLogbook( logbook_ );
+    helper.setLogbook( logbook_.get() );
 
     // assign entries and keyword
     auto selectionMode( logEntrySelectionWidget->mode() );
@@ -2281,7 +2268,7 @@ void MainWindow::_restoreBackup( Backup backup )
     Backup::List backups( logbook_->backupFiles() );
 
     // store associated backup manager Widget
-    Base::KeySet<BackupManagerWidget> widgets( logbook_ );
+    Base::KeySet<BackupManagerWidget> widgets( logbook_.get() );
 
     // replace logbook with backup
     setLogbook( backup.file() );
@@ -2298,7 +2285,7 @@ void MainWindow::_restoreBackup( Backup backup )
 
     // re-associate
     for( const auto& widget:widgets )
-    { Base::Key::associate( widget, logbook_ ); }
+    { Base::Key::associate( widget, logbook_.get() ); }
 
     // and save
     if( !logbook_->file().isEmpty() )
@@ -2453,7 +2440,7 @@ void MainWindow::_reorganize()
 
     // redo fileChecker registration
     fileCheck_->clear();
-    fileCheck_->registerLogbook( logbook_ );
+    fileCheck_->registerLogbook( logbook_.get() );
 
     // save
     logbook_->setModified( true );
@@ -2535,7 +2522,7 @@ void MainWindow::_viewLogbookStatistics()
         return;
     }
 
-    LogbookStatisticsDialog( this, logbook_ ).centerOnWidget( qApp->activeWindow() ).exec();
+    LogbookStatisticsDialog( this, logbook_.get() ).centerOnWidget( qApp->activeWindow() ).exec();
 
 }
 
@@ -2551,7 +2538,7 @@ void MainWindow::_editLogbookInformations()
     }
 
     // create dialog
-    LogbookInformationDialog dialog( this, logbook_ );
+    LogbookInformationDialog dialog( this, logbook_.get() );
     if( !dialog.centerOnWidget( qApp->activeWindow() ).exec() ) return;
 
     // keep track of logbook modifications
@@ -2655,7 +2642,7 @@ void MainWindow::_newEntry()
         editionWindow->setColorMenu( colorMenu_ );
         Base::Key::associate( this, editionWindow );
         connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
-        connect( logbook_, SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
+        connect( logbook_.get(), SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
 
     }
 
@@ -2843,7 +2830,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
         else editionWindow->displayEntry( Keyword::Default, entry );
 
         connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
-        connect( logbook_, SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
+        connect( logbook_.get(), SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
 
     }
 
