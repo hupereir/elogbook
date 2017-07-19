@@ -57,6 +57,8 @@ LogEntry::LogEntry( const QDomElement& element ):
         if( name == Xml::Title ) setTitle( value );
         else if( name == Xml::Keyword ) addKeyword( Keyword( value ) );
         else if( name == Xml::Author ) setAuthor( value );
+        else if( name == Xml::Creation ) setCreation( TimeStamp( static_cast<time_t>(value.toLong()) ) );
+        else if( name == Xml::Modification ) setModification( TimeStamp( static_cast<time_t>(value.toLong()) ) );
 
         // kept for backward compatibility
         else if( name == Xml::Color ) setColor( QColor( value ) );
@@ -105,6 +107,8 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
     // title and author
     if( !title_.isEmpty() ) out.setAttribute( Xml::Title, title_ );
     if( !author_.isEmpty() ) out.setAttribute( Xml::Author, author_ );
+    if( creation_.isValid() ) out.setAttribute( Xml::Creation, QString::number( creation_.unixTime() ) );
+    if( modification_.isValid() ) out.setAttribute( Xml::Modification, QString::number( modification_.unixTime() ) );
 
     // keyword
     if( keywords_.size() == 1 && !keywords_.begin()->get().isEmpty() ) out.setAttribute( Xml::Keyword, keywords_.begin()->get() );
@@ -117,11 +121,6 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
 
     // color
     if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( document ) );
-
-    // dump timeStamp
-    if( creation_.isValid() ) out.appendChild( XmlTimeStamp( creation_ ).domElement( Xml::Creation, document ) );
-    if( modification_.isValid() ) out.appendChild( XmlTimeStamp( modification_ ).domElement( Xml::Modification, document ) );
-
 
     // dump text
     if( !text_.isEmpty() )
