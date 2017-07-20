@@ -110,6 +110,16 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
     if( creation_.isValid() ) out.setAttribute( Xml::Creation, QString::number( creation_.unixTime() ) );
     if( modification_.isValid() ) out.setAttribute( Xml::Modification, QString::number( modification_.unixTime() ) );
 
+    if( color_.isValid() )
+    {
+        /*
+        opaque color is written as attribute.
+        translucent as child
+        */
+        if( color_.get().alpha() == 255 ) out.setAttribute( Xml::Color, color_.get().name() );
+        else out.appendChild( XmlColor( color_ ).domElement( document ) );
+    }
+
     // keyword
     if( keywords_.size() == 1 && !keywords_.begin()->get().isEmpty() ) out.setAttribute( Xml::Keyword, keywords_.begin()->get() );
     else {
@@ -118,9 +128,6 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
         { if( !keyword.get().isEmpty() ) out.appendChild( keyword.domElement( document ) ); }
 
     }
-
-    // color
-    if( color_.isValid() ) out.appendChild( XmlColor( color_ ).domElement( document ) );
 
     // dump text
     if( !text_.isEmpty() )

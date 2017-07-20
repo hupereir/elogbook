@@ -60,7 +60,11 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     explicit LogEntry( const QDomElement& );
 
     //* destructor
-    ~LogEntry();
+    ~LogEntry() override;
+
+    //* delete assignment operator
+    /** copy constructor is private, because it is used for deep copy */
+    LogEntry& operator = ( const LogEntry& ) = delete;
 
     //* mime type (for drag and drop)
     static const QString MimeType;
@@ -72,6 +76,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     QDomElement domElement( QDomDocument& ) const;
 
     //* return a new entry copy from this
+    /* deep copy of the associated attachments is performed */
     LogEntry *copy() const;
 
     //* creation TimeStamp
@@ -297,6 +302,9 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
 
 
     private:
+
+    //* copy constructor
+    LogEntry( const LogEntry& ) = default;
 
     //* LogEntry color
     void setColor( QString );
