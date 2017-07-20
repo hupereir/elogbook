@@ -2406,10 +2406,7 @@ void MainWindow::_reorganize()
     auto logbooks( logbook_->children() );
     logbooks.push_back( logbook_.get() );
     for( const auto& logbook:logbooks )
-    {
-        logbook->setModified( true );
-        logbook->clearAssociations<LogEntry>();
-    }
+    { logbook->removeAssociatedKeys<LogEntry>(); }
 
     // put entry set into a list and sort by creation time.
     // First entry must the oldest
@@ -2420,8 +2417,29 @@ void MainWindow::_reorganize()
     for( const auto& entry:entryList )
     {
         Logbook *logbook( logbook_->latestChild() );
-        Base::Key::associate( entry, logbook );
-        logbook->setModified( true );
+        if( entry->isAssociated( logbook ) )
+        {
+
+            // redo the association to the logbook, but do not mark logbook as modified
+            Base::Key::associate( entry, logbook );
+
+        } else {
+
+            // mark original logbooks as modified
+            for( const auto& logbook:Base::KeySet<Logbook>(entry) )
+            { logbook->setModified( true ); }
+
+            // clear association to old logbook
+            entry->clearAssociations<Logbook>();
+
+            // associate to this logbook
+            Base::Key::associate( entry, logbook );
+
+            // mark logbook as modified
+            logbook->setModified( true );
+
+        }
+
     }
 
     // remove empty logbooks
