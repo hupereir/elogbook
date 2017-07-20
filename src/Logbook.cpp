@@ -210,11 +210,7 @@ bool Logbook::read()
 
             // propagate progressAvailable signal.
             connect( child, SIGNAL(progressAvailable(int)), SIGNAL(progressAvailable(int)) );
-
-            QString buffer;
-            QTextStream( &buffer ) << "Reading " << child->file_.localName();
-            emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( child->file_.localName() ) );
-
+            connect( child, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
             child->read();
             children_.append( child );
 
@@ -489,6 +485,7 @@ Logbook* Logbook::latestChild()
         out->setFile( _childFilename( file_, children_.size() ).addPath( file_.path() ) );
         out->setUseCompression( useCompression_ );
         out->setModified( true );
+        connect( out, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
 
         children_ << out;
         setModified( true );
