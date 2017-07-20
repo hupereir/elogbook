@@ -126,7 +126,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordContainer_ = new QWidget;
 
     // set layout
-    QVBoxLayout* vLayout = new QVBoxLayout;
+    auto vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
     vLayout->setSpacing( 5 );
     keywordContainer_->setLayout( vLayout );
@@ -177,7 +177,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     {
         // popup menu for keyword list
-        ContextMenu* menu = new ContextMenu( keywordList_ );
+        auto menu = new ContextMenu( keywordList_ );
         menu->addAction( newEntryAction_ );
         menu->addAction( newKeywordAction_ );
         menu->addSeparator();
@@ -195,7 +195,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList_->addAction( editKeywordAction_ );
 
     // right box for entries and buttons
-    QWidget* right = new QWidget;
+    auto right = new QWidget;
 
     vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
@@ -212,7 +212,7 @@ MainWindow::MainWindow( QWidget *parent ):
     entryToolBar_->addAction( editEntryAction_ );
 
     // need to use a button to be able to set the popup mode
-    entryColorButton_ = new QToolButton(0);
+    entryColorButton_ = new QToolButton();
     entryColorButton_->setText( tr( "Entry Color" ) );
     entryColorButton_->setIcon( IconEngine::get( IconNames::Color ) );
     entryColorButton_->setPopupMode( QToolButton::InstantPopup );
@@ -314,7 +314,6 @@ void MainWindow::createDefaultLogbook()
 
     // create a new logbook, with no file
     setLogbook( File() );
-    Q_CHECK_PTR( logbook_ );
 
     logbook_->setTitle(  Logbook::NoTitle );
     logbook_->setAuthor( XmlOptions::get().raw( "USER" ) );
@@ -431,7 +430,7 @@ bool MainWindow::setLogbook( File file )
     if( logbook_->isBackup() )
     {
 
-        const QString buffer = QString(
+        auto buffer(
             tr( "Warning: this logbook is a backup and is therefore read-only.\n"
             "All editing will be disabled until it is marked as writable again "
             "in the Logbook Information dialog." ) );
@@ -440,7 +439,7 @@ bool MainWindow::setLogbook( File file )
 
     } else if( logbook_->isReadOnly() ) {
 
-        const QString buffer = QString(
+        auto buffer(
             tr( "Warning: this logbook is read-only.\n"
             "All editing will be disabled until it is marked as writable again "
             "in the Logbook Information dialog." ) );
@@ -488,7 +487,7 @@ bool MainWindow::setLogbook( File file )
     {
         QString buffer( errors.size() > 1 ? tr( "Errors occured while parsing files.\n" ):tr("An error occured while parsing files.\n") );
         buffer += XmlError::toString( errors );
-        InformationDialog( 0, buffer ).exec();
+        InformationDialog( nullptr, buffer ).exec();
     }
 
     // add opened file to OpenPrevious mennu.
@@ -738,7 +737,7 @@ LogEntry* MainWindow::previousEntry( LogEntry* entry, bool updateSelection )
 
     Debug::Throw( "MainWindow::previousEntry.\n" );
     QModelIndex index( entryModel_.index( entry ) );
-    if( !( index.isValid() && index.row() > 0 ) ) return 0;
+    if( !( index.isValid() && index.row() > 0 ) ) return nullptr;
 
     QModelIndex previousIndex( entryModel_.index( index.row()-1, index.column() ) );
     if( updateSelection )
@@ -757,7 +756,7 @@ LogEntry* MainWindow::nextEntry( LogEntry* entry, bool updateSelection )
 
     Debug::Throw( "MainWindow::nextEntry.\n" );
     QModelIndex index( entryModel_.index( entry ) );
-    if( !( index.isValid() && index.row()+1 < entryModel_.rowCount() ) ) return 0;
+    if( !( index.isValid() && index.row()+1 < entryModel_.rowCount() ) ) return nullptr;
 
     QModelIndex nextIndex( entryModel_.index( index.row()+1, index.column() ) );
     if( updateSelection )
@@ -777,15 +776,14 @@ void MainWindow::resetAttachmentWindow() const
     Debug::Throw( "MainWindow::resetAttachmentWindow.\n" );
 
     // clear the AttachmentWindow
-    AttachmentWindow &attachmentWindow( Base::Singleton::get().application<Application>()->attachmentWindow() );
+    auto& attachmentWindow( Base::Singleton::get().application<Application>()->attachmentWindow() );
     attachmentWindow.frame().clear();
 
     // check current logbook
     if( !logbook_ ) return;
 
     // retrieve logbook attachments, adds to AttachmentWindow
-    Base::KeySet<Attachment> attachments( logbook_->attachments() );
-    attachmentWindow.frame().add( attachments.toList() );
+    attachmentWindow.frame().add( logbook_->attachments().toList() );
 
     return;
 
@@ -818,7 +816,7 @@ void MainWindow::saveUnchecked()
     }
 
     // check logbook filename is writable
-    File fullname = logbook_->file().expanded();
+    auto fullname = logbook_->file().expanded();
     if( fullname.exists() ) {
 
         // check file is not a directory
@@ -835,7 +833,7 @@ void MainWindow::saveUnchecked()
 
     } else {
 
-        File path( fullname.path() );
+        auto path( fullname.path() );
         if( !path.isDirectory() ) {
             InformationDialog( this, tr( "Selected path is not vallid. <Save Logbook> canceled." ) ).exec();
             return;
@@ -915,11 +913,11 @@ void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mod
     int total( 0 );
 
     // keep track of the last visible entry
-    LogEntry *lastVisibleEntry( 0 );
+    LogEntry *lastVisibleEntry( nullptr );
 
     // keep track of the current selected entry
-    QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
+    auto currentIndex( entryList_->selectionModel()->currentIndex() );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):nullptr );
 
     // check is selection is a valid color when Color search is requested.
     bool colorValid = ( mode&SearchWidget::Color && QColor( selection ).isValid() );
@@ -997,8 +995,8 @@ void MainWindow::showAllEntries()
     Debug::Throw( "MainWindow::showAllEntries.\n" );
 
     // keep track of the current selected entry
-    QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
+    auto currentIndex( entryList_->selectionModel()->currentIndex() );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):nullptr );
 
     // set all logbook entries to find_visible
     for( const auto& entry:logbook_->entries() )
@@ -1053,7 +1051,7 @@ void MainWindow::timerEvent( QTimerEvent* event )
         editionTimer_.stop();
 
         // check if current index is valid and was 'double-clicked'
-        QModelIndex index( entryList_->currentIndex() );
+        auto index( entryList_->currentIndex() );
         if( index.isValid() && index == entryModel_.editionIndex() )
         { _startEntryEdition(); }
 
@@ -1795,13 +1793,14 @@ void MainWindow::_revertToSaved()
     Debug::Throw( "MainWindow::_revertToSaved.\n" );
 
     // check logbook
-    if( !logbook_ ){
+    if( !logbook_ )
+    {
         InformationDialog( this, tr( "No logbook opened. <Reload> canceled." ) ).exec();
         return;
     }
 
     // ask for confirmation
-    const QString buffer = QString( tr( "Discard changes to '%1'?" ) ).arg( logbook_->file().localName());
+    auto buffer = tr( "Discard changes to '%1'?" ).arg( logbook_->file().localName());
     if( ( _hasModifiedEntries() || logbook_->modified() ) && !QuestionDialog( this, buffer ).exec() )
     { return; }
 
@@ -1861,32 +1860,27 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     QPrinter printer( QPrinter::HighResolution );
 
     // generate document name
-    QString buffer;
-    QTextStream( &buffer )  << "elogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid();
-    printer.setDocName( buffer );
+    printer.setDocName( QString( "elogbook_%1_%2_%3" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() ) );
 
     // create options widget
-    PrinterOptionWidget* optionWidget( new PrinterOptionWidget );
+    auto optionWidget = new PrinterOptionWidget;
     optionWidget->setHelper( &helper );
     connect( optionWidget, SIGNAL(orientationChanged(QPrinter::Orientation)), &helper, SLOT(setOrientation(QPrinter::Orientation)) );
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
-    LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget;
+    auto logbookOptionWidget = new LogbookPrintOptionWidget;
     logbookOptionWidget->setWindowTitle( "Logbook Configuration" );
     connect( logbookOptionWidget, SIGNAL(maskChanged(Logbook::Mask)), &helper, SLOT(setMask(Logbook::Mask)) );
     logbookOptionWidget->read( XmlOptions::get() );
 
-    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget;
+    auto logEntryOptionWidget = new LogEntryPrintOptionWidget;
     logEntryOptionWidget->setWindowTitle( "Logbook Entry Configuration" );
     connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setEntryMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
-    dialog.setOptionTabs( QList<QWidget *>()
-        << optionWidget
-        << logbookOptionWidget
-        << logEntryOptionWidget );
+    dialog.setOptionTabs( { optionWidget, logbookOptionWidget, logEntryOptionWidget } );
 
     dialog.setWindowTitle( tr( "Print Logbook - Elogbook" ) );
     if( dialog.exec() == QDialog::Rejected ) return;
@@ -1990,25 +1984,21 @@ void MainWindow::_toHtml()
     else if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // create options widget
-    LogbookPrintOptionWidget* logbookOptionWidget = new LogbookPrintOptionWidget;
+    auto logbookOptionWidget = new LogbookPrintOptionWidget;
     logbookOptionWidget->read( XmlOptions::get() );
 
-    LogEntryPrintSelectionWidget* logEntrySelectionWidget = new LogEntryPrintSelectionWidget;
+    auto logEntrySelectionWidget = new LogEntryPrintSelectionWidget;
     logEntrySelectionWidget->read( XmlOptions::get() );
 
-    LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget;
+    auto logEntryOptionWidget = new LogEntryPrintOptionWidget;
     logEntryOptionWidget->read( XmlOptions::get() );
 
     // create dialog
     HtmlDialog dialog( this );
-    dialog.setOptionWidgets( QList<QWidget *>()
-        << logEntrySelectionWidget
-        << logbookOptionWidget
-        << logEntryOptionWidget );
+    dialog.setOptionWidgets( { logEntrySelectionWidget, logbookOptionWidget, logEntryOptionWidget } );
 
     // generate file name
-    QString buffer;
-    QTextStream( &buffer )  << "eLogbook_" << Util::user() << "_" << TimeStamp::now().unixTime() << "_" << Util::pid() << ".html";
+    QString buffer = QString( "eLogbook_%1_%2_%3.html" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() );
     dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
 
     // execute dialog
@@ -2109,7 +2099,7 @@ void MainWindow::_synchronize()
 
         QString buffer = QString( errors.size() > 1 ? tr( "Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
         buffer += XmlError::toString( errors );
-        InformationDialog( 0, buffer ).exec();
+        InformationDialog( nullptr, buffer ).exec();
 
         Base::Singleton::get().application<Application>()->idle();
         return;
@@ -2342,7 +2332,7 @@ void MainWindow::_mergeBackup( Backup backup )
 
         QString buffer = QString( errors.size() > 1 ? tr( "Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
         buffer += XmlError::toString( errors );
-        InformationDialog( 0, buffer ).exec();
+        InformationDialog( nullptr, buffer ).exec();
 
         Base::Singleton::get().application<Application>()->idle();
         return;
@@ -2382,7 +2372,7 @@ void MainWindow::_mergeBackup( Backup backup )
     resetAttachmentWindow();
 
     // retrieve last modified entry
-    Base::KeySet<LogEntry> entries( logbook_->entries() );
+    auto entries( logbook_->entries() );
     auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
     selectEntry( *iter );
     entryList_->setFocus();
@@ -2410,16 +2400,15 @@ void MainWindow::_reorganize()
     }
 
     // retrieve all entries
-    Base::KeySet<LogEntry> entries( logbook_->entries() );
-    for( const auto& entry:entries )
+    auto entries( logbook_->entries() );
+
+    // clear all logbook to entries associations
+    auto logbooks( logbook_->children() );
+    logbooks.push_back( logbook_.get() );
+    for( const auto& logbook:logbooks )
     {
-
-        Base::KeySet<Logbook> logbooks( entry );
-        for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
-        { logbook->setModified( true ); }
-
-        entry->clearAssociations<Logbook>();
-
+        logbook->setModified( true );
+        logbook->clearAssociations<LogEntry>();
     }
 
     // put entry set into a list and sort by creation time.
@@ -2430,7 +2419,7 @@ void MainWindow::_reorganize()
     // put entries in logbook
     for( const auto& entry:entryList )
     {
-        Logbook *logbook( MainWindow::logbook_->latestChild() );
+        Logbook *logbook( logbook_->latestChild() );
         Base::Key::associate( entry, logbook );
         logbook->setModified( true );
     }
@@ -2454,11 +2443,11 @@ void MainWindow::_showDuplicatedEntries()
     Debug::Throw( "MainWindow::_showDuplicatedEntries.\n" );
 
     // keep track of the last visible entry
-    LogEntry *lastVisibleEntry( 0 );
+    LogEntry *lastVisibleEntry( nullptr );
 
     // keep track of current index
     QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):nullptr );
 
     // keep track of found entries
     int found( 0 );
@@ -2619,7 +2608,7 @@ void MainWindow::_newEntry()
     Debug::Throw( "MainWindow::_NewEntry.\n" );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
-    EditionWindow *editionWindow( 0 );
+    EditionWindow *editionWindow( nullptr );
     Base::KeySet<EditionWindow> frames( this );
     Base::KeySetIterator<EditionWindow> iterator( frames.get() );
     iterator.toBack();
@@ -2638,7 +2627,7 @@ void MainWindow::_newEntry()
     if( !editionWindow )
     {
         // create new EditionWindow
-        editionWindow = new EditionWindow( 0, false );
+        editionWindow = new EditionWindow( nullptr, false );
         editionWindow->setColorMenu( colorMenu_ );
         Base::Key::associate( this, editionWindow );
         connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
@@ -2753,7 +2742,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     Debug::Throw( "MainWindow::_displayEntry.\n" );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
-    EditionWindow *editionWindow( 0 );
+    EditionWindow *editionWindow( nullptr );
     Base::KeySet<EditionWindow> windows( this );
     for( const auto& window:windows )
     {
@@ -2820,7 +2809,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
     // if no editionWindow is found create a new one
     if( !editionWindow )
     {
-        editionWindow = new EditionWindow( 0, false );
+        editionWindow = new EditionWindow( nullptr, false );
         editionWindow->setColorMenu( colorMenu_ );
         Base::Key::associate( this, editionWindow );
 
@@ -3391,7 +3380,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
 
     // keep track of the current selected entry
     QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
-    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):0 );
+    LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):nullptr );
 
     // retrieve all logbook entries
     Base::KeySet<LogEntry> turnedOffEntries;
@@ -3606,7 +3595,7 @@ void MainWindow::_toggleTreeMode( bool value )
     entryList_->setDragEnabled( value );
 
     // get current entry
-    LogEntry* currentEntry( 0 );
+    LogEntry* currentEntry( nullptr );
     QModelIndex index( entryList_->selectionModel()->currentIndex() );
     if( index.isValid() ) currentEntry = entryModel_.get( index );
 
