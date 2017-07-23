@@ -568,8 +568,10 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     /** it is called by the renameEntry keyword slots **/
     void _renameEntryKeyword( Keyword );
 
-    //* change selected entries keyword using argument
-    /** it is called by the confirmRenameEntry keyword slots **/
+    //* copy entry to new keyword
+    void _copyEntryKeyword( Keyword );
+
+    //* link entry to new keyword
     void _linkEntryKeyword( Keyword );
 
     //* update selection and entries

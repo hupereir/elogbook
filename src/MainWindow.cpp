@@ -1271,8 +1271,8 @@ void MainWindow::_installActions()
     keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
     action->setShortcut( Qt::Key_Escape );
 
-    // keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Here" ), this ) );
     entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Move ), tr( "Move Here" ), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Here" ), this ) );
     entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Link ), tr( "Link Here" ), this ) );
     entryKeywordChangedMenuActions_.append( action = new QAction( this ) );
     action->setSeparator( true );
@@ -2404,7 +2404,7 @@ void MainWindow::_reorganize()
 
     // clear all logbook to entries associations
     auto logbooks( logbook_->children() );
-    logbooks.push_back( logbook_.get() );
+    logbooks.append( logbook_.get() );
     for( const auto& logbook:logbooks )
     { logbook->removeAssociatedKeys<LogEntry>(); }
 
@@ -3228,7 +3228,8 @@ void MainWindow::_confirmRenameEntryKeyword( Keyword newKeyword )
     menu.ensurePolished();
     QAction* action( menu.exec( QCursor::pos() ) );
     if( action == entryKeywordChangedMenuActions_[0] ) _renameEntryKeyword( newKeyword );
-    else if( action == entryKeywordChangedMenuActions_[1] ) _linkEntryKeyword( newKeyword );
+    else if( action == entryKeywordChangedMenuActions_[1] ) _copyEntryKeyword( newKeyword );
+    else if( action == entryKeywordChangedMenuActions_[2] ) _linkEntryKeyword( newKeyword );
     else return;
 
 }
@@ -3282,6 +3283,51 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword )
     }
 
     // update selection
+    _updateSelection( newKeyword, entries );
+
+    // Save logbook if needed
+    if( !logbook_->file().isEmpty() ) save();
+
+    return;
+
+}
+
+//_______________________________________________
+void MainWindow::_copyEntryKeyword( Keyword newKeyword )
+{
+
+    Debug::Throw() << "MainWindow::_copyEntryKeyword - newKeyword: " << newKeyword << endl;
+
+    const auto currentKeyword( this->currentKeyword() );
+    if( treeModeAction_->isChecked() && newKeyword == currentKeyword ) return;
+
+    // keep track of modified entries
+    Base::KeySet<LogEntry> entries;
+
+    // retrieve current selection
+    for( const auto& entry:entryModel_.get( entryList_->selectionModel()->selectedRows() ) )
+    {
+
+        // change keyword and set as modified
+        if( entry->keywords().contains( newKeyword ) ) continue;
+
+        //* copy entry to new one
+        LogEntry* newEntry = entry->copy();
+
+        //* set keyword
+        newEntry->clearKeywords();
+        newEntry->addKeyword( newKeyword );
+
+        //* associate to logbook
+        auto logbook( logbook_->latestChild() );
+        logbook->setModified( true );
+        Base::Key::associate( newEntry, logbook );
+
+        // keep track of modified entries
+        entries.insert( newEntry );
+
+    }
+
     _updateSelection( newKeyword, entries );
 
     // Save logbook if needed

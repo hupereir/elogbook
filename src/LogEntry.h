@@ -77,7 +77,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
 
     //* return a new entry copy from this
     /* deep copy of the associated attachments is performed */
-    LogEntry *copy() const;
+    LogEntry* copy() const;
 
     //* creation TimeStamp
     TimeStamp creation() const

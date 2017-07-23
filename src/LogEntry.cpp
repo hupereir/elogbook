@@ -162,6 +162,10 @@ LogEntry* LogEntry::copy() const
 
     LogEntry *out( new LogEntry( *this ) );
 
+    // assign creation and modification to now
+    out->setCreation( TimeStamp::now() );
+    out->setModification( TimeStamp::now() );
+
     // clear associations
     out->clearAssociations();
 
