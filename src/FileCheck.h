@@ -72,14 +72,6 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
             timeStamp_( stamp )
         {}
 
-        //* equal to operator
-        bool operator == ( const Data& data ) const
-        { return file() == data.file(); }
-
-        //* less than operator
-        bool operator < ( const Data& data ) const
-        { return file() < data.file(); }
-
         //* file
         void setFile( const QString& file )
         { file_ = file; }
@@ -250,6 +242,15 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
 
 };
 
+//* equal to operator
+inline bool operator == ( const FileCheck::Data& first, const FileCheck::Data& second)
+{ return first.file() == second.file(); }
+
+//* less than operator
+inline bool operator < ( const FileCheck::Data& first, const FileCheck::Data& second)
+{ return first.file() < second.file(); }
+
+//* hash
 inline uint qHash( const FileCheck::Data& data )
 { return qHash( data.file() ); }
 

@@ -21,6 +21,8 @@
 *******************************************************************************/
 
 #include "Counter.h"
+
+#include "CppUtil.h"
 #include "File.h"
 #include "TimeStamp.h"
 
@@ -43,17 +45,6 @@ class Backup final: private Base::Counter<Backup>
 
     //* constructor from Dom
     explicit Backup( const QDomElement& );
-
-    //* equal to operator
-    bool operator == (const Backup& other ) const
-    { return creation() == other.creation() && file() == other.file(); }
-
-    //* less than operator
-    bool operator < (const Backup& other ) const
-    {
-        if( creation() != other.creation() ) return creation() < other.creation();
-        else return file() < other.file();
-    }
 
     //*@name accessors
     //@{
@@ -118,5 +109,16 @@ class Backup final: private Base::Counter<Backup>
     bool valid_ = false;
 
 };
+
+//* equal to operator
+inline bool operator == (const Backup& first, const Backup& second)
+{ return first.creation() == second.creation() && first.file() == second.file(); }
+
+//* less than operator
+inline bool operator < (const Backup& first, const Backup& second)
+{
+    if( first.creation() != second.creation() ) return first.creation() < second.creation();
+    else return first.file() < second.file();
+}
 
 #endif

@@ -51,18 +51,6 @@ class Keyword final: private Base::Counter<Keyword>
     using Set = QSet<Keyword>;
     using List = QList<Keyword>;
 
-    //* equal to operator
-    bool operator == (const Keyword& other ) const
-    { return get() == other.get(); }
-
-    //* equal to operator
-    bool operator != (const Keyword& other ) const
-    { return !( *this == other ); }
-
-    //* less than operator
-    bool operator < (const Keyword& other ) const
-    { return get() < other.get(); }
-
     //*@name accessors
     //@{
 
@@ -122,6 +110,14 @@ class Keyword final: private Base::Counter<Keyword>
         return out;
     }
 };
+
+//* equal to operator
+inline bool operator == (const Keyword& first, const Keyword& second)
+{ return first.get() == second.get(); }
+
+//* less than operator
+inline bool operator < (const Keyword& first, const Keyword& second)
+{ return first.get() < second.get(); }
 
 //* hash
 inline uint qHash( const Keyword& keyword )

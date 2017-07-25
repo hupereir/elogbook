@@ -57,19 +57,6 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     //* domElement
     QDomElement domElement( QDomDocument& parent ) const;
 
-    /**\fn bool operator < (const Attachment& attachment ) const
-    \brief less than operator, based on Attachment Short name lexicographic order
-    \param attachment the attachment to which this is to be compared
-    */
-    bool operator < (const Attachment& attachment ) const;
-
-    /**\fn bool operator == (const Attachment& attachment ) const
-    \brief equal to operator, based on Attachment Full name
-    \param attachment the attachment to which this is to be compared
-    */
-    bool operator == (const Attachment& attachment ) const
-    { return file_ == attachment.file_; }
-
     //* used to check attachment filenames
     class SameFileFTor
     {
@@ -282,6 +269,19 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
 
     //* true for URL or if file exist
     bool isValid_ = false;
+
+    /**\fn bool operator < (const Attachment& attachment ) const
+    \brief less than operator, based on Attachment Short name lexicographic order
+    \param attachment the attachment to which this is to be compared
+    */
+    friend bool operator < (const Attachment&, const Attachment&);
+
+    /**\fn bool operator == (const Attachment& attachment ) const
+    \brief equal to operator, based on Attachment Full name
+    \param attachment the attachment to which this is to be compared
+    */
+    friend bool operator == (const Attachment& first, const Attachment& second)
+    { return first.file_ == second.file_; }
 
 };
 
