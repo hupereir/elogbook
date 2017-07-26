@@ -33,19 +33,15 @@ const QString LogEntry::MimeType = "logbook/log-entry-list";
 
 //__________________________________
 LogEntry::LogEntry():
-    Counter( "LogEntry" )
-{
-    Debug::Throw( "LogEntry::LogEntry.\n" );
-    _init();
-}
+    Counter( "LogEntry" ),
+    creation_( TimeStamp::now() ),
+    modification_( TimeStamp::now() )
+{}
 
 //_________________________________________________
 LogEntry::LogEntry( const QDomElement& element ):
-    Counter( "LogEntry" )
+    LogEntry()
 {
-    Debug::Throw( "LogEntry::LogEntry [dom].\n" );
-    _init();
-
     // parse attributes
     QDomNamedNodeMap attributes( element.attributes() );
     for( int i=0; i<attributes.count(); i++ )
@@ -91,18 +87,16 @@ LogEntry::LogEntry( const QDomElement& element ):
 //__________________________________
 LogEntry::~LogEntry()
 {
-
     // delete associated attachments
     for( const auto& attachment:Base::KeySet<Attachment>( this ) )
     { delete attachment; }
-
 }
 
 //__________________________________
 QDomElement LogEntry::domElement( QDomDocument& document ) const
 {
     Debug::Throw( "LogEntry::domElement.\n" );
-    QDomElement out( document.createElement( Xml::Entry ) );
+    auto out( document.createElement( Xml::Entry ) );
 
     // title and author
     if( !title_.isEmpty() ) out.setAttribute( Xml::Title, title_ );
@@ -160,11 +154,7 @@ LogEntry* LogEntry::copy() const
 {
     Debug::Throw( "LogEntry::copy.\n" );
 
-    LogEntry *out( new LogEntry( *this ) );
-
-    // assign creation and modification to now
-    out->setCreation( TimeStamp::now() );
-    out->setModification( TimeStamp::now() );
+    auto *out( new LogEntry( *this ) );
 
     // clear associations
     out->clearAssociations();
@@ -265,20 +255,6 @@ void LogEntry::addFormat( Format::TextFormatBlock format )
     if( format.color() == Qt::black ) format.unsetColor();
     if( format.format() == Format::Default && !format.color().isValid() ) return;
     formats_.append(format);
-}
-
-//__________________________________
-void LogEntry::_init()
-{
-    findSelected_ = true;
-    keywordSelected_ = false;
-    creation_ = TimeStamp::now();
-    modification_ = TimeStamp::now();
-    title_.clear();
-    keywords_.clear();
-    author_.clear();
-    text_.clear();
-    color_ = Base::Color();
 }
 
 //________________________________________________________

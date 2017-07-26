@@ -3312,7 +3312,11 @@ void MainWindow::_copyEntryKeyword( Keyword newKeyword )
         if( entry->keywords().contains( newKeyword ) ) continue;
 
         //* copy entry to new one
-        LogEntry* newEntry = entry->copy();
+        auto newEntry = entry->copy();
+
+        // assign creation and modification to now
+        newEntry->setCreation( TimeStamp::now() );
+        newEntry->setModification( TimeStamp::now() );
 
         //* set keyword
         newEntry->clearKeywords();

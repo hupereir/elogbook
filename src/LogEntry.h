@@ -309,9 +309,6 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     //* LogEntry color
     void setColor( QString );
 
-    //* initialize fields (default values)
-    void _init();
-
     //* case sensitivity
     Qt::CaseSensitivity _caseSensitive() const;
 
@@ -337,7 +334,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     Base::Color color_;
 
     //* set to true if entry is said visible by the selection bar
-    bool findSelected_ = false;
+    bool findSelected_ = true;
 
     //* set to true if entry is said visible by the keyword selection
     bool keywordSelected_ = false;
