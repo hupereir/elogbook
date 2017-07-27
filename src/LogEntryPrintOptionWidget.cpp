@@ -19,6 +19,8 @@
 
 
 #include "LogEntryPrintOptionWidget.h"
+
+#include "CppUtil.h"
 #include "LogEntry.h"
 #include "XmlOptions.h"
 
@@ -36,13 +38,16 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_.insert( LogEntry::KeywordMask, new QCheckBox( tr( "Keyword" ), this ) );
-    checkBoxes_.insert( LogEntry::TitleMask, new QCheckBox( tr( "Title" ), this ) );
-    checkBoxes_.insert( LogEntry::AuthorMask, new QCheckBox( tr( "Author" ), this ) );
-    checkBoxes_.insert( LogEntry::CreationMask, new QCheckBox( tr( "Creation time" ), this ) );
-    checkBoxes_.insert( LogEntry::ModificationMask, new QCheckBox( tr( "Last modificaion time" ), this ) );
-    checkBoxes_.insert( LogEntry::TextMask, new QCheckBox( tr( "Contents" ), this ) );
-    checkBoxes_.insert( LogEntry::AttachmentsMask, new QCheckBox( tr( "Attachments" ), this ) );
+    checkBoxes_ = Base::makeT<CheckBoxMap>(
+    {
+        { LogEntry::KeywordMask, new QCheckBox( tr( "Keyword" ), this ) },
+        { LogEntry::TitleMask, new QCheckBox( tr( "Title" ), this ) },
+        { LogEntry::AuthorMask, new QCheckBox( tr( "Author" ), this ) },
+        { LogEntry::CreationMask, new QCheckBox( tr( "Creation time" ), this ) },
+        { LogEntry::ModificationMask, new QCheckBox( tr( "Last modificaion time" ), this ) },
+        { LogEntry::TextMask, new QCheckBox( tr( "Contents" ), this ) },
+        { LogEntry::AttachmentsMask, new QCheckBox( tr( "Attachments" ), this ) }
+    } );
 
     // insert in layout
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

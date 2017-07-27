@@ -19,6 +19,8 @@
 
 
 #include "LogbookPrintOptionWidget.h"
+
+#include "CppUtil.h"
 #include "Logbook.h"
 #include "XmlOptions.h"
 
@@ -36,16 +38,18 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_.insert( Logbook::TitleMask, new QCheckBox( tr( "Title" ), this ) );
-    checkBoxes_.insert( Logbook::CommentsMask, new QCheckBox( tr( "Comments" ), this ) );
-    checkBoxes_.insert( Logbook::AuthorMasks, new QCheckBox( tr( "Author" ), this ) );
-    checkBoxes_.insert( Logbook::FileMask, new QCheckBox( tr( "File name" ), this ) );
-    checkBoxes_.insert( Logbook::DirectoryMask, new QCheckBox( tr( "Attachments directory name" ), this ) );
-    checkBoxes_.insert( Logbook::CreationMask, new QCheckBox( tr( "Creation time" ), this ) );
-    checkBoxes_.insert( Logbook::ModificationMask, new QCheckBox( tr( "Modificaion time" ), this ) );
-    checkBoxes_.insert( Logbook::BackupMask, new QCheckBox( tr( "Backup time" ), this ) );
-    checkBoxes_.insert( Logbook::TableOfContentMask, new QCheckBox( tr( "Table of contents" ), this ) );
-    checkBoxes_.insert( Logbook::ContentMask, new QCheckBox( tr( "Selected logbook entries" ), this ) );
+    checkBoxes_ = Base::makeT<CheckBoxMap>( {
+        { Logbook::TitleMask, new QCheckBox( tr( "Title" ), this ) },
+        { Logbook::CommentsMask, new QCheckBox( tr( "Comments" ), this ) },
+        { Logbook::AuthorMasks, new QCheckBox( tr( "Author" ), this ) },
+        { Logbook::FileMask, new QCheckBox( tr( "File name" ), this ) },
+        { Logbook::DirectoryMask, new QCheckBox( tr( "Attachments directory name" ), this ) },
+        { Logbook::CreationMask, new QCheckBox( tr( "Creation time" ), this ) },
+        { Logbook::ModificationMask, new QCheckBox( tr( "Modificaion time" ), this ) },
+        { Logbook::BackupMask, new QCheckBox( tr( "Backup time" ), this ) },
+        { Logbook::TableOfContentMask, new QCheckBox( tr( "Table of contents" ), this ) },
+        { Logbook::ContentMask, new QCheckBox( tr( "Selected logbook entries" ), this ) }
+    } );
 
     // insert in layout
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
