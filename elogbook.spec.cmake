@@ -33,8 +33,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc COPYING INSTALL
+%{prefix}/bin/compress-logbook
 %{prefix}/bin/copy-logbook
-%{prefix}/bin/synchronize-logbook
 %{prefix}/bin/elogbook
+%{prefix}/bin/synchronize-logbook
+%{prefix}/bin/uncompress-logbook
 
 %changelog
