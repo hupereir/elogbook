@@ -38,15 +38,15 @@ namespace Private
         void setColor( const QColor& );
 
         //* size hint
-        QSize sizeHint() const;
+        QSize sizeHint() const override;
 
         //* size hint
-        QSize minimumSizeHint() const;
+        QSize minimumSizeHint() const override;
 
         protected:
 
         //* paint event
-        void paintEvent( QPaintEvent* );
+        void paintEvent( QPaintEvent* ) override;
 
     };
 

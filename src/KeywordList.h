@@ -40,7 +40,7 @@ class KeywordList: public TreeView
     void setDefaultWidth( int );
 
     //* size
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     private:
 

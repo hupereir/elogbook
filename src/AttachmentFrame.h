@@ -54,7 +54,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     { return defaultHeight_; }
 
     //* size
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     //* list
     bool hasList() const
