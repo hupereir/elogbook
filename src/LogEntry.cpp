@@ -55,8 +55,6 @@ LogEntry::LogEntry( const QDomElement& element ):
         else if( name == Xml::Author ) setAuthor( value );
         else if( name == Xml::Creation ) setCreation( TimeStamp( static_cast<time_t>(value.toLong()) ) );
         else if( name == Xml::Modification ) setModification( TimeStamp( static_cast<time_t>(value.toLong()) ) );
-
-        // kept for backward compatibility
         else if( name == Xml::Color ) setColor( QColor( value ) );
         else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized entry attribute: \"" << name << "\"\n";
     }
