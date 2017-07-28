@@ -212,7 +212,7 @@ MainWindow::MainWindow( QWidget *parent ):
     entryToolBar_->addAction( editEntryAction_ );
 
     // need to use a button to be able to set the popup mode
-    entryColorButton_ = new QToolButton();
+    entryColorButton_ = new QToolButton;
     entryColorButton_->setText( tr( "Entry Color" ) );
     entryColorButton_->setIcon( IconEngine::get( IconNames::Color ) );
     entryColorButton_->setPopupMode( QToolButton::InstantPopup );
