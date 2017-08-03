@@ -174,7 +174,7 @@ bool Logbook::read()
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( element ) );
         else if( tagName == Xml::Backup ) setBackup( XmlTimeStamp( element ) );
         else if( tagName == Xml::RecentEntries ) _readRecentEntries( element );
-        else if( tagName == Xml::BackupMask ) backupFiles_ << Backup( element );
+        else if( tagName == Xml::BackupMask ) backupFiles_.append( Backup( element ) );
         else if( tagName == Xml::Entry ) {
 
             // create entry. Make sure it has a non zero keyword
@@ -433,7 +433,7 @@ XmlError::List Logbook::xmlErrors() const
     XmlError::List out;
     if( error_ ) out.append( error_ );
     for( const auto& logbook:children_ )
-    { out <<  logbook->xmlErrors(); }
+    { out.append( logbook->xmlErrors() ); }
 
     return out;
 }
@@ -444,9 +444,9 @@ Logbook::List Logbook::children() const
     List out;
     for( const auto& logbook:children_ )
     {
-        out << logbook;
+        out.append( logbook );
         List children( logbook->children() );
-        out << children;
+        out.append( children );
     }
 
     return out;
@@ -483,7 +483,7 @@ Logbook* Logbook::latestChild()
         out->setModified( true );
         connect( out, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
 
-        children_ << out;
+        children_.append( out );
         setModified( true );
 
         // associate to existing FileCheck if any
@@ -591,7 +591,7 @@ void Logbook::addRecentEntry( const LogEntry* entry )
     recentEntries_.erase( std::remove( recentEntries_.begin(), recentEntries_.end(), timeStamp ), recentEntries_.end() );
 
     // add again at the end of the list
-    recentEntries_ << timeStamp;
+    recentEntries_.append( timeStamp );
 
     // mark logbook as modified
     setModified( true );

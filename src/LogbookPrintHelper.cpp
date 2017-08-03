@@ -107,20 +107,20 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     using StringPair=QPair<QString, QString>;
     using StringList=QList<StringPair>;
     StringList values;
-    if( mask_&Logbook::TitleMask ) values << StringPair( tr( "Title:" ), logbook_->title() );
-    if( mask_&Logbook::CommentsMask && !logbook_->comments().isEmpty() ) values << StringPair( tr( "Comments:" ), logbook_->comments() );
-    if( mask_&Logbook::AuthorMasks ) values << StringPair( tr( "Author:" ), logbook_->author() );
+    if( mask_&Logbook::TitleMask ) values.append( StringPair( tr( "Title:" ), logbook_->title() ) );
+    if( mask_&Logbook::CommentsMask && !logbook_->comments().isEmpty() ) values.append( StringPair( tr( "Comments:" ), logbook_->comments() ) );
+    if( mask_&Logbook::AuthorMasks ) values.append( StringPair( tr( "Author:" ), logbook_->author() ) );
 
-    if( mask_&Logbook::FileMask ) values << StringPair( tr( "File:" ), logbook_->file() );
+    if( mask_&Logbook::FileMask ) values.append( StringPair( tr( "File:" ), logbook_->file() ) );
     if( mask_&Logbook::DirectoryMask && !logbook_->directory().isEmpty() )
     {
         const QString buffer = logbook_->checkDirectory() ? QString(logbook_->directory()) : QString( tr( "%1 (not found)" ) ).arg( logbook_->directory() );
-        values << StringPair( tr( "Attachments directory:" ), buffer );
+        values.append( StringPair( tr( "Attachments directory:" ), buffer ) );
     }
 
-    if( mask_&Logbook::CreationMask ) values << StringPair( tr( "Created:" ), logbook_->creation().toString() );
-    if( mask_&Logbook::ModificationMask ) values << StringPair( tr( "Modified:" ), logbook_->modification().toString() );
-    if( mask_&Logbook::BackupMask ) values << StringPair( tr( "Backup:" ), logbook_->backup().toString() );
+    if( mask_&Logbook::CreationMask ) values.append( StringPair( tr( "Created:" ), logbook_->creation().toString() ) );
+    if( mask_&Logbook::ModificationMask ) values.append( StringPair( tr( "Modified:" ), logbook_->modification().toString() ) );
+    if( mask_&Logbook::BackupMask ) values.append( StringPair( tr( "Backup:" ), logbook_->backup().toString() ) );
     const int nRows( values.size() );
 
     // create table

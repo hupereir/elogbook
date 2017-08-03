@@ -282,8 +282,7 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
 //______________________________________________________________________
 QStringList LogEntryModel::mimeTypes() const
 {
-    QStringList types;
-    types << LogEntry::MimeType << "text/plain";
+    static const QStringList types( { LogEntry::MimeType, "text/plain" } );
     return types;
 }
 

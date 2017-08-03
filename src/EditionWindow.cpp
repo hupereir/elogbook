@@ -203,18 +203,18 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( newEntryAction_ );
     toolbar->addAction( saveAction_ );
     toolbar->addAction( deleteEntryAction_ );
-    readOnlyActions_ << deleteEntryAction_;
+    readOnlyActions_.append( deleteEntryAction_ );
     toolbar->addAction( &frame->newAction() );
 
     // format bar
     formatBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
     formatBar_->setTarget( editor );
     formatBar_->addAction( insertLinkAction_ );
-    readOnlyActions_ << insertLinkAction_;
+    readOnlyActions_.append( insertLinkAction_ );
 
     const auto& actions( formatBar_->actions() );
     for( auto&& iter = actions.begin(); iter != actions.end(); ++iter )
-    { readOnlyActions_ << iter.value(); }
+    { readOnlyActions_.append( iter.value() ); }
 
     // set proper connection for first editor
     // (because it could not be performed in _newTextEditor)
@@ -226,8 +226,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar = new CustomToolBar( tr( "History" ), this, "EDITION_TOOLBAR" );
     toolbar->addAction( undoAction_ );
     toolbar->addAction( redoAction_ );
-    readOnlyActions_ << undoAction_;
-    readOnlyActions_ << redoAction_;
+    readOnlyActions_.append( { undoAction_, redoAction_ } );
 
     // undo/redo connections
     connect( keywordEditor_, SIGNAL(textChanged(QString)), SLOT(_updateUndoRedoActions()) );
@@ -1011,7 +1010,7 @@ Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orie
     // assign equal size to all splitter children
     QList<int> sizes;
     for( int i=0; i<splitter.count(); i++ )
-    { sizes << dimension/splitter.count(); }
+    { sizes.append( dimension/splitter.count() ); }
     splitter.setSizes( sizes );
 
     // synchronize both editors, if cloned
@@ -1091,7 +1090,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 
             QList<int> sizes;
             for( int i=0; i<parentSplitter->count(); i++ )
-            { sizes << dimension/parentSplitter->count(); }
+            { sizes.append( dimension/parentSplitter->count() ); }
             parentSplitter->setSizes( sizes );
 
         }
@@ -1311,7 +1310,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
-    dialog.setOptionTabs( QList<QWidget *>() << optionWidget << logEntryOptionWidget );
+    dialog.setOptionTabs( { optionWidget, logEntryOptionWidget } );
     dialog.setWindowTitle( tr( "Print Logbook Entry - Elogbook" ) );
     if( !dialog.exec() ) return;
 
@@ -1366,7 +1365,7 @@ void EditionWindow::_toHtml()
 
     // create dialog
     HtmlDialog dialog( this );
-    dialog.setOptionWidgets( QList<QWidget *>() << optionWidget );
+    dialog.setOptionWidgets( { optionWidget } );
     dialog.setWindowTitle( tr( "Export to HTML - Elogbook" ) );
 
     // generate file name
@@ -1858,10 +1857,10 @@ void EditionWindow::_modifiersChanged( TextEditor::Modifiers modifiers )
 {
     if( !_hasStatusBar() ) return;
     QStringList buffer;
-    if( modifiers & TextEditor::Modifier::Wrap ) buffer << "WRAP";
-    if( modifiers & TextEditor::Modifier::Insert ) buffer << "INS";
-    if( modifiers & TextEditor::Modifier::CapsLock ) buffer << "CAPS";
-    if( modifiers & TextEditor::Modifier::NumLock ) buffer << "NUM";
+    if( modifiers & TextEditor::Modifier::Wrap ) buffer.append( "WRAP" );
+    if( modifiers & TextEditor::Modifier::Insert ) buffer.append( "INS" );
+    if( modifiers & TextEditor::Modifier::CapsLock ) buffer.append( "CAPS" );
+    if( modifiers & TextEditor::Modifier::NumLock ) buffer.append( "NUM" );
     statusBar_->label(1).setText( buffer.join( " " ) );
 }
 

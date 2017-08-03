@@ -56,7 +56,6 @@ LogEntry::LogEntry( const QDomElement& element ):
         else if( name == Xml::Creation ) setCreation( TimeStamp( static_cast<time_t>(value.toLong()) ) );
         else if( name == Xml::Modification ) setModification( TimeStamp( static_cast<time_t>(value.toLong()) ) );
         else if( name == Xml::Color ) setColor( QColor( value ) );
-        else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized entry attribute: \"" << name << "\"\n";
     }
 
     // parse children elements
@@ -77,7 +76,6 @@ LogEntry::LogEntry( const QDomElement& element ):
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( childElement ) );
         else if( tagName == Format::Xml::Tag ) addFormat( Format::XmlTextFormatBlock( childElement ) );
         else if( tagName == Xml::Attachment ) Base::Key::associate( this, new Attachment( childElement ) );
-        else Debug::Throw(0) << "LogEntry::LogEntry - unrecognized child " << childElement.tagName() << endl;
     }
 
 }

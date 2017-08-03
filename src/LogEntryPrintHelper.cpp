@@ -111,21 +111,21 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     using StringList=QList<StringPair>;
     StringList values;
 
-    if( mask_&LogEntry::TitleMask ) values << StringPair( tr( "Title:" ), entry_->title() );
+    if( mask_&LogEntry::TitleMask ) values.append( StringPair( tr( "Title:" ), entry_->title() ) );
 
     if( mask_&LogEntry::KeywordMask )
     {
         if( entry_->keywords().size() == 1 )
         {
 
-            values << StringPair( tr( "Keyword:" ), entry_->keywords().begin()->get() );
+            values.append( StringPair( tr( "Keyword:" ), entry_->keywords().begin()->get() ) );
 
         } else {
 
             bool first = true;
             for( const auto& keyword:entry_->keywords() )
             {
-                values << StringPair( first ? tr( "Keywords:" ):QString(), keyword.get() );
+                values.append( StringPair( first ? tr( "Keywords:" ):QString(), keyword.get() ) );
                 first = false;
             }
 
@@ -133,9 +133,9 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 
     }
 
-    if( mask_&LogEntry::AuthorMask ) values << StringPair( tr( "Author:" ), entry_->author() );
-    if( mask_&LogEntry::CreationMask ) values << StringPair( tr( "Created:" ), entry_->creation().toString() );
-    if( mask_&LogEntry::ModificationMask ) values << StringPair( tr( "Modified:" ), entry_->modification().toString() );
+    if( mask_&LogEntry::AuthorMask ) values.append( StringPair( tr( "Author:" ), entry_->author() ) );
+    if( mask_&LogEntry::CreationMask ) values.append( StringPair( tr( "Created:" ), entry_->creation().toString() ) );
+    if( mask_&LogEntry::ModificationMask ) values.append( StringPair( tr( "Modified:" ), entry_->modification().toString() ) );
     const int nRows( values.size() );
 
     // create table
@@ -257,7 +257,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
             formatRange.start = fragment.position() - block.position();
             formatRange.length = fragment.length();
             formatRange.format = fragment.charFormat();
-            formatRanges << formatRange;
+            formatRanges.append( formatRange );
 
         }
 

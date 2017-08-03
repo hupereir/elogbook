@@ -235,7 +235,7 @@ Format::TextFormatBlock::List FormatBar::get() const
             Format::TextFormatBlock textFormatBlock( begin, end, format, color );
             if( !href.isEmpty() ) textFormatBlock.setHRef( href );
 
-            out << textFormatBlock;
+            out.append( textFormatBlock );
 
         }
     }
@@ -254,13 +254,13 @@ void FormatBar::_updateConfiguration()
     {
 
         // add default colors
-        QList<QColor> defaultColors;
-        defaultColors
-            << "#aa0000"
-            << "green"
-            << "blue"
-            << "grey"
-            << "black";
+        QList<QColor> defaultColors( {
+            "#aa0000",
+            "green",
+            "blue",
+            "grey",
+            "black"
+        });
 
         XmlOptions::get().keep( "TEXT_COLOR" );
         for( const auto& color:defaultColors )

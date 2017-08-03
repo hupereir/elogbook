@@ -308,10 +308,10 @@ void AttachmentFrame::enterEvent( QEvent* event )
         if( attachment->isUrl() ) continue;
         if( attachment->file().isEmpty() ) continue;
 
-        records << FileRecord( attachment->file() );
+        records.append( FileRecord( attachment->file() ) );
 
         if( attachment->isLink() == Attachment::Yes || attachment->isLink() == Attachment::Unknown )
-        { records << FileRecord( attachment->sourceFile() ); }
+        { records.append( FileRecord( attachment->sourceFile() ) ); }
 
     }
 
@@ -450,7 +450,7 @@ void AttachmentFrame::_open()
     for( const auto& attachment:selection )
     {
 
-        if( attachment->updateTimeStamps() ) modifiedAttachments << attachment;
+        if( attachment->updateTimeStamps() ) modifiedAttachments.append( attachment );
 
         const bool isUrl( attachment->isUrl() );
         File fullname( isUrl ? attachment->file():attachment->file().expanded() );
@@ -549,7 +549,7 @@ void AttachmentFrame::_edit()
         }
 
         if( !attachmentChanged ) continue;
-        modifiedAttachments << attachment;
+        modifiedAttachments.append( attachment );
 
     }
 
@@ -667,7 +667,7 @@ void AttachmentFrame::_reload()
     // loop over attachments
     AttachmentModel::List modifiedAttachments;
     for( const auto& attachment:selection )
-    { if( attachment->updateTimeStamps() ) modifiedAttachments << attachment; }
+    { if( attachment->updateTimeStamps() ) modifiedAttachments.append( attachment ); }
 
     _saveAttachments( modifiedAttachments );
 

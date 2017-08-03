@@ -36,7 +36,6 @@ Backup::Backup( const QDomElement& element ):
         if( attribute.isNull() ) continue;
         if( attribute.name() == Xml::Creation ) setCreation( TimeStamp(attribute.value().toInt()) );
         else if( attribute.name() == Xml::File ) setFile( File( attribute.value() ) );
-        else Debug::Throw(0) << "Backup::Backup - unknown attribute name: " << attribute.name() << endl;
     }
 }
 

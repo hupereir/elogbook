@@ -54,7 +54,7 @@ void FileCheckDialog::setFiles( const QStringList& files )
     Debug::Throw( "FileCheckDialog::setFiles.\n" );
     FileRecordModel::List records;
     for( const auto& file:files )
-    { records << FileRecord( File(file) ); }
+    { records.append( FileRecord( File(file) ) ); }
 
     model_.set( records );
 

@@ -1325,7 +1325,7 @@ void MainWindow::_resetLogEntryList()
         for( const auto& entry:logbook_->entries() )
         {
             if( (!treeModeAction_->isChecked() && entry->isFindSelected()) || entry->isSelected() )
-            { modelEntries << entry; }
+            { modelEntries.append( entry ); }
         }
 
         entryModel_.add( modelEntries );
@@ -2705,7 +2705,7 @@ void MainWindow::_deleteEntries()
             InformationDialog( this, tr( "Software limitation: cannot delete an entry that is being edited. <Delete Entries> canceled." ) ).exec();
             return;
 
-        } else selection << entryModel_.get( index );
+        } else selection.append( entryModel_.get( index ) );
 
     }
 
@@ -2967,7 +2967,7 @@ void MainWindow::_deleteKeyword()
     // store corresponding list of keywords
     KeywordModel::List keywords;
     for( const auto& index:selectedIndexes )
-    { if( index.isValid() ) keywords << keywordModel_.get( index ); }
+    { if( index.isValid() ) keywords.append( keywordModel_.get( index ) ); }
 
     // retrieve associated entries
     Base::KeySet<LogEntry> entries( logbook_->entries() );

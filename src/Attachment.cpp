@@ -62,7 +62,6 @@ Attachment::Attachment( const QDomElement& element):
         else if( name == Xml::Valid ) setIsValid( (bool) value.toInt() );
         else if( name == Xml::IsLink ) setIsLink( (LinkState) value.toInt() );
         else if( name == Xml::IsUrl ) setIsUrl( (bool) value.toInt() );
-        else Debug::Throw(0) << "unrecognized attachment attribute: \"" << name << "\"\n";
     }
 
     // parse children elements
@@ -73,7 +72,6 @@ Attachment::Attachment( const QDomElement& element):
         if( tag_name == Xml::Comments ) setComments( child_element.text() );
         else if( tag_name == Xml::Creation ) _setCreation( XmlTimeStamp( child_element ) );
         else if( tag_name == Xml::Modification ) _setModification( XmlTimeStamp( child_element ) );
-        else Debug::Throw(0) << "Attachment::Attachment - unrecognized child " << child_element.tagName() << ".\n";
     }
 
     // by default all URL attachments are valid, provided that the SOURCE_FILE is not empty
@@ -206,13 +204,13 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     sourceFile_ = fullname;
 
     // for other process command
-    ::Command command_string;
+    ::Command commandString;
     switch (command) {
 
         case Copy:
         if( destname.exists() ) return DestExist;
         else {
-            command_string << "cp" << sourceFile_ << destname;
+            commandString << "cp" << sourceFile_ << destname;
             setIsLink( No );
             break;
         }
@@ -220,34 +218,34 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
         case Link:
         if( destname.exists() ) return DestExist;
         else {
-            command_string << "ln" << "-s" << sourceFile_ << destname;
+            commandString << "ln" << "-s" << sourceFile_ << destname;
             setIsLink( Yes );
             break;
         }
 
         case ForceCopy:
         destname.remove();
-        command_string << "cp" << sourceFile_ << destname;
+        commandString << "cp" << sourceFile_ << destname;
         setIsLink( No );
         break;
 
         case ForceLink:
         destname.remove();
-        command_string << "ln" << "-s" << sourceFile_ << destname;
+        commandString << "ln" << "-s" << sourceFile_ << destname;
         setIsLink( Yes );
         break;
 
         case CopyVersion:
         if( destname.exists() && destname.diff( sourceFile_ ) )
         { destname = destname.version(); }
-        command_string << "cp" << sourceFile_ << destname;
+        commandString << "cp" << sourceFile_ << destname;
         setIsLink( No );
         break;
 
         case LinkVersion:
         if( destname.exists() && destname.diff( sourceFile_ ) )
         { destname = destname.version(); }
-        command_string << "ln" << "-s" << sourceFile_ << destname;
+        commandString << "ln" << "-s" << sourceFile_ << destname;
         setIsLink( Yes );
         break;
 
@@ -258,7 +256,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     }
 
     // process copy
-    command_string.run();
+    commandString.run();
 
     // update long/short filenames.
     _setFile( destname );
