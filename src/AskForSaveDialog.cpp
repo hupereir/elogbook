@@ -68,7 +68,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     {
         button = buttonBox->addButton( QDialogButtonBox::Yes );
         connect( button, SIGNAL(clicked()), SLOT(_yes()) );
-        #if defined( Q_OS_WIN )
+        #if defined(Q_OS_WIN)
         button->setIcon( IconEngine::get( IconNames::DialogOk ) );
         #endif
     }
