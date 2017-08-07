@@ -21,6 +21,7 @@
 
 #include "Attachment.h"
 #include "ColorMenu.h"
+#include "CppUtil.h"
 #include "CustomPixmap.h"
 #include "IconNames.h"
 #include "IconEngine.h"
@@ -351,30 +352,32 @@ void LogEntryModel::_resetIcons()
 const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
 {
 
-    IconCache::iterator iter( _icons().find( color ) );
-    if( iter != _icons().end() ) return iter.value();
-
-    const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
-    const double offset = 0.5*( iconSize_ - pixmapSize );
-
-    CustomPixmap pixmap( CustomPixmap( QSize( iconSize_, iconSize_ ), CustomPixmap::Flag::All ) );
-
-    if( color.isValid() )
+    auto iter( _icons().lowerBound( color ) );
+    if( iter != _icons().end() && Base::areEquivalent( color, iter.key() ) ) return iter.value();
+    else
     {
 
-        QPainter painter( &pixmap );
-        painter.setRenderHints(QPainter::Antialiasing );
-        painter.setPen( Qt::NoPen );
+        const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
+        const double offset = 0.5*( iconSize_ - pixmapSize );
 
-        QRectF rect( QPointF( offset, offset ), QSizeF( pixmapSize, pixmapSize ) );
-        painter.setBrush( color.get() );
-        painter.drawEllipse( rect );
-        painter.end();
+        CustomPixmap pixmap( CustomPixmap( QSize( iconSize_, iconSize_ ), CustomPixmap::Flag::All ) );
 
+        if( color.isValid() )
+        {
+
+            QPainter painter( &pixmap );
+            painter.setRenderHints(QPainter::Antialiasing );
+            painter.setPen( Qt::NoPen );
+
+            QRectF rect( QPointF( offset, offset ), QSizeF( pixmapSize, pixmapSize ) );
+            painter.setBrush( color.get() );
+            painter.drawEllipse( rect );
+            painter.end();
+
+        }
+
+        return _icons().insert( iter, color, QIcon( pixmap ) ).value();
     }
-
-    return _icons().insert( color, QIcon( pixmap ) ).value();
-
 }
 
 //________________________________________________________
