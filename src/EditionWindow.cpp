@@ -30,6 +30,7 @@
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
+#include "CppUtil.h"
 #include "CustomToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
@@ -1925,7 +1926,7 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
     if( !url.isValid() || url.isRelative() ) return TextEditor::insertFromMimeData( source );
 
     // check scheme
-    static QStringList schemes = { "file", "ftp", "http", "https" };
+    static const auto schemes = Base::makeT<QStringList>( { "file", "ftp", "http", "https" } );
     if( !schemes.contains( url.scheme() ) ) return TextEditor::insertFromMimeData( source );
 
     // copy mime type

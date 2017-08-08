@@ -103,7 +103,7 @@ bool Application::realizeWidget()
     qApp->processEvents();
 
     // load file from arguments or recent files
-    QStringList filenames( commandLineParser( _arguments() ).orphans() );
+    const auto filenames( commandLineParser( _arguments() ).orphans() );
     const File file = filenames.empty() ?
         recentFiles_->lastValidFile().file():
         File( filenames.front() );
