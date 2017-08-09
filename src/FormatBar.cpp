@@ -21,6 +21,7 @@
 
 #include "BaseIconNames.h"
 #include "ColorMenu.h"
+#include "CppUtil.h"
 #include "CustomToolButton.h"
 #include "Debug.h"
 #include "FormatBarIconNames.h"
@@ -254,18 +255,20 @@ void FormatBar::_updateConfiguration()
     {
 
         // add default colors
-        QList<QColor> defaultColors( {
-            "#aa0000",
-            "green",
-            "blue",
-            "grey",
-            "black"
+        using ColorList = QList<Base::Color>;
+        static const auto defaultColors = Base::makeT<ColorList>(
+        {
+            Base::Color("#aa0000"),
+            Base::Color("green"),
+            Base::Color("blue"),
+            Base::Color("grey"),
+            Base::Color("black")
         });
 
         XmlOptions::get().keep( "TEXT_COLOR" );
         for( const auto& color:defaultColors )
         {
-            XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( color ) ) );
+            XmlOptions::get().add( "TEXT_COLOR", Option().set( color ) );
             colorMenu_->add( color );
         }
 

@@ -227,7 +227,9 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar = new CustomToolBar( tr( "History" ), this, "EDITION_TOOLBAR" );
     toolbar->addAction( undoAction_ );
     toolbar->addAction( redoAction_ );
-    readOnlyActions_.append( { undoAction_, redoAction_ } );
+
+    using ActionList = QList<QAction*>;
+    readOnlyActions_.append( Base::makeT<ActionList>({ undoAction_, redoAction_ }) );
 
     // undo/redo connections
     connect( keywordEditor_, SIGNAL(textChanged(QString)), SLOT(_updateUndoRedoActions()) );
@@ -1311,7 +1313,9 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
-    dialog.setOptionTabs( { optionWidget, logEntryOptionWidget } );
+
+    using WidgetList = QList<QWidget*>;
+    dialog.setOptionTabs( Base::makeT<WidgetList>({ optionWidget, logEntryOptionWidget }) );
     dialog.setWindowTitle( tr( "Print Logbook Entry - Elogbook" ) );
     if( !dialog.exec() ) return;
 
@@ -1366,7 +1370,9 @@ void EditionWindow::_toHtml()
 
     // create dialog
     HtmlDialog dialog( this );
-    dialog.setOptionWidgets( { optionWidget } );
+
+    using WidgetList = QList<QWidget*>;
+    dialog.setOptionWidgets( Base::makeT<WidgetList>({ optionWidget }) );
     dialog.setWindowTitle( tr( "Export to HTML - Elogbook" ) );
 
     // generate file name
