@@ -558,7 +558,12 @@ void Logbook::removeEmptyChildren()
         } else tmp.append( logbook );
     }
 
+    #if QT_VERSION >= 0x040800
     children_.swap( tmp );
+    #else
+    children_ = tmp;
+    #endif
+
     return;
 }
 

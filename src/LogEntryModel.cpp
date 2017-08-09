@@ -376,7 +376,7 @@ const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
 
         }
 
-        return _icons().insert( iter, color, QIcon( pixmap ) ).value();
+        return Base::insert( _icons(), iter, color, QIcon( pixmap ) ).value();
     }
 }
 
