@@ -31,6 +31,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLayout>
+#include <QLineEdit>
 #include <QToolButton>
 
 //___________________________________________________________
