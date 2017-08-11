@@ -652,7 +652,7 @@ void EditionWindow::writeEntryToLogbook( bool updateSelection )
     statusBar_->label().setText( tr( "writting entry to logbook..." ) );
 
     // add entry to logbook, if needed
-    if( entryIsNew ) Base::Key::associate( entry, logbook->latestChild() );
+    if( entryIsNew ) Base::Key::associate( entry, logbook->latestChild().get() );
 
     // update this window title, set unmodified.
     setModified( false );

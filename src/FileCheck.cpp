@@ -56,13 +56,8 @@ void FileCheck::registerLogbook( Logbook* logbook )
     {
         if( !iter->file().isEmpty() )
         {
-
-            // associate (make sure association is unique)
-            if( !isAssociated( iter ) )
-            { Base::Key::associate( this, iter ); }
-
+            Base::Key::associate( this, iter.get() );
             _addFile( iter->file() );
-
         }
     }
 

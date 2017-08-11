@@ -59,7 +59,6 @@ Logbook::~Logbook()
     Debug::Throw( "Logbook::~Logbook.\n" );
 
     // delete log children
-    for( const auto& logbook:children_ ) delete logbook;
     children_.clear();
 
     // delete associated entries
@@ -202,13 +201,13 @@ bool Logbook::read()
 
             File file( fileAttribute );
             if( !file.isAbsolute() ) file.addPath( Logbook::file_.path() );
-            auto child = new Logbook;
+            LogbookPtr child( new Logbook );
             child->setFile( file );
             child->setUseCompression( useCompression_ );
 
             // propagate progressAvailable signal.
-            connect( child, SIGNAL(progressAvailable(int)), SIGNAL(progressAvailable(int)) );
-            connect( child, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
+            connect( child.get(), SIGNAL(progressAvailable(int)), SIGNAL(progressAvailable(int)) );
+            connect( child.get(), SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
             child->read();
             children_.append( child );
 
@@ -396,7 +395,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
         auto copy( entry->copy() );
 
         // associate entry with logbook
-        Base::Key::associate( copy, child );
+        Base::Key::associate( copy, child.get() );
 
         // set child as modified
         child->setModified( true );
@@ -453,47 +452,38 @@ Logbook::List Logbook::children() const
 }
 
 //_________________________________
-Logbook* Logbook::latestChild()
+Logbook::LogbookPtr Logbook::latestChild()
 {
 
     Debug::Throw( "Logbook::latestChild.\n" );
 
-    Logbook* out = nullptr;
-
     // check if one existsing child is not complete
     for( const auto& logbook:children_ )
     {
-        if( logbook && Base::KeySet<LogEntry>(logbook).size() < MaxEntries )
-        {
-            out = logbook;
-            break;
-        }
+        if( logbook && Base::KeySet<LogEntry>(logbook.get()).size() < MaxEntries )
+        { return logbook; }
     }
 
     // add a new child if nothing found
-    if( !out )
-    {
+    LogbookPtr logbook( new Logbook );
+    logbook->setTitle( title() );
+    logbook->setDirectory( directory() );
+    logbook->setAuthor( author() );
+    logbook->setFile( _childFilename( file_, children_.size() ).addPath( file_.path() ) );
+    logbook->setUseCompression( useCompression_ );
+    logbook->setModified( true );
+    connect( logbook.get(), SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
 
-        out = new Logbook;
-        out->setTitle( title() );
-        out->setDirectory( directory() );
-        out->setAuthor( author() );
-        out->setFile( _childFilename( file_, children_.size() ).addPath( file_.path() ) );
-        out->setUseCompression( useCompression_ );
-        out->setModified( true );
-        connect( out, SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
+    children_.append( logbook );
+    setModified( true );
 
-        children_.append( out );
-        setModified( true );
+    // associate to existing FileCheck if any
+    Base::KeySet<FileCheck> fileChecks( this );
+    if( !fileChecks.empty() )
+    { (*fileChecks.begin())->registerLogbook( logbook.get() ); }
 
-        // associate to existing FileCheck if any
-        Base::KeySet<FileCheck> fileChecks( this );
-        if( !fileChecks.empty() )
-        { (*fileChecks.begin())->registerLogbook( out ); }
+    return logbook;
 
-    }
-
-    return out;
 }
 
 //_________________________________
@@ -543,6 +533,7 @@ void Logbook::removeEmptyChildren()
     Debug::Throw( "Logbook::removeEmptyChildren.\n" );
 
     // loop over children
+    /* should try use algorithm instead */
     List tmp;
     for( const auto& logbook:children_ )
     {
@@ -552,8 +543,6 @@ void Logbook::removeEmptyChildren()
 
             // remove file
             if( !logbook->file_.isEmpty() ) logbook->file_.remove();
-
-            delete logbook;
 
         } else tmp.append( logbook );
     }

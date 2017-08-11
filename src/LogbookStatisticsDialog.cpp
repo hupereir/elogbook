@@ -116,8 +116,11 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     listView->header()->setResizeMode( LogbookModel::Modified, QHeaderView::Stretch);
     #endif
 
-    auto&& all( logbook->children() );
-    all.prepend( logbook );
+    LogbookModel::List all;
+    all.append( logbook );
+    for( const auto& child:logbook->children() )
+    { all.append( child.get() ); }
+
     model_.set( all );
 
     listView->resizeColumns();

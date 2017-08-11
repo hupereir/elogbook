@@ -43,6 +43,8 @@
 #include "TreeView.h"
 #include "InformationDialog.h"
 
+#include <memory>
+
 #include <QDesktopServices>
 #include <QHeaderView>
 #include <QUrl>
@@ -218,73 +220,72 @@ void AttachmentFrame::_new()
     }
 
     // create attachment with correct type
-    Attachment *attachment = new Attachment( file );
-    attachment->setIsUrl( isUrl );
-    attachment->setComments( dialog.comments() );
+    std::unique_ptr<Attachment> attachmentPtr( new Attachment( file ) );
+    attachmentPtr->setIsUrl( isUrl );
+    attachmentPtr->setComments( dialog.comments() );
 
     // retrieve command
     Attachment::Command command( dialog.action() );
 
     // process attachment command
-    Attachment::ErrorCode error = attachment->copy( command, fullDirectory );
+    Attachment::ErrorCode error = attachmentPtr->copy( command, fullDirectory );
     QString buffer;
     switch (error)
     {
 
         case Attachment::SourceNotFound:
         InformationDialog( this, QString( tr( "Cannot find file '%1'. <Add Attachment> canceled." ) ).arg( file ) ).exec();
-        delete attachment;
         break;
 
         case Attachment::DestNotFound:
         InformationDialog( this, QString( tr( "Cannot find directory '%1'. <Add Attachment> canceled." ) ).arg( fullDirectory ) ).exec();
-        delete attachment;
         break;
 
         case Attachment::SourceIsDir:
         InformationDialog( this, QString( tr( "File '%1' is a directory. <Add Attachment> canceled." ) ).arg( file ) ).exec();
-        delete attachment;
         break;
 
         case Attachment::DestExist:
         InformationDialog( this, QString( tr( "File '%1' is already in list." ) ).arg( file ) ).exec();
-        delete attachment;
         break;
 
         case Attachment::Success:
-
-        // associate attachment to entry
-        Base::Key::associate( entry, attachment );
-
-        // update all windows edition windows associated to entry
-        windows = Base::KeySet<EditionWindow>( entry );
-        for( const auto& window:windows )
         {
 
-            window->attachmentFrame().visibilityAction_->setChecked( true );
-            window->attachmentFrame().add( *attachment );
+            auto attachment( attachmentPtr.release() );
 
+            // associate attachment to entry
+            Base::Key::associate( entry, attachment );
+
+            // update all windows edition windows associated to entry
+            windows = Base::KeySet<EditionWindow>( entry );
+            for( const auto& window:windows )
+            {
+
+                window->attachmentFrame().visibilityAction_->setChecked( true );
+                window->attachmentFrame().add( *attachment );
+
+            }
+
+            // update attachment frame
+            Base::Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
+
+            // update logbooks destination directory
+            for( const auto& logbook:logbooks )
+            {
+                logbook->setModified( true );
+                logbook->setDirectory( fullDirectory );
+            }
+
+            // change Application window title
+            Base::Singleton::get().application<Application>()->mainWindow().updateWindowTitle();
+
+            // save EditionWindow entry
+            window.saveAction().trigger();
         }
-
-        // update attachment frame
-        Base::Singleton::get().application<Application>()->attachmentWindow().frame().add( *attachment );
-
-        // update logbooks destination directory
-        for( const auto& logbook:logbooks )
-        {
-            logbook->setModified( true );
-            logbook->setDirectory( fullDirectory );
-        }
-
-        // change Application window title
-        Base::Singleton::get().application<Application>()->mainWindow().updateWindowTitle();
-
-        // save EditionWindow entry
-        window.saveAction().trigger();
-
         break;
 
-        default: delete attachment; break;
+        default: break;
 
     }
 

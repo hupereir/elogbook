@@ -35,6 +35,8 @@
 #include <QList>
 #include <QObject>
 
+#include <memory>
+
 class LogEntry;
 class Attachment;
 class XmlTextFormatInfo;
@@ -101,13 +103,14 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     XmlError::List xmlErrors() const;
 
     //* shortcut for logbook children list
-    using List = QList< Logbook* >;
+    using LogbookPtr = std::shared_ptr<Logbook>;
+    using List = QList<LogbookPtr>;
 
     //* retrieves list of all child logbook [recursive]
     List children() const;
 
     //* retrieves first not full child.
-    Logbook* latestChild();
+    LogbookPtr latestChild();
 
     //* retrieve all associated entries [recursive]
     Base::KeySet<LogEntry> entries() const;

@@ -464,7 +464,7 @@ bool MainWindow::setLogbook( File file )
             // reassociate to latest child
             auto child = logbook_->latestChild();
             child->setModified(true);
-            Base::Key::associate( entry, child );
+            Base::Key::associate( entry, child.get() );
         }
 
         logbook_->setModified(true);
@@ -2197,12 +2197,12 @@ void MainWindow::_removeBackups( Backup::List backups )
         backupLogbook.setFile( backup.file() );
         backupLogbook.read();
 
-        // get list of children
-        Logbook::List all( backupLogbook.children() );
-        all.prepend( &backupLogbook );
+        // remove main file
+        emit messageAvailable( QString( tr( "Removing '%1'" ) ).arg( backupLogbook.file() ) );
+        backupLogbook.file().remove();
 
-        // remove all files
-        for( const auto& logbook:all )
+        // remove children files
+        for( const auto& logbook:backupLogbook.children() )
         {
             emit messageAvailable( QString( tr( "Removing '%1'" ) ).arg( logbook->file() ) );
             logbook->file().remove();
@@ -2407,10 +2407,9 @@ void MainWindow::_reorganize()
     // retrieve all entries
     auto entries( logbook_->entries() );
 
-    // clear all logbook to entries associations
-    auto logbooks( logbook_->children() );
-    logbooks.append( logbook_.get() );
-    for( const auto& logbook:logbooks )
+    // clear all logbook-to-entry associations
+    logbook_->removeAssociatedKeys<LogEntry>();
+    for( const auto& logbook:logbook_->children() )
     { logbook->removeAssociatedKeys<LogEntry>(); }
 
     // put entry set into a list and sort by creation time.
@@ -2421,12 +2420,12 @@ void MainWindow::_reorganize()
     // put entries in logbook
     for( const auto& entry:entryList )
     {
-        Logbook *logbook( logbook_->latestChild() );
-        if( entry->isAssociated( logbook ) )
+        auto logbook( logbook_->latestChild() );
+        if( entry->isAssociated( logbook.get() ) )
         {
 
             // redo the association to the logbook, but do not mark logbook as modified
-            Base::Key::associate( entry, logbook );
+            Base::Key::associate( entry, logbook.get() );
 
         } else {
 
@@ -2438,7 +2437,7 @@ void MainWindow::_reorganize()
             entry->clearAssociations<Logbook>();
 
             // associate to this logbook
-            Base::Key::associate( entry, logbook );
+            Base::Key::associate( entry, logbook.get() );
 
             // mark logbook as modified
             logbook->setModified( true );
@@ -3330,7 +3329,7 @@ void MainWindow::_copyEntryKeyword( Keyword newKeyword )
         //* associate to logbook
         auto logbook( logbook_->latestChild() );
         logbook->setModified( true );
-        Base::Key::associate( newEntry, logbook );
+        Base::Key::associate( newEntry, logbook.get() );
 
         // keep track of modified entries
         entries.insert( newEntry );
