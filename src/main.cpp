@@ -62,7 +62,6 @@ int main (int argc, char *argv[])
     // create Application
     QApplication application( argc, argv );
 
-    // singleton application is deleted before QApplication
     Application singleton( CommandLineArguments( argc, argv ) );
     Base::Singleton::get().setApplication( &singleton );
 
