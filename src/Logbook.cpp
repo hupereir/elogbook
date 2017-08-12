@@ -32,6 +32,25 @@
 #include <QFile>
 #include <QTextStream>
 
+#include <new>
+
+//________________________________________________________
+QByteArray safeUncompress( const QByteArray& content )
+{
+    try
+    {
+
+        return qUncompress( content );
+
+    } catch( std::bad_alloc& exception ) {
+
+        Debug::Throw() << "safeUncompress - caught bad_alloc exception: " << exception.what() << endl;
+        return QByteArray();
+
+    }
+
+}
+
 //________________________________
 // public methods
 
@@ -111,7 +130,7 @@ bool Logbook::read()
     // read everything from file
     // try read compressed and try uncompress
     auto content( file.readAll() );
-    auto uncompressed( qUncompress( content ) );
+    auto uncompressed( safeUncompress( content ) );
 
     // try read raw if failed
     if( uncompressed.isEmpty() ) uncompressed = content;
