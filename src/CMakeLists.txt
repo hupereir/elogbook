@@ -1,4 +1,3 @@
-# $Id$
 ########### Qt configuration #########
 if(USE_QT5)
 
@@ -121,7 +120,9 @@ target_link_libraries(elogbook
 )
 
 if(ASPELL_FOUND)
+
   target_link_libraries(elogbook base-spellcheck)
+
 endif()
 
 install(TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR})
