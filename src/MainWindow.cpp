@@ -1554,7 +1554,6 @@ void MainWindow::_newLogbook()
 
     // create a new logbook, with no file
     setLogbook( File() );
-    Q_CHECK_PTR( logbook_ );
 
     logbook_->setTitle( dialog.title() );
     logbook_->setAuthor( dialog.author() );
