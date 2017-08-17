@@ -414,8 +414,12 @@ bool MainWindow::setLogbook( File file )
 
     // retrieve last modified entry
     Base::KeySet<LogEntry> entries( logbook_->entries() );
-    auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
-    selectEntry( *iter );
+    if( !entries.empty() )
+    {
+        auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
+        selectEntry( *iter );
+    }
+
     entryList_->setFocus();
 
     Debug::Throw( "MainWindow::setLogbook - entry selected.\n" );
