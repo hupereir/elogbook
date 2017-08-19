@@ -87,34 +87,22 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
 
     // bold
     QAction* action;
-    addAction( action = new QAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this ) );
-    action->setCheckable( true );
-    actions_.insert( Bold, action );
-    connect( action, SIGNAL(toggled(bool)), SLOT(_bold(bool)) );
+    actions_ = Base::makeT<ActionMap>(
+    {
+        { Bold, addAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this, SLOT(_bold(bool)) ) },
+        { Italic, addAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this, SLOT(_italic(bool)) ) },
+        { Underline, addAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this, SLOT(_underline(bool)) ) },
+        { Strike, addAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this, SLOT(_strike(bool)) ) },
+        { Color, action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this ) }
+    });
 
-    // underline
-    addAction( action = new QAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this ) );
-    action->setCheckable( true );
-    actions_.insert( Italic, action );
-    connect( action, SIGNAL(toggled(bool)), SLOT(_italic(bool)) );
-
-    // underline
-    addAction( action = new QAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this ) );
-    action->setCheckable( true );
-    actions_.insert( Underline, action );
-    connect( action, SIGNAL(toggled(bool)), SLOT(_underline(bool)) );
-
-    // strike
-    addAction( action = new QAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this ) );
-    action->setCheckable( true );
-    actions_.insert( Strike, action );
-    connect( action, SIGNAL(toggled(bool)), SLOT(_strike(bool)) );
+    for( auto&& iter = actions_.begin(); iter != actions_.end(); ++iter )
+    { iter.value()->setCheckable( true ); }
 
     // color
-    action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this );
+    action->setCheckable( false );
     action->setIconText( tr( "Color" ) );
     connect( action, SIGNAL(triggered()), SLOT(_lastColor()) );
-    actions_.insert( Color, action );
 
     // color menu
     colorMenu_ = new ColorMenu( this );

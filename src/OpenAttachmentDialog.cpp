@@ -42,24 +42,24 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     setOptionName( "OPEN_ATTACHMENT_DIALOG" );
 
     // try load Question icon
-    QHBoxLayout *hLayout( new QHBoxLayout );
+    auto hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
     hLayout->setMargin(0);
     mainLayout().addLayout( hLayout );
     {
         // icon
-        QLabel* label = new QLabel( this );
-        QIcon icon = IconEngine::get( IconNames::DialogWarning );
+        auto label = new QLabel( this );
+        auto icon = IconEngine::get( IconNames::DialogWarning );
         label->setPixmap( icon.pixmap( iconSize() ) );
         hLayout->addWidget( label, 0 );
 
     }
 
-    QVBoxLayout* vLayout = new QVBoxLayout;
+    auto vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
     hLayout->addLayout( vLayout, 1 );
 
-    GridLayout* gridLayout = new GridLayout;
+    auto gridLayout = new GridLayout;
     gridLayout->setMargin(0);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
@@ -94,7 +94,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
 
     // radio buttons
-    QButtonGroup* group = new QButtonGroup( this );
+    auto group = new QButtonGroup( this );
     group->setExclusive( true );
 
     gridLayout = new GridLayout;
@@ -110,8 +110,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     comboBox_->setToolTip( tr( "Application to be used to display the attachment" ) );
 
     // retrieve applications from options
-    const QString optionName = "OPEN_ATTACHMENT_APPLICATIONS";
-    const auto applications( XmlOptions::get().specialOptions( optionName ) );
+    const auto applications( XmlOptions::get().specialOptions( "OPEN_ATTACHMENT_APPLICATIONS" ) );
     for( const auto& option:applications )
     { comboBox_->addItem( File( option.raw() ) ); }
 
