@@ -22,6 +22,7 @@
 
 #include "Counter.h"
 #include "File.h"
+#include "Functors.h"
 #include "Key.h"
 #include "TimeStamp.h"
 
@@ -57,27 +58,6 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     //* domElement
     QDomElement domElement( QDomDocument& parent ) const;
 
-    //* used to check attachment filenames
-    class SameFileFTor
-    {
-        public:
-
-        //* constructor
-        explicit SameFileFTor( Attachment* attachment ):
-            attachment_( attachment )
-        {}
-
-        //* predicate
-        bool operator()(Attachment* attachment )
-        { return *attachment == *attachment_; }
-
-        private:
-
-        //* reference attachment
-        Attachment* attachment_;
-
-    };
-
     //*@name accessors
     //@{
 
@@ -106,18 +86,18 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     { return size_; }
 
     //* retrieves local file size
-    QString sizeString() const
+    const QString& sizeString() const
     { return sizeString_; }
 
     //* retrieves associated entry
     LogEntry* entry() const;
 
     //* file creation
-    TimeStamp creation() const
+    const TimeStamp& creation() const
     { return creation_; }
 
     //* retrieves file last modification
-    TimeStamp modification() const
+    const TimeStamp& modification() const
     { return modification_; }
 
     //* retrieves original file name
@@ -214,6 +194,9 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     ErrorCode copy( const Attachment::Command& command, const QString& destdir );
 
     //@}
+
+    //* used to check attachment filenames
+    using SameFileFTor = Base::Functor::Unary<Attachment, const File&, &Attachment::file>;
 
     private:
 

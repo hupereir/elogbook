@@ -345,7 +345,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         Attachment::LinkState isLink( attachment->isLink() );
 
         // check destination file
-        auto found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTor( attachment->file() ) );
+        auto found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTorUnary( attachment->file() ) );
         if( found != records.end() ) { isValid = found->isValid(); }
         else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
 
@@ -360,7 +360,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         // check source file
         if( isValid && isLink == Attachment::Yes )
         {
-            found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTor( attachment->sourceFile() ) );
+            found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTorUnary( attachment->sourceFile() ) );
             if( found != records.end() ) { isValid &= found->isValid(); }
             else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
         }

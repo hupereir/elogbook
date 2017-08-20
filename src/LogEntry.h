@@ -21,7 +21,7 @@
 *******************************************************************************/
 
 #include "Color.h"
-#include "Counter.h"
+#include "Functors.h"
 #include "Key.h"
 #include "Keyword.h"
 #include "TextFormatBlock.h"
@@ -80,11 +80,11 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     LogEntry* copy() const;
 
     //* creation TimeStamp
-    TimeStamp creation() const
+    const TimeStamp& creation() const
     { return creation_; }
 
     //* modification TimeStamp
-    TimeStamp modification() const
+    const TimeStamp& modification() const
     { return modification_; }
 
     //* LogEntry title
@@ -205,70 +205,16 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     //@}
 
     //* use to get last modified entry
-    class LastModifiedFTor
-    {
-
-        public:
-
-        //* returns true if first entry was modified after the second
-        bool operator() ( const LogEntry* first, const LogEntry* second )
-        { return second->modification() < first->modification(); }
-
-    };
+    using LastModifiedFTor = Base::Functor::BinaryMore<LogEntry, const TimeStamp&, &LogEntry::modification>;
 
     //* use to get first created entry
-    class FirstCreatedFTor
-    {
-
-        public:
-
-        //* returns true if first entry was modified after the second
-        bool operator() ( const LogEntry* first, const LogEntry* second )
-        { return first->creation() < second->creation(); }
-
-    };
+    using FirstCreatedFTor = Base::Functor::BinaryLess<LogEntry, const TimeStamp&, &LogEntry::creation>;
 
     //* use to check if entries have same creation time
-    class SameCreationFTor
-    {
-        public:
-
-        //* constructor
-        explicit SameCreationFTor( const TimeStamp& stamp ):
-            stamp_( stamp )
-        {}
-
-        //* predicate
-        bool operator()( const LogEntry *entry ) const
-        { return entry->creation() == stamp_; }
-
-        private:
-
-        //* predicted stamp
-        TimeStamp stamp_;
-
-    };
+    using SameCreationFTor = Base::Functor::Unary<LogEntry, const TimeStamp&, &LogEntry::creation>;
 
     //* use to check if entries have same creation and modification time
-    class DuplicateFTor
-    {
-        public:
-
-        //* constructor
-        explicit DuplicateFTor( LogEntry* entry ):
-            entry_( entry )
-        {}
-
-        //* predicate
-        bool operator()( const LogEntry *entry ) const
-        { return entry->creation() == entry_->creation(); }
-
-        private:
-
-        //* predicte entry
-        LogEntry *entry_;
-
-    };
+    using DuplicateFTor = Base::Functor::Unary<LogEntry, const TimeStamp&, &LogEntry::creation>;
 
     /**
     used to check if LogEntry keyword matches a given keyword.

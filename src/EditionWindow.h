@@ -190,15 +190,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     };
 
     //* used to count alive frames, that are not subject to delayed deletion
-    class aliveFTor
-    {
-        public:
-
-        //* predicate
-        bool operator() (const EditionWindow* frame )
-        { return !frame->isClosed(); }
-
-    };
+    using AliveFTor = Base::Functor::UnaryFalse<EditionWindow, &EditionWindow::isClosed>;
 
     //*@name actions
     //@{

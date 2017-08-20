@@ -86,16 +86,7 @@ class Backup final: private Base::Counter<Backup>
     using List = QList<Backup>;
 
     //* test validity
-    class InvalidFTor
-    {
-
-        public:
-
-        //* predicate
-        bool operator() ( Backup backup ) const
-        { return !backup.isValid(); }
-
-    };
+    using InvalidFTor = Base::Functor::UnaryFalse<Backup, &Backup::isValid>;
 
     private:
 

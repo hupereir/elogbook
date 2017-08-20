@@ -24,6 +24,7 @@
 #include "Counter.h"
 #include "Debug.h"
 #include "File.h"
+#include "Functors.h"
 #include "Key.h"
 #include "TimeStamp.h"
 #include "XmlError.h"
@@ -126,27 +127,27 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     { return entries().empty(); }
 
     //* logbook filename
-    File file() const
+    const File& file() const
     { return file_; }
 
     //* parent logbook filename
-    File parentFile() const
+    const File& parentFile() const
     { return parentFile_; }
 
     //* logbook title
-    QString title() const
+    const QString& title() const
     { return title_; }
 
     //* logbook last author
-    QString author() const
+    const QString& author() const
     { return author_; }
 
     //* retrieves attachment comments
-    QString comments() const
+    const QString& comments() const
     { return comments_; }
 
     //* logbook directory
-    File directory() const
+    const File& directory() const
     { return directory_; }
 
     //* checks if logbook directory is set, exists and is a directory
@@ -165,19 +166,19 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     { return isBackup_; }
 
     //* creation TimeStamp
-    TimeStamp creation() const
+    const TimeStamp& creation() const
     { return creation_; }
 
     //* modification TimeStamp
-    TimeStamp modification() const
+    const TimeStamp& modification() const
     { return modification_; }
 
     //* backup TimeStamp
-    TimeStamp backup() const
+    const TimeStamp& backup() const
     { return backup_; }
 
     //* saved TimeStamp
-    TimeStamp saved() const
+    const TimeStamp& saved() const
     { return saved_; }
 
     /** \brief
@@ -213,7 +214,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     };
 
     //* retrieves current sort method associated to oldest parent
-    SortMethod sortMethod()
+    const SortMethod& sortMethod()
     { return sortMethod_; }
 
     //* sort order
@@ -395,26 +396,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     };
 
     //* used to retrieve logbook associated to given file
-    class SameFileFTor
-    {
-
-        public:
-
-        //* constructor
-        explicit SameFileFTor( File file ):
-            file_( file )
-        {}
-
-        //* predicate
-        bool operator() (const Logbook* logbook) const
-        { return logbook && logbook->file() == file_; }
-
-        private:
-
-        //* predicted file
-        File file_;
-
-    };
+    using SameFileFTor = Base::Functor::Unary<Logbook, const File&, &Logbook::file>;
 
     Q_SIGNALS:
 
