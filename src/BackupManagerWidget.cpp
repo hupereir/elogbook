@@ -100,7 +100,7 @@ void BackupManagerWidget::updateBackups()
     list_->resizeColumns();
 
     // update clean button
-    cleanButton_->setEnabled( std::find_if( backups.begin(), backups.end(), Backup::InvalidFTor() ) != backups.end() );
+    cleanButton_->setEnabled( std::any_of( backups.begin(), backups.end(), Backup::InvalidFTor() ) );
 
 }
 

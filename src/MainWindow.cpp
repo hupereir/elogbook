@@ -415,10 +415,7 @@ bool MainWindow::setLogbook( File file )
     // retrieve last modified entry
     Base::KeySet<LogEntry> entries( logbook_->entries() );
     if( !entries.empty() )
-    {
-        auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
-        selectEntry( *iter );
-    }
+    { selectEntry( *std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() ) ); }
 
     entryList_->setFocus();
 
@@ -1391,7 +1388,7 @@ void MainWindow::_setEnabled( bool value )
 bool MainWindow::_hasModifiedEntries() const
 {
     Base::KeySet<EditionWindow> frames( this );
-    return std::find_if( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() ) != frames.end();
+    return std::any_of( frames.begin(), frames.end(), EditionWindow::ModifiedFTor() );
 }
 
 //_______________________________________________
@@ -2148,8 +2145,7 @@ void MainWindow::_synchronize()
 
     // retrieve last modified entry
     Base::KeySet<LogEntry> entries( logbook_->entries() );
-    auto iter = std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() );
-    selectEntry( *iter );
+    selectEntry( *std::min_element( entries.begin(), entries.end(), LogEntry::LastModifiedFTor() ) );
     entryList_->setFocus();
 
     // write local logbook
