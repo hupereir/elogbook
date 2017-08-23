@@ -120,7 +120,7 @@ bool Logbook::read()
     { delete entry; }
 
     // parse the file
-    QFile file( Logbook::file_ );
+    QFile file( file_ );
     if ( !file.open( QIODevice::ReadOnly ) )
     {
         Debug::Throw(0, "Logbook::read - cannot open file.\n" );
