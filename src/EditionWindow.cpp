@@ -1542,8 +1542,8 @@ void EditionWindow::_insertLink()
 void EditionWindow::_editLink()
 {
     Debug::Throw( "EditionWindow::_editLink.\n" );
-    QTextCursor cursor( activeEditor_->cursorAtContextMenu() );
-    QTextBlock block( cursor.block() );
+    auto cursor( activeEditor_->cursorAtContextMenu() );
+    auto block( cursor.block() );
 
     // loop over text fragments and find the one that matches cursor
     for( auto&& it = block.begin(); !(it.atEnd()); ++it)
@@ -1574,7 +1574,7 @@ void EditionWindow::_removeLink()
 {
     Debug::Throw( "EditionWindow::_removeLink.\n" );
     QTextCursor cursor( activeEditor_->cursorAtContextMenu() );
-    QTextBlock block( cursor.block() );
+    auto block( cursor.block() );
 
     // loop over text fragments and find the one that matches cursor
     for( auto&& it = block.begin(); !(it.atEnd()); ++it)

@@ -88,17 +88,17 @@ MainWindow::MainWindow( QWidget *parent ):
     connect( fileCheck_, SIGNAL(filesModified(FileCheck::DataSet)), SLOT(_filesModified(FileCheck::DataSet)) );
 
     // main widget
-    QWidget* main = new QWidget( this );
+    auto main = new QWidget( this );
     setCentralWidget( main );
 
     // local layout
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto layout = new QVBoxLayout;
     layout->setMargin(0);
     layout->setSpacing(2);
     main->setLayout( layout );
 
     // splitter for KeywordList/LogEntryList
-    QSplitter* splitter( new QSplitter( main ) );
+    auto splitter( new QSplitter( main ) );
     layout->addWidget( splitter, 1 );
     splitter->setOrientation( Qt::Horizontal );
 
@@ -267,7 +267,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     {
         // popup menu for list
-        ContextMenu* menu = new ContextMenu( entryList_ );
+        auto menu = new ContextMenu( entryList_ );
         menu->addAction( newEntryAction_ );
         menu->addSeparator();
         menu->addAction( editEntryTitleAction_ );
@@ -638,8 +638,7 @@ void MainWindow::updateEntry( Keyword keyword, LogEntry* entry, bool updateSelec
     Debug::Throw( "MainWindow::updateEntry.\n" );
 
     // make sure keyword model contains all entry keywords
-    for( const auto& keyword:entry->keywords() )
-    { keywordModel_.add( keyword ); }
+    keywordModel_.add( entry->keywords().toList() );
 
     // update keyword model if needed
     if( keyword != currentKeyword() )
@@ -1080,16 +1079,13 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 
     // get child under widget
     bool accepted( false );
-    auto child = childAt(event->pos());
-    while (child && child != this)
+    for( auto child = childAt(event->pos()); child && child != this; child = child->parentWidget() )
     {
         if( child == keywordToolBar_ || child == entryToolBar_ )
         {
             accepted = true;
             break;
         }
-
-        child = child->parentWidget();
     }
 
     if( !accepted ) return;
@@ -1324,11 +1320,10 @@ void MainWindow::_resetLogEntryList()
     {
 
         LogEntryModel::List modelEntries;
-        for( const auto& entry:logbook_->entries() )
-        {
-            if( (!treeModeAction_->isChecked() && entry->isFindSelected()) || entry->isSelected() )
-            { modelEntries.append( entry ); }
-        }
+        auto entries( logbook_->entries() );
+        std::copy_if( entries.begin(), entries.end(), std::back_inserter(modelEntries),
+            [this]( LogEntry* entry )
+            { return (!treeModeAction_->isChecked() && entry->isFindSelected()) || entry->isSelected(); } );
 
         entryModel_.add( modelEntries );
 
@@ -1343,7 +1338,7 @@ void MainWindow::_resetLogEntryList()
         if( window->isClosed() ) continue;
 
         // get associated entry and see if selected
-        LogEntry* entry( window->entry() );
+        auto entry( window->entry() );
         window->previousEntryAction().setEnabled( entry && entry->isSelected() && previousEntry(entry, false) );
         window->nextEntryAction().setEnabled( entry && entry->isSelected() && nextEntry(entry, false) );
 
@@ -1375,7 +1370,7 @@ void MainWindow::_setEnabled( bool value )
     centralWidget()->setEnabled( value );
 
     // menu
-    menu().setEnabled( value );
+    menu_->setEnabled( value );
 
     // toolbars
     for( const auto& toolbar:findChildren<QToolBar*>() )
@@ -1424,9 +1419,9 @@ AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<Edi
 
     // check if editable EditionWindows needs save
     // cancel if required
-    int count = 0;
-    for( const auto& window:windows )
-    {  if( !( window->isReadOnly() || window->isClosed()) && window->modified() ) count++; }
+    int count = std::count_if( windows.begin(), windows.end(),
+        []( EditionWindow* window )
+        { return !( window->isReadOnly() || window->isClosed()) && window->modified(); } );
 
     // do nothing if no window needs saving
     if( !count ) return AskForSaveDialog::No;
@@ -1642,7 +1637,8 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
     Debug::Throw( "MainWindow::_saveAs.\n");
 
     // check current logbook
-    if( !logbook_ ) {
+    if( !logbook_ )
+    {
         InformationDialog( this, tr( "No logbook opened. <Save Logbook> canceled." ) ).exec();
         return false;
     }
@@ -2118,7 +2114,7 @@ void MainWindow::_synchronize()
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    QHash<LogEntry*,LogEntry*> duplicates( logbook_->synchronize( remoteLogbook ) );
+    auto duplicates( logbook_->synchronize( remoteLogbook ) );
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
@@ -2180,6 +2176,9 @@ void MainWindow::_removeBackups( Backup::List backups )
 
     Base::Singleton::get().application<Application>()->busy();
 
+    // store logbook backups
+    auto logbookBackups( logbook_->backupFiles() );
+
     File::List invalidFiles;
     bool modified( false );
     for( const auto& backup:backups )
@@ -2207,21 +2206,18 @@ void MainWindow::_removeBackups( Backup::List backups )
             logbook->file().remove();
         }
 
-        // clean logbook backups
-        Backup::List backups( logbook_->backupFiles() );
-        auto iter = std::find( backups.begin(), backups.end(), backup );
-        if( iter != backups.end() )
-        {
-            backups.erase( iter );
-            logbook_->setBackupFiles( backups );
-            modified = true;
-        }
+        // remove from logbook backups
+        if( logbookBackups.removeAll( backup ) ) modified = true;
     }
 
     Base::Singleton::get().application<Application>()->idle();
 
-    if( modified && !logbook_->file().isEmpty() )
-    { save(); }
+    if( modified )
+    {
+        // assign new list to logbook and save
+        logbook_->setBackupFiles( logbookBackups );
+        if( !logbook_->file().isEmpty() ) save();
+    }
 
     if( invalidFiles.size() == 1 )
     {
@@ -2350,7 +2346,7 @@ void MainWindow::_mergeBackup( Backup backup )
 
     // synchronize local with remote
     // retrieve map of duplicated entries
-    QHash<LogEntry*,LogEntry*> duplicates( logbook_->synchronize( backupLogbook ) );
+    auto duplicates( logbook_->synchronize( backupLogbook ) );
     Debug::Throw() << "MainWindow::_mergeBackup - number of duplicated entries: " << duplicates.size() << endl;
 
     // update possible EditionWindows when duplicated entries are found
@@ -2629,7 +2625,7 @@ void MainWindow::_newEntry()
     Debug::Throw( "MainWindow::_NewEntry.\n" );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
-    EditionWindow *editionWindow( nullptr );
+    EditionWindow* editionWindow( nullptr );
     Base::KeySet<EditionWindow> frames( this );
     Base::KeySetIterator<EditionWindow> iterator( frames.get() );
     iterator.toBack();
@@ -2653,7 +2649,6 @@ void MainWindow::_newEntry()
         Base::Key::associate( this, editionWindow );
         connect( editionWindow, SIGNAL(scratchFileCreated(File)), this, SIGNAL(scratchFileCreated(File)) );
         connect( logbook_.get(), SIGNAL(readOnlyChanged(bool)), editionWindow, SLOT(updateReadOnlyState()) );
-
     }
 
     // force editionWindow show keyword flag
@@ -2695,7 +2690,7 @@ void MainWindow::_deleteEntries()
     Debug::Throw( "MainWindow::_DeleteEntries .\n" );
 
     // retrieve selected rows;
-    QModelIndexList selectedIndexes( entryList_->selectionModel()->selectedRows() );
+    auto selectedIndexes( entryList_->selectionModel()->selectedRows() );
 
     // convert into LogEntry list
     LogEntryModel::List selection;
@@ -2790,7 +2785,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
         iterator.toBack();
         while( iterator.hasPrevious() )
         {
-            EditionWindow* current( iterator.previous() );
+            auto current( iterator.previous() );
 
             // skip closed editors
             if( !current->isClosed() ) continue;
@@ -3045,11 +3040,11 @@ void MainWindow::_deleteKeyword()
     iter.toBack();
     while( iter.hasPrevious() )
     {
-        const Keyword& keyword( iter.previous() );
+        const auto& keyword( iter.previous() );
 
         // retrieve index associated to parent keyword
         // if valid, select and break
-        QModelIndex index( keywordModel_.index( keyword.parent() ) );
+        auto index( keywordModel_.index( keyword.parent() ) );
         if( index.isValid() )
         {
             keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
@@ -3075,7 +3070,7 @@ void MainWindow::_renameKeyword()
     Debug::Throw("MainWindow::_renameKeyword.\n" );
 
     // check that keywordlist has selected item
-    QModelIndex current( keywordList_->selectionModel()->currentIndex() );
+    auto current( keywordList_->selectionModel()->currentIndex() );
     if( !current.isValid() )
     {
         InformationDialog( this, tr( "No keyword selected. <Rename Keyword> canceled." ) ).exec();
@@ -3098,7 +3093,7 @@ void MainWindow::_confirmRenameKeyword( const Keyword& keyword, const Keyword& n
     QMenu menu( this );
     menu.addActions( keywordChangedMenuActions_ );
     menu.ensurePolished();
-    QAction* action( menu.exec( QCursor::pos() ) );
+    auto action( menu.exec( QCursor::pos() ) );
     if( action == keywordChangedMenuActions_[0] ) _renameKeyword( keyword, newKeyword, true );
     else return;
 
@@ -3159,11 +3154,11 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
     {
 
         // make sure parent keyword index is expanded
-        QModelIndex parentIndex( keywordModel_.index( newKeyword.parent() ) );
+        auto parentIndex( keywordModel_.index( newKeyword.parent() ) );
         if( parentIndex.isValid() ) keywordList_->setExpanded( parentIndex, true );
 
         // retrieve current index, and select
-        QModelIndex index( keywordModel_.index( newKeyword ) );
+        auto index( keywordModel_.index( newKeyword ) );
         keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         keywordList_->scrollTo( index );
@@ -3398,11 +3393,11 @@ void MainWindow::_updateSelection( Keyword newKeyword, Base::KeySet<LogEntry> en
     _resetKeywordList();
 
     // make sure parent keyword index is expanded
-    QModelIndex parentIndex( keywordModel_.index( newKeyword.parent() ) );
+    auto parentIndex( keywordModel_.index( newKeyword.parent() ) );
     if( parentIndex.isValid() ) keywordList_->setExpanded( parentIndex, true );
 
     // retrieve current index, and select
-    QModelIndex index( keywordModel_.index( newKeyword ) );
+    auto index( keywordModel_.index( newKeyword ) );
     keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     keywordList_->scrollTo( index );
@@ -3417,7 +3412,7 @@ void MainWindow::_updateSelection( Keyword newKeyword, Base::KeySet<LogEntry> en
     QModelIndex lastIndex;
     for( const auto& entry:entries )
     {
-        QModelIndex index( entryModel_.index( entry ) );
+        auto index( entryModel_.index( entry ) );
         if( index.isValid() )
         {
             lastIndex = index;
@@ -3450,7 +3445,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
     if( treeModeAction_->isChecked() ) entryModel_.setCurrentKeyword( keyword );
 
     // keep track of the current selected entry
-    QModelIndex currentIndex( entryList_->selectionModel()->currentIndex() );
+    auto currentIndex( entryList_->selectionModel()->currentIndex() );
     LogEntry *selectedEntry( currentIndex.isValid() ? entryModel_.get( currentIndex ):nullptr );
 
     // retrieve all logbook entries
@@ -3600,7 +3595,7 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
     Debug::Throw( "MainWindow::_entryDataChanged.\n" );
 
     if( !index.isValid() ) return;
-    LogEntry* entry( entryModel_.get( index ) );
+    auto entry( entryModel_.get( index ) );
 
     Mask mask;
     if( index.column() == LogEntryModel::Title ) mask |= TitleMask;
@@ -3667,7 +3662,7 @@ void MainWindow::_toggleTreeMode( bool value )
 
     // get current entry
     LogEntry* currentEntry( nullptr );
-    QModelIndex index( entryList_->selectionModel()->currentIndex() );
+    auto index( entryList_->selectionModel()->currentIndex() );
     if( index.isValid() ) currentEntry = entryModel_.get( index );
 
     // update keyword list
@@ -3701,14 +3696,14 @@ void MainWindow::_toggleTreeMode( bool value )
         if( value && currentEntry->hasKeywords() )
         {
             // select keyword
-            QModelIndex index( keywordModel_.index( *currentEntry->keywords().begin() ) );
+            auto index( keywordModel_.index( *currentEntry->keywords().begin() ) );
             keywordList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
             keywordList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
             keywordList_->scrollTo( index );
         }
 
         // select entry
-        QModelIndex index( entryModel_.index( currentEntry ) );
+        auto index( entryModel_.index( currentEntry ) );
         entryList_->selectionModel()->select( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         entryList_->selectionModel()->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
         entryList_->scrollTo( index );
