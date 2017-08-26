@@ -28,6 +28,7 @@
 #include "IconEngine.h"
 #include "PixmapEngine.h"
 #include "Singleton.h"
+#include "TextBlockRange.h"
 #include "TextEditor.h"
 #include "TextPosition.h"
 #include "XmlOptions.h"
@@ -183,12 +184,11 @@ void FormatBar::load( const Format::TextFormatBlock::List& formatList ) const
 Format::TextFormatBlock::List FormatBar::get() const
 {
     Debug::Throw( "FormatBar::get.\n" );
-    Q_CHECK_PTR( editor_ );
 
     Format::TextFormatBlock::List out;
 
     // iterator over blocks
-    for( QTextBlock block = editor_->document()->begin(); block.isValid(); block = block.next() )
+    for( const auto& block:TextBlockRange( editor_->document() ) )
     {
 
         // iterator over text fragments
