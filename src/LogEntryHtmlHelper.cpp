@@ -242,11 +242,8 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
                 localNode.setAttribute( "color", iter->color().name() );
             }
 
-            while( index < text.size() && (int)index < iter->end() )
-            {
-                QTextStream( &buffer ) << text[index];
-                index++;
-            }
+            for( ; index < text.size() && (int)index < iter->end(); ++index )
+            { QTextStream( &buffer ) << text[index]; }
 
             // remove format from list
             formats.erase( iter );

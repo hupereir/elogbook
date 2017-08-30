@@ -114,15 +114,8 @@ QString Keyword::_format( QString value ) const
 
     // look for "/"
     // replace next character by uppercase
-    int pos(0);
-    while( ( pos = out.indexOf( "/", pos ) ) >= 0 )
-    {
-        if( pos+1 < out.length() )
-        {
-            out[pos+1] = out[pos+1].toUpper();
-            pos++;
-        } else break;
-    }
+    for( int position = 0; ( position = out.indexOf( "/", position ) ) >= 0 && position < out.length(); ++position )
+    { out[position+1] = out[position+1].toUpper(); }
 
     // remove trailing "/" if any
     if( out.endsWith( '/' ) )

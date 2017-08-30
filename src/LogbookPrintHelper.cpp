@@ -186,8 +186,7 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
     const QFontMetrics metrics( font, printer );
     const QRect pageRect( _pageRect() );
 
-    auto iter = entries_.begin();
-    while( iter != entries_.end() )
+    for( auto iter = entries_.begin(); iter != entries_.end(); )
     {
 
         // calculate number of rows

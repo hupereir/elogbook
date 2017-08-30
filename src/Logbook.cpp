@@ -541,8 +541,8 @@ void Logbook::truncateRecentEntriesList( int maxCount )
 {
 
     Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
-    while( recentEntries_.size() > maxCount )
-    { recentEntries_.removeFirst(); }
+    if( recentEntries_.size() > maxCount )
+    { recentEntries_.erase( recentEntries_.begin(), recentEntries_.begin() + (recentEntries_.size() - maxCount ) ); }
 
 }
 
