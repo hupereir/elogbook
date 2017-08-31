@@ -214,8 +214,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnlyActions_.append( insertLinkAction_ );
 
     const auto& actions( formatBar_->actions() );
-    for( auto&& iter = actions.begin(); iter != actions.end(); ++iter )
-    { readOnlyActions_.append( iter.value() ); }
+    std::copy( actions.begin(), actions.end(), std::back_inserter( readOnlyActions_ ) );
 
     // set proper connection for first editor
     // (because it could not be performed in _newTextEditor)
@@ -660,10 +659,7 @@ void EditionWindow::writeEntryToLogbook( bool updateSelection )
 
     // update associated EditionWindows
     for( const auto& window:Base::KeySet<EditionWindow> ( entry ) )
-    {
-        Q_ASSERT( window == this || window->isReadOnly() || window->isClosed() );
-        if( window != this ) window->displayEntry( entry );
-    }
+    { if( window != this ) window->displayEntry( entry ); }
 
     // update main window
     mainWindow.updateEntry( keyword_, entry, updateSelection );
@@ -1043,14 +1039,14 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 {
 
     Debug::Throw( "EditionWindow::_newSplitter.\n" );
-    QSplitter *splitter = 0;
+    QSplitter *splitter = nullptr;
 
     // retrieve parent of current display
-    QWidget* parent( activeEditor_->parentWidget() );
+    auto parent( activeEditor_->parentWidget() );
 
     // try cast to splitter
     // do not create a new splitter if the parent has same orientation
-    QSplitter *parentSplitter( qobject_cast<QSplitter*>( parent ) );
+    auto parentSplitter( qobject_cast<QSplitter*>( parent ) );
     if( parentSplitter && parentSplitter->orientation() == orientation ) {
 
         Debug::Throw( "EditionWindow::_newSplitter - orientation match. No need to create new splitter.\n" );
@@ -1111,7 +1107,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     Debug::Throw( "EditionWindow::_newTextEditor.\n" );
 
     // create TextEditor
-    Private::LocalTextEditor* editor = new Private::LocalTextEditor( parent );
+    auto editor = new Private::LocalTextEditor( parent );
 
     // connections
     connect( &editor->insertLinkAction(), SIGNAL(triggered()), SLOT(_insertLink()) );
@@ -1188,7 +1184,6 @@ MainWindow& EditionWindow::_mainWindow() const
 {
     Debug::Throw( "EditionWindow::_mainWindow.\n" );
     Base::KeySet<MainWindow> mainWindows( this );
-    Q_ASSERT( mainWindows.size()==1 );
     return **mainWindows.begin();
 }
 
@@ -1214,11 +1209,12 @@ void EditionWindow::_displayAttachments()
 {
     Debug::Throw( "EditionWindow::_DisplayAttachments.\n" );
 
-    AttachmentFrame &frame( attachmentFrame() );
+    auto &frame( attachmentFrame() );
     frame.clear();
 
     auto entry( this->entry() );
-    if( !entry ) {
+    if( !entry )
+    {
 
         frame.visibilityAction().setChecked( false );
         return;
@@ -1230,7 +1226,6 @@ void EditionWindow::_displayAttachments()
     if( attachments.empty() ) {
 
         frame.visibilityAction().setChecked( false );
-        return;
 
     } else {
 

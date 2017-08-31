@@ -305,7 +305,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     for( const auto& index:indexes )
     {
         if( !( index.isValid() && index.column() == Title ) ) continue;
-        LogEntry* entry( get( index ) );
+        auto entry( get( index ) );
         auto keywords( entry->keywords() );
 
         // FIXME: this is broken. In case of split keyword/title mode, one must get the selected keyword instead

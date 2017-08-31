@@ -118,8 +118,9 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 
     LogbookModel::List all;
     all.append( logbook );
-    for( const auto& child:logbook->children() )
-    { all.append( child.get() ); }
+
+    const auto children( logbook->children() );
+    std::transform( children.begin(), children.end(), std::back_inserter( all ), []( const Logbook::LogbookPtr& logbook ) { return logbook.get(); } );
 
     model_.set( all );
 

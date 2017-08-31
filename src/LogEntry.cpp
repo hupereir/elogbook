@@ -43,13 +43,13 @@ LogEntry::LogEntry( const QDomElement& element ):
     LogEntry()
 {
     // parse attributes
-    QDomNamedNodeMap attributes( element.attributes() );
+    const auto attributes( element.attributes() );
     for( int i=0; i<attributes.count(); i++ )
     {
-        QDomAttr attribute( attributes.item( i ).toAttr() );
+        const auto attribute( attributes.item( i ).toAttr() );
         if( attribute.isNull() ) continue;
-        QString name( attribute.name() );
-        QString value( attribute.value() );
+        const auto name( attribute.name() );
+        const auto value( attribute.value() );
         if( name == Xml::Title ) setTitle( value );
         else if( name == Xml::Keyword ) addKeyword( Keyword( value ) );
         else if( name == Xml::Author ) setAuthor( value );
@@ -59,12 +59,12 @@ LogEntry::LogEntry( const QDomElement& element ):
     }
 
     // parse children elements
-    for(QDomNode childNode = element.firstChild(); !childNode.isNull(); childNode = childNode.nextSibling() )
+    for( auto&& childNode = element.firstChild(); !childNode.isNull(); childNode = childNode.nextSibling() )
     {
-        QDomElement childElement = childNode.toElement();
+        const auto childElement = childNode.toElement();
         if( childElement.isNull() ) continue;
 
-        QString tagName( childElement.tagName() );
+        const auto tagName( childElement.tagName() );
         if( tagName == Xml::Keyword ) addKeyword( Keyword( childElement ) );
         else if( tagName == Base::Xml::Color ) {
 
@@ -200,13 +200,10 @@ bool LogEntry::matchAttachment( QString buffer ) const
     Debug::Throw( "LogEntry::matchAttachment.\n" );
 
     // retrieve associated attachments
-    for( const auto& attachment:Base::KeySet<Attachment>( this ) )
-    {
-        if( attachment->file().contains( buffer, _caseSensitive() ) )
-        { return true; }
-    }
-
-    return false;
+    const auto attachments( Base::KeySet<Attachment>( this ) );
+    return std::any_of( attachments.begin(), attachments.end(),
+        [this, &buffer]( Attachment* attachment )
+        { return attachment->file().contains( buffer, _caseSensitive() ); } );
 }
 
 //__________________________________

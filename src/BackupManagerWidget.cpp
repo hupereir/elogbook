@@ -30,7 +30,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     Counter( "BackupManagerWidget" )
 {
     Debug::Throw( "BackupManagerWidget::BackupManagerWidget" );
-    QHBoxLayout* hLayout = new QHBoxLayout;
+    auto hLayout = new QHBoxLayout;
     hLayout->setMargin(0);
     setLayout( hLayout );
 
@@ -50,12 +50,10 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     buttonLayout_->addWidget( restoreButton_ = new QPushButton( IconEngine::get( IconNames::Undo ), tr( "Restore" ), this ) );
     buttonLayout_->addWidget( mergeButton_ = new QPushButton( IconEngine::get( IconNames::Merge ), tr( "Merge" ), this ) );
 
-    QFrame* frame = new QFrame( this );
+    auto frame = new QFrame( this );
     frame->setFrameStyle( QFrame::HLine );
     buttonLayout_->addWidget( frame );
-
     buttonLayout_->addWidget( cleanButton_ = new QPushButton( IconEngine::get( IconNames::Delete ), tr( "Clean" ), this ) );
-
     buttonLayout_->addStretch( 1 );
 
     // connections
@@ -154,8 +152,8 @@ void BackupManagerWidget::_remove()
     else {
 
         Backup::List backups;
-        for( const auto& index:selectedIndexes )
-        { backups.append( model_.get( index ) ); }
+        std::transform( selectedIndexes.begin(), selectedIndexes.end(), std::back_inserter( backups ),
+            [this]( const QModelIndex& index ){ return model_.get( index ); } );
 
         emit removeBackupsRequested( backups );
 

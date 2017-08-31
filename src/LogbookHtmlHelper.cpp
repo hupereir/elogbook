@@ -185,11 +185,11 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
     if( !( mask_ & Logbook::TableOfContentMask ) ) return;
 
     // table
-    QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
+    auto table = parent.appendChild( document.createElement( "table" ) ).toElement();
     table.setAttribute( "class", "header_inner_table" );
 
     // header
-    QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
+    auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
         appendChild( document.createTextNode( tr( "Title" ) ) );
@@ -209,7 +209,7 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
     // loop over entries
     for( const auto& entry:entries_ )
     {
-        QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
 
         // title
         QDomElement ref = row.appendChild( document.createElement( "td" ) ).

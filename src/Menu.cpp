@@ -170,10 +170,10 @@ void Menu::_updateRecentEntriesMenu()
 
     for( const auto& entry:mainWindow.logbook()->recentEntries() )
     {
-        QAction* action = nullptr;
-        if( entry->hasKeywords() ) action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), entry->keywords().begin()->get() ) );
-        else action = recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), Keyword::Default.get() ) );
-        actions_.insert( action, entry );
+        actions_.insert(  entry->hasKeywords() ?
+            recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), entry->keywords().begin()->get() ) ):
+            recentEntriesMenu_->addAction( QString( "%1 (%2)" ).arg( entry->title(), Keyword::Default.get() ) ),
+            entry );
     }
 
 }

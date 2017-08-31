@@ -147,7 +147,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
     tableFormat.setMargin(margin);
     tableFormat.setCellPadding(0);
     tableFormat.setCellSpacing(0);
-    QTextTable* table = cursor.insertTable( nRows, 2, tableFormat );
+    auto table = cursor.insertTable( nRows, 2, tableFormat );
 
     // populate cells
     for( int row=0; row < nRows; ++row )
@@ -333,7 +333,7 @@ void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painte
     tableFormat.setCellPadding(0);
     tableFormat.setCellSpacing(0);
     tableFormat.setWidth( QTextLength( QTextLength::PercentageLength, 100 ) );
-    QTextTable* table = cursor.insertTable( attachments.size()+2, 3, tableFormat );
+    auto table = cursor.insertTable( attachments.size()+2, 3, tableFormat );
 
     int row(0);
     QTextTableCellFormat cellFormat;

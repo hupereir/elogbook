@@ -272,17 +272,17 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
     if( attachments.empty() ) return;
 
     // paragraph node
-    QDomElement par = parent.
+    auto par = parent.
         appendChild( document.createElement("p") ).
         appendChild( document.createElement( "b" ) ).toElement();
     HtmlTextNode( tr( "Attachments:" ), par, document );
 
     // table
-    QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
+    auto table = parent.appendChild( document.createElement( "table" ) ).toElement();
     table.setAttribute( "class", "header_inner_table" );
 
     // header
-    QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
+    auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
     row.appendChild( document.createElement( "td" ) ).
         appendChild( document.createElement( "b" ) ).
         appendChild( document.createTextNode( tr( "Location" ) ) );
@@ -296,8 +296,8 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
     {
 
         // file
-        QDomElement row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        QDomElement ref = row.
+        auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        auto ref = row.
             appendChild( document.createElement( "td" ) ).
             appendChild( document.createElement( "a" ) ).
             toElement();

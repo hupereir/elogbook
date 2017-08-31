@@ -29,10 +29,10 @@ Backup::Backup( const QDomElement& element ):
     Debug::Throw( "Backup::Backup.\n" );
 
     // parse attributes
-    QDomNamedNodeMap attributes( element.attributes() );
+    const auto attributes( element.attributes() );
     for( int i=0; i<attributes.count(); i++ )
     {
-        QDomAttr attribute( attributes.item( i ).toAttr() );
+        const auto attribute( attributes.item( i ).toAttr() );
         if( attribute.isNull() ) continue;
         if( attribute.name() == Xml::Creation ) setCreation( TimeStamp(attribute.value().toInt()) );
         else if( attribute.name() == Xml::File ) setFile( File( attribute.value() ) );

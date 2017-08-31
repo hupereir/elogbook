@@ -395,6 +395,9 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
 
     };
 
+    //* used to find modified logbooks
+    using ModifiedFTor = Base::Functor::UnaryTrue<Logbook, &Logbook::modified>;
+
     //* used to retrieve logbook associated to given file
     using SameFileFTor = Base::Functor::Unary<Logbook, const File&, &Logbook::file>;
 

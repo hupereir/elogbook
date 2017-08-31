@@ -41,16 +41,16 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     setOptionName( "ENTRY_INFORMATION_DIALOG" );
 
-    QHBoxLayout* hLayout = new QHBoxLayout;
+    auto hLayout = new QHBoxLayout;
     hLayout->setSpacing(10);
     hLayout->setMargin(5);
     mainLayout().addLayout( hLayout );
 
-    QLabel* label = new QLabel(this);
+    auto label = new QLabel(this);
     label->setPixmap( IconEngine::get( IconNames::DialogInformation ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
-    GridLayout *gridLayout = new GridLayout;
+    auto gridLayout = new GridLayout;
     gridLayout->setMargin(0);
     gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
@@ -82,7 +82,6 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
             item->setKey( first ? tr( "Keywords:" ):QString() );
             item->setText( keyword.get() );
             first = false;
-
         }
 
     }

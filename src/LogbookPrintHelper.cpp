@@ -208,7 +208,7 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
         tableFormat.setCellPadding(0);
         tableFormat.setCellSpacing(0);
         tableFormat.setWidth( QTextLength( QTextLength::PercentageLength, 100 ) );
-        QTextTable* table = cursor.insertTable( 1, 4, tableFormat );
+        auto table = cursor.insertTable( 1, 4, tableFormat );
 
         // header
         QTextTableCellFormat cellFormat;

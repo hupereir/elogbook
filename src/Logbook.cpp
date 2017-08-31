@@ -179,12 +179,12 @@ bool Logbook::read()
 
     // parse children
     int entryCount( 0 );
-    for(QDomNode node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() )
+    for( auto&& node = docElement.firstChild(); !node.isNull(); node = node.nextSibling() )
     {
-        QDomElement element = node.toElement();
+        const auto element = node.toElement();
         if( element.isNull() ) continue;
 
-        QString tagName( element.tagName() );
+        const auto tagName( element.tagName() );
 
         // children
         if( tagName == Xml::Comments ) setComments( element.text() );
@@ -233,8 +233,6 @@ bool Logbook::read()
         } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << endl;
 
     }
-
-    // emit progressAvailable( entryCount%progress );
 
     // discard modifications
     setModified( false );
@@ -683,7 +681,7 @@ bool Logbook::setReadOnly( bool value )
 
     // also change permission on children
     for( const auto& logbook:children_ )
-    { changed |= logbook->setReadOnly( value ); }
+    { if( logbook->setReadOnly( value ) ) changed = true; }
 
     return changed;
 
@@ -705,7 +703,7 @@ bool Logbook::setIsBackup( bool value )
 
     // also change permission on children
     for( const auto& logbook:children_ )
-    { changed |= logbook->setIsBackup( value ); }
+    { if( logbook->setIsBackup( value ) ) changed = true; }
 
     return changed;
 
@@ -739,16 +737,7 @@ void Logbook::setModification( const TimeStamp& stamp )
 
 //_________________________________
 bool Logbook::modified() const
-{
-    Debug::Throw( "Logbook::modified.\n" );
-
-    if( modified_ ) return true;
-
-    for( const auto& logbook:children_ )
-    { if( logbook->modified() ) return true; }
-
-    return false;
-}
+{ return modified_ || std::any_of( children_.begin(), children_.end(), ModifiedFTor() ); }
 
 //______________________________________________________________________
 bool Logbook::setSortMethod( Logbook::SortMethod sortMethod )
@@ -852,13 +841,13 @@ void Logbook::_readRecentEntries( const QDomElement& element )
     recentEntries_.clear();
 
     // loop over children
-    for( auto node = element.firstChild(); !node.isNull(); node = node.nextSibling() )
+    for( auto&& node = element.firstChild(); !node.isNull(); node = node.nextSibling() )
     {
-        auto childElement = node.toElement();
+        const auto childElement = node.toElement();
         if( childElement.isNull() ) continue;
 
         // children
-        auto tagName( childElement.tagName() );
+        const auto tagName( childElement.tagName() );
         if( tagName == Xml::Creation ) recentEntries_.append( XmlTimeStamp( childElement ) );
 
     }
@@ -870,7 +859,7 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 {
     Debug::Throw( "Logbook::_recentEntriesElement.\n" );
 
-    QDomElement out( document.createElement( Xml::RecentEntries ) );
+    auto out( document.createElement( Xml::RecentEntries ) );
     for( const auto& timeStamp:recentEntries_ )
     { out.appendChild( XmlTimeStamp( timeStamp ).domElement( Xml::Creation, document ) ); }
 

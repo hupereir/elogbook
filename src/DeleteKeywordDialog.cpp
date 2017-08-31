@@ -56,17 +56,17 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     }
 
     //! try load Question icon
-    QHBoxLayout *hLayout( new QHBoxLayout );
+    auto hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
     hLayout->setMargin(0);
     mainLayout().addLayout( hLayout );
 
-    QLabel* label = new QLabel( this );
+    auto label = new QLabel( this );
     label->setPixmap( IconEngine::get( IconNames::DialogWarning ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignHCenter );
     hLayout->addWidget( new QLabel( buffer, this ) );
 
-    QWidget *box = new QWidget( this );
+    auto box = new QWidget( this );
     mainLayout().addWidget( box );
     box->setLayout( new QVBoxLayout );
     box->layout()->setMargin(5);
@@ -74,7 +74,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
 
 
     // radio buttons
-    QButtonGroup* group = new QButtonGroup( this );
+    auto group = new QButtonGroup( this );
 
     box->layout()->addWidget( moveRadioButton_ = new QRadioButton( tr( "Move entries to parent keyword" ), box ) );
     moveRadioButton_->setToolTip( tr( "Select this button to move entries associated to this keyword to the parent keyword" ) );

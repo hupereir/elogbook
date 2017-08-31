@@ -47,13 +47,13 @@ Attachment::Attachment( const QDomElement& element):
     Debug::Throw() << "Attachment::Attachment.\n";
 
     // parse attributes
-    QDomNamedNodeMap attributes( element.attributes() );
+    const auto attributes( element.attributes() );
     for( int i=0; i<attributes.count(); i++ )
     {
-        QDomAttr attribute( attributes.item( i ).toAttr() );
+        const auto attribute( attributes.item( i ).toAttr() );
         if( attribute.isNull() ) continue;
-        QString name( attribute.name() );
-        QString value( attribute.value() );
+        const auto name( attribute.name() );
+        const auto value( attribute.value() );
 
         if( name == Xml::SourceFile ) _setSourceFile( File( value ) );
         else if( name == Xml::File ) _setFile( File( value ) );
@@ -65,13 +65,13 @@ Attachment::Attachment( const QDomElement& element):
     }
 
     // parse children elements
-    for(QDomNode child_node = element.firstChild(); !child_node.isNull(); child_node = child_node.nextSibling() )
+    for( auto&& childNode = element.firstChild(); !childNode.isNull(); childNode = childNode.nextSibling() )
     {
-        QDomElement child_element = child_node.toElement();
-        QString tag_name( child_element.tagName() );
-        if( tag_name == Xml::Comments ) setComments( child_element.text() );
-        else if( tag_name == Xml::Creation ) _setCreation( XmlTimeStamp( child_element ) );
-        else if( tag_name == Xml::Modification ) _setModification( XmlTimeStamp( child_element ) );
+        const auto childElement = childNode.toElement();
+        const auto tagName( childElement.tagName() );
+        if( tagName == Xml::Comments ) setComments( childElement.text() );
+        else if( tagName == Xml::Creation ) _setCreation( XmlTimeStamp( childElement ) );
+        else if( tagName == Xml::Modification ) _setModification( XmlTimeStamp( childElement ) );
     }
 
     // by default all URL attachments are valid, provided that the SOURCE_FILE is not empty
@@ -84,7 +84,7 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 {
 
     Debug::Throw( "Attachment::DomElement.\n" );
-    QDomElement out( parent.createElement( Xml::Attachment ) );
+    auto out( parent.createElement( Xml::Attachment ) );
     if( !file_.isEmpty() ) out.setAttribute( Xml::File, file_ );
     if( !sourceFile_.isEmpty() ) out.setAttribute( Xml::SourceFile, sourceFile_ );
     out.setAttribute( Xml::Valid, QString::number( isValid() ) );
@@ -98,8 +98,8 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
     }
 
     // dump timeStamp
-    if( creation().isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( Xml::Creation, parent ) );
-    if( modification().isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, parent ) );
+    if( creation_.isValid() ) out.appendChild( XmlTimeStamp( creation() ).domElement( Xml::Creation, parent ) );
+    if( modification_.isValid() ) out.appendChild( XmlTimeStamp( modification() ).domElement( Xml::Modification, parent ) );
 
     return out;
 

@@ -53,9 +53,7 @@ void FileCheckDialog::setFiles( const QStringList& files )
 
     Debug::Throw( "FileCheckDialog::setFiles.\n" );
     FileRecordModel::List records;
-    for( const auto& file:files )
-    { records.append( FileRecord( File(file) ) ); }
-
+    std::transform( files.begin(), files.end(), std::back_inserter( records ), []( const QString& file ) { return FileRecord( File( file ) ); } );
     model_.set( records );
 
     list_->updateMask();
