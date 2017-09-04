@@ -111,9 +111,10 @@ void installDefaultOptions()
     XmlOptions::get().set<int>( "ENTRY_LIST_MASK",
         (1<< LogEntryModel::Color)|
         (1<< LogEntryModel::Title)|
-        (1<< LogEntryModel::Creation)|
-        (1<< LogEntryModel::Modification)|
-        (1<< LogEntryModel::Author) );
+        (1<< LogEntryModel::Modification) );
+
+    XmlOptions::get().set<int>( "ENTRY_LIST_SORT_COLUMN", LogEntryModel::Modification );
+    XmlOptions::get().set<int>( "ENTRY_LIST_SORT_Order", Qt::DescendingOrder );
 
     XmlOptions::get().set<int>( "ATTACHMENT_LIST_MASK",
         (1<< AttachmentModel::Filename)|
