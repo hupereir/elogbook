@@ -388,15 +388,15 @@ QString EditionWindow::windowTitle() const
     if( entry && !entry->title().isEmpty() )
     {
 
-        if( readOnly ) buffer = QString( tr( "%1 (read only) - Elogbook" ) ).arg( entry->title() );
-        else if( modified()  ) buffer = QString( tr( "%1 (modified) - Elogbook" ) ).arg( entry->title() );
+        if( readOnly ) buffer = tr( "%1 (read only)" ).arg( entry->title() );
+        else if( modified()  ) buffer = tr( "%1 (modified)" ).arg( entry->title() );
         else buffer = QString( "%1 - Elogbook" ).arg( entry->title() );
 
     } else {
 
-        if( readOnly ) buffer = QString( tr( "Untitled Logbook Entry (read only) - Elogbook" ) );
-        else if( modified() ) buffer = QString( tr( "Untitled Logbook Entry (modified) - Elogbook" ) );
-        else buffer = QString( tr( "Untitled Logbook Entry - Elogbook" ) );
+        if( readOnly ) buffer = tr( "Untitled Logbook Entry (read only)" );
+        else if( modified() ) buffer = tr( "Untitled Logbook Entry (modified)" );
+        else buffer = tr( "Untitled Logbook Entry" );
 
     }
 
@@ -1169,8 +1169,8 @@ void EditionWindow::_displayCursorPosition( const TextPosition& position)
     Debug::Throw( "EditionWindow::_DisplayCursorPosition.\n" );
     if( !_hasStatusBar() ) return;
 
-    statusBar_->label(2).setText( QString( tr( "Line: %1" ) ).arg( position.paragraph()+1 ), false );
-    statusBar_->label(3).setText( QString( tr( "Column: %1" ) ).arg( position.index()+1 ), true );
+    statusBar_->label(2).setText( tr( "Line: %1" ).arg( position.paragraph()+1 ), false );
+    statusBar_->label(3).setText( tr( "Column: %1" ).arg( position.index()+1 ), true );
 
     return;
 }
@@ -1388,7 +1388,7 @@ void EditionWindow::_toHtml()
     QFile out( file );
     if( !out.open( QIODevice::WriteOnly ) )
     {
-        InformationDialog( this, QString( tr( "Cannot write to file '%1'. <View HTML> canceled." ) ).arg( file ) ).exec();
+        InformationDialog( this, tr( "Cannot write to file '%1'. <View HTML> canceled." ).arg( file ) ).exec();
         return;
     }
 

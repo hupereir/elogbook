@@ -114,7 +114,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     if( mask_&Logbook::FileMask ) values.append( StringPair( tr( "File:" ), logbook_->file() ) );
     if( mask_&Logbook::DirectoryMask && !logbook_->directory().isEmpty() )
     {
-        const QString buffer = logbook_->checkDirectory() ? QString(logbook_->directory()) : QString( tr( "%1 (not found)" ) ).arg( logbook_->directory() );
+        const QString buffer = logbook_->checkDirectory() ? QString(logbook_->directory()) : tr( "%1 (not found)" ).arg( logbook_->directory() );
         values.append( StringPair( tr( "Attachments directory:" ), buffer ) );
     }
 

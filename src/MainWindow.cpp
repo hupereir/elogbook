@@ -320,7 +320,7 @@ void MainWindow::createDefaultLogbook()
     logbook_->setAuthor( XmlOptions::get().raw( "USER" ) );
     logbook_->setDirectory( workingDirectory() );
 
-    logbook_->setComments( QString( tr( "Default logbook created automatically on %1" ) ).arg( TimeStamp::now().toString( TimeStamp::Format::Long ) ) );
+    logbook_->setComments( tr( "Default logbook created automatically on %1" ).arg( TimeStamp::now().toString( TimeStamp::Format::Long ) ) );
 
 }
 
@@ -424,7 +424,7 @@ bool MainWindow::setLogbook( File file )
     // see if logbook has parent file
     if( !logbook_->parentFile().isEmpty() )
     {
-        const QString buffer = QString( tr( "Warning: this logbook should be oppened via '%1' only." ) ).arg( logbook_->parentFile() );
+        const QString buffer = tr( "Warning: this logbook should be oppened via '%1' only." ).arg( logbook_->parentFile() );
         WarningDialog( this, buffer ).exec();
     }
 
@@ -1562,7 +1562,7 @@ void MainWindow::_newLogbook()
     if( directory.exists() && !directory.isDirectory() )
     {
 
-        const QString buffer = QString( tr( "File '%1' is not a directory" ) ).arg( directory );
+        const QString buffer = tr( "File '%1' is not a directory" ).arg( directory );
         InformationDialog( this, buffer ).exec();
 
     } else logbook_->setDirectory( directory );
@@ -1581,9 +1581,9 @@ void MainWindow::updateWindowTitle()
         if( !logbook_->file().isEmpty() )
         {
 
-            if( logbook_->isReadOnly() ) setWindowTitle( QString( tr( "%1 (read-only) - Elogbook" ) ).arg( logbook_->file() ) );
-            else if( logbook_->modified() )setWindowTitle( QString( tr( "%1 (modified) - Elogbook" ) ).arg( logbook_->file() ) );
-            else setWindowTitle( QString( tr( "%1 - Elogbook" ) ).arg( logbook_->file() ) );
+            if( logbook_->isReadOnly() ) setWindowTitle( tr( "%1 (read-only) - Elogbook" ).arg( logbook_->file() ) );
+            else if( logbook_->modified() )setWindowTitle( tr( "%1 (modified) - Elogbook" ).arg( logbook_->file() ) );
+            else setWindowTitle( tr( "%1 - Elogbook" ).arg( logbook_->file() ) );
 
         } else  {
 
@@ -2015,7 +2015,7 @@ void MainWindow::_toHtml()
     QFile out( file );
     if( !out.open( QIODevice::WriteOnly ) )
     {
-        const QString buffer = QString( tr( "Cannot write to file '%1'. <View HTML> canceled." ) ).arg( file );
+        const QString buffer = tr( "Cannot write to file '%1'. <View HTML> canceled." ).arg( file );
         InformationDialog( this, buffer ).exec();
         return;
     }
@@ -2196,13 +2196,13 @@ void MainWindow::_removeBackups( Backup::List backups )
         backupLogbook.read();
 
         // remove main file
-        emit messageAvailable( QString( tr( "Removing '%1'" ) ).arg( backupLogbook.file() ) );
+        emit messageAvailable( tr( "Removing '%1'" ).arg( backupLogbook.file() ) );
         backupLogbook.file().remove();
 
         // remove children files
         for( const auto& logbook:backupLogbook.children() )
         {
-            emit messageAvailable( QString( tr( "Removing '%1'" ) ).arg( logbook->file() ) );
+            emit messageAvailable( tr( "Removing '%1'" ).arg( logbook->file() ) );
             logbook->file().remove();
         }
 
@@ -2222,12 +2222,12 @@ void MainWindow::_removeBackups( Backup::List backups )
     if( invalidFiles.size() == 1 )
     {
 
-        const QString buffer = QString( tr( "Unable to open file named '%1'. <Remove Backup> canceled." ) ).arg( invalidFiles.front() );
+        const QString buffer = tr( "Unable to open file named '%1'. <Remove Backup> canceled." ).arg( invalidFiles.front() );
         InformationDialog( this, buffer ).exec();
 
     } else if( invalidFiles.size() > 1 ) {
 
-        const QString buffer = QString( tr( "%i files could not be opened. <Remove Backup> canceled." ) ).arg( invalidFiles.size() );
+        const QString buffer = tr( "%i files could not be opened. <Remove Backup> canceled." ).arg( invalidFiles.size() );
         QString details;
         for( const auto& file:invalidFiles )
         { details += file + "\n"; }
@@ -2246,7 +2246,7 @@ void MainWindow::_restoreBackup( Backup backup )
     Debug::Throw( "MainWindow::_restoreBackup.\n" );
     if( !backup.file().exists() )
     {
-        const QString buffer = QString( tr( "Unable to open file named '%1'. <Restore Backup> canceled." ) ).arg( backup.file() );
+        const QString buffer = tr( "Unable to open file named '%1'. <Restore Backup> canceled." ).arg( backup.file() );
         InformationDialog( this, buffer ).exec();
         return;
     }
@@ -2299,7 +2299,7 @@ void MainWindow::_mergeBackup( Backup backup )
 
     if( !backup.file().exists() )
     {
-        const QString buffer = QString( tr( "Unable to open file named '%1'. <Merge Backup> canceled." ) ).arg( backup.file() );
+        const QString buffer = tr( "Unable to open file named '%1'. <Merge Backup> canceled." ).arg( backup.file() );
         return;
     }
 
@@ -2562,7 +2562,7 @@ void MainWindow::_editLogbookInformations()
     if( directory.exists() &&  !directory.isDirectory() )
     {
 
-        const QString buffer = QString( tr( "File '%1' is not a directory." ) ).arg( directory );
+        const QString buffer = tr( "File '%1' is not a directory." ).arg( directory );
         InformationDialog( this, buffer ).exec();
 
     } else modified |= logbook_->setDirectory( directory );

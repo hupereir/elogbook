@@ -36,10 +36,10 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
 
     // create label
     QString buffer;
-    if( keywords.size() == 1 ) buffer = QString( tr( "Delete keyword '%1' ?" ) ).arg( keywords.front().get() );
+    if( keywords.size() == 1 ) buffer = tr( "Delete keyword '%1' ?" ).arg( keywords.front().get() );
     else {
 
-        buffer = QString( tr( "Delete following keywords ?\n  " ) );
+        buffer = tr( "Delete following keywords ?\n  " );
         int maxKeywords = 10;
         int index(0);
         for( const auto& keyword:keywords )

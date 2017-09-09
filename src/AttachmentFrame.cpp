@@ -202,9 +202,9 @@ void AttachmentFrame::_new()
         if( fullDirectory.exists() && !fullDirectory.isDirectory() )
         {
 
-            InformationDialog( this, QString( tr( "File '%1' is not a directory." ) ).arg( fullDirectory ) ).exec();
+            InformationDialog( this, tr( "File '%1' is not a directory." ).arg( fullDirectory ) ).exec();
 
-        } else if( !fullDirectory.exists() && QuestionDialog( this, QString( tr( "Directory '%1' does not exist. Create ?" ) ).arg( fullDirectory ) ).exec() ) {
+        } else if( !fullDirectory.exists() && QuestionDialog( this, tr( "Directory '%1' does not exist. Create ?" ).arg( fullDirectory ) ).exec() ) {
 
             ( Command( "mkdir" ) << fullDirectory ).run();
         }
@@ -234,19 +234,19 @@ void AttachmentFrame::_new()
     {
 
         case Attachment::SourceNotFound:
-        InformationDialog( this, QString( tr( "Cannot find file '%1'. <Add Attachment> canceled." ) ).arg( file ) ).exec();
+        InformationDialog( this, tr( "Cannot find file '%1'. <Add Attachment> canceled." ).arg( file ) ).exec();
         break;
 
         case Attachment::DestNotFound:
-        InformationDialog( this, QString( tr( "Cannot find directory '%1'. <Add Attachment> canceled." ) ).arg( fullDirectory ) ).exec();
+        InformationDialog( this, tr( "Cannot find directory '%1'. <Add Attachment> canceled." ).arg( fullDirectory ) ).exec();
         break;
 
         case Attachment::SourceIsDir:
-        InformationDialog( this, QString( tr( "File '%1' is a directory. <Add Attachment> canceled." ) ).arg( file ) ).exec();
+        InformationDialog( this, tr( "File '%1' is a directory. <Add Attachment> canceled." ).arg( file ) ).exec();
         break;
 
         case Attachment::DestExist:
-        InformationDialog( this, QString( tr( "File '%1' is already in list." ) ).arg( file ) ).exec();
+        InformationDialog( this, tr( "File '%1' is already in list." ).arg( file ) ).exec();
         break;
 
         case Attachment::Success:
@@ -457,7 +457,7 @@ void AttachmentFrame::_open()
         File fullname( isUrl ? attachment->file():attachment->file().expanded() );
         if( !( isUrl || fullname.exists() ) )
         {
-            InformationDialog( this, QString( tr( "Cannot find file '%1'. <Open Attachment> canceled." ) ).arg( fullname ) ).exec();
+            InformationDialog( this, tr( "Cannot find file '%1'. <Open Attachment> canceled." ).arg( fullname ) ).exec();
             continue;
         }
 
@@ -469,7 +469,7 @@ void AttachmentFrame::_open()
 
                 if( !dialog.isCommandValid() || (dialog.command().isEmpty() && !dialog.isCommandDefault() ) )
                 {
-                    InformationDialog( this, QString( tr( "Specified command is invalid. <Open Attachment> canceled." ) ).arg( fullname ) ).exec();
+                    InformationDialog( this, tr( "Specified command is invalid. <Open Attachment> canceled." ).arg( fullname ) ).exec();
                     continue;
                 }
 
@@ -698,13 +698,13 @@ void AttachmentFrame::_saveAs()
         if( isUrl )
         {
 
-            InformationDialog( this, QString( tr( "Selected attachement is URL. <Save Attachment As> canceled." ) ) ).exec();
+            InformationDialog( this, tr( "Selected attachement is URL. <Save Attachment As> canceled." ) ).exec();
             continue;
 
         } else if( !fullname.exists() ) {
 
             QString buffer;
-            InformationDialog( this, QString( tr( "Cannot find file '%1'. <Save Attachment As> canceled." ) ).arg( fullname ) ).exec();
+            InformationDialog( this, tr( "Cannot find file '%1'. <Save Attachment As> canceled." ).arg( fullname ) ).exec();
             continue;
 
         } else {

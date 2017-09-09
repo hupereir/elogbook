@@ -107,7 +107,7 @@ bool Logbook::read()
     }
 
     // update StateFrame
-    emit messageAvailable( QString( tr( "Reading '%1'" ) ).arg( file_.localName() ) );
+    emit messageAvailable( tr( "Reading '%1'" ).arg( file_.localName() ) );
 
     // check input file
     if( !file_.exists() ) {
@@ -271,7 +271,7 @@ bool Logbook::write( File file )
         { file.backup(); }
 
         // update stateFrame
-        emit messageAvailable( QString( tr( "Writing '%1'" ) ).arg( file.localName() ) );
+        emit messageAvailable( tr( "Writing '%1'" ).arg( file.localName() ) );
 
         if( !QFile( file ).open( QIODevice::WriteOnly ) )
         {

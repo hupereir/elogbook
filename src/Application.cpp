@@ -114,7 +114,7 @@ bool Application::realizeWidget()
         // show information dialog, provided that fileList is not empty
         if( !file.isEmpty() )
         {
-            const QString buffer = QString( tr( "Unable to open file '%1'." ) ).arg( file );
+            const auto buffer = tr( "Unable to open file '%1'." ).arg( file );
             InformationDialog( mainWindow_.get(), buffer ).exec();
         }
 
@@ -189,7 +189,7 @@ bool Application::_processCommand( Server::ServerCommand command )
         if( !filenames.isEmpty() )
         {
 
-            auto buffer = QString( tr( "Accept request for file '%1'?" ) ).arg( filenames.front() );
+            auto buffer = tr( "Accept request for file '%1'?" ).arg( filenames.front() );
             if( QuestionDialog( mainWindow_.get(), buffer ).centerOnParent().exec() )
             { mainWindow_->setLogbook( File( filenames.front() ) ); }
 
