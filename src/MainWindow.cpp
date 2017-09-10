@@ -129,7 +129,7 @@ MainWindow::MainWindow( QWidget *parent ):
     // set layout
     auto vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
-    vLayout->setSpacing( 5 );
+    vLayout->setSpacing(0);
     keywordContainer_->setLayout( vLayout );
 
     keywordToolBar_ = new CustomToolBar( tr( "Keywords" ), keywordContainer_, "KEYWORD_TOOLBAR" );
@@ -200,7 +200,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     vLayout = new QVBoxLayout;
     vLayout->setMargin(0);
-    vLayout->setSpacing( 5 );
+    vLayout->setSpacing(0);
     right->setLayout( vLayout );
 
     entryToolBar_ = new CustomToolBar( tr( "Entries" ), right, "ENTRY_TOOLBAR" );
