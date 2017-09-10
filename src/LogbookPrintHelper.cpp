@@ -18,8 +18,8 @@
 *******************************************************************************/
 
 #include "LogbookPrintHelper.h"
-
 #include "LogEntryPrintHelper.h"
+#include "Util.h"
 
 #include <QList>
 #include <QPair>
@@ -65,7 +65,7 @@ void LogbookPrintHelper::print( QPrinter* printer )
     {
         progress_ = 0;
         progressDialog_ = new QProgressDialog( tr( "Generating print output..." ), tr( "Cancel" ), 0, maxValue );
-        progressDialog_.data()->setWindowTitle( tr( "Print Logbook - Elogbook" ) );
+        progressDialog_.data()->setWindowTitle( Util::windowTitle( tr( "Print Logbook" ) ) );
         progressDialog_.data()->setWindowModality(Qt::WindowModal);
     }
 

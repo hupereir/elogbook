@@ -36,7 +36,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 {
 
     Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
-    setWindowTitle( tr( "Attachments - Elogbook" ) );
+    setWindowTitle( tr( "Attachments" ) );
     setOptionName( "ATTACHMENT_WINDOW" );
 
     layout()->setMargin(0);

@@ -40,7 +40,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
 {
     Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
 
-    setWindowTitle( tr( "Logbook Statistics - Elogbook" ) );
+    setWindowTitle( tr( "Logbook Statistics" ) );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );
 
     auto hLayout = new QHBoxLayout;

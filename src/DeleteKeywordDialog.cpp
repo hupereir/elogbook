@@ -32,7 +32,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
 {
 
     Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
-    setWindowTitle( tr( "Delete Keyword - Elogbook" ) );
+    setWindowTitle( tr( "Delete Keyword" ) );
 
     // create label
     QString buffer;

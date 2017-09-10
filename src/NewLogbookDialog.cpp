@@ -30,7 +30,7 @@ CustomDialog( parent )
 {
 
     Debug::Throw( "NewLogbookDialog::NewLogbookDialog.\n" );
-    setWindowTitle( tr( "New Logbook - Elogbook" ) );
+    setWindowTitle( tr( "New Logbook" ) );
     QGridLayout *gridLayout( new QGridLayout );
     gridLayout->setMargin(0);
     gridLayout->setSpacing(5);

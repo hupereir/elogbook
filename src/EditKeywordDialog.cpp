@@ -29,7 +29,7 @@ EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
 
     Debug::Throw( "EditKeywordDialog::EditKeywordDialog.\n" );
 
-    setWindowTitle( tr( "Edit Keyword - Elogbook" ) );
+    setWindowTitle( tr( "Edit Keyword" ) );
     mainLayout().addWidget( combobox_ = new CustomComboBox( this ) );
     combobox_->setEditable( true );
     combobox_->setAutoCompletion( true );

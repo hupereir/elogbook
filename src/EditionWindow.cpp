@@ -1302,7 +1302,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     LogEntryPrintOptionWidget* logEntryOptionWidget = new LogEntryPrintOptionWidget;
-    logEntryOptionWidget->setWindowTitle( "Logbook Entry Configuration" );
+    logEntryOptionWidget->setWindowTitle( tr( "Logbook Entry Configuration" ) );
     connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
 
@@ -1311,7 +1311,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
 
     using WidgetList = QList<QWidget*>;
     dialog.setOptionTabs( Base::makeT<WidgetList>({ optionWidget, logEntryOptionWidget }) );
-    dialog.setWindowTitle( tr( "Print Logbook Entry - Elogbook" ) );
+    dialog.setWindowTitle( tr( "Print Logbook Entry" ) );
     if( !dialog.exec() ) return;
 
     // add output file to scratch files, if any
@@ -1343,7 +1343,7 @@ void EditionWindow::_printPreview()
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this, CustomDialog::OkButton|CustomDialog::CancelButton );
-    dialog.setWindowTitle( tr( "Print Preview - Elogbook" ) );
+    dialog.setWindowTitle( tr( "Print Preview" ) );
     dialog.setHelper( &helper );
 
     // print
@@ -1368,7 +1368,7 @@ void EditionWindow::_toHtml()
 
     using WidgetList = QList<QWidget*>;
     dialog.setOptionWidgets( Base::makeT<WidgetList>({ optionWidget }) );
-    dialog.setWindowTitle( tr( "Export to HTML - Elogbook" ) );
+    dialog.setWindowTitle( tr( "Export to HTML" ) );
 
     // generate file name
     QString buffer;
@@ -1520,7 +1520,7 @@ void EditionWindow::_insertLink()
 
     // create dialog
     InsertLinkDialog dialog( this, selection );
-    dialog.setWindowTitle( tr( "Insert link - Elogbook" ) );
+    dialog.setWindowTitle( tr( "Insert link" ) );
     if( !dialog.exec() ) return;
 
     // update format
@@ -1607,7 +1607,7 @@ void EditionWindow::_openLink()
     if( anchor.isEmpty() ) return;
 
     OpenWithDialog dialog( this );
-    dialog.setWindowTitle( tr( "Open Link - Homechat" ) );
+    dialog.setWindowTitle( tr( "Open Link" ) );
     dialog.setLink( File( anchor ) );
     dialog.setOptionName( "OPEN_LINK_APPLICATIONS" );
     dialog.realizeWidget();

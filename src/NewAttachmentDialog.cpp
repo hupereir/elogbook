@@ -31,7 +31,7 @@ CustomDialog( parent )
 {
 
     Debug::Throw( "NewAttachmentDialog::NewAttachmentDialog.\n" );
-    setWindowTitle( tr( "New Attachment - Elogbook" ) );
+    setWindowTitle( tr( "New Attachment" ) );
 
     GridLayout* gridLayout = new GridLayout;
     gridLayout->setMargin(0);

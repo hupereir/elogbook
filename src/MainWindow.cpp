@@ -1581,9 +1581,9 @@ void MainWindow::updateWindowTitle()
         if( !logbook_->file().isEmpty() )
         {
 
-            if( logbook_->isReadOnly() ) setWindowTitle( tr( "%1 (read-only) - Elogbook" ).arg( logbook_->file() ) );
-            else if( logbook_->modified() )setWindowTitle( tr( "%1 (modified) - Elogbook" ).arg( logbook_->file() ) );
-            else setWindowTitle( tr( "%1 - Elogbook" ).arg( logbook_->file() ) );
+            if( logbook_->isReadOnly() ) setWindowTitle( tr( "%1 (read-only)" ).arg( logbook_->file() ) );
+            else if( logbook_->modified() )setWindowTitle( tr( "%1 (modified)" ).arg( logbook_->file() ) );
+            else setWindowTitle( logbook_->file() );
 
         } else  {
 
@@ -1866,12 +1866,12 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     connect( optionWidget, SIGNAL(pageModeChanged(BasePrintHelper::PageMode)), &helper, SLOT(setPageMode(BasePrintHelper::PageMode)) );
 
     auto logbookOptionWidget = new LogbookPrintOptionWidget;
-    logbookOptionWidget->setWindowTitle( "Logbook Configuration" );
+    logbookOptionWidget->setWindowTitle( tr( "Logbook Configuration" ) );
     connect( logbookOptionWidget, SIGNAL(maskChanged(Logbook::Mask)), &helper, SLOT(setMask(Logbook::Mask)) );
     logbookOptionWidget->read( XmlOptions::get() );
 
     auto logEntryOptionWidget = new LogEntryPrintOptionWidget;
-    logEntryOptionWidget->setWindowTitle( "Logbook Entry Configuration" );
+    logEntryOptionWidget->setWindowTitle( tr( "Logbook Entry Configuration" ) );
     connect( logEntryOptionWidget, SIGNAL(maskChanged(LogEntry::Mask)), &helper, SLOT(setEntryMask(LogEntry::Mask)) );
     logEntryOptionWidget->read( XmlOptions::get() );
 
@@ -1881,7 +1881,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     using WidgetList = QList<QWidget*>;
     dialog.setOptionTabs( Base::makeT<WidgetList>({ optionWidget, logbookOptionWidget, logEntryOptionWidget }));
 
-    dialog.setWindowTitle( tr( "Print Logbook - Elogbook" ) );
+    dialog.setWindowTitle( tr( "Print Logbook" ) );
     if( dialog.exec() == QDialog::Rejected ) return;
 
     // add output file to scratch files, if any
@@ -1959,7 +1959,7 @@ void MainWindow::_printPreview()
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this, CustomDialog::OkButton|CustomDialog::CancelButton );
-    dialog.setWindowTitle( tr( "Print Preview - Elogbook" ) );
+    dialog.setWindowTitle( tr( "Print Preview" ) );
     dialog.setHelper( &helper );
 
     // print
@@ -2927,7 +2927,7 @@ void MainWindow::_newKeyword()
 
     // create dialog
     EditKeywordDialog dialog( this );
-    dialog.setWindowTitle( tr( "New Keyword - Elogbook" ) );
+    dialog.setWindowTitle( tr( "New Keyword" ) );
 
     for( const auto& keyword:keywordModel_.children() )
     { dialog.add( keyword ); }
@@ -3196,7 +3196,7 @@ void MainWindow::_renameEntryKeyword()
 
     // create dialog
     EditKeywordDialog dialog( this );
-    dialog.setWindowTitle( tr( "Edit Keyword - Elogbook" ) );
+    dialog.setWindowTitle( tr( "Edit Keyword" ) );
 
     for( const auto& keyword:keywordModel_.children() )
     { dialog.add( keyword ); }

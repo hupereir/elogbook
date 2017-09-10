@@ -35,7 +35,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
 {
     Debug::Throw( "LogbookInformationDialog::LogbookInformationDialog.\n" );
 
-    setWindowTitle( tr( "Logbook Informations - Elogbook" ) );
+    setWindowTitle( tr( "Logbook Informations" ) );
     setOptionName( "LOGBOOK_INFORMATION_DIALOG" );
 
     QHBoxLayout* hLayout = new QHBoxLayout;

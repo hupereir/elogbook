@@ -25,7 +25,7 @@ LogEntryPrintSelectionDialog::LogEntryPrintSelectionDialog( QWidget* parent ):
     CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
-    setWindowTitle( tr( "Select Entries for Printing - Elogbook" ) );
+    setWindowTitle( tr( "Select Entries for Printing" ) );
     mainLayout().addWidget( selectionWidget_ = new LogEntryPrintSelectionWidget( this ) );
     selectionWidget_->read( XmlOptions::get() );
 }

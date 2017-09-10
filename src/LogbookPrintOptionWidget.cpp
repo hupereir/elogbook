@@ -32,7 +32,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     OptionWidget( "LOGBOOK_PRINT_OPTION_MASK" )
 {
 
-    setWindowTitle( "Logbook Configuration - Elogbook" );
+    setWindowTitle( tr( "Logbook Configuration" ) );
 
     auto layout = new QVBoxLayout;
     setLayout( layout );
