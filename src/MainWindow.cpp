@@ -1582,7 +1582,7 @@ void MainWindow::updateWindowTitle()
         {
 
             if( logbook_->isReadOnly() ) setWindowTitle( tr( "%1 (read-only)" ).arg( logbook_->file() ) );
-            else if( logbook_->modified() )setWindowTitle( tr( "%1 (modified)" ).arg( logbook_->file() ) );
+            else if( logbook_->modified() ) setWindowTitle( tr( "%1 (modified)" ).arg( logbook_->file() ) );
             else setWindowTitle( logbook_->file() );
 
         } else  {
@@ -1877,11 +1877,11 @@ void MainWindow::_print( LogbookPrintHelper& helper )
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
+    dialog.setWindowTitle( Util::windowTitle( tr( "Print Logbook" ) ) );
 
     using WidgetList = QList<QWidget*>;
     dialog.setOptionTabs( Base::makeT<WidgetList>({ optionWidget, logbookOptionWidget, logEntryOptionWidget }));
 
-    dialog.setWindowTitle( tr( "Print Logbook" ) );
     if( dialog.exec() == QDialog::Rejected ) return;
 
     // add output file to scratch files, if any

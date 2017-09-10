@@ -1308,10 +1308,10 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
+    dialog.setWindowTitle( Util::windowTitle( tr( "Print Logbook Entry" ) ) );
 
     using WidgetList = QList<QWidget*>;
     dialog.setOptionTabs( Base::makeT<WidgetList>({ optionWidget, logEntryOptionWidget }) );
-    dialog.setWindowTitle( tr( "Print Logbook Entry" ) );
     if( !dialog.exec() ) return;
 
     // add output file to scratch files, if any
