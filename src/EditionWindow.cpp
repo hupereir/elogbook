@@ -379,28 +379,25 @@ QString EditionWindow::windowTitle() const
 {
 
     Debug::Throw( "EditionWindow::windowTitle.\n" );
-    auto entry( this->entry() );
+    const auto entry( this->entry() );
 
     // read only flag
     const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbookIsReadOnly() ) );
 
-    QString buffer;
     if( entry && !entry->title().isEmpty() )
     {
 
-        if( readOnly ) buffer = tr( "%1 (read only)" ).arg( entry->title() );
-        else if( modified()  ) buffer = tr( "%1 (modified)" ).arg( entry->title() );
-        else buffer = QString( "%1 - Elogbook" ).arg( entry->title() );
+        if( readOnly ) return tr( "%1 (read only)" ).arg( entry->title() );
+        else if( modified()  ) return tr( "%1 (modified)" ).arg( entry->title() );
+        else return entry->title();
 
     } else {
 
-        if( readOnly ) buffer = tr( "Untitled Logbook Entry (read only)" );
-        else if( modified() ) buffer = tr( "Untitled Logbook Entry (modified)" );
-        else buffer = tr( "Untitled Logbook Entry" );
+        if( readOnly ) return tr( "Untitled Logbook Entry (read only)" );
+        else if( modified() ) return tr( "Untitled Logbook Entry (modified)" );
+        else return tr( "Untitled Logbook Entry" );
 
     }
-
-    return buffer;
 
 }
 
