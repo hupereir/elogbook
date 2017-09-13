@@ -22,8 +22,8 @@
 
 #include "Counter.h"
 
-#include "CppUtil.h"
 #include "File.h"
+#include "Operators.h"
 #include "TimeStamp.h"
 
 #include <QDomDocument>
