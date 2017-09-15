@@ -111,7 +111,6 @@ add_platform_executable(elogbook
   ${elogbook_RESOURCES_RCC}
 )
 
-target_link_libraries(elogbook ${QT_LIBRARIES})
 target_link_libraries(elogbook
   base
   base-qt
@@ -125,13 +124,17 @@ if(ASPELL_FOUND)
 
 endif()
 
-install(TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR})
-
 if(USE_QT5)
 
   target_link_libraries(elogbook Qt5::Widgets Qt5::Network Qt5::PrintSupport Qt5::Xml)
 
+else()
+
+  target_link_libraries(elogbook ${QT_LIBRARIES})
+
 endif()
+
+install(TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR})
 
 ########### next target ###############
 if(UNIX)
@@ -141,19 +144,22 @@ if(UNIX)
     ${elogbook_lib_SOURCES}
     ${copy_logbook_SOURCES})
 
-  target_link_libraries(copy-logbook ${QT_LIBRARIES})
   target_link_libraries(copy-logbook
     base
     base-qt
     base-server)
 
-  install(TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR})
-
   if(USE_QT5)
 
     target_link_libraries(copy-logbook Qt5::Widgets Qt5::Xml)
 
+  else()
+
+    target_link_libraries(copy-logbook ${QT_LIBRARIES})
+
   endif()
+
+  install(TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR})
 
 endif()
 
@@ -165,19 +171,22 @@ if(UNIX)
     ${elogbook_lib_SOURCES}
     ${compress_logbook_SOURCES})
 
-  target_link_libraries(compress-logbook ${QT_LIBRARIES})
   target_link_libraries(compress-logbook
     base
     base-qt
     base-server)
 
-  install(TARGETS compress-logbook DESTINATION ${BIN_INSTALL_DIR})
-
   if(USE_QT5)
 
     target_link_libraries(compress-logbook Qt5::Widgets Qt5::Xml)
 
+  else()
+
+    target_link_libraries(compress-logbook ${QT_LIBRARIES})
+
   endif()
+
+  install(TARGETS compress-logbook DESTINATION ${BIN_INSTALL_DIR})
 
 endif()
 
@@ -189,19 +198,22 @@ if(UNIX)
     ${elogbook_lib_SOURCES}
     ${uncompress_logbook_SOURCES})
 
-  target_link_libraries(uncompress-logbook ${QT_LIBRARIES})
   target_link_libraries(uncompress-logbook
     base
     base-qt
     base-server)
 
-  install(TARGETS uncompress-logbook DESTINATION ${BIN_INSTALL_DIR})
-
   if(USE_QT5)
 
     target_link_libraries(uncompress-logbook Qt5::Widgets Qt5::Xml)
 
+  else()
+
+    target_link_libraries(uncompress-logbook ${QT_LIBRARIES})
+
   endif()
+
+  install(TARGETS uncompress-logbook DESTINATION ${BIN_INSTALL_DIR})
 
 endif()
 
@@ -213,18 +225,21 @@ if(UNIX)
     ${elogbook_lib_SOURCES}
     ${synchronize_logbook_SOURCES})
 
-  target_link_libraries(synchronize-logbook ${QT_LIBRARIES})
   target_link_libraries(synchronize-logbook
     base
     base-qt
     base-server)
 
-  install(TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR})
-
   if(USE_QT5)
 
     target_link_libraries(synchronize-logbook Qt5::Widgets Qt5::Xml)
 
+  else()
+
+    target_link_libraries(synchronize-logbook ${QT_LIBRARIES})
+
   endif()
+
+  install(TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR})
 
 endif()
