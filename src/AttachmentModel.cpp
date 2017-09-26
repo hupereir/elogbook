@@ -26,7 +26,7 @@
 
 //_______________________________________________________________
 AttachmentModel::AttachmentModel( QObject* parent ):
-    ListModel<Attachment*>( parent ),
+    ListModel( parent ),
     Counter( "AttachmentModel" )
 {
     Debug::Throw( "AttachmentModel::AttachmentModel.\n" );

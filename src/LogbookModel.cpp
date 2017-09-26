@@ -29,7 +29,7 @@ QVariant LogbookModel::data( const QModelIndex& index, int role ) const
     if( !contains( index ) ) return QVariant();
 
     // retrieve associated file info
-    Logbook& logbook( *get()[index.row()] );
+    const auto& logbook( *get(index) );
 
     // return text associated to file and column
     if( role == Qt::DisplayRole )

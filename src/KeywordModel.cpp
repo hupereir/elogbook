@@ -24,7 +24,7 @@
 
 //______________________________________________________________
 KeywordModel::KeywordModel( QObject* parent ):
-    TreeModel<Keyword>( parent ),
+    TreeModel( parent ),
     Counter( "KeywordModel" )
 {}
 

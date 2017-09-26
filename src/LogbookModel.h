@@ -47,11 +47,11 @@ class LogbookModel: public ListModel<Logbook*>, private Base::Counter<LogbookMod
 
     //* constructor
     explicit LogbookModel( QObject* parent = nullptr ):
-        ListModel<Logbook*>( parent ),
-        Counter( "LogbookStatisticsDialog::Model" )
+        ListModel( parent ),
+        Counter( "LogbookModel" )
     {}
 
-    //*@name methods reimplemented from base class
+    //*@name accessors
     //@{
 
     //* flags

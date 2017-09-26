@@ -45,7 +45,7 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
 
 //_______________________________________________________________
 LogEntryModel::LogEntryModel( QObject* parent ):
-    ListModel<LogEntry*>( parent ),
+    ListModel( parent ),
     Counter( "LogEntryModel" )
 {
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
