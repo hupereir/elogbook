@@ -31,8 +31,9 @@ KeywordModel::KeywordModel( QObject* parent ):
 //__________________________________________________________________
 Qt::ItemFlags KeywordModel::flags(const QModelIndex &index) const
 {
-    if( !index.isValid() ) return Qt::ItemIsDropEnabled;
-    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled| Qt::ItemIsDragEnabled | Qt::ItemIsEditable;
+    return index.isValid() ?
+        Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled| Qt::ItemIsDragEnabled | Qt::ItemIsEditable:
+        Qt::ItemIsDropEnabled;
 }
 
 //__________________________________________________________________
@@ -130,11 +131,11 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
     {
 
         // retrieve/check string
-        QString keyword_string( data->data( Keyword::MimeType ) );
-        if( keyword_string.isNull() || keyword_string.isEmpty() ) return false;
+        QString keywordString( data->data( Keyword::MimeType ) );
+        if( keywordString.isNull() || keywordString.isEmpty() ) return false;
 
         // retrieve old keyword
-        Keyword oldKeyword( keyword_string );
+        Keyword oldKeyword( keywordString );
 
         // retrieve new location
         QModelIndex index = parent.isValid() ? parent : QModelIndex();
