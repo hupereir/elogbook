@@ -81,7 +81,7 @@ set(elogbook_SOURCES
   LogEntryPrintSelectionDialog.cpp
   LogEntryPrintSelectionWidget.cpp
   MainWindow.cpp
-  Menu.cpp
+  MenuBar.cpp
   NewAttachmentDialog.cpp
   NewLogbookDialog.cpp
   OpenAttachmentDialog.cpp

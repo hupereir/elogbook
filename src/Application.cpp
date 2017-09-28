@@ -27,7 +27,7 @@
 #include "InformationDialog.h"
 #include "Logbook.h"
 #include "MainWindow.h"
-#include "Menu.h"
+#include "MenuBar.h"
 #include "RecentFilesMenu.h"
 #include "ScratchFileMonitor.h"
 #include "QtUtil.h"

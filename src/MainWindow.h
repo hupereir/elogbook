@@ -48,7 +48,7 @@ class CustomToolBar;
 class EditionWindow;
 class FileCheck;
 class LogbookPrintHelper;
-class Menu;
+class MenuBar;
 class ProgressStatusBar;
 
 //* display a set of log entries, allows selection of one
@@ -67,8 +67,8 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //@{
 
     //* retrive menu
-    Menu& menu() const
-    { return *menu_; }
+    MenuBar& menuBar() const
+    { return *menuBar_; }
 
     //* retrive state frame
     ProgressStatusBar& statusBar() const
@@ -578,7 +578,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _updateSelection( Keyword, Base::KeySet<LogEntry> );
 
     //* main menu
-    Menu* menu_ = nullptr;
+    MenuBar* menuBar_ = nullptr;
 
     //* search panel
     SearchWidget *searchWidget_ = nullptr;

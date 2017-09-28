@@ -50,7 +50,7 @@ class CustomToolBar;
 class FormatBar;
 class LogEntryPrintHelper;
 class MainWindow;
-class Menu;
+class MenuBar;
 class SelectLineWidget;
 
 namespace Private
@@ -565,7 +565,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     BaseStatusBar* statusBar_ = nullptr;
 
     //* menu
-    Menu* menu_ = nullptr;
+    MenuBar* menuBar_ = nullptr;
 
     //*@name widgets (re-implemented from TextEditor)
     //@{

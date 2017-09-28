@@ -52,7 +52,7 @@
 #include "LogEntryPrintOptionWidget.h"
 #include "LogEntryPrintSelectionDialog.h"
 #include "LogEntryPrintSelectionWidget.h"
-#include "Menu.h"
+#include "MenuBar.h"
 #include "NewLogbookDialog.h"
 #include "PrinterOptionWidget.h"
 #include "PrintPreviewDialog.h"
@@ -291,10 +291,10 @@ MainWindow::MainWindow( QWidget *parent ):
     connect( splitter, SIGNAL(splitterMoved(int,int)), SLOT(_splitterMoved()) );
 
     // main menu
-    menu_ = new Menu( this , this );
-    setMenuBar( menu_ );
-    connect( menu_, SIGNAL(entrySelected(LogEntry*)), SLOT(selectEntry(LogEntry*)) );
-    connect( menu_, SIGNAL(entrySelected(LogEntry*)), SLOT(_displayEntry(LogEntry*)) );
+    menuBar_ = new MenuBar( this , this );
+    setMenuBar( menuBar_ );
+    connect( menuBar_, SIGNAL(entrySelected(LogEntry*)), SLOT(selectEntry(LogEntry*)) );
+    connect( menuBar_, SIGNAL(entrySelected(LogEntry*)), SLOT(_displayEntry(LogEntry*)) );
 
     // configuration
     connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
@@ -353,7 +353,7 @@ bool MainWindow::setLogbook( File file )
     } else {
 
         // save in menu
-        menu().recentFilesMenu().setCurrentFile( file );
+        menuBar_->recentFilesMenu().setCurrentFile( file );
 
     }
 
@@ -1008,7 +1008,7 @@ void MainWindow::showAllEntries()
     _resetLogEntryList();
 
     if( selectedEntry && selectedEntry->isSelected() ) selectEntry( selectedEntry );
-    else if( entryModel_.rowCount() ) selectEntry( entryModel_.get( entryModel_.index( entryModel_.rowCount()-1, 0 ) ) );
+    else if( !entryModel_.empty() ) selectEntry( entryModel_.get( entryModel_.index( entryModel_.rowCount()-1, 0 ) ) );
 
     statusbar_->label().clear();
 
@@ -1370,7 +1370,7 @@ void MainWindow::_setEnabled( bool value )
     centralWidget()->setEnabled( value );
 
     // menu
-    menu_->setEnabled( value );
+    menuBar_->setEnabled( value );
 
     // toolbars
     for( const auto& toolbar:findChildren<QToolBar*>() )
@@ -1578,22 +1578,22 @@ void MainWindow::updateWindowTitle()
     if( logbook_ )
     {
 
-        if( !logbook_->file().isEmpty() )
+        if( logbook_->file().isEmpty() )
         {
+
+            if( logbook_->isReadOnly() ) QMainWindow::setWindowTitle( tr( "ELogbook (read-only)" ) );
+            else if( logbook_->modified() ) QMainWindow::setWindowTitle( tr( "ELogbook (modified)" ) );
+            else QMainWindow::setWindowTitle( "Elogbook" );
+
+        } else  {
 
             if( logbook_->isReadOnly() ) setWindowTitle( tr( "%1 (read-only)" ).arg( logbook_->file() ) );
             else if( logbook_->modified() ) setWindowTitle( tr( "%1 (modified)" ).arg( logbook_->file() ) );
             else setWindowTitle( logbook_->file() );
 
-        } else  {
-
-            if( logbook_->isReadOnly() ) setWindowTitle( tr( "ELogbook (read-only)" ) );
-            else if( logbook_->modified() ) setWindowTitle( tr( "ELogbook (modified)" ) );
-            else setWindowTitle( "Elogbook" );
-
         }
 
-    } else setWindowTitle( "Elogbook" );
+    } else QMainWindow::setWindowTitle( "Elogbook" );
 
 }
 
@@ -1667,7 +1667,7 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
     save();
 
     // update current file in menu
-    menu().recentFilesMenu().setCurrentFile( fullname );
+    menuBar_->recentFilesMenu().setCurrentFile( fullname );
 
     /*
     force logbook state to unmodified since
@@ -3459,7 +3459,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
     // if EditionWindow current entry is visible, select it
     // otherwise, select last entry in model
     if( selectedEntry && selectedEntry->isSelected() ) selectEntry( selectedEntry );
-    else if( entryModel_.rowCount() )  { selectEntry( entryModel_.get( entryModel_.index( entryModel_.rowCount()-1, 0 ) ) ); }
+    else if( !entryModel_.empty() )  { selectEntry( entryModel_.get( entryModel_.index( entryModel_.rowCount()-1, 0 ) ) ); }
 
     return;
 }

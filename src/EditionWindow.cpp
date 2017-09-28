@@ -47,7 +47,7 @@
 #include "LogEntryPrintHelper.h"
 #include "LogEntryPrintOptionWidget.h"
 #include "MainWindow.h"
-#include "Menu.h"
+#include "MenuBar.h"
 #include "Options.h"
 #include "PrinterOptionWidget.h"
 #include "PrintPreviewDialog.h"
@@ -263,8 +263,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( nextEntryAction_ );
 
     // create menu if requested
-    menu_ = new Menu( this, &application->mainWindow() );
-    setMenuBar( menu_ );
+    menuBar_ = new MenuBar( this, &application->mainWindow() );
+    setMenuBar( menuBar_ );
 
     // changes display according to readOnly flag
     setReadOnly( readOnly_ );
@@ -298,7 +298,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
 
     // update recentFiles menu
     auto&& mainWindow( _mainWindow() );
-    menu_->recentFilesMenu().setCurrentFile( mainWindow.menu().recentFilesMenu().currentFile() );
+    menuBar_->recentFilesMenu().setCurrentFile( mainWindow.menuBar().recentFilesMenu().currentFile() );
 
     // check entry and associate to this editor
     if( !entry ) return;

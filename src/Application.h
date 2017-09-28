@@ -77,7 +77,7 @@ class Application: public BaseApplication, private Base::Counter<Application>
     QString applicationName() const override
     { return "Elogbook"; }
 
-    //* application name
+    //* application icon
     QIcon applicationIcon() const override
     { return IconEngine::get( ":/elogbook.png" ); }
 

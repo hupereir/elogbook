@@ -17,7 +17,7 @@
 *
 *******************************************************************************/
 
-#include "Menu.h"
+#include "MenuBar.h"
 
 #include "Application.h"
 #include "AttachmentWindow.h"
@@ -39,12 +39,12 @@
 #include "XmlOptions.h"
 
 //_______________________________________________
-Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
+MenuBar::MenuBar( QWidget* parent, MainWindow* mainWindow ):
     QMenuBar( parent ),
-    Counter( "Menu" )
+    Counter( "MenuBar" )
 {
 
-    Debug::Throw( "Menu::Menu.\n" );
+    Debug::Throw( "MenuBar::MenuBar.\n" );
 
     // try cast parent to EditionWindow
     EditionWindow* editionWindow( qobject_cast<EditionWindow*>( parent ) );
@@ -157,9 +157,9 @@ Menu::Menu( QWidget* parent, MainWindow* mainWindow ):
 }
 
 //_______________________________________________
-void Menu::_updateRecentEntriesMenu()
+void MenuBar::_updateRecentEntriesMenu()
 {
-    Debug::Throw( "Menu::_updateRecentEntriesMenu.\n" );
+    Debug::Throw( "MenuBar::_updateRecentEntriesMenu.\n" );
 
     Q_CHECK_PTR( recentEntriesMenu_ );
     recentEntriesMenu_->clear();
@@ -179,9 +179,9 @@ void Menu::_updateRecentEntriesMenu()
 }
 
 //_______________________________________________
-void Menu::_selectEntry( QAction* action )
+void MenuBar::_selectEntry( QAction* action )
 {
-    Debug::Throw( "Menu::_selectEntry.\n" );
+    Debug::Throw( "MenuBar::_selectEntry.\n" );
     ActionMap::iterator iter( actions_.find( action ) );
     Q_ASSERT( iter != actions_.end() );
     iter.value()->setFindSelected( true );
@@ -189,9 +189,9 @@ void Menu::_selectEntry( QAction* action )
 }
 
 //_______________________________________________
-void Menu::_updateEditorMenu()
+void MenuBar::_updateEditorMenu()
 {
-    Debug::Throw( "Menu::_UpdateEditorMenu.\n" );
+    Debug::Throw( "MenuBar::_UpdateEditorMenu.\n" );
 
     windowsMenu_->clear();
     // retrieve parent editFream if any
@@ -245,10 +245,10 @@ void Menu::_updateEditorMenu()
 
 
 //_______________________________________________
-void Menu::_updatePreferenceMenu()
+void MenuBar::_updatePreferenceMenu()
 {
 
-    Debug::Throw( "Menu::_updatePreferenceMenu.\n" );
+    Debug::Throw( "MenuBar::_updatePreferenceMenu.\n" );
 
     preferenceMenu_->clear();
 
