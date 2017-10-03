@@ -1,5 +1,5 @@
-#ifndef Menu_h
-#define Menu_h
+#ifndef MenuBar_h
+#define MenuBar_h
 
 /******************************************************************************
 *

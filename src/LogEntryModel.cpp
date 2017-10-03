@@ -297,7 +297,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
     QMimeData *mime = new QMimeData;
 
     // set drag type
-    mime->setData( LogEntry::MimeType, 0 );
+    mime->setData( LogEntry::MimeType, nullptr );
 
     // retrieve associated entry
     QString buffer;
@@ -308,7 +308,6 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
         auto entry( get( index ) );
         auto keywords( entry->keywords() );
 
-        // FIXME: this is broken. In case of split keyword/title mode, one must get the selected keyword instead
         if( keywords.empty() ) what << Keyword::Default << "/" << entry->title() << endl;
         else if( keywords.contains( currentKeyword_ ) ) what << currentKeyword_ << "/" << entry->title() << endl;
         else what << keywords.begin()->get() << "/" << entry->title() << endl;

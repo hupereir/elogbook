@@ -36,11 +36,22 @@ class KeywordList: public TreeView
         TreeView( parent )
         {}
 
-    //* default size
-    void setDefaultWidth( int );
+    //*@name accessors
+    //@{
 
     //* size
     QSize sizeHint() const override;
+
+    //@}
+
+
+    //*@name modifiers
+    //@{
+
+    //* default size
+    void setDefaultWidth( int );
+
+    //@}
 
     private:
 

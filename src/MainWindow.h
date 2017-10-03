@@ -384,12 +384,13 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* get entries matching a given entry selection mode
     LogEntryModel::List _entries( LogEntryPrintSelectionWidget::Mode mode );
 
-    protected Q_SLOTS:
+    private Q_SLOTS:
 
     //* files modified
     void _filesModified( FileCheck::DataSet );
 
     //* splitter moved
+    /** used to keep geometry */
     void _splitterMoved();
 
     //* create a new logbook
@@ -553,8 +554,6 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
 
     //* tree mode
     void _toggleTreeMode( bool );
-
-    private Q_SLOTS:
 
     //* configuration
     void _updateConfiguration();

@@ -1,5 +1,6 @@
 base
 base-cmake
+base-filesystem
 base-help
 base-notifications
 base-pixmaps
