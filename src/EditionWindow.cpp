@@ -58,7 +58,7 @@
 #include "OpenWithDialog.h"
 #include "Util.h"
 
-#if USE_ASPELL
+#if WITH_ASPELL
 #include "SpellDialog.h"
 #endif
 
@@ -242,7 +242,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Tools" ), this, "EXTRA_TOOLBAR" );
 
-    #if USE_ASPELL
+    #if WITH_ASPELL
     toolbar->addAction( spellcheckAction_ );
     #endif
 
@@ -847,7 +847,7 @@ void EditionWindow::_installActions()
     connect( saveAction_, SIGNAL(triggered()), SLOT(_save()) );
     saveAction_->setShortcut( QKeySequence::Save );
 
-    #if USE_ASPELL
+    #if WITH_ASPELL
     addAction( spellcheckAction_ = new QAction( IconEngine::get( IconNames::SpellCheck ), tr( "Check Spelling..." ), this ) );
     spellcheckAction_->setToolTip( tr( "Check spelling of current entry" ) );
     connect( spellcheckAction_, SIGNAL(triggered()), SLOT(_spellCheck()) );
@@ -1647,7 +1647,7 @@ void EditionWindow::_deleteEntry()
 //_____________________________________________
 void EditionWindow::_spellCheck()
 {
-    #if USE_ASPELL
+    #if WITH_ASPELL
     Debug::Throw( "EditionWindow::_spellCheck.\n" );
 
     // create dialog
@@ -1750,7 +1750,7 @@ void EditionWindow::_updateReadOnlyActions()
     // new entry
     newEntryAction_->setEnabled( !logbookReadOnly );
 
-    #if USE_ASPELL
+    #if WITH_ASPELL
     spellcheckAction_->setEnabled( !( readOnly || SpellCheck::SpellInterface().dictionaries().empty() ) );
     #endif
 

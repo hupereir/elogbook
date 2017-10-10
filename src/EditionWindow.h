@@ -211,7 +211,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     QAction& saveAction() const
     { return *saveAction_; }
 
-    #if USE_ASPELL
+    #if WITH_ASPELL
     //* check spelling of current entry
     QAction& spellcheckAction() const
     { return *spellcheckAction_; }
@@ -608,7 +608,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //* save
     QAction* saveAction_ = nullptr;
 
-    #if USE_ASPELL
+    #if WITH_ASPELL
     QAction* spellcheckAction_ = nullptr;
     #endif
 

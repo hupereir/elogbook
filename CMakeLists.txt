@@ -28,9 +28,9 @@ configure_file(elogbook.spec.cmake ${CMAKE_SOURCE_DIR}/elogbook.spec)
 find_program(ASPELL aspell)
 find_package(ASPELL)
 if(ASPELL_FOUND)
-  add_definitions(-DUSE_ASPELL=1)
+  add_definitions(-DWITH_ASPELL=${LIBPULSE_FOUND})
 else()
-  add_definitions(-DUSE_ASPELL=0)
+  add_definitions(-DWITH_ASPELL=0)
 endif()
 
 ########### external applications ###############
