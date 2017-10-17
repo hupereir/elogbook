@@ -56,3 +56,6 @@ else()
 endif()
 
 add_subdirectory(src)
+
+feature_summary(WHAT PACKAGES_FOUND DESCRIPTION "Found packages:")
+feature_summary(WHAT PACKAGES_NOT_FOUND DESCRIPTION "Not found packages:")
