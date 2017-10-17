@@ -8,8 +8,9 @@ SET(ELOGBOOK_VERSION_PATCH 1)
 set(ELOGBOOK_VERSION ${ELOGBOOK_VERSION_MAJOR}.${ELOGBOOK_VERSION_MINOR}.${ELOGBOOK_VERSION_PATCH})
 
 ########### modules #################
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/base-cmake")
+set(CMAKE_MODULE_PATH $CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/base-cmake")
 include(Macros)
+include(FeatureSummary)
 setup_cmake_settings()
 setup_compiler_flags()
 
