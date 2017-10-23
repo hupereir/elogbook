@@ -199,7 +199,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     bool needsBackup() const;
 
     //* generate tagged backup filename
-    File backupFilename() const;
+    File backupFileName() const;
 
     //* sort method enumeration
     enum SortMethod
@@ -426,7 +426,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     QDomElement _recentEntriesElement( QDomDocument& ) const;
 
     //* generate tagged backup filename
-    File _childFilename( File, int ) const;
+    File _childFileName( File, int ) const;
 
     private:
 

@@ -1723,14 +1723,14 @@ void MainWindow::_saveBackup()
     }
 
     // generate backup fileName
-    auto filename( logbook_->backupFilename( ) );
+    auto filename( logbook_->backupFileName( ) );
     if( filename.isEmpty() ) {
         InformationDialog( this, tr( "No valid filename. Use <Save As> first." ) ).exec();
         return;
     }
 
     // stores current logbook filename
-    auto currentFilename( logbook_->file() );
+    auto currentFileName( logbook_->file() );
     const bool readOnlyState( logbook_->isReadOnly() );
     const bool backupState( logbook_->isBackup() );
 
@@ -1749,7 +1749,7 @@ void MainWindow::_saveBackup()
     Base::Singleton::get().application<Application>()->recentFiles().remove( File(filename).expanded() );
 
     // restore initial filename
-    logbook_->setFile( currentFilename, true );
+    logbook_->setFile( currentFileName, true );
 
     if( saved )
     {

@@ -117,7 +117,7 @@ void installDefaultOptions()
     XmlOptions::get().set<int>( "ENTRY_LIST_SORT_Order", Qt::DescendingOrder );
 
     XmlOptions::get().set<int>( "ATTACHMENT_LIST_MASK",
-        (1<< AttachmentModel::Filename)|
+        (1<< AttachmentModel::FileName)|
         (1<< AttachmentModel::Size)|
         (1<< AttachmentModel::Modification) );
 

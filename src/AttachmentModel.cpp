@@ -69,7 +69,7 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
         switch( index.column() )
         {
 
-            case Filename:
+            case FileName:
             return attachment->isUrl() ? attachment->file().get() : attachment->shortFile().get();
 
             case Size: return attachment->sizeString();
@@ -83,7 +83,7 @@ QVariant AttachmentModel::data( const QModelIndex& index, int role ) const
             default: return QVariant();
         }
     } else if( role == Qt::ToolTipRole ) return attachment->file().get();
-    else if( role == Qt::DecorationRole && index.column() == Filename ) return _icon( index );
+    else if( role == Qt::DecorationRole && index.column() == FileName ) return _icon( index );
 
     return QVariant();
 
@@ -122,7 +122,7 @@ bool AttachmentModel::SortFTor::operator () ( Attachment* first, Attachment* sec
     {
 
         default:
-        case Filename: return first->shortFile() < second->shortFile();
+        case FileName: return first->shortFile() < second->shortFile();
         case Size: return  first->size() < second->size();
         case Creation: return first->creation() < second->creation();
         case Modification: return first->modification() < second->modification();

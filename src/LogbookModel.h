@@ -38,7 +38,7 @@ class LogbookModel: public ListModel<Logbook*>, private Base::Counter<LogbookMod
     //* column type enumeration
     enum ColumnType
     {
-        Filename,
+        FileName,
         Entries,
         Created,
         Modified,

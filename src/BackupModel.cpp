@@ -51,7 +51,7 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
 
         switch( index.column() )
         {
-            case Filename: return backup.file().localName().get();
+            case FileName: return backup.file().localName().get();
             case Path: return backup.file().path().get();
             case Creation: return backup.creation().toString();
 
@@ -116,7 +116,7 @@ bool BackupModel::SortFTor::operator () ( Backup first, Backup second ) const
     switch( type_ )
     {
 
-        case Filename: return first.file().localName() < second.file().localName();
+        case FileName: return first.file().localName() < second.file().localName();
         case Path: return first.file().path() < second.file().path();
         case Creation: return first.creation() < second.creation();
         default: return true;

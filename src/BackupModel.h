@@ -42,7 +42,7 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
     //* column type enumeration
     enum ColumnType
     {
-        Filename,
+        FileName,
         Path,
         Creation,
         nColumns

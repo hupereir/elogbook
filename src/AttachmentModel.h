@@ -42,7 +42,7 @@ class AttachmentModel : public ListModel<Attachment*>, private Base::Counter<Att
     //* column type enumeration
     enum ColumnType
     {
-        Filename,
+        FileName,
         Size,
         Creation,
         Modification,

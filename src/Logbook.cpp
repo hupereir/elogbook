@@ -339,9 +339,9 @@ bool Logbook::write( File file )
         // dump all logbook childrens
         for( int childCount = 0; childCount < children_.size(); ++childCount )
         {
-            auto childFilename = _childFilename( file, childCount );
+            auto childFileName = _childFileName( file, childCount );
             auto childElement = document.createElement( Xml::Child );
-            childElement.setAttribute( Xml::File, childFilename );
+            childElement.setAttribute( Xml::File, childFileName );
             top.appendChild( childElement );
         }
 
@@ -370,10 +370,10 @@ bool Logbook::write( File file )
     for( const auto& logbook:children_ )
     {
 
-        File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
+        File childFileName( _childFileName( file, childCount ).addPath( file.path() ) );
 
         logbook->setParentFile( file );
-        if( !logbook->write( childFilename ) ) completed = false;
+        if( !logbook->write( childFileName ) ) completed = false;
 
         ++childCount;
 
@@ -486,7 +486,7 @@ Logbook::LogbookPtr Logbook::latestChild()
     logbook->setTitle( title() );
     logbook->setDirectory( directory() );
     logbook->setAuthor( author() );
-    logbook->setFile( _childFilename( file_, children_.size() ).addPath( file_.path() ) );
+    logbook->setFile( _childFileName( file_, children_.size() ).addPath( file_.path() ) );
     logbook->setUseCompression( useCompression_ );
     logbook->setModified( true );
     connect( logbook.get(), SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
@@ -626,9 +626,9 @@ void Logbook::setFile( File file, bool recursive )
         int childCount=0;
         for( const auto& logbook:children_ )
         {
-            File childFilename( _childFilename( file, childCount ).addPath( file.path() ) );
+            File childFileName( _childFileName( file, childCount ).addPath( file.path() ) );
             logbook->setParentFile( file );
-            logbook->setFile( childFilename, true );
+            logbook->setFile( childFileName, true );
             ++childCount;
         }
 
@@ -645,9 +645,9 @@ bool Logbook::needsBackup() const
 }
 
 //_________________________________
-File Logbook::backupFilename() const
+File Logbook::backupFileName() const
 {
-    Debug::Throw( "Logbook::MakeBackupFilename.\n" );
+    Debug::Throw( "Logbook::MakeBackupFileName.\n" );
     auto head( File( file_ ).truncatedName() );
     auto foot( File( file_ ).extension() );
     if( !foot.isEmpty() ) foot = File( QString(".") + foot );
@@ -868,7 +868,7 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 }
 
 //______________________________________________________________________
-File Logbook::_childFilename( File file, int childCount ) const
+File Logbook::_childFileName( File file, int childCount ) const
 {
 
     const auto head( file.localName().truncatedName() );
@@ -880,7 +880,7 @@ File Logbook::_childFilename( File file, int childCount ) const
         .arg( childCount )
         .arg( foot ) );
 
-    Debug::Throw( ) << "Logbook::_MakeChildFilename - \"" << out << "\".\n";
+    Debug::Throw( ) << "Logbook::_MakeChildFileName - \"" << out << "\".\n";
     return out;
 
 }
