@@ -86,15 +86,18 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     //* take action when no match is found
     void noMatchFound();
 
-    protected Q_SLOTS:
+    protected:
+
+    //* change event
+    void changeEvent( QEvent* ) override;
+
+    private Q_SLOTS:
 
     //* find button
     void _updateFindButton( const QString& );
 
     //* restore palette
     void _restorePalette();
-
-    private Q_SLOTS:
 
     //* configuration
     void _updateConfiguration();
@@ -112,11 +115,6 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     //* disable all entries button
     void _disableAllEntriesButton()
     { allEntriesButton_->setEnabled( false ); }
-
-    protected:
-
-    //* change event
-    void changeEvent( QEvent* ) override;
 
     private:
 

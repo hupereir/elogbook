@@ -62,7 +62,7 @@ class OpenAttachmentDialog: public CustomDialog
 
     //@}
 
-    protected Q_SLOTS:
+    private Q_SLOTS:
 
     //* save commands added to combobox
     void _saveCommands();

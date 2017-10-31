@@ -92,13 +92,13 @@ class Application: public BaseApplication, private Base::Counter<Application>
     //* configuration
     void _configuration() override;
 
-    //* exit safely
-    void _exit();
-
     //* process request from application manager
     bool _processCommand( Server::ServerCommand ) override;
 
     private Q_SLOTS:
+
+    //* exit safely
+    void _exit();
 
     //* update configuration
     void _updateConfiguration();

@@ -72,16 +72,7 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     //* update
     void updateBackups();
 
-    protected:
-
-    //* get associated logbook
-    Logbook* _logbook() const
-    {
-        Base::KeySet<Logbook> logbooks( this );
-        return logbooks.empty() ? 0L:*logbooks.begin();
-    }
-
-    protected Q_SLOTS:
+    private Q_SLOTS:
 
     //* update actions
     void _updateActions();
@@ -99,6 +90,13 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     void _merge();
 
     private:
+
+    //* get associated logbook
+    Logbook* _logbook() const
+    {
+        Base::KeySet<Logbook> logbooks( this );
+        return logbooks.empty() ? 0L:*logbooks.begin();
+    }
 
     //* model
     BackupModel model_;

@@ -1405,7 +1405,7 @@ void EditionWindow::_toHtml()
     // get command and execute
     QString command( dialog.command() );
     if( !command.isEmpty() )
-    { ( Command( command ) << file ).run(); }
+    { ( Base::Command( command ) << file ).run(); }
 
 }
 

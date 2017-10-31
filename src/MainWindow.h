@@ -348,42 +348,6 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* context menu event [overloaded]
     void contextMenuEvent( QContextMenuEvent* ) override;
 
-    //* clear list and reinitialize from logbook entries
-    void _resetKeywordList();
-
-    //* clear list and reinitialize from logbook entries
-    void _resetLogEntryList();
-
-    //* load colors (from current logbook)
-    void _loadColors();
-
-    //* enable state
-    void _setEnabled( bool );
-
-    //* returns true if logbook has modified entries
-    bool _hasModifiedEntries() const;
-
-    //* perform autoSave
-    void _autoSave();
-
-    //* check modified entries
-    AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow> );
-
-    enum MaskFlag
-    {
-        None = 0,
-        TitleMask = 1<<0,
-        KeywordMask = 1<<1
-    };
-
-    Q_DECLARE_FLAGS( Mask, MaskFlag )
-
-    //* update frames associated to given entry
-    void _updateEntryFrames( LogEntry*, Mask );
-
-    //* get entries matching a given entry selection mode
-    LogEntryModel::List _entries( LogEntryPrintSelectionWidget::Mode mode );
-
     private Q_SLOTS:
 
     //* files modified
@@ -509,7 +473,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     or by deleting a keyword in the list, and moving entries to the parent.
     It is also called by the renameKeyword slot above.
     */
-    void _renameKeyword( const Keyword& oldKeyword, const Keyword& newKeyword, bool updateSelection = true );
+    void _renameKeyword( Keyword oldKeyword, Keyword newKeyword, bool updateSelection = true );
 
     //* rename keyword for selected entries using dialog
     /** this is triggered by the rename entry keyword action in the logEntry list. */
@@ -559,6 +523,42 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _updateConfiguration();
 
     private:
+
+    //* clear list and reinitialize from logbook entries
+    void _resetKeywordList();
+
+    //* clear list and reinitialize from logbook entries
+    void _resetLogEntryList();
+
+    //* load colors (from current logbook)
+    void _loadColors();
+
+    //* enable state
+    void _setEnabled( bool );
+
+    //* returns true if logbook has modified entries
+    bool _hasModifiedEntries() const;
+
+    //* perform autoSave
+    void _autoSave();
+
+    //* check modified entries
+    AskForSaveDialog::ReturnCode _checkModifiedEntries( Base::KeySet<EditionWindow> );
+
+    enum MaskFlag
+    {
+        None = 0,
+        TitleMask = 1<<0,
+        KeywordMask = 1<<1
+    };
+
+    Q_DECLARE_FLAGS( Mask, MaskFlag )
+
+    //* update frames associated to given entry
+    void _updateEntryFrames( LogEntry*, Mask );
+
+    //* get entries matching a given entry selection mode
+    LogEntryModel::List _entries( LogEntryPrintSelectionWidget::Mode mode );
 
     //* install actions
     void _installActions();

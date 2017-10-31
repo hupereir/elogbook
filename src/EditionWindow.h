@@ -321,43 +321,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
 
     //@}
 
-    //*@name display management
-    //@{
-
-    //* split view
-    Private::LocalTextEditor& _splitView( const Qt::Orientation& );
-
-    //* create new splitter
-    QSplitter& _newSplitter( const Qt::Orientation&  );
-
-    //* create new TextEditor
-    Private::LocalTextEditor& _newTextEditor( QWidget* parent );
-
-    //@}
-
-    //* display cursor position
-    void _displayCursorPosition( const TextPosition& position );
-
-    //* true if has associated main window
-    bool _hasMainWindow() const;
-
-    //* retrieve associated MainWindow
-    MainWindow& _mainWindow() const;
-
-    //* update text Widget from current entry
-    void _displayText();
-
-    //* update attachment list Widget from current entry
-    void _displayAttachments();
-
-    //* true if status bar is set
-    bool _hasStatusBar() const
-    { return (bool) statusBar_; }
-
-    //* change keyword (and other widgets) visibility
-    void _setKeywordVisible( bool );
-
-    protected Q_SLOTS:
+    private Q_SLOTS:
 
     //* Save Current entry
     void _save( bool updateSelection = true );
@@ -499,12 +463,46 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //* toggle show keyword
     void _toggleShowKeyword( bool );
 
-    private Q_SLOTS:
-
     //* configuration
     void _updateConfiguration();
 
     private:
+
+    //*@name display management
+    //@{
+
+    //* split view
+    Private::LocalTextEditor& _splitView( const Qt::Orientation& );
+
+    //* create new splitter
+    QSplitter& _newSplitter( const Qt::Orientation&  );
+
+    //* create new TextEditor
+    Private::LocalTextEditor& _newTextEditor( QWidget* parent );
+
+    //@}
+
+    //* display cursor position
+    void _displayCursorPosition( const TextPosition& position );
+
+    //* true if has associated main window
+    bool _hasMainWindow() const;
+
+    //* retrieve associated MainWindow
+    MainWindow& _mainWindow() const;
+
+    //* update text Widget from current entry
+    void _displayText();
+
+    //* update attachment list Widget from current entry
+    void _displayAttachments();
+
+    //* true if status bar is set
+    bool _hasStatusBar() const
+    { return (bool) statusBar_; }
+
+    //* change keyword (and other widgets) visibility
+    void _setKeywordVisible( bool );
 
     //* install actions
     void _installActions();

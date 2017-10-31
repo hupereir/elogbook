@@ -206,7 +206,7 @@ void AttachmentFrame::_new()
 
         } else if( !fullDirectory.exists() && QuestionDialog( this, tr( "Directory '%1' does not exist. Create ?" ).arg( fullDirectory ) ).exec() ) {
 
-            ( Command( "mkdir" ) << fullDirectory ).run();
+            ( Base::Command( "mkdir" ) << fullDirectory ).run();
         }
 
     }
@@ -481,7 +481,7 @@ void AttachmentFrame::_open()
 
                 } else {
 
-                    ( Command( dialog.command() ) << fullname ).run();
+                    ( Base::Command( dialog.command() ) << fullname ).run();
 
                 }
 
@@ -496,7 +496,7 @@ void AttachmentFrame::_open()
 
                 // check filename and copy if accepted
                 if( destname.isEmpty() || (destname.exists() && !QuestionDialog( this, tr( "Selected file already exists. Overwrite ?" ) ).exec() ) ) return;
-                else ( Command("cp") << fullname << destname ).run();
+                else ( Base::Command("cp") << fullname << destname ).run();
 
             }
 
@@ -718,7 +718,7 @@ void AttachmentFrame::_saveAs()
 
             // check filename and copy if accepted
             if( destname.isEmpty() || (destname.exists() && !QuestionDialog( this, tr( "selected file already exists. Overwrite ?" ) ).exec() ) ) return;
-            else ( Command("cp") << fullname << destname ).run();
+            else ( Base::Command("cp") << fullname << destname ).run();
 
         }
 

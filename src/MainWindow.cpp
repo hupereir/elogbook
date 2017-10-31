@@ -2052,7 +2052,7 @@ void MainWindow::_toHtml()
     // get command and execute
     QString command( dialog.command() );
     if( !command.isEmpty() )
-    { ( Command( command ) << file ).run(); }
+    { ( Base::Command( command ) << file ).run(); }
 
 }
 
@@ -3101,7 +3101,7 @@ void MainWindow::_confirmRenameKeyword( const Keyword& keyword, const Keyword& n
 
 
 //____________________________________________
-void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeyword, bool updateSelection )
+void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updateSelection )
 {
 
     Debug::Throw("MainWindow::_renameKeyword.\n" );
@@ -3118,7 +3118,7 @@ void MainWindow::_renameKeyword( const Keyword& keyword, const Keyword& newKeywo
         update entry with new keyword
         */
         bool modified = false;
-        for( const auto& entryKeyword:entry->keywords() )
+        for( auto entryKeyword:entry->keywords() )
         {
 
             if( entryKeyword.inherits( keyword ) )

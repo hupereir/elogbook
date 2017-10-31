@@ -155,12 +155,10 @@ class AttachmentFrame: public QWidget, public Base::Key
     //* enter event
     void enterEvent( QEvent* ) override;
 
-    protected Q_SLOTS:
+    private Q_SLOTS:
 
     //* process records from thread
     void _processRecords( const FileRecord::List&, bool );
-
-    private Q_SLOTS:
 
     //* update configuration
     void _updateConfiguration();

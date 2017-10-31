@@ -61,7 +61,7 @@ class AttachmentWindow: public CustomDialog
     //* uniconify
     void uniconify();
 
-    protected Q_SLOTS:
+    private Q_SLOTS:
 
     //* display entry associated to selected attachment when selection changes
     void _displayEntry( Attachment& );

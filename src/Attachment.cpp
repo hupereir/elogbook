@@ -166,7 +166,7 @@ LogEntry* Attachment::entry() const
 }
 
 //__________________________________
-Attachment::ErrorCode Attachment::copy( const Command& command, const QString& destdir )
+Attachment::ErrorCode Attachment::copy( const Attachment::Command& command, const QString& destdir )
 {
     Debug::Throw() << "Attachment::ProcessCopy.\n";
 
@@ -204,7 +204,7 @@ Attachment::ErrorCode Attachment::copy( const Command& command, const QString& d
     sourceFile_ = fullname;
 
     // for other process command
-    ::Command commandString;
+    Base::Command commandString;
     switch (command) {
 
         case Copy:

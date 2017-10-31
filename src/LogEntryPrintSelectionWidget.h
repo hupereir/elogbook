@@ -60,7 +60,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     //* emited when selection mode is changed
     void modeChanged( LogEntryPrintSelectionWidget::Mode );
 
-    protected Q_SLOTS:
+    private Q_SLOTS:
 
     //* update mode
     void _updateMode()
