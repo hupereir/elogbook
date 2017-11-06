@@ -164,6 +164,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // update LogEntryList when keyword selection change
     connect( keywordList_->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(_keywordSelectionChanged(QModelIndex)) );
+    connect( keywordList_->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), SLOT(_updateKeywordActions()) );
     connect( keywordList_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateKeywordActions()) );
     _updateKeywordActions();
 
@@ -670,13 +671,17 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
 {
     Debug::Throw( "MainWindow::deleteEntry.\n" );
 
-    Q_CHECK_PTR( entry );
+    // check entry
+    if( !entry ) return;
 
-    // get associated attachments
+    // keep track whether entry is new
+    const bool entryIsNew( Base::KeySet<Logbook>( entry ).empty() );
+
+    // get associated attachments and delete
     for( const auto& attachment:Base::KeySet<Attachment>(entry) )
     {
 
-        // retrieve/delete associated attachment frames
+        // retrieve associated attachment frames
         for( const auto& frame:Base::KeySet<AttachmentFrame>(attachment) )
         { frame->remove( *attachment ); }
 
@@ -684,9 +689,6 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
         delete attachment;
 
     };
-
-    // remove from model
-    entryModel_.remove( entry );
 
     /*
     hide associated EditionWindows
@@ -699,16 +701,25 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
         window->hide();
     }
 
-    // set logbooks as modified
-    for( const auto& logbook:Base::KeySet<Logbook>( entry ) )
-    { logbook->setModified( true ); }
+    if( !entryIsNew )
+    {
 
-    // delete entry
-    delete entry;
+        // remove from model
+        entryModel_.remove( entry );
 
-    // save
-    if( save && !logbook_->file().isEmpty() )
-    { this->save(); }
+        // set associated logbooks as modified
+        for( const auto& logbook : Base::KeySet<Logbook>( entry ) )
+        { logbook->setModified( true ); }
+
+        // delete entry
+        /* this is not called for new entries, because already handled in editionWindow->setIsClosed */
+        delete entry;
+
+        // save
+        if( save && !logbook_->file().isEmpty() )
+        { this->save(); }
+
+    }
 
     return;
 
