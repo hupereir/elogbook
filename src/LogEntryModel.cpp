@@ -265,7 +265,6 @@ QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int
 
                 default:
                 return QVariant();
-
             }
 
             break;
