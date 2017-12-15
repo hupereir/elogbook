@@ -334,8 +334,6 @@ bool Logbook::write( File file )
 
         }
 
-        // emit progressAvailable( entryCount%progress );
-
         // dump all logbook childrens
         for( int childCount = 0; childCount < children_.size(); ++childCount )
         {
