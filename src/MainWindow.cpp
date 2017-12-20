@@ -3129,12 +3129,11 @@ void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updat
         update entry with new keyword
         */
         bool modified = false;
-        for( auto entryKeyword:entry->keywords() )
+        const auto keywords( entry->keywords() );
+        for( auto entryKeyword:keywords )
         {
-
             if( entryKeyword.inherits( keyword ) )
             {
-
                 entry->replaceKeyword( entryKeyword, Keyword( QString( entryKeyword.get() ).replace( keyword.get(), newKeyword.get() ) ) );
                 modified = true;
             }
