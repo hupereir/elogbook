@@ -50,29 +50,6 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
 }
 
 //__________________________________________________________________
-bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int role )
-{
-    Debug::Throw( "KeywordModel::setData.\n" );
-    if( !(index.isValid() && role == Qt::EditRole ) ) return false;
-
-    // retrieve parent index
-    Keyword parentKeyword( get( parent( index ) ) );
-
-    Keyword keyword( get( index ) );
-    if( value.toString() != keyword.current() )
-    {
-        // generate new keyword from value
-        Keyword newKeyword( parentKeyword.append( value.toString() ) );
-        Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << newKeyword << endl;
-        emit keywordChanged( keyword, newKeyword );
-        emit dataChanged( index, index );
-    }
-
-    return true;
-
-}
-
-//__________________________________________________________________
 QVariant KeywordModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
 
@@ -114,6 +91,29 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
     mime->setData( "text/plain", qPrintable( buffer ) );
 
     return mime;
+
+}
+
+//__________________________________________________________________
+bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int role )
+{
+    Debug::Throw( "KeywordModel::setData.\n" );
+    if( !(index.isValid() && role == Qt::EditRole ) ) return false;
+
+    // retrieve parent index
+    Keyword parentKeyword( get( parent( index ) ) );
+
+    Keyword keyword( get( index ) );
+    if( value.toString() != keyword.current() )
+    {
+        // generate new keyword from value
+        Keyword newKeyword( parentKeyword.append( value.toString() ) );
+        Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << newKeyword << endl;
+        emit keywordChanged( keyword, newKeyword );
+        emit dataChanged( index, index );
+    }
+
+    return true;
 
 }
 

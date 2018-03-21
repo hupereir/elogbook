@@ -43,7 +43,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     //* column type enumeration
     enum { nColumns = 1 };
 
-    //*@name methods reimplemented from base class
+    //*@name accessors
     //@{
 
     //* flags
@@ -51,9 +51,6 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
 
     //* return data
     QVariant data( const QModelIndex&, int ) const override;
-
-    // modify data
-    bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole ) override;
 
     //* header data
     QVariant headerData( int, Qt::Orientation, int = Qt::DisplayRole ) const override;
@@ -67,6 +64,14 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
 
     //* mime data
     QMimeData* mimeData( const QModelIndexList& ) const override;
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    // modify data
+    bool setData( const QModelIndex&, const QVariant&, int = Qt::EditRole ) override;
 
     //* drop mine data
     bool dropMimeData(const QMimeData*, Qt::DropAction, int, int, const QModelIndex&) override;
