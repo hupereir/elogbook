@@ -1298,7 +1298,7 @@ void MainWindow::_resetKeywordList()
     Q_CHECK_PTR( logbook_ );
 
     // retrieve new list of keywords (from logbook)
-    Keyword::Set newKeywords;
+    Keyword::OrderedSet newKeywords;
     Keyword root;
     for( const auto& entry:logbook_->entries() )
     {

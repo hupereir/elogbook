@@ -21,6 +21,7 @@
 *******************************************************************************/
 
 #include "Counter.h"
+#include "QOrderedSet.h"
 
 #include <QDomElement>
 #include <QDomDocument>
@@ -49,6 +50,7 @@ class Keyword final: private Base::Counter<Keyword>
 
     //* keyword set
     using Set = QSet<Keyword>;
+    using OrderedSet = QOrderedSet<Keyword>;
     using List = QList<Keyword>;
 
     //*@name accessors
