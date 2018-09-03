@@ -21,7 +21,6 @@
 #include "LogEntryPrintOptionWidget.h"
 
 #include "CppUtil.h"
-#include "LogEntry.h"
 #include "XmlOptions.h"
 
 #include <QLayout>
