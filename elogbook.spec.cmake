@@ -20,8 +20,8 @@ Qt-based electronic logbook
 %setup -q -n %{name}-%{ver} %{rel}
 
 %build
-cmake -DCMAKE_INSTALL_PREFIX=%{prefix} .
-make -j4
+cmake -DCMAKE_INSTALL_PREFIX=%{prefix} -DUSE_QT5=1 .
+make
 
 %install
 rm -rf $RPM_BUILD_ROOT
