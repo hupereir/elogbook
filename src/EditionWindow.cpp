@@ -860,6 +860,12 @@ void EditionWindow::_installActions()
     entryInformationAction_->setToolTip( tr( "Show current entry properties" ) );
     connect( entryInformationAction_, SIGNAL(triggered()), SLOT(_entryInformation()) );
 
+    // reload
+    reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload Entry" ), this );
+    reloadAction_->setToolTip( tr( "ReloadEntry" ) );
+    reloadAction_->setShortcut( QKeySequence::Refresh );
+    connect( reloadAction_, SIGNAL(triggered()), SLOT(_reloadEntry()) );
+
     // print
     addAction( printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this ) );
     printAction_->setToolTip( tr( "Print current logbook entry" ) );
@@ -1260,6 +1266,24 @@ void EditionWindow::_save( bool updateSelection )
     { mainWindow.saveUnchecked(); }
 
     return;
+
+}
+
+//___________________________________________________________
+void EditionWindow::_reloadEntry()
+{
+    Debug::Throw( "EditionWindow::_reloadEntry.\n" );
+    auto entry( this->entry() );
+    if( !entry )
+    {
+        InformationDialog( this, tr( "No valid entry opened. <Reload> canceled." ) ).exec();
+        return;
+    }
+
+    if( modified() && !QuestionDialog( this, tr( "Discard changes to this entry ?" ) ).exec() )
+    { return; }
+
+    displayEntry( entry );
 
 }
 

@@ -1225,10 +1225,11 @@ void MainWindow::_installActions()
     backupManagerAction_->setToolTip( tr( "Save logbook backup" ) );
     connect( backupManagerAction_, SIGNAL(triggered()), SLOT(_manageBackups()) );
 
-    revertToSaveAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this );
-    revertToSaveAction_->setToolTip( tr( "Restore saved logbook" ) );
-    revertToSaveAction_->setShortcut( QKeySequence::Refresh );
-    connect( revertToSaveAction_, SIGNAL(triggered()), SLOT(_revertToSaved()) );
+    // reload
+    reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this );
+    reloadAction_->setToolTip( tr( "Restore saved logbook" ) );
+    reloadAction_->setShortcut( QKeySequence::Refresh );
+    connect( reloadAction_, SIGNAL(triggered()), SLOT(_revertToSaved()) );
 
     // print
     printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this );

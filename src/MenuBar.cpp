@@ -75,7 +75,8 @@ MenuBar::MenuBar( QWidget* parent, MainWindow* mainWindow ):
     menu->addAction( &mainWindow->saveAsAction() );
     menu->addAction( &mainWindow->saveBackupAction() );
     menu->addAction( &mainWindow->backupManagerAction() );
-    menu->addAction( &mainWindow->revertToSaveAction() );
+    if( editionWindow ) menu->addAction( &editionWindow->reloadAction() );
+    else menu->addAction( &mainWindow->reloadAction() );
     menu->addSeparator();
 
     if( editionWindow )

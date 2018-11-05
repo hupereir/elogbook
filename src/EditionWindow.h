@@ -221,6 +221,10 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     QAction& entryInformationAction() const
     { return *entryInformationAction_; }
 
+    //* revert logbook to saved version
+    QAction& reloadAction() const
+    { return *reloadAction_; }
+
     //* print
     QAction& printAction() const
     { return *printAction_; }
@@ -325,6 +329,9 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
 
     //* Save Current entry
     void _save( bool updateSelection = true );
+
+    //* reload entry
+    void _reloadEntry();
 
     //* Print current document
     void _print();
@@ -612,6 +619,9 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
 
     //* entry information
     QAction* entryInformationAction_ = nullptr;
+
+    //* reload
+    QAction* reloadAction_ = nullptr;
 
     //* print
     QAction* printAction_ = nullptr;

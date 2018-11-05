@@ -256,8 +256,8 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     { return *backupManagerAction_; }
 
     //* revert logbook to saved version
-    QAction& revertToSaveAction() const
-    { return *revertToSaveAction_; }
+    QAction& reloadAction() const
+    { return *reloadAction_; }
 
     //* print
     QAction& printAction() const
@@ -711,7 +711,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     QAction* backupManagerAction_ = nullptr;
 
     //* revert logbook to saved version
-    QAction* revertToSaveAction_ = nullptr;
+    QAction* reloadAction_ = nullptr;
 
     //* print preview
     QAction* printAction_ = nullptr;
