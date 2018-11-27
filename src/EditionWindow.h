@@ -49,6 +49,7 @@ class ColorMenu;
 class CustomToolBar;
 class FormatBar;
 class LogEntryPrintHelper;
+class MessageWidget;
 class MainWindow;
 class MenuBar;
 class SelectLineWidget;
@@ -536,8 +537,8 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //* keyword
     Keyword keyword_;
 
-    //* lock toolbar
-    CustomToolBar* lock_ = nullptr;
+    //* message widget
+    MessageWidget* messageWidget_ = nullptr;
 
     //* keyword label
     QLabel* keywordLabel_ = nullptr;

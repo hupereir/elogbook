@@ -48,6 +48,7 @@
 #include "LogEntryPrintOptionWidget.h"
 #include "MainWindow.h"
 #include "MenuBar.h"
+#include "MessageWidget.h"
 #include "Options.h"
 #include "PrinterOptionWidget.h"
 #include "PrintPreviewDialog.h"
@@ -90,6 +91,17 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     layout->setMargin(0);
     layout->setSpacing(2);
     main->setLayout( layout );
+
+    // message widget
+    messageWidget_ = new MessageWidget( main );
+    layout->addWidget( messageWidget_ );
+    messageWidget_->setText( tr( "This entry is open in read-only mode." ) );
+    messageWidget_->setDirection( QBoxLayout::LeftToRight );
+    {
+        auto button = messageWidget_->addButton( IconEngine::get( IconNames::Edit ), tr( "Edit entry" ) );
+        connect( button, SIGNAL(clicked()), SLOT(_unlock()) );
+        connect( button, SIGNAL(clicked()), messageWidget_, SLOT(animatedHide()) );
+    }
 
     // header layout
     auto gridLayout( new QGridLayout );
@@ -185,19 +197,6 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     _installActions();
     auto application( Base::Singleton::get().application<Application>() );
     addAction( &application->closeAction() );
-
-    // toolbars
-    // lock toolbar is visible only when window is not editable
-    lock_ = new CustomToolBar( tr( "Lock" ), this, "LOCK_TOOLBAR" );
-    lock_->setMovable( false );
-
-    // hide lock_ visibility action because the latter should not be checkable in any menu
-    lock_->visibilityAction().setVisible( false );
-
-    QAction *action;
-    lock_->addAction( action = new QAction( IconEngine::get( IconNames::Lock ), tr( "Unlock" ), this ) );
-    connect( action, SIGNAL(triggered()), SLOT(_unlock()) );
-    action->setToolTip( tr( "Remove read-only lock for current editor" ) );
 
     // main toolbar
     auto toolbar = new CustomToolBar( tr( "Main Toolbar" ), this, "MAIN_TOOLBAR" );
@@ -343,6 +342,8 @@ const TextEditor& EditionWindow::activeEditor() const
 void EditionWindow::setReadOnly( bool value )
 {
     readOnly_ = value;
+    if( readOnly_ ) messageWidget_->animatedShow();
+    else messageWidget_->animatedHide();
     _updateReadOnlyActions();
     _updateSaveAction();
     updateWindowTitle();
@@ -1470,7 +1471,7 @@ void EditionWindow::_previousEntry()
 
     MainWindow &mainWindow( _mainWindow() );
     auto entry( mainWindow.previousEntry( this->entry(), true ) );
-    if( !( entry  && mainWindow.lockEntry( entry ) ) ) return;
+    if( !( entry  && mainWindow.lockEntry( entry, this ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
 
@@ -1483,7 +1484,7 @@ void EditionWindow::_nextEntry()
 
     MainWindow &mainWindow( _mainWindow() );
     auto entry( mainWindow.nextEntry( this->entry(), true ) );
-    if( !( entry && mainWindow.lockEntry( entry ) ) ) return;
+    if( !( entry && mainWindow.lockEntry( entry, this ) ) ) return;
     displayEntry( entry );
     setReadOnly( false );
 
@@ -1725,7 +1726,7 @@ void EditionWindow::_unlock()
     if( !readOnly_ ) return;
     auto entry( this->entry() );
 
-    if( entry && ! _mainWindow().lockEntry( entry ) ) return;
+    if( entry && ! _mainWindow().lockEntry( entry, this ) ) return;
     setReadOnly( false );
 
     return;
@@ -1749,16 +1750,6 @@ void EditionWindow::_updateReadOnlyActions()
     // changes button state
     for( const auto& action:readOnlyActions_ )
     { action->setEnabled( !readOnly ); }
-
-    // changes lock button state
-    if( readOnly_ && lock_->isHidden() )
-    {
-
-        Qt::ToolBarArea currentLocation = toolBarArea( lock_ );
-        if( currentLocation == Qt::NoToolBarArea ) { addToolBar( Qt::LeftToolBarArea, lock_ ); }
-        lock_->show();
-
-    } else if( !(readOnly_ || lock_->isHidden() ) ) { lock_->hide(); }
 
     // changes TextEdit readOnly status
     keywordEditor_->setReadOnly( readOnly );

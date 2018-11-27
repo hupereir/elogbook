@@ -726,7 +726,7 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
 }
 
 //_______________________________________________
-bool MainWindow::lockEntry( LogEntry* entry )
+bool MainWindow::lockEntry( LogEntry* entry, EditionWindow* editionWindow )
 {
     Debug::Throw( "MainWindow::lockEntry.\n" );
     if( !entry ) return true;
@@ -738,7 +738,8 @@ bool MainWindow::lockEntry( LogEntry* entry )
     else if( reply == AskForSaveDialog::Yes ) saveUnchecked();
 
     // mark modified editors as read only
-    for( const auto& window:windows ) window->setReadOnly( true );
+    for( const auto& window:windows )
+    {  if( window != editionWindow ) window->setReadOnly( true ); }
 
     return true;
 }

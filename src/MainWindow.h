@@ -152,7 +152,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void deleteEntry( LogEntry*, bool save = true );
 
     //* look for EditionWindows matching entry, set readonly
-    bool lockEntry( LogEntry* );
+    bool lockEntry( LogEntry*, EditionWindow* = nullptr );
 
     //* retrieve previous entry (if any)
     LogEntry* previousEntry( LogEntry*, bool );
