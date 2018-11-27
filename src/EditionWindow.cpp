@@ -103,6 +103,8 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
         connect( button, SIGNAL(clicked()), messageWidget_, SLOT(animatedHide()) );
     }
 
+    messageWidget_->hide();
+
     // header layout
     auto gridLayout( new QGridLayout );
     gridLayout->setSpacing(0);
