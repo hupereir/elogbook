@@ -917,7 +917,7 @@ void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mod
     // retrieve selection source
     if( mode == SearchWidget::None )
     {
-        InformationDialog( this, tr( "At least one search field must be selected" ) ).centerOnParent().exec();
+        InformationDialog( this, tr( "At least one search field must be selected." ) ).centerOnParent().exec();
         return;
     }
 
@@ -1575,7 +1575,7 @@ void MainWindow::_newLogbook()
     if( directory.exists() && !directory.isDirectory() )
     {
 
-        const QString buffer = tr( "File '%1' is not a directory" ).arg( directory );
+        const QString buffer = tr( "File '%1' is not a directory." ).arg( directory );
         InformationDialog( this, buffer ).exec();
 
     } else logbook_->setDirectory( directory );
@@ -2510,7 +2510,7 @@ void MainWindow::_showDuplicatedEntries()
     if( !found )
     {
 
-        InformationDialog( this, tr( "No duplicated entries found" ) ).centerOnParent().exec();
+        InformationDialog( this, tr( "No duplicated entries found." ) ).centerOnParent().exec();
 
         // reset flag for the turned off entries to true
         for( const auto& entry:turnedOffEntries )
@@ -2971,7 +2971,7 @@ void MainWindow::_deleteKeyword()
     auto selectedIndexes( keywordList_->selectionModel()->selectedRows() );
     if( selectedIndexes.empty() )
     {
-        InformationDialog( this, tr( "No keyword selected. <Delete Keyword> canceled" ) ).exec();
+        InformationDialog( this, tr( "No keyword selected. <Delete Keyword> canceled." ) ).exec();
         return;
     }
 
@@ -3199,7 +3199,7 @@ void MainWindow::_renameEntryKeyword()
     // check that current keyword make sense
     if( !keywordList_->selectionModel()->currentIndex().isValid() )
     {
-        InformationDialog( this, tr( "No keyword selected. <Rename Entry Keyword> canceled" ) ).exec();
+        InformationDialog( this, tr( "No keyword selected. <Rename Entry Keyword> canceled." ) ).exec();
         return;
     }
 
