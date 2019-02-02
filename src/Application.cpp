@@ -49,7 +49,7 @@ bool Application::initApplicationManager()
     Debug::Throw( "Application::initApplicationManager.\n" );
 
     // retrieve files from arguments and expand if needed
-    CommandLineParser parser( commandLineParser( _arguments() ) );
+    auto parser( commandLineParser( _arguments() ) );
 
     auto&& orphans( parser.orphans() );
     for( auto&& orphan:orphans )
