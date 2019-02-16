@@ -83,7 +83,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
       spinbox->setSuffix( tr( "s" ) );
       addOptionWidget( spinbox );
 
-      spinbox->setSpecialValueText( tr( " Never" ) );
+      spinbox->setSpecialValueText( tr( "Never" ) );
       spinbox->setMinimum( 0 );
       spinbox->setMaximum( 10 );
 
