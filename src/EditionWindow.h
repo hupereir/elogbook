@@ -162,10 +162,6 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //* force keyword visibility
     void setForceShowKeyword( bool value );
 
-    //* close view
-    /** Ask for save if view is modified */
-    void closeEditor( TextEditor& );
-
     //* change active display manualy
     void setActiveEditor( TextEditor& );
 
@@ -489,6 +485,9 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     Private::LocalTextEditor& _newTextEditor( QWidget* parent );
 
     //@}
+
+    //* close a given editor
+    void _closeEditor( TextEditor& );
 
     //* display cursor position
     void _displayCursorPosition( const TextPosition& position );

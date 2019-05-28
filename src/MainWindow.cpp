@@ -2815,21 +2815,6 @@ void MainWindow::_displayEntry( LogEntry* entry )
             else if( entry->hasKeywords() ) editionWindow->displayEntry( *entry->keywords().begin(), entry );
             else editionWindow->displayEntry( Keyword::Default, entry );
 
-            // also kill all frames but one
-            Base::KeySet< TextEditor > editors( editionWindow );
-            if( editors.size() > 1 )
-            {
-
-                auto localIter( editors.begin() );
-                ++localIter;
-                for( ;localIter != editors.end(); ++localIter )
-                { editionWindow->closeEditor( **localIter ); }
-
-                (**editors.begin()).setFocus();
-                editionWindow->setActiveEditor( **editors.begin() );
-
-            }
-
             break;
         }
 

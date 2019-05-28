@@ -358,7 +358,6 @@ void EditionWindow::setColorMenu( ColorMenu* menu )
     if( colorWidget_ && !colorWidget_->menu() )
     { colorWidget_->setMenu( menu ); }
 }
-
 //_____________________________________________
 void EditionWindow::setIsClosed( bool value )
 {
@@ -373,6 +372,25 @@ void EditionWindow::setIsClosed( bool value )
         auto entry( this->entry() );
         if( entry && Base::KeySet<Logbook>( entry ).empty() )
         { delete entry; }
+
+        // remove all editors but one
+        Base::KeySet< TextEditor > editors( this );
+        if( editors.size() > 1 )
+        {
+
+            auto localIter( editors.begin() );
+            ++localIter;
+            for( ;localIter != editors.end(); ++localIter )
+            { _closeEditor( **localIter ); }
+
+            // update active editors
+            (**editors.begin()).setFocus();
+            setActiveEditor( **editors.begin() );
+
+        }
+
+        // reset editor's font
+
 
     }
 }
@@ -467,16 +485,16 @@ void EditionWindow::setForceShowKeyword( bool value )
 }
 
 //___________________________________________________________
-void EditionWindow::closeEditor( TextEditor& editor )
+void EditionWindow::_closeEditor( TextEditor& editor )
 {
-    Debug::Throw( "EditionWindow::closeEditor.\n" );
+    Debug::Throw( 0, "EditionWindow::_closeEditor.\n" );
 
     // retrieve number of editors
     // if only one display, close the entire window
     Base::KeySet<TextEditor> editors( this );
     if( editors.size() < 2 )
     {
-        Debug::Throw() << "EditionWindow::closeEditor - full close." << endl;
+        Debug::Throw() << "EditionWindow::_closeEditor - full close." << endl;
         close();
         return;
     }
@@ -505,7 +523,7 @@ void EditionWindow::closeEditor( TextEditor& editor )
             }
         }
         Q_CHECK_PTR( child );
-        Debug::Throw( "EditionWindow::closeEditor - found child.\n" );
+        Debug::Throw( "EditionWindow::_closeEditor - found child.\n" );
 
         // retrieve splitter parent
         QWidget* grandParent( parentSplitter->parentWidget() );
@@ -528,7 +546,7 @@ void EditionWindow::closeEditor( TextEditor& editor )
 
         // delete parentSplitter, now that it is empty
         parentSplitter->deleteLater();
-        Debug::Throw( "EditionWindow::closeEditor - deleted splitter.\n" );
+        Debug::Throw( "EditionWindow::_closeEditor - deleted splitter.\n" );
 
     } else {
 
@@ -540,25 +558,21 @@ void EditionWindow::closeEditor( TextEditor& editor )
     }
 
     // update activeEditor
-    bool activeFound( false );
     Base::KeySetIterator<TextEditor> iterator( editors.get() );
     iterator.toBack();
     while( iterator.hasPrevious() )
     {
-        TextEditor* current( iterator.previous() );
+        auto current( iterator.previous() );
         if( current != &editor )
         {
             setActiveEditor( *current );
-            activeFound = true;
             break;
         }
     }
-    Q_UNUSED( activeFound );
-    Q_ASSERT( activeFound );
 
     // change focus
     activeEditor_->setFocus();
-    Debug::Throw( "EditionWindow::closeEditor - done.\n" );
+    Debug::Throw( "EditionWindow::_closeEditor - done.\n" );
 
 }
 
@@ -778,7 +792,7 @@ void EditionWindow::selectLineFromDialog()
 //____________________________________________
 void EditionWindow::closeEvent( QCloseEvent *event )
 {
-    Debug::Throw( "EditionWindow::closeEvent.\n" );
+    Debug::Throw( 0, "EditionWindow::closeEvent.\n" );
 
     // ask for save if entry is modified
     if( !(readOnly_ || closed_ ) && modified() && askForSave() == AskForSaveDialog::Cancel ) event->ignore();
@@ -1853,9 +1867,9 @@ void EditionWindow::_textModified( bool state )
 //_____________________________________________
 void EditionWindow::_close()
 {
-    Debug::Throw( "EditionWindow::_closeView (SLOT)\n" );
+    Debug::Throw( 0, "EditionWindow::_close\n" );
     Base::KeySet< Private::LocalTextEditor > editors( this );
-    if( editors.size() > 1 ) closeEditor( activeEditor() );
+    if( editors.size() > 1 ) _closeEditor( activeEditor() );
     else close();
 }
 
