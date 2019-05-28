@@ -340,6 +340,42 @@ TextEditor& EditionWindow::activeEditor()
 const TextEditor& EditionWindow::activeEditor() const
 { return *activeEditor_; }
 
+//_____________________________________________
+bool EditionWindow::modified() const
+{
+    return
+        keywordEditor_->isModified() ||
+        titleEditor_->isModified() ||
+        activeEditor_->document()->isModified();
+}
+
+//_____________________________________________
+QString EditionWindow::windowTitle() const
+{
+
+    Debug::Throw( "EditionWindow::windowTitle.\n" );
+    const auto entry( this->entry() );
+
+    // read only flag
+    const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbookIsReadOnly() ) );
+
+    if( entry && !entry->title().isEmpty() )
+    {
+
+        if( readOnly ) return tr( "%1 (read only)" ).arg( entry->title() );
+        else if( modified()  ) return tr( "%1 (modified)" ).arg( entry->title() );
+        else return entry->title();
+
+    } else {
+
+        if( readOnly ) return tr( "Untitled Logbook Entry (read only)" );
+        else if( modified() ) return tr( "Untitled Logbook Entry (modified)" );
+        else return tr( "Untitled Logbook Entry" );
+
+    }
+
+}
+
 //____________________________________________
 void EditionWindow::setReadOnly( bool value )
 {
@@ -374,52 +410,16 @@ void EditionWindow::setIsClosed( bool value )
         { delete entry; }
 
         // remove all editors but one
-        Base::KeySet< TextEditor > editors( this );
-        if( editors.size() > 1 )
+        for( auto&& editor:Base::KeySet< TextEditor >(this) )
         {
-
-            auto localIter( editors.begin() );
-            ++localIter;
-            for( ;localIter != editors.end(); ++localIter )
-            { _closeEditor( **localIter ); }
-
-            // update active editors
-            (**editors.begin()).setFocus();
-            setActiveEditor( **editors.begin() );
-
+            if( editor != activeEditor_ )
+            { _closeEditor( *editor ); }
         }
 
         // reset editor's font
-
-
-    }
-}
-
-//_____________________________________________
-QString EditionWindow::windowTitle() const
-{
-
-    Debug::Throw( "EditionWindow::windowTitle.\n" );
-    const auto entry( this->entry() );
-
-    // read only flag
-    const bool readOnly( readOnly_ || (_hasMainWindow() && _mainWindow().logbookIsReadOnly() ) );
-
-    if( entry && !entry->title().isEmpty() )
-    {
-
-        if( readOnly ) return tr( "%1 (read only)" ).arg( entry->title() );
-        else if( modified()  ) return tr( "%1 (modified)" ).arg( entry->title() );
-        else return entry->title();
-
-    } else {
-
-        if( readOnly ) return tr( "Untitled Logbook Entry (read only)" );
-        else if( modified() ) return tr( "Untitled Logbook Entry (modified)" );
-        else return tr( "Untitled Logbook Entry" );
+        activeEditor_->setFont( qApp->font( activeEditor_ ) );
 
     }
-
 }
 
 //_____________________________________________
@@ -487,7 +487,7 @@ void EditionWindow::setForceShowKeyword( bool value )
 //___________________________________________________________
 void EditionWindow::_closeEditor( TextEditor& editor )
 {
-    Debug::Throw( 0, "EditionWindow::_closeEditor.\n" );
+    Debug::Throw( "EditionWindow::_closeEditor.\n" );
 
     // retrieve number of editors
     // if only one display, close the entire window
@@ -714,7 +714,7 @@ void EditionWindow::findFromDialog()
     if( !findWidget_ ) _createFindWidget();
     findWidget_->show();
     findWidget_->editor().setFocus();
-    activeEditor().ensureCursorVisible();
+    activeEditor_->ensureCursorVisible();
 
     /*
     setting the default text values
@@ -722,7 +722,7 @@ void EditionWindow::findFromDialog()
     otherwise it may be automatically resized
     to very large sizes due to the input text
     */
-    QString text( activeEditor().selection().text() );
+    QString text( activeEditor_->selection().text() );
     if( !text.isEmpty() )
     {
         const int maxLength( 1024 );
@@ -748,7 +748,7 @@ void EditionWindow::replaceFromDialog()
     // show replace widget and set focus
     replaceWidget_->show();
     replaceWidget_->editor().setFocus();
-    activeEditor().ensureCursorVisible();
+    activeEditor_->ensureCursorVisible();
 
     /*
     setting the default text values
@@ -764,7 +764,7 @@ void EditionWindow::replaceFromDialog()
     // update find text
     QString text;
     if( !( text = qApp->clipboard()->text( QClipboard::Selection) ).isEmpty() ) replaceWidget_->setText( text );
-    else if( activeEditor().textCursor().hasSelection() ) replaceWidget_->setText( activeEditor().textCursor().selectedText() );
+    else if( activeEditor_->textCursor().hasSelection() ) replaceWidget_->setText( activeEditor_->textCursor().selectedText() );
     else if( !( text = TextEditor::lastSelection().text() ).isEmpty() ) replaceWidget_->setText( text );
 
     // update replace text
@@ -792,7 +792,7 @@ void EditionWindow::selectLineFromDialog()
 //____________________________________________
 void EditionWindow::closeEvent( QCloseEvent *event )
 {
-    Debug::Throw( 0, "EditionWindow::closeEvent.\n" );
+    Debug::Throw( "EditionWindow::closeEvent.\n" );
 
     // ask for save if entry is modified
     if( !(readOnly_ || closed_ ) && modified() && askForSave() == AskForSaveDialog::Cancel ) event->ignore();
@@ -1734,6 +1734,30 @@ void EditionWindow::_cloneWindow()
 }
 
 //_____________________________________________
+void EditionWindow::_find( TextSelection selection )
+{ activeEditor_->find( selection ); }
+
+//_____________________________________________
+void EditionWindow::_replace( TextSelection selection )
+{ activeEditor_->replace( selection ); }
+
+//_____________________________________________
+void EditionWindow::_replaceInSelection( TextSelection selection )
+{ activeEditor_->replaceInSelection( selection ); }
+
+//_____________________________________________
+void EditionWindow::_replaceInWindow( TextSelection selection )
+{ activeEditor_->replaceInWindow( selection ); }
+
+//_____________________________________________
+void EditionWindow::_selectLine( int value )
+{ activeEditor_->selectLine( value ); }
+
+//_____________________________________________
+void EditionWindow::_restoreFocus()
+{ activeEditor_->setFocus(); }
+
+//_____________________________________________
 void EditionWindow::_unlock()
 {
 
@@ -1751,7 +1775,7 @@ void EditionWindow::_unlock()
 
 //_____________________________________________
 void EditionWindow::_updateReplaceInSelection()
-{ if( replaceWidget_ ) replaceWidget_->enableReplaceInSelection( activeEditor().hasSelection() ); }
+{ if( replaceWidget_ ) replaceWidget_->enableReplaceInSelection( activeEditor_->hasSelection() ); }
 
 //_____________________________________________
 void EditionWindow::_updateReadOnlyActions()
@@ -1865,11 +1889,15 @@ void EditionWindow::_textModified( bool state )
 }
 
 //_____________________________________________
+void EditionWindow::_displayCursorPosition()
+{ _displayCursorPosition( activeEditor_->textPosition() ); }
+
+//_____________________________________________
 void EditionWindow::_close()
 {
-    Debug::Throw( 0, "EditionWindow::_close\n" );
+    Debug::Throw( "EditionWindow::_close\n" );
     Base::KeySet< Private::LocalTextEditor > editors( this );
-    if( editors.size() > 1 ) _closeEditor( activeEditor() );
+    if( editors.size() > 1 ) _closeEditor( *activeEditor_ );
     else close();
 }
 

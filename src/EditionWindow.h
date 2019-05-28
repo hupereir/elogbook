@@ -101,13 +101,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     { return closed_; }
 
     //* check if current entry has been modified or not
-    bool modified() const
-    {
-        return
-            keywordEditor_->isModified() ||
-            titleEditor_->isModified() ||
-            activeEditor().document()->isModified();
-    }
+    bool modified() const;
 
     //* computes window title
     QString windowTitle() const;
@@ -373,28 +367,22 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void _cloneWindow();
 
     //* find
-    void _find( TextSelection selection )
-    { activeEditor().find( selection ); }
+    void _find( TextSelection );
 
     //* find
-    void _replace( TextSelection selection )
-    { activeEditor().replace( selection ); }
+    void _replace( TextSelection );
 
     //* find
-    void _replaceInSelection( TextSelection selection )
-    { activeEditor().replaceInSelection( selection ); }
+    void _replaceInSelection( TextSelection );
 
     //* find
-    void _replaceInWindow( TextSelection selection )
-    { activeEditor().replaceInWindow( selection ); }
+    void _replaceInWindow( TextSelection );
 
     //* select line
-    void _selectLine( int value )
-    { activeEditor().selectLine( value ); }
+    void _selectLine( int );
 
     //* restore focus on active display, when closing embedded dialog
-    void _restoreFocus()
-    { activeEditor().setFocus(); }
+    void _restoreFocus();
 
     //* unlock read-only editors
     void _unlock();
@@ -436,12 +424,11 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void _textModified( bool );
 
     //* display cursor position
-    void _displayCursorPosition()
-    { _displayCursorPosition( activeEditor().textPosition() ); }
+    void _displayCursorPosition();
 
     //* display cursor position
-    void _displayCursorPosition( int, int new_position )
-    { _displayCursorPosition( TextPosition( 0, new_position ) ); }
+    void _displayCursorPosition( int, int newPosition )
+    { _displayCursorPosition( TextPosition( 0, newPosition ) ); }
 
     //* close
     void _close();
