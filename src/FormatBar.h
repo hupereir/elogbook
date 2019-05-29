@@ -56,8 +56,8 @@ class FormatBar: public CustomToolBar
     //* constructor
     explicit FormatBar( QWidget*, const QString& );
 
-    //* set target editor
-    void setTarget( TextEditor& );
+    //*@name accessors
+    //@{
 
     //* load text formats
     void load( const Format::TextFormatBlock::List& ) const;
@@ -71,6 +71,16 @@ class FormatBar: public CustomToolBar
     //* actions
     const ActionMap& actions() const
     { return actions_; }
+
+    //@}
+
+    //*@name modifiers
+    //@{
+
+    //* set target editor
+    void setTarget( TextEditor& );
+
+    //@}
 
     public Q_SLOTS:
 

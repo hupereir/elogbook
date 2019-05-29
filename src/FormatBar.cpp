@@ -194,15 +194,15 @@ Format::TextFormatBlock::List FormatBar::get() const
         // iterator over text fragments
         for( auto&& it = block.begin(); !(it.atEnd()); ++it)
         {
-            QTextFragment fragment = it.fragment();
+            const auto fragment = it.fragment();
             if( !fragment.isValid() ) continue;
 
             // retrieve fragments position
-            int begin( fragment.position() );
-            int end( fragment.position() + fragment.length() );
+            const int begin( fragment.position() );
+            const int end( fragment.position() + fragment.length() );
 
             // retrieve text format
-            QTextCharFormat textFormat( fragment.charFormat() );
+            const QTextCharFormat textFormat( fragment.charFormat() );
 
             Format::TextFormatFlags format( Format::Default );
             if( textFormat.fontWeight() == QFont::Bold ) format |= Format::Bold;
