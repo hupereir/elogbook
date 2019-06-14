@@ -26,8 +26,7 @@
 #include "XmlOptions.h"
 #include "XmlTimeStamp.h"
 
-#include <cstdio>
-#include <cstring>
+#include <QRegExp>
 
 //_______________________________________
 const QString Attachment::NoFile;
