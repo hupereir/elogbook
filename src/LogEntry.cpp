@@ -74,7 +74,7 @@ LogEntry::LogEntry( const QDomElement& element ):
         } else if( tagName == Xml::Text ) setText( childElement.text() );
         else if( tagName == Xml::Creation ) setCreation( XmlTimeStamp( childElement ) );
         else if( tagName == Xml::Modification ) setModification( XmlTimeStamp( childElement ) );
-        else if( tagName == Format::Xml::Tag ) addFormat( Format::XmlTextFormatBlock( childElement ) );
+        else if( tagName == TextFormat::Xml::Tag ) addFormat( TextFormat::XmlBlock( childElement ) );
         else if( tagName == Xml::Attachment ) Base::Key::associate( this, new Attachment( childElement ) );
     }
 
@@ -133,8 +133,8 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
     // dump text format
     for( const auto& format:formats_ )
     {
-        if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != Format::Default ) )
-        { out.appendChild( Format::XmlTextFormatBlock( format ).domElement( document ) ); }
+        if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != TextFormat::Default ) )
+        { out.appendChild( TextFormat::XmlBlock( format ).domElement( document ) ); }
      }
 
     // dump attachments
@@ -242,11 +242,11 @@ void LogEntry::removeKeyword( Keyword keyword )
 { keywords_.remove( keyword ); }
 
 //__________________________________
-void LogEntry::addFormat( Format::TextFormatBlock format )
+void LogEntry::addFormat( TextFormat::Block format )
 {
     if( format.isEmpty() ) return;
     if( format.color() == Qt::black ) format.unsetColor();
-    if( format.format() == Format::Default && !format.color().isValid() ) return;
+    if( format.format() == TextFormat::Default && !format.color().isValid() ) return;
     formats_.append(format);
 }
 

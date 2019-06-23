@@ -214,11 +214,11 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
 
         // define format
         QTextCharFormat textFormat;
-        textFormat.setFontWeight( format.format() & Format::Bold ? QFont::Bold : QFont::Normal );
-        textFormat.setFontItalic( format.format() & Format::Italic );
-        textFormat.setFontUnderline( format.format() & Format::Underline );
-        textFormat.setFontStrikeOut( format.format() & Format::Strike );
-        textFormat.setFontOverline( format.format() & Format::Overline );
+        textFormat.setFontWeight( format.format() & TextFormat::Bold ? QFont::Bold : QFont::Normal );
+        textFormat.setFontItalic( format.format() & TextFormat::Italic );
+        textFormat.setFontUnderline( format.format() & TextFormat::Underline );
+        textFormat.setFontStrikeOut( format.format() & TextFormat::Strike );
+        textFormat.setFontOverline( format.format() & TextFormat::Overline );
 
         // load color
         if( format.color().isValid() )

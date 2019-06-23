@@ -108,7 +108,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { return color_; }
 
     //* entry text format
-    Format::TextFormatBlock::List formats() const
+    TextFormat::Block::List formats() const
     { return formats_; }
 
     //* LogEntry text
@@ -184,10 +184,10 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { color_ = Base::Color(color); }
 
     //* add TextFormatBlock
-    void addFormat( Format::TextFormatBlock );
+    void addFormat( TextFormat::Block );
 
     //* entry text format
-    void setFormats( const Format::TextFormatBlock::List& formats )
+    void setFormats( const TextFormat::Block::List& formats )
     { formats_ = formats; }
 
     //* LogEntry text
@@ -286,7 +286,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     bool keywordSelected_ = false;
 
     //* list of text formats
-    Format::TextFormatBlock::List formats_;
+    TextFormat::Block::List formats_;
 
 };
 

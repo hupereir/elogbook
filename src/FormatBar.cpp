@@ -139,7 +139,7 @@ void FormatBar::setTarget( TextEditor& editor )
 }
 
 //________________________________________
-void FormatBar::load( const Format::TextFormatBlock::List& formatList ) const
+void FormatBar::load( const TextFormat::Block::List& formatList ) const
 {
 
     Debug::Throw( "FormatBar::loadFormats.\n" );
@@ -159,11 +159,11 @@ void FormatBar::load( const Format::TextFormatBlock::List& formatList ) const
 
         // define format
         QTextCharFormat textFormat;
-        textFormat.setFontWeight( block.format() & Format::Bold ? QFont::Bold : QFont::Normal );
-        textFormat.setFontItalic( block.format() & Format::Italic );
-        textFormat.setFontUnderline( block.format() & Format::Underline );
-        textFormat.setFontStrikeOut( block.format() & Format::Strike );
-        textFormat.setFontOverline( block.format() & Format::Overline );
+        textFormat.setFontWeight( block.format() & TextFormat::Bold ? QFont::Bold : QFont::Normal );
+        textFormat.setFontItalic( block.format() & TextFormat::Italic );
+        textFormat.setFontUnderline( block.format() & TextFormat::Underline );
+        textFormat.setFontStrikeOut( block.format() & TextFormat::Strike );
+        textFormat.setFontOverline( block.format() & TextFormat::Overline );
 
         // load color
         if( block.color().isValid() && !(block.color() == baseTextColor) )
@@ -181,11 +181,11 @@ void FormatBar::load( const Format::TextFormatBlock::List& formatList ) const
 
 }
 //________________________________________
-Format::TextFormatBlock::List FormatBar::get() const
+TextFormat::Block::List FormatBar::get() const
 {
     Debug::Throw( "FormatBar::get.\n" );
 
-    Format::TextFormatBlock::List out;
+    TextFormat::Block::List out;
 
     // iterator over blocks
     for( const auto& block:TextBlockRange( editor_->document() ) )
@@ -204,12 +204,12 @@ Format::TextFormatBlock::List FormatBar::get() const
             // retrieve text format
             const QTextCharFormat textFormat( fragment.charFormat() );
 
-            Format::TextFormatFlags format( Format::Default );
-            if( textFormat.fontWeight() == QFont::Bold ) format |= Format::Bold;
-            if( textFormat.fontItalic() ) format |= Format::Italic;
-            if( textFormat.fontUnderline() ) format |= Format::Underline;
-            if( textFormat.fontStrikeOut() ) format |= Format::Strike;
-            if( textFormat.fontOverline() ) format |= Format::Overline;
+            TextFormat::Flags format( TextFormat::Default );
+            if( textFormat.fontWeight() == QFont::Bold ) format |= TextFormat::Bold;
+            if( textFormat.fontItalic() ) format |= TextFormat::Italic;
+            if( textFormat.fontUnderline() ) format |= TextFormat::Underline;
+            if( textFormat.fontStrikeOut() ) format |= TextFormat::Strike;
+            if( textFormat.fontOverline() ) format |= TextFormat::Overline;
 
             // retrieve text color
             QColor color( textFormat.foreground().color() );
@@ -218,10 +218,10 @@ Format::TextFormatBlock::List FormatBar::get() const
             const QString href( textFormat.anchorHref() );
 
             // skip format if corresponds to default
-            if( format == Format::Default && !color.isValid() && href.isEmpty() ) continue;
+            if( format == TextFormat::Default && !color.isValid() && href.isEmpty() ) continue;
 
             // store new TextFormatBlock
-            Format::TextFormatBlock textFormatBlock( begin, end, format, color );
+            TextFormat::Block textFormatBlock( begin, end, format, color );
             if( !href.isEmpty() ) textFormatBlock.setHRef( href );
 
             out.append( textFormatBlock );

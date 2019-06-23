@@ -206,7 +206,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     QDomElement par = parent.appendChild( document.createElement("p") ).toElement();
 
     // get formats
-    Format::TextFormatBlock::List formats( entry_->formats() );
+    TextFormat::Block::List formats( entry_->formats() );
 
     // text
     const QString text( entry_->text() );
@@ -216,7 +216,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     for( int index = 0; index < text.size(); )
     {
         Debug::Throw() << "index: " << index << " position: " << index << endl;
-        auto iter( std::find_if( formats.begin(), formats.end(), Format::TextFormatBlock::ContainsFTor( index ) ) );
+        auto iter( std::find_if( formats.begin(), formats.end(), TextFormat::Block::ContainsFTor( index ) ) );
         if( iter == formats.end() || iter->isEmpty() )
         {
             QTextStream( &buffer ) << text[index];
@@ -232,10 +232,10 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
 
             // open new element define format
             QDomElement localNode( parent );
-            if( iter->format() & Format::Underline ) localNode = localNode.appendChild( document.createElement( "u" ) ).toElement();
-            if( iter->format() & Format::Italic ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
-            if( iter->format() & Format::Bold ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
-            if( iter->format() & Format::Strike ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
+            if( iter->format() & TextFormat::Underline ) localNode = localNode.appendChild( document.createElement( "u" ) ).toElement();
+            if( iter->format() & TextFormat::Italic ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
+            if( iter->format() & TextFormat::Bold ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
+            if( iter->format() & TextFormat::Strike ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
             if( iter->color().isValid() )
             {
                 localNode = localNode.appendChild( document.createElement( "font" ) ).toElement();

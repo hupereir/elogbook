@@ -60,10 +60,10 @@ class FormatBar: public CustomToolBar
     //@{
 
     //* load text formats
-    void load( const Format::TextFormatBlock::List& ) const;
+    void load( const TextFormat::Block::List& ) const;
 
     //* get text formats
-    Format::TextFormatBlock::List get() const;
+    TextFormat::Block::List get() const;
 
     //* button map
     using ActionMap = QHash< ActionId, QAction* >;
