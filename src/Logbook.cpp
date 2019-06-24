@@ -34,18 +34,46 @@
 
 #include <new>
 
-//________________________________________________________
-QByteArray safeUncompress( const QByteArray& content )
+namespace
 {
-    try
+
+    namespace Local
     {
 
-        return qUncompress( content );
+        //________________________________________________________
+        QByteArray safeUncompress( const QByteArray& content )
+        {
+            try
+            {
 
-    } catch( std::bad_alloc& exception ) {
+                return qUncompress( content );
 
-        Debug::Throw() << "safeUncompress - caught bad_alloc exception: " << exception.what() << endl;
-        return QByteArray();
+            } catch( std::bad_alloc& exception ) {
+
+                Debug::Throw() << "safeUncompress - caught bad_alloc exception: " << exception.what() << endl;
+                return QByteArray();
+
+            }
+
+        }
+
+        //______________________________________________________________________
+        File childFileName( File file, int childCount )
+        {
+
+            const auto head( file.localName().truncatedName() );
+            QString foot( file.extension() );
+            if( !foot.isEmpty() ) foot = QString(".") + foot;
+
+            File out( QString( "%1_include_%2%3" )
+                .arg( head )
+                .arg( childCount )
+                .arg( foot ) );
+
+            Debug::Throw( ) << "Local::childFileName - \"" << out << "\".\n";
+            return out;
+
+        }
 
     }
 
@@ -130,7 +158,7 @@ bool Logbook::read()
     // read everything from file
     // try read compressed and try uncompress
     auto content( file.readAll() );
-    auto uncompressed( safeUncompress( content ) );
+    auto uncompressed( Local::safeUncompress( content ) );
 
     // try read raw if failed
     if( uncompressed.isEmpty() ) uncompressed = content;
@@ -337,7 +365,7 @@ bool Logbook::write( File file )
         // dump all logbook childrens
         for( int childCount = 0; childCount < children_.size(); ++childCount )
         {
-            auto childFileName = _childFileName( file, childCount );
+            auto childFileName = Local::childFileName( file, childCount );
             auto childElement = document.createElement( Xml::Child );
             childElement.setAttribute( Xml::File, childFileName );
             top.appendChild( childElement );
@@ -368,7 +396,7 @@ bool Logbook::write( File file )
     for( const auto& logbook:children_ )
     {
 
-        File childFileName( _childFileName( file, childCount ).addPath( file.path() ) );
+        File childFileName( Local::childFileName( file, childCount ).addPath( file.path() ) );
 
         logbook->setParentFile( file );
         if( !logbook->write( childFileName ) ) completed = false;
@@ -484,7 +512,7 @@ Logbook::LogbookPtr Logbook::latestChild()
     logbook->setTitle( title() );
     logbook->setDirectory( directory() );
     logbook->setAuthor( author() );
-    logbook->setFile( _childFileName( file_, children_.size() ).addPath( file_.path() ) );
+    logbook->setFile( Local::childFileName( file_, children_.size() ).addPath( file_.path() ) );
     logbook->setUseCompression( useCompression_ );
     logbook->setModified( true );
     connect( logbook.get(), SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
@@ -624,7 +652,7 @@ void Logbook::setFile( File file, bool recursive )
         int childCount=0;
         for( const auto& logbook:children_ )
         {
-            File childFileName( _childFileName( file, childCount ).addPath( file.path() ) );
+            File childFileName( Local::childFileName( file, childCount ).addPath( file.path() ) );
             logbook->setParentFile( file );
             logbook->setFile( childFileName, true );
             ++childCount;
@@ -861,24 +889,6 @@ QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
     for( const auto& timeStamp:recentEntries_ )
     { out.appendChild( XmlTimeStamp( timeStamp ).domElement( Xml::Creation, document ) ); }
 
-    return out;
-
-}
-
-//______________________________________________________________________
-File Logbook::_childFileName( File file, int childCount ) const
-{
-
-    const auto head( file.localName().truncatedName() );
-    QString foot( file.extension() );
-    if( !foot.isEmpty() ) foot = QString(".") + foot;
-
-    File out( QString( "%1_include_%2%3" )
-        .arg( head )
-        .arg( childCount )
-        .arg( foot ) );
-
-    Debug::Throw( ) << "Logbook::_MakeChildFileName - \"" << out << "\".\n";
     return out;
 
 }

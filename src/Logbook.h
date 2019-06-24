@@ -417,18 +417,13 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     //* read-only changed
     void readOnlyChanged( bool );
 
-    protected:
+    private:
 
     //* read recent entries
     void _readRecentEntries( const QDomElement& );
 
     //* recent entries dom element
     QDomElement _recentEntriesElement( QDomDocument& ) const;
-
-    //* generate tagged backup filename
-    File _childFileName( File, int ) const;
-
-    private:
 
     //* list of pointers to logbook children
     List children_;
