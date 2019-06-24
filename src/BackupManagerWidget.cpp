@@ -56,6 +56,11 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     buttonLayout_->addWidget( cleanButton_ = new QPushButton( IconEngine::get( IconNames::Delete ), tr( "Clean" ), this ) );
     buttonLayout_->addStretch( 1 );
 
+    // actions
+    addAction( removeAction_ = new QAction( IconEngine::get( IconNames::Remove ), tr( "Remove" ), this ) );
+    removeAction_->setShortcut( QKeySequence::Delete );
+    list_->addAction( removeAction_ );
+
     // connections
     connect( list_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateActions()) );
     connect( cleanButton_, SIGNAL(clicked()), SLOT(_clean()) );
@@ -63,6 +68,9 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
 
     connect( removeButton_, SIGNAL(clicked()), SLOT(_remove()) );
     connect( removeButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
+
+    connect( removeAction_, SIGNAL(triggered()), SLOT(_remove()) );
+    connect( removeAction_, SIGNAL(triggered()), SLOT(updateBackups()) );
 
     connect( restoreButton_, SIGNAL(clicked()), SLOT(_restore()) );
     connect( restoreButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
@@ -86,7 +94,7 @@ void BackupManagerWidget::updateBackups()
     model_.clear();
 
     // check associated logbook
-    Logbook* logbook( _logbook() );
+    auto logbook( _logbook() );
     if( !logbook ) return;
 
     // load backups and check validity
@@ -107,7 +115,7 @@ void BackupManagerWidget::_clean()
 {
     Debug::Throw( "BackupManagerWidget::_clean.\n" );
 
-    Logbook* logbook( _logbook() );
+    auto logbook( _logbook() );
     if( !logbook ) return;
 
     Backup::List backups( model_.get() );
@@ -124,7 +132,7 @@ void BackupManagerWidget::_clean()
 void BackupManagerWidget::_remove()
 {
     Debug::Throw( "BackupManagerWidget::_remove.\n" );
-    QModelIndexList selectedIndexes( list_->selectionModel()->selectedRows() );
+    const auto selectedIndexes( list_->selectionModel()->selectedRows() );
     if( selectedIndexes.isEmpty() ) return;
 
     QString buffer;
@@ -165,10 +173,10 @@ void BackupManagerWidget::_remove()
 void BackupManagerWidget::_restore()
 {
     Debug::Throw( "BackupManagerWidget::_restore.\n" );
-    QModelIndex index( list_->selectionModel()->currentIndex() );
+    const auto index( list_->selectionModel()->currentIndex() );
     if( !index.isValid() ) return;
 
-    const Backup& backup( model_.get( index ) );
+    const auto& backup( model_.get( index ) );
 
     // ask confirmation
     QString buffer = QString(
@@ -183,13 +191,13 @@ void BackupManagerWidget::_restore()
 void BackupManagerWidget::_merge()
 {
     Debug::Throw( "BackupManagerWidget::_merge.\n" );
-    QModelIndex index( list_->selectionModel()->currentIndex() );
+    const auto index( list_->selectionModel()->currentIndex() );
     if( !index.isValid() ) return;
 
-    const Backup& backup( model_.get( index ) );
+    const auto& backup( model_.get( index ) );
 
     // ask confirmation
-    QString buffer = QString(
+    const auto buffer = QString(
         tr( "Merge backup file named '%1' to current logbook ?\n"
         "Warning: this will add all unmatched entry in the backup to the current logbook." ) )
         .arg( backup.file().localName()  );
@@ -203,6 +211,7 @@ void BackupManagerWidget::_updateActions()
     Debug::Throw( "BackupManagerWidget::_updateActions" );
     bool hasSelection( !list_->selectionModel()->selectedRows().isEmpty() );
     removeButton_->setEnabled( hasSelection );
+    removeAction_->setEnabled( hasSelection );
     restoreButton_->setEnabled( hasSelection );
     mergeButton_->setEnabled( hasSelection );
 }

@@ -109,13 +109,16 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
 
     //*@name buttons
     //@{
-
     QPushButton* cleanButton_ = nullptr;
     QPushButton* removeButton_ = nullptr;
     QPushButton* restoreButton_ = nullptr;
     QPushButton* mergeButton_ = nullptr;
     QPushButton* newBackupButton_ = nullptr;
+    //@}
 
+    //*@name actions
+    //@{
+    QAction* removeAction_ = nullptr;
     //@}
 
 };
