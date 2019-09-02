@@ -103,7 +103,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 
                         auto keyword( keywords.begin()->get() );
                         if( keyword.size() > 1 && keyword[0] == '/' )
-                        { keyword = keyword.mid( 1 ); }
+                        { keyword.remove( 0, 1 ); }
 
                         return keyword;
 

@@ -290,7 +290,7 @@ void Attachment::_setFile( const File& file )
     // remove trailing spaces
     static QRegExp regexp( "\\s+$" );
     if( regexp.indexIn( file_ ) >= 0 )
-    { file_ = File( file_.get().left( file_.get().size() - regexp.matchedLength() ) ); }
+    { file_.get().truncate( file_.get().size() - regexp.matchedLength() ); }
 
     return;
 }

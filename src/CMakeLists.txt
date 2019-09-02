@@ -92,23 +92,13 @@ set(elogbook_SOURCES
 
 set(elogbook_RESOURCES pixmaps.qrc)
 
-if(USE_QT5)
-
-  qt5_add_resources(elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
-
-else()
-
-  qt4_add_resources(elogbook_RESOURCES_RCC ${elogbook_RESOURCES})
-
-endif()
-
 add_application_icon(elogbook_SOURCES ${CMAKE_SOURCE_DIR}/elogbook)
 add_desktop_file(${CMAKE_SOURCE_DIR}/elogbook)
 add_platform_executable(elogbook
   ${ELOGBOOK_VERSION}
   ${elogbook_lib_SOURCES}
   ${elogbook_SOURCES}
-  ${elogbook_RESOURCES_RCC}
+  ${elogbook_RESOURCES}
 )
 
 target_link_libraries(elogbook

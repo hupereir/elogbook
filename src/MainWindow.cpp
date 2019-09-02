@@ -2618,7 +2618,7 @@ void MainWindow::_findEntries() const
     if( !( text = qApp->clipboard()->text( QClipboard::Selection ) ).isEmpty() )
     {
         const int maxLength( 1024 );
-        text = text.left( maxLength );
+        text.truncate( maxLength );
         searchWidget_->setText( text );
     }
 

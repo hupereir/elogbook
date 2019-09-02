@@ -60,7 +60,7 @@ QString Keyword::current() const
 //_________________________________________________________________
 Keyword Keyword::parent() const
 {
-    int pos = value_.lastIndexOf( '/' );
+    const int pos = value_.lastIndexOf( '/' );
     return Keyword( value_.left( pos ) );
 }
 
