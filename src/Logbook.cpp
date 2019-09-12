@@ -20,6 +20,7 @@
 #include "Logbook.h"
 
 #include "Attachment.h"
+#include "CppUtil.h"
 #include "Debug.h"
 #include "FileCheck.h"
 #include "LogEntry.h"
@@ -317,7 +318,7 @@ bool Logbook::write( File file )
         if( !author_.isEmpty() ) top.setAttribute( Xml::Author, author_ ) ;
         if( !parentFile_.isEmpty() ) top.setAttribute( Xml::ParentFile, parentFile_ );
 
-        top.setAttribute( Xml::SortMethod, QString::number( sortMethod_ ) );
+        top.setAttribute( Xml::SortMethod, QString::number( Base::toIntegralType( sortMethod_ ) ) );
         top.setAttribute( Xml::SortOrder, QString::number( sortOrder_ ) );
         top.setAttribute( Xml::ReadOnly, QString::number( readOnly_ ) );
         top.setAttribute( Xml::BackupMask, QString::number( isBackup_ ) );
@@ -800,23 +801,23 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
     switch( sortMethod_ )
     {
 
-        case Logbook::SortColor:
+        case SortMethod::SortColor:
         return (first->color() < second->color() );
         break;
 
-        case Logbook::SortCreation:
+        case SortMethod::SortCreation:
         return (first->creation() < second->creation());
         break;
 
-        case Logbook::SortModification:
+        case SortMethod::SortModification:
         return (first->modification() < second->modification());
         break;
 
-        case Logbook::SortTitle:
+        case SortMethod::SortTitle:
         return (first->title() < second->title());
         break;
 
-        case Logbook::SortKeyword:
+        case SortMethod::SortKeyword:
         {
             auto firstKeywords( first->keywords() );
             auto secondKeywords( second->keywords() );
@@ -825,7 +826,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
             else return *firstKeywords.begin() < *secondKeywords.begin();
         }
 
-        case Logbook::SortAuthor:
+        case SortMethod::SortAuthor:
         return (first->author() < second->author());
 
         default:

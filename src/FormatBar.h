@@ -44,7 +44,7 @@ class FormatBar: public CustomToolBar
     public:
 
     //* action id enumeration
-    enum ActionId
+    enum class ActionId
     {
         Bold,
         Italic,

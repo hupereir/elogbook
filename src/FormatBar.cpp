@@ -90,11 +90,11 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
     QAction* action;
     actions_ = Base::makeT<ActionMap>(
     {
-        { Bold, addAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this, SLOT(_bold(bool)) ) },
-        { Italic, addAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this, SLOT(_italic(bool)) ) },
-        { Underline, addAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this, SLOT(_underline(bool)) ) },
-        { Strike, addAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this, SLOT(_strike(bool)) ) },
-        { Color, action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this ) }
+        { ActionId::Bold, addAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this, SLOT(_bold(bool)) ) },
+        { ActionId::Italic, addAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this, SLOT(_italic(bool)) ) },
+        { ActionId::Underline, addAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this, SLOT(_underline(bool)) ) },
+        { ActionId::Strike, addAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this, SLOT(_strike(bool)) ) },
+        { ActionId::Color, action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this ) }
     });
 
     for( auto&& iter = actions_.begin(); iter != actions_.end(); ++iter )
@@ -357,10 +357,10 @@ void FormatBar::updateState( const QTextCharFormat& format )
 {
     Debug::Throw( "FormatBar::updateState.\n" );
     enabled_ = false;
-    actions_[Bold]->setChecked( format.fontWeight() == QFont::Bold );
-    actions_[Italic]->setChecked( format.fontItalic() );
-    actions_[Underline]->setChecked( format.fontUnderline() );
-    actions_[Strike]->setChecked( format.fontStrikeOut() );
+    actions_[ActionId::Bold]->setChecked( format.fontWeight() == QFont::Bold );
+    actions_[ActionId::Italic]->setChecked( format.fontItalic() );
+    actions_[ActionId::Underline]->setChecked( format.fontUnderline() );
+    actions_[ActionId::Strike]->setChecked( format.fontStrikeOut() );
     enabled_ = true;
 }
 

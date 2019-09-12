@@ -103,7 +103,7 @@ QString NewAttachmentDialog::comments() const
 
 //____________________________________________________
 Attachment::Command NewAttachmentDialog::action() const
-{ return actionComboBox_->currentText() == tr( "Copy" ) ? Attachment::CopyVersion: Attachment::LinkVersion; }
+{ return actionComboBox_->currentText() == tr( "Copy" ) ? Attachment::Command::CopyVersion: Attachment::Command::LinkVersion; }
 
 //____________________________________________________
 void NewAttachmentDialog::setFile( const File& file )
@@ -132,7 +132,7 @@ void NewAttachmentDialog::setIsUrl( bool value )
 void NewAttachmentDialog::setAction( const Attachment::Command& command )
 {
     Debug::Throw( "NewAttachmentDialog::SetAction.\n" );
-    QString actionString = ( command == Attachment::CopyVersion ) ? tr( "Copy" ) : tr( "Link" );
+    QString actionString = ( command == Attachment::Command::CopyVersion ) ? tr( "Copy" ) : tr( "Link" );
     actionComboBox_->setCurrentIndex( actionComboBox_->findText( actionString ) );
 }
 

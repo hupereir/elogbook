@@ -185,7 +185,7 @@ void AttachmentFrame::_new()
     }
 
     // action
-    dialog.setAction( Attachment::CopyVersion );
+    dialog.setAction( Attachment::Command::CopyVersion );
     dialog.resize( 400, 350 );
     if( dialog.centerOnWidget( AttachmentFrame::window() ).exec() == QDialog::Rejected ) return;
 
@@ -233,23 +233,23 @@ void AttachmentFrame::_new()
     switch (error)
     {
 
-        case Attachment::SourceNotFound:
+        case Attachment::ErrorCode::SourceNotFound:
         InformationDialog( this, tr( "Cannot find file '%1'. <Add Attachment> canceled." ).arg( file ) ).exec();
         break;
 
-        case Attachment::DestNotFound:
+        case Attachment::ErrorCode::DestNotFound:
         InformationDialog( this, tr( "Cannot find directory '%1'. <Add Attachment> canceled." ).arg( fullDirectory ) ).exec();
         break;
 
-        case Attachment::SourceIsDir:
+        case Attachment::ErrorCode::SourceIsDir:
         InformationDialog( this, tr( "File '%1' is a directory. <Add Attachment> canceled." ).arg( file ) ).exec();
         break;
 
-        case Attachment::DestExist:
+        case Attachment::ErrorCode::DestExist:
         InformationDialog( this, tr( "File '%1' is already in list." ).arg( file ) ).exec();
         break;
 
-        case Attachment::Success:
+        case Attachment::ErrorCode::Success:
         {
 
             auto attachment( attachmentPtr.release() );
@@ -311,7 +311,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
 
         records.append( FileRecord( attachment->file() ) );
 
-        if( attachment->isLink() == Attachment::Yes || attachment->isLink() == Attachment::Unknown )
+        if( attachment->isLink() == Attachment::LinkState::Yes || attachment->isLink() == Attachment::LinkState::Unknown )
         { records.append( FileRecord( attachment->sourceFile() ) ); }
 
     }
@@ -350,15 +350,15 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
 
         // check link status
-        if( isValid && isLink == Attachment::Unknown )
+        if( isValid && isLink == Attachment::LinkState::Unknown )
         {
             // check if destination is a link
             QFileInfo fileInfo( attachment->file() );
-            isLink = fileInfo.isSymLink() ? Attachment::Yes : Attachment::No;
+            isLink = fileInfo.isSymLink() ? Attachment::LinkState::Yes : Attachment::LinkState::No;
         }
 
         // check source file
-        if( isValid && isLink == Attachment::Yes )
+        if( isValid && isLink == Attachment::LinkState::Yes )
         {
             found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTorUnary( attachment->sourceFile() ) );
             if( found != records.end() ) { isValid &= found->isValid(); }
@@ -366,7 +366,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         }
 
         // update validity flag and set parent logbook as modified if needed
-        Debug::Throw() << "AttachmentFrame::_processRecords - valid: " << isValid << " link: " << isLink << endl;
+        Debug::Throw() << "AttachmentFrame::_processRecords - valid: " << isValid << " link: " << Base::toIntegralType( isLink ) << endl;
         if( attachment->setIsValid( isValid ) || attachment->setIsLink( isLink ) )
         {
 
@@ -464,7 +464,7 @@ void AttachmentFrame::_open()
         OpenAttachmentDialog dialog( this, *attachment );
         if( dialog.centerOnWidget( window() ).exec() == QDialog::Accepted )
         {
-            if( dialog.action() == OpenAttachmentDialog::Open )
+            if( dialog.action() == OpenAttachmentDialog::Action::Open )
             {
 
                 if( !dialog.isCommandValid() || (dialog.command().isEmpty() && !dialog.isCommandDefault() ) )
@@ -593,7 +593,7 @@ void AttachmentFrame::_delete()
             logbookChanged = true;
 
             // retrieve action
-            bool fromDisk( dialog.action() == DeleteAttachmentDialog::DeleteFromDisk );
+            bool fromDisk( dialog.action() == DeleteAttachmentDialog::Action::DeleteFromDisk );
 
             // retrieve associated attachment frames and remove item
             Base::KeySet<AttachmentFrame> frames( attachment );

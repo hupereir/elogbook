@@ -170,7 +170,7 @@ QString OpenAttachmentDialog::command() const
 
 //______________________________________________________
 OpenAttachmentDialog::Action OpenAttachmentDialog::action() const
-{ return openRadioButton_->isChecked() ? Open:SaveAs; }
+{ return openRadioButton_->isChecked() ? Action::Open : Action::SaveAs; }
 
 //____________________________________________________________________________
 void OpenAttachmentDialog::_saveCommands()

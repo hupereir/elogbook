@@ -37,7 +37,7 @@ class DeleteKeywordDialog: public CustomDialog
     explicit DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&, bool hasEntries );
 
     //* entry action
-    enum Action
+    enum class Action
     {
         MoveEntries,
         DeleteEntries
@@ -45,15 +45,15 @@ class DeleteKeywordDialog: public CustomDialog
 
     //* get action
     Action action() const
-    { return moveRadioButton_->isChecked() ? MoveEntries:DeleteEntries; }
+    { return moveRadioButton_->isChecked() ? Action::MoveEntries : Action::DeleteEntries; }
 
     //* move netries
     bool moveEntries() const
-    { return action() == MoveEntries; }
+    { return action() == Action::MoveEntries; }
 
     //* delete entries
     bool deleteEntries() const
-    { return action() == DeleteEntries; }
+    { return action() == Action::DeleteEntries; }
 
     private:
 

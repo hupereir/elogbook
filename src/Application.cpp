@@ -181,7 +181,7 @@ bool Application::_processCommand( Server::ServerCommand command )
 
     Debug::Throw( "Application::_processCommand.\n" );
     if( BaseApplication::_processCommand( command ) ) return true;
-    if( command.command() == Server::ServerCommand::Raise )
+    if( command.command() == Server::ServerCommand::CommandType::Raise )
     {
 
         if( mainWindow_ ) mainWindow_->uniconifyAction().trigger();

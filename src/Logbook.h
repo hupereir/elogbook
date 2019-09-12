@@ -202,7 +202,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     File backupFileName() const;
 
     //* sort method enumeration
-    enum SortMethod
+    enum class SortMethod
     {
         SortCreation,
         SortModification,
@@ -471,7 +471,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     TimeStamp saved_;
 
     //* method used for LogEntry sort
-    SortMethod sortMethod_ = Logbook::SortCreation;
+    SortMethod sortMethod_ = SortMethod::SortCreation;
 
     //* backup list
     Backup::List backupFiles_;

@@ -143,16 +143,16 @@ void FileCheck::_fileChanged( const QString& file )
         if( !local.exists() )
         {
 
-            data.setFlag( Data::FileRemoved );
+            data.setFlag( Data::Flag::FileRemoved );
 
         } else {
 
-            data.setFlag( Data::FileModified );
+            data.setFlag( Data::Flag::FileModified );
             data.setTimeStamp( local.lastModified() );
 
         }
 
-        if( data.flag() == Data::FileRemoved || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
+        if( data.flag() == Data::Flag::FileRemoved || ((*iter)->saved().isValid() && (*iter)->saved() < data.timeStamp()) )
         {
             data_.insert( data );
             timer_.start( 200, this );
@@ -189,9 +189,9 @@ QVariant FileCheck::Model::data( const QModelIndex& index, int role ) const
             {
                 switch( data.flag() )
                 {
-                    case Data::FileModified: return tr( "Modified" );
-                    case Data::FileRemoved: return tr( "Removed" );
-                    case Data::None:
+                    case Data::Flag::FileModified: return tr( "Modified" );
+                    case Data::Flag::FileRemoved: return tr( "Removed" );
+                    case Data::Flag::None:
                     default: return tr( "None" );
                 }
             }

@@ -19,6 +19,7 @@
 
 #include "Attachment.h"
 #include "Command.h"
+#include "CppUtil.h"
 #include "Debug.h"
 #include "File.h"
 #include "LogEntry.h"
@@ -87,7 +88,7 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
     if( !file_.isEmpty() ) out.setAttribute( Xml::File, file_ );
     if( !sourceFile_.isEmpty() ) out.setAttribute( Xml::SourceFile, sourceFile_ );
     out.setAttribute( Xml::Valid, QString::number( isValid() ) );
-    out.setAttribute( Xml::IsLink, QString::number( isLink() ) );
+    out.setAttribute( Xml::IsLink, QString::number( Base::toIntegralType( isLink() ) ) );
     out.setAttribute( Xml::IsUrl, QString::number( isUrl() ) );
     if( comments().size())
     {
@@ -173,7 +174,7 @@ Attachment::ErrorCode Attachment::copy( const Attachment::Command& command, cons
     if( sourceFile_.isEmpty() )
     {
         Debug::Throw(0) << "Attachment::ProcessCopy - orig not set. Canceled.\n";
-        return SourceNotFound;
+        return ErrorCode::SourceNotFound;
     }
 
     // for URL attachments, just copy origin to file, whatever the command
@@ -183,20 +184,20 @@ Attachment::ErrorCode Attachment::copy( const Attachment::Command& command, cons
         _setCreation( TimeStamp::now() );
         _setModification( TimeStamp() );
         setIsValid( true );
-        return Success;
+        return ErrorCode::Success;
     }
 
     // check destination directory
     if( destdir.isEmpty() )
     {
         Debug::Throw(0) << "Attachment::ProcessCopy - destdir not set. Canceled.\n";
-        return DestNotFound;
+        return ErrorCode::DestNotFound;
     }
 
     // generate expanded source name
     File fullname( sourceFile_ .expanded() );
-    if( !( isUrl_ || fullname.exists() ) ) return SourceNotFound;
-    else if( !isUrl_ && fullname.isDirectory() ) return SourceIsDir;
+    if( !( isUrl_ || fullname.exists() ) ) return ErrorCode::SourceNotFound;
+    else if( !isUrl_ && fullname.isDirectory() ) return ErrorCode::SourceIsDir;
 
     // destination filename
     File destname( fullname.localName().addPath( File( destdir ) ).expand() );
@@ -206,49 +207,49 @@ Attachment::ErrorCode Attachment::copy( const Attachment::Command& command, cons
     Base::Command commandString;
     switch (command) {
 
-        case Copy:
-        if( destname.exists() ) return DestExist;
+        case Command::Copy:
+        if( destname.exists() ) return ErrorCode::DestExist;
         else {
             commandString << "cp" << sourceFile_ << destname;
-            setIsLink( No );
+            setIsLink( LinkState::No );
             break;
         }
 
-        case Link:
-        if( destname.exists() ) return DestExist;
+        case Command::Link:
+        if( destname.exists() ) return ErrorCode::DestExist;
         else {
             commandString << "ln" << "-s" << sourceFile_ << destname;
-            setIsLink( Yes );
+            setIsLink( LinkState::Yes );
             break;
         }
 
-        case ForceCopy:
+        case Command::ForceCopy:
         destname.remove();
         commandString << "cp" << sourceFile_ << destname;
-        setIsLink( No );
+        setIsLink( LinkState::No );
         break;
 
-        case ForceLink:
+        case Command::ForceLink:
         destname.remove();
         commandString << "ln" << "-s" << sourceFile_ << destname;
-        setIsLink( Yes );
+        setIsLink( LinkState::Yes );
         break;
 
-        case CopyVersion:
+        case Command::CopyVersion:
         if( destname.exists() && destname.diff( sourceFile_ ) )
         { destname = destname.version(); }
         commandString << "cp" << sourceFile_ << destname;
-        setIsLink( No );
+        setIsLink( LinkState::No );
         break;
 
-        case LinkVersion:
+        case Command::LinkVersion:
         if( destname.exists() && destname.diff( sourceFile_ ) )
         { destname = destname.version(); }
         commandString << "ln" << "-s" << sourceFile_ << destname;
-        setIsLink( Yes );
+        setIsLink( LinkState::Yes );
         break;
 
-        case Nothing:
+        case Command::Nothing:
         default:
         break;
 
@@ -266,7 +267,7 @@ Attachment::ErrorCode Attachment::copy( const Attachment::Command& command, cons
     }
 
     setIsValid( true );
-    return Success;
+    return ErrorCode::Success;
 }
 
 //________________________________________

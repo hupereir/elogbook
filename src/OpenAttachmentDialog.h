@@ -51,7 +51,7 @@ class OpenAttachmentDialog: public CustomDialog
     QString command() const;
 
     //* action
-    enum Action
+    enum class Action
     {
         Open,
         SaveAs

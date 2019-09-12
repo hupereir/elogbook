@@ -394,16 +394,16 @@ bool MainWindow::setLogbook( File file )
     Debug::Throw( "MainWindow::setLogbook - lists set.\n" );
 
     // change sorting
-    Qt::SortOrder sort_order( (Qt::SortOrder) logbook_->sortOrder() );
+    Qt::SortOrder sortOrder( (Qt::SortOrder) logbook_->sortOrder() );
     Debug::Throw( "MainWindow::setLogbook - got sort order.\n" );
 
     switch( logbook_->sortMethod() )
     {
-        case Logbook::SortColor: entryList_->sortByColumn( LogEntryModel::Color, sort_order ); break;
-        case Logbook::SortTitle: entryList_->sortByColumn( LogEntryModel::Title, sort_order ); break;
-        case Logbook::SortCreation: entryList_->sortByColumn( LogEntryModel::Creation, sort_order ); break;
-        case Logbook::SortModification: entryList_->sortByColumn( LogEntryModel::Modification , sort_order); break;
-        case Logbook::SortAuthor: entryList_->sortByColumn( LogEntryModel::Author, sort_order ); break;
+        case Logbook::SortMethod::SortColor: entryList_->sortByColumn( LogEntryModel::Color, sortOrder ); break;
+        case Logbook::SortMethod::SortTitle: entryList_->sortByColumn( LogEntryModel::Title, sortOrder ); break;
+        case Logbook::SortMethod::SortCreation: entryList_->sortByColumn( LogEntryModel::Creation, sortOrder ); break;
+        case Logbook::SortMethod::SortModification: entryList_->sortByColumn( LogEntryModel::Modification , sortOrder); break;
+        case Logbook::SortMethod::SortAuthor: entryList_->sortByColumn( LogEntryModel::Author, sortOrder ); break;
         default: break;
     }
 
@@ -1520,16 +1520,16 @@ void MainWindow::_filesModified( FileCheck::DataSet files )
     else {
 
         // create dialog and take action accordingly
-        int state = LogbookModifiedDialog( this, files ).exec();
-        if( state == LogbookModifiedDialog::SaveAgain ) { save(); }
-        else if( state == LogbookModifiedDialog::SaveAs ) { _saveAs(); }
-        else if( state == LogbookModifiedDialog::Reload )
+        auto state = static_cast<LogbookModifiedDialog::ReturnCode>( LogbookModifiedDialog( this, files ).exec() );
+        if( state == LogbookModifiedDialog::ReturnCode::SaveAgain ) { save(); }
+        else if( state == LogbookModifiedDialog::ReturnCode::SaveAs ) { _saveAs(); }
+        else if( state == LogbookModifiedDialog::ReturnCode::Reload )
         {
 
             logbook_->setModifiedRecursive( false );
             _revertToSaved();
 
-        } else if( state == LogbookModifiedDialog::Ignore ) { ignoreWarnings_ = true; }
+        } else if( state == LogbookModifiedDialog::ReturnCode::Ignore ) { ignoreWarnings_ = true; }
 
     }
 
@@ -3542,11 +3542,11 @@ void MainWindow::_storeSortMethod( int column, Qt::SortOrder order  )
     bool changed( false );
     switch( column ) {
 
-        case LogEntryModel::Color: changed = logbook_->setSortMethod( Logbook::SortColor ); break;
-        case LogEntryModel::Title: changed = logbook_->setSortMethod( Logbook::SortTitle ); break;
-        case LogEntryModel::Creation: changed = logbook_->setSortMethod( Logbook::SortCreation ); break;
-        case LogEntryModel::Modification: changed = logbook_->setSortMethod( Logbook::SortModification ); break;
-        case LogEntryModel::Author: changed = logbook_->setSortMethod( Logbook::SortAuthor ); break;
+        case LogEntryModel::Color: changed = logbook_->setSortMethod( Logbook::SortMethod::SortColor ); break;
+        case LogEntryModel::Title: changed = logbook_->setSortMethod( Logbook::SortMethod::SortTitle ); break;
+        case LogEntryModel::Creation: changed = logbook_->setSortMethod( Logbook::SortMethod::SortCreation ); break;
+        case LogEntryModel::Modification: changed = logbook_->setSortMethod( Logbook::SortMethod::SortModification ); break;
+        case LogEntryModel::Author: changed = logbook_->setSortMethod( Logbook::SortMethod::SortAuthor ); break;
         default: return;
 
     }

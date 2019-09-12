@@ -70,7 +70,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     { return isUrl_; }
 
     //* link state
-    enum LinkState
+    enum class LinkState
     {
         Unknown,
         Yes,
@@ -159,7 +159,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     }
 
     //* command enum to tell who original file should be transformed into attached file
-    enum Command
+    enum class Command
     {
         Copy,
         Link,
@@ -171,7 +171,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     };
 
     //* error codes output enum for ProcessCopy
-    enum ErrorCode
+    enum class ErrorCode
     {
         Success,
         SourceNotFound,
@@ -248,7 +248,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     bool isUrl_ = false;
 
     //* is link
-    LinkState isLink_ = Unknown;
+    LinkState isLink_ = LinkState::Unknown;
 
     //* true for URL or if file exist
     bool isValid_ = false;

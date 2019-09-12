@@ -58,7 +58,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         public:
 
         //* flag
-        enum Flag
+        enum class Flag
         {
             None,
             FileRemoved,
@@ -66,7 +66,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         };
 
         //* constructor
-        explicit Data( QString file = QString(), Flag flag = None, TimeStamp stamp = TimeStamp() ):
+        explicit Data( QString file = QString(), Flag flag = Flag::None, TimeStamp stamp = TimeStamp() ):
             file_( file ),
             flag_( flag ),
             timeStamp_( stamp )
@@ -102,7 +102,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         QString file_;
 
         //* flag
-        Flag flag_ = None;
+        Flag flag_ = Flag::None;
 
         //* timestamp
         TimeStamp timeStamp_;

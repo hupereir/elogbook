@@ -22,6 +22,7 @@
 
 #include "BaseDialog.h"
 #include "Counter.h"
+#include "CppUtil.h"
 #include "FileCheck.h"
 
 class TreeView;
@@ -36,7 +37,7 @@ class LogbookModifiedDialog: public BaseDialog, private Base::Counter<LogbookMod
     public:
 
     //* return codes
-    enum ReturnCode
+    enum class ReturnCode
     {
         SaveAgain,
         SaveAs,
@@ -59,19 +60,19 @@ class LogbookModifiedDialog: public BaseDialog, private Base::Counter<LogbookMod
 
     //* re-saved removed file
     void _reLoad()
-    { done( Reload ); }
+    { done( Base::toIntegralType( ReturnCode::Reload ) ); }
 
     //* re-saved removed file
     void _reSave()
-    { done( SaveAgain ); }
+    { done( Base::toIntegralType( ReturnCode::SaveAgain ) ); }
 
     //* save file with new name
     void _saveAs()
-    { done( SaveAs ); }
+    { done( Base::toIntegralType( ReturnCode::SaveAs ) ); }
 
     //* save file with new name
     void _ignore()
-    { done( Ignore ); }
+    { done( Base::toIntegralType( ReturnCode::Ignore ) ); }
 
     private:
 
