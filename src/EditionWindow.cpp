@@ -1032,11 +1032,7 @@ Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orie
     { sizes.append( dimension/splitter.count() ); }
     splitter.setSizes( sizes );
 
-    // synchronize both editors, if cloned
-    /*
-    if there exists no clone of active display,
-    backup text and register a new Sync object
-    */
+    // synchronize both editors
     Base::KeySet<Private::LocalTextEditor> editors( &activeEditorLocal );
 
     // clone new display
