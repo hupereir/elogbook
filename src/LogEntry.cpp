@@ -17,11 +17,12 @@
 *
 *******************************************************************************/
 
+#include "LogEntry.h"
+
 #include "Debug.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
 #include "Logbook.h"
-#include "LogEntry.h"
 #include "TextFormat.h"
 #include "XmlColor.h"
 #include "XmlDef.h"
@@ -40,7 +41,9 @@ LogEntry::LogEntry():
 
 //_________________________________________________
 LogEntry::LogEntry( const QDomElement& element ):
-    LogEntry()
+    Counter( "LogEntry" ),
+    creation_( TimeStamp::now() ),
+    modification_( TimeStamp::now() )
 {
     // parse attributes
     const auto attributes( element.attributes() );
