@@ -71,7 +71,6 @@
 #include <QStylePainter>
 #include <QStyleOptionToolButton>
 #include <QTextFragment>
-#include <QTextLayout>
 #include <QUrl>
 
 //_______________________________________________
@@ -1577,16 +1576,16 @@ void EditionWindow::_editLink()
     // loop over text fragments and find the one that matches cursor
     for( auto&& it = block.begin(); !(it.atEnd()); ++it)
     {
-        QTextFragment fragment = it.fragment();
+        auto fragment = it.fragment();
         if( !fragment.isValid() ) continue;
         if( fragment.position() > cursor.position() || fragment.position() + fragment.length() <= cursor.position() )
         { continue; }
 
-        QString anchor( fragment.charFormat().anchorHref() );
+        auto anchor( fragment.charFormat().anchorHref() );
         if( anchor.isEmpty() ) continue;
 
         // select the corresponding block
-        QTextCursor cursor( activeEditor_->textCursor() );
+        auto cursor( activeEditor_->textCursor() );
         cursor.setPosition( fragment.position() );
         cursor.setPosition( fragment.position() + fragment.length(), QTextCursor::KeepAnchor );
         activeEditor_->setTextCursor( cursor );
