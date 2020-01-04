@@ -135,9 +135,6 @@ bool Logbook::read()
         return false;
     }
 
-    // update StateFrame
-    emit messageAvailable( tr( "Reading '%1'" ).arg( file_.localName() ) );
-
     // check input file
     if( !file_.exists() ) {
         Debug::Throw(0) << "Logbook::read - ERROR: cannot access file \"" << file_ << "\".\n";
@@ -300,8 +297,6 @@ bool Logbook::write( File file )
         { file.backup(); }
 
         // update stateFrame
-        emit messageAvailable( tr( "Writing '%1'" ).arg( file.localName() ) );
-
         if( !QFile( file ).open( QIODevice::WriteOnly ) )
         {
             Debug::Throw(0) << "Logbook::write - unable to write to file " << file << endl;
