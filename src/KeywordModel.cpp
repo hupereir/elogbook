@@ -18,8 +18,6 @@
 *******************************************************************************/
 
 #include "KeywordModel.h"
-
-#include "CppUtil.h"
 #include "LogEntry.h"
 
 //______________________________________________________________
@@ -63,10 +61,7 @@ QVariant KeywordModel::headerData(int section, Qt::Orientation orientation, int 
 
 //______________________________________________________________________
 QStringList KeywordModel::mimeTypes() const
-{
-    static const auto types = Base::makeT<QStringList>( { Keyword::MimeType, "text/plain" });
-    return types;
-}
+{ return { Keyword::MimeType, "text/plain" }; }
 
 //______________________________________________________________________
 QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const

@@ -19,8 +19,6 @@
 
 
 #include "LogEntryPrintOptionWidget.h"
-
-#include "CppUtil.h"
 #include "XmlOptions.h"
 
 #include <QLayout>
@@ -37,7 +35,7 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_ = Base::makeT<CheckBoxMap>(
+    checkBoxes_ =
     {
         { LogEntry::KeywordMask, new QCheckBox( tr( "Keyword" ), this ) },
         { LogEntry::TitleMask, new QCheckBox( tr( "Title" ), this ) },
@@ -46,7 +44,7 @@ LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
         { LogEntry::ModificationMask, new QCheckBox( tr( "Last modificaion time" ), this ) },
         { LogEntry::TextMask, new QCheckBox( tr( "Contents" ), this ) },
         { LogEntry::AttachmentsMask, new QCheckBox( tr( "Attachments" ), this ) }
-    } );
+    };
 
     // insert in layout
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

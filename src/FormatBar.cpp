@@ -88,14 +88,14 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
 
     // bold
     QAction* action;
-    actions_ = Base::makeT<ActionMap>(
+    actions_ =
     {
         { ActionId::Bold, addAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this, SLOT(_bold(bool)) ) },
         { ActionId::Italic, addAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this, SLOT(_italic(bool)) ) },
         { ActionId::Underline, addAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this, SLOT(_underline(bool)) ) },
         { ActionId::Strike, addAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this, SLOT(_strike(bool)) ) },
         { ActionId::Color, action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this ) }
-    });
+    };
 
     for( auto&& iter = actions_.begin(); iter != actions_.end(); ++iter )
     { iter.value()->setCheckable( true ); }
@@ -244,7 +244,7 @@ void FormatBar::_updateConfiguration()
 
         // add default colors
         using ColorList = QList<Base::Color>;
-        static const auto defaultColors = Base::makeT<ColorList>(
+        static const ColorList defaultColors(
         {
             Base::Color("#aa0000"),
             Base::Color("green"),

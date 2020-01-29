@@ -17,7 +17,6 @@
 *
 *******************************************************************************/
 
-
 #include "LogEntryPrintSelectionWidget.h"
 #include "CppUtil.h"
 #include "XmlOptions.h"
@@ -39,11 +38,12 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
     QButtonGroup* group = new QButtonGroup( this );
 
     // insert checkboxes
-    radioButtons_ = Base::makeT<RadioButtonMap>( {
+    radioButtons_ =
+    {
         { Mode::AllEntries, new QRadioButton( tr( "All entries" ), this ) },
         { Mode::VisibleEntries, new QRadioButton( tr( "Visible entries" ), this ) },
         { Mode::SelectedEntries, new QRadioButton( tr( "Selected entries" ), this ) }
-    } );
+    };
 
     // insert in layout
     for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )

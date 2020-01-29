@@ -20,7 +20,6 @@
 
 #include "LogbookPrintOptionWidget.h"
 
-#include "CppUtil.h"
 #include "Logbook.h"
 #include "XmlOptions.h"
 
@@ -38,7 +37,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     setLayout( layout );
 
     // insert checkboxes
-    checkBoxes_ = Base::makeT<CheckBoxMap>( {
+    checkBoxes_ = {
         { Logbook::TitleMask, new QCheckBox( tr( "Title" ), this ) },
         { Logbook::CommentsMask, new QCheckBox( tr( "Comments" ), this ) },
         { Logbook::AuthorMasks, new QCheckBox( tr( "Author" ), this ) },
@@ -49,7 +48,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
         { Logbook::BackupMask, new QCheckBox( tr( "Backup time" ), this ) },
         { Logbook::TableOfContentMask, new QCheckBox( tr( "Table of contents" ), this ) },
         { Logbook::ContentMask, new QCheckBox( tr( "Selected logbook entries" ), this ) }
-    } );
+    };
 
     // insert in layout
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )

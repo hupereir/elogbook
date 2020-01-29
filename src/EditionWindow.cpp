@@ -30,7 +30,6 @@
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
-#include "CppUtil.h"
 #include "CustomToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
@@ -227,8 +226,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( undoAction_ );
     toolbar->addAction( redoAction_ );
 
-    using ActionList = QList<QAction*>;
-    readOnlyActions_.append( Base::makeT<ActionList>({ undoAction_, redoAction_ }) );
+    readOnlyActions_.append( { undoAction_, redoAction_ } );
 
     // undo/redo connections
     connect( keywordEditor_, SIGNAL(textChanged(QString)), SLOT(_updateUndoRedoActions()) );
@@ -1343,8 +1341,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
     QPrintDialog dialog( &printer, this );
     dialog.setWindowTitle( Util::windowTitle( tr( "Print Logbook Entry" ) ) );
 
-    using WidgetList = QList<QWidget*>;
-    dialog.setOptionTabs( Base::makeT<WidgetList>({ optionWidget, logEntryOptionWidget }) );
+    dialog.setOptionTabs( { optionWidget, logEntryOptionWidget } );
     if( !dialog.exec() ) return;
 
     // add output file to scratch files, if any
@@ -1399,8 +1396,7 @@ void EditionWindow::_toHtml()
     // create dialog
     HtmlDialog dialog( this );
 
-    using WidgetList = QList<QWidget*>;
-    dialog.setOptionWidgets( Base::makeT<WidgetList>({ optionWidget }) );
+    dialog.setOptionWidgets( { optionWidget } );
     dialog.setWindowTitle( tr( "Export to HTML" ) );
 
     // generate file name
@@ -1978,7 +1974,7 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
     if( !url.isValid() || url.isRelative() ) return TextEditor::insertFromMimeData( source );
 
     // check scheme
-    static const auto schemes = Base::makeT<QStringList>( { "file", "ftp", "http", "https", "alien" } );
+    static const QStringList schemes( { "file", "ftp", "http", "https", "alien" } );
     if( !schemes.contains( url.scheme() ) ) return TextEditor::insertFromMimeData( source );
 
     // copy mime type

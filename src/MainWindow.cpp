@@ -27,7 +27,6 @@
 #include "ColorMenu.h"
 #include "Command.h"
 #include "ContextMenu.h"
-#include "CppUtil.h"
 #include "CustomToolBar.h"
 #include "Debug.h"
 #include "DeleteKeywordDialog.h"
@@ -1886,9 +1885,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
     dialog.setWindowTitle( Util::windowTitle( tr( "Print Logbook" ) ) );
-
-    using WidgetList = QList<QWidget*>;
-    dialog.setOptionTabs( Base::makeT<WidgetList>({ optionWidget, logbookOptionWidget, logEntryOptionWidget }));
+    dialog.setOptionTabs( { optionWidget, logbookOptionWidget, logEntryOptionWidget });
 
     if( dialog.exec() == QDialog::Rejected ) return;
 
@@ -2002,9 +1999,7 @@ void MainWindow::_toHtml()
 
     // create dialog
     HtmlDialog dialog( this );
-
-    using WidgetList = QList<QWidget*>;
-    dialog.setOptionWidgets( Base::makeT<WidgetList>({ logEntrySelectionWidget, logbookOptionWidget, logEntryOptionWidget }) );
+    dialog.setOptionWidgets( { logEntrySelectionWidget, logbookOptionWidget, logEntryOptionWidget } );
 
     // generate file name
     QString buffer = QString( "eLogbook_%1_%2_%3.html" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() );
@@ -2174,7 +2169,7 @@ void MainWindow::_synchronize()
 
 //_______________________________________________
 void MainWindow::_removeBackup( Backup backup )
-{ _removeBackups( Base::makeT<Backup::List>({ backup }) ); }
+{ _removeBackups( { backup } ); }
 
 //_______________________________________________
 void MainWindow::_removeBackups( Backup::List backups )
