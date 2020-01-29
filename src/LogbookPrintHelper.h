@@ -27,10 +27,10 @@
 #include "LogEntryModel.h"
 #include "LogEntry.h"
 #include "LogEntryPrintSelectionWidget.h"
-#include "WeakPointer.h"
 
 #include <QObject>
 #include <QPainter>
+#include <QPointer>
 #include <QPrinter>
 #include <QProgressDialog>
 
@@ -127,7 +127,7 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     Keyword currentKeyword_;
 
     //* progress dialog
-    Base::WeakPointer<QProgressDialog> progressDialog_;
+    QPointer<QProgressDialog> progressDialog_;
 
     //* progress
     int progress_ = 0;
