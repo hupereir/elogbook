@@ -70,8 +70,6 @@ class LogbookHtmlHelper: public QObject, private Base::Counter<LogbookHtmlHelper
 
     //@}
 
-    public Q_SLOTS:
-
     //* print
     void print( QIODevice* );
 

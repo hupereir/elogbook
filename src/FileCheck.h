@@ -206,11 +206,6 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
     //* timer event, to handle multiple file modification at once
     void timerEvent( QTimerEvent* ) override;
 
-    private Q_SLOTS:
-
-    //* one monitored file has been modified
-    void _fileChanged( const QString& );
-
     protected:
 
     //* add file
@@ -227,6 +222,9 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
     QFileSystemWatcher fileSystemWatcher_;
 
     private:
+
+    //* one monitored file has been modified
+    void _fileChanged( const QString& );
 
     //* file set
     using FileSet = QSet<QString>;

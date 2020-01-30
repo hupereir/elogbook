@@ -19,6 +19,7 @@
 
 #include "SearchWidget.h"
 
+#include "Application.h"
 #include "Color.h"
 #include "CustomComboBox.h"
 #include "Debug.h"
@@ -71,8 +72,8 @@ SearchWidget::SearchWidget( QWidget* parent ):
 
     hLayout->addWidget( editor_, 1 );
 
-    connect( editor_, SIGNAL(activated(QString)), SLOT(_selectionRequest()) );
-    connect( editor_, &QComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
+    connect( editor_, QOverload<const QString&>::of( &CustomComboBox::activated ), [this](QString){ _selectionRequest(); } );
+    connect( editor_, &CustomComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
     connect( editor_->lineEdit(), &QLineEdit::textChanged, this, &SearchWidget::_restorePalette );
 
     // find selection button
@@ -126,7 +127,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     { connect( iter.value(), &QAbstractButton::toggled, this, &SearchWidget::_saveMask ); }
 
     // configuration
-    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application<Application>(), &Application::configurationChanged, this, &SearchWidget::_updateConfiguration );
     _updateConfiguration();
 
 }

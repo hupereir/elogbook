@@ -60,7 +60,7 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
     //* emitted when selection mode is changed
     void modeChanged( LogEntryPrintSelectionWidget::Mode );
 
-    private Q_SLOTS:
+    private:
 
     //* update mode
     void _updateMode()
@@ -68,8 +68,6 @@ class LogEntryPrintSelectionWidget: public QWidget, public OptionWidget
         emit modeChanged( mode() );
         if( _connected() ) emit modified();
     }
-
-    private:
 
     //* checkboxes
     using RadioButtonMap = QHash<Mode, QRadioButton* >;

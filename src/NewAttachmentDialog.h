@@ -81,12 +81,10 @@ class NewAttachmentDialog: public CustomDialog
 
     //@}
 
-    private Q_SLOTS:
+    private:
 
     //* called when url checkbox toggled
     void _urlChanged( bool );
-
-    private:
 
     //* filename browsed line editor
     BrowsedLineEditor* fileEditor_ = nullptr;

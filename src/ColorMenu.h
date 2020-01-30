@@ -76,7 +76,7 @@ class ColorMenu: public QMenu, private Base::Counter<ColorMenu>
     //* paint event (overloaded)
     void paintEvent( QPaintEvent* event ) override;
 
-    private Q_SLOTS:
+    private:
 
     //* display colors when about to show
     void _display();
@@ -90,8 +90,6 @@ class ColorMenu: public QMenu, private Base::Counter<ColorMenu>
 
     //* get color associated to action, emit ColorSelected
     void _selected( QAction* );
-
-    private:
 
     //* list of loaded colors
     Base::Color::Set colors_;

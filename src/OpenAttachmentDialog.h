@@ -62,12 +62,10 @@ class OpenAttachmentDialog: public CustomDialog
 
     //@}
 
-    private Q_SLOTS:
+    private:
 
     //* save commands added to combobox
     void _saveCommands();
-
-    private:
 
     //* command browsed line editor
     OpenWithComboBox *comboBox_ = nullptr;

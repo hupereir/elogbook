@@ -166,6 +166,34 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* update window title
     void updateWindowTitle();
 
+    //* open existing logbook
+    void open() { open(FileRecord()); }
+    void open( FileRecord );
+
+    //* save current logbook
+    /** pending entry modifications are ignored */
+    void saveUnchecked();
+
+    //* save current logbook
+    /**
+    if there are pending enry modifications, they are first saved to the logbook,
+    then the logbook is saved.
+    if argument is false, all modified entries will be saved without asking
+    */
+    void save();
+
+    //* select entry
+    void selectEntry( LogEntry* );
+
+    //* select entry
+    void selectEntry( const Keyword&, LogEntry* );
+
+    //* select entries using selection criterions
+    void selectEntries( QString, SearchWidget::SearchModes );
+
+    //* show all entries
+    void showAllEntries();
+
     //@}
 
     //*@name actions
@@ -308,35 +336,6 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* emitted at the end of SetLogbook
     void ready();
 
-    public Q_SLOTS:
-
-    //* open existing logbook
-    void open( FileRecord file = FileRecord() );
-
-    //* save current logbook
-    /** pending entry modifications are ignored */
-    void saveUnchecked();
-
-    //* save current logbook
-    /**
-    if there are pending enry modifications, they are first saved to the logbook,
-    then the logbook is saved.
-    if argument is false, all modified entries will be saved without asking
-    */
-    void save();
-
-    //* select entry
-    void selectEntry( LogEntry* );
-
-    //* select entry
-    void selectEntry( const Keyword&, LogEntry* );
-
-    //* select entries using selection criterions
-    void selectEntries( QString, SearchWidget::SearchModes );
-
-    //* show all entries
-    void showAllEntries();
-
     protected:
 
     //* close event
@@ -348,7 +347,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* context menu event [overloaded]
     void contextMenuEvent( QContextMenuEvent* ) override;
 
-    private Q_SLOTS:
+    private:
 
     //* files modified
     void _filesModified( FileCheck::DataSet );
@@ -367,7 +366,8 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     save current logbook with a given filename
     returns true if logbook was saved
     */
-    bool _saveAs( File defaultFile = File(), bool registerLogbook = true );
+    bool _saveAs() { return _saveAs( File(), true ); }
+    bool _saveAs( File defaultFile, bool registerLogbook = true );
 
     //* save current logbook with a given filename
     void _saveBackup();
@@ -473,7 +473,10 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     or by deleting a keyword in the list, and moving entries to the parent.
     It is also called by the renameKeyword slot above.
     */
-    void _renameKeyword( Keyword oldKeyword, Keyword newKeyword, bool updateSelection = true );
+    void _renameKeyword( Keyword oldKeyword, Keyword newKeyword )
+    { _renameKeyword( oldKeyword, newKeyword, true ); }
+
+    void _renameKeyword( Keyword, Keyword, bool updateSelection );
 
     //* rename keyword for selected entries using dialog
     /** this is triggered by the rename entry keyword action in the logEntry list. */
@@ -521,8 +524,6 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
 
     //* configuration
     void _updateConfiguration();
-
-    private:
 
     //* clear list and reinitialize from logbook entries
     void _resetKeywordList();

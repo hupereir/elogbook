@@ -37,8 +37,6 @@ class ProgressBar:public BaseProgressBar, private Base::Counter<ProgressBar>
         Counter( "ProgressBar" )
     {}
 
-    public Q_SLOTS:
-
     //* set maximum
     void setMaximum( int value ) override
     {

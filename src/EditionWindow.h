@@ -167,6 +167,23 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     but the logbook itself is not saved */
     void writeEntryToLogbook( bool updateSelection );
 
+
+    //* update read-only state
+    void updateReadOnlyState();
+
+    //* change window title
+    void updateWindowTitle()
+    { setWindowTitle( windowTitle() ); }
+
+    //* find text from dialog
+    void findFromDialog();
+
+    //* replace text from dialog
+    void replaceFromDialog();
+
+    //* select line from dialog
+    void selectLineFromDialog();
+
     //@}
 
     //* used to count modified EditionWindows
@@ -280,29 +297,6 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
 
     //@}
 
-    public Q_SLOTS:
-
-    //* update read-only state
-    void updateReadOnlyState();
-
-    //* change window title
-    void updateWindowTitle()
-    { setWindowTitle( windowTitle() ); }
-
-    //*@name reimplemented from TextEditor
-    //@{
-
-    //* find text from dialog
-    void findFromDialog();
-
-    //* replace text from dialog
-    void replaceFromDialog();
-
-    //* select line from dialog
-    void selectLineFromDialog();
-
-    //@}
-
     protected:
 
     //*@name event filters
@@ -316,7 +310,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
 
     //@}
 
-    private Q_SLOTS:
+    private:
 
     //* Save Current entry
     void _save( bool updateSelection = true );
@@ -456,8 +450,6 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
 
     //* configuration
     void _updateConfiguration();
-
-    private:
 
     //*@name display management
     //@{

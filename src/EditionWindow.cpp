@@ -174,10 +174,10 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     splitter->setStretchFactor( 1, 0 );
 
     connect( splitter, &QSplitter::splitterMoved, this, &EditionWindow::_splitterMoved );
-    connect( keywordEditor_, &LineEditor::modificationChanged, this, &EditionWindow::_textModified );
-    connect( keywordEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
-    connect( titleEditor_, &LineEditor::modificationChanged, this, &EditionWindow::_textModified );
-    connect( titleEditor_, SIGNAL(cursorPositionChanged(int,int)), SLOT(_displayCursorPosition(int,int)) );
+    connect( keywordEditor_, &Editor::modificationChanged, this, &EditionWindow::_textModified );
+    connect( keywordEditor_, &Editor::cursorPositionChanged, this, QOverload<>::of( &EditionWindow::_displayCursorPosition ) );
+    connect( titleEditor_, &Editor::modificationChanged, this, &EditionWindow::_textModified );
+    connect( titleEditor_, &Editor::cursorPositionChanged, this, QOverload<>::of( &EditionWindow::_displayCursorPosition ) );
     connect( activeEditor_->document(), &QTextDocument::modificationChanged, this, &EditionWindow::_textModified );
 
     // create attachment list
@@ -229,13 +229,13 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnlyActions_.append( { undoAction_, redoAction_ } );
 
     // undo/redo connections
-    connect( keywordEditor_, SIGNAL(textChanged(QString)), SLOT(_updateUndoRedoActions()) );
-    connect( keywordEditor_, &QLineEdit::textChanged, this, &EditionWindow::_updateSaveAction );
+    connect( keywordEditor_, &Editor::textChanged, [this](QString){ _updateUndoRedoActions(); } );
+    connect( keywordEditor_, &Editor::textChanged, this, &EditionWindow::_updateSaveAction );
 
-    connect( titleEditor_, SIGNAL(textChanged(QString)), SLOT(_updateUndoRedoActions()) );
-    connect( titleEditor_, &QLineEdit::textChanged, this, &EditionWindow::_updateSaveAction );
+    connect( titleEditor_, &Editor::textChanged, [this](QString){ _updateUndoRedoActions(); } );
+    connect( titleEditor_, &Editor::textChanged, this, &EditionWindow::_updateSaveAction );
 
-    connect( qApp, SIGNAL(focusChanged(QWidget*,QWidget*)), SLOT(_updateUndoRedoActions(QWidget*,QWidget*)) );
+    connect( qApp, &QApplication::focusChanged, [this](QWidget*,QWidget*){ _updateUndoRedoActions(); } );
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Tools" ), this, "EXTRA_TOOLBAR" );
@@ -271,7 +271,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     _modifiersChanged( activeEditor_->modifiers() );
 
     // configuration
-    connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( application, &Application::configurationChanged, this, &EditionWindow::_updateConfiguration );
     _updateConfiguration();
 
 }
@@ -884,7 +884,7 @@ void EditionWindow::_installActions()
     addAction( printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this ) );
     printAction_->setToolTip( tr( "Print current logbook entry" ) );
     printAction_->setShortcut( QKeySequence::Print );
-    connect( printAction_, SIGNAL(triggered()), SLOT(_print()) );
+    connect( printAction_, &QAction::triggered, this, QOverload<>::of( &EditionWindow::_print ) );
 
     // print preview
     addAction( printPreviewAction_ = new QAction( IconEngine::get( IconNames::PrintPreview ), tr( "Print Preview..." ), this ) );
@@ -946,9 +946,9 @@ void EditionWindow::_createFindWidget()
 
         findWidget_ = new BaseFindWidget( container_ );
         container_->layout()->addWidget( findWidget_ );
-        connect( findWidget_, SIGNAL(find(TextSelection)), SLOT(_find(TextSelection)) );
-        connect( this, SIGNAL(matchFound()), findWidget_, SLOT(matchFound()) );
-        connect( this, SIGNAL(noMatchFound()), findWidget_, SLOT(noMatchFound()) );
+        connect( findWidget_, &BaseFindWidget::find, this, &EditionWindow::_find );
+        connect( this, &EditionWindow::matchFound, findWidget_, &BaseFindWidget::matchFound );
+        connect( this, &EditionWindow::noMatchFound, findWidget_, &BaseFindWidget::noMatchFound );
         connect( &findWidget_->closeButton(), &QAbstractButton::clicked, this, &EditionWindow::_restoreFocus );
         findWidget_->hide();
 
@@ -967,7 +967,7 @@ void EditionWindow::_createReplaceWidget()
 
         replaceWidget_ = new BaseReplaceWidget( container_ );
         container_->layout()->addWidget( replaceWidget_ );
-        connect( replaceWidget_, SIGNAL(find(TextSelection)), SLOT(_find(TextSelection)) );
+        connect( replaceWidget_, &BaseReplaceWidget::find, this, &EditionWindow::_find );
         connect( replaceWidget_, &BaseReplaceWidget::replace, this, &EditionWindow::_replace );
         connect( replaceWidget_, &BaseReplaceWidget::replaceInWindow, this, &EditionWindow::_replaceInWindow );
         connect( replaceWidget_, &BaseReplaceWidget::replaceInSelection, this, &EditionWindow::_replaceInSelection );
@@ -975,8 +975,8 @@ void EditionWindow::_createReplaceWidget()
         connect( &replaceWidget_->closeButton(), &QAbstractButton::clicked, this, &EditionWindow::_restoreFocus );
         replaceWidget_->hide();
 
-        connect( this, SIGNAL(matchFound()), replaceWidget_, SLOT(matchFound()) );
-        connect( this, SIGNAL(noMatchFound()), replaceWidget_, SLOT(noMatchFound()) );
+        connect( this, &EditionWindow::matchFound, replaceWidget_, &BaseReplaceWidget::matchFound );
+        connect( this, &EditionWindow::noMatchFound, replaceWidget_, &BaseReplaceWidget::noMatchFound );
 
     }
 
@@ -1126,12 +1126,12 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( &editor->insertLinkAction(), &QAction::triggered, this, &EditionWindow::_insertLink );
     connect( &editor->editLinkAction(), &QAction::triggered, this, &EditionWindow::_editLink );
     connect( &editor->removeLinkAction(), &QAction::triggered, this, &EditionWindow::_removeLink );
-    connect( &editor->openLinkAction(), SIGNAL(triggered()), SLOT(_openLink()) );
-    connect( editor, SIGNAL(linkActivated(QString)), SLOT(_openLink(QString)) );
-    connect( editor, SIGNAL(hasFocus(TextEditor*)), SLOT(_displayFocusChanged(TextEditor*)) );
-    connect( editor, SIGNAL(cursorPositionChanged()), SLOT(_displayCursorPosition()) );
+    connect( &editor->openLinkAction(), &QAction::triggered, this, QOverload<>::of( &EditionWindow::_openLink) );
+    connect( editor, &Private::LocalTextEditor::linkActivated, this, QOverload<QString>::of( &EditionWindow::_openLink ) );
+    connect( editor, &Private::LocalTextEditor::hasFocus, this, &EditionWindow::_displayFocusChanged );
+    connect( editor, &Private::LocalTextEditor::cursorPositionChanged, this, QOverload<>::of( &EditionWindow::_displayCursorPosition ) );
     connect( editor, &TextEditor::modifiersChanged, this, &EditionWindow::_modifiersChanged );
-    connect( editor, SIGNAL(undoAvailable(bool)), SLOT(_updateUndoRedoActions()) );
+    connect( editor, &Private::LocalTextEditor::undoAvailable, [this](bool){ _updateUndoRedoActions(); } );
     connect( editor, &QTextEdit::selectionChanged, this, &EditionWindow::_updateInsertLinkActions );
     connect( editor->document(), &QTextDocument::modificationChanged, this, &EditionWindow::_updateSaveAction );
 
@@ -1944,8 +1944,7 @@ Private::LocalTextEditor::LocalTextEditor( QWidget* parent ):
     _installActions();
 
     // configuration
-    auto application( Base::Singleton::get().application<Application>() );
-    connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application<Application>(), &Application::configurationChanged, this, &LocalTextEditor::_updateConfiguration );
     _updateConfiguration();
 
 }

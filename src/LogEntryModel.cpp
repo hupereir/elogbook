@@ -19,6 +19,7 @@
 
 #include "LogEntryModel.h"
 
+#include "Application.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
 #include "CppUtil.h"
@@ -30,6 +31,7 @@
 #include "TimeStamp.h"
 #include "QtUtil.h"
 #include "XmlOptions.h"
+
 
 #include <QIcon>
 #include <QMimeData>
@@ -50,7 +52,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 {
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
 
-    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application<Application>(), &Application::configurationChanged, this, &LogEntryModel::_updateConfiguration );
     connect( this, &QAbstractItemModel::layoutChanged, this, &LogEntryModel::_disableEdition );
     _updateConfiguration();
 

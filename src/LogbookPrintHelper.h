@@ -80,10 +80,6 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     void setCurrentKeyword( Keyword value )
     { currentKeyword_ = value; }
 
-    //@}
-
-    public Q_SLOTS:
-
     //* mask
     void setMask( Logbook::Mask value )
     { mask_ = value; }
@@ -94,6 +90,8 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
 
     //* print
     void print( QPrinter* );
+
+    //@}
 
     protected:
 

@@ -117,7 +117,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     //* sort
     void _sort( int, Qt::SortOrder ) override;
 
-    private Q_SLOTS:
+    private:
 
     //* update configuration
     void _updateConfiguration();
@@ -125,8 +125,6 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     //* used to disable edition when model is changed while editing
     void _disableEdition()
     { setEditionEnabled( false ); }
-
-    private:
 
     //* color icon cache
     using IconCache = QMap<Base::Color, QIcon>;

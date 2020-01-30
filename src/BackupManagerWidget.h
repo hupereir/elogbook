@@ -47,6 +47,9 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     QVBoxLayout& buttonLayout()
     { return *buttonLayout_; }
 
+    //* update
+    void updateBackups();
+
     Q_SIGNALS:
 
     //* emitted when backups are changed (from clean action)
@@ -67,12 +70,7 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     //* emitted when backup is requested
     void backupRequested();
 
-    public Q_SLOTS:
-
-    //* update
-    void updateBackups();
-
-    private Q_SLOTS:
+    private:
 
     //* update actions
     void _updateActions();
@@ -88,8 +86,6 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
 
     //* merge
     void _merge();
-
-    private:
 
     //* get associated logbook
     Logbook* _logbook() const

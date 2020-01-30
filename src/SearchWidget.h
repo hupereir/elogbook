@@ -68,6 +68,12 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     //* change text
     void setText( const QString& );
 
+    //* take action when at least one match is found
+    void matchFound();
+
+    //* take action when no match is found
+    void noMatchFound();
+
     //@}
 
     Q_SIGNALS:
@@ -78,20 +84,12 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     //* emitted when the Show All button is pressed
     void showAllEntries();
 
-    public Q_SLOTS:
-
-    //* take action when at least one match is found
-    void matchFound();
-
-    //* take action when no match is found
-    void noMatchFound();
-
     protected:
 
     //* change event
     void changeEvent( QEvent* ) override;
 
-    private Q_SLOTS:
+    private:
 
     //* find button
     void _updateFindButton( const QString& );
@@ -115,8 +113,6 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     //* disable all entries button
     void _disableAllEntriesButton()
     { allEntriesButton_->setEnabled( false ); }
-
-    private:
 
     //* create not found palette
     void _updateNotFoundPalette();

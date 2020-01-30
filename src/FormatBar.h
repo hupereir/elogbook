@@ -80,14 +80,12 @@ class FormatBar: public CustomToolBar
     //* set target editor
     void setTarget( TextEditor& );
 
-    //@}
-
-    public Q_SLOTS:
-
     //* update button state
     void updateState( const QTextCharFormat& );
 
-    private Q_SLOTS:
+    //@}
+
+    private:
 
     //* update configuration
     void _updateConfiguration();
@@ -112,8 +110,6 @@ class FormatBar: public CustomToolBar
 
     //* last selected color
     void _lastColor();
-
-    private:
 
     //* target text editor
     TextEditor* editor_ = nullptr;

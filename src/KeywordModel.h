@@ -94,7 +94,7 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     //* sort
     void _sort( int, Qt::SortOrder ) override;
 
-    private Q_SLOTS:
+    private:
 
     //* keyword changed
     void _requestEntryKeywordChanged()
@@ -103,8 +103,6 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
     //* keyword changed
     void _requestKeywordChanged()
     { emit keywordChangeRequest( keywordChangedData_.oldKeyword(), keywordChangedData_.newKeyword() ); }
-
-    private:
 
     //* list column names
     const std::array<QString, nColumns> columnTitles_ = {{ tr( "Keywords" ) }};

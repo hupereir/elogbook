@@ -56,7 +56,7 @@ class LogbookModifiedDialog: public BaseDialog, private Base::Counter<LogbookMod
 
     //@}
 
-    private Q_SLOTS:
+    private:
 
     //* re-saved removed file
     void _reLoad()
@@ -73,8 +73,6 @@ class LogbookModifiedDialog: public BaseDialog, private Base::Counter<LogbookMod
     //* save file with new name
     void _ignore()
     { done( Base::toIntegralType( ReturnCode::Ignore ) ); }
-
-    private:
 
     //* model
     FileCheck::Model model_;

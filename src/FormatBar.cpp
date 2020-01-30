@@ -19,6 +19,7 @@
 
 #include "FormatBar.h"
 
+#include "Application.h"
 #include "BaseIconNames.h"
 #include "ColorMenu.h"
 #include "CppUtil.h"
@@ -54,8 +55,6 @@ class FormatColorButton: public CustomToolButton
         CustomToolButton( parent )
     {}
 
-    public Q_SLOTS:
-
     //* set color
     void setColor( QColor color )
     {
@@ -90,10 +89,10 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
     QAction* action;
     actions_ =
     {
-        { ActionId::Bold, addAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this, SLOT(_bold(bool)) ) },
-        { ActionId::Italic, addAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this, SLOT(_italic(bool)) ) },
-        { ActionId::Underline, addAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this, SLOT(_underline(bool)) ) },
-        { ActionId::Strike, addAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this, SLOT(_strike(bool)) ) },
+        { ActionId::Bold, addAction( IconEngine::get( IconNames::Bold ), tr( "Bold" ), this, &FormatBar::_bold ) },
+        { ActionId::Italic, addAction( IconEngine::get( IconNames::Italic ), tr( "Italic" ), this, &FormatBar::_italic ) },
+        { ActionId::Underline, addAction( IconEngine::get( IconNames::Underline ), tr( "Underline" ), this, &FormatBar::_underline ) },
+        { ActionId::Strike, addAction( IconEngine::get( IconNames::Strike ), tr( "Strike" ), this, &FormatBar::_strike ) },
         { ActionId::Color, action = new QAction( IconEngine::get( IconNames::Color ), tr( "Color" ), this ) }
     };
 
@@ -120,8 +119,8 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
     connect( colorMenu_, &ColorMenu::selected, button, &FormatColorButton::setColor );
 
     // configuration
-    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
-    connect( Base::Singleton::get().application(), SIGNAL(saveConfiguration()), SLOT(_saveConfiguration()) );
+    connect( Base::Singleton::get().application<Application>(), &Application::configurationChanged, this, &FormatBar::_updateConfiguration );
+    connect( Base::Singleton::get().application<Application>(), &Application::saveConfiguration, this, &FormatBar::_saveConfiguration );
     _updateConfiguration();
 
 }

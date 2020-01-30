@@ -54,7 +54,7 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
     //* mask changed
     void maskChanged( LogEntry::Mask );
 
-    private Q_SLOTS:
+    private:
 
     //* update mask
     void _updateMask()
@@ -62,8 +62,6 @@ class LogEntryPrintOptionWidget: public QWidget, public OptionWidget
         emit maskChanged( mask() );
         if( _connected() ) emit modified();
     }
-
-    private:
 
     //* checkboxes
     using CheckBoxMap = QHash<LogEntry::MaskFlag, QCheckBox* >;

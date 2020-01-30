@@ -155,7 +155,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     //* enter event
     void enterEvent( QEvent* ) override;
 
-    private Q_SLOTS:
+    private:
 
     //* process records from thread
     void _processRecords( const FileRecord::List&, bool );
@@ -187,15 +187,8 @@ class AttachmentFrame: public QWidget, public Base::Key
     //* clean
     void _clean();
 
-    //*@name selections
-    //@{
-
     //* current item changed
     void _itemSelected( const QModelIndex& );
-
-    //@}
-
-    private:
 
     //* install actions
     void _installActions();

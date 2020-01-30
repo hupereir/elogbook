@@ -55,7 +55,7 @@ class MenuBar:public QMenuBar, private Base::Counter<MenuBar>
     //* triggered when an entry is selected in recent entries list
     void entrySelected( LogEntry* );
 
-    private Q_SLOTS:
+    private:
 
     //* recent entries
     void _updateRecentEntriesMenu();
@@ -68,8 +68,6 @@ class MenuBar:public QMenuBar, private Base::Counter<MenuBar>
 
     //* update preference menu
     void _updatePreferenceMenu();
-
-    private:
 
     //* recent entries
     QMenu* recentEntriesMenu_ = nullptr;

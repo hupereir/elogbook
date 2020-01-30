@@ -62,7 +62,7 @@ MenuBar::MenuBar( QWidget* parent, MainWindow* mainWindow ):
 
     // file menu
     recentFilesMenu_ = new RecentFilesMenu( this, Base::Singleton::get().application<Application>()->recentFiles() );
-    connect( recentFilesMenu_, &RecentFilesMenu::fileSelected, mainWindow, &MainWindow::open );
+    connect( recentFilesMenu_, &RecentFilesMenu::fileSelected, mainWindow, QOverload<FileRecord>::of( &MainWindow::open ) );
     menu->addMenu( recentFilesMenu_ );
 
     menu->addAction( &mainWindow->synchronizeAction() );

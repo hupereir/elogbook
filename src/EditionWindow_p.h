@@ -105,12 +105,10 @@ namespace Private
         //* install actions in context menu
         void installContextMenuActions( BaseContextMenu*, bool = true ) override;
 
-        private Q_SLOTS:
+        private:
 
         //* configuration
         void _updateConfiguration();
-
-        private:
 
         //* install actions
         void _installActions();

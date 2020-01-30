@@ -93,7 +93,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     connect( treeView_->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &AttachmentFrame::_itemSelected );
     connect( treeView_, &QAbstractItemView::activated, this, &AttachmentFrame::_open );
 
-    connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( Base::Singleton::get().application<Application>(), &Application::configurationChanged, this, &AttachmentFrame::_updateConfiguration );
     _updateConfiguration();
     _updateActions();
 }

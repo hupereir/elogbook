@@ -113,7 +113,7 @@ MainWindow::MainWindow( QWidget *parent ):
     statusbar_->setProgressBar( new ProgressBar );
     statusbar_->addClock();
     connect( this, &MainWindow::messageAvailable, &statusbar_->label(), &StatusBarLabel::setTextAndUpdate );
-    connect( this, SIGNAL(messageAvailable(QString)), &statusbar_->progressBar(), SLOT(setText(QString)) );
+    connect( this, &MainWindow::messageAvailable, static_cast<ProgressBar*>(&statusbar_->progressBar()), &ProgressBar::setText );
 
     // global scope actions
     _installActions();
@@ -174,7 +174,7 @@ MainWindow::MainWindow( QWidget *parent ):
     // rename all entries matching first keyword the second. This correspond to
     // drag and drop inside the keyword list, or to direct edition of a keyword list item.
     connect( &keywordModel_, &KeywordModel::keywordChangeRequest, this, &MainWindow::_confirmRenameKeyword );
-    connect( &keywordModel_, SIGNAL(keywordChanged(Keyword,Keyword)), SLOT(_renameKeyword(Keyword,Keyword)) );
+    connect( &keywordModel_, &KeywordModel::keywordChanged, this, QOverload<Keyword,Keyword>::of( &MainWindow::_renameKeyword ) );
 
     {
         // popup menu for keyword list
@@ -243,14 +243,14 @@ MainWindow::MainWindow( QWidget *parent ):
     if( entryList_->itemDelegate() ) entryList_->itemDelegate()->deleteLater();
     entryList_->setItemDelegate( new TextEditionDelegate( this ) );
 
-    connect( entryList_->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), SLOT(_storeSortMethod(int,Qt::SortOrder)) );
+    connect( entryList_->header(), &QHeaderView::sortIndicatorChanged, this, QOverload<int, Qt::SortOrder>::of( &MainWindow::_storeSortMethod ) );
     connect( entryList_->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::_updateEntryActions );
     connect( entryList_, &QAbstractItemView::activated, this, &MainWindow::_entryItemActivated );
     connect( entryList_, &QAbstractItemView::clicked, this, &MainWindow::_entryItemClicked );
     _updateEntryActions();
 
-    connect( &entryModel_, SIGNAL(layoutChanged()), entryList_, SLOT(resizeColumns()) );
-    connect( &entryModel_, &QAbstractItemModel::dataChanged, this, &MainWindow::_entryDataChanged );
+    connect( &entryModel_, &LogEntryModel::layoutChanged, entryList_, QOverload<>::of( &LogEntryList::resizeColumns ) );
+    connect( &entryModel_, &LogEntryModel::dataChanged, this, &MainWindow::_entryDataChanged );
 
     /*
     add the deleteEntryAction to the list,
@@ -288,11 +288,11 @@ MainWindow::MainWindow( QWidget *parent ):
     // main menu
     menuBar_ = new MenuBar( this , this );
     setMenuBar( menuBar_ );
-    connect( menuBar_, SIGNAL(entrySelected(LogEntry*)), SLOT(selectEntry(LogEntry*)) );
+    connect( menuBar_, &MenuBar::entrySelected, this, QOverload<LogEntry*>::of( &MainWindow::selectEntry ) );
     connect( menuBar_, &MenuBar::entrySelected, this, &MainWindow::_displayEntry );
 
     // configuration
-    connect( application, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( application, &Application::configurationChanged, this, &MainWindow::_updateConfiguration );
     _updateConfiguration();
     _updateKeywordActions();
     _updateEntryActions();
@@ -365,7 +365,7 @@ bool MainWindow::setLogbook( File file )
 
     connect( logbook_.get(), &Logbook::maximumProgressAvailable, statusbar_, &ProgressStatusBar::showProgressBar );
     connect( logbook_.get(), &Logbook::maximumProgressAvailable, &statusbar_->progressBar(), &QProgressBar::setMaximum );
-    connect( logbook_.get(), SIGNAL(progressAvailable(int)), &statusbar_->progressBar(), SLOT(addToProgress(int)) );
+    connect( logbook_.get(), &Logbook::progressAvailable, static_cast<ProgressBar*>(&statusbar_->progressBar()), &ProgressBar::addToProgress );
     connect( logbook_.get(), &Logbook::messageAvailable, this, &MainWindow::messageAvailable );
 
     connect( logbook_.get(), &Logbook::readOnlyChanged, this, &MainWindow::_updateEntryActions );
@@ -1121,7 +1121,7 @@ void MainWindow::_installActions()
     editKeywordAction_->setToolTip( tr( "Rename selected keyword" ) );
     editKeywordAction_->setShortcut( Qt::Key_F2 );
     editKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
-    connect( editKeywordAction_, SIGNAL(triggered()), SLOT(_renameKeyword()) );
+    connect( editKeywordAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_renameKeyword ) );
 
     /*
     delete keyword action
@@ -1176,7 +1176,7 @@ void MainWindow::_installActions()
 
     entryKeywordAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Change Keyword..." ), this );
     entryKeywordAction_->setToolTip( tr( "Edit selected entries keyword" ) );
-    connect( entryKeywordAction_, SIGNAL(triggered()), SLOT(_renameEntryKeyword()) );
+    connect( entryKeywordAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_renameEntryKeyword) );
 
     // entry information
     addAction( entryInformationAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Entry Properties..." ), this ) );
@@ -1190,7 +1190,7 @@ void MainWindow::_installActions()
     openAction_ = new QAction( IconEngine::get( IconNames::Open ), tr( "Open..." ), this );
     openAction_->setToolTip( tr( "Open an existsing logbook" ) );
     openAction_->setShortcut( QKeySequence::Open );
-    connect( openAction_, SIGNAL(triggered()), SLOT(open()) );
+    connect( openAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::open ) );
 
     synchronizeAction_ = new QAction( IconEngine::get( IconNames::Merge ), tr( "Synchronize..." ), this );
     synchronizeAction_->setToolTip( tr( "Synchronize current logbook with remote" ) );
@@ -1210,7 +1210,7 @@ void MainWindow::_installActions()
 
     saveAsAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save As..." ), this );
     saveAsAction_->setToolTip( tr( "Save logbook with a different name" ) );
-    connect( saveAsAction_, SIGNAL(triggered()), SLOT(_saveAs()) );
+    connect( saveAsAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_saveAs ) );
 
     saveBackupAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save Backup..." ), this );
     saveBackupAction_->setToolTip( tr( "Save logbook backup" ) );
@@ -1229,7 +1229,7 @@ void MainWindow::_installActions()
     // print
     printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this );
     printAction_->setShortcut( QKeySequence::Print );
-    connect( printAction_, SIGNAL(triggered()), SLOT(_print()) );
+    connect( printAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_print ) );
 
     // print preview
     addAction( printPreviewAction_ = new QAction( IconEngine::get( IconNames::PrintPreview ), tr( "Print Preview..." ), this ) );

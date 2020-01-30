@@ -191,9 +191,9 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         addOptionWidget( recentFilesConfiguration );
 
         recentFilesConfiguration->read();
-        connect( this, SIGNAL(ok()), recentFilesConfiguration, SLOT(write()) );
-        connect( this, SIGNAL(apply()), recentFilesConfiguration, SLOT(write()) );
-        connect( this, &BaseConfigurationDialog::reset, recentFilesConfiguration, &RecentFilesConfiguration::reload );
+        connect( this, &ConfigurationDialog::ok, recentFilesConfiguration, QOverload<>::of( &RecentFilesConfiguration::write ) );
+        connect( this, &ConfigurationDialog::apply, recentFilesConfiguration, QOverload<>::of( &RecentFilesConfiguration::write ) );
+        connect( this, &ConfigurationDialog::reset, recentFilesConfiguration, &RecentFilesConfiguration::reload );
     }
 
     // misc

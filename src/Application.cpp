@@ -85,10 +85,10 @@ bool Application::realizeWidget()
 
     // create selection frame
     mainWindow_.reset( new MainWindow );
-    connect( attachmentWindow_.get(), SIGNAL(entrySelected(LogEntry*)), mainWindow_.get(), SLOT(selectEntry(LogEntry*)) );
+    connect( attachmentWindow_.get(), &AttachmentWindow::entrySelected, mainWindow_.get(), QOverload<LogEntry*>::of( &MainWindow::selectEntry ) );
 
     // update configuration
-    connect( this, SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
+    connect( this, &Application::configurationChanged, this, &Application::_updateConfiguration );
     emit configurationChanged();
 
     mainWindow_->centerOnDesktop();

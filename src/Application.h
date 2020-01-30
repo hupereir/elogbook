@@ -87,7 +87,7 @@ class Application: public BaseApplication, private Base::Counter<Application>
 
     //@}
 
-    protected Q_SLOTS:
+    protected:
 
     //* configuration
     void _configuration() override;
@@ -95,15 +95,13 @@ class Application: public BaseApplication, private Base::Counter<Application>
     //* process request from application manager
     bool _processCommand( Server::ServerCommand ) override;
 
-    private Q_SLOTS:
+    private:
 
     //* exit safely
     void _exit();
 
     //* update configuration
     void _updateConfiguration();
-
-    private:
 
     //* recent files
     std::unique_ptr<FileList> recentFiles_;
