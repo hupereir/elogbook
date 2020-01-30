@@ -88,10 +88,10 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     label->setBuddy( comments_ );
 
     // connections
-    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), title_, SLOT(setDisabled(bool)) );
-    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), author_, SLOT(setDisabled(bool)) );
-    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), attachmentDirectory_, SLOT(setDisabled(bool)) );
-    connect( readOnlyCheckBox_, SIGNAL(toggled(bool)), comments_, SLOT(setDisabled(bool)) );
+    connect( readOnlyCheckBox_, &QAbstractButton::toggled, title_, &QWidget::setDisabled );
+    connect( readOnlyCheckBox_, &QAbstractButton::toggled, author_, &QWidget::setDisabled );
+    connect( readOnlyCheckBox_, &QAbstractButton::toggled, attachmentDirectory_, &QWidget::setDisabled );
+    connect( readOnlyCheckBox_, &QAbstractButton::toggled, comments_, &QWidget::setDisabled );
     readOnlyCheckBox_->setChecked( logbook->isReadOnly() );
 
 }

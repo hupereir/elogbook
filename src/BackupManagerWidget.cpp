@@ -62,24 +62,24 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     list_->addAction( removeAction_ );
 
     // connections
-    connect( list_->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(_updateActions()) );
-    connect( cleanButton_, SIGNAL(clicked()), SLOT(_clean()) );
-    connect( cleanButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
+    connect( list_->selectionModel(), &QItemSelectionModel::selectionChanged, this, &BackupManagerWidget::_updateActions );
+    connect( cleanButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::_clean );
+    connect( cleanButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::updateBackups );
 
-    connect( removeButton_, SIGNAL(clicked()), SLOT(_remove()) );
-    connect( removeButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
+    connect( removeButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::_remove );
+    connect( removeButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::updateBackups );
 
-    connect( removeAction_, SIGNAL(triggered()), SLOT(_remove()) );
-    connect( removeAction_, SIGNAL(triggered()), SLOT(updateBackups()) );
+    connect( removeAction_, &QAction::triggered, this, &BackupManagerWidget::_remove );
+    connect( removeAction_, &QAction::triggered, this, &BackupManagerWidget::updateBackups );
 
-    connect( restoreButton_, SIGNAL(clicked()), SLOT(_restore()) );
-    connect( restoreButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
+    connect( restoreButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::_restore );
+    connect( restoreButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::updateBackups );
 
-    connect( mergeButton_, SIGNAL(clicked()), SLOT(_merge()) );
-    connect( mergeButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
+    connect( mergeButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::_merge );
+    connect( mergeButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::updateBackups );
 
-    connect( newBackupButton_, SIGNAL(clicked()), SIGNAL(backupRequested()) );
-    connect( newBackupButton_, SIGNAL(clicked()), SLOT(updateBackups()) );
+    connect( newBackupButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::backupRequested );
+    connect( newBackupButton_, &QAbstractButton::clicked, this, &BackupManagerWidget::updateBackups );
 
     if( logbook ) Base::Key::associate( this, logbook );
 

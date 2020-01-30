@@ -73,7 +73,7 @@ bool Application::realizeWidget()
 
     // need to redirect closeAction to proper exit
     closeAction().disconnect();
-    connect( &closeAction(), SIGNAL(triggered()), SLOT(_exit()) );
+    connect( &closeAction(), &QAction::triggered, this, &Application::_exit );
 
     // recent files
     recentFiles_.reset( new XmlFileList );
@@ -96,8 +96,8 @@ bool Application::realizeWidget()
 
     // scratch files
     scratchFileMonitor_.reset( new ScratchFileMonitor );
-    connect( qApp, SIGNAL(aboutToQuit()), scratchFileMonitor_.get(), SLOT(deleteScratchFiles()) );
-    connect( mainWindow_.get(), SIGNAL(scratchFileCreated(File)), scratchFileMonitor_.get(), SLOT(add(File)) );
+    connect( qApp, &QCoreApplication::aboutToQuit, scratchFileMonitor_.get(), &ScratchFileMonitor::deleteScratchFiles );
+    connect( mainWindow_.get(), &MainWindow::scratchFileCreated, scratchFileMonitor_.get(), &ScratchFileMonitor::add );
 
     // update
     qApp->processEvents();
@@ -142,7 +142,7 @@ void Application::_configuration()
     Debug::Throw( "Application::_configuration" );
     emit saveConfiguration();
     ConfigurationDialog dialog;
-    connect( &dialog, SIGNAL(configurationChanged()), SIGNAL(configurationChanged()) );
+    connect( &dialog, &BaseConfigurationDialog::configurationChanged, this, &BaseCoreApplication::configurationChanged );
     dialog.centerOnWidget( qApp->activeWindow() );
     dialog.exec();
 

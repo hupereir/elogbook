@@ -73,22 +73,22 @@ Counter( "LogbookModifiedDialog" )
     // resave button
     QPushButton* button;
     buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::Save ), tr( "Save Again" ), this ) );
-    connect( button, SIGNAL(clicked()), SLOT(_reSave()) );
+    connect( button, &QAbstractButton::clicked, this, &LogbookModifiedDialog::_reSave );
     button->setToolTip( tr( "Save file again. Disc modifications will be lost" ) );
 
     // save as button
     buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::SaveAs ), tr( "Save As" ), this ) );
-    connect( button, SIGNAL(clicked()), SLOT(_saveAs()) );
+    connect( button, &QAbstractButton::clicked, this, &LogbookModifiedDialog::_saveAs );
     button->setToolTip( tr( "Save file with a different name" ) );
 
     // reload button.
     buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this ) );
-    connect( button, SIGNAL(clicked()), SLOT(_reLoad()) );
+    connect( button, &QAbstractButton::clicked, this, &LogbookModifiedDialog::_reLoad );
     button->setToolTip( tr( "Reload file from disc. Modifications will be lost" ) );
 
     // ignore button.
     buttonLayout->addWidget( button = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "Ignore" ), this ) );
-    connect( button, SIGNAL(clicked()), SLOT(_ignore()) );
+    connect( button, &QAbstractButton::clicked, this, &LogbookModifiedDialog::_ignore );
     button->setToolTip( tr( "Ignore warning" ) );
 
 }

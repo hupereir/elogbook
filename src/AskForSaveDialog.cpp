@@ -67,7 +67,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     if( buttons & Yes )
     {
         button = buttonBox->addButton( QDialogButtonBox::Yes );
-        connect( button, SIGNAL(clicked()), SLOT(_yes()) );
+        connect( button, &QAbstractButton::clicked, this, &AskForSaveDialog::_yes );
         #if defined(Q_OS_WIN)
         button->setIcon( IconEngine::get( IconNames::DialogOk ) );
         #endif
@@ -77,7 +77,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     if( buttons & All )
     {
         button = buttonBox->addButton( QDialogButtonBox::YesToAll );
-        connect( button, SIGNAL(clicked()), SLOT(_all()) );
+        connect( button, &QAbstractButton::clicked, this, &AskForSaveDialog::_all );
         button->setIcon( IconEngine::get( IconNames::DialogAccept ) );
     }
 
@@ -85,7 +85,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     if( buttons & No )
     {
         button = buttonBox->addButton( QDialogButtonBox::No );
-        connect( button, SIGNAL(clicked()), SLOT(_no()) );
+        connect( button, &QAbstractButton::clicked, this, &AskForSaveDialog::_no );
         button->setIcon( IconEngine::get( IconNames::DialogClose ) );
     }
 
@@ -94,7 +94,7 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     {
         button = buttonBox->addButton( QDialogButtonBox::Cancel );
         button->setShortcut( Qt::Key_Escape );
-        connect( button, SIGNAL(clicked()), SLOT(_cancel()) );
+        connect( button, &QAbstractButton::clicked, this, &AskForSaveDialog::_cancel );
     }
 
     adjustSize();

@@ -251,8 +251,8 @@ bool Logbook::read()
             child->setUseCompression( useCompression_ );
 
             // propagate progressAvailable signal.
-            connect( child.get(), SIGNAL(progressAvailable(int)), SIGNAL(progressAvailable(int)) );
-            connect( child.get(), SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
+            connect( child.get(), &Logbook::progressAvailable, this, &Logbook::progressAvailable );
+            connect( child.get(), &Logbook::messageAvailable, this, &Logbook::messageAvailable );
             child->read();
             children_.append( child );
 
@@ -511,7 +511,7 @@ Logbook::LogbookPtr Logbook::latestChild()
     logbook->setFile( Local::childFileName( file_, children_.size() ).addPath( file_.path() ) );
     logbook->setUseCompression( useCompression_ );
     logbook->setModified( true );
-    connect( logbook.get(), SIGNAL(messageAvailable(QString)), SIGNAL(messageAvailable(QString)) );
+    connect( logbook.get(), &Logbook::messageAvailable, this, &Logbook::messageAvailable );
 
     children_.append( logbook );
     setModified( true );

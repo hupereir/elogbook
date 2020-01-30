@@ -103,12 +103,12 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
     // color
     action->setCheckable( false );
     action->setIconText( tr( "Color" ) );
-    connect( action, SIGNAL(triggered()), SLOT(_lastColor()) );
+    connect( action, &QAction::triggered, this, &FormatBar::_lastColor );
 
     // color menu
     colorMenu_ = new ColorMenu( this );
     action->setMenu( colorMenu_ );
-    connect( colorMenu_, SIGNAL(selected(QColor)), SLOT(_color(QColor)) );
+    connect( colorMenu_, &ColorMenu::selected, this, &FormatBar::_color );
     action->setMenu( colorMenu_ );
 
     // color button
@@ -117,7 +117,7 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
     addWidget( button );
     button->setDefaultAction( action );
     button->setPopupMode( QToolButton::MenuButtonPopup );
-    connect( colorMenu_, SIGNAL(selected(QColor)), button, SLOT(setColor(QColor)) );
+    connect( colorMenu_, &ColorMenu::selected, button, &FormatColorButton::setColor );
 
     // configuration
     connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );

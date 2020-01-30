@@ -43,7 +43,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     buttonLayout().setMargin(5);
 
     mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
-    connect( frame_, SIGNAL(attachmentSelected(Attachment&)), SLOT(_displayEntry(Attachment&)) );
+    connect( frame_, &AttachmentFrame::attachmentSelected, this, &AttachmentWindow::_displayEntry );
 
     frame_->contextMenu().insertAction( &frame_->newAction(), &frame_->list().findAction() );
 

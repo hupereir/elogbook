@@ -116,7 +116,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
         checkbox->setChecked( false );
         spinbox->setEnabled( false );
-        connect( checkbox, SIGNAL(toggled(bool)), spinbox, SLOT(setEnabled(bool)) );
+        connect( checkbox, &QAbstractButton::toggled, spinbox, &QWidget::setEnabled );
 
         gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Backup logbook every" ), page, "AUTO_BACKUP" ), row, 0, 1, 1 );
         addOptionWidget( checkbox );
@@ -129,7 +129,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
         checkbox->setChecked( false );
         spinbox->setEnabled( false );
-        connect( checkbox, SIGNAL(toggled(bool)), spinbox, SLOT(setEnabled(bool)) );
+        connect( checkbox, &QAbstractButton::toggled, spinbox, &QWidget::setEnabled );
 
     }
 
@@ -193,7 +193,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         recentFilesConfiguration->read();
         connect( this, SIGNAL(ok()), recentFilesConfiguration, SLOT(write()) );
         connect( this, SIGNAL(apply()), recentFilesConfiguration, SLOT(write()) );
-        connect( this, SIGNAL(reset()), recentFilesConfiguration, SLOT(reload()) );
+        connect( this, &BaseConfigurationDialog::reset, recentFilesConfiguration, &RecentFilesConfiguration::reload );
     }
 
     // misc

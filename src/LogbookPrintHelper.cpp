@@ -328,7 +328,7 @@ void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QP
     helper.setPageNumber( pageNumber() );
     helper.setSheetNumber( sheetNumber() );
 
-    connect( &helper, SIGNAL(pageCountChanged(int)), this, SIGNAL(pageCountChanged(int)) );
+    connect( &helper, &BasePrintHelper::pageCountChanged, this, &BasePrintHelper::pageCountChanged );
     for( const auto& entry:entries_ )
     {
 

@@ -66,7 +66,7 @@ CustomDialog( parent )
         urlCheckBox_ = new QCheckBox( tr( "Selected attachment is a web adress" ), this ),
         gridLayout->currentRow(), 1, 1, 1 );
 
-    connect( urlCheckBox_, SIGNAL(toggled(bool)), SLOT(_urlChanged(bool)) );
+    connect( urlCheckBox_, &QAbstractButton::toggled, this, &NewAttachmentDialog::_urlChanged );
 
     gridLayout->setColumnStretch( 1, 1 );
 

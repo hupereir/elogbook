@@ -36,7 +36,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
 
     // add close button
     QPushButton* closeButton = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "Close" ), managerWidget_ );
-    connect( closeButton, SIGNAL(clicked()), SLOT(close()) );
+    connect( closeButton, &QAbstractButton::clicked, this, &QWidget::close );
     managerWidget_->buttonLayout().addWidget( closeButton );
 
 }

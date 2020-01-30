@@ -51,7 +51,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
     Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
 
     connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
-    connect( this, SIGNAL(layoutChanged()), SLOT(_disableEdition()) );
+    connect( this, &QAbstractItemModel::layoutChanged, this, &LogEntryModel::_disableEdition );
     _updateConfiguration();
 
 }

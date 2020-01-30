@@ -53,7 +53,7 @@ LogbookPrintOptionWidget::LogbookPrintOptionWidget( QWidget* parent ):
     // insert in layout
     for( auto&& iter = checkBoxes_.begin(); iter != checkBoxes_.end(); iter++ )
     {
-        connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_updateMask()) );
+        connect( iter.value(), &QAbstractButton::toggled, this, &LogbookPrintOptionWidget::_updateMask );
         layout->addWidget( iter.value() );
     }
 

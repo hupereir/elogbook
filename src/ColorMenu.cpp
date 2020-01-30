@@ -35,14 +35,14 @@ ColorMenu::ColorMenu( QWidget* parent ):
     Debug::Throw( "ColorMenu::ColorMenu.\n" );
 
     // new color action
-    addAction( IconEngine::get( IconNames::Add ), tr( "New" ), this, SLOT(_new()) );
+    addAction( IconEngine::get( IconNames::Add ), tr( "New" ), this, &ColorMenu::_new );
     addSeparator();
 
     // default color action
-    addAction( tr( "Default" ), this, SLOT(_default()) );
+    addAction( tr( "Default" ), this, &ColorMenu::_default );
 
-    connect( this, SIGNAL(triggered(QAction*)), SLOT(_selected(QAction*)) );
-    connect( this, SIGNAL(aboutToShow()), SLOT(_display()) );
+    connect( this, &QMenu::triggered, this, &ColorMenu::_selected );
+    connect( this, &QMenu::aboutToShow, this, &ColorMenu::_display );
 }
 
 //_______________________________________________

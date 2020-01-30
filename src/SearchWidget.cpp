@@ -72,8 +72,8 @@ SearchWidget::SearchWidget( QWidget* parent ):
     hLayout->addWidget( editor_, 1 );
 
     connect( editor_, SIGNAL(activated(QString)), SLOT(_selectionRequest()) );
-    connect( editor_, SIGNAL(editTextChanged(QString)), SLOT(_updateFindButton(QString)) );
-    connect( editor_->lineEdit(), SIGNAL(textChanged(QString)), SLOT(_restorePalette()) );
+    connect( editor_, &QComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
+    connect( editor_->lineEdit(), &QLineEdit::textChanged, this, &SearchWidget::_restorePalette );
 
     // find selection button
     findButton_ = new QPushButton( IconEngine::get( IconNames::Find ), tr( "Find" ), this );
@@ -81,7 +81,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     findButton_->setEnabled( false );
     hLayout->addWidget( findButton_ );
 
-    connect( findButton_, SIGNAL(clicked()), SLOT(_selectionRequest()) );
+    connect( findButton_, &QAbstractButton::clicked, this, &SearchWidget::_selectionRequest );
 
     // show all button
     allEntriesButton_ = new QPushButton( tr( "Show All" ), this );
@@ -90,8 +90,8 @@ SearchWidget::SearchWidget( QWidget* parent ):
     allEntriesButton_->setEnabled( false );
     hLayout->addWidget( allEntriesButton_ );
 
-    connect( allEntriesButton_, SIGNAL(clicked()), SIGNAL(showAllEntries()) );
-    connect( allEntriesButton_, SIGNAL(clicked()), SLOT(_disableAllEntriesButton()) );
+    connect( allEntriesButton_, &QAbstractButton::clicked, this, &SearchWidget::showAllEntries );
+    connect( allEntriesButton_, &QAbstractButton::clicked, this, &SearchWidget::_disableAllEntriesButton );
 
     // close button
     QToolButton* closeButton = new QToolButton( this );
@@ -99,8 +99,8 @@ SearchWidget::SearchWidget( QWidget* parent ):
     closeButton->setIcon( IconEngine::get( IconNames::DialogClose ) );
     closeButton->setText( tr( "Close" ) );
     hLayout->addWidget( closeButton );
-    connect( closeButton, SIGNAL(clicked()),this,  SIGNAL(showAllEntries()) );
-    connect( closeButton, SIGNAL(clicked()),this,  SLOT(hide()) );
+    connect( closeButton, &QAbstractButton::clicked,this,  &SearchWidget::showAllEntries );
+    connect( closeButton, &QAbstractButton::clicked,this,  &QWidget::hide );
 
     // second row
     label = new QLabel( tr( "In:" ), this );
@@ -123,7 +123,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     checkboxes_[Text]->setChecked( true );
 
     for( auto&& iter = checkboxes_.begin(); iter !=checkboxes_.end(); ++iter )
-    { connect( iter.value(), SIGNAL(toggled(bool)), SLOT(_saveMask()) ); }
+    { connect( iter.value(), &QAbstractButton::toggled, this, &SearchWidget::_saveMask ); }
 
     // configuration
     connect( Base::Singleton::get().application(), SIGNAL(configurationChanged()), SLOT(_updateConfiguration()) );
