@@ -54,7 +54,7 @@ class LogEntryPrintHelper: public BasePrintHelper, private Base::Counter<LogEntr
     { mask_ = value; }
 
     //* print
-    void print( QPrinter* );
+    void print( QPrinter* ) override;
 
     protected:
 

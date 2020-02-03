@@ -89,7 +89,7 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     { entryMask_ = value; }
 
     //* print
-    void print( QPrinter* );
+    void print( QPrinter* ) override;
 
     //@}
 
