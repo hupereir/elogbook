@@ -144,7 +144,7 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
 
         // delay keyword changed emission to fix issues with nested event loops
         keywordChangedData_.set(  oldKeyword, newKeyword );
-        QMetaObject::invokeMethod( this, "_requestKeywordChanged", Qt::QueuedConnection );
+        QMetaObject::invokeMethod( this, &KeywordModel::_requestKeywordChanged, Qt::QueuedConnection );
 
         return true;
     }
@@ -161,7 +161,7 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
 
         // delay keyword changed emission to fix issues with nested event loops
         keywordChangedData_.set(  newKeyword );
-        QMetaObject::invokeMethod( this, "_requestEntryKeywordChanged", Qt::QueuedConnection );
+        QMetaObject::invokeMethod( this, &KeywordModel::_requestEntryKeywordChanged, Qt::QueuedConnection );
 
         return true;
 
