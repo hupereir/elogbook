@@ -27,7 +27,7 @@
 //_________________________________________________________________
 LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
     QWidget( parent ),
-    OptionWidget( "LOGENTRY_PRINT_SELECTION", this )
+    OptionWidget( "LOGENTRY_PRINT_SELECTION" )
 {
 
     setWindowTitle( tr( "Logbook Entry Selection" ) );
