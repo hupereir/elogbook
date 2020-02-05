@@ -255,4 +255,4 @@ void LogEntry::addFormat( TextFormat::Block format )
 
 //________________________________________________________
 Qt::CaseSensitivity LogEntry::_caseSensitive() const
-{ return XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive: Qt::CaseInsensitive; }
+{ return XmlOptions::get().get<bool>( QStringLiteral("CASE_SENSITIVE") ) ? Qt::CaseSensitive: Qt::CaseInsensitive; }

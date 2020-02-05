@@ -63,60 +63,60 @@ void installDefaultOptions()
 
 
     // window sizes
-    XmlOptions::get().set<int>( "ATTACHMENT_WINDOW_HEIGHT",400 );
-    XmlOptions::get().set<int>( "ATTACHMENT_WINDOW_WIDTH", 600 );
-    XmlOptions::get().set<int>( "ATTACHMENT_FRAME_HEIGHT", 150 );
+    XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_WINDOW_HEIGHT"),400 );
+    XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_WINDOW_WIDTH"), 600 );
+    XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_FRAME_HEIGHT"), 150 );
 
-    XmlOptions::get().set<int>( "EDITION_WINDOW_HEIGHT", 750 );
-    XmlOptions::get().set<int>( "EDITION_WINDOW_WIDTH", 700 );
+    XmlOptions::get().set<int>( QStringLiteral("EDITION_WINDOW_HEIGHT"), 750 );
+    XmlOptions::get().set<int>( QStringLiteral("EDITION_WINDOW_WIDTH"), 700 );
 
-    XmlOptions::get().set<int>( "MAIN_WINDOW_HEIGHT", 750 );
-    XmlOptions::get().set<int>( "MAIN_WINDOW_WIDTH", 700 );
-    XmlOptions::get().set<int>( "LIST_ICON_SIZE", 10 );
-    XmlOptions::get().set<int>( "ATTACHMENT_LIST_ICON_SIZE", 22 );
+    XmlOptions::get().set<int>( QStringLiteral("MAIN_WINDOW_HEIGHT"), 750 );
+    XmlOptions::get().set<int>( QStringLiteral("MAIN_WINDOW_WIDTH"), 700 );
+    XmlOptions::get().set<int>( QStringLiteral("LIST_ICON_SIZE"), 10 );
+    XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_LIST_ICON_SIZE"), 22 );
 
-    XmlOptions::get().set<bool>( "USE_COMPRESSION", true );
-    XmlOptions::get().set<bool>( "FILE_BACKUP", false );
-    XmlOptions::get().set<bool>( "AUTO_BACKUP", true );
-    XmlOptions::get().set<bool>( "AUTO_SAVE", false );
-    XmlOptions::get().set<int>( "AUTO_SAVE_ITV", 60 );
-    XmlOptions::get().set<int>( "BACKUP_ITV", 30 );
-    XmlOptions::get().set<bool>( "CASE_SENSITIVE", false );
-    XmlOptions::get().set<int>( "DB_SIZE", 10 );
-    XmlOptions::get().set<bool>( "SEARCH_PANEL", false );
+    XmlOptions::get().set<bool>( QStringLiteral("USE_COMPRESSION"), true );
+    XmlOptions::get().set<bool>( QStringLiteral("FILE_BACKUP"), false );
+    XmlOptions::get().set<bool>( QStringLiteral("AUTO_BACKUP"), true );
+    XmlOptions::get().set<bool>( QStringLiteral("AUTO_SAVE"), false );
+    XmlOptions::get().set<int>( QStringLiteral("AUTO_SAVE_ITV"), 60 );
+    XmlOptions::get().set<int>( QStringLiteral("BACKUP_ITV"), 30 );
+    XmlOptions::get().set<bool>( QStringLiteral("CASE_SENSITIVE"), false );
+    XmlOptions::get().set<int>( QStringLiteral("DB_SIZE"), 10 );
+    XmlOptions::get().set<bool>( QStringLiteral("SEARCH_PANEL"), false );
 
-    XmlOptions::get().set<bool>( "MAIN_TOOLBAR", true );
-    XmlOptions::get().set<bool>( "FORMAT_TOOLBAR", true );
-    XmlOptions::get().set<bool>( "EDITION_TOOLBAR", false );
-    XmlOptions::get().set<bool>( "EXTRA_TOOLBAR", false );
-    XmlOptions::get().set<bool>( "NAVIGATION_TOOLBAR", false );
-    XmlOptions::get().set<bool>( "MULTIPLE_VIEW_TOOLBAR", true );
+    XmlOptions::get().set<bool>( QStringLiteral("MAIN_TOOLBAR"), true );
+    XmlOptions::get().set<bool>( QStringLiteral("FORMAT_TOOLBAR"), true );
+    XmlOptions::get().set<bool>( QStringLiteral("EDITION_TOOLBAR"), false );
+    XmlOptions::get().set<bool>( QStringLiteral("EXTRA_TOOLBAR"), false );
+    XmlOptions::get().set<bool>( QStringLiteral("NAVIGATION_TOOLBAR"), false );
+    XmlOptions::get().set<bool>( QStringLiteral("MULTIPLE_VIEW_TOOLBAR"), true );
 
-    XmlOptions::get().set<bool>( "LOCK_TOOLBAR", false );
-    XmlOptions::get().set<bool>( "ENTRY_TOOLBAR", true );
-    XmlOptions::get().set<bool>( "KEYWORD_TOOLBAR", true );
-    XmlOptions::get().set<bool>( "SHOW_SEARCHPANEL", true );
+    XmlOptions::get().set<bool>( QStringLiteral("LOCK_TOOLBAR"), false );
+    XmlOptions::get().set<bool>( QStringLiteral("ENTRY_TOOLBAR"), true );
+    XmlOptions::get().set<bool>( QStringLiteral("KEYWORD_TOOLBAR"), true );
+    XmlOptions::get().set<bool>( QStringLiteral("SHOW_SEARCHPANEL"), true );
 
-    XmlOptions::get().set<int>( "MAX_RECENT_ENTRIES", 30 );
-    XmlOptions::get().set<bool>( "SHOW_KEYWORD", false );
-    XmlOptions::get().set<bool>( "USE_TREE", true );
+    XmlOptions::get().set<int>( QStringLiteral("MAX_RECENT_ENTRIES"), 30 );
+    XmlOptions::get().set<bool>( QStringLiteral("SHOW_KEYWORD"), false );
+    XmlOptions::get().set<bool>( QStringLiteral("USE_TREE"), true );
 
-    XmlOptions::get().set<int>( "LOGENTRY_PRINT_OPTION_MASK", LogEntry::All );
-    XmlOptions::get().set<int>( "LOGENTRY_PRINT_SELECTION", Base::toIntegralType(LogEntryPrintSelectionWidget::Mode::AllEntries) );
-    XmlOptions::get().set<int>( "LOGBOOK_PRINT_OPTION_MASK", Logbook::All );
+    XmlOptions::get().set<int>( QStringLiteral("LOGENTRY_PRINT_OPTION_MASK"), LogEntry::All );
+    XmlOptions::get().set<int>( QStringLiteral("LOGENTRY_PRINT_SELECTION"), Base::toIntegralType(LogEntryPrintSelectionWidget::Mode::AllEntries) );
+    XmlOptions::get().set<int>( QStringLiteral("LOGBOOK_PRINT_OPTION_MASK"), Logbook::All );
 
-    XmlOptions::get().set<bool>( "AUTO_INSERT_LINK", true );
+    XmlOptions::get().set<bool>( QStringLiteral("AUTO_INSERT_LINK"), true );
 
     // masks
-    XmlOptions::get().set<int>( "ENTRY_LIST_MASK",
+    XmlOptions::get().set<int>( QStringLiteral("ENTRY_LIST_MASK"),
         (1<< LogEntryModel::Color)|
         (1<< LogEntryModel::Title)|
         (1<< LogEntryModel::Modification) );
 
-    XmlOptions::get().set<int>( "ENTRY_LIST_SORT_COLUMN", LogEntryModel::Modification );
-    XmlOptions::get().set<int>( "ENTRY_LIST_SORT_Order", Qt::DescendingOrder );
+    XmlOptions::get().set<int>( QStringLiteral("ENTRY_LIST_SORT_COLUMN"), LogEntryModel::Modification );
+    XmlOptions::get().set<int>( QStringLiteral("ENTRY_LIST_SORT_Order"), Qt::DescendingOrder );
 
-    XmlOptions::get().set<int>( "ATTACHMENT_LIST_MASK",
+    XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_LIST_MASK"),
         (1<< AttachmentModel::FileName)|
         (1<< AttachmentModel::Size)|
         (1<< AttachmentModel::Modification) );

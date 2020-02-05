@@ -411,7 +411,7 @@ void AttachmentFrame::_updateConfiguration()
 {
 
     Debug::Throw( QStringLiteral("AttachmentFrame::_updateConfiguration.\n") );
-    int icon_size( XmlOptions::get().get<int>( "ATTACHMENT_LIST_ICON_SIZE" ) );
+    int icon_size( XmlOptions::get().get<int>( QStringLiteral("ATTACHMENT_LIST_ICON_SIZE") ) );
     treeView_->setIconSize( QSize( icon_size, icon_size ) );
 
 }

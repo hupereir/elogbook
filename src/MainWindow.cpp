@@ -154,8 +154,8 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList_->setOptionName( "KEYWORD_LIST" );
 
     // default width from options, if found
-    if( XmlOptions::get().contains( "KEYWORD_LIST_WIDTH" ) )
-    { keywordList_->setDefaultWidth( XmlOptions::get().get<int>( "KEYWORD_LIST_WIDTH" ) ); }
+    if( XmlOptions::get().contains( QStringLiteral("KEYWORD_LIST_WIDTH") ) )
+    { keywordList_->setDefaultWidth( XmlOptions::get().get<int>( QStringLiteral("KEYWORD_LIST_WIDTH") ) ); }
 
     // replace item delegate
     if( keywordList_->itemDelegate() ) keywordList_->itemDelegate()->deleteLater();
@@ -312,7 +312,7 @@ void MainWindow::createDefaultLogbook()
     setLogbook( File() );
 
     logbook_->setTitle(  Logbook::NoTitle );
-    logbook_->setAuthor( XmlOptions::get().raw( "USER" ) );
+    logbook_->setAuthor( XmlOptions::get().raw( QStringLiteral("USER") ) );
     logbook_->setDirectory( workingDirectory() );
 
     logbook_->setComments( tr( "Default logbook created automatically on %1" ).arg( TimeStamp::now().toString( TimeStamp::Format::Long ) ) );
@@ -333,7 +333,7 @@ bool MainWindow::setLogbook( File file )
 
     // create new logbook
     logbook_.reset( new Logbook );
-    logbook_->setUseCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
+    logbook_->setUseCompression( XmlOptions::get().get<bool>( QStringLiteral("USE_COMPRESSION") ) );
 
     // if filename is empty, return
     if( file.isEmpty() )
@@ -511,7 +511,7 @@ void MainWindow::checkLogbookBackup()
 
     // check if oppened logbook needs backup
     if(
-        XmlOptions::get().get<bool>( "AUTO_BACKUP" ) &&
+        XmlOptions::get().get<bool>( QStringLiteral("AUTO_BACKUP") ) &&
         !logbook_->file().isEmpty() &&
         !logbook_->isReadOnly() &&
         logbook_->needsBackup() )
@@ -1051,7 +1051,7 @@ void MainWindow::timerEvent( QTimerEvent* event )
 
         // stop timer and save time
         resizeTimer_.stop();
-        XmlOptions::get().set<int>( "KEYWORD_LIST_WIDTH", keywordList_->width() );
+        XmlOptions::get().set<int>( QStringLiteral("KEYWORD_LIST_WIDTH"), keywordList_->width() );
 
     } else if(event->timerId() == editionTimer_.timerId() ) {
 
@@ -1551,7 +1551,7 @@ void MainWindow::_newLogbook()
     // new logbook
     NewLogbookDialog dialog( this );
     dialog.setTitle( Logbook::NoTitle );
-    dialog.setAuthor( XmlOptions::get().raw( "USER" ) );
+    dialog.setAuthor( XmlOptions::get().raw( QStringLiteral("USER") ) );
     dialog.setAttachmentDirectory( workingDirectory() );
     if( !dialog.centerOnParent().exec() ) return;
 
@@ -1959,8 +1959,8 @@ void MainWindow::_printPreview()
     }
 
     // masks
-    helper.setMask( (Logbook::Mask) XmlOptions::get().get<int>( "LOGBOOK_PRINT_OPTION_MASK" ) );
-    helper.setEntryMask( (LogEntry::Mask) XmlOptions::get().get<int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
+    helper.setMask( (Logbook::Mask) XmlOptions::get().get<int>( QStringLiteral("LOGBOOK_PRINT_OPTION_MASK") ) );
+    helper.setEntryMask( (LogEntry::Mask) XmlOptions::get().get<int>( QStringLiteral("LOGENTRY_PRINT_OPTION_MASK") ) );
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this, CustomDialog::OkButton|CustomDialog::CancelButton );
@@ -3699,7 +3699,7 @@ void MainWindow::_toggleTreeMode( bool value )
 
 
     // save to options
-    XmlOptions::get().set<bool>( "USE_TREE", value );
+    XmlOptions::get().set<bool>( QStringLiteral("USE_TREE"), value );
 
 }
 
@@ -3712,11 +3712,11 @@ void MainWindow::_updateConfiguration()
     resize( sizeHint() );
 
     // compression
-    if( logbook_ ) logbook_->setUseCompression( XmlOptions::get().get<bool>( "USE_COMPRESSION" ) );
+    if( logbook_ ) logbook_->setUseCompression( XmlOptions::get().get<bool>( QStringLiteral("USE_COMPRESSION") ) );
 
     // autoSave
-    autoSaveDelay_ = 1000*XmlOptions::get().get<int>( "AUTO_SAVE_ITV" );
-    bool autosave( XmlOptions::get().get<bool>( "AUTO_SAVE" ) );
+    autoSaveDelay_ = 1000*XmlOptions::get().get<int>( QStringLiteral("AUTO_SAVE_ITV") );
+    bool autosave( XmlOptions::get().get<bool>( QStringLiteral("AUTO_SAVE") ) );
     if( autosave ) autosaveTimer_.start( autoSaveDelay_, this );
     else autosaveTimer_.stop();
 
@@ -3726,10 +3726,10 @@ void MainWindow::_updateConfiguration()
     { colorMenu_->add( color.get<Base::Color>() ); }
 
     // max number of recent entries
-    maxRecentEntries_ = XmlOptions::get().get<int>( "MAX_RECENT_ENTRIES" );
+    maxRecentEntries_ = XmlOptions::get().get<int>( QStringLiteral("MAX_RECENT_ENTRIES") );
 
     // tree mode
-    treeModeAction_->setChecked( XmlOptions::get().get<bool>( "USE_TREE" ) );
+    treeModeAction_->setChecked( XmlOptions::get().get<bool>( QStringLiteral("USE_TREE") ) );
 
 }
 

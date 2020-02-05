@@ -152,8 +152,8 @@ void Application::_configuration()
 void Application::_updateConfiguration()
 {
     Debug::Throw( QStringLiteral("Application::_updateConfiguration.\n") );
-    static_cast<XmlFileList*>(recentFiles_.get())->setDBFile( File( XmlOptions::get().raw( "RC_FILE" ) ) );
-    recentFiles_->setMaxSize( XmlOptions::get().get<int>( "DB_SIZE" ) );
+    static_cast<XmlFileList*>(recentFiles_.get())->setDBFile( File( XmlOptions::get().raw( QStringLiteral("RC_FILE") ) ) );
+    recentFiles_->setMaxSize( XmlOptions::get().get<int>( QStringLiteral("DB_SIZE") ) );
 }
 
 //_________________________________________________

@@ -293,7 +293,7 @@ bool Logbook::write( File file )
         TimeStamp lastSaved( file.lastModified() );
 
         // make a backup of the file, if necessary
-        if( XmlOptions::get().get<bool>( "FILE_BACKUP" ) )
+        if( XmlOptions::get().get<bool>( QStringLiteral("FILE_BACKUP") ) )
         { file.backup(); }
 
         // update stateFrame
@@ -659,7 +659,7 @@ bool Logbook::needsBackup() const
 {
     Debug::Throw( QStringLiteral("Logbook::needsBackup.\n") );
     if( !backup().isValid() ) return true;
-    return( TimeStamp::now().unixTime() > backup().unixTime() + (24*3600)*XmlOptions::get().get<double>( "BACKUP_ITV" ) );
+    return( TimeStamp::now().unixTime() > backup().unixTime() + (24*3600)*XmlOptions::get().get<double>( QStringLiteral("BACKUP_ITV") ) );
 }
 
 //_________________________________

@@ -183,9 +183,9 @@ void SearchWidget::_updateConfiguration()
     Debug::Throw( QStringLiteral("SearchWidget::_updateConfiguration.\n") );
 
     // load mask
-    if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
+    if( XmlOptions::get().contains( QStringLiteral("SEARCH_PANEL_MASK") ) )
     {
-        int mask( XmlOptions::get().get<int>( "SEARCH_PANEL_MASK" ) );
+        int mask( XmlOptions::get().get<int>( QStringLiteral("SEARCH_PANEL_MASK") ) );
         for( auto&& iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
         { iter.value()->setChecked( mask & iter.key() ); }
     }
@@ -203,7 +203,7 @@ void SearchWidget::_saveMask()
     for( auto&& iter = checkboxes_.begin(); iter != checkboxes_.end(); ++iter )
     { if( iter.value()->isChecked() ) mask |= iter.key(); }
 
-    XmlOptions::get().set<int>( "SEARCH_PANEL_MASK", mask );
+    XmlOptions::get().set<int>( QStringLiteral("SEARCH_PANEL_MASK"), mask );
 
 }
 

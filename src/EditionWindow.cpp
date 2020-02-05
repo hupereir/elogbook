@@ -183,7 +183,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // create attachment list
     auto frame = new AttachmentFrame( 0, readOnly_ );
     frame->visibilityAction().setChecked( false );
-    frame->setDefaultHeight( XmlOptions::get().get<int>( "ATTACHMENT_FRAME_HEIGHT" ) );
+    frame->setDefaultHeight( XmlOptions::get().get<int>( QStringLiteral("ATTACHMENT_FRAME_HEIGHT") ) );
     splitter->addWidget( frame );
     Base::Key::associate( this, frame );
 
@@ -653,7 +653,7 @@ void EditionWindow::writeEntryToLogbook( bool updateSelection )
     entry->setTitle( titleEditor_->text() );
 
     // update author
-    entry->setAuthor( XmlOptions::get().raw( "USER" ) );
+    entry->setAuthor( XmlOptions::get().raw( QStringLiteral("USER") ) );
 
     // add _now_ to entry modification timestamps
     entry->setModified();
@@ -814,7 +814,7 @@ void EditionWindow::timerEvent( QTimerEvent* event )
 
         // save size
         if( attachmentFrame().visibilityAction().isChecked() )
-        { XmlOptions::get().set<int>( "ATTACHMENT_FRAME_HEIGHT", attachmentFrame().height() ); }
+        { XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_FRAME_HEIGHT"), attachmentFrame().height() ); }
 
     } else return BaseMainWindow::timerEvent( event );
 
@@ -1369,7 +1369,7 @@ void EditionWindow::_printPreview()
     // create helper
     LogEntryPrintHelper helper( this );
     helper.setEntry( entry() );
-    helper.setMask( (LogEntry::Mask) XmlOptions::get().get<int>( "LOGENTRY_PRINT_OPTION_MASK" ) );
+    helper.setMask( (LogEntry::Mask) XmlOptions::get().get<int>( QStringLiteral("LOGENTRY_PRINT_OPTION_MASK") ) );
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this, CustomDialog::OkButton|CustomDialog::CancelButton );
@@ -1452,7 +1452,7 @@ void EditionWindow::_newEntry()
 
     // create new entry, set author, set keyword
     auto entry = new LogEntry;
-    entry->setAuthor( XmlOptions::get().raw( "USER" ) );
+    entry->setAuthor( XmlOptions::get().raw( QStringLiteral("USER") ) );
     entry->addKeyword( _mainWindow().currentKeyword() );
 
     // display new entry
@@ -1686,14 +1686,14 @@ void EditionWindow::_spellCheck()
     SpellCheck::SpellDialog dialog( activeEditor_ );
 
     // set dictionary and filter
-    dialog.setFilter( XmlOptions::get().raw("DICTIONARY_FILTER") );
-    dialog.setDictionary( XmlOptions::get().raw("DICTIONARY") );
+    dialog.setFilter( XmlOptions::get().raw(QStringLiteral("DICTIONARY_FILTER")) );
+    dialog.setDictionary( XmlOptions::get().raw(QStringLiteral("DICTIONARY")) );
     dialog.nextWord();
     dialog.exec();
 
     // update dictionary and filter from dialog
-    XmlOptions::get().setRaw( "DICTIONARY_FILTER", dialog.interface().filter() );
-    XmlOptions::get().setRaw( "DICTIONARY", dialog.interface().dictionary() );
+    XmlOptions::get().setRaw( QStringLiteral("DICTIONARY_FILTER"), dialog.interface().filter() );
+    XmlOptions::get().setRaw( QStringLiteral("DICTIONARY"), dialog.interface().dictionary() );
 
     #endif
 }
@@ -1919,7 +1919,7 @@ void EditionWindow::_toggleShowKeyword( bool value )
 
     Debug::Throw( QStringLiteral("EditionWindow::_toggleShowKeyword.\n") );
     _setKeywordVisible( value || forceShowKeyword_ );
-    XmlOptions::get().set<bool>( "SHOW_KEYWORD", value );
+    XmlOptions::get().set<bool>( QStringLiteral("SHOW_KEYWORD"), value );
 
 }
 
@@ -1932,7 +1932,7 @@ void EditionWindow::_updateConfiguration()
     resize( sizeHint() );
 
     // show keyword
-    showKeywordAction_->setChecked( XmlOptions::get().get<bool>( "SHOW_KEYWORD" ) );
+    showKeywordAction_->setChecked( XmlOptions::get().get<bool>( QStringLiteral("SHOW_KEYWORD") ) );
 
 }
 
@@ -2009,7 +2009,7 @@ void Private::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu,
 
 //_____________________________________________
 void Private::LocalTextEditor::_updateConfiguration()
-{ autoInsertLinks_ = XmlOptions::get().get<bool>( "AUTO_INSERT_LINK" ); }
+{ autoInsertLinks_ = XmlOptions::get().get<bool>( QStringLiteral("AUTO_INSERT_LINK") ); }
 
 //___________________________________________________________________________________
 void Private::LocalTextEditor::_installActions()

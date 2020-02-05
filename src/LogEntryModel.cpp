@@ -332,7 +332,7 @@ void LogEntryModel::_sort( int column, Qt::SortOrder order )
 void LogEntryModel::_updateConfiguration()
 {
     Debug::Throw( QStringLiteral("LogEntryModel::_updateConfiguration.\n") );
-    iconSize_ =XmlOptions::get().get<int>( "LIST_ICON_SIZE" );
+    iconSize_ =XmlOptions::get().get<int>( QStringLiteral("LIST_ICON_SIZE") );
     _resetIcons();
 }
 
@@ -354,7 +354,7 @@ const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
     else
     {
 
-        const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( "LIST_ICON_SIZE" ) );
+        const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( QStringLiteral("LIST_ICON_SIZE") ) );
         const double offset = 0.5*( iconSize_ - pixmapSize );
 
         CustomPixmap pixmap( QSize( iconSize_, iconSize_ ), CustomPixmap::Flag::Transparent );

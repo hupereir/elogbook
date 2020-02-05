@@ -107,7 +107,7 @@ QDomElement Attachment::domElement( QDomDocument& parent ) const
 
 //___________________________________
 bool operator < ( const Attachment& first, const Attachment& second)
-{ return first.shortFile().get().compare( second.shortFile(), XmlOptions::get().get<bool>( "CASE_SENSITIVE" ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }
+{ return first.shortFile().get().compare( second.shortFile(), XmlOptions::get().get<bool>( QStringLiteral("CASE_SENSITIVE") ) ? Qt::CaseSensitive:Qt::CaseInsensitive ) < 0; }
 
 //__________________________________
 void Attachment::updateSize()
