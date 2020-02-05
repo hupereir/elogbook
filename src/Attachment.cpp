@@ -27,7 +27,7 @@
 #include "XmlOptions.h"
 #include "XmlTimeStamp.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 
 //_______________________________________
 const QString Attachment::NoFile;
@@ -289,9 +289,10 @@ void Attachment::_setFile( const File& file )
     file_  = file;
 
     // remove trailing spaces
-    static QRegExp regexp( "\\s+$" );
-    if( regexp.indexIn( file_ ) >= 0 )
-    { file_.get().truncate( file_.get().size() - regexp.matchedLength() ); }
+    static const QRegularExpression regexp( "\\s+$" );
+    const auto match( regexp.match( file_ ) );
+    if( match.hasMatch() )
+    { file_.get().truncate( match.capturedStart() ); }
 
     return;
 }
