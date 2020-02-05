@@ -149,7 +149,7 @@ bool Logbook::read()
     QFile file( file_ );
     if ( !file.open( QIODevice::ReadOnly ) )
     {
-        Debug::Throw(0, "Logbook::read - cannot open file.\n" );
+        Debug::Throw(0, QStringLiteral("Logbook::read - cannot open file.\n") );
         return false;
     }
 
@@ -821,7 +821,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
         return (first->author() < second->author());
 
         default:
-        Debug::Throw(0,"EntryLessFTor - invalid sort method.\n" );
+        Debug::Throw(0,QStringLiteral("EntryLessFTor - invalid sort method.\n") );
         break;
     }
     return false;
