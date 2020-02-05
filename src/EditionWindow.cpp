@@ -1959,7 +1959,7 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
     { return TextEditor::insertFromMimeData( source ); }
 
     // do nothing in case of rich text
-    if( source->hasFormat(QLatin1String("application/x-qrichtext") ) )
+    if( source->hasFormat(QStringLiteral("application/x-qrichtext") ) )
     { return TextEditor::insertFromMimeData( source ); }
 
     // get source text
