@@ -36,7 +36,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     Debug::Throw( QStringLiteral("LogbookInformationDialog::LogbookInformationDialog.\n") );
 
     setWindowTitle( tr( "Logbook Informations" ) );
-    setOptionName( "LOGBOOK_INFORMATION_DIALOG" );
+    setOptionName( QStringLiteral("LOGBOOK_INFORMATION_DIALOG") );
 
     QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->setMargin(5);

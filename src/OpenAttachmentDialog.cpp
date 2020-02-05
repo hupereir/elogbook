@@ -39,7 +39,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
     Debug::Throw( QStringLiteral("OpenAttachmentDialog::OpenAttachmentDialog.\n") );
-    setOptionName( "OPEN_ATTACHMENT_DIALOG" );
+    setOptionName( QStringLiteral("OPEN_ATTACHMENT_DIALOG") );
 
     // try load Question icon
     auto hLayout( new QHBoxLayout );
@@ -110,7 +110,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
     comboBox_->setToolTip( tr( "Application to be used to display the attachment" ) );
 
     // retrieve applications from options
-    const auto applications( XmlOptions::get().specialOptions( "OPEN_ATTACHMENT_APPLICATIONS" ) );
+    const auto applications( XmlOptions::get().specialOptions( QStringLiteral("OPEN_ATTACHMENT_APPLICATIONS") ) );
     for( const auto& option:applications )
     { comboBox_->addItem( File( option.raw() ) ); }
 

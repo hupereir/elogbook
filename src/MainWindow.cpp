@@ -79,7 +79,7 @@ MainWindow::MainWindow( QWidget *parent ):
     workingDirectory_( Util::workingDirectory() )
 {
     Debug::Throw( QStringLiteral("MainWindow::MainWindow.\n") );
-    setOptionName( "MAIN_WINDOW" );
+    setOptionName( QStringLiteral("MAIN_WINDOW") );
     updateWindowTitle();
 
     // file checker
@@ -131,7 +131,7 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->setSpacing(0);
     keywordContainer_->setLayout( vLayout );
 
-    keywordToolBar_ = new CustomToolBar( tr( "Keywords" ), keywordContainer_, "KEYWORD_TOOLBAR" );
+    keywordToolBar_ = new CustomToolBar( tr( "Keywords" ), keywordContainer_, QStringLiteral("KEYWORD_TOOLBAR") );
     keywordToolBar_->setTransparent( true );
     keywordToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( keywordToolBar_ );
@@ -151,7 +151,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordList_->setDragEnabled(true);
     keywordList_->setAcceptDrops(true);
     keywordList_->setDropIndicatorShown(true);
-    keywordList_->setOptionName( "KEYWORD_LIST" );
+    keywordList_->setOptionName( QStringLiteral("KEYWORD_LIST") );
 
     // default width from options, if found
     if( XmlOptions::get().contains( QStringLiteral("KEYWORD_LIST_WIDTH") ) )
@@ -203,7 +203,7 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->setSpacing(0);
     right->setLayout( vLayout );
 
-    entryToolBar_ = new CustomToolBar( tr( "Entries" ), right, "ENTRY_TOOLBAR" );
+    entryToolBar_ = new CustomToolBar( tr( "Entries" ), right, QStringLiteral("ENTRY_TOOLBAR") );
     entryToolBar_->setTransparent( true );
     entryToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( entryToolBar_ );
@@ -230,7 +230,7 @@ MainWindow::MainWindow( QWidget *parent ):
     entryList_->setModel( &entryModel_ );
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
     entryList_->setDragEnabled(true);
-    entryList_->setOptionName( "ENTRY_LIST" );
+    entryList_->setOptionName( QStringLiteral("ENTRY_LIST") );
     entryList_->setColumnHidden( LogEntryModel::Key, true );
     entryList_->lockColumnVisibility( LogEntryModel::Key );
     entryList_->setColumnHidden( LogEntryModel::Title, false );
@@ -3722,7 +3722,7 @@ void MainWindow::_updateConfiguration()
 
     // colors
     colorMenu_->reset();
-    for( const auto& color:XmlOptions::get().specialOptions( "COLOR" ) )
+    for( const auto& color:XmlOptions::get().specialOptions( QStringLiteral("COLOR") ) )
     { colorMenu_->add( color.get<Base::Color>() ); }
 
     // max number of recent entries

@@ -28,7 +28,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
 {
     Debug::Throw( QStringLiteral("BackupManagerDialog::BackupManagerDialog.\n") );
     setWindowTitle( tr( "Backup Manager" ) );
-    setOptionName( "BACKUP_MANAGER_DIALOG" );
+    setOptionName( QStringLiteral("BACKUP_MANAGER_DIALOG") );
 
     setLayout( new QVBoxLayout );
     layout()->setMargin(5);

@@ -37,7 +37,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 
     Debug::Throw( QStringLiteral("AttachmentWindow::AttachmentWindow.\n") );
     setWindowTitle( tr( "Attachments" ) );
-    setOptionName( "ATTACHMENT_WINDOW" );
+    setOptionName( QStringLiteral("ATTACHMENT_WINDOW") );
 
     layout()->setMargin(0);
     buttonLayout().setMargin(5);

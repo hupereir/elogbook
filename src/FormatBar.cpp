@@ -237,7 +237,7 @@ void FormatBar::_updateConfiguration()
     Debug::Throw( QStringLiteral("FormatBar::_updateConfiguration.\n") );
 
     // retrieve colors from options
-    Options::List colors( XmlOptions::get().specialOptions( "TEXT_COLOR" ) );
+    Options::List colors( XmlOptions::get().specialOptions( QStringLiteral("TEXT_COLOR") ) );
     if( colors.empty() )
     {
 
@@ -252,7 +252,7 @@ void FormatBar::_updateConfiguration()
             Base::Color("black")
         });
 
-        XmlOptions::get().keep( "TEXT_COLOR" );
+        XmlOptions::get().keep( QStringLiteral("TEXT_COLOR") );
         for( const auto& color:defaultColors )
         {
             XmlOptions::get().add( "TEXT_COLOR", Option().set( color ) );
@@ -272,7 +272,7 @@ void FormatBar::_updateConfiguration()
 void FormatBar::_saveConfiguration()
 {
     Debug::Throw( QStringLiteral("FormatBar::_saveConfiguration.\n") );
-    XmlOptions::get().keep( "TEXT_COLOR" );
+    XmlOptions::get().keep( QStringLiteral("TEXT_COLOR") );
 
     const Base::Color::Set colors( colorMenu_->colors() );
     for( const auto& color:colors )

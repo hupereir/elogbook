@@ -39,7 +39,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 {
     Debug::Throw( QStringLiteral("LogEntryInformationDialog::LogEntryInformationDialog.\n") );
 
-    setOptionName( "ENTRY_INFORMATION_DIALOG" );
+    setOptionName( QStringLiteral("ENTRY_INFORMATION_DIALOG") );
 
     auto hLayout = new QHBoxLayout;
     hLayout->setSpacing(10);

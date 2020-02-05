@@ -35,7 +35,7 @@ Counter( QStringLiteral("LogbookModifiedDialog") )
 {
 
     Debug::Throw( QStringLiteral("LogbookModifiedDialog::LogbookModifiedDialog.\n") );
-    setOptionName( "LOGBOOK_MODIFIED_DIALOG" );
+    setOptionName( QStringLiteral("LOGBOOK_MODIFIED_DIALOG") );
 
     Q_ASSERT( !files.empty() );
 

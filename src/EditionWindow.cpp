@@ -79,7 +79,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnly_( readOnly )
 {
     Debug::Throw(QStringLiteral("EditionWindow::EditionWindow.\n") );
-    setOptionName( "editionWindow" );
+    setOptionName( QStringLiteral("editionWindow") );
     setObjectName( "EDITFRAME" );
 
     auto main( new QWidget( this ) );
@@ -199,7 +199,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     addAction( &application->closeAction() );
 
     // main toolbar
-    auto toolbar = new CustomToolBar( tr( "Main Toolbar" ), this, "MAIN_TOOLBAR" );
+    auto toolbar = new CustomToolBar( tr( "Main Toolbar" ), this, QStringLiteral("MAIN_TOOLBAR") );
     toolbar->addAction( newEntryAction_ );
     toolbar->addAction( saveAction_ );
     toolbar->addAction( deleteEntryAction_ );
@@ -222,7 +222,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
         formatBar_, &FormatBar::updateState );
 
     // edition toolbars
-    toolbar = new CustomToolBar( tr( "History" ), this, "EDITION_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "History" ), this, QStringLiteral("EDITION_TOOLBAR") );
     toolbar->addAction( undoAction_ );
     toolbar->addAction( redoAction_ );
 
@@ -238,7 +238,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     connect( qApp, &QApplication::focusChanged, [this](QWidget*,QWidget*){ _updateUndoRedoActions(); } );
 
     // extra toolbar
-    toolbar = new CustomToolBar( tr( "Tools" ), this, "EXTRA_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Tools" ), this, QStringLiteral("EXTRA_TOOLBAR") );
 
     #if WITH_ASPELL
     toolbar->addAction( spellcheckAction_ );
@@ -248,14 +248,14 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( entryInformationAction_ );
 
     // extra toolbar
-    toolbar = new CustomToolBar( tr( "Multiple Views" ), this, "MULTIPLE_VIEW_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Multiple Views" ), this, QStringLiteral("MULTIPLE_VIEW_TOOLBAR") );
     toolbar->addAction( splitViewHorizontalAction_ );
     toolbar->addAction( splitViewVerticalAction_ );
     toolbar->addAction( cloneWindowAction_ );
     toolbar->addAction( closeAction_ );
 
     // extra toolbar
-    toolbar = new CustomToolBar( tr( "Navigation" ), this, "NAVIGATION_TOOLBAR" );
+    toolbar = new CustomToolBar( tr( "Navigation" ), this, QStringLiteral("NAVIGATION_TOOLBAR") );
     toolbar->addAction( &application->mainWindow().uniconifyAction() );
     toolbar->addAction( previousEntryAction_ );
     toolbar->addAction( nextEntryAction_ );
@@ -1638,7 +1638,7 @@ void EditionWindow::_openLink()
     OpenWithDialog dialog( this );
     dialog.setWindowTitle( tr( "Open Link" ) );
     dialog.setLink( File( anchor ) );
-    dialog.setOptionName( "OPEN_LINK_APPLICATIONS" );
+    dialog.setOptionName( QStringLiteral("OPEN_LINK_APPLICATIONS") );
     dialog.realizeWidget();
     dialog.exec();
 

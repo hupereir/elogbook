@@ -72,7 +72,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     layout()->addWidget( new TreeView::Container( this, treeView_ ) );
     treeView_->setModel( &_model() );
     treeView_->setSelectionMode( QAbstractItemView::ContiguousSelection );
-    treeView_->setOptionName( "ATTACHMENTLIST" );
+    treeView_->setOptionName( QStringLiteral("ATTACHMENTLIST") );
     treeView_->setTextElideMode ( Qt::ElideMiddle );
 
     // install actions
