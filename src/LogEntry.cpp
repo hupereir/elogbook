@@ -30,7 +30,7 @@
 #include "XmlTimeStamp.h"
 
 //__________________________________
-const QString LogEntry::MimeType = "logbook/log-entry-list";
+const QString LogEntry::MimeType = QStringLiteral("logbook/log-entry-list");
 
 //__________________________________
 LogEntry::LogEntry():

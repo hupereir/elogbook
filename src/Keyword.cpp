@@ -26,7 +26,7 @@
 
 //_________________________________________________________________
 const Keyword Keyword::Default( QObject::tr( "New entries" ) );
-const QString Keyword::MimeType( "logbook/keyword-list" );
+const QString Keyword::MimeType( QStringLiteral("logbook/keyword-list") );
 
 //_________________________________________________________________
 Keyword::Keyword( QString value):

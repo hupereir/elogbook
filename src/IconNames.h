@@ -27,29 +27,29 @@
 namespace IconNames
 {
 
-    static const QString Attach = "mail-attachment";
-    static const QString Close = "document-close";
-    static const QString Home = "go-home";
-    static const QString PreviousEntry = "go-previous";
-    static const QString NextEntry = "go-next";
-    static const QString New = "document-new";
-    static const QString Save = "document-save";
-    static const QString SaveAs = "document-save-as";
-    static const QString SpellCheck = "tools-check-spelling";
-    static const QString ViewLeftRight = "view-split-left-right";
-    static const QString ViewTopBottom = "view-split-top-bottom";
-    static const QString ViewRemove = "view-close";
-    static const QString ViewClone = "view-fullscreen";
-    static const QString Tree = "view-list-tree";
-    static const QString ConfigureBackups = "configure-backups";
-    static const QString InsertSymbolicLink = "insert-link";
+    static const QString Attach = QStringLiteral("mail-attachment");
+    static const QString Close = QStringLiteral("document-close");
+    static const QString Home = QStringLiteral("go-home");
+    static const QString PreviousEntry = QStringLiteral("go-previous");
+    static const QString NextEntry = QStringLiteral("go-next");
+    static const QString New = QStringLiteral("document-new");
+    static const QString Save = QStringLiteral("document-save");
+    static const QString SaveAs = QStringLiteral("document-save-as");
+    static const QString SpellCheck = QStringLiteral("tools-check-spelling");
+    static const QString ViewLeftRight = QStringLiteral("view-split-left-right");
+    static const QString ViewTopBottom = QStringLiteral("view-split-top-bottom");
+    static const QString ViewRemove = QStringLiteral("view-close");
+    static const QString ViewClone = QStringLiteral("view-fullscreen");
+    static const QString Tree = QStringLiteral("view-list-tree");
+    static const QString ConfigureBackups = QStringLiteral("configure-backups");
+    static const QString InsertSymbolicLink = QStringLiteral("insert-link");
 
-    static const QString PreferencesSpellCheck = "tools-check-spelling";
-    static const QString PreferencesBackup = "document-save";
-    static const QString Merge = "merge";
+    static const QString PreferencesSpellCheck = QStringLiteral("tools-check-spelling");
+    static const QString PreferencesBackup = QStringLiteral("document-save");
+    static const QString Merge = QStringLiteral("merge");
 
-    static const QString Move = "go-jump";
-    static const QString Link = "edit-link";
+    static const QString Move = QStringLiteral("go-jump");
+    static const QString Link = QStringLiteral("edit-link");
 
 };
 

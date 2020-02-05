@@ -25,10 +25,10 @@
 //* namespace for icon static name wrappers
 namespace IconNames
 {
-    static const QString Bold = "format-text-bold";
-    static const QString Italic = "format-text-italic";
-    static const QString Strike = "format-text-strikethrough";
-    static const QString Underline = "format-text-underline";
+    static const QString Bold = QStringLiteral("format-text-bold");
+    static const QString Italic = QStringLiteral("format-text-italic");
+    static const QString Strike = QStringLiteral("format-text-strikethrough");
+    static const QString Underline = QStringLiteral("format-text-underline");
 }
 
 #endif

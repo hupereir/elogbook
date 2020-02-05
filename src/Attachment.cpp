@@ -32,7 +32,7 @@
 //_______________________________________
 const QString Attachment::NoFile;
 const QString Attachment::NoComments( QObject::tr( "no comments" ) );
-const QString Attachment::NoSize( " - " );
+const QString Attachment::NoSize( QStringLiteral(" - ") );
 
 //_______________________________________
 Attachment::Attachment( const QString orig ):

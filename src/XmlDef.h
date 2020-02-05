@@ -26,35 +26,35 @@
 namespace Xml
 {
 
-    static const QString Logbook( "Logbook" );
-    static const QString Attachment( "Attachment" );
-    static const QString RecentEntries( "RecentEntries" );
-    static const QString Entry( "Entry" );
-    static const QString Child( "Child" );
-    static const QString Type( "type" );
-    static const QString File( "file" );
-    static const QString SourceFile( "orig" );
-    static const QString ParentFile( "parent_file" );
-    static const QString Valid( "valid" );
-    static const QString IsLink( "is_link" );
-    static const QString IsUrl( "is_url" );
-    static const QString Directory( "directory" );
-    static const QString Comments( "comments" );
-    static const QString Creation( "Creation" );
-    static const QString Modification( "Modification" );
-    static const QString Backup( "Backup" );
-    static const QString BackupMask( "Logbook_backup" );
-    static const QString Title( "title" );
-    static const QString Author( "author" );
-    static const QString SortMethod( "sort_method" );
-    static const QString SortOrder( "sort_order" );
-    static const QString Entries( "entries" );
-    static const QString Children( "children" );
-    static const QString Text( "Text" );
-    static const QString Keyword( "key" );
-    static const QString KeywordValue( "value" );
-    static const QString Color( "color" );
-    static const QString ReadOnly( "ReadOnly" );
+    static const QString Logbook( QStringLiteral("Logbook") );
+    static const QString Attachment( QStringLiteral("Attachment") );
+    static const QString RecentEntries( QStringLiteral("RecentEntries") );
+    static const QString Entry( QStringLiteral("Entry") );
+    static const QString Child( QStringLiteral("Child") );
+    static const QString Type( QStringLiteral("type") );
+    static const QString File( QStringLiteral("file") );
+    static const QString SourceFile( QStringLiteral("orig") );
+    static const QString ParentFile( QStringLiteral("parent_file") );
+    static const QString Valid( QStringLiteral("valid") );
+    static const QString IsLink( QStringLiteral("is_link") );
+    static const QString IsUrl( QStringLiteral("is_url") );
+    static const QString Directory( QStringLiteral("directory") );
+    static const QString Comments( QStringLiteral("comments") );
+    static const QString Creation( QStringLiteral("Creation") );
+    static const QString Modification( QStringLiteral("Modification") );
+    static const QString Backup( QStringLiteral("Backup") );
+    static const QString BackupMask( QStringLiteral("Logbook_backup") );
+    static const QString Title( QStringLiteral("title") );
+    static const QString Author( QStringLiteral("author") );
+    static const QString SortMethod( QStringLiteral("sort_method") );
+    static const QString SortOrder( QStringLiteral("sort_order") );
+    static const QString Entries( QStringLiteral("entries") );
+    static const QString Children( QStringLiteral("children") );
+    static const QString Text( QStringLiteral("Text") );
+    static const QString Keyword( QStringLiteral("key") );
+    static const QString KeywordValue( QStringLiteral("value") );
+    static const QString Color( QStringLiteral("color") );
+    static const QString ReadOnly( QStringLiteral("ReadOnly") );
 
 };
 
