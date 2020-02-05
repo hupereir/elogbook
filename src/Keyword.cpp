@@ -30,13 +30,13 @@ const QString Keyword::MimeType( "logbook/keyword-list" );
 
 //_________________________________________________________________
 Keyword::Keyword( QString value):
-    Counter( "Keyword" ),
+    Counter( QStringLiteral("Keyword") ),
     value_( _format( value ) )
 {}
 
 //_________________________________________________________________
 Keyword::Keyword( const QDomElement& element ):
-    Counter( "Keyword" ),
+    Counter( QStringLiteral("Keyword") ),
     value_( _format( element.text() ) )
 {}
 

@@ -48,9 +48,9 @@ LogEntryModel::IconCache& LogEntryModel::_icons()
 //_______________________________________________________________
 LogEntryModel::LogEntryModel( QObject* parent ):
     ListModel( parent ),
-    Counter( "LogEntryModel" )
+    Counter( QStringLiteral("LogEntryModel") )
 {
-    Debug::Throw( "LogEntryModel::LogEntryModel.\n" );
+    Debug::Throw( QStringLiteral("LogEntryModel::LogEntryModel.\n") );
 
     connect( Base::Singleton::get().application<Application>(), &Application::configurationChanged, this, &LogEntryModel::_updateConfiguration );
     connect( this, &QAbstractItemModel::layoutChanged, this, &LogEntryModel::_disableEdition );
@@ -183,7 +183,7 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 //__________________________________________________________________
 bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int role )
 {
-    Debug::Throw( "LogEntryModel::setData.\n" );
+    Debug::Throw( QStringLiteral("LogEntryModel::setData.\n") );
 
     if( !editionEnabled_ ) return false;
     if( !(index.isValid() && ( index.column() == Title || index.column() == Key ) && role == Qt::EditRole ) ) return false;
@@ -331,7 +331,7 @@ void LogEntryModel::_sort( int column, Qt::SortOrder order )
 //________________________________________________________
 void LogEntryModel::_updateConfiguration()
 {
-    Debug::Throw( "LogEntryModel::_updateConfiguration.\n" );
+    Debug::Throw( QStringLiteral("LogEntryModel::_updateConfiguration.\n") );
     iconSize_ =XmlOptions::get().get<int>( "LIST_ICON_SIZE" );
     _resetIcons();
 }
@@ -340,7 +340,7 @@ void LogEntryModel::_updateConfiguration()
 void LogEntryModel::_resetIcons()
 {
 
-    Debug::Throw( "LogEntryModel::_resetIcons" );
+    Debug::Throw( QStringLiteral("LogEntryModel::_resetIcons") );
     _icons().clear();
 
 }
@@ -381,7 +381,7 @@ const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
 const QIcon& LogEntryModel::_attachmentIcon() const
 {
 
-    Debug::Throw( "LogEntryModel::_attachmentIcon" );
+    Debug::Throw( QStringLiteral("LogEntryModel::_attachmentIcon") );
 
     static QIcon attachmentIcon;
     if( attachmentIcon.isNull() ) attachmentIcon = IconEngine::get( IconNames::Attach );

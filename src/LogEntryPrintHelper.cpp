@@ -39,7 +39,7 @@
 //__________________________________________________________________________________
 void LogEntryPrintHelper::print( QPrinter* printer )
 {
-    Debug::Throw( "LogEntryPrintHelper::print.\n" );
+    Debug::Throw( QStringLiteral("LogEntryPrintHelper::print.\n") );
 
     // check entry
     Q_CHECK_PTR( entry_ );
@@ -72,7 +72,7 @@ void LogEntryPrintHelper::print( QPrinter* printer )
 void LogEntryPrintHelper::printEntry( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
-    Debug::Throw( "LogEntryPrintHelper::printEntry.\n" );
+    Debug::Throw( QStringLiteral("LogEntryPrintHelper::printEntry.\n") );
 
     // check entry
     Q_CHECK_PTR( entry_ );
@@ -91,7 +91,7 @@ void LogEntryPrintHelper::printEntry( QPrinter* printer, QPainter* painter, QPoi
 void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
-    Debug::Throw( "LogEntryPrintHelper::_printHeader.\n" );
+    Debug::Throw( QStringLiteral("LogEntryPrintHelper::_printHeader.\n") );
 
     // check mask
     if( !( mask_ & LogEntry::HeaderMask ) ) return;
@@ -188,7 +188,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 //__________________________________________________________________________________
 void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
-    Debug::Throw( "LogEntryPrintHelper::_printBody.\n" );
+    Debug::Throw( QStringLiteral("LogEntryPrintHelper::_printBody.\n") );
 
     // check mask
     if( !(mask_&LogEntry::TextMask ) ) return;
@@ -302,7 +302,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
 //__________________________________________________________________________________
 void LogEntryPrintHelper::_printAttachments( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
-    Debug::Throw( "LogEntryPrintHelper::_printAttachments.\n" );
+    Debug::Throw( QStringLiteral("LogEntryPrintHelper::_printAttachments.\n") );
 
     // check mask
     if( !(mask_&LogEntry::AttachmentsMask) ) return;

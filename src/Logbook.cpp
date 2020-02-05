@@ -90,13 +90,13 @@ const QString Logbook::NoDirectory;
 
 //________________________________
 Logbook::Logbook( File file ):
-    Counter( "Logbook" ),
+    Counter( QStringLiteral("Logbook") ),
     directory_( NoDirectory ),
     title_( NoTitle ),
     author_( NoAuthor ),
     creation_( TimeStamp::now() )
 {
-    Debug::Throw( "Logbook::Logbook. (file)\n" );
+    Debug::Throw( QStringLiteral("Logbook::Logbook. (file)\n") );
     setFile( file );
     read();
 }
@@ -104,7 +104,7 @@ Logbook::Logbook( File file ):
 //_________________________________
 Logbook::~Logbook()
 {
-    Debug::Throw( "Logbook::~Logbook.\n" );
+    Debug::Throw( QStringLiteral("Logbook::~Logbook.\n") );
 
     // delete log children
     children_.clear();
@@ -127,11 +127,11 @@ void Logbook::setUseCompression( bool value )
 bool Logbook::read()
 {
 
-    Debug::Throw( "Logbook::read.\n" );
+    Debug::Throw( QStringLiteral("Logbook::read.\n") );
 
     if( file_.isEmpty() )
     {
-        Debug::Throw( "Logbook::read - file is empty.\n" );
+        Debug::Throw( QStringLiteral("Logbook::read - file is empty.\n") );
         return false;
     }
 
@@ -271,7 +271,7 @@ bool Logbook::read()
 bool Logbook::write( File file )
 {
 
-    Debug::Throw( "Logbook::write.\n" );
+    Debug::Throw( QStringLiteral("Logbook::write.\n") );
 
     // check filename
     if( file.isEmpty() ) file = Logbook::file_;
@@ -408,7 +408,7 @@ bool Logbook::write( File file )
 //_________________________________
 QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
 {
-    Debug::Throw( "Logbook::synchronize.\n" );
+    Debug::Throw( QStringLiteral("Logbook::synchronize.\n") );
 
     // retrieve logbook entries
     auto newEntries( logbook.entries() );
@@ -467,7 +467,7 @@ QHash<LogEntry*,LogEntry*> Logbook::synchronize( const Logbook& logbook )
 //_________________________________
 XmlError::List Logbook::xmlErrors() const
 {
-    Debug::Throw( "Logbook::xmlErrors.\n" );
+    Debug::Throw( QStringLiteral("Logbook::xmlErrors.\n") );
     XmlError::List out;
     if( error_ ) out.append( error_ );
     for( const auto& logbook:children_ )
@@ -494,7 +494,7 @@ Logbook::List Logbook::children() const
 Logbook::LogbookPtr Logbook::latestChild()
 {
 
-    Debug::Throw( "Logbook::latestChild.\n" );
+    Debug::Throw( QStringLiteral("Logbook::latestChild.\n") );
 
     // check if one existsing child is not complete
     for( const auto& logbook:children_ )
@@ -560,7 +560,7 @@ Base::KeySet<Attachment> Logbook::attachments() const
 void Logbook::truncateRecentEntriesList( int maxCount )
 {
 
-    Debug::Throw( "Logbook::truncateRecentEntriesList.\n" );
+    Debug::Throw( QStringLiteral("Logbook::truncateRecentEntriesList.\n") );
     if( recentEntries_.size() > maxCount )
     { recentEntries_.erase( recentEntries_.begin(), recentEntries_.begin() + (recentEntries_.size() - maxCount ) ); }
 
@@ -569,7 +569,7 @@ void Logbook::truncateRecentEntriesList( int maxCount )
 //_________________________________
 void Logbook::removeEmptyChildren()
 {
-    Debug::Throw( "Logbook::removeEmptyChildren.\n" );
+    Debug::Throw( QStringLiteral("Logbook::removeEmptyChildren.\n") );
 
     // loop over children
     /* should try use algorithm instead */
@@ -613,7 +613,7 @@ QList<LogEntry*> Logbook::recentEntries() const
 void Logbook::addRecentEntry( const LogEntry* entry )
 {
 
-    Debug::Throw( "Logbook::addRecentEntry.\n" );
+    Debug::Throw( QStringLiteral("Logbook::addRecentEntry.\n") );
     auto timeStamp( entry->creation() );
 
     // first remove time stamp from list if it exists
@@ -630,7 +630,7 @@ void Logbook::addRecentEntry( const LogEntry* entry )
 //_________________________________
 void Logbook::setFile( File file, bool recursive )
 {
-    Debug::Throw( "Logbook::setFile.\n" );
+    Debug::Throw( QStringLiteral("Logbook::setFile.\n") );
 
     // update file and last saved timestamp
     file_ = file;
@@ -657,7 +657,7 @@ void Logbook::setFile( File file, bool recursive )
 //_________________________________
 bool Logbook::needsBackup() const
 {
-    Debug::Throw( "Logbook::needsBackup.\n" );
+    Debug::Throw( QStringLiteral("Logbook::needsBackup.\n") );
     if( !backup().isValid() ) return true;
     return( TimeStamp::now().unixTime() > backup().unixTime() + (24*3600)*XmlOptions::get().get<double>( "BACKUP_ITV" ) );
 }
@@ -665,7 +665,7 @@ bool Logbook::needsBackup() const
 //_________________________________
 File Logbook::backupFileName() const
 {
-    Debug::Throw( "Logbook::MakeBackupFileName.\n" );
+    Debug::Throw( QStringLiteral("Logbook::MakeBackupFileName.\n") );
     auto head( File( file_ ).truncatedName() );
     auto foot( File( file_ ).extension() );
     if( !foot.isEmpty() ) foot = File( QString(".") + foot );
@@ -684,7 +684,7 @@ File Logbook::backupFileName() const
 bool Logbook::setReadOnly( bool value )
 {
 
-    Debug::Throw( "Logbook::setReadOnly.\n" );
+    Debug::Throw( QStringLiteral("Logbook::setReadOnly.\n") );
     bool changed( false );
     if( readOnly_ != value )
     {
@@ -709,7 +709,7 @@ bool Logbook::setReadOnly( bool value )
 bool Logbook::setIsBackup( bool value )
 {
 
-    Debug::Throw( "Logbook::setIsBackup.\n" );
+    Debug::Throw( QStringLiteral("Logbook::setIsBackup.\n") );
     bool changed( false );
     if( isBackup_ != value )
     {
@@ -730,7 +730,7 @@ bool Logbook::setIsBackup( bool value )
 //_________________________________
 void Logbook::setModified( bool value )
 {
-    Debug::Throw( "Logbook::setModified.\n");
+    Debug::Throw( QStringLiteral("Logbook::setModified.\n"));
     modified_ = value;
     if( value ) setModification( TimeStamp::now() );
 }
@@ -738,7 +738,7 @@ void Logbook::setModified( bool value )
 //_________________________________
 void Logbook::setModifiedRecursive( bool value )
 {
-    Debug::Throw( "Logbook::SetModifiedRecursive.\n" );
+    Debug::Throw( QStringLiteral("Logbook::SetModifiedRecursive.\n") );
     modified_ = value;
     if( value ) setModification( TimeStamp::now() );
     for( const auto& logbook:children_ )
@@ -749,7 +749,7 @@ void Logbook::setModifiedRecursive( bool value )
 //_________________________________
 void Logbook::setModification( const TimeStamp& stamp )
 {
-    Debug::Throw( "Logbook::SetModification.\n" );
+    Debug::Throw( QStringLiteral("Logbook::SetModification.\n") );
     modification_ = stamp;
 }
 
@@ -760,7 +760,7 @@ bool Logbook::modified() const
 //______________________________________________________________________
 bool Logbook::setSortMethod( Logbook::SortMethod sortMethod )
 {
-    Debug::Throw( "Logbook::setSortMethod.\n" );
+    Debug::Throw( QStringLiteral("Logbook::setSortMethod.\n") );
     bool changed = ( this->sortMethod() != sortMethod );
     if( changed )
     {
@@ -773,7 +773,7 @@ bool Logbook::setSortMethod( Logbook::SortMethod sortMethod )
 //______________________________________________________________________
 bool Logbook::setSortOrder( int order )
 {
-    Debug::Throw( "Logbook::setSortOrder.\n" );
+    Debug::Throw( QStringLiteral("Logbook::setSortOrder.\n") );
     bool changed = (sortOrder() != order );
     if( changed )
     {
@@ -830,7 +830,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 //______________________________________________________________________
 void Logbook::addBackup( File file )
 {
-    Debug::Throw( "Logbook::addBackup.\n" );
+    Debug::Throw( QStringLiteral("Logbook::addBackup.\n") );
     backupFiles_.append( Backup( file ) );
     backup_ = backupFiles_.back().creation();
     setModified( true );
@@ -840,7 +840,7 @@ void Logbook::addBackup( File file )
 void Logbook::setBackupFiles( const Backup::List& backups )
 {
 
-    Debug::Throw( "Logbook::setBackupFiles.\n" );
+    Debug::Throw( QStringLiteral("Logbook::setBackupFiles.\n") );
     if( backupFiles_ == backups ) return;
     backupFiles_ = backups;
 
@@ -855,7 +855,7 @@ void Logbook::setBackupFiles( const Backup::List& backups )
 void Logbook::_readRecentEntries( const QDomElement& element )
 {
 
-    Debug::Throw( "Logbook::_readRecentEntries.\n" );
+    Debug::Throw( QStringLiteral("Logbook::_readRecentEntries.\n") );
     recentEntries_.clear();
 
     // loop over children
@@ -875,7 +875,7 @@ void Logbook::_readRecentEntries( const QDomElement& element )
 //______________________________________________________________________
 QDomElement Logbook::_recentEntriesElement( QDomDocument& document ) const
 {
-    Debug::Throw( "Logbook::_recentEntriesElement.\n" );
+    Debug::Throw( QStringLiteral("Logbook::_recentEntriesElement.\n") );
 
     auto out( document.createElement( Xml::RecentEntries ) );
     for( const auto& timeStamp:recentEntries_ )

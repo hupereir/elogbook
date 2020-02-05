@@ -23,10 +23,10 @@
 
 //______________________________________________________________________
 Backup::Backup( const QDomElement& element ):
-    Counter( "Backup" ),
+    Counter( QStringLiteral("Backup") ),
     valid_( true )
 {
-    Debug::Throw( "Backup::Backup.\n" );
+    Debug::Throw( QStringLiteral("Backup::Backup.\n") );
 
     // parse attributes
     const auto attributes( element.attributes() );
@@ -42,7 +42,7 @@ Backup::Backup( const QDomElement& element ):
 //______________________________________________________________________
 QDomElement Backup::domElement( QDomDocument& document ) const
 {
-    Debug::Throw( "Backup::domElement.\n" );
+    Debug::Throw( QStringLiteral("Backup::domElement.\n") );
     QDomElement out( document.createElement( Xml::BackupMask ) );
     out.setAttribute( Xml::Creation, QString::number( creation_.unixTime() ) );
     out.setAttribute( Xml::File, file() );

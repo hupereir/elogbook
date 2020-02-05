@@ -33,7 +33,7 @@
 LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* logbook ):
     CustomDialog( parent )
 {
-    Debug::Throw( "LogbookInformationDialog::LogbookInformationDialog.\n" );
+    Debug::Throw( QStringLiteral("LogbookInformationDialog::LogbookInformationDialog.\n") );
 
     setWindowTitle( tr( "Logbook Informations" ) );
     setOptionName( "LOGBOOK_INFORMATION_DIALOG" );

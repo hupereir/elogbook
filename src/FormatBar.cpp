@@ -83,7 +83,7 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
     CustomToolBar( "Text format", parent, optionName )
 {
 
-    Debug::Throw( "ToolBar::ToolBar.\n" );
+    Debug::Throw( QStringLiteral("ToolBar::ToolBar.\n") );
 
     // bold
     QAction* action;
@@ -141,7 +141,7 @@ void FormatBar::setTarget( TextEditor& editor )
 void FormatBar::load( const TextFormat::Block::List& formatList ) const
 {
 
-    Debug::Throw( "FormatBar::loadFormats.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::loadFormats.\n") );
     Q_CHECK_PTR( editor_ );
 
     // get base text color name
@@ -182,7 +182,7 @@ void FormatBar::load( const TextFormat::Block::List& formatList ) const
 //________________________________________
 TextFormat::Block::List FormatBar::get() const
 {
-    Debug::Throw( "FormatBar::get.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::get.\n") );
 
     TextFormat::Block::List out;
 
@@ -234,7 +234,7 @@ TextFormat::Block::List FormatBar::get() const
 //________________________________________
 void FormatBar::_updateConfiguration()
 {
-    Debug::Throw( "FormatBar::_updateConfiguration.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_updateConfiguration.\n") );
 
     // retrieve colors from options
     Options::List colors( XmlOptions::get().specialOptions( "TEXT_COLOR" ) );
@@ -271,7 +271,7 @@ void FormatBar::_updateConfiguration()
 //________________________________________
 void FormatBar::_saveConfiguration()
 {
-    Debug::Throw( "FormatBar::_saveConfiguration.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_saveConfiguration.\n") );
     XmlOptions::get().keep( "TEXT_COLOR" );
 
     const Base::Color::Set colors( colorMenu_->colors() );
@@ -284,7 +284,7 @@ void FormatBar::_saveConfiguration()
 //________________________________________
 void FormatBar::_bold( bool state )
 {
-    Debug::Throw( "FormatBar::_bold.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_bold.\n") );
     if( editor_ && enabled_ )
     {
         QTextCharFormat format;
@@ -296,7 +296,7 @@ void FormatBar::_bold( bool state )
 //________________________________________
 void FormatBar::_italic( bool state )
 {
-    Debug::Throw( "FormatBar::_italic.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_italic.\n") );
     if( editor_ && enabled_ )
     {
         QTextCharFormat format;
@@ -308,7 +308,7 @@ void FormatBar::_italic( bool state )
 //________________________________________
 void FormatBar::_underline( bool state )
 {
-    Debug::Throw( "FormatBar::_underline.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_underline.\n") );
     if( editor_ && enabled_ )
     {
         QTextCharFormat format;
@@ -320,7 +320,7 @@ void FormatBar::_underline( bool state )
 //________________________________________
 void FormatBar::_strike( bool state )
 {
-    Debug::Throw( "FormatBar::_strike.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_strike.\n") );
     if( editor_ && enabled_ )
     {
         QTextCharFormat format;
@@ -332,7 +332,7 @@ void FormatBar::_strike( bool state )
 //________________________________________
 void FormatBar::_color( QColor color )
 {
-    Debug::Throw( "FormatBar::_color.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_color.\n") );
     if( editor_ && enabled_ )
     {
 
@@ -347,14 +347,14 @@ void FormatBar::_color( QColor color )
 //______________________________________
 void FormatBar::_lastColor()
 {
-    Debug::Throw( "FormatBar::_lastColor.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::_lastColor.\n") );
     _color( colorMenu_->lastColor() );
 }
 
 //________________________________________
 void FormatBar::updateState( const QTextCharFormat& format )
 {
-    Debug::Throw( "FormatBar::updateState.\n" );
+    Debug::Throw( QStringLiteral("FormatBar::updateState.\n") );
     enabled_ = false;
     actions_[ActionId::Bold]->setChecked( format.fontWeight() == QFont::Bold );
     actions_[ActionId::Italic]->setChecked( format.fontItalic() );

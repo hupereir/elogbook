@@ -48,7 +48,7 @@ class LogbookModel: public ListModel<Logbook*>, private Base::Counter<LogbookMod
     //* constructor
     explicit LogbookModel( QObject* parent = nullptr ):
         ListModel( parent ),
-        Counter( "LogbookModel" )
+        Counter( QStringLiteral("LogbookModel") )
     {}
 
     //*@name accessors

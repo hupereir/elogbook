@@ -61,7 +61,7 @@ namespace Private
         //* constructor
         explicit LocalSplitter( QWidget* parent ):
             QSplitter( parent ),
-            Counter( "LocalSplitter" )
+            Counter( QStringLiteral("LocalSplitter") )
         {}
 
     };

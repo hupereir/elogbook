@@ -29,7 +29,7 @@ NewLogbookDialog::NewLogbookDialog( QWidget* parent ):
 CustomDialog( parent )
 {
 
-    Debug::Throw( "NewLogbookDialog::NewLogbookDialog.\n" );
+    Debug::Throw( QStringLiteral("NewLogbookDialog::NewLogbookDialog.\n") );
     setWindowTitle( tr( "New Logbook" ) );
     QGridLayout *gridLayout( new QGridLayout );
     gridLayout->setMargin(0);

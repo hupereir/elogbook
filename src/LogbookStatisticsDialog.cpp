@@ -38,7 +38,7 @@
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
     CustomDialog( parent, CloseButton )
 {
-    Debug::Throw( "LogbookStatisticsDialog::LogbookStatisticsDialog.\n" );
+    Debug::Throw( QStringLiteral("LogbookStatisticsDialog::LogbookStatisticsDialog.\n") );
 
     setWindowTitle( tr( "Logbook Statistics" ) );
     setOptionName( "LOGBOOK_STATISTICS_DIALOG" );

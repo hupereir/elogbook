@@ -75,10 +75,10 @@
 //_____________________________________________
 MainWindow::MainWindow( QWidget *parent ):
     BaseMainWindow( parent ),
-    Counter( "MainWindow" ),
+    Counter( QStringLiteral("MainWindow") ),
     workingDirectory_( Util::workingDirectory() )
 {
-    Debug::Throw( "MainWindow::MainWindow.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::MainWindow.\n") );
     setOptionName( "MAIN_WINDOW" );
     updateWindowTitle();
 
@@ -303,7 +303,7 @@ MainWindow::MainWindow( QWidget *parent ):
 void MainWindow::createDefaultLogbook()
 {
 
-    Debug::Throw( "MainWindow::_newLogbook.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_newLogbook.\n") );
 
     // check current logbook
     if( logbookIsModified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -378,18 +378,18 @@ bool MainWindow::setLogbook( File file )
     logbook_->read();
     _setEnabled( true );
 
-    Debug::Throw( "MainWindow::setLogbook - finished reading.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::setLogbook - finished reading.\n") );
 
     // update listView with new entries
     _resetKeywordList();
     _resetLogEntryList();
     _loadColors();
 
-    Debug::Throw( "MainWindow::setLogbook - lists set.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::setLogbook - lists set.\n") );
 
     // change sorting
     Qt::SortOrder sortOrder( (Qt::SortOrder) logbook_->sortOrder() );
-    Debug::Throw( "MainWindow::setLogbook - got sort order.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::setLogbook - got sort order.\n") );
 
     switch( logbook_->sortMethod() )
     {
@@ -401,11 +401,11 @@ bool MainWindow::setLogbook( File file )
         default: break;
     }
 
-    Debug::Throw( "MainWindow::setLogbook - lists sorted.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::setLogbook - lists sorted.\n") );
 
     // update attachment frame
     resetAttachmentWindow();
-    Debug::Throw( "MainWindow::setLogbook - attachment frame reset.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::setLogbook - attachment frame reset.\n") );
 
     // retrieve last modified entry
     Base::KeySet<LogEntry> entries( logbook_->entries() );
@@ -414,7 +414,7 @@ bool MainWindow::setLogbook( File file )
 
     entryList_->setFocus();
 
-    Debug::Throw( "MainWindow::setLogbook - entry selected.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::setLogbook - entry selected.\n") );
 
     // see if logbook has parent file
     if( !logbook_->parentFile().isEmpty() )
@@ -504,7 +504,7 @@ bool MainWindow::setLogbook( File file )
 //_____________________________________________
 void MainWindow::checkLogbookBackup()
 {
-    Debug::Throw( "MainWindow::checkLogbookBackup.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::checkLogbookBackup.\n") );
 
     // check logbook makes sense
     if( !logbook_ ) return;
@@ -530,7 +530,7 @@ void MainWindow::checkLogbookBackup()
 void MainWindow::reset()
 {
 
-    Debug::Throw( "MainWindow::reset.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::reset.\n") );
     if( logbook_ ) logbook_.reset();
 
     // clear list of entries
@@ -559,7 +559,7 @@ AskForSaveDialog::ReturnCode MainWindow::checkModifiedEntries()
 AskForSaveDialog::ReturnCode MainWindow::askForSave( bool enableCancel )
 {
 
-    Debug::Throw( "MainWindow::askForSave.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::askForSave.\n") );
 
     // create dialog
     AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No );
@@ -579,7 +579,7 @@ void MainWindow::clearSelection()
 //_______________________________________________
 void MainWindow::selectEntry( LogEntry* entry )
 {
-    Debug::Throw("MainWindow::selectEntry.\n" );
+    Debug::Throw(QStringLiteral("MainWindow::selectEntry.\n") );
 
     if( !entry ) return;
 
@@ -603,7 +603,7 @@ void MainWindow::selectEntry( LogEntry* entry )
 //_______________________________________________
 void MainWindow::selectEntry( const Keyword& keyword, LogEntry* entry )
 {
-    Debug::Throw("MainWindow::selectEntry.\n" );
+    Debug::Throw(QStringLiteral("MainWindow::selectEntry.\n") );
 
     if( !entry ) return;
     if( !entry->keywords().contains( keyword ) )
@@ -630,7 +630,7 @@ void MainWindow::selectEntry( const Keyword& keyword, LogEntry* entry )
 void MainWindow::updateEntry( Keyword keyword, LogEntry* entry, bool updateSelection )
 {
 
-    Debug::Throw( "MainWindow::updateEntry.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::updateEntry.\n") );
 
     // make sure keyword model contains all entry keywords
     keywordModel_.add( entry->keywords().toList() );
@@ -663,7 +663,7 @@ void MainWindow::updateEntry( Keyword keyword, LogEntry* entry, bool updateSelec
 //_______________________________________________
 void MainWindow::deleteEntry( LogEntry* entry, bool save )
 {
-    Debug::Throw( "MainWindow::deleteEntry.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::deleteEntry.\n") );
 
     // check entry
     if( !entry ) return;
@@ -722,7 +722,7 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
 //_______________________________________________
 bool MainWindow::lockEntry( LogEntry* entry, EditionWindow* editionWindow )
 {
-    Debug::Throw( "MainWindow::lockEntry.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::lockEntry.\n") );
     if( !entry ) return true;
 
     // check whether there are modified editors around and ask for save
@@ -742,7 +742,7 @@ bool MainWindow::lockEntry( LogEntry* entry, EditionWindow* editionWindow )
 LogEntry* MainWindow::previousEntry( LogEntry* entry, bool updateSelection )
 {
 
-    Debug::Throw( "MainWindow::previousEntry.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::previousEntry.\n") );
     QModelIndex index( entryModel_.index( entry ) );
     if( !( index.isValid() && index.row() > 0 ) ) return nullptr;
 
@@ -761,7 +761,7 @@ LogEntry* MainWindow::previousEntry( LogEntry* entry, bool updateSelection )
 LogEntry* MainWindow::nextEntry( LogEntry* entry, bool updateSelection )
 {
 
-    Debug::Throw( "MainWindow::nextEntry.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::nextEntry.\n") );
     QModelIndex index( entryModel_.index( entry ) );
     if( !( index.isValid() && index.row()+1 < entryModel_.rowCount() ) ) return nullptr;
 
@@ -780,7 +780,7 @@ LogEntry* MainWindow::nextEntry( LogEntry* entry, bool updateSelection )
 void MainWindow::resetAttachmentWindow() const
 {
 
-    Debug::Throw( "MainWindow::resetAttachmentWindow.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::resetAttachmentWindow.\n") );
 
     // clear the AttachmentWindow
     auto& attachmentWindow( Base::Singleton::get().application<Application>()->attachmentWindow() );
@@ -799,7 +799,7 @@ void MainWindow::resetAttachmentWindow() const
 //_______________________________________________
 Keyword MainWindow::currentKeyword() const
 {
-    Debug::Throw( "MainWindow::currentKeyword.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::currentKeyword.\n") );
     QModelIndex index( keywordList_->selectionModel()->currentIndex() );
     return index.isValid() ? keywordModel_.get( index ) : Keyword();
 }
@@ -808,7 +808,7 @@ Keyword MainWindow::currentKeyword() const
 void MainWindow::saveUnchecked()
 {
 
-    Debug::Throw( "MainWindow::saveUnchecked.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::saveUnchecked.\n") );
     // check logbook
     if( !logbook_ )
     {
@@ -878,7 +878,7 @@ void MainWindow::saveUnchecked()
 void MainWindow::save()
 {
 
-    Debug::Throw( "MainWindow::save.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::save.\n") );
 
     // check logbook
     if( !logbook_ )
@@ -999,7 +999,7 @@ void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mod
 //_______________________________________________
 void MainWindow::showAllEntries()
 {
-    Debug::Throw( "MainWindow::showAllEntries.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::showAllEntries.\n") );
 
     // keep track of the current selected entry
     auto currentIndex( entryList_->selectionModel()->currentIndex() );
@@ -1026,7 +1026,7 @@ void MainWindow::showAllEntries()
 //____________________________________
 void MainWindow::closeEvent( QCloseEvent *event )
 {
-    Debug::Throw( "MainWindow::closeEvent.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::closeEvent.\n") );
 
     auto reply = checkModifiedEntries();
     if( reply == AskForSaveDialog::Cancel )
@@ -1074,14 +1074,14 @@ void MainWindow::timerEvent( QTimerEvent* event )
 void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 {
 
-    Debug::Throw( "MainWindow::contextMenuEvent.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::contextMenuEvent.\n") );
     BaseMainWindow::contextMenuEvent( event );
     if( event->isAccepted() ) return;
 
     // if event was rejected it means it is outer of one of the
     // relevant window area. However here we want it to also be accepted
     // in the 'customized' keyword and entry toolbars.
-    Debug::Throw( "MainWindow::contextMenuEvent - event rejected.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::contextMenuEvent - event rejected.\n") );
 
     // get child under widget
     bool accepted( false );
@@ -1108,7 +1108,7 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 void MainWindow::_installActions()
 {
 
-    Debug::Throw( "MainWindow::_installActions.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_installActions.\n") );
     uniconifyAction_ = new QAction( IconEngine::get( IconNames::Home ), tr( "Main Window" ), this );
     uniconifyAction_->setToolTip( tr( "Raise application main window" ) );
     connect( uniconifyAction_, &QAction::triggered, this, &BaseMainWindow::uniconify );
@@ -1290,7 +1290,7 @@ void MainWindow::_installActions()
 void MainWindow::_resetKeywordList()
 {
 
-    Debug::Throw( "MainWindow::_resetKeywordList.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_resetKeywordList.\n") );
     Q_CHECK_PTR( logbook_ );
 
     // retrieve new list of keywords (from logbook)
@@ -1318,7 +1318,7 @@ void MainWindow::_resetKeywordList()
 void MainWindow::_resetLogEntryList()
 {
 
-    Debug::Throw( "MainWindow::_resetLogEntryList.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_resetLogEntryList.\n") );
 
     // clear list of entries
     entryModel_.clear();
@@ -1359,7 +1359,7 @@ void MainWindow::_resetLogEntryList()
 void MainWindow::_loadColors()
 {
 
-    Debug::Throw( "MainWindow::_loadColors.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_loadColors.\n") );
 
     if( !logbook_ ) return;
 
@@ -1422,7 +1422,7 @@ void MainWindow::_autoSave()
 //__________________________________________________________________
 AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<EditionWindow> windows )
 {
-    Debug::Throw( "_MainWindow::checkModifiedEntries.\n" );
+    Debug::Throw( QStringLiteral("_MainWindow::checkModifiedEntries.\n") );
 
     // check if editable EditionWindows needs save
     // cancel if required
@@ -1476,7 +1476,7 @@ AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<Edi
 //_______________________________________________
 void MainWindow::_updateEntryFrames( LogEntry* entry, Mask mask )
 {
-    Debug::Throw( "MainWindow::_updateEntryFrames.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_updateEntryFrames.\n") );
 
     if( !mask ) return;
 
@@ -1503,7 +1503,7 @@ void MainWindow::_updateEntryFrames( LogEntry* entry, Mask mask )
 void MainWindow::_filesModified( FileCheck::DataSet files )
 {
 
-    Debug::Throw( "MainWindow::_filesModified.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_filesModified.\n") );
 
     if( ignoreWarnings_ ) return;
     if( files.empty() ) return;
@@ -1533,14 +1533,14 @@ void MainWindow::_filesModified( FileCheck::DataSet files )
 //________________________________________________________
 void MainWindow::_splitterMoved()
 {
-    Debug::Throw( "MainWindow::_splitterMoved.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_splitterMoved.\n") );
     resizeTimer_.start( 200, this );
 }
 
 //_______________________________________________
 void MainWindow::_newLogbook()
 {
-    Debug::Throw( "MainWindow::_newLogbook.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_newLogbook.\n") );
 
     // check current logbook
     auto reply = checkModifiedEntries();
@@ -1580,7 +1580,7 @@ void MainWindow::_newLogbook()
 void MainWindow::updateWindowTitle()
 {
 
-    Debug::Throw( "MainWindow::updateWindowTitle.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::updateWindowTitle.\n") );
 
     if( logbook_ )
     {
@@ -1608,7 +1608,7 @@ void MainWindow::updateWindowTitle()
 void MainWindow::open( FileRecord record )
 {
 
-    Debug::Throw( "MainWindow::open.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::open.\n") );
 
     // check if current logbook needs save
     auto reply = checkModifiedEntries();
@@ -1641,7 +1641,7 @@ void MainWindow::open( FileRecord record )
 //_______________________________________________
 bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
 {
-    Debug::Throw( "MainWindow::_saveAs.\n");
+    Debug::Throw( QStringLiteral("MainWindow::_saveAs.\n"));
 
     // check current logbook
     if( !logbook_ )
@@ -1703,7 +1703,7 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
 //_____________________________________________
 void MainWindow::_saveForced()
 {
-    Debug::Throw( "MainWindow::_saveForced.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_saveForced.\n") );
 
     // retrieve/check MainWindow/Logbook
     if( !logbook_ )
@@ -1721,7 +1721,7 @@ void MainWindow::_saveForced()
 //_______________________________________________
 void MainWindow::_saveBackup()
 {
-    Debug::Throw( "MainWindow::_saveBackup.\n");
+    Debug::Throw( QStringLiteral("MainWindow::_saveBackup.\n"));
 
     // check current logbook
     if( !logbook_ ) {
@@ -1774,7 +1774,7 @@ void MainWindow::_saveBackup()
 //_______________________________________________
 void MainWindow::_manageBackups()
 {
-    Debug::Throw( "MainWindow::_manageBackups.\n");
+    Debug::Throw( QStringLiteral("MainWindow::_manageBackups.\n"));
 
     BackupManagerDialog dialog( this );
     Base::Key::associate( &dialog.managerWidget(), logbook_.get() );
@@ -1794,7 +1794,7 @@ void MainWindow::_manageBackups()
 //_____________________________________________
 void MainWindow::_revertToSaved()
 {
-    Debug::Throw( "MainWindow::_revertToSaved.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_revertToSaved.\n") );
 
     // check logbook
     if( !logbook_ )
@@ -1858,7 +1858,7 @@ void MainWindow::_print()
 //___________________________________________________________
 void MainWindow::_print( LogbookPrintHelper& helper )
 {
-    Debug::Throw( "MainWindow::_print.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_print.\n") );
 
     // create printer
     QPrinter printer( QPrinter::HighResolution );
@@ -1915,7 +1915,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
 //___________________________________________________________
 void MainWindow::_printPreview()
 {
-    Debug::Throw( "MainWindow::_printPreview.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_printPreview.\n") );
 
     // save EditionWindows and logbook
     auto reply = checkModifiedEntries();
@@ -1979,7 +1979,7 @@ void MainWindow::_printPreview()
 //___________________________________________________________
 void MainWindow::_toHtml()
 {
-    Debug::Throw( "MainWindow::_toHtml.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_toHtml.\n") );
 
     // save EditionWindows
     auto reply = checkModifiedEntries();
@@ -2062,7 +2062,7 @@ void MainWindow::_toHtml()
 //_______________________________________________
 void MainWindow::_synchronize()
 {
-    Debug::Throw( "MainWindow::_synchronize.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_synchronize.\n") );
 
     // check current logbook is valid
     if( !logbook_ ) {
@@ -2175,7 +2175,7 @@ void MainWindow::_removeBackup( Backup backup )
 void MainWindow::_removeBackups( Backup::List backups )
 {
 
-    Debug::Throw( "MainWindow::_removeBackups.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_removeBackups.\n") );
 
     Base::Singleton::get().application<Application>()->busy();
 
@@ -2246,7 +2246,7 @@ void MainWindow::_removeBackups( Backup::List backups )
 //_______________________________________________
 void MainWindow::_restoreBackup( Backup backup )
 {
-    Debug::Throw( "MainWindow::_restoreBackup.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_restoreBackup.\n") );
     if( !backup.file().exists() )
     {
         const QString buffer = tr( "Unable to open file named '%1'. <Restore Backup> canceled." ).arg( backup.file() );
@@ -2292,7 +2292,7 @@ void MainWindow::_restoreBackup( Backup backup )
 //_______________________________________________
 void MainWindow::_mergeBackup( Backup backup )
 {
-    Debug::Throw( "MainWindow::_mergeBackup.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_mergeBackup.\n") );
 
     // check current logbook is valid
     if( !logbook_ ) {
@@ -2394,7 +2394,7 @@ void MainWindow::_mergeBackup( Backup backup )
 //_______________________________________________
 void MainWindow::_reorganize()
 {
-    Debug::Throw( "MainWindow::_reorganize.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_reorganize.\n") );
 
     if( !logbook_ )
     {
@@ -2460,7 +2460,7 @@ void MainWindow::_reorganize()
 //_______________________________________________
 void MainWindow::_showDuplicatedEntries()
 {
-    Debug::Throw( "MainWindow::_showDuplicatedEntries.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_showDuplicatedEntries.\n") );
 
     // keep track of the last visible entry
     LogEntry *lastVisibleEntry( nullptr );
@@ -2523,7 +2523,7 @@ void MainWindow::_showDuplicatedEntries()
 //_______________________________________________
 void MainWindow::_viewLogbookStatistics()
 {
-    Debug::Throw( "MainWindow::_viewLogbookStatistics.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_viewLogbookStatistics.\n") );
 
     if( !logbook_ )
     {
@@ -2538,7 +2538,7 @@ void MainWindow::_viewLogbookStatistics()
 //_______________________________________________
 void MainWindow::_editLogbookInformations()
 {
-    Debug::Throw( "MainWindow::_editLogbookInformations.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_editLogbookInformations.\n") );
 
     if( !logbook_ )
     {
@@ -2582,7 +2582,7 @@ void MainWindow::_editLogbookInformations()
 //_______________________________________________
 void MainWindow::_closeEditionWindows( bool askForSave )
 {
-    Debug::Throw( "MainWindow::_closeEditionWindows.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_closeEditionWindows.\n") );
 
     // get all EditionWindows from MainWindow
     Base::KeySet<EditionWindow> windows( this );
@@ -2601,7 +2601,7 @@ void MainWindow::_closeEditionWindows( bool askForSave )
 void MainWindow::_findEntries() const
 {
 
-    Debug::Throw( "MainWindow::_findEntries.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_findEntries.\n") );
 
     // try set from current selection
     QString text;
@@ -2625,7 +2625,7 @@ void MainWindow::_findEntries() const
 void MainWindow::_newEntry()
 {
 
-    Debug::Throw( "MainWindow::_NewEntry.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_NewEntry.\n") );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
     EditionWindow* editionWindow( nullptr );
@@ -2669,7 +2669,7 @@ void MainWindow::_newEntry()
 //____________________________________________
 void MainWindow::_editEntries()
 {
-    Debug::Throw( "MainWindow::_EditEntries .\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_EditEntries .\n") );
 
     // retrieve selected items; make sure they do not include the navigator
     auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
@@ -2690,7 +2690,7 @@ void MainWindow::_editEntries()
 //____________________________________________
 void MainWindow::_deleteEntries()
 {
-    Debug::Throw( "MainWindow::_DeleteEntries .\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_DeleteEntries .\n") );
 
     // retrieve selected rows;
     auto selectedIndexes( entryList_->selectionModel()->selectedRows() );
@@ -2758,7 +2758,7 @@ void MainWindow::_deleteEntries()
 void MainWindow::_displayEntry( LogEntry* entry )
 {
 
-    Debug::Throw( "MainWindow::_displayEntry.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_displayEntry.\n") );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
     EditionWindow *editionWindow( nullptr );
@@ -2836,7 +2836,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
 //_______________________________________________
 void MainWindow::_changeEntryTitle( LogEntry* entry, QString newTitle )
 {
-    Debug::Throw( "MainWindow::_changeEntryTitle.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_changeEntryTitle.\n") );
 
     // make sure that title was changed
     if( newTitle == entry->title() ) return;
@@ -2859,7 +2859,7 @@ void MainWindow::_changeEntryTitle( LogEntry* entry, QString newTitle )
 //_______________________________________________
 void MainWindow::_changeEntryColor( QColor color )
 {
-    Debug::Throw( "MainWindow::_changeEntryColor.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_changeEntryColor.\n") );
 
     // retrieve current selection
     auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
@@ -2911,7 +2911,7 @@ void MainWindow::_entryInformation()
 void MainWindow::_newKeyword()
 {
 
-    Debug::Throw( "MainWindow::_newKeyword.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_newKeyword.\n") );
 
     // create dialog
     EditKeywordDialog dialog( this );
@@ -2940,7 +2940,7 @@ void MainWindow::_newKeyword()
 //____________________________________________
 void MainWindow::_deleteKeyword()
 {
-    Debug::Throw("MainWindow::_deleteKeyword.\n" );
+    Debug::Throw(QStringLiteral("MainWindow::_deleteKeyword.\n") );
 
     // check that keywordlist has selected item
     auto selectedIndexes( keywordList_->selectionModel()->selectedRows() );
@@ -2982,13 +2982,13 @@ void MainWindow::_deleteKeyword()
     if( dialog.moveEntries() && associatedEntries.size() )
     {
 
-        Debug::Throw( "MainWindow::_deleteKeyword - moving entries.\n" );
+        Debug::Throw( QStringLiteral("MainWindow::_deleteKeyword - moving entries.\n") );
         for( const auto& keyword:keywords )
         { _renameKeyword( keyword, keyword.parent(), false ); }
 
     } else if( dialog.deleteEntries() ) {
 
-        Debug::Throw( "MainWindow::_deleteKeyword - deleting entries.\n" );
+        Debug::Throw( QStringLiteral("MainWindow::_deleteKeyword - deleting entries.\n") );
 
         for( const auto& entry:associatedEntries )
         {
@@ -3055,7 +3055,7 @@ void MainWindow::_deleteKeyword()
 //____________________________________________
 void MainWindow::_renameKeyword()
 {
-    Debug::Throw("MainWindow::_renameKeyword.\n" );
+    Debug::Throw(QStringLiteral("MainWindow::_renameKeyword.\n") );
 
     // check that keywordlist has selected item
     auto current( keywordList_->selectionModel()->currentIndex() );
@@ -3073,7 +3073,7 @@ void MainWindow::_renameKeyword()
 //____________________________________________
 void MainWindow::_confirmRenameKeyword( const Keyword& keyword, const Keyword& newKeyword )
 {
-    Debug::Throw("MainWindow::_confirmRenameKeyword.\n" );
+    Debug::Throw(QStringLiteral("MainWindow::_confirmRenameKeyword.\n") );
 
     // check keywords are different
     if( keyword == newKeyword ) return;
@@ -3092,7 +3092,7 @@ void MainWindow::_confirmRenameKeyword( const Keyword& keyword, const Keyword& n
 void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updateSelection )
 {
 
-    Debug::Throw("MainWindow::_renameKeyword.\n" );
+    Debug::Throw(QStringLiteral("MainWindow::_renameKeyword.\n") );
 
     // check keywords are different
     if( keyword == newKeyword ) return;
@@ -3161,7 +3161,7 @@ void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updat
 //____________________________________________
 void MainWindow::_renameEntryKeyword()
 {
-    Debug::Throw("MainWindow::_renameEntryKeyword.\n" );
+    Debug::Throw(QStringLiteral("MainWindow::_renameEntryKeyword.\n") );
 
     // retrieve current selection
     auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
@@ -3422,7 +3422,7 @@ void MainWindow::_updateSelection( Keyword newKeyword, Base::KeySet<LogEntry> en
 void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
 {
 
-    Debug::Throw( "MainWindow::_keywordSelectionChanged.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_keywordSelectionChanged.\n") );
     if( !logbook_ ) return;
     if( !index.isValid() ) return;
 
@@ -3454,7 +3454,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
 //_____________________________________________
 void MainWindow::_updateKeywordActions()
 {
-    Debug::Throw( "MainWindow::_updateKeywordActions.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_updateKeywordActions.\n") );
 
     const bool readOnly( logbook_ && logbook_->isReadOnly() );
     newKeywordAction_->setEnabled( !readOnly );
@@ -3467,7 +3467,7 @@ void MainWindow::_updateKeywordActions()
 //_____________________________________________
 void MainWindow::_updateEntryActions()
 {
-    Debug::Throw( "MainWindow::_updateEntryActions.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_updateEntryActions.\n") );
     const bool readOnly( logbook_ && logbook_->isReadOnly() );
     const int selectedEntries( entryList_->selectionModel()->selectedRows().size() );
     const bool hasSelection( selectedEntries > 0 );
@@ -3503,7 +3503,7 @@ void MainWindow::_updateEntryActions()
 //_____________________________________________
 void MainWindow::_updateReadOnlyState()
 {
-    Debug::Throw( "MainWindow::_updateReadOnlyState.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_updateReadOnlyState.\n") );
 
     const bool readOnly( logbook_ && logbook_->isReadOnly() );
     synchronizeAction_->setEnabled( !readOnly );
@@ -3579,7 +3579,7 @@ void MainWindow::_entryItemClicked( const QModelIndex& index )
 //_______________________________________________
 void MainWindow::_entryDataChanged( const QModelIndex& index )
 {
-    Debug::Throw( "MainWindow::_entryDataChanged.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_entryDataChanged.\n") );
 
     if( !index.isValid() ) return;
     auto entry( entryModel_.get( index ) );
@@ -3604,7 +3604,7 @@ void MainWindow::_entryDataChanged( const QModelIndex& index )
 void MainWindow::_startEntryEdition()
 {
 
-    Debug::Throw( "MainWindow::_startEntryEdition\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_startEntryEdition\n") );
 
     // get current index and check validity
     const auto& index = entryList_->currentIndex();
@@ -3628,7 +3628,7 @@ void MainWindow::_startEntryEdition()
 void MainWindow::_showMonitoredFiles()
 {
 
-    Debug::Throw( "MainWindow::_showMonitoredFiles.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_showMonitoredFiles.\n") );
     FileCheckDialog dialog( qApp->activeWindow() );
     dialog.setFiles( fileCheck_->fileSystemWatcher().files() );
     dialog.exec();
@@ -3707,7 +3707,7 @@ void MainWindow::_toggleTreeMode( bool value )
 void MainWindow::_updateConfiguration()
 {
 
-    Debug::Throw( "MainWindow::_updateConfiguration.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_updateConfiguration.\n") );
 
     resize( sizeHint() );
 

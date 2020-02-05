@@ -38,9 +38,9 @@
 //___________________________________________________________
 SearchWidget::SearchWidget( QWidget* parent ):
     QWidget( parent ),
-    Counter( "SearchWidget" )
+    Counter( QStringLiteral("SearchWidget") )
 {
-    Debug::Throw( "SearchWidget::SearchWidget.\n" );
+    Debug::Throw( QStringLiteral("SearchWidget::SearchWidget.\n") );
 
     // update palette
     _updateNotFoundPalette();
@@ -180,7 +180,7 @@ void SearchWidget::_updateFindButton( const QString& value )
 void SearchWidget::_updateConfiguration()
 {
 
-    Debug::Throw( "SearchWidget::_updateConfiguration.\n" );
+    Debug::Throw( QStringLiteral("SearchWidget::_updateConfiguration.\n") );
 
     // load mask
     if( XmlOptions::get().contains( "SEARCH_PANEL_MASK" ) )
@@ -196,7 +196,7 @@ void SearchWidget::_updateConfiguration()
 void SearchWidget::_saveMask()
 {
 
-    Debug::Throw( "SearchWidget::_saveMask.\n" );
+    Debug::Throw( QStringLiteral("SearchWidget::_saveMask.\n") );
 
     // store mask
     int mask(0);
@@ -210,7 +210,7 @@ void SearchWidget::_saveMask()
 //___________________________________________________________
 void SearchWidget::_selectionRequest()
 {
-    Debug::Throw( "SearchWidget::_selectionRequest.\n" );
+    Debug::Throw( QStringLiteral("SearchWidget::_selectionRequest.\n") );
 
     // build mode
     SearchModes mode = None;

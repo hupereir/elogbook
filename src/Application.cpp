@@ -40,13 +40,13 @@
 //____________________________________________
 Application::Application( CommandLineArguments arguments ) :
     BaseApplication( nullptr, arguments ),
-    Counter( "Application" )
+    Counter( QStringLiteral("Application") )
 {}
 
 //____________________________________________
 bool Application::initApplicationManager()
 {
-    Debug::Throw( "Application::initApplicationManager.\n" );
+    Debug::Throw( QStringLiteral("Application::initApplicationManager.\n") );
 
     // retrieve files from arguments and expand if needed
     auto parser( commandLineParser( _arguments() ) );
@@ -66,7 +66,7 @@ bool Application::initApplicationManager()
 //____________________________________________
 bool Application::realizeWidget()
 {
-    Debug::Throw( "Application::realizeWidget.\n" );
+    Debug::Throw( QStringLiteral("Application::realizeWidget.\n") );
 
     // check if the method has already been called.
     if( !BaseApplication::realizeWidget() ) return false;
@@ -139,7 +139,7 @@ void Application::usage() const
 void Application::_configuration()
 {
 
-    Debug::Throw( "Application::_configuration" );
+    Debug::Throw( QStringLiteral("Application::_configuration") );
     emit saveConfiguration();
     ConfigurationDialog dialog;
     connect( &dialog, &BaseConfigurationDialog::configurationChanged, this, &BaseCoreApplication::configurationChanged );
@@ -151,7 +151,7 @@ void Application::_configuration()
 //_________________________________________________
 void Application::_updateConfiguration()
 {
-    Debug::Throw( "Application::_updateConfiguration.\n" );
+    Debug::Throw( QStringLiteral("Application::_updateConfiguration.\n") );
     static_cast<XmlFileList*>(recentFiles_.get())->setDBFile( File( XmlOptions::get().raw( "RC_FILE" ) ) );
     recentFiles_->setMaxSize( XmlOptions::get().get<int>( "DB_SIZE" ) );
 }
@@ -160,7 +160,7 @@ void Application::_updateConfiguration()
 void Application::_exit()
 {
 
-    Debug::Throw( "Application::_exit.\n" );
+    Debug::Throw( QStringLiteral("Application::_exit.\n") );
 
     // ensure everything is saved properly
     if( mainWindow_ )
@@ -179,7 +179,7 @@ void Application::_exit()
 bool Application::_processCommand( Server::ServerCommand command )
 {
 
-    Debug::Throw( "Application::_processCommand.\n" );
+    Debug::Throw( QStringLiteral("Application::_processCommand.\n") );
     if( BaseApplication::_processCommand( command ) ) return true;
     if( command.command() == Server::ServerCommand::CommandType::Raise )
     {

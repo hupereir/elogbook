@@ -37,7 +37,7 @@ class Backup final: private Base::Counter<Backup>
 
     //* constructor
     explicit Backup( const File& file = File(), const TimeStamp& creation = TimeStamp::now() ):
-        Counter( "Backup" ),
+        Counter( QStringLiteral("Backup") ),
         file_( file ),
         creation_( creation ),
         valid_( true )

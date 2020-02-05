@@ -27,9 +27,9 @@
 //_______________________________________________________________
 AttachmentModel::AttachmentModel( QObject* parent ):
     ListModel( parent ),
-    Counter( "AttachmentModel" )
+    Counter( QStringLiteral("AttachmentModel") )
 {
-    Debug::Throw( "AttachmentModel::AttachmentModel.\n" );
+    Debug::Throw( QStringLiteral("AttachmentModel::AttachmentModel.\n") );
     iconProvider_ = new MimeTypeIconProvider( this );
 }
 

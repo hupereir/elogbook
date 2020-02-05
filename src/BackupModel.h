@@ -36,7 +36,7 @@ class BackupModel: public ListModel< Backup >, private Base::Counter<BackupModel
 
     //* constructor
     explicit BackupModel():
-        Counter( "BackupModel" )
+        Counter( QStringLiteral("BackupModel") )
     {}
 
     //* column type enumeration

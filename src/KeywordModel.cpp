@@ -23,7 +23,7 @@
 //______________________________________________________________
 KeywordModel::KeywordModel( QObject* parent ):
     TreeModel( parent ),
-    Counter( "KeywordModel" )
+    Counter( QStringLiteral("KeywordModel") )
 {}
 
 //__________________________________________________________________
@@ -92,7 +92,7 @@ QMimeData* KeywordModel::mimeData(const QModelIndexList &indexes) const
 //__________________________________________________________________
 bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int role )
 {
-    Debug::Throw( "KeywordModel::setData.\n" );
+    Debug::Throw( QStringLiteral("KeywordModel::setData.\n") );
     if( !(index.isValid() && role == Qt::EditRole ) ) return false;
 
     // retrieve parent index
@@ -116,7 +116,7 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
 bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, int, int, const QModelIndex& parent)
 {
 
-    Debug::Throw( "KeywordModel::dropMimeData\n" );
+    Debug::Throw( QStringLiteral("KeywordModel::dropMimeData\n") );
 
     // check action
     if( action == Qt::IgnoreAction) return true;

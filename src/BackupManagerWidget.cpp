@@ -27,9 +27,9 @@
 //____________________________________________________________________________
 BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     QWidget( parent ),
-    Counter( "BackupManagerWidget" )
+    Counter( QStringLiteral("BackupManagerWidget") )
 {
-    Debug::Throw( "BackupManagerWidget::BackupManagerWidget" );
+    Debug::Throw( QStringLiteral("BackupManagerWidget::BackupManagerWidget") );
     auto hLayout = new QHBoxLayout;
     hLayout->setMargin(0);
     setLayout( hLayout );
@@ -90,7 +90,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
 //____________________________________________________________________________
 void BackupManagerWidget::updateBackups()
 {
-    Debug::Throw( "BackupManagerWidget::updateBackups" );
+    Debug::Throw( QStringLiteral("BackupManagerWidget::updateBackups") );
     model_.clear();
 
     // check associated logbook
@@ -113,7 +113,7 @@ void BackupManagerWidget::updateBackups()
 //____________________________________________________________________________
 void BackupManagerWidget::_clean()
 {
-    Debug::Throw( "BackupManagerWidget::_clean.\n" );
+    Debug::Throw( QStringLiteral("BackupManagerWidget::_clean.\n") );
 
     auto logbook( _logbook() );
     if( !logbook ) return;
@@ -131,7 +131,7 @@ void BackupManagerWidget::_clean()
 //____________________________________________________________________________
 void BackupManagerWidget::_remove()
 {
-    Debug::Throw( "BackupManagerWidget::_remove.\n" );
+    Debug::Throw( QStringLiteral("BackupManagerWidget::_remove.\n") );
     const auto selectedIndexes( list_->selectionModel()->selectedRows() );
     if( selectedIndexes.isEmpty() ) return;
 
@@ -172,7 +172,7 @@ void BackupManagerWidget::_remove()
 //____________________________________________________________________________
 void BackupManagerWidget::_restore()
 {
-    Debug::Throw( "BackupManagerWidget::_restore.\n" );
+    Debug::Throw( QStringLiteral("BackupManagerWidget::_restore.\n") );
     const auto index( list_->selectionModel()->currentIndex() );
     if( !index.isValid() ) return;
 
@@ -190,7 +190,7 @@ void BackupManagerWidget::_restore()
 //____________________________________________________________________________
 void BackupManagerWidget::_merge()
 {
-    Debug::Throw( "BackupManagerWidget::_merge.\n" );
+    Debug::Throw( QStringLiteral("BackupManagerWidget::_merge.\n") );
     const auto index( list_->selectionModel()->currentIndex() );
     if( !index.isValid() ) return;
 
@@ -208,7 +208,7 @@ void BackupManagerWidget::_merge()
 //____________________________________________________________________________
 void BackupManagerWidget::_updateActions()
 {
-    Debug::Throw( "BackupManagerWidget::_updateActions" );
+    Debug::Throw( QStringLiteral("BackupManagerWidget::_updateActions") );
     bool hasSelection( !list_->selectionModel()->selectedRows().isEmpty() );
     removeButton_->setEnabled( hasSelection );
     removeAction_->setEnabled( hasSelection );

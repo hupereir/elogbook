@@ -75,10 +75,10 @@
 //_______________________________________________
 EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     BaseMainWindow( parent ),
-    Counter( "EditionWindow" ),
+    Counter( QStringLiteral("EditionWindow") ),
     readOnly_( readOnly )
 {
-    Debug::Throw("EditionWindow::EditionWindow.\n" );
+    Debug::Throw(QStringLiteral("EditionWindow::EditionWindow.\n") );
     setOptionName( "editionWindow" );
     setObjectName( "EDITFRAME" );
 
@@ -280,7 +280,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 void EditionWindow::displayEntry( Keyword keyword, LogEntry *entry )
 {
 
-    Debug::Throw( "EditionWindow::displayEntry.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::displayEntry.\n") );
     keyword_ =  keyword;
     displayEntry( entry );
 
@@ -289,7 +289,7 @@ void EditionWindow::displayEntry( Keyword keyword, LogEntry *entry )
 //____________________________________________
 void EditionWindow::displayEntry( LogEntry *entry )
 {
-    Debug::Throw( "EditionWindow::displayEntry.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::displayEntry.\n") );
 
     // disassociate with existing entries, if any
     clearAssociations<LogEntry>();
@@ -314,7 +314,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
     _displayAttachments();
 
     // update previous and next action states
-    Debug::Throw( "EditionWindow::displayEntry - setting button states.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::displayEntry - setting button states.\n") );
     previousEntryAction_->setEnabled( mainWindow.previousEntry(entry, false) );
     nextEntryAction_->setEnabled( mainWindow.nextEntry(entry, false) );
 
@@ -325,7 +325,7 @@ void EditionWindow::displayEntry( LogEntry *entry )
     _updateSaveAction();
     updateWindowTitle();
 
-    Debug::Throw( "EditionWindow::displayEntry - done.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::displayEntry - done.\n") );
     return;
 }
 
@@ -350,7 +350,7 @@ bool EditionWindow::modified() const
 QString EditionWindow::windowTitle() const
 {
 
-    Debug::Throw( "EditionWindow::windowTitle.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::windowTitle.\n") );
     const auto entry( this->entry() );
 
     // read only flag
@@ -422,7 +422,7 @@ void EditionWindow::setIsClosed( bool value )
 //_____________________________________________
 void EditionWindow::displayKeyword()
 {
-    Debug::Throw( "EditionWindow::displayKeyword.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::displayKeyword.\n") );
 
     keywordEditor_->setText( keyword_.get() );
     keywordEditor_->setCursorPosition( 0 );
@@ -433,7 +433,7 @@ void EditionWindow::displayKeyword()
 //_____________________________________________
 void EditionWindow::displayTitle()
 {
-    Debug::Throw( "EditionWindow::displayTitle.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::displayTitle.\n") );
 
     auto entry( this->entry() );
     if( entry ) titleEditor_->setText( entry->title() );
@@ -444,7 +444,7 @@ void EditionWindow::displayTitle()
 //_____________________________________________
 void EditionWindow::displayColor()
 {
-    Debug::Throw( "EditionWindow::DisplayColor.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::DisplayColor.\n") );
 
     // try load entry color
     const QColor color( entry()->color() );
@@ -467,7 +467,7 @@ void EditionWindow::displayColor()
 //______________________________________________________
 void EditionWindow::setModified( bool value )
 {
-    Debug::Throw( "EditionWindow::setModified.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::setModified.\n") );
     keywordEditor_->setModified( value );
     titleEditor_->setModified( value );
     activeEditor_->document()->setModified( value );
@@ -476,7 +476,7 @@ void EditionWindow::setModified( bool value )
 //___________________________________________________________
 void EditionWindow::setForceShowKeyword( bool value )
 {
-    Debug::Throw( "EditionWindow::setForceShowKeyword.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::setForceShowKeyword.\n") );
     _setKeywordVisible( value || showKeywordAction_->isChecked() );
     showKeywordAction_->setEnabled( !value );
 }
@@ -484,7 +484,7 @@ void EditionWindow::setForceShowKeyword( bool value )
 //___________________________________________________________
 void EditionWindow::_closeEditor( TextEditor& editor )
 {
-    Debug::Throw( "EditionWindow::_closeEditor.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_closeEditor.\n") );
 
     // retrieve number of editors
     // if only one display, close the entire window
@@ -520,7 +520,7 @@ void EditionWindow::_closeEditor( TextEditor& editor )
             }
         }
         Q_CHECK_PTR( child );
-        Debug::Throw( "EditionWindow::_closeEditor - found child.\n" );
+        Debug::Throw( QStringLiteral("EditionWindow::_closeEditor - found child.\n") );
 
         // retrieve splitter parent
         QWidget* grandParent( parentSplitter->parentWidget() );
@@ -543,7 +543,7 @@ void EditionWindow::_closeEditor( TextEditor& editor )
 
         // delete parentSplitter, now that it is empty
         parentSplitter->deleteLater();
-        Debug::Throw( "EditionWindow::_closeEditor - deleted splitter.\n" );
+        Debug::Throw( QStringLiteral("EditionWindow::_closeEditor - deleted splitter.\n") );
 
     } else {
 
@@ -569,7 +569,7 @@ void EditionWindow::_closeEditor( TextEditor& editor )
 
     // change focus
     activeEditor_->setFocus();
-    Debug::Throw( "EditionWindow::_closeEditor - done.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_closeEditor - done.\n") );
 
 }
 
@@ -599,7 +599,7 @@ void EditionWindow::setActiveEditor( TextEditor& editor )
 AskForSaveDialog::ReturnCode EditionWindow::askForSave()
 {
 
-    Debug::Throw( "EditionWindow::askForSave.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::askForSave.\n") );
 
     // create dialog
     AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No  | AskForSaveDialog::Cancel );
@@ -693,7 +693,7 @@ void EditionWindow::writeEntryToLogbook( bool updateSelection )
 void EditionWindow::updateReadOnlyState()
 {
 
-    Debug::Throw( "EditionWindow::updateReadOnlyState\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::updateReadOnlyState\n") );
     _updateReadOnlyActions();
     _updateSaveAction();
     _updateUndoRedoActions();
@@ -705,7 +705,7 @@ void EditionWindow::updateReadOnlyState()
 //_____________________________________________________________________
 void EditionWindow::findFromDialog()
 {
-    Debug::Throw( "EditionWindow::findFromDialog.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::findFromDialog.\n") );
 
     // create find widget
     if( !findWidget_ ) _createFindWidget();
@@ -737,7 +737,7 @@ void EditionWindow::findFromDialog()
 //_____________________________________________________________________
 void EditionWindow::replaceFromDialog()
 {
-    Debug::Throw( "EditionWindow::replaceFromDialog.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::replaceFromDialog.\n") );
 
     // create replace widget
     if( !replaceWidget_ ) _createReplaceWidget();
@@ -774,7 +774,7 @@ void EditionWindow::replaceFromDialog()
 void EditionWindow::selectLineFromDialog()
 {
 
-    Debug::Throw( "TextEditor::selectLineFromDialog.\n" );
+    Debug::Throw( QStringLiteral("TextEditor::selectLineFromDialog.\n") );
 
     // create select line widget
     if( !selectLineWidget_ ) _createSelectLineWidget();
@@ -789,7 +789,7 @@ void EditionWindow::selectLineFromDialog()
 //____________________________________________
 void EditionWindow::closeEvent( QCloseEvent *event )
 {
-    Debug::Throw( "EditionWindow::closeEvent.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::closeEvent.\n") );
 
     // ask for save if entry is modified
     if( !(readOnly_ || closed_ ) && modified() && askForSave() == AskForSaveDialog::Cancel ) event->ignore();
@@ -823,7 +823,7 @@ void EditionWindow::timerEvent( QTimerEvent* event )
 //_____________________________________________
 void EditionWindow::_installActions()
 {
-    Debug::Throw( "EditionWindow::_installActions.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_installActions.\n") );
 
     // undo action
     addAction( undoAction_ = new QAction( IconEngine::get( IconNames::Undo ), tr( "Undo" ), this ) );
@@ -940,7 +940,7 @@ void EditionWindow::_installActions()
 void EditionWindow::_createFindWidget()
 {
 
-    Debug::Throw( "EditionWindow::_createFindWidget.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_createFindWidget.\n") );
     if( !findWidget_ )
     {
 
@@ -961,7 +961,7 @@ void EditionWindow::_createFindWidget()
 //_____________________________________________________________________
 void EditionWindow::_createReplaceWidget()
 {
-    Debug::Throw( "EditionWindow::_CreateReplaceDialog.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_CreateReplaceDialog.\n") );
     if( !( replaceWidget_ ) )
     {
 
@@ -1000,7 +1000,7 @@ void EditionWindow::_createSelectLineWidget()
 //___________________________________________________________
 Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
 {
-    Debug::Throw( "EditionWindow::_splitView.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_splitView.\n") );
 
     // keep local pointer to current active display
     auto& activeEditorLocal( *activeEditor_ );
@@ -1051,7 +1051,7 @@ Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orie
 QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 {
 
-    Debug::Throw( "EditionWindow::_newSplitter.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_newSplitter.\n") );
     QSplitter *splitter = nullptr;
 
     // retrieve parent of current display
@@ -1062,7 +1062,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
     auto parentSplitter( qobject_cast<QSplitter*>( parent ) );
     if( parentSplitter && parentSplitter->orientation() == orientation ) {
 
-        Debug::Throw( "EditionWindow::_newSplitter - orientation match. No need to create new splitter.\n" );
+        Debug::Throw( QStringLiteral("EditionWindow::_newSplitter - orientation match. No need to create new splitter.\n") );
         splitter = parentSplitter;
 
     } else {
@@ -1072,7 +1072,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
         if( parentSplitter )
         {
 
-            Debug::Throw( "EditionWindow::_newSplitter - found parent splitter with incorrect orientation.\n" );
+            Debug::Throw( QStringLiteral("EditionWindow::_newSplitter - found parent splitter with incorrect orientation.\n") );
             // create a splitter with correct orientation
             // give him no parent, because the parent is set in QSplitter::insertWidget()
             splitter = new Private::LocalSplitter( nullptr );
@@ -1081,7 +1081,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 
         } else {
 
-            Debug::Throw( "EditionWindow::_newSplitter - no splitter found. Creating a new one.\n" );
+            Debug::Throw( QStringLiteral("EditionWindow::_newSplitter - no splitter found. Creating a new one.\n") );
 
             // create a splitter with correct orientation
             splitter = new Private::LocalSplitter(parent);
@@ -1117,7 +1117,7 @@ QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
 //_____________________________________________________________
 Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 {
-    Debug::Throw( "EditionWindow::_newTextEditor.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_newTextEditor.\n") );
 
     // create TextEditor
     auto editor = new Private::LocalTextEditor( parent );
@@ -1167,7 +1167,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     setActiveEditor( *editor );
     editor->setFocus();
     Debug::Throw() << "EditionWindow::_newTextEditor - key: " << editor->key() << endl;
-    Debug::Throw( "EditionWindow::_newTextEditor - done.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_newTextEditor - done.\n") );
 
     // update insert Link actions
     _updateInsertLinkActions();
@@ -1179,7 +1179,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 //_____________________________________________
 void EditionWindow::_displayCursorPosition( const TextPosition& position)
 {
-    Debug::Throw( "EditionWindow::_DisplayCursorPosition.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_DisplayCursorPosition.\n") );
     if( !_hasStatusBar() ) return;
 
     statusBar_->label(2).setText( tr( "Line: %1" ).arg( position.paragraph()+1 ), false );
@@ -1195,7 +1195,7 @@ bool EditionWindow::_hasMainWindow() const
 //_______________________________________________
 MainWindow& EditionWindow::_mainWindow() const
 {
-    Debug::Throw( "EditionWindow::_mainWindow.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_mainWindow.\n") );
     Base::KeySet<MainWindow> mainWindows( this );
     return **mainWindows.begin();
 }
@@ -1203,7 +1203,7 @@ MainWindow& EditionWindow::_mainWindow() const
 //_____________________________________________
 void EditionWindow::_displayText()
 {
-    Debug::Throw( "EditionWindow::_displayText.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_displayText.\n") );
     if( !activeEditor_ ) return;
 
     auto entry( this->entry() );
@@ -1220,7 +1220,7 @@ void EditionWindow::_displayText()
 //_____________________________________________
 void EditionWindow::_displayAttachments()
 {
-    Debug::Throw( "EditionWindow::_DisplayAttachments.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_DisplayAttachments.\n") );
 
     auto &frame( attachmentFrame() );
     frame.clear();
@@ -1254,7 +1254,7 @@ void EditionWindow::_displayAttachments()
 //_____________________________________________
 void EditionWindow::_setKeywordVisible( bool value )
 {
-    Debug::Throw( "EditionWindow::_setKeywordVisible.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_setKeywordVisible.\n") );
     keywordLabel_->setVisible( value );
     keywordEditor_->setVisible( value );
     titleLabel_->setVisible( value );
@@ -1264,7 +1264,7 @@ void EditionWindow::_setKeywordVisible( bool value )
 void EditionWindow::_save( bool updateSelection )
 {
 
-    Debug::Throw( "EditionWindow::_save.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_save.\n") );
 
     // save this entry to the logbook
     writeEntryToLogbook( updateSelection );
@@ -1282,7 +1282,7 @@ void EditionWindow::_save( bool updateSelection )
 //___________________________________________________________
 void EditionWindow::_reloadEntry()
 {
-    Debug::Throw( "EditionWindow::_reloadEntry.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_reloadEntry.\n") );
     auto entry( this->entry() );
     if( !entry )
     {
@@ -1300,7 +1300,7 @@ void EditionWindow::_reloadEntry()
 //___________________________________________________________
 void EditionWindow::_print()
 {
-    Debug::Throw( "EditionWindow::_print.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_print.\n") );
 
     // check if entry is modified
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -1361,7 +1361,7 @@ void EditionWindow::_print( LogEntryPrintHelper& helper )
 //___________________________________________________________
 void EditionWindow::_printPreview()
 {
-    Debug::Throw( "EditionWindow::_printPreview.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_printPreview.\n") );
 
     // check if entry is modified
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -1384,7 +1384,7 @@ void EditionWindow::_printPreview()
 //___________________________________________________________
 void EditionWindow::_toHtml()
 {
-    Debug::Throw( "EditionWindow::_toHtml.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_toHtml.\n") );
 
     // check if entry is modified
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -1445,7 +1445,7 @@ void EditionWindow::_toHtml()
 void EditionWindow::_newEntry()
 {
 
-    Debug::Throw( "EditionWindow::_newEntry.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_newEntry.\n") );
 
     // check if entry is modified
     if( modified() && askForSave() == AskForSaveDialog::Cancel ) return;
@@ -1467,14 +1467,14 @@ void EditionWindow::_newEntry()
 //_____________________________________________
 void EditionWindow::_splitterMoved()
 {
-    Debug::Throw( "MainWindow::_splitterMoved.\n" );
+    Debug::Throw( QStringLiteral("MainWindow::_splitterMoved.\n") );
     resizeTimer_.start( 200, this );
 }
 
 //_______________________________________________
 void EditionWindow::_previousEntry()
 {
-    Debug::Throw( "EditionWindow::_previousEntry.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_previousEntry.\n") );
 
     MainWindow &mainWindow( _mainWindow() );
     auto entry( mainWindow.previousEntry( this->entry(), true ) );
@@ -1487,7 +1487,7 @@ void EditionWindow::_previousEntry()
 //_______________________________________________
 void EditionWindow::_nextEntry()
 {
-    Debug::Throw( "EditionWindow::_nextEntry.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_nextEntry.\n") );
 
     MainWindow &mainWindow( _mainWindow() );
     auto entry( mainWindow.nextEntry( this->entry(), true ) );
@@ -1501,7 +1501,7 @@ void EditionWindow::_nextEntry()
 void EditionWindow::_entryInformation()
 {
 
-    Debug::Throw( "EditionWindow::_EntryInfo.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_EntryInfo.\n") );
 
     // check entry
     auto entry( this->entry() );
@@ -1518,7 +1518,7 @@ void EditionWindow::_entryInformation()
 //_____________________________________________
 void EditionWindow::_undo()
 {
-    Debug::Throw( "EditionWindow::_undo.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_undo.\n") );
     if( activeEditor_->QWidget::hasFocus() ) activeEditor_->document()->undo();
     else if( titleEditor_->hasFocus() ) titleEditor_->undo();
     else if( keywordEditor_->hasFocus() ) keywordEditor_->undo();
@@ -1528,7 +1528,7 @@ void EditionWindow::_undo()
 //_____________________________________________
 void EditionWindow::_redo()
 {
-    Debug::Throw( "EditionWindow::_redo.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_redo.\n") );
     if( activeEditor_->QWidget::hasFocus() ) activeEditor_->document()->redo();
     else if( titleEditor_->hasFocus() ) titleEditor_->redo();
     else if( keywordEditor_->hasFocus() ) keywordEditor_->redo();
@@ -1538,7 +1538,7 @@ void EditionWindow::_redo()
 //_____________________________________________
 void EditionWindow::_insertLink()
 {
-    Debug::Throw( "EditionWindow::_insertLink.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_insertLink.\n") );
 
     // check readonly and selection
     const QTextCursor cursor( activeEditor_->textCursor() );
@@ -1565,7 +1565,7 @@ void EditionWindow::_insertLink()
 //_____________________________________________
 void EditionWindow::_editLink()
 {
-    Debug::Throw( "EditionWindow::_editLink.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_editLink.\n") );
     auto cursor( activeEditor_->cursorAtContextMenu() );
     auto block( cursor.block() );
 
@@ -1596,7 +1596,7 @@ void EditionWindow::_editLink()
 //_____________________________________________
 void EditionWindow::_removeLink()
 {
-    Debug::Throw( "EditionWindow::_removeLink.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_removeLink.\n") );
     QTextCursor cursor( activeEditor_->cursorAtContextMenu() );
     auto block( cursor.block() );
 
@@ -1631,7 +1631,7 @@ void EditionWindow::_removeLink()
 //_____________________________________________
 void EditionWindow::_openLink()
 {
-    Debug::Throw( "EditionWindow::_openLink.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_openLink.\n") );
     QString anchor( activeEditor_->anchor() );
     if( anchor.isEmpty() ) return;
 
@@ -1647,7 +1647,7 @@ void EditionWindow::_openLink()
 //_____________________________________________
 void EditionWindow::_openLink( QString anchor )
 {
-    Debug::Throw( "EditionWindow::_openLink.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_openLink.\n") );
     if( !anchor.isEmpty() ) QDesktopServices::openUrl( QUrl::fromEncoded( anchor.toLatin1() ) );
 }
 
@@ -1655,7 +1655,7 @@ void EditionWindow::_openLink( QString anchor )
 void EditionWindow::_deleteEntry()
 {
 
-    Debug::Throw( "EditionWindow::_deleteEntry.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_deleteEntry.\n") );
 
     // check current entry
     auto entry( this->entry() );
@@ -1680,7 +1680,7 @@ void EditionWindow::_deleteEntry()
 void EditionWindow::_spellCheck()
 {
     #if WITH_ASPELL
-    Debug::Throw( "EditionWindow::_spellCheck.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_spellCheck.\n") );
 
     // create dialog
     SpellCheck::SpellDialog dialog( activeEditor_ );
@@ -1703,7 +1703,7 @@ void EditionWindow::_spellCheck()
 void EditionWindow::_cloneWindow()
 {
 
-    Debug::Throw( "EditionWindow::_cloneWindow.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_cloneWindow.\n") );
     auto entry( this->entry() );
     if( !entry ) {
         InformationDialog( this, tr( "No valid entry found. <New window> canceled." ) ).exec();
@@ -1752,7 +1752,7 @@ void EditionWindow::_restoreFocus()
 void EditionWindow::_unlock()
 {
 
-    Debug::Throw( "EditionWindow::_unlock.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_unlock.\n") );
 
     if( !readOnly_ ) return;
     auto entry( this->entry() );
@@ -1772,7 +1772,7 @@ void EditionWindow::_updateReplaceInSelection()
 void EditionWindow::_updateReadOnlyActions()
 {
 
-    Debug::Throw( "EditionWindow::_updateReadOnlyActions.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_updateReadOnlyActions.\n") );
 
     // add flag from logbook read only
     const bool logbookReadOnly( _hasMainWindow() && _mainWindow().logbookIsReadOnly() );
@@ -1810,7 +1810,7 @@ void EditionWindow::_updateSaveAction()
 void EditionWindow::_updateUndoRedoActions()
 {
 
-    Debug::Throw( "EditionWindow::_updateRedoAction.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_updateRedoAction.\n") );
     if( keywordEditor_->hasFocus() )
     {
         undoAction_->setEnabled( keywordEditor_->isUndoAvailable() && !keywordEditor_->isReadOnly() );
@@ -1832,7 +1832,7 @@ void EditionWindow::_updateUndoRedoActions()
 //_____________________________________________
 void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 {
-    Debug::Throw( "EditionWindow::_updateUndoRedoAction.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_updateUndoRedoAction.\n") );
     if( current == keywordEditor_ )
     {
 
@@ -1856,7 +1856,7 @@ void EditionWindow::_updateUndoRedoActions( QWidget*, QWidget* current )
 //_____________________________________________
 void EditionWindow::_updateInsertLinkActions()
 {
-    Debug::Throw( "EditionWindow::_updateInsertLinkActions.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_updateInsertLinkActions.\n") );
     const bool enabled( !readOnly_ && !( _hasMainWindow() && _mainWindow().logbookIsReadOnly() ) && activeEditor_->textCursor().hasSelection() );
 
     // disable main window action
@@ -1886,7 +1886,7 @@ void EditionWindow::_displayCursorPosition()
 //_____________________________________________
 void EditionWindow::_close()
 {
-    Debug::Throw( "EditionWindow::_close\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_close\n") );
     Base::KeySet< Private::LocalTextEditor > editors( this );
     if( editors.size() > 1 ) _closeEditor( *activeEditor_ );
     else close();
@@ -1917,7 +1917,7 @@ void EditionWindow::_modifiersChanged( TextEditor::Modifiers modifiers )
 void EditionWindow::_toggleShowKeyword( bool value )
 {
 
-    Debug::Throw( "EditionWindow::_toggleShowKeyword.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_toggleShowKeyword.\n") );
     _setKeywordVisible( value || forceShowKeyword_ );
     XmlOptions::get().set<bool>( "SHOW_KEYWORD", value );
 
@@ -1928,7 +1928,7 @@ void EditionWindow::_updateConfiguration()
 {
 
     // one should check whether this is needed or not.
-    Debug::Throw( "EditionWindow::_updateConfiguration.\n" );
+    Debug::Throw( QStringLiteral("EditionWindow::_updateConfiguration.\n") );
     resize( sizeHint() );
 
     // show keyword
@@ -1952,7 +1952,7 @@ Private::LocalTextEditor::LocalTextEditor( QWidget* parent ):
 //___________________________________________________________________________________
 void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
 {
-    Debug::Throw( "Private::LocalTextEditor::insertFromMimeData.\n" );
+    Debug::Throw( QStringLiteral("Private::LocalTextEditor::insertFromMimeData.\n") );
 
     // check option
     if( !autoInsertLinks_ )
@@ -1988,7 +1988,7 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
 //___________________________________________________________________________________
 void Private::LocalTextEditor::installContextMenuActions( BaseContextMenu* menu, bool allActions )
 {
-    Debug::Throw( "Private::LocalTextEditor::installContextMenuActions.\n" );
+    Debug::Throw( QStringLiteral("Private::LocalTextEditor::installContextMenuActions.\n") );
     TextEditor::installContextMenuActions( menu, allActions );
 
     // insert link
@@ -2014,7 +2014,7 @@ void Private::LocalTextEditor::_updateConfiguration()
 //___________________________________________________________________________________
 void Private::LocalTextEditor::_installActions()
 {
-    Debug::Throw( "Private::LocalTextEditor::_installActions.\n" );
+    Debug::Throw( QStringLiteral("Private::LocalTextEditor::_installActions.\n") );
     addAction( insertLinkAction_ = new QAction( IconEngine::get( IconNames::InsertSymbolicLink ), tr( "Insert Link..." ), this ) );
     addAction( editLinkAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Edit Link..." ), this ) );
     addAction( removeLinkAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Remove Link..." ), this ) );
@@ -2027,8 +2027,8 @@ void Private::LocalTextEditor::_installActions()
 //___________________________________________________________________________________
 Private::ColorWidget::ColorWidget( QWidget* parent ):
     QToolButton( parent ),
-    Counter( "ColorWidget" )
-{ Debug::Throw( "ColorWidget::ColorWidget.\n" ); }
+    Counter( QStringLiteral("ColorWidget") )
+{ Debug::Throw( QStringLiteral("ColorWidget::ColorWidget.\n") ); }
 
 //___________________________________________________________________________________
 void Private::ColorWidget::setColor( const QColor& color )

@@ -45,8 +45,8 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     //* constructor
     explicit LogbookPrintHelper( QObject* parent = nullptr ):
         BasePrintHelper( parent ),
-        Counter( "LogbookPrintHelper" )
-    { Debug::Throw( "LogbookPrintHelper::LogbookPrintHelper.\n" ); };
+        Counter( QStringLiteral("LogbookPrintHelper") )
+    { Debug::Throw( QStringLiteral("LogbookPrintHelper::LogbookPrintHelper.\n") ); };
 
     //*@name accessors
     //@{

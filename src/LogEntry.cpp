@@ -34,14 +34,14 @@ const QString LogEntry::MimeType = "logbook/log-entry-list";
 
 //__________________________________
 LogEntry::LogEntry():
-    Counter( "LogEntry" ),
+    Counter( QStringLiteral("LogEntry") ),
     creation_( TimeStamp::now() ),
     modification_( TimeStamp::now() )
 {}
 
 //_________________________________________________
 LogEntry::LogEntry( const QDomElement& element ):
-    Counter( "LogEntry" ),
+    Counter( QStringLiteral("LogEntry") ),
     creation_( TimeStamp::now() ),
     modification_( TimeStamp::now() )
 {
@@ -94,7 +94,7 @@ LogEntry::~LogEntry()
 //__________________________________
 QDomElement LogEntry::domElement( QDomDocument& document ) const
 {
-    Debug::Throw( "LogEntry::domElement.\n" );
+    Debug::Throw( QStringLiteral("LogEntry::domElement.\n") );
     auto out( document.createElement( Xml::Entry ) );
 
     // title and author
@@ -151,7 +151,7 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
 //__________________________________
 LogEntry* LogEntry::copy() const
 {
-    Debug::Throw( "LogEntry::copy.\n" );
+    Debug::Throw( QStringLiteral("LogEntry::copy.\n") );
 
     auto *out( new LogEntry( *this ) );
 
@@ -200,7 +200,7 @@ bool LogEntry::matchColor( QString buffer ) const
 //__________________________________
 bool LogEntry::matchAttachment( QString buffer ) const
 {
-    Debug::Throw( "LogEntry::matchAttachment.\n" );
+    Debug::Throw( QStringLiteral("LogEntry::matchAttachment.\n") );
 
     // retrieve associated attachments
     const auto attachments( Base::KeySet<Attachment>( this ) );

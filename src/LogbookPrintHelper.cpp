@@ -35,7 +35,7 @@
 //__________________________________________________________________________________
 void LogbookPrintHelper::print( QPrinter* printer )
 {
-    Debug::Throw( "LogbookPrintHelper::print.\n" );
+    Debug::Throw( QStringLiteral("LogbookPrintHelper::print.\n") );
 
     // check logbook
     Q_CHECK_PTR( logbook_ );
@@ -88,7 +88,7 @@ void LogbookPrintHelper::print( QPrinter* printer )
 void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
-    Debug::Throw( "LogbookPrintHelper::_printHeader.\n" );
+    Debug::Throw( QStringLiteral("LogbookPrintHelper::_printHeader.\n") );
 
     // check mask
     if( !( mask_ & Logbook::HeaderMask ) ) return;
@@ -173,7 +173,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
 void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
-    Debug::Throw( "LogbookPrintHelper::_printTable.\n" );
+    Debug::Throw( QStringLiteral("LogbookPrintHelper::_printTable.\n") );
 
     // check entries
     if( entries_.empty() ) return;
@@ -308,7 +308,7 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
 void LogbookPrintHelper::_printEntries( QPrinter* printer, QPainter* painter, QPointF& offset )
 {
 
-    Debug::Throw( "LogbookPrintHelper::_printEntries.\n" );
+    Debug::Throw( QStringLiteral("LogbookPrintHelper::_printEntries.\n") );
 
     // check entries
     if( entries_.empty() ) return;

@@ -67,7 +67,7 @@ class NewLogbookDialog: public CustomDialog
     //* comments
     void setComments( const QString& comments )
     {
-        Debug::Throw( "NewLogbookDialog::setComments.\n" );
+        Debug::Throw( QStringLiteral("NewLogbookDialog::setComments.\n") );
         comments_->setPlainText( comments );
     }
 

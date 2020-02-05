@@ -27,7 +27,7 @@ EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
     CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
-    Debug::Throw( "EditKeywordDialog::EditKeywordDialog.\n" );
+    Debug::Throw( QStringLiteral("EditKeywordDialog::EditKeywordDialog.\n") );
 
     setWindowTitle( tr( "Edit Keyword" ) );
     mainLayout().addWidget( combobox_ = new CustomComboBox( this ) );

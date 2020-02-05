@@ -32,7 +32,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     CustomDialog( parent, OkButton | CancelButton| Separator )
 {
 
-    Debug::Throw( "DeleteAttachmentDialog::DeleteAttachmentDialog.\n" );
+    Debug::Throw( QStringLiteral("DeleteAttachmentDialog::DeleteAttachmentDialog.\n") );
 
     // radio buttons
     QButtonGroup* group = new QButtonGroup( this );

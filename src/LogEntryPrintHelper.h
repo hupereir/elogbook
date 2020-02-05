@@ -39,8 +39,8 @@ class LogEntryPrintHelper: public BasePrintHelper, private Base::Counter<LogEntr
     //* constructor
     explicit LogEntryPrintHelper( QObject* parent = nullptr ):
         BasePrintHelper( parent ),
-        Counter( "LogEntryPrintHelper" )
-    { Debug::Throw( "LogEntryPrintHelper::LogEntryPrintHelper.\n" ); };
+        Counter( QStringLiteral("LogEntryPrintHelper") )
+    { Debug::Throw( QStringLiteral("LogEntryPrintHelper::LogEntryPrintHelper.\n") ); };
 
     //* entry
     void setEntry( LogEntry* entry )

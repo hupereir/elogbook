@@ -30,9 +30,9 @@
 //_______________________________________________
 ColorMenu::ColorMenu( QWidget* parent ):
     QMenu( parent ),
-    Counter( "ColorMenu" )
+    Counter( QStringLiteral("ColorMenu") )
 {
-    Debug::Throw( "ColorMenu::ColorMenu.\n" );
+    Debug::Throw( QStringLiteral("ColorMenu::ColorMenu.\n") );
 
     // new color action
     addAction( IconEngine::get( IconNames::Add ), tr( "New" ), this, &ColorMenu::_new );
@@ -90,7 +90,7 @@ void ColorMenu::paintEvent( QPaintEvent* event )
 void ColorMenu::_display()
 {
 
-    Debug::Throw( "ColorMenu::_display.\n" );
+    Debug::Throw( QStringLiteral("ColorMenu::_display.\n") );
 
     // clear actions
     for( auto&& iter = actions_.begin(); iter != actions_.end(); ++iter )
@@ -116,7 +116,7 @@ void ColorMenu::_display()
 void ColorMenu::_new()
 {
 
-    Debug::Throw( "ColorMenu::_new.\n" );
+    Debug::Throw( QStringLiteral("ColorMenu::_new.\n") );
     QColor color( QColorDialog::getColor( Qt::white, this ) );
     if( color.isValid() )
     {
@@ -131,7 +131,7 @@ void ColorMenu::_new()
 void ColorMenu::_default()
 {
 
-    Debug::Throw( "ColorMenu::_default.\n" );
+    Debug::Throw( QStringLiteral("ColorMenu::_default.\n") );
     lastColor_ = QColor();
     emit selected( QColor() );
 
@@ -140,7 +140,7 @@ void ColorMenu::_default()
 //_______________________________________________
 void ColorMenu::_selected( QAction* action )
 {
-    Debug::Throw( "ColorMenu::_selected.\n" );
+    Debug::Throw( QStringLiteral("ColorMenu::_selected.\n") );
     auto iter = actions_.find( action );
     if( iter != actions_.end() )
     {

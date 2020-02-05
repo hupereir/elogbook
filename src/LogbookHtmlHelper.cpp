@@ -25,7 +25,7 @@
 //__________________________________________________________________________________
 void LogbookHtmlHelper::print( QIODevice* device )
 {
-    Debug::Throw( "LogbookHtmlHelper::print.\n" );
+    Debug::Throw( QStringLiteral("LogbookHtmlHelper::print.\n") );
 
     // check logbook
     Q_CHECK_PTR( logbook_ );
@@ -58,7 +58,7 @@ void LogbookHtmlHelper::print( QIODevice* device )
 void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& parent )
 {
 
-    Debug::Throw( "LogbookHtmlHelper::_appendHeader.\n" );
+    Debug::Throw( QStringLiteral("LogbookHtmlHelper::_appendHeader.\n") );
 
     // check mask
     if( !( mask_ & Logbook::HeaderMask ) ) return;
@@ -176,7 +176,7 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
 void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& parent )
 {
 
-    Debug::Throw( "LogbookHtmlHelper::_appendTable.\n" );
+    Debug::Throw( QStringLiteral("LogbookHtmlHelper::_appendTable.\n") );
 
     // check entries
     if( entries_.empty() ) return;
@@ -260,7 +260,7 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
 void LogbookHtmlHelper::_appendEntries( QDomDocument& document, QDomElement& parent )
 {
 
-    Debug::Throw( "LogbookHtmlHelper::_appendEntries.\n" );
+    Debug::Throw( QStringLiteral("LogbookHtmlHelper::_appendEntries.\n") );
 
     // check entries
     if( entries_.empty() ) return;

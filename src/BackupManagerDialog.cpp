@@ -26,7 +26,7 @@
 BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
    BaseDialog( parent )
 {
-    Debug::Throw( "BackupManagerDialog::BackupManagerDialog.\n" );
+    Debug::Throw( QStringLiteral("BackupManagerDialog::BackupManagerDialog.\n") );
     setWindowTitle( tr( "Backup Manager" ) );
     setOptionName( "BACKUP_MANAGER_DIALOG" );
 

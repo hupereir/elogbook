@@ -38,7 +38,7 @@ OpenAttachmentDialog::OpenAttachmentDialog( QWidget* parent, const Attachment& a
 CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
-    Debug::Throw( "OpenAttachmentDialog::OpenAttachmentDialog.\n" );
+    Debug::Throw( QStringLiteral("OpenAttachmentDialog::OpenAttachmentDialog.\n") );
     setOptionName( "OPEN_ATTACHMENT_DIALOG" );
 
     // try load Question icon

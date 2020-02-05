@@ -32,7 +32,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     CustomDialog( parent )
 {
 
-    Debug::Throw( "EditAttachmentDialog::EditAttachmentDialog.\n" );
+    Debug::Throw( QStringLiteral("EditAttachmentDialog::EditAttachmentDialog.\n") );
 
     GridLayout* gridLayout = new GridLayout;
     gridLayout->setMargin(0);
@@ -84,6 +84,6 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
 //____________________________________________________
 QString EditAttachmentDialog::comments() const
 {
-    Debug::Throw( "EditAttachmentDialog::comments.\n" );
+    Debug::Throw( QStringLiteral("EditAttachmentDialog::comments.\n") );
     return commentsEditor_->toPlainText();
 }

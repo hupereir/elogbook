@@ -32,7 +32,7 @@
 //__________________________________________________________________________________
 void LogEntryHtmlHelper::print( QIODevice* device )
 {
-    Debug::Throw( "LogEntryHtmlHelper::print.\n" );
+    Debug::Throw( QStringLiteral("LogEntryHtmlHelper::print.\n") );
 
     // check entry
     Q_CHECK_PTR( entry_ );
@@ -62,7 +62,7 @@ void LogEntryHtmlHelper::print( QIODevice* device )
 void LogEntryHtmlHelper::appendEntry( QDomDocument& document, QDomElement& parent )
 {
 
-    Debug::Throw( "LogEntryHtmlHelper::appendEntry.\n" );
+    Debug::Throw( QStringLiteral("LogEntryHtmlHelper::appendEntry.\n") );
 
     // check entry
     Q_CHECK_PTR( entry_ );
@@ -80,7 +80,7 @@ void LogEntryHtmlHelper::appendEntry( QDomDocument& document, QDomElement& paren
 void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& parent )
 {
 
-    Debug::Throw( "LogEntryHtmlHelper::_appendHeader.\n" );
+    Debug::Throw( QStringLiteral("LogEntryHtmlHelper::_appendHeader.\n") );
 
     // check mask
     if( !( mask_ & LogEntry::HeaderMask ) ) return;
@@ -197,7 +197,7 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
 //__________________________________________________________________________________
 void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& parent )
 {
-    Debug::Throw( "LogEntryHtmlHelper::_appendBody.\n" );
+    Debug::Throw( QStringLiteral("LogEntryHtmlHelper::_appendBody.\n") );
 
     // check mask
     if( !(mask_&LogEntry::TextMask ) ) return;
@@ -262,7 +262,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
 //__________________________________________________________________________________
 void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement& parent )
 {
-    Debug::Throw( "LogEntryHtmlHelper::_appendAttachments.\n" );
+    Debug::Throw( QStringLiteral("LogEntryHtmlHelper::_appendAttachments.\n") );
 
     // check mask
     if( !(mask_&LogEntry::AttachmentsMask) ) return;

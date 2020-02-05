@@ -28,9 +28,9 @@
 //____________________________________________________
 FileCheck::FileCheck( QObject* parent ):
     QObject( parent ),
-    Counter( "FileCheck" )
+    Counter( QStringLiteral("FileCheck") )
 {
-    Debug::Throw( "FileCheck::FileCheck.\n" );
+    Debug::Throw( QStringLiteral("FileCheck::FileCheck.\n") );
     connect( &_fileSystemWatcher(), &QFileSystemWatcher::fileChanged, this, &FileCheck::_fileChanged );
 }
 
@@ -38,7 +38,7 @@ FileCheck::FileCheck( QObject* parent ):
 void FileCheck::registerLogbook( Logbook* logbook )
 {
 
-    Debug::Throw( "FileCheck::clear.\n" );
+    Debug::Throw( QStringLiteral("FileCheck::clear.\n") );
 
     // associate logbook to this and add corresponding file
     if( !logbook->file().isEmpty() )
@@ -67,7 +67,7 @@ void FileCheck::registerLogbook( Logbook* logbook )
 void FileCheck::clear()
 {
 
-    Debug::Throw( "FileCheck::clear.\n" );
+    Debug::Throw( QStringLiteral("FileCheck::clear.\n") );
 
     // clear associated logbooks
     clearAssociations<Logbook>();

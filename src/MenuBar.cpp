@@ -41,10 +41,10 @@
 //_______________________________________________
 MenuBar::MenuBar( QWidget* parent, MainWindow* mainWindow ):
     QMenuBar( parent ),
-    Counter( "MenuBar" )
+    Counter( QStringLiteral("MenuBar") )
 {
 
-    Debug::Throw( "MenuBar::MenuBar.\n" );
+    Debug::Throw( QStringLiteral("MenuBar::MenuBar.\n") );
 
     // try cast parent to EditionWindow
     EditionWindow* editionWindow( qobject_cast<EditionWindow*>( parent ) );
@@ -160,7 +160,7 @@ MenuBar::MenuBar( QWidget* parent, MainWindow* mainWindow ):
 //_______________________________________________
 void MenuBar::_updateRecentEntriesMenu()
 {
-    Debug::Throw( "MenuBar::_updateRecentEntriesMenu.\n" );
+    Debug::Throw( QStringLiteral("MenuBar::_updateRecentEntriesMenu.\n") );
 
     Q_CHECK_PTR( recentEntriesMenu_ );
     recentEntriesMenu_->clear();
@@ -182,7 +182,7 @@ void MenuBar::_updateRecentEntriesMenu()
 //_______________________________________________
 void MenuBar::_selectEntry( QAction* action )
 {
-    Debug::Throw( "MenuBar::_selectEntry.\n" );
+    Debug::Throw( QStringLiteral("MenuBar::_selectEntry.\n") );
     ActionMap::iterator iter( actions_.find( action ) );
     Q_ASSERT( iter != actions_.end() );
     iter.value()->setFindSelected( true );
@@ -192,7 +192,7 @@ void MenuBar::_selectEntry( QAction* action )
 //_______________________________________________
 void MenuBar::_updateEditorMenu()
 {
-    Debug::Throw( "MenuBar::_UpdateEditorMenu.\n" );
+    Debug::Throw( QStringLiteral("MenuBar::_UpdateEditorMenu.\n") );
 
     windowsMenu_->clear();
     // retrieve parent editFream if any
@@ -249,7 +249,7 @@ void MenuBar::_updateEditorMenu()
 void MenuBar::_updatePreferenceMenu()
 {
 
-    Debug::Throw( "MenuBar::_updatePreferenceMenu.\n" );
+    Debug::Throw( QStringLiteral("MenuBar::_updatePreferenceMenu.\n") );
 
     preferenceMenu_->clear();
 

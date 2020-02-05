@@ -126,7 +126,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         //* constructor
         explicit Model( QObject* parent = nullptr ):
             ListModel( parent ),
-            Counter( "FileCheck::Model" )
+            Counter( QStringLiteral("FileCheck::Model") )
         {}
 
         //*@name methods reimplemented from base class

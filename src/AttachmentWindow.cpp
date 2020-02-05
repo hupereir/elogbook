@@ -35,7 +35,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     CustomDialog( parent, CloseButton )
 {
 
-    Debug::Throw( "AttachmentWindow::AttachmentWindow.\n" );
+    Debug::Throw( QStringLiteral("AttachmentWindow::AttachmentWindow.\n") );
     setWindowTitle( tr( "Attachments" ) );
     setOptionName( "ATTACHMENT_WINDOW" );
 
@@ -60,7 +60,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 //________________________________________
 void AttachmentWindow::show()
 {
-    Debug::Throw( "AttachmentWindow::show.\n" );
+    Debug::Throw( QStringLiteral("AttachmentWindow::show.\n") );
     centerOnWidget( qApp->activeWindow());
     QWidget::show();
     QWidget::raise();
@@ -77,7 +77,7 @@ void AttachmentWindow::uniconify()
 void AttachmentWindow::_displayEntry( Attachment& attachment )
 {
 
-    Debug::Throw( "AttachmentWindow::_displayEntry.\n");
+    Debug::Throw( QStringLiteral("AttachmentWindow::_displayEntry.\n"));
 
     // retrieve associated entry
     LogEntry *entry( attachment.entry() );

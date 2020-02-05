@@ -34,7 +34,7 @@ class ProgressBar:public BaseProgressBar, private Base::Counter<ProgressBar>
     //* constructor
     explicit ProgressBar( QWidget* parent = nullptr ):
         BaseProgressBar( parent ),
-        Counter( "ProgressBar" )
+        Counter( QStringLiteral("ProgressBar") )
     {}
 
     //* set maximum

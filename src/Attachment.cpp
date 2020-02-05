@@ -36,13 +36,13 @@ const QString Attachment::NoSize( " - " );
 
 //_______________________________________
 Attachment::Attachment( const QString orig ):
-    Counter( "Attachment" ),
+    Counter( QStringLiteral("Attachment") ),
     sourceFile_( orig )
-{ Debug::Throw( "Attachment::Attachment.\n" ); }
+{ Debug::Throw( QStringLiteral("Attachment::Attachment.\n") ); }
 
 //_______________________________________
 Attachment::Attachment( const QDomElement& element):
-    Counter( "Attachment" )
+    Counter( QStringLiteral("Attachment") )
 {
     Debug::Throw() << "Attachment::Attachment.\n";
 
@@ -83,7 +83,7 @@ Attachment::Attachment( const QDomElement& element):
 QDomElement Attachment::domElement( QDomDocument& parent ) const
 {
 
-    Debug::Throw( "Attachment::DomElement.\n" );
+    Debug::Throw( QStringLiteral("Attachment::DomElement.\n") );
     auto out( parent.createElement( Xml::Attachment ) );
     if( !file_.isEmpty() ) out.setAttribute( Xml::File, file_ );
     if( !sourceFile_.isEmpty() ) out.setAttribute( Xml::SourceFile, sourceFile_ );
@@ -113,7 +113,7 @@ bool operator < ( const Attachment& first, const Attachment& second)
 void Attachment::updateSize()
 {
 
-    Debug::Throw( "Attachment::updateSize.\n" );
+    Debug::Throw( QStringLiteral("Attachment::updateSize.\n") );
 
     // check type
     if( isUrl_ || size() != 0 || !isValid() ) return;
@@ -127,7 +127,7 @@ void Attachment::updateSize()
 bool Attachment::updateTimeStamps()
 {
 
-    Debug::Throw( "Attachment::updateTimeStamps.\n" );
+    Debug::Throw( QStringLiteral("Attachment::updateTimeStamps.\n") );
     bool changed( false );
     if( isUrl_ )
     {
@@ -273,7 +273,7 @@ Attachment::ErrorCode Attachment::copy( const Attachment::Command& command, cons
 //________________________________________
 File Attachment::shortFile() const
 {
-    Debug::Throw( "Attachment::shortFile.\n" );
+    Debug::Throw( QStringLiteral("Attachment::shortFile.\n") );
 
     File file( file_ );
     file.removeTrailingSlash();

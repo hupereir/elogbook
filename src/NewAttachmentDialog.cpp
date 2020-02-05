@@ -30,7 +30,7 @@ NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
 CustomDialog( parent )
 {
 
-    Debug::Throw( "NewAttachmentDialog::NewAttachmentDialog.\n" );
+    Debug::Throw( QStringLiteral("NewAttachmentDialog::NewAttachmentDialog.\n") );
     setWindowTitle( tr( "New Attachment" ) );
 
     GridLayout* gridLayout = new GridLayout;
@@ -97,7 +97,7 @@ bool NewAttachmentDialog::isUrl() const
 //____________________________________________________
 QString NewAttachmentDialog::comments() const
 {
-    Debug::Throw( "NewAttachmentDialog::GetComments.\n" );
+    Debug::Throw( QStringLiteral("NewAttachmentDialog::GetComments.\n") );
     return commentsEditor_->toPlainText();
 }
 
@@ -109,7 +109,7 @@ Attachment::Command NewAttachmentDialog::action() const
 void NewAttachmentDialog::setFile( const File& file )
 {
 
-    Debug::Throw( "NewAttachmentDialog::SetFile.\n" );
+    Debug::Throw( QStringLiteral("NewAttachmentDialog::SetFile.\n") );
     fileEditor_->setFile( file );
 
 }
@@ -117,21 +117,21 @@ void NewAttachmentDialog::setFile( const File& file )
 //____________________________________________________
 void NewAttachmentDialog::setDestinationDirectory( const File& file )
 {
-    Debug::Throw( "NewAttachmentDialog::SetDestinationDirectory.\n" );
+    Debug::Throw( QStringLiteral("NewAttachmentDialog::SetDestinationDirectory.\n") );
     destinationDirectoryEditor_->setFile( file );
 }
 
 //____________________________________________________
 void NewAttachmentDialog::setIsUrl( bool value )
 {
-    Debug::Throw( "NewAttachmentDialog::setType.\n" );
+    Debug::Throw( QStringLiteral("NewAttachmentDialog::setType.\n") );
     urlCheckBox_->setChecked( value );
 }
 
 //____________________________________________________
 void NewAttachmentDialog::setAction( const Attachment::Command& command )
 {
-    Debug::Throw( "NewAttachmentDialog::SetAction.\n" );
+    Debug::Throw( QStringLiteral("NewAttachmentDialog::SetAction.\n") );
     QString actionString = ( command == Attachment::Command::CopyVersion ) ? tr( "Copy" ) : tr( "Link" );
     actionComboBox_->setCurrentIndex( actionComboBox_->findText( actionString ) );
 }
@@ -139,7 +139,7 @@ void NewAttachmentDialog::setAction( const Attachment::Command& command )
 //____________________________________________________
 void NewAttachmentDialog::setComments( const QString& comments )
 {
-    Debug::Throw( "NewAttachmentDialog::SetComments.\n" );
+    Debug::Throw( QStringLiteral("NewAttachmentDialog::SetComments.\n") );
     commentsEditor_->setPlainText( comments );
 }
 

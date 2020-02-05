@@ -39,8 +39,8 @@ class LogEntryHtmlHelper: public QObject, private Base::Counter<LogEntryHtmlHelp
     //* constructor
     explicit LogEntryHtmlHelper( QObject* parent = nullptr ):
         QObject( parent ),
-        Counter( "LogEntryHtmlHelper" )
-    { Debug::Throw( "LogEntryHtmlHelper::LogEntryHtmlHelper.\n" ); };
+        Counter( QStringLiteral("LogEntryHtmlHelper") )
+    { Debug::Throw( QStringLiteral("LogEntryHtmlHelper::LogEntryHtmlHelper.\n") ); };
 
     //* entry
     void setEntry( LogEntry* entry )

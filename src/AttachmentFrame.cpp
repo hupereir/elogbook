@@ -55,7 +55,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     readOnly_( readOnly ),
     thread_( this )
 {
-    Debug::Throw( "AttachmentFrame::AttachmentFrame.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::AttachmentFrame.\n") );
 
     // tell validFile thread not to check duplicates
     // this is needed when checking files that are links
@@ -111,7 +111,7 @@ QSize AttachmentFrame::sizeHint() const
 void AttachmentFrame::add( const AttachmentModel::List& attachments )
 {
 
-    Debug::Throw( "AttachmentFrame::add.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::add.\n") );
     for( const auto& attachment:attachments )
     { Base::Key::associate( this, attachment ); }
 
@@ -124,7 +124,7 @@ void AttachmentFrame::add( const AttachmentModel::List& attachments )
 void AttachmentFrame::update( Attachment& attachment )
 {
 
-    Debug::Throw( "AttachmentFrame::update.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::update.\n") );
     Q_ASSERT( attachment.isAssociated( this ) );
     model_.add( &attachment );
     treeView_->resizeColumns();
@@ -135,7 +135,7 @@ void AttachmentFrame::update( Attachment& attachment )
 void AttachmentFrame::select( Attachment& attachment )
 {
 
-    Debug::Throw( "AttachmentFrame::select.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::select.\n") );
     Q_ASSERT( attachment.isAssociated( this ) );
 
     // get matching model index
@@ -155,7 +155,7 @@ void AttachmentFrame::select( Attachment& attachment )
 void AttachmentFrame::_new()
 {
 
-    Debug::Throw( "AttachmentFrame::_new.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_new.\n") );
 
     // retrieve/check associated EditionWindow/LogEntry
     Base::KeySet<EditionWindow> windows( this );
@@ -295,7 +295,7 @@ void AttachmentFrame::_new()
 void AttachmentFrame::enterEvent( QEvent* event )
 {
 
-    Debug::Throw( "AttachmentFrame::enterEvent.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::enterEvent.\n") );
     if( thread_.isRunning() || !hasList() ) return;
 
     // create file records
@@ -410,7 +410,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
 void AttachmentFrame::_updateConfiguration()
 {
 
-    Debug::Throw( "AttachmentFrame::_updateConfiguration.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_updateConfiguration.\n") );
     int icon_size( XmlOptions::get().get<int>( "ATTACHMENT_LIST_ICON_SIZE" ) );
     treeView_->setIconSize( QSize( icon_size, icon_size ) );
 
@@ -434,7 +434,7 @@ void AttachmentFrame::_updateActions()
 //_____________________________________________
 void AttachmentFrame::_open()
 {
-    Debug::Throw( "AttachmentFrame::_open.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_open.\n") );
 
     // get selection
     AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
@@ -514,7 +514,7 @@ void AttachmentFrame::_open()
 //_____________________________________________
 void AttachmentFrame::_edit()
 {
-    Debug::Throw( "AttachmentFrame::_edit.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_edit.\n") );
 
     // store selected item locally
     // get selection
@@ -562,7 +562,7 @@ void AttachmentFrame::_edit()
 //_____________________________________________
 void AttachmentFrame::_delete()
 {
-    Debug::Throw( "AttachmentFrame::_delete.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_delete.\n") );
 
     // store selected item locally
     // get selection
@@ -653,7 +653,7 @@ void AttachmentFrame::_delete()
 //_____________________________________________
 void AttachmentFrame::_reload()
 {
-    Debug::Throw( "AttachmentFrame::_reload.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_reload.\n") );
 
     // get selection
     AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
@@ -677,7 +677,7 @@ void AttachmentFrame::_reload()
 //_____________________________________________
 void AttachmentFrame::_saveAs()
 {
-    Debug::Throw( "AttachmentFrame::_saveAs.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_saveAs.\n") );
 
     // get selection
     AttachmentModel::List selection( model_.get( treeView_->selectionModel()->selectedRows() ) );
@@ -732,7 +732,7 @@ void AttachmentFrame::_saveAs()
 //_________________________________________________________________________
 void AttachmentFrame::_clean()
 {
-    Debug::Throw( "AttachmentFrame::clean.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::clean.\n") );
 
     // ask for confirmation
     if( !QuestionDialog( this, tr( "Remove all invalid attachments ?" ) ).exec() ) return;
@@ -795,7 +795,7 @@ void AttachmentFrame::_itemSelected( const QModelIndex& index )
 //_______________________________________________________________________
 void AttachmentFrame::_installActions()
 {
-    Debug::Throw( "AttachmentFrame::_installActions.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_installActions.\n") );
 
     addAction( visibilityAction_ = new QAction( IconEngine::get( IconNames::Attach ), tr( "Show &Attachment List" ), this ) );
     visibilityAction_->setToolTip( tr( "Show/hide attachment list" ) );
@@ -839,7 +839,7 @@ void AttachmentFrame::_installActions()
 //_______________________________________________________________________
 void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments )
 {
-    Debug::Throw( "AttachmentFrame::_saveAttachments.\n" );
+    Debug::Throw( QStringLiteral("AttachmentFrame::_saveAttachments.\n") );
     if( attachments.empty() ) return;
 
     // associated lists
@@ -851,14 +851,14 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
 
         // get associated entries and store
         entries.unite( Base::KeySet<LogEntry>( attachment ) );
-        Debug::Throw( "AttachmentFrame::_saveAttachments - entries.\n" );
+        Debug::Throw( QStringLiteral("AttachmentFrame::_saveAttachments - entries.\n") );
 
         // get associated attachment frames and store
         Base::KeySet<AttachmentFrame> localFrames( attachment );
         for( const auto& frame:localFrames )
         { frame->update( *attachment ); }
 
-        Debug::Throw( "AttachmentFrame::_saveAttachments - frames.\n" );
+        Debug::Throw( QStringLiteral("AttachmentFrame::_saveAttachments - frames.\n") );
 
     }
 
@@ -872,11 +872,11 @@ void AttachmentFrame::_saveAttachments( const AttachmentModel::List& attachments
         // get associated logbooks and store
         logbooks.unite( Base::KeySet<Logbook>( entry ) );
 
-        Debug::Throw( "AttachmentFrame::_saveAttachments - logbooks.\n" );
+        Debug::Throw( QStringLiteral("AttachmentFrame::_saveAttachments - logbooks.\n") );
 
         // get associated Edition windows
         editionWindows.unite( Base::KeySet<EditionWindow>( entry ) );
-        Debug::Throw( "AttachmentFrame::_saveAttachments - edition windows.\n" );
+        Debug::Throw( QStringLiteral("AttachmentFrame::_saveAttachments - edition windows.\n") );
 
     }
 

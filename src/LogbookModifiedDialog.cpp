@@ -31,10 +31,10 @@
 //________________________________________________________
 LogbookModifiedDialog::LogbookModifiedDialog( QWidget* parent, const FileCheck::DataSet& files ):
   BaseDialog( parent ),
-Counter( "LogbookModifiedDialog" )
+Counter( QStringLiteral("LogbookModifiedDialog") )
 {
 
-    Debug::Throw( "LogbookModifiedDialog::LogbookModifiedDialog.\n" );
+    Debug::Throw( QStringLiteral("LogbookModifiedDialog::LogbookModifiedDialog.\n") );
     setOptionName( "LOGBOOK_MODIFIED_DIALOG" );
 
     Q_ASSERT( !files.empty() );

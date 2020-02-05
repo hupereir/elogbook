@@ -32,10 +32,10 @@
 //________________________________________________________
 AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, ReturnCodes buttons ):
     BaseDialog( parent ),
-    Counter( "AskForSaveDialog" )
+    Counter( QStringLiteral("AskForSaveDialog") )
 {
 
-    Debug::Throw( "AskForSaveDialog::AskForSaveDialog.\n" );
+    Debug::Throw( QStringLiteral("AskForSaveDialog::AskForSaveDialog.\n") );
     setWindowModality( Qt::ApplicationModal );
 
     // create vbox layout

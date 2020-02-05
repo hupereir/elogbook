@@ -31,7 +31,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
     CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 
-    Debug::Throw( "DeleteKeywordDialog::DeleteKeywordDialog.\n" );
+    Debug::Throw( QStringLiteral("DeleteKeywordDialog::DeleteKeywordDialog.\n") );
     setWindowTitle( tr( "Delete Keyword" ) );
 
     // create label

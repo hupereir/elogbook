@@ -44,7 +44,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
    BaseConfigurationDialog( parent )
 {
 
-    Debug::Throw( "ConfigurationDialog::ConfigurationDialog.\n" );
+    Debug::Throw( QStringLiteral("ConfigurationDialog::ConfigurationDialog.\n") );
 
     baseConfiguration();
 
