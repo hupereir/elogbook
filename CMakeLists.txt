@@ -41,23 +41,18 @@ find_program(XDG_OPEN xdg-open)
 
 ########### subdirectories ###############
 if(USE_SHARED_LIBS)
-
   set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   link_directories(${CMAKE_INSTALL_PREFIX}/lib)
-
 else()
-
+  add_definitions(-DSTATIC_BUILD)
   add_subdirectory(base)
   add_subdirectory(base-qt)
   add_subdirectory(base-server)
   add_subdirectory(base-help)
-
   if(ASPELL_FOUND)
     add_subdirectory(base-spellcheck)
   endif(ASPELL_FOUND)
-
 endif()
 
 add_subdirectory(src)
-
 write_feature_summary()
