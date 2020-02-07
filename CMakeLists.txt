@@ -7,6 +7,9 @@ SET(ELOGBOOK_VERSION_MINOR 12)
 SET(ELOGBOOK_VERSION_PATCH 3)
 set(ELOGBOOK_VERSION ${ELOGBOOK_VERSION_MAJOR}.${ELOGBOOK_VERSION_MINOR}.${ELOGBOOK_VERSION_PATCH})
 
+########### options ###############
+option( USE_SHARED_LIBS "Use Shared Libraries" OFF )
+
 ########### modules #################
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/base-cmake")
 include(Macros)
@@ -20,9 +23,6 @@ set(CPACK_PACKAGE_VERSION "${ELOGBOOK_VERSION}")
 set(CPACK_SOURCE_GENERATOR TGZ)
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}")
 include(CPack)
-
-########### options ###############
-option( USE_SHARED_LIBS "Use Shared Libraries" OFF )
 
 ########### configuration files ###############
 configure_file(elogbook.spec.cmake ${CMAKE_SOURCE_DIR}/elogbook.spec)
