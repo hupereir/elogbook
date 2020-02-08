@@ -244,7 +244,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
 
         // since QT5 extra formats need to be applied before starting the layout
         // create ranges
-        QList<QTextLayout::FormatRange> formatRanges;
+        QVector<QTextLayout::FormatRange> formatRanges;
 
         // iterator over text fragments
         for( auto&& it = block.begin(); !(it.atEnd()); ++it)
@@ -262,7 +262,7 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
         }
 
         // assign to layout
-        textLayout.setAdditionalFormats( formatRanges );
+        textLayout.setFormats( formatRanges );
 
         // layout text
         textLayout.beginLayout();
