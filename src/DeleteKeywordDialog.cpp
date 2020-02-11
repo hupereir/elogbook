@@ -49,7 +49,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>&
             if( index >= maxKeywords )
             {
                 index = 0;
-                buffer += "\n ";
+                buffer += QLatin1String("\n ");
             }
         }
 

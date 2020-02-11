@@ -92,7 +92,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     Q_DECLARE_FLAGS( Mask, MaskFlag )
 
     //* constructor from file
-    explicit Logbook( File = File() );
+    explicit Logbook( const File& = File() );
 
     //* destructor
     ~Logbook() override;
@@ -276,14 +276,14 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     { saved_ = stamp; }
 
     //* logbook filename
-    void setFile( File, bool recursive = false );
+    void setFile( const File&, bool recursive = false );
 
     //* parent logbook filename
     void setParentFile( const File& file )
     { parentFile_ = file; }
 
     //* logbook title. Returns true if changed.
-    bool setTitle( QString title )
+    bool setTitle( const QString &title )
     {
         if( title_ == title ) return false;
         title_ = title;
@@ -291,7 +291,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     }
 
     //* logbook author. Returns true if changed.
-    bool setAuthor( QString author )
+    bool setAuthor( const QString &author )
     {
         if( author_ == author ) return false;
         author_ = author;
@@ -299,7 +299,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     }
 
     //* appends string to attachment comments. Returns true if changed.
-    bool setComments( QString comments )
+    bool setComments( const QString &comments )
     {
         if( comments == comments_ ) return false;
         comments_ = comments ;
@@ -307,7 +307,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     }
 
     //* logbook directory. Returns true if changed.
-    bool setDirectory( File directory )
+    bool setDirectory( const File &directory )
     {
         if( directory_ == directory ) return false;
         directory_ = directory;
@@ -363,7 +363,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     bool setSortOrder( int order );
 
     //* add backup
-    void addBackup( File );
+    void addBackup( const File &);
 
     //* set backup
     void setBackupFiles( const Backup::List& );

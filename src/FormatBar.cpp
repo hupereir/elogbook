@@ -80,7 +80,7 @@ class FormatColorButton: public CustomToolButton
 
 //________________________________________
 FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
-    CustomToolBar( "Text format", parent, optionName )
+    CustomToolBar( QStringLiteral("Text format"), parent, optionName )
 {
 
     Debug::Throw( QStringLiteral("ToolBar::ToolBar.\n") );
@@ -255,7 +255,7 @@ void FormatBar::_updateConfiguration()
         XmlOptions::get().keep( QStringLiteral("TEXT_COLOR") );
         for( const auto& color:defaultColors )
         {
-            XmlOptions::get().add( "TEXT_COLOR", Option().set( color ) );
+            XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( color ) );
             colorMenu_->add( color );
         }
 
@@ -276,7 +276,7 @@ void FormatBar::_saveConfiguration()
 
     const Base::Color::Set colors( colorMenu_->colors() );
     for( const auto& color:colors )
-    { XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( color ) ) ); }
+    { XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( color ) ) ); }
 
     return;
 }

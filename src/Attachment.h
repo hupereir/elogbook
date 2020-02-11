@@ -50,7 +50,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     static const QString NoSize;
 
     //* contructor
-    explicit Attachment( const QString = QString() );
+    explicit Attachment( const QString& = QString() );
 
     //* creator from DomElement
     explicit Attachment( const QDomElement& element );
@@ -137,7 +137,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     }
 
     //* link
-    bool setIsLink( const LinkState& value )
+    bool setIsLink( Attachment::LinkState value )
     {
         if( isLink_ == value ) return false;
         isLink_ = value;
@@ -191,7 +191,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     Attachment::DO_NOTHING, just stores the attached file name, but do nothing
     \param destdir destination directory
     */
-    ErrorCode copy( const Attachment::Command& command, const QString& destdir );
+    ErrorCode copy( Attachment::Command command, const QString& destdir );
 
     //@}
 
@@ -208,7 +208,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     void _setFile( const File& file );
 
     //* file creation
-    bool _setCreation( TimeStamp stamp )
+    bool _setCreation( const TimeStamp &stamp )
     {
         if( creation_ == stamp ) return false;
         creation_ = stamp;
@@ -216,7 +216,7 @@ class Attachment: private Base::Counter<Attachment>, public Base::Key
     }
 
     //* modification
-    bool _setModification( TimeStamp stamp )
+    bool _setModification( const TimeStamp &stamp )
     {
         if( modification_ == stamp ) return false;
         modification_ = stamp;

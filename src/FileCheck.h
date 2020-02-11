@@ -66,7 +66,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         };
 
         //* constructor
-        explicit Data( QString file = QString(), Flag flag = Flag::None, TimeStamp stamp = TimeStamp() ):
+        explicit Data( const QString &file = QString(), Flag flag = Flag::None, const TimeStamp &stamp = TimeStamp() ):
             file_( file ),
             flag_( flag ),
             timeStamp_( stamp )
@@ -81,7 +81,7 @@ class FileCheck: public QObject, public Base::Key, private Base::Counter<FileChe
         { return file_; }
 
         //* flag
-        void setFlag( const Flag& flag )
+        void setFlag( FileCheck::Data::Flag flag )
         { flag_ = flag; }
 
         //* flag

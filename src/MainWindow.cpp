@@ -174,7 +174,7 @@ MainWindow::MainWindow( QWidget *parent ):
     // rename all entries matching first keyword the second. This correspond to
     // drag and drop inside the keyword list, or to direct edition of a keyword list item.
     connect( &keywordModel_, &KeywordModel::keywordChangeRequest, this, &MainWindow::_confirmRenameKeyword );
-    connect( &keywordModel_, &KeywordModel::keywordChanged, this, QOverload<Keyword,Keyword>::of( &MainWindow::_renameKeyword ) );
+    connect( &keywordModel_, &KeywordModel::keywordChanged, this, QOverload<const Keyword&, const Keyword&>::of( &MainWindow::_renameKeyword ) );
 
     {
         // popup menu for keyword list
@@ -320,7 +320,7 @@ void MainWindow::createDefaultLogbook()
 }
 
 //_______________________________________________
-bool MainWindow::setLogbook( File file )
+bool MainWindow::setLogbook( const File &file )
 {
 
     Debug::Throw() << "MainWindow::SetLogbook - logbook: \"" << file << "\"" << endl;
@@ -627,7 +627,7 @@ void MainWindow::selectEntry( const Keyword& keyword, LogEntry* entry )
 }
 
 //_______________________________________________
-void MainWindow::updateEntry( Keyword keyword, LogEntry* entry, bool updateSelection )
+void MainWindow::updateEntry( const Keyword &keyword, LogEntry* entry, bool updateSelection )
 {
 
     Debug::Throw( QStringLiteral("MainWindow::updateEntry.\n") );
@@ -894,7 +894,7 @@ void MainWindow::save()
 }
 
 //_______________________________________________
-void MainWindow::selectEntries( QString selection, SearchWidget::SearchModes mode )
+void MainWindow::selectEntries( const QString &selection, SearchWidget::SearchModes mode )
 {
     Debug::Throw() << "MainWindow::selectEntries - selection: " << selection << " mode:" << mode << endl;
 
@@ -1500,7 +1500,7 @@ void MainWindow::_updateEntryFrames( LogEntry* entry, Mask mask )
 }
 
 //_____________________________________________
-void MainWindow::_filesModified( FileCheck::DataSet files )
+void MainWindow::_filesModified( const FileCheck::DataSet &files )
 {
 
     Debug::Throw( QStringLiteral("MainWindow::_filesModified.\n") );
@@ -1590,7 +1590,7 @@ void MainWindow::updateWindowTitle()
 
             if( logbook_->isReadOnly() ) QMainWindow::setWindowTitle( tr( "ELogbook (read-only)" ) );
             else if( logbook_->modified() ) QMainWindow::setWindowTitle( tr( "ELogbook (modified)" ) );
-            else QMainWindow::setWindowTitle( "Elogbook" );
+            else QMainWindow::setWindowTitle( QStringLiteral("Elogbook") );
 
         } else  {
 
@@ -1600,7 +1600,7 @@ void MainWindow::updateWindowTitle()
 
         }
 
-    } else QMainWindow::setWindowTitle( "Elogbook" );
+    } else QMainWindow::setWindowTitle( QStringLiteral("Elogbook") );
 
 }
 
@@ -1864,7 +1864,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     QPrinter printer( QPrinter::HighResolution );
 
     // generate document name
-    printer.setDocName( QString( "elogbook_%1_%2_%3" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() ) );
+    printer.setDocName( QStringLiteral( "elogbook_%1_%2_%3" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() ) );
 
     // create options widget
     auto optionWidget = new PrinterOptionWidget;
@@ -2002,7 +2002,7 @@ void MainWindow::_toHtml()
     dialog.setOptionWidgets( { logEntrySelectionWidget, logbookOptionWidget, logEntryOptionWidget } );
 
     // generate file name
-    QString buffer = QString( "eLogbook_%1_%2_%3.html" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() );
+    QString buffer = QStringLiteral( "eLogbook_%1_%2_%3.html" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() );
     dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
 
     // execute dialog
@@ -2086,7 +2086,7 @@ void MainWindow::_synchronize()
 
     // set busy flag
     Base::Singleton::get().application<Application>()->busy();
-    statusbar_->label().setText( "Reading remote logbook ... " );
+    statusbar_->label().setText( QStringLiteral("Reading remote logbook ... ") );
 
     // opens file in remote logbook
     Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remoteFile << endl;
@@ -2168,11 +2168,11 @@ void MainWindow::_synchronize()
 }
 
 //_______________________________________________
-void MainWindow::_removeBackup( Backup backup )
+void MainWindow::_removeBackup( const Backup &backup )
 { _removeBackups( { backup } ); }
 
 //_______________________________________________
-void MainWindow::_removeBackups( Backup::List backups )
+void MainWindow::_removeBackups( const Backup::List &backups )
 {
 
     Debug::Throw( QStringLiteral("MainWindow::_removeBackups.\n") );
@@ -2244,7 +2244,7 @@ void MainWindow::_removeBackups( Backup::List backups )
 }
 
 //_______________________________________________
-void MainWindow::_restoreBackup( Backup backup )
+void MainWindow::_restoreBackup( const Backup &backup )
 {
     Debug::Throw( QStringLiteral("MainWindow::_restoreBackup.\n") );
     if( !backup.file().exists() )
@@ -2290,7 +2290,7 @@ void MainWindow::_restoreBackup( Backup backup )
 }
 
 //_______________________________________________
-void MainWindow::_mergeBackup( Backup backup )
+void MainWindow::_mergeBackup( const Backup &backup )
 {
     Debug::Throw( QStringLiteral("MainWindow::_mergeBackup.\n") );
 
@@ -2834,7 +2834,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
 }
 
 //_______________________________________________
-void MainWindow::_changeEntryTitle( LogEntry* entry, QString newTitle )
+void MainWindow::_changeEntryTitle( LogEntry* entry, const QString &newTitle )
 {
     Debug::Throw( QStringLiteral("MainWindow::_changeEntryTitle.\n") );
 
@@ -3089,7 +3089,7 @@ void MainWindow::_confirmRenameKeyword( const Keyword& keyword, const Keyword& n
 
 
 //____________________________________________
-void MainWindow::_renameKeyword( Keyword keyword, Keyword newKeyword, bool updateSelection )
+void MainWindow::_renameKeyword( const Keyword &keyword, const Keyword &newKeyword, bool updateSelection )
 {
 
     Debug::Throw(QStringLiteral("MainWindow::_renameKeyword.\n") );
@@ -3203,7 +3203,7 @@ void MainWindow::_renameEntryKeyword()
 }
 
 //_______________________________________________
-void MainWindow::_confirmRenameEntryKeyword( Keyword newKeyword )
+void MainWindow::_confirmRenameEntryKeyword( const Keyword &newKeyword )
 {
 
     Debug::Throw() << "MainWindow::_confirmRenameEntryKeyword - newKeyword: " << newKeyword << endl;
@@ -3220,7 +3220,7 @@ void MainWindow::_confirmRenameEntryKeyword( Keyword newKeyword )
 }
 
 //_______________________________________________
-void MainWindow::_renameEntryKeyword( Keyword newKeyword )
+void MainWindow::_renameEntryKeyword( const Keyword &newKeyword )
 {
 
     Debug::Throw() << "MainWindow::_renameEntryKeyword - newKeyword: " << newKeyword << endl;
@@ -3278,7 +3278,7 @@ void MainWindow::_renameEntryKeyword( Keyword newKeyword )
 }
 
 //_______________________________________________
-void MainWindow::_copyEntryKeyword( Keyword newKeyword )
+void MainWindow::_copyEntryKeyword( const Keyword &newKeyword )
 {
 
     Debug::Throw() << "MainWindow::_copyEntryKeyword - newKeyword: " << newKeyword << endl;
@@ -3327,7 +3327,7 @@ void MainWindow::_copyEntryKeyword( Keyword newKeyword )
 }
 
 //_______________________________________________
-void MainWindow::_linkEntryKeyword( Keyword newKeyword )
+void MainWindow::_linkEntryKeyword( const Keyword &newKeyword )
 {
 
     Debug::Throw() << "MainWindow::_linkEntryKeyword - newKeyword: " << newKeyword << endl;
@@ -3370,7 +3370,7 @@ void MainWindow::_linkEntryKeyword( Keyword newKeyword )
 }
 
 //_______________________________________________
-void MainWindow::_updateSelection( Keyword newKeyword, Base::KeySet<LogEntry> entries )
+void MainWindow::_updateSelection( const Keyword &newKeyword, const Base::KeySet<LogEntry> &entries )
 {
 
     // check if at least one entry is selected

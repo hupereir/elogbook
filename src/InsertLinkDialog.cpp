@@ -24,7 +24,7 @@
 #include <QLayout>
 
 //_________________________________________________________
-InsertLinkDialog::InsertLinkDialog( QWidget* parent, QString value ):
+InsertLinkDialog::InsertLinkDialog( QWidget* parent, const QString &value ):
 CustomDialog( parent, OkButton|CancelButton|Separator )
 {
     Debug::Throw( QStringLiteral("InsertLinkDialog::InsertLinkDialog.\n") );

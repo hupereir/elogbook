@@ -74,7 +74,7 @@ class NewAttachmentDialog: public CustomDialog
     void setIsUrl( bool );
 
     //* Action
-    void setAction( const Attachment::Command& );
+    void setAction( Attachment::Command  );
 
     //* comments
     void setComments( const QString& comments );

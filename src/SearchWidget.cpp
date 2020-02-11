@@ -72,7 +72,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
 
     hLayout->addWidget( editor_, 1 );
 
-    connect( editor_, QOverload<const QString&>::of( &CustomComboBox::activated ), [this](QString){ _selectionRequest(); } );
+    connect( editor_, QOverload<const QString&>::of( &CustomComboBox::activated ), [this](const QString&){ _selectionRequest(); } );
     connect( editor_, &CustomComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
     connect( editor_->lineEdit(), &QLineEdit::textChanged, this, &SearchWidget::_restorePalette );
 

@@ -65,7 +65,7 @@ class LogbookHtmlHelper: public QObject, private Base::Counter<LogbookHtmlHelper
     { entryMask_ = value; }
 
     //* current keyword
-    void setCurrentKeyword( Keyword value )
+    void setCurrentKeyword( const Keyword &value )
     { currentKeyword_ = value; }
 
     //@}

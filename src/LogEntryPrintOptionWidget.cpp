@@ -26,7 +26,7 @@
 //_________________________________________________________________
 LogEntryPrintOptionWidget::LogEntryPrintOptionWidget( QWidget* parent ):
     QWidget( parent ),
-    OptionWidget( "LOGENTRY_PRINT_OPTION_MASK" )
+    OptionWidget( QStringLiteral("LOGENTRY_PRINT_OPTION_MASK") )
 {
 
     setWindowTitle( tr( "Logbook Entry Configuration" ) );

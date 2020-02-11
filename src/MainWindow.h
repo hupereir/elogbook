@@ -128,7 +128,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     when the file that is passed is from the currently opened logbook,
     since the later gets deleted in the method and the file is being re-used
     */
-    bool setLogbook( File );
+    bool setLogbook( const File &);
 
     //* check if logbook needs a backup, ask for it if needed
     void checkLogbookBackup();
@@ -146,7 +146,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void clearSelection();
 
     //* update entry (create new if not found )
-    void updateEntry( Keyword, LogEntry*, bool );
+    void updateEntry( const Keyword&, LogEntry*, bool );
 
     //* delete entry
     void deleteEntry( LogEntry*, bool save = true );
@@ -189,7 +189,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void selectEntry( const Keyword&, LogEntry* );
 
     //* select entries using selection criterions
-    void selectEntries( QString, SearchWidget::SearchModes );
+    void selectEntries( const QString&, SearchWidget::SearchModes );
 
     //* show all entries
     void showAllEntries();
@@ -350,7 +350,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     private:
 
     //* files modified
-    void _filesModified( FileCheck::DataSet );
+    void _filesModified( const FileCheck::DataSet &);
 
     //* splitter moved
     /** used to keep geometry */
@@ -394,16 +394,16 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _synchronize();
 
     //* remove backup
-    void _removeBackup( Backup );
+    void _removeBackup( const Backup &);
 
     //* remove backups
-    void _removeBackups( Backup::List );
+    void _removeBackups( const Backup::List &);
 
     //* restore backup
-    void _restoreBackup( Backup );
+    void _restoreBackup( const Backup &);
 
     //* merge backup
-    void _mergeBackup( Backup );
+    void _mergeBackup( const Backup &);
 
     //* reorganize logbook to entries associations
     void _reorganize();
@@ -440,7 +440,7 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     void _displayEntry( LogEntry* );
 
     //* rename entry with current title
-    void _changeEntryTitle( LogEntry*, QString );
+    void _changeEntryTitle( LogEntry*, const QString &);
 
     //* change selected entries color
     void _changeEntryColor( QColor );
@@ -473,17 +473,17 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     or by deleting a keyword in the list, and moving entries to the parent.
     It is also called by the renameKeyword slot above.
     */
-    void _renameKeyword( Keyword oldKeyword, Keyword newKeyword )
+    void _renameKeyword( const Keyword &oldKeyword, const Keyword &newKeyword )
     { _renameKeyword( oldKeyword, newKeyword, true ); }
 
-    void _renameKeyword( Keyword, Keyword, bool updateSelection );
+    void _renameKeyword( const Keyword&, const Keyword&, bool updateSelection );
 
     //* rename keyword for selected entries using dialog
     /** this is triggered by the rename entry keyword action in the logEntry list. */
     void _renameEntryKeyword();
 
     //* change selected entries keyword using argument
-    void _confirmRenameEntryKeyword( Keyword );
+    void _confirmRenameEntryKeyword( const Keyword &);
 
     //* keyword selection changed
     void _keywordSelectionChanged( const QModelIndex& );
@@ -566,16 +566,16 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
 
     //* change selected entries keyword using argument
     /** it is called by the renameEntry keyword slots **/
-    void _renameEntryKeyword( Keyword );
+    void _renameEntryKeyword( const Keyword &);
 
     //* copy entry to new keyword
-    void _copyEntryKeyword( Keyword );
+    void _copyEntryKeyword( const Keyword &);
 
     //* link entry to new keyword
-    void _linkEntryKeyword( Keyword );
+    void _linkEntryKeyword( const Keyword &);
 
     //* update selection and entries
-    void _updateSelection( Keyword, Base::KeySet<LogEntry> );
+    void _updateSelection( const Keyword&, const Base::KeySet<LogEntry> &);
 
     //* main menu
     MenuBar* menuBar_ = nullptr;

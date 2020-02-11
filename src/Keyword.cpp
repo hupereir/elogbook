@@ -29,7 +29,7 @@ const Keyword Keyword::Default( QObject::tr( "New entries" ) );
 const QString Keyword::MimeType( QStringLiteral("logbook/keyword-list") );
 
 //_________________________________________________________________
-Keyword::Keyword( QString value):
+Keyword::Keyword( const QString &value):
     Counter( QStringLiteral("Keyword") ),
     value_( _format( value ) )
 {}
@@ -80,11 +80,11 @@ bool Keyword::inherits( const Keyword& keyword ) const
 }
 
 //_________________________________________________________________
-Keyword& Keyword::append( QString value )
+Keyword& Keyword::append( const QString &value )
 {
 
     // check string to append
-    if( value.isEmpty() || value == "/" ) return *this;
+    if( value.isEmpty() || value == QLatin1String("/") ) return *this;
 
     // make sure leading "/" is added
     if( value.startsWith( '/' ) || value_.endsWith( '/' ) ) value_ += value;
@@ -105,7 +105,7 @@ QString Keyword::_format( QString value ) const
     if( value.isEmpty() ) return QString('/');
 
     // keep "root" unchanged
-    if( value == "/" ) return value;
+    if( value == QLatin1String("/") ) return value;
 
     QString out( value );
 
@@ -114,7 +114,7 @@ QString Keyword::_format( QString value ) const
 
     // look for "/"
     // replace next character by uppercase
-    for( int position = 0; ( position = out.indexOf( "/", position ) ) >= 0 && position < out.length(); ++position )
+    for( int position = 0; ( position = out.indexOf( QLatin1String("/"), position ) ) >= 0 && position < out.length(); ++position )
     { out[position+1] = out[position+1].toUpper(); }
 
     // remove trailing "/" if any

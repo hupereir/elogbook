@@ -117,16 +117,16 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
 
 
     //* returns true if entry title matches buffer
-    bool matchTitle( QString ) const;
+    bool matchTitle( const QString &) const;
 
     //* returns true if entry keyword matches buffer
-    bool matchKeyword( QString ) const;
+    bool matchKeyword( const QString &) const;
 
     //* returns true if entry text matches buffer
-    bool matchText( QString ) const;
+    bool matchText( const QString &) const;
 
     //* returns true if entry text matches buffer
-    bool matchColor( QString ) const;
+    bool matchColor( const QString &) const;
 
     //* returns true if any entry attachment file name matches buffer
     bool matchAttachment( QString ) const;
@@ -149,34 +149,34 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     //@{
 
     //* creation TimeStamp
-    void setCreation( const TimeStamp stamp )
+    void setCreation( const TimeStamp &stamp )
     { creation_ = stamp; }
 
     //* set modification_ to _now_
     void setModified();
 
     //* modification TimeStamp
-    void setModification( const TimeStamp stamp )
+    void setModification( const TimeStamp &stamp )
     { modification_ = stamp; }
 
     //* Log entry title
-    void setTitle( QString title )
+    void setTitle( const QString &title )
     { title_ = title; }
 
     //* clear keywords
     void clearKeywords();
 
     //* add a keyword to the list
-    void addKeyword( Keyword );
+    void addKeyword( const Keyword &);
 
     //* replace a keyword in the list
-    void replaceKeyword( Keyword, Keyword );
+    void replaceKeyword( const Keyword&, const Keyword &);
 
     //* remove keyword
-    void removeKeyword( Keyword );
+    void removeKeyword( const Keyword &);
 
     //* Log entry author
-    void setAuthor( QString author )
+    void setAuthor( const QString &author )
     { author_ = author; }
 
     //* LogEntry color
@@ -191,7 +191,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { formats_ = formats; }
 
     //* LogEntry text
-    void setText( QString text )
+    void setText( const QString &text )
     { text_ = text; }
 
     //* set if entry is said visible by the find bar
@@ -226,7 +226,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
         public:
 
         //* constructor
-        explicit MatchKeywordFTor( Keyword keyword ):
+        explicit MatchKeywordFTor( const Keyword &keyword ):
             keyword_( keyword )
         {}
 

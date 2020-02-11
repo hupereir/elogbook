@@ -45,21 +45,21 @@ void installDefaultOptions()
 
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( QStringLiteral("COLOR") );
-    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#aa0000" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#FF9900" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#FF8C00" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#009900" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#3333FF" ) ) );
-    XmlOptions::get().add( "COLOR", Option().set( Base::Color( "#993399" ) ) );
+    XmlOptions::get().add( QStringLiteral("COLOR"), Option().set( Base::Color( "#aa0000" ) ) );
+    XmlOptions::get().add( QStringLiteral("COLOR"), Option().set( Base::Color( "#FF9900" ) ) );
+    XmlOptions::get().add( QStringLiteral("COLOR"), Option().set( Base::Color( "#FF8C00" ) ) );
+    XmlOptions::get().add( QStringLiteral("COLOR"), Option().set( Base::Color( "#009900" ) ) );
+    XmlOptions::get().add( QStringLiteral("COLOR"), Option().set( Base::Color( "#3333FF" ) ) );
+    XmlOptions::get().add( QStringLiteral("COLOR"), Option().set( Base::Color( "#993399" ) ) );
 
     // COLOR options are special. Keep the full list
     XmlOptions::get().keep( QStringLiteral("TEXT_COLOR") );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#aa0000" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#FF9900" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#FF8C00" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#009900" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#3333FF" ) ) );
-    XmlOptions::get().add( "TEXT_COLOR", Option().set( Base::Color( "#993399" ) ) );
+    XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#aa0000" ) ) );
+    XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#FF9900" ) ) );
+    XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#FF8C00" ) ) );
+    XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#009900" ) ) );
+    XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#3333FF" ) ) );
+    XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#993399" ) ) );
 
 
     // window sizes
@@ -124,11 +124,11 @@ void installDefaultOptions()
     // add run-time non recordable options
     QString user( Util::user( ) );
     QString host( Util::host() );
-    XmlOptions::get().set( "USER", Option( user+"@"+host, Option::Flag::None ) );
+    XmlOptions::get().set( QStringLiteral("USER"), Option( user+"@"+host, Option::Flag::None ) );
 
     // resource file
-    XmlOptions::get().set( "OLD_RC_FILE", Option(  File(".elogbookrc").addPath(Util::home()), Option::Flag::None ) );
-    XmlOptions::get().set( "RC_FILE", Option(  File("elogbookrc").addPath(Util::config()), Option::Flag::None ) );
+    XmlOptions::get().set( QStringLiteral("OLD_RC_FILE"), Option(  File(".elogbookrc").addPath(Util::home()), Option::Flag::None ) );
+    XmlOptions::get().set( QStringLiteral("RC_FILE"), Option(  File("elogbookrc").addPath(Util::config()), Option::Flag::None ) );
 
     XmlOptions::get().setAutoDefault( false );
 

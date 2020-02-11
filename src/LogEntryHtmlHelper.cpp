@@ -41,17 +41,17 @@ void LogEntryHtmlHelper::print( QIODevice* device )
     if( !mask_ ) return;
 
     // dump header/style
-    QDomDocument document( "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"" );
+    QDomDocument document( QStringLiteral("html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"") );
 
     // html
-    QDomElement html = document.appendChild( document.createElement( "html" ) ).toElement();
-    html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
+    QDomElement html = document.appendChild( document.createElement( QStringLiteral("html") ) ).toElement();
+    html.setAttribute( QStringLiteral("xmlns"), QStringLiteral("http://www.w3.org/1999/xhtml") );
 
     // head
     HtmlHeaderNode( html, document );
 
     // body
-    QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
+    QDomElement body = html.appendChild( document.createElement( QStringLiteral("body") ) ).toElement();
     appendEntry( document, body );
 
     device->write( qPrintable( document.toString() ) );
@@ -86,26 +86,26 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     if( !( mask_ & LogEntry::HeaderMask ) ) return;
 
     // surrounding table
-    QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
-    table.setAttribute( "class", "header_outer_table" );
+    QDomElement table = parent.appendChild( document.createElement( QStringLiteral("table") ) ).toElement();
+    table.setAttribute( QStringLiteral("class"), QStringLiteral("header_outer_table") );
 
     QColor color( Base::Color( entry_->color() ) );
     if( color.isValid() )
     {
         QString buffer;
         QTextStream( &buffer ) << "border: 1px solid" << color.name();
-        table.setAttribute( "style", buffer );
+        table.setAttribute( QStringLiteral("style"), buffer );
     }
 
     QDomElement column = table.
-        appendChild( document.createElement( "tr" ) ).
-        appendChild( document.createElement( "td" ) ).
+        appendChild( document.createElement( QStringLiteral("tr") ) ).
+        appendChild( document.createElement( QStringLiteral("td") ) ).
         toElement();
-    column.setAttribute( "class", "header_column" );
+    column.setAttribute( QStringLiteral("class"), QStringLiteral("header_column") );
     table = column.
-        appendChild( document.createElement( "table" ) ).
+        appendChild( document.createElement( QStringLiteral("table") ) ).
         toElement();
-    table.setAttribute( "class", "header_inner_table" );
+    table.setAttribute( QStringLiteral("class"), QStringLiteral("header_inner_table") );
     QDomElement row;
 
     // keyword
@@ -118,26 +118,26 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
             bool first( true );
             for( const auto& keyword:entry_->keywords() )
             {
-                row = table.appendChild( document.createElement( "tr" ) ).toElement();
+                row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
                 if( first )
                 {
 
-                    row.appendChild( document.createElement( "td" ) )
+                    row.appendChild( document.createElement( QStringLiteral("td") ) )
                         .appendChild( document.createTextNode( tr( "Keywords:" ) ) );
                     first = false;
 
-                } else row.appendChild( document.createElement( "td" ) );
+                } else row.appendChild( document.createElement( QStringLiteral("td") ) );
 
-                row.appendChild( document.createElement( "td" ) ).
+                row.appendChild( document.createElement( QStringLiteral("td") ) ).
                     appendChild( document.createTextNode( keyword.get().toUtf8() ) );
             }
         } else {
 
             const auto& keyword( *entry_->keywords().begin() );
-            row = table.appendChild( document.createElement( "tr" ) ).toElement();
-            row.appendChild( document.createElement( "td" ) )
+            row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+            row.appendChild( document.createElement( QStringLiteral("td") ) )
                 .appendChild( document.createTextNode( tr( "Keyword:" ) ) );
-            row.appendChild( document.createElement( "td" ) ).
+            row.appendChild( document.createElement( QStringLiteral("td") ) ).
                 appendChild( document.createTextNode( keyword.get().toUtf8() ) );
 
         }
@@ -147,25 +147,25 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     // title
     if( !entry_->title().isEmpty() && (mask_&LogEntry::TitleMask) )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Title:" ) ) );
 
         QDomElement ref = row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "a" ) ).
+            appendChild( document.createElement( QStringLiteral("td") ) ).
+            appendChild( document.createElement( QStringLiteral("a") ) ).
             toElement();
-        ref.setAttribute( "name", QString::number( entry_->creation().unixTime() ) );
+        ref.setAttribute( QStringLiteral("name"), QString::number( entry_->creation().unixTime() ) );
         ref.appendChild( document.createTextNode( entry_->title().toUtf8() ) );
     }
 
     // author
     if( !entry_->author().isEmpty() && (mask_&LogEntry::AuthorMask) )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Author:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( entry_->author().toUtf8() ) );
 
     }
@@ -173,10 +173,10 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     // creation
     if( entry_->creation().isValid() && (mask_&LogEntry::CreationMask) )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Created:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( entry_->creation().toString().toUtf8() ) );
 
     }
@@ -184,10 +184,10 @@ void LogEntryHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& par
     // modification
     if( entry_->modification().isValid() && (mask_&LogEntry::ModificationMask) )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Modified:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( entry_->modification().toString().toUtf8() ) );
 
     }
@@ -203,7 +203,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     if( !(mask_&LogEntry::TextMask ) ) return;
 
     // paragraph node
-    QDomElement par = parent.appendChild( document.createElement("p") ).toElement();
+    QDomElement par = parent.appendChild( document.createElement(QStringLiteral("p")) ).toElement();
 
     // get formats
     TextFormat::Block::List formats( entry_->formats() );
@@ -232,14 +232,14 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
 
             // open new element define format
             QDomElement localNode( parent );
-            if( iter->format() & TextFormat::Underline ) localNode = localNode.appendChild( document.createElement( "u" ) ).toElement();
-            if( iter->format() & TextFormat::Italic ) localNode = localNode.appendChild( document.createElement( "i" ) ).toElement();
-            if( iter->format() & TextFormat::Bold ) localNode = localNode.appendChild( document.createElement( "b" ) ).toElement();
-            if( iter->format() & TextFormat::Strike ) localNode = localNode.appendChild( document.createElement( "s" ) ).toElement();
+            if( iter->format() & TextFormat::Underline ) localNode = localNode.appendChild( document.createElement( QStringLiteral("u") ) ).toElement();
+            if( iter->format() & TextFormat::Italic ) localNode = localNode.appendChild( document.createElement( QStringLiteral("i") ) ).toElement();
+            if( iter->format() & TextFormat::Bold ) localNode = localNode.appendChild( document.createElement( QStringLiteral("b") ) ).toElement();
+            if( iter->format() & TextFormat::Strike ) localNode = localNode.appendChild( document.createElement( QStringLiteral("s") ) ).toElement();
             if( iter->color().isValid() )
             {
-                localNode = localNode.appendChild( document.createElement( "font" ) ).toElement();
-                localNode.setAttribute( "color", iter->color().name() );
+                localNode = localNode.appendChild( document.createElement( QStringLiteral("font") ) ).toElement();
+                localNode.setAttribute( QStringLiteral("color"), iter->color().name() );
             }
 
             for( ; index < text.size() && (int)index < iter->end(); ++index )
@@ -273,22 +273,22 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
 
     // paragraph node
     auto par = parent.
-        appendChild( document.createElement("p") ).
-        appendChild( document.createElement( "b" ) ).toElement();
+        appendChild( document.createElement(QStringLiteral("p")) ).
+        appendChild( document.createElement( QStringLiteral("b") ) ).toElement();
     HtmlTextNode( tr( "Attachments:" ), par, document );
 
     // table
-    auto table = parent.appendChild( document.createElement( "table" ) ).toElement();
-    table.setAttribute( "class", "header_inner_table" );
+    auto table = parent.appendChild( document.createElement( QStringLiteral("table") ) ).toElement();
+    table.setAttribute( QStringLiteral("class"), QStringLiteral("header_inner_table") );
 
     // header
-    auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    row.appendChild( document.createElement( "td" ) ).
-        appendChild( document.createElement( "b" ) ).
+    auto row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+    row.appendChild( document.createElement( QStringLiteral("td") ) ).
+        appendChild( document.createElement( QStringLiteral("b") ) ).
         appendChild( document.createTextNode( tr( "Location" ) ) );
 
-    row.appendChild( document.createElement( "td" ) ).
-        appendChild( document.createElement( "b" ) ).
+    row.appendChild( document.createElement( QStringLiteral("td") ) ).
+        appendChild( document.createElement( QStringLiteral("b") ) ).
         appendChild( document.createTextNode( tr( "Comments" ) ) );
 
     // attachments
@@ -296,19 +296,19 @@ void LogEntryHtmlHelper::_appendAttachments( QDomDocument& document, QDomElement
     {
 
         // file
-        auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        auto row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
         auto ref = row.
-            appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "a" ) ).
+            appendChild( document.createElement( QStringLiteral("td") ) ).
+            appendChild( document.createElement( QStringLiteral("a") ) ).
             toElement();
-        if( attachment->isUrl() ) ref.setAttribute( "href", attachment->file() );
-        else ref.setAttribute( "href", QString("file:") + attachment->file() );
+        if( attachment->isUrl() ) ref.setAttribute( QStringLiteral("href"), attachment->file() );
+        else ref.setAttribute( QStringLiteral("href"), QStringLiteral("file:") + attachment->file() );
         ref.appendChild( document.createTextNode( attachment->file().get().toUtf8() ) );
 
         // comments
         if( !attachment->comments().isEmpty() )
         {
-            QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
+            QDomElement column = row.appendChild( document.createElement( QStringLiteral("td") ) ).toElement();
             HtmlTextNode( attachment->comments(), column, document );
         }
 

@@ -80,7 +80,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 {
     Debug::Throw(QStringLiteral("EditionWindow::EditionWindow.\n") );
     setOptionName( QStringLiteral("editionWindow") );
-    setObjectName( "EDITFRAME" );
+    setObjectName( QStringLiteral("EDITFRAME") );
 
     auto main( new QWidget( this ) );
     setCentralWidget( main );
@@ -207,7 +207,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( &frame->newAction() );
 
     // format bar
-    formatBar_ = new FormatBar( this, "FORMAT_TOOLBAR" );
+    formatBar_ = new FormatBar( this, QStringLiteral("FORMAT_TOOLBAR") );
     formatBar_->setTarget( editor );
     formatBar_->addAction( insertLinkAction_ );
     readOnlyActions_.append( insertLinkAction_ );
@@ -229,10 +229,10 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnlyActions_.append( { undoAction_, redoAction_ } );
 
     // undo/redo connections
-    connect( keywordEditor_, &Editor::textChanged, [this](QString){ _updateUndoRedoActions(); } );
+    connect( keywordEditor_, &Editor::textChanged, [this](const QString&){ _updateUndoRedoActions(); } );
     connect( keywordEditor_, &Editor::textChanged, this, &EditionWindow::_updateSaveAction );
 
-    connect( titleEditor_, &Editor::textChanged, [this](QString){ _updateUndoRedoActions(); } );
+    connect( titleEditor_, &Editor::textChanged, [this](const QString&){ _updateUndoRedoActions(); } );
     connect( titleEditor_, &Editor::textChanged, this, &EditionWindow::_updateSaveAction );
 
     connect( qApp, &QApplication::focusChanged, [this](QWidget*,QWidget*){ _updateUndoRedoActions(); } );
@@ -277,7 +277,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 }
 
 //____________________________________________
-void EditionWindow::displayEntry( Keyword keyword, LogEntry *entry )
+void EditionWindow::displayEntry( const Keyword &keyword, LogEntry *entry )
 {
 
     Debug::Throw( QStringLiteral("EditionWindow::displayEntry.\n") );
@@ -998,7 +998,7 @@ void EditionWindow::_createSelectLineWidget()
 }
 
 //___________________________________________________________
-Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orientation )
+Private::LocalTextEditor& EditionWindow::_splitView( Qt::Orientation orientation )
 {
     Debug::Throw( QStringLiteral("EditionWindow::_splitView.\n") );
 
@@ -1048,7 +1048,7 @@ Private::LocalTextEditor& EditionWindow::_splitView( const Qt::Orientation& orie
 }
 
 //____________________________________________________________
-QSplitter& EditionWindow::_newSplitter( const Qt::Orientation& orientation )
+QSplitter& EditionWindow::_newSplitter( Qt::Orientation orientation )
 {
 
     Debug::Throw( QStringLiteral("EditionWindow::_newSplitter.\n") );
@@ -1127,7 +1127,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     connect( &editor->editLinkAction(), &QAction::triggered, this, &EditionWindow::_editLink );
     connect( &editor->removeLinkAction(), &QAction::triggered, this, &EditionWindow::_removeLink );
     connect( &editor->openLinkAction(), &QAction::triggered, this, QOverload<>::of( &EditionWindow::_openLink) );
-    connect( editor, &Private::LocalTextEditor::linkActivated, this, QOverload<QString>::of( &EditionWindow::_openLink ) );
+    connect( editor, &Private::LocalTextEditor::linkActivated, this, QOverload<const QString&>::of( &EditionWindow::_openLink ) );
     connect( editor, &Private::LocalTextEditor::hasFocus, this, &EditionWindow::_displayFocusChanged );
     connect( editor, &Private::LocalTextEditor::cursorPositionChanged, this, QOverload<>::of( &EditionWindow::_displayCursorPosition ) );
     connect( editor, &TextEditor::modifiersChanged, this, &EditionWindow::_modifiersChanged );
@@ -1645,7 +1645,7 @@ void EditionWindow::_openLink()
 }
 
 //_____________________________________________
-void EditionWindow::_openLink( QString anchor )
+void EditionWindow::_openLink( const QString &anchor )
 {
     Debug::Throw( QStringLiteral("EditionWindow::_openLink.\n") );
     if( !anchor.isEmpty() ) QDesktopServices::openUrl( QUrl::fromEncoded( anchor.toLatin1() ) );
@@ -1725,19 +1725,19 @@ void EditionWindow::_cloneWindow()
 }
 
 //_____________________________________________
-void EditionWindow::_find( TextSelection selection )
+void EditionWindow::_find( const TextSelection &selection )
 { activeEditor_->find( selection ); }
 
 //_____________________________________________
-void EditionWindow::_replace( TextSelection selection )
+void EditionWindow::_replace( const TextSelection &selection )
 { activeEditor_->replace( selection ); }
 
 //_____________________________________________
-void EditionWindow::_replaceInSelection( TextSelection selection )
+void EditionWindow::_replaceInSelection( const TextSelection &selection )
 { activeEditor_->replaceInSelection( selection ); }
 
 //_____________________________________________
-void EditionWindow::_replaceInWindow( TextSelection selection )
+void EditionWindow::_replaceInWindow( const TextSelection &selection )
 { activeEditor_->replaceInWindow( selection ); }
 
 //_____________________________________________
@@ -1906,11 +1906,11 @@ void EditionWindow::_modifiersChanged( TextEditor::Modifiers modifiers )
 {
     if( !_hasStatusBar() ) return;
     QStringList buffer;
-    if( modifiers & TextEditor::Modifier::Wrap ) buffer.append( "WRAP" );
-    if( modifiers & TextEditor::Modifier::Insert ) buffer.append( "INS" );
-    if( modifiers & TextEditor::Modifier::CapsLock ) buffer.append( "CAPS" );
-    if( modifiers & TextEditor::Modifier::NumLock ) buffer.append( "NUM" );
-    statusBar_->label(1).setText( buffer.join( " " ) );
+    if( modifiers & TextEditor::Modifier::Wrap ) buffer.append( QStringLiteral("WRAP") );
+    if( modifiers & TextEditor::Modifier::Insert ) buffer.append( QStringLiteral("INS") );
+    if( modifiers & TextEditor::Modifier::CapsLock ) buffer.append( QStringLiteral("CAPS") );
+    if( modifiers & TextEditor::Modifier::NumLock ) buffer.append( QStringLiteral("NUM") );
+    statusBar_->label(1).setText( buffer.join( QStringLiteral(" ") ) );
 }
 
 //________________________________________________________________
@@ -1980,7 +1980,7 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
     // redo html addind the proper href
     QMimeData copy;
     copy.setText( source->text() );
-    copy.setHtml( QString( "<a href=\"%1\">%1</a> " ).arg( text ) );
+    copy.setHtml( QStringLiteral( "<a href=\"%1\">%1</a> " ).arg( text ) );
     return TextEditor::insertFromMimeData( &copy );
 
 }

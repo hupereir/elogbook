@@ -56,7 +56,7 @@ int main (int argc, char *argv[])
     // load options
     QString user( Util::user( ) );
     QString host( Util::host() );
-    XmlOptions::get().set( "USER", Option( user+"@"+host, Option::Flag::None ) );
+    XmlOptions::get().set( QStringLiteral("USER"), Option( user+"@"+host, Option::Flag::None ) );
 
     // options
     installDefaultOptions();
@@ -85,7 +85,7 @@ int main (int argc, char *argv[])
     QCoreApplication application( argc, argv );
 
     // install error handler
-    ErrorHandler::get().disableMessage( "qUncompress: Z_DATA_ERROR: Input data is corrupted file" );
+    ErrorHandler::get().disableMessage( QStringLiteral("qUncompress: Z_DATA_ERROR: Input data is corrupted file") );
     ErrorHandler::initialize();
 
     // try open first Logbook

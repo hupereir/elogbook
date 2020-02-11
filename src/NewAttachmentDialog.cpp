@@ -129,7 +129,7 @@ void NewAttachmentDialog::setIsUrl( bool value )
 }
 
 //____________________________________________________
-void NewAttachmentDialog::setAction( const Attachment::Command& command )
+void NewAttachmentDialog::setAction( Attachment::Command command )
 {
     Debug::Throw( QStringLiteral("NewAttachmentDialog::SetAction.\n") );
     QString actionString = ( command == Attachment::Command::CopyVersion ) ? tr( "Copy" ) : tr( "Link" );

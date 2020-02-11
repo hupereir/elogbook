@@ -79,7 +79,7 @@ CustomDialog( parent, OkButton|CancelButton|Separator )
 
     // creation
     gridLayout->addWidget( new QLabel( tr( "Created:" ), this ) );
-    gridLayout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():"-", this ) );
+    gridLayout->addWidget( new QLabel( attachment.creation().isValid() ? attachment.creation().toString():QStringLiteral("-"), this ) );
 
     // modification
     if( attachment.modification().isValid() )

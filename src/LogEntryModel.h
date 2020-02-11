@@ -106,7 +106,7 @@ class LogEntryModel : public ListModel<LogEntry*>, private Base::Counter<LogEntr
     }
 
     //* current keyword
-    void setCurrentKeyword( Keyword value )
+    void setCurrentKeyword( const Keyword &value )
     { currentKeyword_ = value; }
 
     //@}

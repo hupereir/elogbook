@@ -35,7 +35,7 @@ const QString Attachment::NoComments( QObject::tr( "no comments" ) );
 const QString Attachment::NoSize( QStringLiteral(" - ") );
 
 //_______________________________________
-Attachment::Attachment( const QString orig ):
+Attachment::Attachment( const QString &orig ):
     Counter( QStringLiteral("Attachment") ),
     sourceFile_( orig )
 { Debug::Throw( QStringLiteral("Attachment::Attachment.\n") ); }
@@ -57,7 +57,7 @@ Attachment::Attachment( const QDomElement& element):
 
         if( name == Xml::SourceFile ) _setSourceFile( File( value ) );
         else if( name == Xml::File ) _setFile( File( value ) );
-        else if( name == Xml::Type ) setIsUrl( value == "URL" );
+        else if( name == Xml::Type ) setIsUrl( value == QLatin1String("URL") );
         else if( name == Xml::Comments ) setComments( value );
         else if( name == Xml::Valid ) setIsValid( (bool) value.toInt() );
         else if( name == Xml::IsLink ) setIsLink( (LinkState) value.toInt() );
@@ -166,7 +166,7 @@ LogEntry* Attachment::entry() const
 }
 
 //__________________________________
-Attachment::ErrorCode Attachment::copy( const Attachment::Command& command, const QString& destdir )
+Attachment::ErrorCode Attachment::copy( Attachment::Command command, const QString& destdir )
 {
     Debug::Throw() << "Attachment::ProcessCopy.\n";
 

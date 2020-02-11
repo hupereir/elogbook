@@ -43,7 +43,7 @@ class Application: public BaseApplication, private Base::Counter<Application>
     public:
 
     //* constructor
-    explicit Application( CommandLineArguments );
+    explicit Application( const CommandLineArguments &);
 
     //* application manager
     bool initApplicationManager() override;
@@ -75,7 +75,7 @@ class Application: public BaseApplication, private Base::Counter<Application>
 
     //* application name
     QString applicationName() const override
-    { return "Elogbook"; }
+    { return QStringLiteral("Elogbook"); }
 
     //* application icon
     QIcon applicationIcon() const override
@@ -93,7 +93,7 @@ class Application: public BaseApplication, private Base::Counter<Application>
     void _configuration() override;
 
     //* process request from application manager
-    bool _processCommand( Server::ServerCommand ) override;
+    bool _processCommand( const Server::ServerCommand& ) override;
 
     private:
 

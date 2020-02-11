@@ -59,14 +59,14 @@ namespace
         }
 
         //______________________________________________________________________
-        File childFileName( File file, int childCount )
+        File childFileName( const File &file, int childCount )
         {
 
             const auto head( file.localName().truncatedName() );
             QString foot( file.extension() );
-            if( !foot.isEmpty() ) foot = QString(".") + foot;
+            if( !foot.isEmpty() ) foot = QStringLiteral(".") + foot;
 
-            File out( QString( "%1_include_%2%3" )
+            File out( QStringLiteral( "%1_include_%2%3" )
                 .arg( head )
                 .arg( childCount )
                 .arg( foot ) );
@@ -89,7 +89,7 @@ const QString Logbook::NoFile;
 const QString Logbook::NoDirectory;
 
 //________________________________
-Logbook::Logbook( File file ):
+Logbook::Logbook( const File &file ):
     Counter( QStringLiteral("Logbook") ),
     directory_( NoDirectory ),
     title_( NoTitle ),
@@ -628,7 +628,7 @@ void Logbook::addRecentEntry( const LogEntry* entry )
 }
 
 //_________________________________
-void Logbook::setFile( File file, bool recursive )
+void Logbook::setFile( const File &file, bool recursive )
 {
     Debug::Throw( QStringLiteral("Logbook::setFile.\n") );
 
@@ -668,14 +668,14 @@ File Logbook::backupFileName() const
     Debug::Throw( QStringLiteral("Logbook::MakeBackupFileName.\n") );
     auto head( File( file_ ).truncatedName() );
     auto foot( File( file_ ).extension() );
-    if( !foot.isEmpty() ) foot = File( QString(".") + foot );
+    if( !foot.isEmpty() ) foot = File( QStringLiteral(".") + foot );
     QString tag( TimeStamp::now().toString( TimeStamp::Format::DateTag ) );
 
-    File out( QString( "%1_backup_%2%3" ).arg( head, tag, foot ) );
+    File out( QStringLiteral( "%1_backup_%2%3" ).arg( head, tag, foot ) );
 
     // check if file exists, add index
     for( int index = 1; File( out ).exists(); ++index )
-    { out = File( QString( "%1_backup_%2_%4%3" ).arg( head, tag, foot ).arg(index) ); }
+    { out = File( QStringLiteral( "%1_backup_%2_%4%3" ).arg( head, tag, foot ).arg(index) ); }
 
     return out;
 }
@@ -828,7 +828,7 @@ bool Logbook::EntryLessFTor::operator () ( LogEntry* first, LogEntry* second ) c
 }
 
 //______________________________________________________________________
-void Logbook::addBackup( File file )
+void Logbook::addBackup( const File &file )
 {
     Debug::Throw( QStringLiteral("Logbook::addBackup.\n") );
     backupFiles_.append( Backup( file ) );

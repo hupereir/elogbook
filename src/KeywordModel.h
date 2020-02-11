@@ -141,14 +141,14 @@ class KeywordModel : public TreeModel<Keyword>, private Base::Counter<KeywordMod
         //@{
 
         //* set keywords
-        void set( Keyword oldKeyword, Keyword newKeyword )
+        void set( const Keyword &oldKeyword, const Keyword &newKeyword )
         {
             oldKeyword_ = oldKeyword;
             newKeyword_ = newKeyword;
         }
 
         //* set keywords
-        void set( Keyword newKeyword )
+        void set( const Keyword &newKeyword )
         {
             oldKeyword_ = Keyword();
             newKeyword_ = newKeyword;

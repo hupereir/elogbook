@@ -24,21 +24,21 @@
 HtmlHeaderNode::HtmlHeaderNode( QDomElement& parent, QDomDocument& document )
 {
     Debug::Throw( QStringLiteral("HtmlHeaderNode::Header.\n") );
-    QDomElement head = parent.appendChild( document.createElement( "head" ) ).toElement();
-    QDomElement meta = head.appendChild( document.createElement( "meta" ) ).toElement();
-    meta.setAttribute( "content", "text/html; charset=utf8" );
-    meta.setAttribute( "http-equiv", "Content-Type" );
+    QDomElement head = parent.appendChild( document.createElement( QStringLiteral("head") ) ).toElement();
+    QDomElement meta = head.appendChild( document.createElement( QStringLiteral("meta") ) ).toElement();
+    meta.setAttribute( QStringLiteral("content"), QStringLiteral("text/html; charset=utf8") );
+    meta.setAttribute( QStringLiteral("http-equiv"), QStringLiteral("Content-Type") );
 
-    meta = head.appendChild( document.createElement( "meta" ) ).toElement();
-    meta.setAttribute( "content", "eLogbook" );
-    meta.setAttribute( "name", "Generator" );
+    meta = head.appendChild( document.createElement( QStringLiteral("meta") ) ).toElement();
+    meta.setAttribute( QStringLiteral("content"), QStringLiteral("eLogbook") );
+    meta.setAttribute( QStringLiteral("name"), QStringLiteral("Generator") );
 
     head.
-        appendChild( document.createElement( "title" ) ).
-        appendChild( document.createTextNode( "Electronic Logbook" ) );
+        appendChild( document.createElement( QStringLiteral("title") ) ).
+        appendChild( document.createTextNode( QStringLiteral("Electronic Logbook") ) );
 
-    QDomElement style = head.appendChild( document.createElement( "style" ) ).toElement();
-    style.setAttribute( "type", "text/css" );
+    QDomElement style = head.appendChild( document.createElement( QStringLiteral("style") ) ).toElement();
+    style.setAttribute( QStringLiteral("type"), QStringLiteral("text/css") );
     style.appendChild( document.createTextNode(
         "body { \n"
         "  background: white; color: black; \n "

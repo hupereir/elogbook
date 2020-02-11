@@ -77,7 +77,7 @@ class LogbookPrintHelper: public BasePrintHelper, private Base::Counter<LogbookP
     { aborted_ = true; }
 
     //* current keyword
-    void setCurrentKeyword( Keyword value )
+    void setCurrentKeyword( const Keyword &value )
     { currentKeyword_ = value; }
 
     //* mask

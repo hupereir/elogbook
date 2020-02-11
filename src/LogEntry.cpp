@@ -173,11 +173,11 @@ LogEntry* LogEntry::copy() const
 }
 
 //__________________________________
-bool LogEntry::matchTitle( QString buffer ) const
+bool LogEntry::matchTitle( const QString &buffer ) const
 { return title_.contains( buffer, _caseSensitive() ); }
 
 //__________________________________
-bool LogEntry::matchKeyword( QString buffer ) const
+bool LogEntry::matchKeyword( const QString &buffer ) const
 {
     for( const auto& keyword:keywords_ )
     { if( keyword.get().contains( buffer, _caseSensitive() ) ) return true; }
@@ -186,11 +186,11 @@ bool LogEntry::matchKeyword( QString buffer ) const
 }
 
 //__________________________________
-bool LogEntry::matchText(  QString buffer ) const
+bool LogEntry::matchText(  const QString &buffer ) const
 { return text_.contains( buffer, _caseSensitive() ); }
 
 //__________________________________
-bool LogEntry::matchColor( QString buffer ) const
+bool LogEntry::matchColor( const QString &buffer ) const
 {
     if( !color_.isValid() && !QColor( buffer ).isValid() ) return true;
     else if( !color_.isValid() ) return false;
@@ -218,14 +218,14 @@ void LogEntry::clearKeywords()
 { keywords_.clear(); }
 
 //__________________________________
-void LogEntry::addKeyword( Keyword keyword )
+void LogEntry::addKeyword( const Keyword &keyword )
 {
     if( !keywords_.contains( keyword ) && !keyword.get().isEmpty() )
     { keywords_.insert( keyword ); }
 }
 
 //__________________________________
-void LogEntry::replaceKeyword( Keyword oldKeyword, Keyword newKeyword )
+void LogEntry::replaceKeyword( const Keyword &oldKeyword, const Keyword &newKeyword )
 {
     if( keywords_.contains( oldKeyword ) )
     {
@@ -241,7 +241,7 @@ void LogEntry::replaceKeyword( Keyword oldKeyword, Keyword newKeyword )
 }
 
 //__________________________________
-void LogEntry::removeKeyword( Keyword keyword )
+void LogEntry::removeKeyword( const Keyword &keyword )
 { keywords_.remove( keyword ); }
 
 //__________________________________

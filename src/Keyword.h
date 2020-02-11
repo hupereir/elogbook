@@ -43,7 +43,7 @@ class Keyword final: private Base::Counter<Keyword>
     static const QString MimeType;
 
     //* constructor
-    explicit Keyword( QString = QString() );
+    explicit Keyword( const QString& = QString() );
 
     //* constructor from DOM
     explicit Keyword( const QDomElement& );
@@ -89,11 +89,11 @@ class Keyword final: private Base::Counter<Keyword>
     { value_ = _format( QString() ); }
 
     //* set full keyword
-    void set( QString value )
+    void set( const QString &value )
     { value_ = _format( value ); }
 
     //* append
-    Keyword& append( QString value );
+    Keyword& append( const QString &value );
 
     //@}
 

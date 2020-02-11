@@ -206,7 +206,7 @@ void AttachmentFrame::_new()
 
         } else if( !fullDirectory.exists() && QuestionDialog( this, tr( "Directory '%1' does not exist. Create ?" ).arg( fullDirectory ) ).exec() ) {
 
-            ( Base::Command( "mkdir" ) << fullDirectory ).run();
+            ( Base::Command( QStringLiteral("mkdir") ) << fullDirectory ).run();
         }
 
     }
@@ -477,7 +477,7 @@ void AttachmentFrame::_open()
                 {
 
                     if( isUrl ) QDesktopServices::openUrl( QUrl::fromEncoded( fullname.get().toLatin1() ) );
-                    else QDesktopServices::openUrl( QUrl::fromEncoded( QString( "file://%1" ).arg( fullname ).toLatin1() ) );
+                    else QDesktopServices::openUrl( QUrl::fromEncoded( QStringLiteral( "file://%1" ).arg( fullname ).toLatin1() ) );
 
                 } else {
 
@@ -496,7 +496,7 @@ void AttachmentFrame::_open()
 
                 // check filename and copy if accepted
                 if( destname.isEmpty() || (destname.exists() && !QuestionDialog( this, tr( "Selected file already exists. Overwrite ?" ) ).exec() ) ) return;
-                else ( Base::Command("cp") << fullname << destname ).run();
+                else ( Base::Command(QStringLiteral("cp")) << fullname << destname ).run();
 
             }
 
@@ -718,7 +718,7 @@ void AttachmentFrame::_saveAs()
 
             // check filename and copy if accepted
             if( destname.isEmpty() || (destname.exists() && !QuestionDialog( this, tr( "selected file already exists. Overwrite ?" ) ).exec() ) ) return;
-            else ( Base::Command("cp") << fullname << destname ).run();
+            else ( Base::Command(QStringLiteral("cp")) << fullname << destname ).run();
 
         }
 

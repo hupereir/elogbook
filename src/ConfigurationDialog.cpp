@@ -61,16 +61,16 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
       QVBoxLayout* layout = new QVBoxLayout;
       box->setLayout( layout );
 
-      OptionCheckBox* checkbox = new OptionCheckBox( tr( "Wrap text " ), box, "WRAP_TEXT" );
+      OptionCheckBox* checkbox = new OptionCheckBox( tr( "Wrap text " ), box, QStringLiteral("WRAP_TEXT") );
       checkbox->setToolTip( tr( "Turn on/off line wrapping at editor border" ) );
       layout->addWidget( checkbox );
       addOptionWidget( checkbox );
 
-      layout->addWidget( checkbox = new OptionCheckBox( tr( "Show line numbers" ), box, "SHOW_LINE_NUMBERS" ) );
+      layout->addWidget( checkbox = new OptionCheckBox( tr( "Show line numbers" ), box, QStringLiteral("SHOW_LINE_NUMBERS") ) );
       checkbox->setToolTip( tr( "Turn on/off display of line numbers" ) );
       addOptionWidget( checkbox );
 
-      layout->addWidget( checkbox = new OptionCheckBox( tr( "Insert hyperlinks automatically" ), box, "AUTO_INSERT_LINK" ) );
+      layout->addWidget( checkbox = new OptionCheckBox( tr( "Insert hyperlinks automatically" ), box, QStringLiteral("AUTO_INSERT_LINK") ) );
       addOptionWidget( checkbox );
 
       QLabel* label;
@@ -79,7 +79,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
       layout->addLayout( hLayout );
       hLayout->setMargin(0);
       hLayout->addWidget( label = new QLabel( tr( "Automatically hide mouse cursor after: " ), box ) );
-      hLayout->addWidget( spinbox = new OptionSpinBox( box, "AUTOHIDE_CURSOR_DELAY" ) );
+      hLayout->addWidget( spinbox = new OptionSpinBox( box, QStringLiteral("AUTOHIDE_CURSOR_DELAY") ) );
       spinbox->setSuffix( tr( "s" ) );
       addOptionWidget( spinbox );
 
@@ -98,17 +98,17 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         page->layout()->addItem( gridLayout );
 
         int row = 0;
-        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Compress logbook files" ), page, "USE_COMPRESSION" ), row++, 0, 1, 2 );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Compress logbook files" ), page, QStringLiteral("USE_COMPRESSION") ), row++, 0, 1, 2 );
         addOptionWidget( checkbox );
 
-        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Make backup of files when saving modifications" ), page, "FILE_BACKUP" ), row++, 0, 1, 2 );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Make backup of files when saving modifications" ), page, QStringLiteral("FILE_BACKUP") ), row++, 0, 1, 2 );
         checkbox->setToolTip( tr( "Make backup of the file prior to saving modifications" ) );
         addOptionWidget( checkbox );
 
-        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Automatically save logbook every" ), page, "AUTO_SAVE" ), row, 0, 1, 1 );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Automatically save logbook every" ), page, QStringLiteral("AUTO_SAVE") ), row, 0, 1, 1 );
         addOptionWidget( checkbox );
 
-        gridLayout->addWidget( spinbox = new OptionSpinBox( page, "AUTO_SAVE_ITV" ), row++, 1, 1, 1 );
+        gridLayout->addWidget( spinbox = new OptionSpinBox( page, QStringLiteral("AUTO_SAVE_ITV") ), row++, 1, 1, 1 );
         spinbox->setSuffix( tr( "s" ) );
         spinbox->setMinimum( 0 );
         spinbox->setMaximum( 3600 );
@@ -118,10 +118,10 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         spinbox->setEnabled( false );
         connect( checkbox, &QAbstractButton::toggled, spinbox, &QWidget::setEnabled );
 
-        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Backup logbook every" ), page, "AUTO_BACKUP" ), row, 0, 1, 1 );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Backup logbook every" ), page, QStringLiteral("AUTO_BACKUP") ), row, 0, 1, 1 );
         addOptionWidget( checkbox );
 
-        gridLayout->addWidget( spinbox = new OptionSpinBox( page, "BACKUP_ITV" ), row++, 1, 1, 1 );
+        gridLayout->addWidget( spinbox = new OptionSpinBox( page, QStringLiteral("BACKUP_ITV") ), row++, 1, 1, 1 );
         spinbox->setSuffix( tr( " days" ) );
         spinbox->setMinimum( 0 );
         spinbox->setMaximum( 365 );
@@ -168,7 +168,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         page->layout()->addWidget( box );
 
         OptionListBox* listbox;
-        box->layout()->addWidget( listbox = new ColorOptionListBox( box, "COLOR" ) );
+        box->layout()->addWidget( listbox = new ColorOptionListBox( box, QStringLiteral("COLOR") ) );
         listbox->setToolTip( tr( "Colors used for logbook entry display" ) );
         addOptionWidget( listbox );
 
@@ -178,7 +178,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         box->layout()->setSpacing(5);
         page->layout()->addWidget( box );
 
-        box->layout()->addWidget( listbox = new ColorOptionListBox( box, "TEXT_COLOR" ) );
+        box->layout()->addWidget( listbox = new ColorOptionListBox( box, QStringLiteral("TEXT_COLOR") ) );
         listbox->setToolTip(tr(  "Colors used for text formatting" ) );
         addOptionWidget( listbox );
     }
@@ -208,11 +208,11 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         page->layout()->addWidget( box );
 
         gridLayout->addWidget( new QLabel( tr( "Maximum number of stored recent entries:" ), box ) );
-        gridLayout->addWidget( spinbox = new OptionSpinBox( box, "MAX_RECENT_ENTRIES" ) );
+        gridLayout->addWidget( spinbox = new OptionSpinBox( box, QStringLiteral("MAX_RECENT_ENTRIES") ) );
         spinbox->setToolTip( tr( "Maximum number of entries that appear in the <i>Recent Entries</i> menu" ) );
         addOptionWidget( spinbox );
 
-        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Case sensitive text/entry finding" ), box, "CASE_SENSITIVE" ), 1, 0, 1, 2 );
+        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Case sensitive text/entry finding" ), box, QStringLiteral("CASE_SENSITIVE") ), 1, 0, 1, 2 );
         checkbox->setToolTip( tr( "Toggle case sensitive text search" ) );
         addOptionWidget( checkbox );
     }

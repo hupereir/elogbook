@@ -34,17 +34,17 @@ void LogbookHtmlHelper::print( QIODevice* device )
     if( !mask_ ) return;
 
     // dump header/style
-    QDomDocument document( "html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"" );
+    QDomDocument document( QStringLiteral("html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-strict.dtd\"") );
 
     // html
-    QDomElement html = document.appendChild( document.createElement( "html" ) ).toElement();
-    html.setAttribute( "xmlns", "http://www.w3.org/1999/xhtml" );
+    QDomElement html = document.appendChild( document.createElement( QStringLiteral("html") ) ).toElement();
+    html.setAttribute( QStringLiteral("xmlns"), QStringLiteral("http://www.w3.org/1999/xhtml") );
 
     // head
     HtmlHeaderNode( html, document );
 
     // body
-    QDomElement body = html.appendChild( document.createElement( "body" ) ).toElement();
+    QDomElement body = html.appendChild( document.createElement( QStringLiteral("body") ) ).toElement();
     _appendHeader( document, body );
     _appendTable( document, body );
     _appendEntries( document, body );
@@ -64,72 +64,72 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     if( !( mask_ & Logbook::HeaderMask ) ) return;
 
     // surrounding table
-    QDomElement table = parent.appendChild( document.createElement( "table" ) ).toElement();
-    table.setAttribute( "class", "header_outer_table" );
+    QDomElement table = parent.appendChild( document.createElement( QStringLiteral("table") ) ).toElement();
+    table.setAttribute( QStringLiteral("class"), QStringLiteral("header_outer_table") );
 
     QDomElement column = table.
-        appendChild( document.createElement( "tr" ) ).
-        appendChild( document.createElement( "td" ) ).
+        appendChild( document.createElement( QStringLiteral("tr") ) ).
+        appendChild( document.createElement( QStringLiteral("td") ) ).
         toElement();
-    column.setAttribute( "class", "header_column" );
+    column.setAttribute( QStringLiteral("class"), QStringLiteral("header_column") );
     table = column.
-        appendChild( document.createElement( "table" ) ).
+        appendChild( document.createElement( QStringLiteral("table") ) ).
         toElement();
-    table.setAttribute( "class", "header_inner_table" );
+    table.setAttribute( QStringLiteral("class"), QStringLiteral("header_inner_table") );
     QDomElement row;
 
     // title
     if( mask_&Logbook::TitleMask )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Title:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( logbook_->title().toUtf8() ) );
     }
 
     // comments
     if( mask_&Logbook::CommentsMask && !logbook_->comments().isEmpty() )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Comments:" ) ) );
 
-        QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
+        QDomElement column = row.appendChild( document.createElement( QStringLiteral("td") ) ).toElement();
         HtmlTextNode( logbook_->comments(), column, document );
     }
 
     // author
     if( mask_&Logbook::AuthorMasks && !logbook_->author().isEmpty() )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Author:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( logbook_->author().toUtf8() ) );
     }
 
     // file
     if( mask_&Logbook::FileMask && !logbook_->file().isEmpty() )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "File:" ) ) );
-        QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
-        QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", logbook_->file() );
+        QDomElement column = row.appendChild( document.createElement( QStringLiteral("td") ) ).toElement();
+        QDomElement ref = column.appendChild( document.createElement( QStringLiteral("a") ) ).toElement();
+        ref.setAttribute( QStringLiteral("href"), logbook_->file() );
         ref.appendChild( document.createTextNode( logbook_->file().get().toUtf8() ) );
     }
 
     // directory
     if( mask_&Logbook::DirectoryMask && !logbook_->directory().isEmpty() )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Directory:" ) ) );
-        QDomElement column = row.appendChild( document.createElement( "td" ) ).toElement();
-        QDomElement ref = column.appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", logbook_->directory() );
+        QDomElement column = row.appendChild( document.createElement( QStringLiteral("td") ) ).toElement();
+        QDomElement ref = column.appendChild( document.createElement( QStringLiteral("a") ) ).toElement();
+        ref.setAttribute( QStringLiteral("href"), logbook_->directory() );
         ref.appendChild( document.createTextNode( logbook_->directory().get().toUtf8() ) );
 
         if( !logbook_->checkDirectory() )
@@ -140,34 +140,34 @@ void LogbookHtmlHelper::_appendHeader( QDomDocument& document, QDomElement& pare
     // creation
     if( logbook_->creation().isValid() && (mask_&Logbook::CreationMask) )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Created:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( logbook_->creation().toString().toUtf8() ) );
     }
 
     // modification
     if( logbook_->modification().isValid() && (mask_&Logbook::ModificationMask) )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Modified:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( logbook_->modification().toString().toUtf8() ) );
     }
 
     // backup
     if( logbook_->backup().isValid() && (mask_&Logbook::BackupMask) )
     {
-        row = table.appendChild( document.createElement( "tr" ) ).toElement();
-        row.appendChild( document.createElement( "td" ) ).
+        row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( tr( "Backup:" ) ) );
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( logbook_->modification().toString().toUtf8() ) );
     }
 
-    parent.appendChild( document.createElement( "p" ) );
+    parent.appendChild( document.createElement( QStringLiteral("p") ) );
 
 }
 
@@ -185,40 +185,40 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
     if( !( mask_ & Logbook::TableOfContentMask ) ) return;
 
     // table
-    auto table = parent.appendChild( document.createElement( "table" ) ).toElement();
-    table.setAttribute( "class", "header_inner_table" );
+    auto table = parent.appendChild( document.createElement( QStringLiteral("table") ) ).toElement();
+    table.setAttribute( QStringLiteral("class"), QStringLiteral("header_inner_table") );
 
     // header
-    auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
-    row.appendChild( document.createElement( "td" ) ).
-        appendChild( document.createElement( "b" ) ).
+    auto row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
+    row.appendChild( document.createElement( QStringLiteral("td") ) ).
+        appendChild( document.createElement( QStringLiteral("b") ) ).
         appendChild( document.createTextNode( tr( "Title" ) ) );
 
-    row.appendChild( document.createElement( "td" ) ).
-        appendChild( document.createElement( "b" ) ).
+    row.appendChild( document.createElement( QStringLiteral("td") ) ).
+        appendChild( document.createElement( QStringLiteral("b") ) ).
         appendChild( document.createTextNode( tr( "Keyword" ) ) );
 
-    row.appendChild( document.createElement( "td" ) ).
-        appendChild( document.createElement( "b" ) ).
+    row.appendChild( document.createElement( QStringLiteral("td") ) ).
+        appendChild( document.createElement( QStringLiteral("b") ) ).
         appendChild( document.createTextNode( tr( "Created" ) ) );
 
-    row.appendChild( document.createElement( "td" ) ).
-        appendChild( document.createElement( "b" ) ).
+    row.appendChild( document.createElement( QStringLiteral("td") ) ).
+        appendChild( document.createElement( QStringLiteral("b") ) ).
         appendChild( document.createTextNode( tr( "Last Modified" ) ) );
 
     // loop over entries
     for( const auto& entry:entries_ )
     {
-        auto row = table.appendChild( document.createElement( "tr" ) ).toElement();
+        auto row = table.appendChild( document.createElement( QStringLiteral("tr") ) ).toElement();
 
         // title
-        QDomElement ref = row.appendChild( document.createElement( "td" ) ).
-            appendChild( document.createElement( "a" ) ).toElement();
-        ref.setAttribute( "href", QString( "#" ) + QString::number( entry->creation().unixTime() ) );
+        QDomElement ref = row.appendChild( document.createElement( QStringLiteral("td") ) ).
+            appendChild( document.createElement( QStringLiteral("a") ) ).toElement();
+        ref.setAttribute( QStringLiteral("href"), QStringLiteral( "#" ) + QString::number( entry->creation().unixTime() ) );
         ref.appendChild( document.createTextNode( entry->title().toUtf8() ) );
 
         // keywords
-        ref = row.appendChild( document.createElement( "td" ) ).toElement();
+        ref = row.appendChild( document.createElement( QStringLiteral("td") ) ).toElement();
         if( entry->keywords().contains( currentKeyword_ ) )
         {
 
@@ -231,7 +231,7 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
             for( const auto& keyword:entry->keywords() )
             {
                 ref.appendChild( document.createTextNode( keyword.get().toUtf8() ) );
-                if( i < keywordCount-1 ) ref.appendChild( document.createElement( "br" ) );
+                if( i < keywordCount-1 ) ref.appendChild( document.createElement( QStringLiteral("br") ) );
 
                 // increment counter
                 ++i;
@@ -240,16 +240,16 @@ void LogbookHtmlHelper::_appendTable( QDomDocument& document, QDomElement& paren
         }
 
         // creation
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( entry->creation().toString().toUtf8() ) );
 
         // modification
-        row.appendChild( document.createElement( "td" ) ).
+        row.appendChild( document.createElement( QStringLiteral("td") ) ).
             appendChild( document.createTextNode( entry->modification().toString().toUtf8() ) );
 
     }
 
-    parent.appendChild( document.createElement( "p" ) );
+    parent.appendChild( document.createElement( QStringLiteral("p") ) );
 
     return;
 
@@ -278,7 +278,7 @@ void LogbookHtmlHelper::_appendEntries( QDomDocument& document, QDomElement& par
         helper.setEntry( entry );
         helper.setMask( entryMask_ );
         helper.appendEntry( document, parent );
-        parent.appendChild( document.createElement( "p" ) );
+        parent.appendChild( document.createElement( QStringLiteral("p") ) );
 
     }
 

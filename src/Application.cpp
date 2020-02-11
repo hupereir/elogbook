@@ -38,7 +38,7 @@
 #include <QMessageBox>
 
 //____________________________________________
-Application::Application( CommandLineArguments arguments ) :
+Application::Application( const CommandLineArguments &arguments ) :
     BaseApplication( nullptr, arguments ),
     Counter( QStringLiteral("Application") )
 {}
@@ -130,7 +130,7 @@ bool Application::realizeWidget()
 //____________________________________________
 void Application::usage() const
 {
-    _usage( "elogbook", tr( "[options] [file]" ) );
+    _usage( QStringLiteral("elogbook"), tr( "[options] [file]" ) );
     commandLineParser().usage();
     return;
 }
@@ -176,7 +176,7 @@ void Application::_exit()
 }
 
 //________________________________________________
-bool Application::_processCommand( Server::ServerCommand command )
+bool Application::_processCommand( const Server::ServerCommand& command )
 {
 
     Debug::Throw( QStringLiteral("Application::_processCommand.\n") );

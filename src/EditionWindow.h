@@ -112,7 +112,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* display all entries informations
-    void displayEntry( Keyword, LogEntry* = nullptr );
+    void displayEntry( const Keyword&, LogEntry* = nullptr );
 
     //* display all entries informations
     void displayEntry( LogEntry* = nullptr );
@@ -361,16 +361,16 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void _cloneWindow();
 
     //* find
-    void _find( TextSelection );
+    void _find( const TextSelection &);
 
     //* find
-    void _replace( TextSelection );
+    void _replace( const TextSelection &);
 
     //* find
-    void _replaceInSelection( TextSelection );
+    void _replaceInSelection( const TextSelection &);
 
     //* find
-    void _replaceInWindow( TextSelection );
+    void _replaceInWindow( const TextSelection &);
 
     //* select line
     void _selectLine( int );
@@ -394,7 +394,7 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     void _openLink();
 
     //* view link
-    void _openLink( QString );
+    void _openLink( const QString &);
 
     //* update replace in selection action
     void _updateReplaceInSelection();
@@ -455,10 +455,10 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //@{
 
     //* split view
-    Private::LocalTextEditor& _splitView( const Qt::Orientation& );
+    Private::LocalTextEditor& _splitView( Qt::Orientation  );
 
     //* create new splitter
-    QSplitter& _newSplitter( const Qt::Orientation&  );
+    QSplitter& _newSplitter( Qt::Orientation   );
 
     //* create new TextEditor
     Private::LocalTextEditor& _newTextEditor( QWidget* parent );
