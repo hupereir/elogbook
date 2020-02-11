@@ -72,7 +72,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
 
     hLayout->addWidget( editor_, 1 );
 
-    connect( editor_, QOverload<const QString&>::of( &CustomComboBox::activated ), [this](const QString&){ _selectionRequest(); } );
+    connect( editor_, QOverload<const QString&>::of( &CustomComboBox::activated ), this, [this](const QString&){ _selectionRequest(); } );
     connect( editor_, &CustomComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
     connect( editor_->lineEdit(), &QLineEdit::textChanged, this, &SearchWidget::_restorePalette );
 
@@ -100,8 +100,8 @@ SearchWidget::SearchWidget( QWidget* parent ):
     closeButton->setIcon( IconEngine::get( IconNames::DialogClose ) );
     closeButton->setText( tr( "Close" ) );
     hLayout->addWidget( closeButton );
-    connect( closeButton, &QAbstractButton::clicked,this,  &SearchWidget::showAllEntries );
-    connect( closeButton, &QAbstractButton::clicked,this,  &QWidget::hide );
+    connect( closeButton, &QAbstractButton::clicked, this,  &SearchWidget::showAllEntries );
+    connect( closeButton, &QAbstractButton::clicked, this,  &QWidget::hide );
 
     // second row
     label = new QLabel( tr( "In:" ), this );
@@ -165,7 +165,7 @@ void SearchWidget::changeEvent( QEvent* event )
         default: break;
     }
 
-    return QWidget::changeEvent( event );
+    QWidget::changeEvent( event );
 }
 
 //___________________________________________________________

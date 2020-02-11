@@ -156,7 +156,7 @@ void LogbookPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QPo
     painter->translate( pageRect.topLeft() + offset );
 
     // render background frame
-    painter->setPen( QColor( "#888888" ) );
+    painter->setPen( QColor( 136, 136, 136 ) );
     painter->drawRect( QRectF( QPointF(0,0), boundingRect.size() ) );
 
     // render contents

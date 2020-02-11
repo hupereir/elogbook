@@ -229,13 +229,11 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     readOnlyActions_.append( { undoAction_, redoAction_ } );
 
     // undo/redo connections
-    connect( keywordEditor_, &Editor::textChanged, [this](const QString&){ _updateUndoRedoActions(); } );
+    connect( keywordEditor_, &Editor::textChanged, this, [this](const QString&){ _updateUndoRedoActions(); } );
     connect( keywordEditor_, &Editor::textChanged, this, &EditionWindow::_updateSaveAction );
-
-    connect( titleEditor_, &Editor::textChanged, [this](const QString&){ _updateUndoRedoActions(); } );
+    connect( titleEditor_, &Editor::textChanged, this, [this](const QString&){ _updateUndoRedoActions(); } );
     connect( titleEditor_, &Editor::textChanged, this, &EditionWindow::_updateSaveAction );
-
-    connect( qApp, &QApplication::focusChanged, [this](QWidget*,QWidget*){ _updateUndoRedoActions(); } );
+    connect( qApp, &QApplication::focusChanged, this, [this](QWidget*,QWidget*){ _updateUndoRedoActions(); } );
 
     // extra toolbar
     toolbar = new CustomToolBar( tr( "Tools" ), this, QStringLiteral("EXTRA_TOOLBAR") );
@@ -1956,32 +1954,49 @@ void Private::LocalTextEditor::insertFromMimeData( const QMimeData* source )
 
     // check option
     if( !autoInsertLinks_ )
-    { return TextEditor::insertFromMimeData( source ); }
+    {
+        TextEditor::insertFromMimeData( source );
+        return;
+    }
 
     // do nothing in case of rich text
     if( source->hasFormat(QStringLiteral("application/x-qrichtext") ) )
-    { return TextEditor::insertFromMimeData( source ); }
+    {
+        TextEditor::insertFromMimeData( source );
+        return;
+    }
 
     // get source text
     QString text;
     if( source->hasHtml() ) text = source->html();
     else text = source->text();
-    if( text.isNull() ) return TextEditor::insertFromMimeData( source );
+    if( text.isNull() )
+    {
+        TextEditor::insertFromMimeData( source );
+        return;
+    }
 
     // try build an url from text
     QUrl url( text );
-    if( !url.isValid() || url.isRelative() ) return TextEditor::insertFromMimeData( source );
-
+    if( !url.isValid() || url.isRelative() )
+    {
+        TextEditor::insertFromMimeData( source );
+        return;
+    }
     // check scheme
     static const QStringList schemes( { "file", "ftp", "http", "https", "alien" } );
-    if( !schemes.contains( url.scheme() ) ) return TextEditor::insertFromMimeData( source );
+    if( !schemes.contains( url.scheme() ) )
+    {
+        TextEditor::insertFromMimeData( source );
+        return;
+    }
 
     // copy mime type
     // redo html addind the proper href
     QMimeData copy;
     copy.setText( source->text() );
     copy.setHtml( QStringLiteral( "<a href=\"%1\">%1</a> " ).arg( text ) );
-    return TextEditor::insertFromMimeData( &copy );
+    TextEditor::insertFromMimeData( &copy );
 
 }
 

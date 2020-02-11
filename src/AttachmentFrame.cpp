@@ -229,7 +229,6 @@ void AttachmentFrame::_new()
 
     // process attachment command
     Attachment::ErrorCode error = attachmentPtr->copy( command, fullDirectory );
-    QString buffer;
     switch (error)
     {
 
@@ -305,23 +304,18 @@ void AttachmentFrame::enterEvent( QEvent* event )
     AttachmentModel::List attachments( model_.get() );
     for( const auto& attachment:attachments )
     {
-
         if( attachment->isUrl() ) continue;
         if( attachment->file().isEmpty() ) continue;
-
         records.append( FileRecord( attachment->file() ) );
-
         if( attachment->isLink() == Attachment::LinkState::Yes || attachment->isLink() == Attachment::LinkState::Unknown )
         { records.append( FileRecord( attachment->sourceFile() ) ); }
-
     }
 
     // setup thread and start
     thread_.setRecords( records );
     thread_.start();
 
-    return QWidget::enterEvent( event );
-
+    QWidget::enterEvent( event );
 }
 
 //_______________________________________________
@@ -703,7 +697,6 @@ void AttachmentFrame::_saveAs()
 
         } else if( !fullname.exists() ) {
 
-            QString buffer;
             InformationDialog( this, tr( "Cannot find file '%1'. <Save Attachment As> canceled." ).arg( fullname ) ).exec();
             continue;
 

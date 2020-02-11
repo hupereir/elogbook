@@ -60,7 +60,7 @@ class Keyword final: private Base::Counter<Keyword>
     QDomElement domElement( QDomDocument& ) const;
 
     //* full keyword
-    QString get() const
+    const QString& get() const
     { return value_; }
 
     //* true if is root

@@ -26,6 +26,8 @@
 class LogEntryPrintSelectionDialog: public CustomDialog
 {
 
+    Q_OBJECT
+
     public:
 
     //* constructor

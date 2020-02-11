@@ -172,7 +172,7 @@ void LogEntryPrintHelper::_printHeader( QPrinter* printer, QPainter* painter, QP
 
     // render background frame
     QColor color( Base::Color( entry_->color() ) );
-    if( !color.isValid() ) color = QColor( "#888888" );
+    if( !color.isValid() ) color.setRgb( 131, 131, 131 );
     painter->setPen( color );
     painter->drawRect( QRectF( QPointF(0,0), boundingRect.size() ) );
 

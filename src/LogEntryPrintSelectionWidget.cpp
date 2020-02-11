@@ -29,13 +29,11 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
     QWidget( parent ),
     OptionWidget( QStringLiteral("LOGENTRY_PRINT_SELECTION") )
 {
-
     setWindowTitle( tr( "Logbook Entry Selection" ) );
-
-    QVBoxLayout* layout = new QVBoxLayout;
+    auto layout = new QVBoxLayout;
     setLayout( layout );
 
-    QButtonGroup* group = new QButtonGroup( this );
+    auto group = new QButtonGroup( this );
 
     // insert checkboxes
     radioButtons_ =
@@ -52,22 +50,17 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
         group->addButton( iter.value() );
     }
 
-    connect( group, QOverload<int>::of(&QButtonGroup::buttonClicked), [this](int){ _updateMode(); } );
-
+    connect( group, QOverload<int>::of(&QButtonGroup::buttonClicked), this, [this](int){ _updateMode(); } );
     layout->addStretch(1);
-
 }
 
 //_________________________________________________________________
 void LogEntryPrintSelectionWidget::read( const Options& options )
 {
-
     int mode( options.get<int>( optionName() ) );
     for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { iter.value()->setChecked( Base::toIntegralType(iter.key()) == mode ); }
-
     _setConnected();
-
 }
 
 //_________________________________________________________________
@@ -79,6 +72,5 @@ LogEntryPrintSelectionWidget::Mode LogEntryPrintSelectionWidget::mode() const
 {
     for( auto&& iter = radioButtons_.begin(); iter != radioButtons_.end(); iter++ )
     { if( iter.value()->isChecked() ) return iter.key(); }
-
     return Mode::AllEntries;
 }

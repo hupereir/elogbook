@@ -349,8 +349,8 @@ void LogEntryModel::_resetIcons()
 const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
 {
 
-    auto iter( _icons().lowerBound( color ) );
-    if( iter != _icons().end() && Base::areEquivalent( color, iter.key() ) ) return iter.value();
+    const auto iter( _icons().lowerBound( color ) );
+    if( iter != _icons().cend() && Base::areEquivalent( color, iter.key() ) ) return iter.value();
     else
     {
 

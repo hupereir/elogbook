@@ -1045,35 +1045,23 @@ void MainWindow::closeEvent( QCloseEvent *event )
 //_______________________________________________________
 void MainWindow::timerEvent( QTimerEvent* event )
 {
-
     if( event->timerId() == resizeTimer_.timerId() )
     {
-
-        // stop timer and save time
         resizeTimer_.stop();
         XmlOptions::get().set<int>( QStringLiteral("KEYWORD_LIST_WIDTH"), keywordList_->width() );
-
     } else if(event->timerId() == editionTimer_.timerId() ) {
-
         editionTimer_.stop();
-
-        // check if current index is valid and was 'double-clicked'
         auto index( entryList_->currentIndex() );
         if( index.isValid() && index == entryModel_.editionIndex() )
         { _startEntryEdition(); }
-
     } else if(event->timerId() == autosaveTimer_.timerId() ) {
-
         _autoSave();
-
-    } else return BaseMainWindow::timerEvent( event );
-
+    } else BaseMainWindow::timerEvent( event );
 }
 
 //________________________________________________
 void MainWindow::contextMenuEvent( QContextMenuEvent* event )
 {
-
     Debug::Throw( QStringLiteral("MainWindow::contextMenuEvent.\n") );
     BaseMainWindow::contextMenuEvent( event );
     if( event->isAccepted() ) return;
@@ -1099,9 +1087,7 @@ void MainWindow::contextMenuEvent( QContextMenuEvent* event )
     menu->exec( event->globalPos() );
     menu->deleteLater();
     event->accept();
-
     return;
-
 }
 
 //_______________________________________________
@@ -2300,11 +2286,7 @@ void MainWindow::_mergeBackup( const Backup &backup )
         return;
     }
 
-    if( !backup.file().exists() )
-    {
-        const QString buffer = tr( "Unable to open file named '%1'. <Merge Backup> canceled." ).arg( backup.file() );
-        return;
-    }
+    if( !backup.file().exists() ) return;
 
     // save EditionWindows
     auto reply = checkModifiedEntries();

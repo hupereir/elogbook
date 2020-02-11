@@ -24,5 +24,5 @@
 *
 *******************************************************************************/
 
-#define VERSION "@ELOGBOOK_VERSION@"
+#define VERSION QStringLiteral( "@ELOGBOOK_VERSION@" )
 #endif

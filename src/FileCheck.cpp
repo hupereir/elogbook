@@ -86,18 +86,13 @@ void FileCheck::timerEvent( QTimerEvent* event )
 {
     if( event->timerId() == timer_.timerId() )
     {
-
-        // stop timer
         timer_.stop();
-
-        // emit signal
         if( !data_.empty() )
         {
             emit filesModified( data_ );
             data_.clear();
         }
-
-    } else return QObject::timerEvent( event );
+    } else QObject::timerEvent( event );
 
 
 }
