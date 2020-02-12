@@ -28,12 +28,16 @@
 
 #include <QDomDocument>
 #include <QDomElement>
+#include <QVector>
 
 //* store backup information
 class Backup final: private Base::Counter<Backup>
 {
 
     public:
+
+    //* list
+    using List = QVector<Backup>;
 
     //* constructor
     explicit Backup( const File& file = File(), const TimeStamp& creation = TimeStamp::now() ):
@@ -81,9 +85,6 @@ class Backup final: private Base::Counter<Backup>
     { valid_ = file_.exists(); }
 
     //@}
-
-    //* list
-    using List = QList<Backup>;
 
     //* test validity
     using InvalidFTor = Base::Functor::UnaryFalse<Backup, &Backup::isValid>;

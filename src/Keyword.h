@@ -25,10 +25,10 @@
 
 #include <QDomElement>
 #include <QDomDocument>
-#include <QList>
 #include <QSet>
 #include <QString>
 #include <QTextStream>
+#include <QVector>
 
 //* log entry keyword
 class Keyword final: private Base::Counter<Keyword>
@@ -51,7 +51,7 @@ class Keyword final: private Base::Counter<Keyword>
     //* keyword set
     using Set = QSet<Keyword>;
     using OrderedSet = QOrderedSet<Keyword>;
-    using List = QList<Keyword>;
+    using List = QVector<Keyword>;
 
     //*@name accessors
     //@{

@@ -30,6 +30,7 @@
 #include "BaseStatusBar.h"
 #include "ColorMenu.h"
 #include "Command.h"
+#include "CppUtil.h"
 #include "CustomToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
@@ -1241,7 +1242,7 @@ void EditionWindow::_displayAttachments()
     } else {
 
         frame.visibilityAction().setChecked( true );
-        frame.add( attachments.toList() );
+        frame.add( Base::makeT<AttachmentModel::List>( attachments ) );
 
     }
 

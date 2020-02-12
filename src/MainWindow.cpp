@@ -633,7 +633,7 @@ void MainWindow::updateEntry( const Keyword &keyword, LogEntry* entry, bool upda
     Debug::Throw( QStringLiteral("MainWindow::updateEntry.\n") );
 
     // make sure keyword model contains all entry keywords
-    keywordModel_.add( entry->keywords().toList() );
+    keywordModel_.add( Base::makeT<KeywordModel::List>(entry->keywords()) );
 
     // update keyword model if needed
     if( keyword != currentKeyword() )
@@ -790,7 +790,7 @@ void MainWindow::resetAttachmentWindow() const
     if( !logbook_ ) return;
 
     // retrieve logbook attachments, adds to AttachmentWindow
-    attachmentWindow.frame().add( logbook_->attachments().toList() );
+    attachmentWindow.frame().add( Base::makeT<AttachmentModel::List>(logbook_->attachments()) );
 
     return;
 
@@ -1277,7 +1277,6 @@ void MainWindow::_resetKeywordList()
 {
 
     Debug::Throw( QStringLiteral("MainWindow::_resetKeywordList.\n") );
-    Q_CHECK_PTR( logbook_ );
 
     // retrieve new list of keywords (from logbook)
     Keyword::OrderedSet newKeywords;
@@ -1286,18 +1285,14 @@ void MainWindow::_resetKeywordList()
     {
         if( entry->isFindSelected() )
         {
-
             for( auto keyword:entry->keywords() )
             {
                 for( ; keyword != root; keyword = keyword.parent() )
                 { newKeywords.insert( keyword ); }
             }
-
         }
     }
-
-    keywordModel_.set( newKeywords.toList() );
-
+    keywordModel_.set( Base::makeT<KeywordModel::List>(newKeywords) );
 }
 
 //_______________________________________________
@@ -1930,7 +1925,7 @@ void MainWindow::_printPreview()
     {
 
         case LogEntryPrintSelectionWidget::Mode::AllEntries:
-        helper.setEntries( Base::KeySet<LogEntry>( logbook_->entries() ).toList() );
+        helper.setEntries( Base::makeT<LogEntryModel::List>( Base::KeySet<LogEntry>( logbook_->entries() ) ) );
         break;
 
         default:
@@ -3723,7 +3718,7 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
     {
         default:
         case LogEntryPrintSelectionWidget::Mode::AllEntries:
-        return Base::KeySet<LogEntry>( logbook_->entries() ).toList();
+        return Base::makeT<LogEntryModel::List>( logbook_->entries() );
 
         case LogEntryPrintSelectionWidget::Mode::VisibleEntries:
         return entryModel_.get();

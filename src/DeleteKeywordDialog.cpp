@@ -27,7 +27,7 @@
 #include <QLayout>
 
 //_____________________________________________________
-DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const QList<Keyword>& keywords, bool hasEntries ):
+DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const Keyword::List& keywords, bool hasEntries ):
     CustomDialog( parent, OkButton|CancelButton|Separator )
 {
 

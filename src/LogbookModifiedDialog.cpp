@@ -17,9 +17,11 @@
 *
 *******************************************************************************/
 
+#include "LogbookModifiedDialog.h"
+
+#include "CppUtil.h"
 #include "IconNames.h"
 #include "IconEngine.h"
-#include "LogbookModifiedDialog.h"
 #include "QtUtil.h"
 #include "TreeView.h"
 #include "XmlOptions.h"
@@ -60,7 +62,7 @@ Counter( QStringLiteral("LogbookModifiedDialog") )
     list_->setModel( &model_ );
     layout->addWidget( list_, 1 );
 
-    model_.add( files.toList() );
+    model_.add( Base::makeT<FileCheck::Model::List>( files ) );
     list_->resizeColumns();
 
     // button layout
@@ -95,4 +97,4 @@ Counter( QStringLiteral("LogbookModifiedDialog") )
 
 //___________________________________________________________________
 void LogbookModifiedDialog::addFiles( const FileCheck::DataSet& files )
-{ model_.add( files.toList() ); }
+{ model_.add( Base::makeT<FileCheck::Model::List>( files ) ); }
