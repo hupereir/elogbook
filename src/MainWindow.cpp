@@ -1125,7 +1125,7 @@ void MainWindow::_installActions()
     findEntriesAction_->setToolTip( tr( "Find entries matching specific criteria" ) );
     connect( findEntriesAction_, &QAction::triggered, this, &MainWindow::_findEntries );
 
-    newEntryAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Entry..." ), this );
+    addAction( newEntryAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Entry..." ), this ) );
     newEntryAction_->setToolTip( tr( "Create a new entry" ) );
     newEntryAction_->setShortcut( QKeySequence::New );
     connect( newEntryAction_, &QAction::triggered, this, &MainWindow::_newEntry );
