@@ -31,7 +31,7 @@
 #include "ColorMenu.h"
 #include "Command.h"
 #include "CppUtil.h"
-#include "CustomToolBar.h"
+#include "ToolBar.h"
 #include "File.h"
 #include "FormatBar.h"
 #include "HtmlDialog.h"
@@ -200,7 +200,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     addAction( &application->closeAction() );
 
     // main toolbar
-    auto toolbar = new CustomToolBar( tr( "Main Toolbar" ), this, QStringLiteral("MAIN_TOOLBAR") );
+    auto toolbar = new ToolBar( tr( "Main Toolbar" ), this, QStringLiteral("MAIN_TOOLBAR") );
     toolbar->addAction( newEntryAction_ );
     toolbar->addAction( saveAction_ );
     toolbar->addAction( deleteEntryAction_ );
@@ -223,7 +223,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
         formatBar_, &FormatBar::updateState );
 
     // edition toolbars
-    toolbar = new CustomToolBar( tr( "History" ), this, QStringLiteral("EDITION_TOOLBAR") );
+    toolbar = new ToolBar( tr( "History" ), this, QStringLiteral("EDITION_TOOLBAR") );
     toolbar->addAction( undoAction_ );
     toolbar->addAction( redoAction_ );
 
@@ -237,7 +237,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     connect( qApp, &QApplication::focusChanged, this, [this](QWidget*,QWidget*){ _updateUndoRedoActions(); } );
 
     // extra toolbar
-    toolbar = new CustomToolBar( tr( "Tools" ), this, QStringLiteral("EXTRA_TOOLBAR") );
+    toolbar = new ToolBar( tr( "Tools" ), this, QStringLiteral("EXTRA_TOOLBAR") );
 
     #if WITH_ASPELL
     toolbar->addAction( spellcheckAction_ );
@@ -247,14 +247,14 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( entryInformationAction_ );
 
     // extra toolbar
-    toolbar = new CustomToolBar( tr( "Multiple Views" ), this, QStringLiteral("MULTIPLE_VIEW_TOOLBAR") );
+    toolbar = new ToolBar( tr( "Multiple Views" ), this, QStringLiteral("MULTIPLE_VIEW_TOOLBAR") );
     toolbar->addAction( splitViewHorizontalAction_ );
     toolbar->addAction( splitViewVerticalAction_ );
     toolbar->addAction( cloneWindowAction_ );
     toolbar->addAction( closeAction_ );
 
     // extra toolbar
-    toolbar = new CustomToolBar( tr( "Navigation" ), this, QStringLiteral("NAVIGATION_TOOLBAR") );
+    toolbar = new ToolBar( tr( "Navigation" ), this, QStringLiteral("NAVIGATION_TOOLBAR") );
     toolbar->addAction( &application->mainWindow().uniconifyAction() );
     toolbar->addAction( previousEntryAction_ );
     toolbar->addAction( nextEntryAction_ );

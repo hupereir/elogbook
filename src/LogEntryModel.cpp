@@ -23,7 +23,7 @@
 #include "Attachment.h"
 #include "ColorMenu.h"
 #include "CppUtil.h"
-#include "CustomPixmap.h"
+#include "Pixmap.h"
 #include "IconNames.h"
 #include "IconEngine.h"
 #include "LogEntry.h"
@@ -357,7 +357,7 @@ const QIcon& LogEntryModel::_icon( const Base::Color& color ) const
         const double pixmapSize = 0.75*std::min<double>( 8, XmlOptions::get().get<double>( QStringLiteral("LIST_ICON_SIZE") ) );
         const double offset = 0.5*( iconSize_ - pixmapSize );
 
-        CustomPixmap pixmap( QSize( iconSize_, iconSize_ ), CustomPixmap::Flag::Transparent );
+        Pixmap pixmap( QSize( iconSize_, iconSize_ ), Pixmap::Flag::Transparent );
 
         if( color.isValid() )
         {

@@ -21,7 +21,7 @@
 
 #include "Application.h"
 #include "AttachmentWindow.h"
-#include "CustomToolBar.h"
+#include "ToolBar.h"
 #include "DebugMenu.h"
 #include "DefaultHelpText.h"
 #include "EditionWindow.h"

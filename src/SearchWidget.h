@@ -26,7 +26,7 @@ s*
 #include <QHash>
 #include <QPushButton>
 
-class CustomComboBox;
+class ComboBox;
 
 //* selects entries from keyword/title/text/...
 class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
@@ -57,7 +57,7 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     //@{
 
     //* editor
-    CustomComboBox& editor() const
+    ComboBox& editor() const
     { return *editor_; }
 
     //@}
@@ -130,7 +130,7 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     CheckBoxMap checkboxes_;
 
     //* selection text widget
-    CustomComboBox *editor_ = nullptr;
+    ComboBox *editor_ = nullptr;
 
     //* not found palette
     QPalette notFoundPalette_;

@@ -23,7 +23,7 @@
 #include "BaseIconNames.h"
 #include "ColorMenu.h"
 #include "CppUtil.h"
-#include "CustomToolButton.h"
+#include "ToolButton.h"
 #include "Debug.h"
 #include "FormatBarIconNames.h"
 #include "IconEngine.h"
@@ -43,7 +43,7 @@
 #include <QTextFragment>
 
 // used for customized color button
-class FormatColorButton: public CustomToolButton
+class FormatColorButton: public ToolButton
 {
 
     Q_OBJECT
@@ -52,7 +52,7 @@ class FormatColorButton: public CustomToolButton
 
     //* constructor
     explicit FormatColorButton( QWidget* parent ):
-        CustomToolButton( parent )
+        ToolButton( parent )
     {}
 
     //* set color
@@ -80,7 +80,7 @@ class FormatColorButton: public CustomToolButton
 
 //________________________________________
 FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
-    CustomToolBar( QStringLiteral("Text format"), parent, optionName )
+    ToolBar( QStringLiteral("Text format"), parent, optionName )
 {
 
     Debug::Throw( QStringLiteral("ToolBar::ToolBar.\n") );
@@ -389,7 +389,7 @@ void FormatColorButton::paintEvent( QPaintEvent* event )
     }
 
     // default handling if color is invalid
-    CustomToolButton::paintEvent( event );
+    ToolButton::paintEvent( event );
 
     return;
 

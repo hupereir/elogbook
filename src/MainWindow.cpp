@@ -27,7 +27,7 @@
 #include "ColorMenu.h"
 #include "Command.h"
 #include "ContextMenu.h"
-#include "CustomToolBar.h"
+#include "ToolBar.h"
 #include "Debug.h"
 #include "DeleteKeywordDialog.h"
 #include "EditionWindow.h"
@@ -131,7 +131,7 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->setSpacing(0);
     keywordContainer_->setLayout( vLayout );
 
-    keywordToolBar_ = new CustomToolBar( tr( "Keywords" ), keywordContainer_, QStringLiteral("KEYWORD_TOOLBAR") );
+    keywordToolBar_ = new ToolBar( tr( "Keywords" ), keywordContainer_, QStringLiteral("KEYWORD_TOOLBAR") );
     keywordToolBar_->setTransparent( true );
     keywordToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( keywordToolBar_ );
@@ -203,7 +203,7 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->setSpacing(0);
     right->setLayout( vLayout );
 
-    entryToolBar_ = new CustomToolBar( tr( "Entries" ), right, QStringLiteral("ENTRY_TOOLBAR") );
+    entryToolBar_ = new ToolBar( tr( "Entries" ), right, QStringLiteral("ENTRY_TOOLBAR") );
     entryToolBar_->setTransparent( true );
     entryToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( entryToolBar_ );

@@ -20,7 +20,7 @@
 *
 *******************************************************************************/
 
-#include "CustomComboBox.h"
+#include "ComboBox.h"
 #include "CustomDialog.h"
 #include "Keyword.h"
 
@@ -50,7 +50,7 @@ class EditKeywordDialog: public CustomDialog
     private:
 
     //*keyword combo box
-    CustomComboBox *combobox_ = nullptr;
+    ComboBox *combobox_ = nullptr;
 
 };
 

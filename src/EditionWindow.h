@@ -46,7 +46,7 @@ class BaseFindWidget;
 class BaseReplaceWidget;
 class BaseStatusBar;
 class ColorMenu;
-class CustomToolBar;
+class ToolBar;
 class FormatBar;
 class LogEntryPrintHelper;
 class MessageWidget;

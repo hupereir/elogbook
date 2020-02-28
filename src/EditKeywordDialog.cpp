@@ -30,7 +30,7 @@ EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
     Debug::Throw( QStringLiteral("EditKeywordDialog::EditKeywordDialog.\n") );
 
     setWindowTitle( tr( "Edit Keyword" ) );
-    mainLayout().addWidget( combobox_ = new CustomComboBox( this ) );
+    mainLayout().addWidget( combobox_ = new ComboBox( this ) );
     combobox_->setEditable( true );
     combobox_->setAutoCompletion( true );
 

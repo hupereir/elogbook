@@ -21,7 +21,7 @@
 *******************************************************************************/
 
 #include "Counter.h"
-#include "CustomToolBar.h"
+#include "ToolBar.h"
 #include "TextFormatBlock.h"
 #include "TextFormat.h"
 
@@ -35,7 +35,7 @@ class ColorMenu;
 class TextEditor;
 
 //* text formating bar
-class FormatBar: public CustomToolBar
+class FormatBar: public ToolBar
 {
 
     //* Qt meta object declaration

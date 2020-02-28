@@ -21,7 +21,7 @@
 
 #include "Application.h"
 #include "Color.h"
-#include "CustomComboBox.h"
+#include "ComboBox.h"
 #include "Debug.h"
 #include "IconNames.h"
 #include "IconEngine.h"
@@ -62,7 +62,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     gridLayout->addLayout( hLayout, 0, 1, 1, 1 );
 
     // editor
-    editor_ = new CustomComboBox( this );
+    editor_ = new ComboBox( this );
     editor_->setEditable( true );
     editor_->setAutoCompletion( true );
     editor_->setToolTip( tr( " Text to be found in logbook" ) );
@@ -72,8 +72,8 @@ SearchWidget::SearchWidget( QWidget* parent ):
 
     hLayout->addWidget( editor_, 1 );
 
-    connect( editor_, QOverload<const QString&>::of( &CustomComboBox::activated ), this, [this](const QString&){ _selectionRequest(); } );
-    connect( editor_, &CustomComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
+    connect( editor_, QOverload<const QString&>::of( &ComboBox::activated ), this, [this](const QString&){ _selectionRequest(); } );
+    connect( editor_, &ComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
     connect( editor_->lineEdit(), &QLineEdit::textChanged, this, &SearchWidget::_restorePalette );
 
     // find selection button

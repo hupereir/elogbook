@@ -44,7 +44,7 @@
 #include <memory>
 
 class ColorMenu;
-class CustomToolBar;
+class ToolBar;
 class EditionWindow;
 class FileCheck;
 class LogbookPrintHelper;
@@ -107,11 +107,11 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     Keyword currentKeyword() const;
 
     //* keyword toolbar
-    CustomToolBar& keywordToolBar() const
+    ToolBar& keywordToolBar() const
     { return *keywordToolBar_; }
 
     //* entry toolbar
-    CustomToolBar& entryToolBar() const
+    ToolBar& entryToolBar() const
     { return *entryToolBar_; }
 
     //@}
@@ -639,10 +639,10 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //@name toolbars
     //@{
     //* keywords
-    CustomToolBar *keywordToolBar_ = nullptr;
+    ToolBar *keywordToolBar_ = nullptr;
 
     //* entries
-    CustomToolBar *entryToolBar_ = nullptr;
+    ToolBar *entryToolBar_ = nullptr;
     //@}
 
     //*@name actions
