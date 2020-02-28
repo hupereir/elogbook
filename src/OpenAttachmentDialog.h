@@ -21,14 +21,14 @@
 *******************************************************************************/
 
 #include "Attachment.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 
 #include <QRadioButton>
 
 class OpenWithComboBox;
 
 //* open attachment popup dialog
-class OpenAttachmentDialog: public CustomDialog
+class OpenAttachmentDialog: public Dialog
 {
 
     Q_OBJECT

@@ -25,7 +25,7 @@
 
 //_________________________________________________________
 InsertLinkDialog::InsertLinkDialog( QWidget* parent, const QString &value ):
-CustomDialog( parent, OkButton|CancelButton|Separator )
+Dialog( parent, OkButton|CancelButton|Separator )
 {
     Debug::Throw( QStringLiteral("InsertLinkDialog::InsertLinkDialog.\n") );
     setOptionName( QStringLiteral("INSERT_LINK_DIALOG") );

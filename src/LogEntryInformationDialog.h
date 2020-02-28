@@ -20,13 +20,13 @@
 *
 *******************************************************************************/
 
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "Counter.h"
 
 class LogEntry;
 
 //* logbook entry informations
-class LogEntryInformationDialog: public CustomDialog
+class LogEntryInformationDialog: public Dialog
 {
 
     Q_OBJECT

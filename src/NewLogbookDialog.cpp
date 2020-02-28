@@ -26,7 +26,7 @@
 
 //_______________________________________________________
 NewLogbookDialog::NewLogbookDialog( QWidget* parent ):
-CustomDialog( parent )
+Dialog( parent )
 {
 
     Debug::Throw( QStringLiteral("NewLogbookDialog::NewLogbookDialog.\n") );

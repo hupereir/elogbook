@@ -21,11 +21,11 @@
 *******************************************************************************/
 
 #include "ComboBox.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "Keyword.h"
 
 //* Edit/create keyword popup dialog
-class EditKeywordDialog: public CustomDialog
+class EditKeywordDialog: public Dialog
 {
 
     Q_OBJECT

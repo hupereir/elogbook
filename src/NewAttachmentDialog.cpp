@@ -27,7 +27,7 @@
 
 //_____________________________________________________
 NewAttachmentDialog::NewAttachmentDialog( QWidget* parent ):
-CustomDialog( parent )
+Dialog( parent )
 {
 
     Debug::Throw( QStringLiteral("NewAttachmentDialog::NewAttachmentDialog.\n") );

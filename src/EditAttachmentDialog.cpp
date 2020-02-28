@@ -29,7 +29,7 @@
 
 //_____________________________________________________
 EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& attachment ):
-    CustomDialog( parent )
+    Dialog( parent )
 {
 
     Debug::Throw( QStringLiteral("EditAttachmentDialog::EditAttachmentDialog.\n") );

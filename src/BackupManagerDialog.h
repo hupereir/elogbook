@@ -20,7 +20,7 @@
 *
 *******************************************************************************/
 
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "FileRecordModel.h"
 
 class BackupManagerWidget;

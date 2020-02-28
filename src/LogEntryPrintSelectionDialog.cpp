@@ -22,7 +22,7 @@
 
 //_____________________________________________________________________
 LogEntryPrintSelectionDialog::LogEntryPrintSelectionDialog( QWidget* parent ):
-    CustomDialog( parent, OkButton|CancelButton|Separator )
+    Dialog( parent, OkButton|CancelButton|Separator )
 {
 
     setWindowTitle( tr( "Select Entries for Printing" ) );

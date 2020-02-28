@@ -20,14 +20,14 @@
 *
 *******************************************************************************/
 
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "FileRecordModel.h"
 #include <QStringList>
 
 class TreeView;
 
 //* QDialog used to select opened files
-class FileCheckDialog: public CustomDialog
+class FileCheckDialog: public Dialog
 {
 
     Q_OBJECT

@@ -28,7 +28,7 @@
 
 //_____________________________________________________
 DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const Keyword::List& keywords, bool hasEntries ):
-    CustomDialog( parent, OkButton|CancelButton|Separator )
+    Dialog( parent, OkButton|CancelButton|Separator )
 {
 
     Debug::Throw( QStringLiteral("DeleteKeywordDialog::DeleteKeywordDialog.\n") );

@@ -22,7 +22,7 @@
 
 #include "LineEditor.h"
 #include "BrowsedLineEditor.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "TextEditor.h"
 #include "File.h"
 #include "Debug.h"
@@ -30,7 +30,7 @@
 #include <QString>
 
 //* new attachment popup dialog
-class NewLogbookDialog: public CustomDialog
+class NewLogbookDialog: public Dialog
 {
 
     Q_OBJECT

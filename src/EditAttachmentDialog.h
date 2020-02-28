@@ -22,10 +22,10 @@
 
 #include "Attachment.h"
 #include "TextEditor.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 
 //* edit attachment popup dialog
-class EditAttachmentDialog: public CustomDialog
+class EditAttachmentDialog: public Dialog
 {
 
     Q_OBJECT

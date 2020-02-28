@@ -20,10 +20,10 @@
 *
 *******************************************************************************/
 
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "LogEntryPrintSelectionWidget.h"
 
-class LogEntryPrintSelectionDialog: public CustomDialog
+class LogEntryPrintSelectionDialog: public Dialog
 {
 
     Q_OBJECT

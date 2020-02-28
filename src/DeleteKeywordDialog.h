@@ -20,13 +20,13 @@
 *
 *******************************************************************************/
 
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "Keyword.h"
 
 #include <QRadioButton>
 
 //* delete keyword popup dialog
-class DeleteKeywordDialog: public CustomDialog
+class DeleteKeywordDialog: public Dialog
 {
 
     Q_OBJECT

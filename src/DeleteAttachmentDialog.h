@@ -21,12 +21,12 @@
 *******************************************************************************/
 
 #include "Attachment.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 
 #include <QRadioButton>
 
 //* delete attachment popup dialog
-class DeleteAttachmentDialog: public CustomDialog
+class DeleteAttachmentDialog: public Dialog
 {
 
     Q_OBJECT

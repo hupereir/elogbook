@@ -31,7 +31,7 @@
 
 //_________________________________________________________
 LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* logbook ):
-    CustomDialog( parent )
+    Dialog( parent )
 {
     Debug::Throw( QStringLiteral("LogbookInformationDialog::LogbookInformationDialog.\n") );
 

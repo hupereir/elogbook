@@ -1371,7 +1371,7 @@ void EditionWindow::_printPreview()
     helper.setMask( (LogEntry::Mask) XmlOptions::get().get<int>( QStringLiteral("LOGENTRY_PRINT_OPTION_MASK") ) );
 
     // create dialog, connect and execute
-    PrintPreviewDialog dialog( this, CustomDialog::OkButton|CustomDialog::CancelButton );
+    PrintPreviewDialog dialog( this, Dialog::OkButton|Dialog::CancelButton );
     dialog.setWindowTitle( tr( "Print Preview" ) );
     dialog.setHelper( &helper );
 

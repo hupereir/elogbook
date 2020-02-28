@@ -29,7 +29,7 @@
 
 //_____________________________________________________
 DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachment& attachment ):
-    CustomDialog( parent, OkButton | CancelButton| Separator )
+    Dialog( parent, OkButton | CancelButton| Separator )
 {
 
     Debug::Throw( QStringLiteral("DeleteAttachmentDialog::DeleteAttachmentDialog.\n") );

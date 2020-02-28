@@ -20,7 +20,7 @@
 *
 *******************************************************************************/
 
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "Counter.h"
 #include "AttachmentFrame.h"
 #include "Debug.h"
@@ -30,7 +30,7 @@
 class Attachment;
 
 //* popup window to list/edit all attachments independantly from entries
-class AttachmentWindow: public CustomDialog
+class AttachmentWindow: public Dialog
 {
 
     //* Qt meta object declaration

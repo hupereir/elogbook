@@ -22,7 +22,7 @@
 
 #include "LineEditor.h"
 #include "BrowsedLineEditor.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "File.h"
 #include "TextEditor.h"
 
@@ -30,7 +30,7 @@
 
 class Logbook;
 
-class LogbookInformationDialog: public CustomDialog
+class LogbookInformationDialog: public Dialog
 {
 
     Q_OBJECT

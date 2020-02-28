@@ -21,11 +21,11 @@
 *******************************************************************************/
 
 #include "BrowsedLineEditor.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "LineEditor.h"
 
 //* open attachment popup dialog
-class InsertLinkDialog: public CustomDialog
+class InsertLinkDialog: public Dialog
 {
 
     Q_OBJECT

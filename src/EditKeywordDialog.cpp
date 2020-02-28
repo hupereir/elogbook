@@ -24,7 +24,7 @@
 
 //_____________________________________________________
 EditKeywordDialog::EditKeywordDialog( QWidget* parent ):
-    CustomDialog( parent, OkButton|CancelButton|Separator )
+    Dialog( parent, OkButton|CancelButton|Separator )
 {
 
     Debug::Throw( QStringLiteral("EditKeywordDialog::EditKeywordDialog.\n") );

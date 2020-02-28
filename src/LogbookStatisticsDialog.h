@@ -21,12 +21,12 @@
 *******************************************************************************/
 
 #include "Counter.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "LogbookModel.h"
 
 class Logbook;
 
-class LogbookStatisticsDialog: public CustomDialog
+class LogbookStatisticsDialog: public Dialog
 {
 
     Q_OBJECT

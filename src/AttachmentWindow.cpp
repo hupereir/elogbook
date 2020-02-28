@@ -32,7 +32,7 @@
 
 //________________________________________
 AttachmentWindow::AttachmentWindow( QWidget* parent ):
-    CustomDialog( parent, CloseButton )
+    Dialog( parent, CloseButton )
 {
 
     Debug::Throw( QStringLiteral("AttachmentWindow::AttachmentWindow.\n") );
@@ -69,7 +69,7 @@ void AttachmentWindow::show()
 //________________________________________
 void AttachmentWindow::uniconify()
 {
-    CustomDialog::uniconify();
+    Dialog::uniconify();
     frame_->list().setFocus();
 }
 

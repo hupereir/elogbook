@@ -35,7 +35,7 @@
 
 //_________________________________________________________
 LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry* entry ):
-    CustomDialog( parent, OkButton| Separator )
+    Dialog( parent, OkButton| Separator )
 {
     Debug::Throw( QStringLiteral("LogEntryInformationDialog::LogEntryInformationDialog.\n") );
 

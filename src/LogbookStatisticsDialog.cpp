@@ -36,7 +36,7 @@
 
 //_________________________________________________________
 LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logbook ):
-    CustomDialog( parent, CloseButton )
+    Dialog( parent, CloseButton )
 {
     Debug::Throw( QStringLiteral("LogbookStatisticsDialog::LogbookStatisticsDialog.\n") );
 

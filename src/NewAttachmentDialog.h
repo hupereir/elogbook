@@ -22,7 +22,7 @@
 
 #include "Attachment.h"
 #include "BrowsedLineEditor.h"
-#include "CustomDialog.h"
+#include "Dialog.h"
 #include "TextEditor.h"
 #include "File.h"
 
@@ -30,7 +30,7 @@
 #include <QComboBox>
 
 //* new attachment popup dialog
-class NewAttachmentDialog: public CustomDialog
+class NewAttachmentDialog: public Dialog
 {
 
     //* Qt meta object declaration
