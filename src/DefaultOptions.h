@@ -127,7 +127,6 @@ void installDefaultOptions()
     XmlOptions::get().set( QStringLiteral("USER"), Option( user+"@"+host, Option::Flag::None ) );
 
     // resource file
-    XmlOptions::get().set( QStringLiteral("OLD_RC_FILE"), Option(  File(".elogbookrc").addPath(Util::home()), Option::Flag::None ) );
     XmlOptions::get().set( QStringLiteral("RC_FILE"), Option(  File("elogbookrc").addPath(Util::config()), Option::Flag::None ) );
 
     XmlOptions::get().setAutoDefault( false );

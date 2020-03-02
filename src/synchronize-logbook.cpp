@@ -22,7 +22,6 @@
 #include "ErrorHandler.h"
 #include "Logbook.h"
 #include "Options.h"
-#include "ResourceMigration.h"
 #include "Util.h"
 
 #include <QCoreApplication>
@@ -61,12 +60,8 @@ int main (int argc, char *argv[])
     // options
     installDefaultOptions();
 
-    // migrate old rc files
-    File oldRCFile( XmlOptions::get().raw( QStringLiteral("OLD_RC_FILE") ) );
+    // resources
     File rcFile( XmlOptions::get().raw( QStringLiteral("RC_FILE") ) );
-    ResourceMigration( oldRCFile ).migrate( rcFile );
-
-    // assign and read
     XmlOptions::setFile( rcFile );
     XmlOptions::read();
 

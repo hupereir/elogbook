@@ -21,7 +21,6 @@
 #include "Debug.h"
 #include "DefaultOptions.h"
 #include "ErrorHandler.h"
-#include "ResourceMigration.h"
 #include "SystemOptions.h"
 #include "Singleton.h"
 #include "XmlFileRecord.h"
@@ -42,12 +41,8 @@ int main (int argc, char *argv[])
     installDefaultOptions();
     installSystemOptions();
 
-    // migrate old rc files
-    File oldRCFile( XmlOptions::get().raw( QStringLiteral("OLD_RC_FILE") ) );
+    // resources
     File rcFile( XmlOptions::get().raw( QStringLiteral("RC_FILE") ) );
-    ResourceMigration( oldRCFile ).migrate( rcFile );
-
-    // assign and read
     XmlOptions::setFile( rcFile );
     XmlOptions::read();
 
