@@ -56,6 +56,7 @@
 #include "RecentFilesMenu.h"
 #include "SelectLineWidget.h"
 #include "Singleton.h"
+#include "ToolBarSpacerItem.h"
 #include "OpenWithDialog.h"
 #include "Util.h"
 
@@ -258,6 +259,11 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     toolbar->addAction( &application->mainWindow().uniconifyAction() );
     toolbar->addAction( previousEntryAction_ );
     toolbar->addAction( nextEntryAction_ );
+
+    // application menu
+    toolbar =  new ToolBar( tr( "Application Menu" ), this, QStringLiteral("APPMENU_TOOLBAR") );
+    toolbar->addWidget( new ToolBarSpacerItem );
+    addApplicationMenu( toolbar );
 
     // create menu if requested
     menuBar_ = new MenuBar( this, &application->mainWindow() );
