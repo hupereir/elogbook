@@ -1,9 +1,9 @@
-#ifndef LogEntryList_h
-#define LogEntryList_h
+#ifndef ToolTipWidget_h
+#define ToolTipWidget_h
 
 /******************************************************************************
 *
-* Copyright (C) 2002 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
+* Copyright (C) 2017 Hugo PEREIRA <mailto: hugo.pereira@free.fr>
 *
 * This is free software; you can redistribute it and/or modify it under the
 * terms of the GNU General Public License as published by the Free Software
@@ -20,12 +20,12 @@
 *
 *******************************************************************************/
 
-#include "TreeView.h"
+#include "BaseToolTipWidget.h"
 
-class ToolTipWidget;
+class GridLayoutItem;
+class LogEntry;
 
-//* local TreeView to store size hint
-class LogEntryList: public TreeView
+class ToolTipWidget: public BaseToolTipWidget
 {
 
     Q_OBJECT
@@ -33,15 +33,20 @@ class LogEntryList: public TreeView
     public:
 
     //* constructor
-    explicit LogEntryList( QWidget* parent = nullptr );
+    explicit ToolTipWidget( QWidget* = nullptr );
+
+    //* assign logbook entry
+    void setLogEntry( LogEntry* );
 
     private:
 
-    //* show tooltip
-    void _showToolTip( const QModelIndex& );
-
-    //* tooltip widget
-    ToolTipWidget* toolTipWidget_ = nullptr;
+    //*@name items
+    //@{
+    GridLayoutItem* titleItem_ = nullptr;
+    GridLayoutItem* authorItem_ = nullptr;
+    GridLayoutItem* createdItem_ = nullptr;
+    GridLayoutItem* modifiedItem_ = nullptr;
+    //@}
 
 };
 

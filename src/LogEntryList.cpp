@@ -18,3 +18,46 @@
 *******************************************************************************/
 
 #include "LogEntryList.h"
+
+#include "Debug.h"
+#include "LogEntryModel.h"
+#include "ToolTipWidget.h"
+
+
+//_______________________________________________________________
+LogEntryList::LogEntryList( QWidget* parent ):
+    TreeView( parent )
+{
+    Debug::Throw( QStringLiteral( "LogEntryList::LogEntryList.\n" ) );
+
+    setMouseTracking( true );
+
+    // tooltip widget
+    toolTipWidget_ = new ToolTipWidget( this );
+    connect( this, &LogEntryList::hovered, this, &LogEntryList::_showToolTip );
+
+}
+
+
+//________________________________________________________
+void LogEntryList::_showToolTip( const QModelIndex& index )
+{
+    Debug::Throw( QStringLiteral("LogEntryList::_showToolTip.\n") );
+
+    // check index and model
+    const auto model = static_cast<LogEntryModel*>( this->model() );
+    if( !( model && index.isValid() ) ) toolTipWidget_->hide();
+    else {
+
+        // assign item
+        toolTipWidget_->setLogEntry( model->get( index ) );
+
+        // rect
+        toolTipWidget_->setIndexRect(
+            visualRect( index ).
+            translated( viewport()->mapToGlobal( QPoint( 0, 0 ) ) ) );
+
+        // show
+        toolTipWidget_->showDelayed();
+    }
+}

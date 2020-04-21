@@ -215,6 +215,9 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Case sensitive text/entry finding" ), box, QStringLiteral("CASE_SENSITIVE") ), 1, 0, 1, 2 );
         checkbox->setToolTip( tr( "Toggle case sensitive text search" ) );
         addOptionWidget( checkbox );
+
+        gridLayout->addWidget( checkbox = new OptionCheckBox( tr( "Show tooltips" ), box, QStringLiteral("SHOW_TOOLTIPS") ), 2, 0, 1, 2 );
+        addOptionWidget( checkbox );
     }
 
     // load initial configuration

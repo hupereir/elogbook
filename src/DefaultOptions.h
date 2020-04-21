@@ -61,7 +61,6 @@ void installDefaultOptions()
     XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#3333FF" ) ) );
     XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#993399" ) ) );
 
-
     // window sizes
     XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_WINDOW_HEIGHT"),400 );
     XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_WINDOW_WIDTH"), 600 );
@@ -84,6 +83,7 @@ void installDefaultOptions()
     XmlOptions::get().set<bool>( QStringLiteral("CASE_SENSITIVE"), false );
     XmlOptions::get().set<int>( QStringLiteral("DB_SIZE"), 10 );
     XmlOptions::get().set<bool>( QStringLiteral("SEARCH_PANEL"), false );
+    XmlOptions::get().set<bool>( QStringLiteral("SHOW_TOOLTIPS"), true );
 
     XmlOptions::get().set<bool>( QStringLiteral("MAIN_TOOLBAR"), true );
     XmlOptions::get().set<bool>( QStringLiteral("FORMAT_TOOLBAR"), true );
