@@ -24,6 +24,7 @@
 #include "AttachmentModel.h"
 #include "Debug.h"
 #include "Key.h"
+#include "ThreadDeleter.h"
 #include "ValidFileThread.h"
 
 #include <QWidget>
@@ -245,8 +246,8 @@ class AttachmentFrame: public QWidget, public Base::Key
     //* list
     TreeView* treeView_ = nullptr;
 
-    // valid file thread
-    ValidFileThread thread_;
+    //* thread to check file validity
+    std::unique_ptr<ValidFileThread, Base::ThreadDeleter> thread_;
 
 };
 

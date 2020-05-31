@@ -53,14 +53,14 @@
 AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
     QWidget( parent ),
     readOnly_( readOnly ),
-    thread_( this )
+    thread_( new ValidFileThread(this) )
 {
     Debug::Throw( QStringLiteral("AttachmentFrame::AttachmentFrame.\n") );
 
     // tell validFile thread not to check duplicates
     // this is needed when checking files that are links
-    thread_.setCheckDuplicates( false );
-    connect( &thread_, &ValidFileThread::recordsAvailable, this, &AttachmentFrame::_processRecords );
+    thread_->setCheckDuplicates( false );
+    connect( thread_.get(), &ValidFileThread::recordsAvailable, this, &AttachmentFrame::_processRecords );
 
     // default layout
     setLayout( new QVBoxLayout );
@@ -295,7 +295,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
 {
 
     Debug::Throw( QStringLiteral("AttachmentFrame::enterEvent.\n") );
-    if( thread_.isRunning() || !hasList() ) return;
+    if( thread_->isRunning() || !hasList() ) return;
 
     // create file records
     FileRecord::List records;
@@ -312,8 +312,8 @@ void AttachmentFrame::enterEvent( QEvent* event )
     }
 
     // setup thread and start
-    thread_.setRecords( records );
-    thread_.start();
+    thread_->setRecords( records );
+    thread_->start();
 
     QWidget::enterEvent( event );
 }
