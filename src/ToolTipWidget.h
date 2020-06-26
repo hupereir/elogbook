@@ -22,6 +22,8 @@
 
 #include "BaseToolTipWidget.h"
 
+#include <QLabel>
+
 class GridLayoutItem;
 class LogEntry;
 
@@ -40,9 +42,11 @@ class ToolTipWidget: public BaseToolTipWidget
 
     private:
 
+    //* title
+    QLabel* titleLabel_ = nullptr;
+
     //*@name items
     //@{
-    GridLayoutItem* titleItem_ = nullptr;
     GridLayoutItem* authorItem_ = nullptr;
     GridLayoutItem* createdItem_ = nullptr;
     GridLayoutItem* modifiedItem_ = nullptr;

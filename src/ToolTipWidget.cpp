@@ -28,6 +28,7 @@
 #include "TimeStamp.h"
 #include "XmlOptions.h"
 
+#include <QFrame>
 #include <QLayout>
 
 //_______________________________________________________
@@ -38,18 +39,33 @@ ToolTipWidget::ToolTipWidget( QWidget* parent ):
     Debug::Throw( QStringLiteral("ToolTipWidget::ToolTipWidget.\n") );
 
     setFollowMouse( true );
+ 
+    auto vLayout = new QVBoxLayout;
+    vLayout->setMargin( 10 );
+    vLayout->setSpacing( 5 );
+    setLayout( vLayout );
+ 
+    // title
+    vLayout->addWidget( titleLabel_ = new QLabel( this ) );
+    titleLabel_->setAlignment( Qt::AlignCenter );
+    titleLabel_->setFont( QtUtil::titleFont( titleLabel_->font() ) );
+    titleLabel_->setMargin( 1 );
+
+    // separator
+    auto separator = new QFrame( this );
+    separator->setFrameStyle( QFrame::HLine );
+    vLayout->addWidget( separator );
 
     // grid layout
     auto gridLayout = new GridLayout;
     gridLayout->setMaxCount( 2 );
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
     gridLayout->setColumnAlignment( 1, Qt::AlignVCenter|Qt::AlignLeft );
-    gridLayout->setMargin( 10 );
+    gridLayout->setMargin( 0 );
     gridLayout->setSpacing( 5 );
-    setLayout( gridLayout );
+    vLayout->addLayout( gridLayout );
 
     // items
-    ( titleItem_ = new GridLayoutItem( this, gridLayout ) )->setKey( tr( "Title:" ) );
     ( authorItem_ = new GridLayoutItem( this, gridLayout ) )->setKey( tr( "Author:" ) );
     ( createdItem_ = new GridLayoutItem( this, gridLayout ) )->setKey( tr( "Created:" ) );
     ( modifiedItem_ = new GridLayoutItem( this, gridLayout ) )->setKey( tr( "Modified:" ) );
@@ -61,7 +77,7 @@ void ToolTipWidget::setLogEntry( LogEntry* entry )
     Debug::Throw( QStringLiteral("ToolTipWidget::setLogEntry.\n") );
     if( entry )
     {
-        titleItem_->setText( entry->title() );
+        titleLabel_->setText( entry->title() );
         authorItem_->setText( entry->author() );
         createdItem_->setText( entry->creation().toString() );
         modifiedItem_->setText( entry->modification().toString() );
