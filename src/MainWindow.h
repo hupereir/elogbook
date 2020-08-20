@@ -426,7 +426,13 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
 
     //* find entries
     void _findEntries() const;
-
+    
+    //* toggle keyword list header
+    void _toggleShowKeywordListHeader();
+    
+    //* toggle entry list header
+    void _toggleShowEntryListHeader();
+    
     //* create new entry
     void _newEntry();
 
@@ -651,6 +657,21 @@ class MainWindow: public BaseMainWindow, private Base::Counter<MainWindow>, publ
     //* uniconify action
     QAction* uniconifyAction_ = nullptr;
 
+    //* show keyword list header
+    QAction* showKeywordListHeaderAction_ = nullptr;
+    
+    //* show entry list header
+    QAction* showEntryListHeaderAction_ = nullptr;
+
+    //* keyword list sorting action
+    QAction* keywordListColumnSortingAction_ = nullptr;
+    
+    //* entry list sorting action
+    QAction* entryListColumnSortingAction_ = nullptr;
+
+    //* entry list column selection action
+    QAction* entryListColumnSelectionAction_ = nullptr;
+    
     //* add new keyword
     QAction* newKeywordAction_ = nullptr;
 

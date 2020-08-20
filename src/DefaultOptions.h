@@ -97,6 +97,10 @@ void installDefaultOptions()
     XmlOptions::get().set<bool>( QStringLiteral("KEYWORD_TOOLBAR"), true );
     XmlOptions::get().set<bool>( QStringLiteral("SHOW_SEARCHPANEL"), true );
 
+    XmlOptions::get().set<bool>( QStringLiteral("SHOW_ENTRYLIST_HEADER"), true );
+    XmlOptions::get().set<bool>( QStringLiteral("SHOW_KEYWORDLIST_HEADER"), true );
+
+    
     XmlOptions::get().set<int>( QStringLiteral("MAX_RECENT_ENTRIES"), 30 );
     XmlOptions::get().set<bool>( QStringLiteral("SHOW_KEYWORD"), false );
     XmlOptions::get().set<bool>( QStringLiteral("USE_TREE"), true );

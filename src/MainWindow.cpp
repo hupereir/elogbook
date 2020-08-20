@@ -25,6 +25,8 @@
 #include "BackupManagerWidget.h"
 #include "BaseIconNames.h"
 #include "ColorMenu.h"
+#include "ColumnSelectionMenu.h"
+#include "ColumnSortingMenu.h"
 #include "Command.h"
 #include "ContextMenu.h"
 #include "ToolBar.h"
@@ -59,6 +61,7 @@
 #include "ProgressStatusBar.h"
 #include "QuestionDialog.h"
 #include "QtUtil.h"
+#include "ReverseOrderAction.h"
 #include "RecentFilesMenu.h"
 #include "SearchWidget.h"
 #include "Singleton.h"
@@ -131,7 +134,7 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->setSpacing(0);
     keywordContainer_->setLayout( vLayout );
 
-    keywordToolBar_ = new ToolBar( tr( "Keywords" ), keywordContainer_, QStringLiteral("KEYWORD_TOOLBAR") );
+    keywordToolBar_ = new ToolBar( tr("Keywords"), keywordContainer_, QStringLiteral("KEYWORD_TOOLBAR") );
     keywordToolBar_->setTransparent( true );
     keywordToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( keywordToolBar_ );
@@ -179,6 +182,9 @@ MainWindow::MainWindow( QWidget *parent ):
     {
         // popup menu for keyword list
         auto menu = new ContextMenu( keywordList_ );
+        menu->addAction( showKeywordListHeaderAction_ );
+        menu->addAction( keywordListColumnSortingAction_ = new ReverseOrderAction( menu, keywordList_ ) );
+        menu->addSeparator();
         menu->addAction( newEntryAction_ );
         menu->addAction( newKeywordAction_ );
         menu->addSeparator();
@@ -203,7 +209,7 @@ MainWindow::MainWindow( QWidget *parent ):
     vLayout->setSpacing(0);
     right->setLayout( vLayout );
 
-    entryToolBar_ = new ToolBar( tr( "Entries" ), right, QStringLiteral("ENTRY_TOOLBAR") );
+    entryToolBar_ = new ToolBar( tr("Entries"), right, QStringLiteral("ENTRY_TOOLBAR") );
     entryToolBar_->setTransparent( true );
     entryToolBar_->setAppearsInMenu( true );
     vLayout->addWidget( entryToolBar_ );
@@ -214,7 +220,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // need to use a button to be able to set the popup mode
     entryColorButton_ = new QToolButton;
-    entryColorButton_->setText( tr( "Entry Color" ) );
+    entryColorButton_->setText( tr("Entry Color") );
     entryColorButton_->setIcon( IconEngine::get( IconNames::Color ) );
     entryColorButton_->setPopupMode( QToolButton::InstantPopup );
     entryColorButton_->setMenu( colorMenu_ );
@@ -238,7 +244,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     entryList_->header()->setSectionResizeMode(LogEntryModel::Creation, QHeaderView::Stretch);
     entryList_->header()->setSectionResizeMode(LogEntryModel::Modification, QHeaderView::Stretch);
-
+    
     // replace item delegate
     if( entryList_->itemDelegate() ) entryList_->itemDelegate()->deleteLater();
     entryList_->setItemDelegate( new TextEditionDelegate( this ) );
@@ -263,6 +269,10 @@ MainWindow::MainWindow( QWidget *parent ):
     {
         // popup menu for list
         auto menu = new ContextMenu( entryList_ );
+        menu->addAction( showEntryListHeaderAction_ );
+        entryListColumnSortingAction_ = menu->addMenu( new ColumnSortingMenu( menu, entryList_ ) );
+        entryListColumnSelectionAction_ = menu->addMenu( new ColumnSelectionMenu( menu, entryList_ ) );
+        menu->addSeparator();
         menu->addAction( newEntryAction_ );
         menu->addSeparator();
         menu->addAction( editEntryTitleAction_ );
@@ -315,7 +325,7 @@ void MainWindow::createDefaultLogbook()
     logbook_->setAuthor( XmlOptions::get().raw( QStringLiteral("USER") ) );
     logbook_->setDirectory( workingDirectory() );
 
-    logbook_->setComments( tr( "Default logbook created automatically on %1" ).arg( TimeStamp::now().toString( TimeStamp::Format::Long ) ) );
+    logbook_->setComments( tr("Default logbook created automatically on %1").arg( TimeStamp::now().toString( TimeStamp::Format::Long ) ) );
 
 }
 
@@ -419,30 +429,25 @@ bool MainWindow::setLogbook( const File &file )
     // see if logbook has parent file
     if( !logbook_->parentFile().isEmpty() )
     {
-        const QString buffer = tr( "Warning: this logbook should be oppened via '%1' only." ).arg( logbook_->parentFile() );
+        const QString buffer = tr("Warning: this logbook should be oppened via '%1' only.").arg( logbook_->parentFile() );
         WarningDialog( this, buffer ).exec();
     }
 
     // see if logbook is read-only
     if( logbook_->isBackup() )
     {
-
         auto buffer(
-            tr( "Warning: this logbook is a backup and is therefore read-only.\n"
+            tr("Warning: this logbook is a backup and is therefore read-only.\n"
             "All editing will be disabled until it is marked as writable again "
-            "in the Logbook Information dialog." ) );
-
+            "in the Logbook Information dialog.") );
         WarningDialog( this, buffer ).exec();
-
     } else if( logbook_->isReadOnly() ) {
-
         auto buffer(
-            tr( "Warning: this logbook is read-only.\n"
+            tr("Warning: this logbook is read-only.\n"
             "All editing will be disabled until it is marked as writable again "
-            "in the Logbook Information dialog." ) );
+            "in the Logbook Information dialog.") );
 
         WarningDialog( this, buffer ).exec();
-
     }
 
     // cleanup
@@ -450,7 +455,6 @@ bool MainWindow::setLogbook( const File &file )
     entries = Base::KeySet<LogEntry>(logbook_.get());
     if( !entries.empty() )
     {
-
         Debug::Throw(0) << "MainWindow::setLogbook - moving " << entries.size() << " entries" << endl;
         for( const auto& entry : entries )
         {
@@ -482,7 +486,7 @@ bool MainWindow::setLogbook( const File &file )
     auto errors( logbook_->xmlErrors() );
     if( errors.size() )
     {
-        QString buffer( errors.size() > 1 ? tr( "Errors occured while parsing files.\n" ):tr("An error occured while parsing files.\n") );
+        QString buffer( errors.size() > 1 ? tr("Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
         buffer += XmlError::toString( errors );
         InformationDialog( nullptr, buffer ).exec();
     }
@@ -518,7 +522,7 @@ void MainWindow::checkLogbookBackup()
     {
 
         // ask if backup needs to be saved; save if yes
-        if( QuestionDialog( this, tr( "Current logbook needs backup. Make one?" ) ).exec() )
+        if( QuestionDialog( this, tr("Current logbook needs backup. Make one?") ).exec() )
         { _saveBackup(); }
 
     }
@@ -566,7 +570,7 @@ AskForSaveDialog::ReturnCode MainWindow::askForSave( bool enableCancel )
     if( enableCancel ) buttons |= AskForSaveDialog::Cancel;
 
     // exec and check return code
-    auto reply = AskForSaveDialog( this, tr( "Logbook has been modified. Save ?" ), buttons ).centerOnParent().exec();
+    auto reply = AskForSaveDialog( this, tr("Logbook has been modified. Save ?"), buttons ).centerOnParent().exec();
     if( reply == AskForSaveDialog::Yes ) saveUnchecked();
     return AskForSaveDialog::ReturnCode(reply);
 
@@ -674,14 +678,12 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
     // get associated attachments and delete
     for( const auto& attachment:Base::KeySet<Attachment>(entry) )
     {
-
         // retrieve associated attachment frames
         for( const auto& frame:Base::KeySet<AttachmentFrame>(attachment) )
         { frame->remove( *attachment ); }
 
         // delete attachment
         delete attachment;
-
     };
 
     /*
@@ -697,7 +699,6 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
 
     if( !entryIsNew )
     {
-
         // remove from model
         entryModel_.remove( entry );
 
@@ -712,11 +713,8 @@ void MainWindow::deleteEntry( LogEntry* entry, bool save )
         // save
         if( save && !logbook_->file().isEmpty() )
         { this->save(); }
-
     }
-
     return;
-
 }
 
 //_______________________________________________
@@ -741,7 +739,6 @@ bool MainWindow::lockEntry( LogEntry* entry, EditionWindow* editionWindow )
 //_______________________________________________
 LogEntry* MainWindow::previousEntry( LogEntry* entry, bool updateSelection )
 {
-
     Debug::Throw( QStringLiteral("MainWindow::previousEntry.\n") );
     QModelIndex index( entryModel_.index( entry ) );
     if( !( index.isValid() && index.row() > 0 ) ) return nullptr;
@@ -754,13 +751,11 @@ LogEntry* MainWindow::previousEntry( LogEntry* entry, bool updateSelection )
     }
 
     return entryModel_.get( previousIndex );
-
 }
 
 //_______________________________________________
 LogEntry* MainWindow::nextEntry( LogEntry* entry, bool updateSelection )
 {
-
     Debug::Throw( QStringLiteral("MainWindow::nextEntry.\n") );
     QModelIndex index( entryModel_.index( entry ) );
     if( !( index.isValid() && index.row()+1 < entryModel_.rowCount() ) ) return nullptr;
@@ -773,7 +768,6 @@ LogEntry* MainWindow::nextEntry( LogEntry* entry, bool updateSelection )
     }
 
     return entryModel_.get( nextIndex );
-
 }
 
 //_______________________________________________
@@ -791,9 +785,7 @@ void MainWindow::resetAttachmentWindow() const
 
     // retrieve logbook attachments, adds to AttachmentWindow
     attachmentWindow.frame().add( Base::makeT<AttachmentModel::List>(logbook_->attachments()) );
-
     return;
-
 }
 
 //_______________________________________________
@@ -812,29 +804,31 @@ void MainWindow::saveUnchecked()
     // check logbook
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No Logbook opened. <Save> canceled." ) ).exec();
+        InformationDialog( this, tr("No Logbook opened. <Save> canceled.") ).exec();
         return;
     }
 
-        // check logbook filename, go to Save As if no file is given and redirect is true
-    if( logbook_->file().isEmpty() ) {
+    // check logbook filename, go to Save As if no file is given and redirect is true
+    if( logbook_->file().isEmpty() ) 
+    {
         _saveAs();
         return;
     }
 
     // check logbook filename is writable
     auto fullname = logbook_->file().expanded();
-    if( fullname.exists() ) {
+    if( fullname.exists() ) 
+    {
 
         // check file is not a directory
         if( fullname.isDirectory() ) {
-            InformationDialog( this, tr( "Selected file is a directory. <Save Logbook> canceled." ) ).exec();
+            InformationDialog( this, tr("Selected file is a directory. <Save Logbook> canceled.") ).exec();
             return;
         }
 
         // check file is writable
         if( !fullname.isWritable() ) {
-            InformationDialog( this, tr( "Selected file is not writable. <Save Logbook> canceled." ) ).exec();
+            InformationDialog( this, tr("Selected file is not writable. <Save Logbook> canceled.") ).exec();
             return;
         }
 
@@ -842,7 +836,7 @@ void MainWindow::saveUnchecked()
 
         auto path( fullname.path() );
         if( !path.isDirectory() ) {
-            InformationDialog( this, tr( "Selected path is not vallid. <Save Logbook> canceled." ) ).exec();
+            InformationDialog( this, tr("Selected path is not vallid. <Save Logbook> canceled.") ).exec();
             return;
         }
 
@@ -883,7 +877,7 @@ void MainWindow::save()
     // check logbook
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No Logbook opened. <Save> canceled." ) ).exec();
+        InformationDialog( this, tr("No Logbook opened. <Save> canceled.") ).exec();
         return;
     }
 
@@ -911,7 +905,7 @@ void MainWindow::selectEntries( const QString &selection, SearchWidget::SearchMo
     // retrieve selection source
     if( mode == SearchWidget::None )
     {
-        InformationDialog( this, tr( "At least one search field must be selected." ) ).centerOnParent().exec();
+        InformationDialog( this, tr("At least one search field must be selected.") ).centerOnParent().exec();
         return;
     }
 
@@ -968,7 +962,7 @@ void MainWindow::selectEntries( const QString &selection, SearchWidget::SearchMo
     {
 
         searchWidget_->noMatchFound();
-        statusbar_->label().setText( tr( "No match found" ) );
+        statusbar_->label().setText( tr("No match found") );
 
         // reset flag for the turned off entries to true
         for( const auto& entry:turnedOffEntries )
@@ -986,7 +980,7 @@ void MainWindow::selectEntries( const QString &selection, SearchWidget::SearchMo
         if( selectedEntry && selectedEntry->isSelected() ) selectEntry( selectedEntry );
         else if( lastVisibleEntry ) selectEntry( lastVisibleEntry );
 
-        const QString buffer = QString( found > 1 ? tr( "%1 out of %2 entries selected" ):tr( "%1 out of %2 entry selected" ) ).arg( found ).arg( total );
+        const QString buffer = QString( found > 1 ? tr("%1 out of %2 entries selected"):tr("%1 out of %2 entry selected") ).arg( found ).arg( total );
         statusbar_->label().setText( buffer );
 
     }
@@ -1095,16 +1089,22 @@ void MainWindow::_installActions()
 {
 
     Debug::Throw( QStringLiteral("MainWindow::_installActions.\n") );
-    uniconifyAction_ = new QAction( IconEngine::get( IconNames::Home ), tr( "Main Window" ), this );
-    uniconifyAction_->setToolTip( tr( "Raise application main window" ) );
+    uniconifyAction_ = new QAction( IconEngine::get( IconNames::Home ), tr("Main Window"), this );
+    uniconifyAction_->setToolTip( tr("Raise application main window") );
     connect( uniconifyAction_, &QAction::triggered, this, &BaseMainWindow::uniconify );
 
-    newKeywordAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Keyword" ), this );
-    newKeywordAction_->setToolTip( tr( "Create a new keyword" ) );
+    showKeywordListHeaderAction_ = new QAction( tr("Show Header"), this );
+    connect( showKeywordListHeaderAction_, &QAction::triggered, this, &MainWindow::_toggleShowKeywordListHeader );
+    
+    showEntryListHeaderAction_ = new QAction( tr("Show Header"), this );
+    connect( showEntryListHeaderAction_, &QAction::triggered, this, &MainWindow::_toggleShowEntryListHeader );
+
+    newKeywordAction_ = new QAction( IconEngine::get( IconNames::New ), tr("New Keyword"), this );
+    newKeywordAction_->setToolTip( tr("Create a new keyword") );
     connect( newKeywordAction_, &QAction::triggered, this, &MainWindow::_newKeyword );
 
-    addAction( editKeywordAction_ = new QAction( IconEngine::get( IconNames::Rename ), tr( "Rename Keyword..." ), this ) );
-    editKeywordAction_->setToolTip( tr( "Rename selected keyword" ) );
+    addAction( editKeywordAction_ = new QAction( IconEngine::get( IconNames::Rename ), tr("Rename Keyword..."), this ) );
+    editKeywordAction_->setToolTip( tr("Rename selected keyword") );
     editKeywordAction_->setShortcut( Qt::Key_F2 );
     editKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( editKeywordAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_renameKeyword ) );
@@ -1114,28 +1114,28 @@ void MainWindow::_installActions()
     it is associated to the Qt::Key_Delete shortcut
     but the later is enabled only if the KeywordList has focus.
     */
-    deleteKeywordAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete Keyword" ), this );
-    deleteKeywordAction_->setToolTip( tr( "Delete selected keyword" ) );
+    deleteKeywordAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr("Delete Keyword"), this );
+    deleteKeywordAction_->setToolTip( tr("Delete selected keyword") );
     deleteKeywordAction_->setShortcut( QKeySequence::Delete );
     deleteKeywordAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( deleteKeywordAction_, &QAction::triggered, this, &MainWindow::_deleteKeyword );
 
-    findEntriesAction_ = new QAction( IconEngine::get( IconNames::Find ), tr( "Find" ), this );
+    findEntriesAction_ = new QAction( IconEngine::get( IconNames::Find ), tr("Find"), this );
     findEntriesAction_->setShortcut( QKeySequence::Find );
-    findEntriesAction_->setToolTip( tr( "Find entries matching specific criteria" ) );
+    findEntriesAction_->setToolTip( tr("Find entries matching specific criteria") );
     connect( findEntriesAction_, &QAction::triggered, this, &MainWindow::_findEntries );
 
-    addAction( newEntryAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Entry..." ), this ) );
-    newEntryAction_->setToolTip( tr( "Create a new entry" ) );
+    addAction( newEntryAction_ = new QAction( IconEngine::get( IconNames::New ), tr("New Entry..."), this ) );
+    newEntryAction_->setToolTip( tr("Create a new entry") );
     newEntryAction_->setShortcut( QKeySequence::New );
     connect( newEntryAction_, &QAction::triggered, this, &MainWindow::_newEntry );
 
-    editEntryAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Edit Entries..." ), this );
-    editEntryAction_->setToolTip( tr( "Edit selected entries" ) );
+    editEntryAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr("Edit Entries..."), this );
+    editEntryAction_->setToolTip( tr("Edit selected entries") );
     connect( editEntryAction_, &QAction::triggered, this, &MainWindow::_editEntries );
 
-    editEntryTitleAction_ = new QAction( IconEngine::get( IconNames::Rename ), tr( "Rename Entry..." ), this );
-    editEntryTitleAction_->setToolTip( tr( "Edit selected entry title" ) );
+    editEntryTitleAction_ = new QAction( IconEngine::get( IconNames::Rename ), tr("Rename Entry..."), this );
+    editEntryTitleAction_->setToolTip( tr("Edit selected entry title") );
     editEntryTitleAction_->setShortcut( Qt::Key_F2 );
     editEntryTitleAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( editEntryTitleAction_, &QAction::triggered, this, &MainWindow::_startEntryEdition );
@@ -1145,129 +1145,129 @@ void MainWindow::_installActions()
     it is associated to the Qt::Key_Delete shortcut
     but the later is enabled only if the KeywordList has focus.
     */
-    deleteEntryAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr( "Delete Entries" ), this );
-    deleteEntryAction_->setToolTip( tr( "Delete selected entries" ) );
+    deleteEntryAction_ = new QAction( IconEngine::get( IconNames::Delete ), tr("Delete Entries"), this );
+    deleteEntryAction_->setToolTip( tr("Delete selected entries") );
     deleteEntryAction_->setShortcut( QKeySequence::Delete );
     deleteEntryAction_->setShortcutContext( Qt::WidgetShortcut );
     connect( deleteEntryAction_, &QAction::triggered, this, &MainWindow::_deleteEntries );
 
     // color menu
     colorMenu_ = new ColorMenu( this );
-    colorMenu_->setTitle( tr( "Change entry color" ) );
+    colorMenu_->setTitle( tr("Change entry color") );
     connect( colorMenu_, &ColorMenu::selected, this, &MainWindow::_changeEntryColor );
 
-    entryColorAction_ = new QAction( IconEngine::get( IconNames::Color ), tr( "Entry Color" ), this );
-    entryColorAction_->setToolTip( tr( "Change selected entries color" ) );
+    entryColorAction_ = new QAction( IconEngine::get( IconNames::Color ), tr("Entry Color"), this );
+    entryColorAction_->setToolTip( tr("Change selected entries color") );
     entryColorAction_->setMenu( colorMenu_ );
 
-    entryKeywordAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr( "Change Keyword..." ), this );
-    entryKeywordAction_->setToolTip( tr( "Edit selected entries keyword" ) );
+    entryKeywordAction_ = new QAction( IconEngine::get( IconNames::Edit ), tr("Change Keyword..."), this );
+    entryKeywordAction_->setToolTip( tr("Edit selected entries keyword") );
     connect( entryKeywordAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_renameEntryKeyword) );
 
     // entry information
-    addAction( entryInformationAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Entry Properties..." ), this ) );
-    entryInformationAction_->setToolTip( tr( "Show current entry properties" ) );
+    addAction( entryInformationAction_ = new QAction( IconEngine::get( IconNames::Information ), tr("Entry Properties..."), this ) );
+    entryInformationAction_->setToolTip( tr("Show current entry properties") );
     connect( entryInformationAction_, &QAction::triggered, this, &MainWindow::_entryInformation );
 
-    newLogbookAction_ = new QAction( IconEngine::get( IconNames::New ), tr( "New Logbook..." ), this );
-    newLogbookAction_->setToolTip( tr( "Create a new logbook" ) );
+    newLogbookAction_ = new QAction( IconEngine::get( IconNames::New ), tr("New Logbook..."), this );
+    newLogbookAction_->setToolTip( tr("Create a new logbook") );
     connect( newLogbookAction_, &QAction::triggered, this, &MainWindow::_newLogbook );
 
-    openAction_ = new QAction( IconEngine::get( IconNames::Open ), tr( "Open..." ), this );
-    openAction_->setToolTip( tr( "Open an existsing logbook" ) );
+    openAction_ = new QAction( IconEngine::get( IconNames::Open ), tr("Open..."), this );
+    openAction_->setToolTip( tr("Open an existsing logbook") );
     openAction_->setShortcut( QKeySequence::Open );
     connect( openAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::open ) );
 
-    synchronizeAction_ = new QAction( IconEngine::get( IconNames::Merge ), tr( "Synchronize..." ), this );
-    synchronizeAction_->setToolTip( tr( "Synchronize current logbook with remote" ) );
+    synchronizeAction_ = new QAction( IconEngine::get( IconNames::Merge ), tr("Synchronize..."), this );
+    synchronizeAction_->setToolTip( tr("Synchronize current logbook with remote") );
     connect( synchronizeAction_, &QAction::triggered, this, &MainWindow::_synchronize );
 
-    reorganizeAction_ = new QAction( tr( "Reorganize" ), this );
-    reorganizeAction_->setToolTip( tr( "Reoganize logbook entries in files" ) );
+    reorganizeAction_ = new QAction( tr("Reorganize"), this );
+    reorganizeAction_->setToolTip( tr("Reoganize logbook entries in files") );
     connect( reorganizeAction_, &QAction::triggered, this, &MainWindow::_reorganize );
 
-    saveAction_ = new QAction( IconEngine::get( IconNames::Save ), tr( "Save" ), this );
-    saveAction_->setToolTip( tr( "Save all edited entries" ) );
+    saveAction_ = new QAction( IconEngine::get( IconNames::Save ), tr("Save"), this );
+    saveAction_->setToolTip( tr("Save all edited entries") );
     connect( saveAction_, &QAction::triggered, this, &MainWindow::save );
 
-    saveForcedAction_ = new QAction( IconEngine::get( IconNames::Save ), tr( "Save (forced)" ), this );
-    saveForcedAction_->setToolTip( tr( "Save all entries" ) );
+    saveForcedAction_ = new QAction( IconEngine::get( IconNames::Save ), tr("Save (forced)"), this );
+    saveForcedAction_->setToolTip( tr("Save all entries") );
     connect( saveForcedAction_, &QAction::triggered, this, &MainWindow::_saveForced );
 
-    saveAsAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save As..." ), this );
-    saveAsAction_->setToolTip( tr( "Save logbook with a different name" ) );
+    saveAsAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr("Save As..."), this );
+    saveAsAction_->setToolTip( tr("Save logbook with a different name") );
     connect( saveAsAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_saveAs ) );
 
-    saveBackupAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr( "Save Backup..." ), this );
-    saveBackupAction_->setToolTip( tr( "Save logbook backup" ) );
+    saveBackupAction_ = new QAction( IconEngine::get( IconNames::SaveAs ), tr("Save Backup..."), this );
+    saveBackupAction_->setToolTip( tr("Save logbook backup") );
     connect( saveBackupAction_, &QAction::triggered, this, &MainWindow::_saveBackup );
 
-    backupManagerAction_ = new QAction( IconEngine::get( IconNames::ConfigureBackups ), tr( "Manage Backups..." ), this );
-    backupManagerAction_->setToolTip( tr( "Save logbook backup" ) );
+    backupManagerAction_ = new QAction( IconEngine::get( IconNames::ConfigureBackups ), tr("Manage Backups..."), this );
+    backupManagerAction_->setToolTip( tr("Save logbook backup") );
     connect( backupManagerAction_, &QAction::triggered, this, &MainWindow::_manageBackups );
 
     // reload
-    reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload" ), this );
-    reloadAction_->setToolTip( tr( "Restore saved logbook" ) );
+    reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr("Reload"), this );
+    reloadAction_->setToolTip( tr("Restore saved logbook") );
     reloadAction_->setShortcut( QKeySequence::Refresh );
     connect( reloadAction_, &QAction::triggered, this, &MainWindow::_revertToSaved );
 
     // print
-    printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr( "Print..." ), this );
+    printAction_ = new QAction( IconEngine::get( IconNames::Print ), tr("Print..."), this );
     printAction_->setShortcut( QKeySequence::Print );
     connect( printAction_, &QAction::triggered, this, QOverload<>::of( &MainWindow::_print ) );
 
     // print preview
-    addAction( printPreviewAction_ = new QAction( IconEngine::get( IconNames::PrintPreview ), tr( "Print Preview..." ), this ) );
+    addAction( printPreviewAction_ = new QAction( IconEngine::get( IconNames::PrintPreview ), tr("Print Preview..."), this ) );
     printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
     connect( printPreviewAction_, &QAction::triggered, this, &MainWindow::_printPreview );
 
     // export to HTML
-    htmlAction_ = new QAction( IconEngine::get( IconNames::Html ), tr( "Export to HTML..." ), this );
+    htmlAction_ = new QAction( IconEngine::get( IconNames::Html ), tr("Export to HTML..."), this );
     connect( htmlAction_, &QAction::triggered, this, &MainWindow::_toHtml );
 
-    logbookStatisticsAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Logbook Statistics..." ), this );
-    logbookStatisticsAction_->setToolTip( tr( "View logbook statistics" ) );
+    logbookStatisticsAction_ = new QAction( IconEngine::get( IconNames::Information ), tr("Logbook Statistics..."), this );
+    logbookStatisticsAction_->setToolTip( tr("View logbook statistics") );
     connect( logbookStatisticsAction_, &QAction::triggered, this, &MainWindow::_viewLogbookStatistics );
 
-    logbookInformationsAction_ = new QAction( IconEngine::get( IconNames::Information ), tr( "Logbook Properties..." ), this );
-    logbookInformationsAction_->setToolTip( tr( "Edit logbook properties" ) );
+    logbookInformationsAction_ = new QAction( IconEngine::get( IconNames::Information ), tr("Logbook Properties..."), this );
+    logbookInformationsAction_->setToolTip( tr("Edit logbook properties") );
     connect( logbookInformationsAction_, &QAction::triggered, this, &MainWindow::_editLogbookInformations );
 
-    closeFramesAction_ = new QAction( IconEngine::get( IconNames::Close ), tr( "Close Editors" ), this );
-    closeFramesAction_->setToolTip( tr( "Close all entry editors" ) );
+    closeFramesAction_ = new QAction( IconEngine::get( IconNames::Close ), tr("Close Editors"), this );
+    closeFramesAction_->setToolTip( tr("Close all entry editors") );
     connect( closeFramesAction_, &QAction::triggered, this, &MainWindow::_closeEditionWindows );
 
     // show duplicated entries
-    showDuplicatesAction_ = new QAction( tr( "Show Duplicated Entries..." ), this );
-    showDuplicatesAction_->setToolTip( tr( "Show duplicated entries in logbook" ) );
+    showDuplicatesAction_ = new QAction( tr("Show Duplicated Entries..."), this );
+    showDuplicatesAction_->setToolTip( tr("Show duplicated entries in logbook") );
     connect( showDuplicatesAction_, &QAction::triggered, this, &MainWindow::_showDuplicatedEntries );
 
     // view monitored files
-    monitoredFilesAction_ = new QAction( tr( "Show Monitored Files..." ), this );
-    monitoredFilesAction_->setToolTip( tr( "Show monitored files" ) );
+    monitoredFilesAction_ = new QAction( tr("Show Monitored Files..."), this );
+    monitoredFilesAction_->setToolTip( tr("Show monitored files") );
     connect( monitoredFilesAction_, &QAction::triggered, this, &MainWindow::_showMonitoredFiles );
 
     // tree mode
-    treeModeAction_ = new QAction( tr( "Use Tree to Display Entries and Keywords" ), this );
+    treeModeAction_ = new QAction( tr("Use Tree to Display Entries and Keywords"), this );
     treeModeAction_->setCheckable( true );
     treeModeAction_->setChecked( true );
     connect( treeModeAction_, &QAction::toggled, this, &MainWindow::_toggleTreeMode );
 
     // menu actions
     QAction* action;
-    keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Move ), tr( "Move Here" ), this ) );
+    keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Move ), tr("Move Here"), this ) );
     keywordChangedMenuActions_.append( action = new QAction( this ) );
     action->setSeparator( true );
-    keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
+    keywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::DialogCancel ), tr("Cancel"), this ) );
     action->setShortcut( Qt::Key_Escape );
 
-    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Move ), tr( "Move Here" ), this ) );
-    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Copy ), tr( "Copy Here" ), this ) );
-    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Link ), tr( "Link Here" ), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Move ), tr("Move Here"), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Copy ), tr("Copy Here"), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::Link ), tr("Link Here"), this ) );
     entryKeywordChangedMenuActions_.append( action = new QAction( this ) );
     action->setSeparator( true );
-    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::DialogCancel ), tr( "Cancel" ), this ) );
+    entryKeywordChangedMenuActions_.append( action = new QAction( IconEngine::get( IconNames::DialogCancel ), tr("Cancel"), this ) );
     action->setShortcut( Qt::Key_Escape );
 
 }
@@ -1381,7 +1381,7 @@ void MainWindow::_autoSave()
     if( logbook_ && !logbook_->file().isEmpty() )
     {
 
-        statusbar_->label().setText( tr( "Saving" ) );
+        statusbar_->label().setText( tr("Saving") );
 
         // retrieve non read only editors; perform save
         for( const auto& window:Base::KeySet<EditionWindow>( this ) )
@@ -1394,7 +1394,7 @@ void MainWindow::_autoSave()
 
     } else {
 
-        statusbar_->label().setText( tr( "no logbook filename. <Autosave> skipped" ) );
+        statusbar_->label().setText( tr("no logbook filename. <Autosave> skipped") );
 
     }
 
@@ -1428,7 +1428,7 @@ AskForSaveDialog::ReturnCode MainWindow::_checkModifiedEntries( Base::KeySet<Edi
             AskForSaveDialog::ReturnCodes buttons( AskForSaveDialog::Yes | AskForSaveDialog::No  | AskForSaveDialog::Cancel );
             if( count > 1 ) buttons |= AskForSaveDialog::All;
 
-            QString message = tr( "Entry '%1' has been modified. Save ?" ).arg( window->entryTitle() );
+            QString message = tr("Entry '%1' has been modified. Save ?").arg( window->entryTitle() );
             AskForSaveDialog dialog( this, message, buttons );
             auto reply = dialog.centerOnParent().exec();
             if( reply == AskForSaveDialog::Yes )
@@ -1550,7 +1550,7 @@ void MainWindow::_newLogbook()
     if( directory.exists() && !directory.isDirectory() )
     {
 
-        const QString buffer = tr( "File '%1' is not a directory." ).arg( directory );
+        const QString buffer = tr("File '%1' is not a directory.").arg( directory );
         InformationDialog( this, buffer ).exec();
 
     } else logbook_->setDirectory( directory );
@@ -1569,14 +1569,14 @@ void MainWindow::updateWindowTitle()
         if( logbook_->file().isEmpty() )
         {
 
-            if( logbook_->isReadOnly() ) QMainWindow::setWindowTitle( tr( "ELogbook (read-only)" ) );
-            else if( logbook_->modified() ) QMainWindow::setWindowTitle( tr( "ELogbook (modified)" ) );
+            if( logbook_->isReadOnly() ) QMainWindow::setWindowTitle( tr("ELogbook (read-only)") );
+            else if( logbook_->modified() ) QMainWindow::setWindowTitle( tr("ELogbook (modified)") );
             else QMainWindow::setWindowTitle( QStringLiteral("Elogbook") );
 
         } else  {
 
-            if( logbook_->isReadOnly() ) setWindowTitle( tr( "%1 (read-only)" ).arg( logbook_->file() ) );
-            else if( logbook_->modified() ) setWindowTitle( tr( "%1 (modified)" ).arg( logbook_->file() ) );
+            if( logbook_->isReadOnly() ) setWindowTitle( tr("%1 (read-only)").arg( logbook_->file() ) );
+            else if( logbook_->modified() ) setWindowTitle( tr("%1 (modified)").arg( logbook_->file() ) );
             else setWindowTitle( logbook_->file() );
 
         }
@@ -1627,13 +1627,13 @@ bool MainWindow::_saveAs( File defaultFile, bool registerLogbook )
     // check current logbook
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No logbook opened. <Save Logbook> canceled." ) ).exec();
+        InformationDialog( this, tr("No logbook opened. <Save Logbook> canceled.") ).exec();
         return false;
     }
 
     // check default filename
     if( defaultFile.isEmpty() ) defaultFile = logbook_->file();
-    if( defaultFile.isEmpty() ) defaultFile = File( "log.xml" ).addPath( workingDirectory() );
+    if( defaultFile.isEmpty() ) defaultFile = File( "log.xml").addPath( workingDirectory() );
 
     // create file dialog
     FileDialog dialog( this );
@@ -1689,7 +1689,7 @@ void MainWindow::_saveForced()
     // retrieve/check MainWindow/Logbook
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No Logbook opened. <Save> canceled." ) ).exec();
+        InformationDialog( this, tr("No Logbook opened. <Save> canceled.") ).exec();
         return;
     }
 
@@ -1706,14 +1706,14 @@ void MainWindow::_saveBackup()
 
     // check current logbook
     if( !logbook_ ) {
-        InformationDialog( this, tr( "No logbook opened. <Save Backup> canceled." ) ).exec();
+        InformationDialog( this, tr("No logbook opened. <Save Backup> canceled.") ).exec();
         return;
     }
 
     // generate backup fileName
     auto filename( logbook_->backupFileName( ) );
     if( filename.isEmpty() ) {
-        InformationDialog( this, tr( "No valid filename. Use <Save As> first." ) ).exec();
+        InformationDialog( this, tr("No valid filename. Use <Save As> first.") ).exec();
         return;
     }
 
@@ -1780,12 +1780,12 @@ void MainWindow::_revertToSaved()
     // check logbook
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No logbook opened. <Reload> canceled." ) ).exec();
+        InformationDialog( this, tr("No logbook opened. <Reload> canceled.") ).exec();
         return;
     }
 
     // ask for confirmation
-    auto buffer = tr( "Discard changes to '%1'?" ).arg( logbook_->file().localName());
+    auto buffer = tr("Discard changes to '%1'?").arg( logbook_->file().localName());
     if( ( _hasModifiedEntries() || logbook_->modified() ) && !QuestionDialog( this, buffer ).exec() )
     { return; }
 
@@ -1814,7 +1814,7 @@ void MainWindow::_print()
 
     // get entry selection
     LogEntryPrintSelectionDialog selectionDialog( this );
-    selectionDialog.okButton().setText( tr( "Print ..." ) );
+    selectionDialog.okButton().setText( tr("Print ...") );
     selectionDialog.okButton().setIcon( IconEngine::get( IconNames::Print ) );
     if( !selectionDialog.exec() ) return;
 
@@ -1845,7 +1845,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     QPrinter printer( QPrinter::HighResolution );
 
     // generate document name
-    printer.setDocName( QStringLiteral( "elogbook_%1_%2_%3" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() ) );
+    printer.setDocName( QStringLiteral( "elogbook_%1_%2_%3").arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() ) );
 
     // create options widget
     auto optionWidget = new PrinterOptionWidget;
@@ -1854,18 +1854,18 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     connect( optionWidget, &PrinterOptionWidget::pageModeChanged, &helper, &BasePrintHelper::setPageMode );
 
     auto logbookOptionWidget = new LogbookPrintOptionWidget;
-    logbookOptionWidget->setWindowTitle( tr( "Logbook Configuration" ) );
+    logbookOptionWidget->setWindowTitle( tr("Logbook Configuration") );
     connect( logbookOptionWidget, &LogbookPrintOptionWidget::maskChanged, &helper, &LogbookPrintHelper::setMask );
     logbookOptionWidget->read( XmlOptions::get() );
 
     auto logEntryOptionWidget = new LogEntryPrintOptionWidget;
-    logEntryOptionWidget->setWindowTitle( tr( "Logbook Entry Configuration" ) );
+    logEntryOptionWidget->setWindowTitle( tr("Logbook Entry Configuration") );
     connect( logEntryOptionWidget, &LogEntryPrintOptionWidget::maskChanged, &helper, &LogbookPrintHelper::setEntryMask );
     logEntryOptionWidget->read( XmlOptions::get() );
 
     // create prind dialog and run.
     QPrintDialog dialog( &printer, this );
-    dialog.setWindowTitle( Util::windowTitle( tr( "Print Logbook" ) ) );
+    dialog.setWindowTitle( Util::windowTitle( tr("Print Logbook") ) );
     dialog.setOptionTabs( { optionWidget, logbookOptionWidget, logEntryOptionWidget });
 
     if( dialog.exec() == QDialog::Rejected ) return;
@@ -1906,7 +1906,7 @@ void MainWindow::_printPreview()
 
     // get entry selection
     LogEntryPrintSelectionDialog selectionDialog( this );
-    selectionDialog.okButton().setText( tr( "Preview ..." ) );
+    selectionDialog.okButton().setText( tr("Preview ...") );
     selectionDialog.okButton().setIcon( IconEngine::get( IconNames::PrintPreview ) );
     if( !selectionDialog.exec() ) return;
 
@@ -1945,7 +1945,7 @@ void MainWindow::_printPreview()
 
     // create dialog, connect and execute
     PrintPreviewDialog dialog( this, Dialog::OkButton|Dialog::CancelButton );
-    dialog.setWindowTitle( tr( "Print Preview" ) );
+    dialog.setWindowTitle( tr("Print Preview") );
     dialog.setHelper( &helper );
 
     // print
@@ -1983,7 +1983,7 @@ void MainWindow::_toHtml()
     dialog.setOptionWidgets( { logEntrySelectionWidget, logbookOptionWidget, logEntryOptionWidget } );
 
     // generate file name
-    QString buffer = QStringLiteral( "eLogbook_%1_%2_%3.html" ).arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() );
+    QString buffer = QStringLiteral( "eLogbook_%1_%2_%3.html").arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() );
     dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
 
     // execute dialog
@@ -1992,14 +1992,14 @@ void MainWindow::_toHtml()
     // retrieve/check file
     File file( dialog.file() );
     if( file.isEmpty() ) {
-        InformationDialog(this, tr( "No output file specified. <View HTML> canceled." ) ).exec();
+        InformationDialog(this, tr("No output file specified. <View HTML> canceled.") ).exec();
         return;
     }
 
     QFile out( file );
     if( !out.open( QIODevice::WriteOnly ) )
     {
-        const QString buffer = tr( "Cannot write to file '%1'. <View HTML> canceled." ).arg( file );
+        const QString buffer = tr("Cannot write to file '%1'. <View HTML> canceled.").arg( file );
         InformationDialog( this, buffer ).exec();
         return;
     }
@@ -2047,7 +2047,7 @@ void MainWindow::_synchronize()
 
     // check current logbook is valid
     if( !logbook_ ) {
-        InformationDialog( this, tr( "No logbook opened. <Merge> canceled." ) ).exec();
+        InformationDialog( this, tr("No logbook opened. <Merge> canceled.") ).exec();
         return;
     }
 
@@ -2082,7 +2082,7 @@ void MainWindow::_synchronize()
     if( errors.size() )
     {
 
-        QString buffer = QString( errors.size() > 1 ? tr( "Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
+        QString buffer = QString( errors.size() > 1 ? tr("Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
         buffer += XmlError::toString( errors );
         InformationDialog( nullptr, buffer ).exec();
 
@@ -2137,7 +2137,7 @@ void MainWindow::_synchronize()
     Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << nDuplicated << endl;
 
     // save remote logbook
-    statusbar_->label().setText( tr( "Saving remote logbook..." ) );
+    statusbar_->label().setText( tr("Saving remote logbook...") );
     remoteLogbook.write();
 
     // idle
@@ -2180,13 +2180,13 @@ void MainWindow::_removeBackups( const Backup::List &backups )
         backupLogbook.read();
 
         // remove main file
-        emit messageAvailable( tr( "Removing '%1'" ).arg( backupLogbook.file() ) );
+        emit messageAvailable( tr("Removing '%1'").arg( backupLogbook.file() ) );
         backupLogbook.file().remove();
 
         // remove children files
         for( const auto& logbook:backupLogbook.children() )
         {
-            emit messageAvailable( tr( "Removing '%1'" ).arg( logbook->file() ) );
+            emit messageAvailable( tr("Removing '%1'").arg( logbook->file() ) );
             logbook->file().remove();
         }
 
@@ -2206,12 +2206,12 @@ void MainWindow::_removeBackups( const Backup::List &backups )
     if( invalidFiles.size() == 1 )
     {
 
-        const QString buffer = tr( "Unable to open file named '%1'. <Remove Backup> canceled." ).arg( invalidFiles.front() );
+        const QString buffer = tr("Unable to open file named '%1'. <Remove Backup> canceled.").arg( invalidFiles.front() );
         InformationDialog( this, buffer ).exec();
 
     } else if( invalidFiles.size() > 1 ) {
 
-        const QString buffer = tr( "%i files could not be opened. <Remove Backup> canceled." ).arg( invalidFiles.size() );
+        const QString buffer = tr("%i files could not be opened. <Remove Backup> canceled.").arg( invalidFiles.size() );
         QString details;
         for( const auto& file:invalidFiles )
         { details += file + "\n"; }
@@ -2230,7 +2230,7 @@ void MainWindow::_restoreBackup( const Backup &backup )
     Debug::Throw( QStringLiteral("MainWindow::_restoreBackup.\n") );
     if( !backup.file().exists() )
     {
-        const QString buffer = tr( "Unable to open file named '%1'. <Restore Backup> canceled." ).arg( backup.file() );
+        const QString buffer = tr("Unable to open file named '%1'. <Restore Backup> canceled.").arg( backup.file() );
         InformationDialog( this, buffer ).exec();
         return;
     }
@@ -2277,7 +2277,7 @@ void MainWindow::_mergeBackup( const Backup &backup )
 
     // check current logbook is valid
     if( !logbook_ ) {
-        InformationDialog( this, tr( "No logbook opened. <Merge> canceled." ) ).exec();
+        InformationDialog( this, tr("No logbook opened. <Merge> canceled.") ).exec();
         return;
     }
 
@@ -2295,7 +2295,7 @@ void MainWindow::_mergeBackup( const Backup &backup )
 
     // set busy flag
     Base::Singleton::get().application<Application>()->busy();
-    statusbar_->label().setText( tr( "Reading remote logbook..." ) );
+    statusbar_->label().setText( tr("Reading remote logbook...") );
 
     // opens file in remote logbook
     Debug::Throw() << "MainWindow::_mergeBackup - reading remote logbook from file: " << backup.file() << endl;
@@ -2310,7 +2310,7 @@ void MainWindow::_mergeBackup( const Backup &backup )
     if( errors.size() )
     {
 
-        QString buffer = QString( errors.size() > 1 ? tr( "Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
+        QString buffer = QString( errors.size() > 1 ? tr("Errors occured while parsing files.\n"):tr("An error occured while parsing files.\n") );
         buffer += XmlError::toString( errors );
         InformationDialog( nullptr, buffer ).exec();
 
@@ -2375,7 +2375,7 @@ void MainWindow::_reorganize()
 
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No valid logbook. <Reorganize> canceled." ) ).exec();
+        InformationDialog( this, tr("No valid logbook. <Reorganize> canceled.") ).exec();
         return;
     }
 
@@ -2477,7 +2477,7 @@ void MainWindow::_showDuplicatedEntries()
     if( !found )
     {
 
-        InformationDialog( this, tr( "No duplicated entries found." ) ).centerOnParent().exec();
+        InformationDialog( this, tr("No duplicated entries found.") ).centerOnParent().exec();
 
         // reset flag for the turned off entries to true
         for( const auto& entry:turnedOffEntries )
@@ -2504,7 +2504,7 @@ void MainWindow::_viewLogbookStatistics()
 
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No logbook opened. <View Logbook Statistics> canceled." ) ).exec();
+        InformationDialog( this, tr("No logbook opened. <View Logbook Statistics> canceled.") ).exec();
         return;
     }
 
@@ -2519,7 +2519,7 @@ void MainWindow::_editLogbookInformations()
 
     if( !logbook_ )
     {
-        InformationDialog( this, tr( "No logbook opened. <Edit Logbook Informations> canceled." ) ).exec();
+        InformationDialog( this, tr("No logbook opened. <Edit Logbook Informations> canceled.") ).exec();
         return;
     }
 
@@ -2542,7 +2542,7 @@ void MainWindow::_editLogbookInformations()
     if( directory.exists() &&  !directory.isDirectory() )
     {
 
-        const QString buffer = tr( "File '%1' is not a directory." ).arg( directory );
+        const QString buffer = tr("File '%1' is not a directory.").arg( directory );
         InformationDialog( this, buffer ).exec();
 
     } else modified |= logbook_->setDirectory( directory );
@@ -2599,9 +2599,42 @@ void MainWindow::_findEntries() const
 }
 
 //____________________________________________
+void MainWindow::_toggleShowKeywordListHeader()
+{
+    Debug::Throw( QStringLiteral("MainWindow::_toggleShowKeywordListHeader.\n") );
+    
+    // toggle header visibility
+    const bool show( !keywordList_->header()->isVisible() );
+    keywordList_->header()->setVisible( show );
+    
+    // update actions
+    showKeywordListHeaderAction_->setText( show ? tr("Hide Header"):tr("Show Header") );
+    keywordListColumnSortingAction_->setEnabled( !show );
+    
+    // update option
+    XmlOptions::get().set<bool>( QStringLiteral( "SHOW_KEYWORDLIST_HEADER"), show );
+}
+    
+//____________________________________________
+void MainWindow::_toggleShowEntryListHeader()
+{
+    Debug::Throw( QStringLiteral("MainWindow::_toggleShowEntryListHeader.\n") );
+
+    // toggle header visibility
+    const bool show( !entryList_->header()->isVisible() );
+    entryList_->header()->setVisible( show );
+    
+    showEntryListHeaderAction_->setText( show ? tr("Hide Header"):tr("Show Header") );
+    entryListColumnSortingAction_->setEnabled( !show );
+    entryListColumnSelectionAction_->setEnabled( !show );
+    
+    // update option
+    XmlOptions::get().set<bool>( QStringLiteral( "SHOW_ENTRYLIST_HEADER"), show );
+}
+    
+//____________________________________________
 void MainWindow::_newEntry()
 {
-
     Debug::Throw( QStringLiteral("MainWindow::_NewEntry.\n") );
 
     // retrieve associated EditionWindows, check if one matches the selected entry
@@ -2652,7 +2685,7 @@ void MainWindow::_editEntries()
     auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
     if( selection.empty() )
     {
-        InformationDialog( this, tr( "No entry selected. <Edit Entries> canceled." ) ).exec();
+        InformationDialog( this, tr("No entry selected. <Edit Entries> canceled.") ).exec();
         return;
     }
 
@@ -2680,7 +2713,7 @@ void MainWindow::_deleteEntries()
         if( entryModel_.editionEnabled() && index ==  entryModel_.editionIndex() )
         {
 
-            InformationDialog( this, tr( "Software limitation: cannot delete an entry that is being edited. <Delete Entries> canceled." ) ).exec();
+            InformationDialog( this, tr("Software limitation: cannot delete an entry that is being edited. <Delete Entries> canceled.") ).exec();
             return;
 
         } else selection.append( entryModel_.get( index ) );
@@ -2690,14 +2723,14 @@ void MainWindow::_deleteEntries()
     // check selection size
     if( selection.empty() )
     {
-        InformationDialog( this, tr( "No entry selected. <Delete Entries> canceled." ) ).exec();
+        InformationDialog( this, tr("No entry selected. <Delete Entries> canceled.") ).exec();
         return;
     }
 
     // ask confirmation
-    const QString buffer = QString( selection.size() == 1 ? tr( "Delete selected entry" ):tr( "Delete selected entries" ) );
+    const QString buffer = QString( selection.size() == 1 ? tr("Delete selected entry"):tr("Delete selected entries") );
     QuestionDialog dialog( this, buffer );
-    dialog.okButton().setText( tr( "Delete" ) );
+    dialog.okButton().setText( tr("Delete") );
     dialog.okButton().setIcon( IconEngine::get( IconNames::Delete ) );
     if( !dialog.exec() ) return;
 
@@ -2842,7 +2875,7 @@ void MainWindow::_changeEntryColor( QColor color )
     auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
     if( selection.empty() )
     {
-        InformationDialog( this, tr( "No entry selected. <Change Entry Color> canceled." ) ).exec();
+        InformationDialog( this, tr("No entry selected. <Change Entry Color> canceled.") ).exec();
         return;
     }
 
@@ -2892,7 +2925,7 @@ void MainWindow::_newKeyword()
 
     // create dialog
     EditKeywordDialog dialog( this );
-    dialog.setWindowTitle( tr( "New Keyword" ) );
+    dialog.setWindowTitle( tr("New Keyword") );
 
     for( const auto& keyword:keywordModel_.children() )
     { dialog.add( keyword ); }
@@ -2923,7 +2956,7 @@ void MainWindow::_deleteKeyword()
     auto selectedIndexes( keywordList_->selectionModel()->selectedRows() );
     if( selectedIndexes.empty() )
     {
-        InformationDialog( this, tr( "No keyword selected. <Delete Keyword> canceled." ) ).exec();
+        InformationDialog( this, tr("No keyword selected. <Delete Keyword> canceled.") ).exec();
         return;
     }
 
@@ -3038,7 +3071,7 @@ void MainWindow::_renameKeyword()
     auto current( keywordList_->selectionModel()->currentIndex() );
     if( !current.isValid() )
     {
-        InformationDialog( this, tr( "No keyword selected. <Rename Keyword> canceled." ) ).exec();
+        InformationDialog( this, tr("No keyword selected. <Rename Keyword> canceled.") ).exec();
         return;
     }
 
@@ -3144,14 +3177,14 @@ void MainWindow::_renameEntryKeyword()
     auto selection( entryModel_.get( entryList_->selectionModel()->selectedRows() ) );
     if( selection.empty() )
     {
-        InformationDialog( this, tr( "No entry selected. <Rename Entry Keyword> canceled." ) ).exec();
+        InformationDialog( this, tr("No entry selected. <Rename Entry Keyword> canceled.") ).exec();
         return;
     }
 
     // check that current keyword make sense
     if( !keywordList_->selectionModel()->currentIndex().isValid() )
     {
-        InformationDialog( this, tr( "No keyword selected. <Rename Entry Keyword> canceled." ) ).exec();
+        InformationDialog( this, tr("No keyword selected. <Rename Entry Keyword> canceled.") ).exec();
         return;
     }
 
@@ -3160,7 +3193,7 @@ void MainWindow::_renameEntryKeyword()
 
     // create dialog
     EditKeywordDialog dialog( this );
-    dialog.setWindowTitle( tr( "Edit Keyword" ) );
+    dialog.setWindowTitle( tr("Edit Keyword") );
 
     for( const auto& keyword:keywordModel_.children() )
     { dialog.add( keyword ); }
@@ -3452,13 +3485,13 @@ void MainWindow::_updateEntryActions()
     if( selectedEntries > 1 )
     {
 
-        editEntryAction_->setText( tr( "Edit Entries" ) );
-        deleteEntryAction_->setText( tr( "Delete Entries" ) );
+        editEntryAction_->setText( tr("Edit Entries") );
+        deleteEntryAction_->setText( tr("Delete Entries") );
 
     } else {
 
-        editEntryAction_->setText( tr( "Edit Entry" ) );
-        deleteEntryAction_->setText( tr( "Delete Entry" ) );
+        editEntryAction_->setText( tr("Edit Entry") );
+        deleteEntryAction_->setText( tr("Delete Entry") );
 
     }
 
@@ -3616,7 +3649,7 @@ void MainWindow::_showMonitoredFiles()
 void MainWindow::_toggleTreeMode( bool value )
 {
 
-    Debug::Throw() << "MainWindow::_toggleTreeMode - " << ( value ? "true":"false" ) << endl;
+    Debug::Throw() << "MainWindow::_toggleTreeMode - " << ( value ? "true":"false") << endl;
 
     // show/hide keyword list
     keywordContainer_->setVisible( value );
@@ -3677,13 +3710,11 @@ void MainWindow::_toggleTreeMode( bool value )
 
     // save to options
     XmlOptions::get().set<bool>( QStringLiteral("USE_TREE"), value );
-
 }
 
 //_______________________________________________
 void MainWindow::_updateConfiguration()
 {
-
     Debug::Throw( QStringLiteral("MainWindow::_updateConfiguration.\n") );
 
     resize( sizeHint() );
@@ -3708,12 +3739,24 @@ void MainWindow::_updateConfiguration()
     // tree mode
     treeModeAction_->setChecked( XmlOptions::get().get<bool>( QStringLiteral("USE_TREE") ) );
 
+    // header visibility
+    {
+        const auto show = XmlOptions::get().get<bool>( QStringLiteral("SHOW_KEYWORDLIST_HEADER") );
+        if( keywordList_ ) keywordList_->header()->setVisible(show);
+        showKeywordListHeaderAction_->setText(show ? tr("Hide Header"):tr("Show Header"));
+    }
+    
+    {
+        const auto show = XmlOptions::get().get<bool>( QStringLiteral("SHOW_ENTRYLIST_HEADER") );
+        if( entryList_ ) entryList_->header()->setVisible(show);
+        showEntryListHeaderAction_->setText(show ? tr("Hide Header"):tr("Show Header"));
+    }
+    
 }
 
 //_______________________________________________
 LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mode )
 {
-
     switch( mode )
     {
         default:
@@ -3727,5 +3770,4 @@ LogEntryModel::List MainWindow::_entries( LogEntryPrintSelectionWidget::Mode mod
         return entryModel_.get( entryList_->selectionModel()->selectedRows() );
 
     }
-
 }
