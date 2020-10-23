@@ -880,7 +880,7 @@ void EditionWindow::_installActions()
     connect( entryInformationAction_, &QAction::triggered, this, &EditionWindow::_entryInformation );
 
     // reload
-    reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload Entry" ), this );
+    addAction( reloadAction_ = new QAction( IconEngine::get( IconNames::Reload ), tr( "Reload Entry" ), this ) );
     reloadAction_->setToolTip( tr( "ReloadEntry" ) );
     reloadAction_->setShortcut( QKeySequence::Refresh );
     connect( reloadAction_, &QAction::triggered, this, &EditionWindow::_reloadEntry );
