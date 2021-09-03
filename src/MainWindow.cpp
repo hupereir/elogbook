@@ -2529,7 +2529,6 @@ void MainWindow::_editLogbookInformations()
 
     // keep track of logbook modifications
     bool modified( false );
-
     modified |= logbook_->setTitle( dialog.title() );
     modified |= logbook_->setAuthor( dialog.author() );
     modified |= logbook_->setComments( dialog.comments() );
@@ -2541,12 +2540,9 @@ void MainWindow::_editLogbookInformations()
     // check if fulldir is not a non directory existsing file
     if( directory.exists() &&  !directory.isDirectory() )
     {
-
         const QString buffer = tr("File '%1' is not a directory.").arg( directory );
         InformationDialog( this, buffer ).exec();
-
     } else modified |= logbook_->setDirectory( directory );
-
 
     // save Logbook, if needed
     if( modified ) logbook_->setModified( true );
@@ -2557,7 +2553,7 @@ void MainWindow::_editLogbookInformations()
 }
 
 //_______________________________________________
-void MainWindow::_closeEditionWindows( bool askForSave )
+void MainWindow::_closeEditionWindows( bool )
 {
     Debug::Throw( QStringLiteral("MainWindow::_closeEditionWindows.\n") );
 
@@ -2569,9 +2565,6 @@ void MainWindow::_closeEditionWindows( bool askForSave )
 
     for( const auto& window:windows )
     { window->deleteLater(); }
-
-    return;
-
 }
 
 //____________________________________________

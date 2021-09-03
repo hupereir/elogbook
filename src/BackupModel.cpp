@@ -77,7 +77,7 @@ QVariant BackupModel::data( const QModelIndex& index, int role ) const
 }
 
 //__________________________________________________________________
-QVariant BackupModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant BackupModel::headerData(int section, Qt::Orientation, int role) const
 {
 
     if( section >= 0 && section < nColumns )

@@ -111,9 +111,8 @@ void FileCheck::_addFile( const QString& file )
 }
 
 //______________________________________________________
-void FileCheck::_removeFile( const QString& file, bool forced )
+void FileCheck::_removeFile( const QString& file, bool )
 {
-
     Debug::Throw() << "FileCheck::removeFile: " << file << endl;
     files_.remove( file );
     _fileSystemWatcher().removePath( file );

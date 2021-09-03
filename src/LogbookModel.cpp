@@ -66,7 +66,7 @@ QVariant LogbookModel::data( const QModelIndex& index, int role ) const
 }
 
 //_______________________________________________________________________________________
-QVariant LogbookModel::headerData(int section, Qt::Orientation orientation, int role ) const
+QVariant LogbookModel::headerData(int section, Qt::Orientation, int role ) const
 {
     if( section >= 0 && section < nColumns )
     {

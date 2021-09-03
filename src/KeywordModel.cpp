@@ -48,10 +48,10 @@ QVariant KeywordModel::data( const QModelIndex& index, int role ) const
 }
 
 //__________________________________________________________________
-QVariant KeywordModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant KeywordModel::headerData(int section, Qt::Orientation, int role) const
 {
 
-    if( orientation == Qt::Horizontal && role == Qt::DisplayRole && section >= 0 && section < nColumns )
+    if( role == Qt::DisplayRole && section >= 0 && section < nColumns )
     { return columnTitles_[section]; }
 
     // return empty

@@ -219,7 +219,7 @@ bool LogEntryModel::setData(const QModelIndex &index, const QVariant& value, int
 }
 
 //__________________________________________________________________
-QVariant LogEntryModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant LogEntryModel::headerData(int section, Qt::Orientation, int role) const
 {
 
     switch( role )
