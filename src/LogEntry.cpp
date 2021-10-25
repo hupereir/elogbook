@@ -136,7 +136,10 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
     // dump text format
     for( const auto& format:formats_ )
     {
-        if( !format.isEmpty() && ((format.color().isValid() && format.color() != QPalette().color( QPalette::Text ) ) || format.format() != TextFormat::Default ) )
+        if( !format.isEmpty() && (
+            (format.foreground().isValid() && format.foreground() != QPalette().color( QPalette::Text ) ) 
+            || (format.background().isValid() && format.background() != QPalette().color( QPalette::Base ) ) 
+            || format.format() != TextFormat::Default ) )
         { out.appendChild( TextFormat::XmlBlock( format ).domElement( document ) ); }
      }
 
@@ -248,8 +251,9 @@ void LogEntry::removeKeyword( const Keyword &keyword )
 void LogEntry::addFormat( TextFormat::Block format )
 {
     if( format.isEmpty() ) return;
-    if( format.color() == Qt::black ) format.unsetColor();
-    if( format.format() == TextFormat::Default && !format.color().isValid() ) return;
+    if( format.foreground() == Qt::black ) format.unsetForeground();
+    if( format.background() == Qt::black ) format.unsetBackground();
+    if( format.format() == TextFormat::Default && !format.foreground().isValid() && !format.background().isValid() ) return;
     formats_.append(format);
 }
 

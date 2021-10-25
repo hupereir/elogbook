@@ -50,7 +50,8 @@ class FormatBar: public ToolBar
         Italic,
         Strike,
         Underline,
-        Color
+        Foreground,
+        Background
     };
 
     //* constructor
@@ -106,10 +107,16 @@ class FormatBar: public ToolBar
     void _strike( bool );
 
     //* color
-    void _color( QColor );
+    void _foreground( QColor );
+
+    //* color
+    void _background( QColor );
 
     //* last selected color
-    void _lastColor();
+    void _lastForegroundColor();
+
+    //* last selected color
+    void _lastBackgroundColor();
 
     //* target text editor
     TextEditor* editor_ = nullptr;
@@ -121,7 +128,10 @@ class FormatBar: public ToolBar
     ActionMap actions_;
 
     //* color menu
-    ColorMenu* colorMenu_ = nullptr;
+    ColorMenu* foregroundColorMenu_ = nullptr;
+
+    //* color menu
+    ColorMenu* backgroundColorMenu_ = nullptr;
 
 };
 

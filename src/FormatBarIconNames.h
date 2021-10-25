@@ -29,6 +29,9 @@ namespace IconNames
     static const QString Italic = QStringLiteral("format-text-italic");
     static const QString Strike = QStringLiteral("format-text-strikethrough");
     static const QString Underline = QStringLiteral("format-text-underline");
+    static const QString Foreground = QStringLiteral("format-text-color");
+    static const QString Background = QStringLiteral("format-fill-color");
+
 }
 
 #endif

@@ -220,9 +220,11 @@ void LogEntryPrintHelper::_printBody( QPrinter* printer, QPainter* painter, QPoi
         textFormat.setFontStrikeOut( format.format() & TextFormat::Strike );
         textFormat.setFontOverline( format.format() & TextFormat::Overline );
 
-        // load color
-        if( format.color().isValid() )
-        { textFormat.setForeground( format.color() ); }
+        if( format.foreground().isValid() )
+        { textFormat.setForeground( format.foreground() ); }
+
+        if( format.background().isValid() )
+        { textFormat.setBackground( format.background() ); }
 
         cursor.setCharFormat( textFormat );
 
