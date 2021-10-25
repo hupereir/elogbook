@@ -236,10 +236,17 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
             if( iter->format() & TextFormat::Italic ) localNode = localNode.appendChild( document.createElement( QStringLiteral("i") ) ).toElement();
             if( iter->format() & TextFormat::Bold ) localNode = localNode.appendChild( document.createElement( QStringLiteral("b") ) ).toElement();
             if( iter->format() & TextFormat::Strike ) localNode = localNode.appendChild( document.createElement( QStringLiteral("s") ) ).toElement();
-            if( iter->foreground().isValid() )
+            if( iter->foreground().isValid() || iter->background().isValid() )
             {
                 localNode = localNode.appendChild( document.createElement( QStringLiteral("font") ) ).toElement();
-                localNode.setAttribute( QStringLiteral("color"), iter->foreground().name() );
+                if(  iter->foreground().isValid() && iter->background().isValid() )
+                {
+                    localNode.setAttribute( QStringLiteral("style"), QString("color:%1;background-color:%2;").arg(iter->foreground().name(),iter->background().name()) );
+                } else if( iter->foreground().isValid() ) {
+                    localNode.setAttribute( QStringLiteral("style"), QString("color:%1;").arg(iter->foreground().name()) );
+                } else if( iter->background().isValid() ) {
+                    localNode.setAttribute( QStringLiteral("style"), QString("background-color:%1;").arg(iter->background().name()) );
+                }
             }
 
             for( ; index < text.size() && (int)index < iter->end(); ++index )

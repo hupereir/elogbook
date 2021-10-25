@@ -260,8 +260,8 @@ TextFormat::Block::List FormatBar::get() const
 
             // store new TextFormatBlock
             TextFormat::Block textFormatBlock( begin, end, format );
-            textFormatBlock.setForeground( foreground );
-            textFormatBlock.setBackground( background );
+            if( foreground.isValid() ) textFormatBlock.setForeground( foreground );
+            if( background.isValid() ) textFormatBlock.setBackground( background );
             
             if( !href.isEmpty() ) textFormatBlock.setHRef( href );
 
