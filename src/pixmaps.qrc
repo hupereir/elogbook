@@ -14,6 +14,7 @@
     <file alias="icons/32x32/insert-link.png">../pixmaps/insert-link.png</file>
     <file alias="icons/32x32/edit-link.png">../pixmaps/edit-link.png</file>
     <file alias="icons/32x32/format-text-bold.png">../pixmaps/format-text-bold.png</file>
+    <file alias="icons/32x32/format-text-color.png">../pixmaps/format-text-color.png</file>
     <file alias="icons/32x32/format-text-italic.png">../pixmaps/format-text-italic.png</file>
     <file alias="icons/32x32/format-text-strikethrough.png">../pixmaps/format-text-strikethrough.png</file>
     <file alias="icons/32x32/format-text-underline.png">../pixmaps/format-text-underline.png</file>
