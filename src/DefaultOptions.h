@@ -69,6 +69,7 @@ void installDefaultOptions()
     XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#009900" ) ) );
     XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#3333FF" ) ) );
     XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#993399" ) ) );
+    XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#FFFF00" ) ) );
 
     // window sizes
     XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_WINDOW_HEIGHT"),400 );
