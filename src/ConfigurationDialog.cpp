@@ -182,6 +182,12 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         listbox->setToolTip(tr(  "Colors used for text formatting" ) );
         addOptionWidget( listbox );
         
+
+        box = new QGroupBox( tr( "Text Highlight Colors" ), page );
+        box->setLayout( new QVBoxLayout );
+        box->layout()->setMargin(5);
+        box->layout()->setSpacing(5);
+        page->layout()->addWidget( box );
         box->layout()->addWidget( listbox = new ColorOptionListBox( box, QStringLiteral("HIGHLIGHT_COLOR") ) );
         listbox->setToolTip(tr(  "Colors used for highlighting text" ) );
         addOptionWidget( listbox );
