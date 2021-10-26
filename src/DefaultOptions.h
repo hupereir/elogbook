@@ -61,6 +61,15 @@ void installDefaultOptions()
     XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#3333FF" ) ) );
     XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( "#993399" ) ) );
 
+    // COLOR options are special. Keep the full list
+    XmlOptions::get().keep( QStringLiteral("HIGHLIGHT_COLOR") );
+    XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#aa0000" ) ) );
+    XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#FF9900" ) ) );
+    XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#FF8C00" ) ) );
+    XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#009900" ) ) );
+    XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#3333FF" ) ) );
+    XmlOptions::get().add( QStringLiteral("HIGHLIGHT_COLOR"), Option().set( Base::Color( "#993399" ) ) );
+
     // window sizes
     XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_WINDOW_HEIGHT"),400 );
     XmlOptions::get().set<int>( QStringLiteral("ATTACHMENT_WINDOW_WIDTH"), 600 );

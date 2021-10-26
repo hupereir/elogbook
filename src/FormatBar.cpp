@@ -106,7 +106,7 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
         foreground->setCheckable( false );
         foreground->setIconText( tr( "Color" ) );
         connect( foreground, &QAction::triggered, this, &FormatBar::_lastForegroundColor );
-    
+
         // color menu
         foregroundColorMenu_ = new ColorMenu( this );
         foreground->setMenu( foregroundColorMenu_ );
@@ -122,13 +122,13 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
         connect( foregroundColorMenu_, &ColorMenu::selected, button, &FormatColorButton::setColor );
     }
 
-    
+
     // background color action
     {
         background->setCheckable( false );
         background->setIconText( tr( "Color" ) );
         connect( background, &QAction::triggered, this, &FormatBar::_lastBackgroundColor );
-    
+
         // color menu
         backgroundColorMenu_ = new ColorMenu( this );
         background->setMenu( backgroundColorMenu_ );
@@ -171,8 +171,8 @@ void FormatBar::load( const TextFormat::Block::List& formatList ) const
     Q_CHECK_PTR( editor_ );
 
     // get base text color name
-    const QColor baseTextColor( editor_->palette().color( QPalette::Text ) );
-    const QColor baseViewColor( editor_->palette().color( QPalette::Base ) );
+    const QColor textColor( editor_->palette().color( QPalette::Text ) );
+    const QColor baseColor( editor_->palette().color( QPalette::Base ) );
 
     QTextCursor cursor( editor_->document() );
     cursor.beginEditBlock();
@@ -192,11 +192,11 @@ void FormatBar::load( const TextFormat::Block::List& formatList ) const
         textFormat.setFontOverline( block.format() & TextFormat::Overline );
 
         // load foreground
-        if( block.foreground().isValid() && !(block.foreground() == baseTextColor) )
+        if( block.foreground().isValid() && !(block.foreground() == textColor) )
         { textFormat.setForeground( block.foreground() ); }
 
         // load background
-        if( block.background().isValid() && !(block.background() == baseViewColor) )
+        if( block.background().isValid() && !(block.background() == baseColor) )
         { textFormat.setBackground( block.background() ); }
 
         // load href
@@ -218,8 +218,8 @@ TextFormat::Block::List FormatBar::get() const
     TextFormat::Block::List out;
 
     // get base text color name
-    const QColor baseTextColor( editor_->palette().color( QPalette::Text ) );
-    const QColor baseViewColor( editor_->palette().color( QPalette::Base ) );
+    const QColor textColor( editor_->palette().color( QPalette::Text ) );
+    const QColor baseColor( editor_->palette().color( QPalette::Base ) );
 
     // iterator over blocks
     for( const auto& block:TextBlockRange( editor_->document() ) )
@@ -247,11 +247,11 @@ TextFormat::Block::List FormatBar::get() const
 
             // retrieve text color
             QColor foreground( textFormat.foreground().color() );
-            if( foreground == baseTextColor ) foreground = QColor();
+            if( foreground == textColor ) foreground = QColor();
 
             // retrieve text color
             QColor background( textFormat.background().color() );
-            if( background == baseViewColor ) background = QColor();
+            if( background == baseColor ) background = QColor();
 
             const QString href( textFormat.anchorHref() );
 
@@ -262,7 +262,7 @@ TextFormat::Block::List FormatBar::get() const
             TextFormat::Block textFormatBlock( begin, end, format );
             if( foreground.isValid() ) textFormatBlock.setForeground( foreground );
             if( background.isValid() ) textFormatBlock.setBackground( background );
-            
+
             if( !href.isEmpty() ) textFormatBlock.setHRef( href );
 
             out.append( textFormatBlock );
@@ -278,55 +278,32 @@ void FormatBar::_updateConfiguration()
 {
     Debug::Throw( QStringLiteral("FormatBar::_updateConfiguration.\n") );
 
-    // retrieve colors from options
-    Options::List colors( XmlOptions::get().specialOptions( QStringLiteral("TEXT_COLOR") ) );
-    if( colors.empty() )
+    auto loadColors = []( const QString& optionName, ColorMenu* menu )
     {
+        menu->reset();
+        for( const auto& color:XmlOptions::get().specialOptions( optionName ) )
+        { menu->add( color.get<Base::Color>() ); }
+    };
 
-        // add default colors
-        using ColorList = QList<Base::Color>;
-        static const ColorList defaultColors(
-        {
-            Base::Color("#aa0000"),
-            Base::Color("green"),
-            Base::Color("blue"),
-            Base::Color("grey"),
-            Base::Color("black")
-        });
-
-        XmlOptions::get().keep( QStringLiteral("TEXT_COLOR") );
-        for( const auto& color:defaultColors )
-        {
-            XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( color ) );
-            foregroundColorMenu_->add( color );
-            backgroundColorMenu_->add( color );
-        }
-
-    } else {
-
-        for( const auto& color:colors )
-        { 
-            foregroundColorMenu_->add( color.get<Base::Color>() ); 
-            backgroundColorMenu_->add( color.get<Base::Color>() ); 
-        }
-
-    }
+    loadColors( "TEXT_COLOR", foregroundColorMenu_ );
+    loadColors( "HIGHLIGHT_COLOR", backgroundColorMenu_ );
 }
-
 
 //________________________________________
 void FormatBar::_saveConfiguration()
 {
     Debug::Throw( QStringLiteral("FormatBar::_saveConfiguration.\n") );
-    XmlOptions::get().keep( QStringLiteral("TEXT_COLOR") );
 
-    Base::Color::Set colors( foregroundColorMenu_->colors() );
-    colors.unite( backgroundColorMenu_->colors() );
-    
-    for( const auto& color:colors )
-    { XmlOptions::get().add( QStringLiteral("TEXT_COLOR"), Option().set( Base::Color( color ) ) ); }
+    auto saveColors = []( const QString& optionName, ColorMenu* menu )
+    {
+        XmlOptions::get().keep( optionName );
+        const Base::Color::Set colors( menu->colors() );
+        for( const auto& color:colors )
+        { XmlOptions::get().add( optionName, Option().set( Base::Color( color ) ) ); }
+    };
 
-    return;
+    saveColors( "TEXT_COLOR", foregroundColorMenu_ );
+    saveColors( "HIGHLIGHT_COLOR", backgroundColorMenu_ );
 }
 
 //________________________________________
