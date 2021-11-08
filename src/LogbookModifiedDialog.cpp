@@ -44,7 +44,7 @@ Counter( QStringLiteral("LogbookModifiedDialog") )
     // create vbox layout
     QVBoxLayout* layout=new QVBoxLayout;
     layout->setSpacing(10);
-    layout->setMargin(10);
+    QtUtil::setMargin(layout, 10);
     setLayout( layout );
 
     // create message
@@ -68,7 +68,7 @@ Counter( QStringLiteral("LogbookModifiedDialog") )
     // button layout
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setSpacing(5);
-    buttonLayout->setMargin(0);
+    QtUtil::setMargin(buttonLayout, 0);
     layout->addLayout( buttonLayout );
     buttonLayout->addStretch(1);
 

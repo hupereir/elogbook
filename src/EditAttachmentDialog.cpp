@@ -17,12 +17,13 @@
 *
 *******************************************************************************/
 
-#include "EditAttachmentDialog.h"
-
-#include "LineEditor.h"
 #include "Debug.h"
+#include "EditAttachmentDialog.h"
 #include "File.h"
 #include "GridLayout.h"
+#include "LineEditor.h"
+#include "QtUtil.h"
+
 
 #include <QLayout>
 #include <QLabel>
@@ -35,7 +36,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     Debug::Throw( QStringLiteral("EditAttachmentDialog::EditAttachmentDialog.\n") );
 
     GridLayout* gridLayout = new GridLayout;
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
@@ -70,7 +71,7 @@ EditAttachmentDialog::EditAttachmentDialog( QWidget* parent, const Attachment& a
     gridLayout->setColumnStretch( 1, 1 );
 
     QVBoxLayout* boxLayout = new QVBoxLayout;
-    boxLayout->setMargin(0);
+    QtUtil::setMargin(boxLayout, 0);
     boxLayout->setSpacing(5);
     mainLayout().addLayout( boxLayout, 1 );
 

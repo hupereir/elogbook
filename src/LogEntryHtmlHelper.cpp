@@ -215,7 +215,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
     QString buffer;
     for( int index = 0; index < text.size(); )
     {
-        Debug::Throw() << "index: " << index << " position: " << index << endl;
+        Debug::Throw() << "index: " << index << " position: " << index << Qt::endl;
         auto iter( std::find_if( formats.begin(), formats.end(), TextFormat::Block::ContainsFTor( index ) ) );
         if( iter == formats.end() || iter->isEmpty() )
         {
@@ -224,7 +224,7 @@ void LogEntryHtmlHelper::_appendBody( QDomDocument& document, QDomElement& paren
 
         } else {
 
-            Debug::Throw() << *iter << endl;
+            Debug::Throw() << *iter << Qt::endl;
 
             // write previous text
             HtmlTextNode( buffer, parent, document );

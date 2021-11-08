@@ -17,17 +17,18 @@
 *
 *******************************************************************************/
 
-#include "OpenAttachmentDialog.h"
-
 #include "BaseIconNames.h"
 #include "Debug.h"
 #include "ElidedLabel.h"
 #include "File.h"
 #include "GridLayout.h"
 #include "IconEngine.h"
+#include "OpenAttachmentDialog.h"
 #include "OpenWithComboBox.h"
+#include "QtUtil.h"
 #include "TextEditor.h"
 #include "XmlOptions.h"
+
 
 #include <QButtonGroup>
 #include <QLabel>
@@ -44,7 +45,7 @@ Dialog( parent, OkButton|CancelButton|Separator )
     // try load Question icon
     auto hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
-    hLayout->setMargin(0);
+    QtUtil::setMargin(hLayout, 0);
     mainLayout().addLayout( hLayout );
     {
         // icon
@@ -56,11 +57,11 @@ Dialog( parent, OkButton|CancelButton|Separator )
     }
 
     auto vLayout = new QVBoxLayout;
-    vLayout->setMargin(0);
+    QtUtil::setMargin(vLayout, 0);
     hLayout->addLayout( vLayout, 1 );
 
     auto gridLayout = new GridLayout;
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
     vLayout->addStretch();
@@ -99,7 +100,7 @@ Dialog( parent, OkButton|CancelButton|Separator )
 
     gridLayout = new GridLayout;
     mainLayout().addLayout( gridLayout );
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setMaxCount(2);
 
     gridLayout->addWidget( openRadioButton_ = new QRadioButton( tr( "Open using:" ), this ) );

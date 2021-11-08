@@ -107,7 +107,7 @@ QVariant AttachmentModel::headerData(int section, Qt::Orientation, int role) con
 //____________________________________________________________
 void AttachmentModel::_sort( int column, Qt::SortOrder order )
 {
-    Debug::Throw() << "AttachmentModel::sort - column: " << column << " order: " << order << endl;
+    Debug::Throw() << "AttachmentModel::sort - column: " << column << " order: " << order << Qt::endl;
     std::sort( _get().begin(), _get().end(), SortFTor( (ColumnType) column, order ) );
 }
 

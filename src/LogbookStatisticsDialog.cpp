@@ -17,17 +17,18 @@
 *
 *******************************************************************************/
 
-#include "LogbookStatisticsDialog.h"
-
 #include "Debug.h"
 #include "GridLayout.h"
-#include "IconNames.h"
-#include "IconEngine.h"
-#include "Logbook.h"
-#include "LogEntry.h"
 #include "GridLayoutItem.h"
+#include "IconEngine.h"
+#include "IconNames.h"
+#include "LogEntry.h"
+#include "Logbook.h"
+#include "LogbookStatisticsDialog.h"
+#include "QtUtil.h"
 #include "TreeView.h"
 #include "Util.h"
+
 
 #include <QHeaderView>
 #include <QLayout>
@@ -44,7 +45,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     setOptionName( QStringLiteral("LOGBOOK_STATISTICS_DIALOG") );
 
     auto hLayout = new QHBoxLayout;
-    hLayout->setMargin(5);
+    QtUtil::setMargin(hLayout, 5);
     mainLayout().addLayout( hLayout );
 
     auto label = new QLabel(this);
@@ -53,7 +54,7 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     hLayout->addStretch();
 
     auto gridLayout = new GridLayout;
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setMaxCount(2);
     hLayout->addLayout( gridLayout );
     hLayout->addStretch();

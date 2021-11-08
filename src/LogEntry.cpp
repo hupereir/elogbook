@@ -238,7 +238,7 @@ void LogEntry::replaceKeyword( const Keyword &oldKeyword, const Keyword &newKeyw
 
     } else {
 
-        Debug::Throw(0) << "LogEntry::replaceKeyword - unable to find old keyword " << oldKeyword.get() << endl;
+        Debug::Throw(0) << "LogEntry::replaceKeyword - unable to find old keyword " << oldKeyword.get() << Qt::endl;
     }
 
 }

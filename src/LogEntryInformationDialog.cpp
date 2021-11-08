@@ -43,7 +43,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
 
     auto hLayout = new QHBoxLayout;
     hLayout->setSpacing(10);
-    hLayout->setMargin(5);
+    QtUtil::setMargin(hLayout, 5);
     mainLayout().addLayout( hLayout );
 
     auto label = new QLabel(this);
@@ -51,7 +51,7 @@ LogEntryInformationDialog::LogEntryInformationDialog( QWidget* parent, LogEntry*
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
     auto gridLayout = new GridLayout;
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
 

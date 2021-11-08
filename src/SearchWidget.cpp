@@ -17,16 +17,17 @@
 *
 *******************************************************************************/
 
-#include "SearchWidget.h"
-
 #include "Application.h"
 #include "Color.h"
 #include "ComboBox.h"
 #include "Debug.h"
-#include "IconNames.h"
 #include "IconEngine.h"
+#include "IconNames.h"
+#include "QtUtil.h"
+#include "SearchWidget.h"
 #include "Singleton.h"
 #include "XmlOptions.h"
+
 
 #include <QApplication>
 #include <QGroupBox>
@@ -47,7 +48,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
 
     // editor layout
     QGridLayout* gridLayout = new QGridLayout;
-    gridLayout->setMargin(2);
+    QtUtil::setMargin(gridLayout, 2);
     gridLayout->setSpacing(5);
     setLayout( gridLayout );
 
@@ -57,7 +58,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     gridLayout->addWidget( label, 0, 0, 1, 1 );
 
     QHBoxLayout* hLayout = new QHBoxLayout;
-    hLayout->setMargin(0);
+    QtUtil::setMargin(hLayout, 0);
     hLayout->setSpacing(5);
     gridLayout->addLayout( hLayout, 0, 1, 1, 1 );
 
@@ -72,7 +73,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
 
     hLayout->addWidget( editor_, 1 );
 
-    connect( editor_, QOverload<const QString&>::of( &ComboBox::activated ), this, [this](const QString&){ _selectionRequest(); } );
+    connect( editor_, &ComboBox::activated, this, [this](int){ _selectionRequest(); } );
     connect( editor_, &ComboBox::editTextChanged, this, &SearchWidget::_updateFindButton );
     connect( editor_->lineEdit(), &QLineEdit::textChanged, this, &SearchWidget::_restorePalette );
 
@@ -109,7 +110,7 @@ SearchWidget::SearchWidget( QWidget* parent ):
     gridLayout->addWidget( label, 1, 0, 1, 1 );
 
     hLayout = new QHBoxLayout;
-    hLayout->setMargin(0);
+    QtUtil::setMargin(hLayout, 0);
     hLayout->setSpacing(5);
     gridLayout->addLayout( hLayout, 1, 1, 1, 1 );
 

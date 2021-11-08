@@ -17,8 +17,9 @@
 *
 *******************************************************************************/
 
-#include "InsertLinkDialog.h"
 #include "Debug.h"
+#include "InsertLinkDialog.h"
+#include "QtUtil.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -30,7 +31,7 @@ Dialog( parent, OkButton|CancelButton|Separator )
     Debug::Throw( QStringLiteral("InsertLinkDialog::InsertLinkDialog.\n") );
     setOptionName( QStringLiteral("INSERT_LINK_DIALOG") );
     QHBoxLayout* hLayout = new QHBoxLayout;
-    hLayout->setMargin(0);
+    QtUtil::setMargin(hLayout, 0);
     mainLayout().addLayout( hLayout );
     QLabel* label;
 

@@ -62,7 +62,7 @@ LogEntryModel::LogEntryModel( QObject* parent ):
 Qt::ItemFlags LogEntryModel::flags(const QModelIndex &index) const
 {
 
-    if( !contains(index) ) return 0;
+    if( !contains(index) ) return {};
 
     // default flags
     Qt::ItemFlags out( Qt::ItemIsEnabled | Qt::ItemIsSelectable );
@@ -306,9 +306,9 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
         auto entry( get( index ) );
         auto keywords( entry->keywords() );
 
-        if( keywords.empty() ) what << Keyword::Default << "/" << entry->title() << endl;
-        else if( keywords.contains( currentKeyword_ ) ) what << currentKeyword_ << "/" << entry->title() << endl;
-        else what << keywords.begin()->get() << "/" << entry->title() << endl;
+        if( keywords.empty() ) what << Keyword::Default << "/" << entry->title() << Qt::endl;
+        else if( keywords.contains( currentKeyword_ ) ) what << currentKeyword_ << "/" << entry->title() << Qt::endl;
+        else what << keywords.begin()->get() << "/" << entry->title() << Qt::endl;
 
     }
 
@@ -324,7 +324,7 @@ QMimeData* LogEntryModel::mimeData(const QModelIndexList &indexes) const
 //____________________________________________________________
 void LogEntryModel::_sort( int column, Qt::SortOrder order )
 {
-    Debug::Throw() << "LogEntryModel::sort - column: " << column << " order: " << order << endl;
+    Debug::Throw() << "LogEntryModel::sort - column: " << column << " order: " << order << Qt::endl;
     std::sort( _get().begin(), _get().end(), SortFTor( (ColumnType) column, order ) );
 }
 

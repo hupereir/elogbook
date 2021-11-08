@@ -17,10 +17,9 @@
 *
 *******************************************************************************/
 
-#include "AttachmentFrame.h"
-
 #include "Application.h"
 #include "Attachment.h"
+#include "AttachmentFrame.h"
 #include "AttachmentWindow.h"
 #include "Command.h"
 #include "ContextMenu.h"
@@ -31,17 +30,19 @@
 #include "File.h"
 #include "FileDialog.h"
 #include "FileRecord.h"
-#include "IconNames.h"
 #include "IconEngine.h"
-#include "Logbook.h"
+#include "IconNames.h"
+#include "InformationDialog.h"
 #include "LogEntry.h"
+#include "Logbook.h"
 #include "MainWindow.h"
 #include "NewAttachmentDialog.h"
 #include "OpenAttachmentDialog.h"
+#include "QtUtil.h"
 #include "QuestionDialog.h"
 #include "Singleton.h"
 #include "TreeView.h"
-#include "InformationDialog.h"
+
 
 #include <memory>
 
@@ -64,7 +65,7 @@ AttachmentFrame::AttachmentFrame( QWidget *parent, bool readOnly ):
 
     // default layout
     setLayout( new QVBoxLayout );
-    layout()->setMargin(0);
+    QtUtil::setMargin(layout(), 0);
     layout()->setSpacing(5);
 
     // create list
@@ -322,7 +323,7 @@ void AttachmentFrame::enterEvent( QEvent* event )
 void AttachmentFrame::_processRecords( const FileRecord::List& records, bool hasInvalidRecords )
 {
 
-    Debug::Throw() << "AttachmentFrame::_processRecords." << endl;
+    Debug::Throw() << "AttachmentFrame::_processRecords." << Qt::endl;
 
     // retrieve all attachments from model
     // true if some modifications are to be saved
@@ -333,7 +334,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         if( attachment->isUrl() ) continue;
         if( attachment->file().isEmpty() ) continue;
 
-        Debug::Throw() << "AttachmentFrame::_processRecords - checking: " << attachment->file() << endl;
+        Debug::Throw() << "AttachmentFrame::_processRecords - checking: " << attachment->file() << Qt::endl;
 
         bool isValid( attachment->isValid() );
         Attachment::LinkState isLink( attachment->isLink() );
@@ -341,7 +342,7 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         // check destination file
         auto found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTorUnary( attachment->file() ) );
         if( found != records.end() ) { isValid = found->isValid(); }
-        else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
+        else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << Qt::endl; }
 
         // check link status
         if( isValid && isLink == Attachment::LinkState::Unknown )
@@ -356,11 +357,11 @@ void AttachmentFrame::_processRecords( const FileRecord::List& records, bool has
         {
             found = std::find_if( records.begin(), records.end(), FileRecord::SameFileFTorUnary( attachment->sourceFile() ) );
             if( found != records.end() ) { isValid &= found->isValid(); }
-            else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << endl; }
+            else { Debug::Throw() << "AttachmentFrame::_processRecords - not found." << Qt::endl; }
         }
 
         // update validity flag and set parent logbook as modified if needed
-        Debug::Throw() << "AttachmentFrame::_processRecords - valid: " << isValid << " link: " << Base::toIntegralType( isLink ) << endl;
+        Debug::Throw() << "AttachmentFrame::_processRecords - valid: " << isValid << " link: " << Base::toIntegralType( isLink ) << Qt::endl;
         if( attachment->setIsValid( isValid ) || attachment->setIsLink( isLink ) )
         {
 
@@ -739,7 +740,7 @@ void AttachmentFrame::_clean()
         // skip attachment if valid
         if( attachment->isValid() ) continue;
 
-        Debug::Throw() << "AttachmentFrame::_clean - removing: " << attachment->file() << endl;
+        Debug::Throw() << "AttachmentFrame::_clean - removing: " << attachment->file() << Qt::endl;
 
         // retrieve associated attachment frames and remove item
         Base::KeySet<AttachmentFrame> frames( attachment );
@@ -780,7 +781,7 @@ void AttachmentFrame::_itemSelected( const QModelIndex& index )
 {
     if( !index.isValid() ) return;
     Attachment& attachment( *model_.get( index ) );
-    Debug::Throw() << "AttachmentFrame::_itemSelected - " << attachment.file() << endl;
+    Debug::Throw() << "AttachmentFrame::_itemSelected - " << attachment.file() << Qt::endl;
     emit attachmentSelected( attachment );
 
 }

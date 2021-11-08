@@ -95,7 +95,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // local layout
     auto layout = new QVBoxLayout;
-    layout->setMargin(0);
+    QtUtil::setMargin(layout, 0);
     layout->setSpacing(2);
     main->setLayout( layout );
 
@@ -130,7 +130,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // set layout
     auto vLayout = new QVBoxLayout;
-    vLayout->setMargin(0);
+    QtUtil::setMargin(vLayout, 0);
     vLayout->setSpacing(0);
     keywordContainer_->setLayout( vLayout );
 
@@ -143,7 +143,7 @@ MainWindow::MainWindow( QWidget *parent ):
     keywordToolBar_->addAction( newKeywordAction_ );
     keywordToolBar_->addAction( deleteKeywordAction_ );
     keywordToolBar_->addAction( editKeywordAction_ );
-    Debug::Throw() << "MainWindow::MainWindow - keyword toolbar created." << endl;
+    Debug::Throw() << "MainWindow::MainWindow - keyword toolbar created." << Qt::endl;
 
     // create keyword list
     vLayout->addWidget( keywordList_ = new KeywordList( keywordContainer_ ), 1 );
@@ -205,7 +205,7 @@ MainWindow::MainWindow( QWidget *parent ):
     auto right = new QWidget;
 
     vLayout = new QVBoxLayout;
-    vLayout->setMargin(0);
+    QtUtil::setMargin(vLayout, 0);
     vLayout->setSpacing(0);
     right->setLayout( vLayout );
 
@@ -333,7 +333,7 @@ void MainWindow::createDefaultLogbook()
 bool MainWindow::setLogbook( const File &file )
 {
 
-    Debug::Throw() << "MainWindow::SetLogbook - logbook: \"" << file << "\"" << endl;
+    Debug::Throw() << "MainWindow::SetLogbook - logbook: \"" << file << "\"" << Qt::endl;
 
     // reset current logbook
     if( logbook_ ) reset();
@@ -455,7 +455,7 @@ bool MainWindow::setLogbook( const File &file )
     entries = Base::KeySet<LogEntry>(logbook_.get());
     if( !entries.empty() )
     {
-        Debug::Throw(0) << "MainWindow::setLogbook - moving " << entries.size() << " entries" << endl;
+        Debug::Throw(0) << "MainWindow::setLogbook - moving " << entries.size() << " entries" << Qt::endl;
         for( const auto& entry : entries )
         {
             // dissassociate
@@ -890,7 +890,7 @@ void MainWindow::save()
 //_______________________________________________
 void MainWindow::selectEntries( const QString &selection, SearchWidget::SearchModes mode )
 {
-    Debug::Throw() << "MainWindow::selectEntries - selection: " << selection << " mode:" << mode << endl;
+    Debug::Throw() << "MainWindow::selectEntries - selection: " << selection << " mode:" << mode << Qt::endl;
 
     // check logbook
     if( !logbook_ ) return;
@@ -2062,15 +2062,15 @@ void MainWindow::_synchronize()
     if( remoteFile.isEmpty() ) return;
 
     // debug
-    Debug::Throw() << "MainWindow::_synchronize - number of local files: " << logbook_->children().size() << endl;
-    Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << logbook_->entries().size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of local files: " << logbook_->children().size() << Qt::endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of local entries: " << logbook_->entries().size() << Qt::endl;
 
     // set busy flag
     Base::Singleton::get().application<Application>()->busy();
     statusbar_->label().setText( QStringLiteral("Reading remote logbook ... ") );
 
     // opens file in remote logbook
-    Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remoteFile << endl;
+    Debug::Throw() << "MainWindow::_synchronize - reading remote logbook from file: " << remoteFile << Qt::endl;
 
     Logbook remoteLogbook;
     connect( &remoteLogbook, &Logbook::messageAvailable, this, &MainWindow::messageAvailable );
@@ -2092,14 +2092,14 @@ void MainWindow::_synchronize()
     }
 
     // debug
-    Debug::Throw() << "MainWindow::_synchronize - number of remote files: " << remoteLogbook.children().size() << endl;
-    Debug::Throw() << "MainWindow::_synchronize - number of remote entries: " << remoteLogbook.entries().size() << endl;
-    Debug::Throw() << "MainWindow::_synchronize - updating local from remote" << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of remote files: " << remoteLogbook.children().size() << Qt::endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of remote entries: " << remoteLogbook.entries().size() << Qt::endl;
+    Debug::Throw() << "MainWindow::_synchronize - updating local from remote" << Qt::endl;
 
     // synchronize local with remote
     // retrieve map of duplicated entries
     auto duplicates( logbook_->synchronize( remoteLogbook ) );
-    Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << duplicates.size() << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << duplicates.size() << Qt::endl;
 
     // update possible EditionWindows when duplicated entries are found
     // delete the local duplicated entries
@@ -2132,9 +2132,9 @@ void MainWindow::_synchronize()
     if( !logbook_->file().isEmpty() ) save();
 
     // synchronize remove with local
-    Debug::Throw() << "MainWindow::_synchronize - updating remote from local" << endl;
+    Debug::Throw() << "MainWindow::_synchronize - updating remote from local" << Qt::endl;
     int nDuplicated = remoteLogbook.synchronize( *logbook_ ).size();
-    Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << nDuplicated << endl;
+    Debug::Throw() << "MainWindow::_synchronize - number of duplicated entries: " << nDuplicated << Qt::endl;
 
     // save remote logbook
     statusbar_->label().setText( tr("Saving remote logbook...") );
@@ -2290,15 +2290,15 @@ void MainWindow::_mergeBackup( const Backup &backup )
     else if( logbook_->modified() && askForSave() == AskForSaveDialog::Cancel ) return;
 
     // debug
-    Debug::Throw() << "MainWindow::_mergeBackup - number of local files: " << logbook_->children().size() << endl;
-    Debug::Throw() << "MainWindow::_mergeBackup - number of local entries: " << logbook_->entries().size() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of local files: " << logbook_->children().size() << Qt::endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of local entries: " << logbook_->entries().size() << Qt::endl;
 
     // set busy flag
     Base::Singleton::get().application<Application>()->busy();
     statusbar_->label().setText( tr("Reading remote logbook...") );
 
     // opens file in remote logbook
-    Debug::Throw() << "MainWindow::_mergeBackup - reading remote logbook from file: " << backup.file() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - reading remote logbook from file: " << backup.file() << Qt::endl;
 
     Logbook backupLogbook;
     connect( &backupLogbook, &Logbook::messageAvailable, this, &MainWindow::messageAvailable );
@@ -2320,14 +2320,14 @@ void MainWindow::_mergeBackup( const Backup &backup )
     }
 
     // debug
-    Debug::Throw() << "MainWindow::_mergeBackup - number of remote files: " << backupLogbook.children().size() << endl;
-    Debug::Throw() << "MainWindow::_mergeBackup - number of remote entries: " << backupLogbook.entries().size() << endl;
-    Debug::Throw() << "MainWindow::_mergeBackup - updating local from remote" << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of remote files: " << backupLogbook.children().size() << Qt::endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of remote entries: " << backupLogbook.entries().size() << Qt::endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - updating local from remote" << Qt::endl;
 
     // synchronize local with remote
     // retrieve map of duplicated entries
     auto duplicates( logbook_->synchronize( backupLogbook ) );
-    Debug::Throw() << "MainWindow::_mergeBackup - number of duplicated entries: " << duplicates.size() << endl;
+    Debug::Throw() << "MainWindow::_mergeBackup - number of duplicated entries: " << duplicates.size() << Qt::endl;
 
     // update possible EditionWindows when duplicated entries are found
     // delete the local duplicated entries
@@ -2389,7 +2389,7 @@ void MainWindow::_reorganize()
 
     // put entry set into a list and sort by creation time.
     // First entry must the oldest
-    QList<LogEntry*> entryList( entries.toList() );
+    QList<LogEntry*> entryList( entries.begin(), entries.end() );
     std::sort( entryList.begin(), entryList.end(), LogEntry::FirstCreatedFTor() );
 
     // put entries in logbook
@@ -2630,25 +2630,20 @@ void MainWindow::_newEntry()
 {
     Debug::Throw( QStringLiteral("MainWindow::_NewEntry.\n") );
 
-    // retrieve associated EditionWindows, check if one matches the selected entry
+    // retrieve associated EditionWindows, reuse those that are being closed rather than creating a new one
     EditionWindow* editionWindow( nullptr );
     Base::KeySet<EditionWindow> frames( this );
-    Base::KeySetIterator<EditionWindow> iterator( frames.get() );
-    iterator.toBack();
-    while( iterator.hasPrevious() )
+    for( const auto& current:frames )
     {
-        EditionWindow* current( iterator.previous() );
-
         // skip closed editors
-        if( !current->isClosed() ) continue;
-        editionWindow = current;
-        editionWindow->setIsClosed( false );
-        editionWindow->setReadOnly( false );
-        break;
+        if( current->isClosed() ) editionWindow = current;
     }
 
-    if( !editionWindow )
-    {
+    if( editionWindow )
+    { 
+        editionWindow->setIsClosed( false );
+        editionWindow->setReadOnly( false );
+    } else {
         // create new EditionWindow
         editionWindow = new EditionWindow( nullptr, false );
         editionWindow->setColorMenu( colorMenu_ );
@@ -2786,17 +2781,11 @@ void MainWindow::_displayEntry( LogEntry* entry )
     if( !editionWindow )
     {
 
-        // the order is reversed to start from latest
-        Base::KeySetIterator<EditionWindow> iterator( windows.get() );
-        iterator.toBack();
-        while( iterator.hasPrevious() )
+        for( const auto& current:windows )
+        { if( current->isClosed() ) editionWindow = current; }
+
+        if( editionWindow )
         {
-            auto current( iterator.previous() );
-
-            // skip closed editors
-            if( !current->isClosed() ) continue;
-
-            editionWindow = current;
             editionWindow->setIsClosed( false );
             editionWindow->setReadOnly( false );
 
@@ -2807,10 +2796,7 @@ void MainWindow::_displayEntry( LogEntry* entry )
             if( treeModeAction_->isChecked() ) editionWindow->displayEntry( currentKeyword(), entry );
             else if( entry->hasKeywords() ) editionWindow->displayEntry( *entry->keywords().begin(), entry );
             else editionWindow->displayEntry( Keyword::Default, entry );
-
-            break;
         }
-
     }
 
     // if no editionWindow is found create a new one
@@ -3209,7 +3195,7 @@ void MainWindow::_renameEntryKeyword()
 void MainWindow::_confirmRenameEntryKeyword( const Keyword &newKeyword )
 {
 
-    Debug::Throw() << "MainWindow::_confirmRenameEntryKeyword - newKeyword: " << newKeyword << endl;
+    Debug::Throw() << "MainWindow::_confirmRenameEntryKeyword - newKeyword: " << newKeyword << Qt::endl;
 
     QMenu menu( this );
     menu.addActions( entryKeywordChangedMenuActions_ );
@@ -3226,7 +3212,7 @@ void MainWindow::_confirmRenameEntryKeyword( const Keyword &newKeyword )
 void MainWindow::_renameEntryKeyword( const Keyword &newKeyword )
 {
 
-    Debug::Throw() << "MainWindow::_renameEntryKeyword - newKeyword: " << newKeyword << endl;
+    Debug::Throw() << "MainWindow::_renameEntryKeyword - newKeyword: " << newKeyword << Qt::endl;
 
     const auto currentKeyword( this->currentKeyword() );
     if( treeModeAction_->isChecked() && newKeyword == currentKeyword ) return;
@@ -3284,7 +3270,7 @@ void MainWindow::_renameEntryKeyword( const Keyword &newKeyword )
 void MainWindow::_copyEntryKeyword( const Keyword &newKeyword )
 {
 
-    Debug::Throw() << "MainWindow::_copyEntryKeyword - newKeyword: " << newKeyword << endl;
+    Debug::Throw() << "MainWindow::_copyEntryKeyword - newKeyword: " << newKeyword << Qt::endl;
 
     const auto currentKeyword( this->currentKeyword() );
     if( treeModeAction_->isChecked() && newKeyword == currentKeyword ) return;
@@ -3333,7 +3319,7 @@ void MainWindow::_copyEntryKeyword( const Keyword &newKeyword )
 void MainWindow::_linkEntryKeyword( const Keyword &newKeyword )
 {
 
-    Debug::Throw() << "MainWindow::_linkEntryKeyword - newKeyword: " << newKeyword << endl;
+    Debug::Throw() << "MainWindow::_linkEntryKeyword - newKeyword: " << newKeyword << Qt::endl;
 
     const auto currentKeyword( this->currentKeyword() );
     if( treeModeAction_->isChecked() && newKeyword == currentKeyword ) return;
@@ -3430,7 +3416,7 @@ void MainWindow::_keywordSelectionChanged( const QModelIndex& index )
     if( !index.isValid() ) return;
 
     Keyword keyword( keywordModel_.get( index ) );
-    Debug::Throw() << "MainWindow::_keywordSelectionChanged - keyword: " << keyword << endl;
+    Debug::Throw() << "MainWindow::_keywordSelectionChanged - keyword: " << keyword << Qt::endl;
 
     if( treeModeAction_->isChecked() ) entryModel_.setCurrentKeyword( keyword );
 
@@ -3528,7 +3514,7 @@ void MainWindow::_storeSortMethod( int column, Qt::SortOrder order  )
         << "MainWindow::_storeSortMethod -"
         << " column: " << column
         << " order: " << order
-        << endl ;
+        << Qt::endl ;
 
     if( !logbook_ ) return;
 
@@ -3642,7 +3628,7 @@ void MainWindow::_showMonitoredFiles()
 void MainWindow::_toggleTreeMode( bool value )
 {
 
-    Debug::Throw() << "MainWindow::_toggleTreeMode - " << ( value ? "true":"false") << endl;
+    Debug::Throw() << "MainWindow::_toggleTreeMode - " << ( value ? "true":"false") << Qt::endl;
 
     // show/hide keyword list
     keywordContainer_->setVisible( value );

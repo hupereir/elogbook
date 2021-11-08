@@ -17,12 +17,9 @@
 *
 *******************************************************************************/
 
-#include "EditionWindow.h"
-#include "EditionWindow_p.h"
-
 #include "Application.h"
-#include "AttachmentWindow.h"
 #include "AttachmentFrame.h"
+#include "AttachmentWindow.h"
 #include "BaseContextMenu.h"
 #include "BaseFindWidget.h"
 #include "BaseIconNames.h"
@@ -31,37 +28,42 @@
 #include "ColorMenu.h"
 #include "Command.h"
 #include "CppUtil.h"
-#include "ToolBar.h"
+#include "EditionWindow.h"
+#include "EditionWindow_p.h"
 #include "File.h"
 #include "FormatBar.h"
 #include "HtmlDialog.h"
+#include "IconEngine.h"
 #include "IconNames.h"
 #include "IconSize.h"
-#include "IconEngine.h"
 #include "InformationDialog.h"
 #include "InsertLinkDialog.h"
-#include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryHtmlHelper.h"
 #include "LogEntryInformationDialog.h"
 #include "LogEntryPrintHelper.h"
 #include "LogEntryPrintOptionWidget.h"
+#include "Logbook.h"
 #include "MainWindow.h"
 #include "MenuBar.h"
 #include "MessageWidget.h"
+#include "OpenWithDialog.h"
 #include "Options.h"
-#include "PrinterOptionWidget.h"
 #include "PrintPreviewDialog.h"
+#include "PrinterOptionWidget.h"
+#include "QtUtil.h"
 #include "QuestionDialog.h"
 #include "RecentFilesMenu.h"
 #include "SelectLineWidget.h"
 #include "Singleton.h"
+#include "SpellDialog.h"
+#include "ToolBar.h"
 #include "ToolBarSpacerItem.h"
-#include "OpenWithDialog.h"
 #include "Util.h"
+#include "moc_EditionWindow_p.cpp"
+
 
 #if WITH_ASPELL
-#include "SpellDialog.h"
 #endif
 
 #include <QApplication>
@@ -88,7 +90,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     setCentralWidget( main );
 
     auto layout = new QVBoxLayout;
-    layout->setMargin(0);
+    QtUtil::setMargin(layout, 0);
     layout->setSpacing(2);
     main->setLayout( layout );
 
@@ -108,7 +110,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // header layout
     auto gridLayout( new QGridLayout );
     gridLayout->setSpacing(0);
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     layout->addLayout( gridLayout );
 
     // title label and editor
@@ -145,20 +147,20 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     // create text
     auto splitterWidget = new QWidget;
     splitterWidget->setLayout( new QVBoxLayout );
-    splitterWidget->layout()->setMargin(0);
+    QtUtil::setMargin(splitterWidget->layout(), 0);
     splitterWidget->layout()->setSpacing(0);
     splitter->addWidget( splitterWidget );
 
     auto editorContainer = new QWidget( splitterWidget );
     editorContainer->setLayout( new QVBoxLayout );
-    editorContainer->layout()->setMargin(0);
+    QtUtil::setMargin(editorContainer->layout(), 0);
     editorContainer->layout()->setSpacing(0);
     static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( editorContainer, 1 );
 
     // container for embedded widgets
     container_ = new QWidget( splitterWidget );
     container_->setLayout( new QVBoxLayout );
-    container_->layout()->setMargin(0);
+    QtUtil::setMargin(container_->layout(), 0);
     container_->layout()->setSpacing(0);
     static_cast<QVBoxLayout*>(splitterWidget->layout())->addWidget( container_, 0 );
 
@@ -496,7 +498,7 @@ void EditionWindow::_closeEditor( TextEditor& editor )
     Base::KeySet<TextEditor> editors( this );
     if( editors.size() < 2 )
     {
-        Debug::Throw() << "EditionWindow::_closeEditor - full close." << endl;
+        Debug::Throw() << "EditionWindow::_closeEditor - full close." << Qt::endl;
         close();
         return;
     }
@@ -560,17 +562,10 @@ void EditionWindow::_closeEditor( TextEditor& editor )
     }
 
     // update activeEditor
-    Base::KeySetIterator<TextEditor> iterator( editors.get() );
-    iterator.toBack();
-    while( iterator.hasPrevious() )
-    {
-        auto current( iterator.previous() );
-        if( current != &editor )
-        {
-            setActiveEditor( *current );
-            break;
-        }
-    }
+    TextEditor* active = nullptr;
+    for( const auto& current:editors.get() )
+    { if( current != &editor ) active = current; }
+    if( active ) setActiveEditor( *active );
 
     // change focus
     activeEditor_->setFocus();
@@ -581,7 +576,7 @@ void EditionWindow::_closeEditor( TextEditor& editor )
 //________________________________________________________________
 void EditionWindow::setActiveEditor( TextEditor& editor )
 {
-    Debug::Throw() << "EditionWindow::setActiveEditor - key: " << editor.key() << endl;
+    Debug::Throw() << "EditionWindow::setActiveEditor - key: " << editor.key() << Qt::endl;
     Q_ASSERT( editor.isAssociated( this ) );
 
     activeEditor_ = static_cast<Private::LocalTextEditor*>(&editor);
@@ -1171,7 +1166,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
     // update current display and focus
     setActiveEditor( *editor );
     editor->setFocus();
-    Debug::Throw() << "EditionWindow::_newTextEditor - key: " << editor->key() << endl;
+    Debug::Throw() << "EditionWindow::_newTextEditor - key: " << editor->key() << Qt::endl;
     Debug::Throw( QStringLiteral("EditionWindow::_newTextEditor - done.\n") );
 
     // update insert Link actions
@@ -1877,7 +1872,7 @@ void EditionWindow::_updateInsertLinkActions()
 //_____________________________________________
 void EditionWindow::_textModified( bool state )
 {
-    Debug::Throw() << "EditionWindow::_textModified - state: " << (state ? "true":"false" ) << endl;
+    Debug::Throw() << "EditionWindow::_textModified - state: " << (state ? "true":"false" ) << Qt::endl;
 
     // check readonly status
     if( readOnly_ ) return;
@@ -1901,7 +1896,7 @@ void EditionWindow::_close()
 void EditionWindow::_displayFocusChanged( TextEditor* editor )
 {
 
-    Debug::Throw() << "EditionWindow::_DisplayFocusChanged - " << editor->key() << endl;
+    Debug::Throw() << "EditionWindow::_DisplayFocusChanged - " << editor->key() << Qt::endl;
     setActiveEditor( *static_cast<Private::LocalTextEditor*>(editor) );
 
 }
@@ -2111,4 +2106,3 @@ void Private::ColorWidget::paintEvent( QPaintEvent* )
 
 }
 
-#include "moc_EditionWindow_p.cpp"

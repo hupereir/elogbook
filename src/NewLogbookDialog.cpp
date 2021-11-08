@@ -32,7 +32,7 @@ Dialog( parent )
     Debug::Throw( QStringLiteral("NewLogbookDialog::NewLogbookDialog.\n") );
     setWindowTitle( tr( "New Logbook" ) );
     QGridLayout *gridLayout( new QGridLayout );
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setSpacing(5);
     mainLayout().addLayout( gridLayout, 0 );
 

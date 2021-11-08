@@ -103,7 +103,7 @@ bool KeywordModel::setData(const QModelIndex &index, const QVariant& value, int 
     {
         // generate new keyword from value
         Keyword newKeyword( parentKeyword.append( value.toString() ) );
-        Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << newKeyword << endl;
+        Debug::Throw() << "KeywordModel::setData - old: " << keyword << " new: " << newKeyword << Qt::endl;
         emit keywordChanged( keyword, newKeyword );
         emit dataChanged( index, index );
     }
@@ -174,7 +174,7 @@ bool KeywordModel::dropMimeData(const QMimeData* data , Qt::DropAction action, i
 //____________________________________________________________
 void KeywordModel::_sort( int column, Qt::SortOrder order )
 {
-    Debug::Throw() << "KeywordModel::sort - column: " << column << " order: " << order << endl;
+    Debug::Throw() << "KeywordModel::sort - column: " << column << " order: " << order << Qt::endl;
     _root().sort( SortFTor(order) );
 }
 

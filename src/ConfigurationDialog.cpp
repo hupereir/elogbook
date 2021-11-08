@@ -17,23 +17,24 @@
 *
 *******************************************************************************/
 
-#include "ConfigurationDialog.h"
-
 #include "Application.h"
 #include "ColorOptionListBox.h"
+#include "ConfigurationDialog.h"
 #include "Debug.h"
 #include "GridLayout.h"
 #include "IconEngine.h"
 #include "IconNames.h"
-#include "LogbookPrintOptionWidget.h"
 #include "LogEntryPrintOptionWidget.h"
+#include "LogbookPrintOptionWidget.h"
 #include "OptionBrowsedLineEditor.h"
 #include "OptionCheckBox.h"
 #include "OptionSpinBox.h"
 #include "Options.h"
+#include "QtUtil.h"
 #include "RecentFilesConfiguration.h"
 #include "Singleton.h"
 #include "TreeViewConfiguration.h"
+
 
 #include <QLabel>
 #include <QLayout>
@@ -77,7 +78,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
       OptionSpinBox* spinbox;
       QHBoxLayout* hLayout = new QHBoxLayout;
       layout->addLayout( hLayout );
-      hLayout->setMargin(0);
+      QtUtil::setMargin(hLayout, 0);
       hLayout->addWidget( label = new QLabel( tr( "Automatically hide mouse cursor after: " ), box ) );
       hLayout->addWidget( spinbox = new OptionSpinBox( box, QStringLiteral("AUTOHIDE_CURSOR_DELAY") ) );
       spinbox->setSuffix( tr( "s" ) );
@@ -94,7 +95,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     {
         auto gridLayout = new GridLayout;
         gridLayout->setSpacing(5);
-        gridLayout->setMargin(0);
+        QtUtil::setMargin(gridLayout, 0);
         page->layout()->addItem( gridLayout );
 
         int row = 0;
@@ -138,7 +139,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     page = &addPage( IconEngine::get( IconNames::PreferencesPrinting ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );
     {
         auto hLayout = new QHBoxLayout;
-        hLayout->setMargin(0);
+        QtUtil::setMargin(hLayout, 0);
         hLayout->setSpacing(5);
         page->layout()->addItem( hLayout );
 
@@ -146,14 +147,14 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         hLayout->addWidget( box );
         box->setLayout( new QVBoxLayout );
         LogbookPrintOptionWidget* logbookPrintOptionWidget = new LogbookPrintOptionWidget( box );
-        logbookPrintOptionWidget->layout()->setMargin(0);
+        QtUtil::setMargin(logbookPrintOptionWidget->layout(), 0);
         box->layout()->addWidget( logbookPrintOptionWidget );
         addOptionWidget( logbookPrintOptionWidget );
 
         hLayout->addWidget( box = new QGroupBox( tr( "Logbook Entries" ), page ) );
         box->setLayout( new QVBoxLayout );
         LogEntryPrintOptionWidget* logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
-        logEntryPrintOptionWidget->layout()->setMargin(0);
+        QtUtil::setMargin(logEntryPrintOptionWidget->layout(), 0);
         box->layout()->addWidget( logEntryPrintOptionWidget );
         addOptionWidget( logEntryPrintOptionWidget );
     }
@@ -163,7 +164,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     {
         auto box = new QGroupBox( tr( "Logbook Entry Colors" ), page );
         box->setLayout( new QVBoxLayout );
-        box->layout()->setMargin(5);
+        QtUtil::setMargin(box->layout(), 5);
         box->layout()->setSpacing(5);
         page->layout()->addWidget( box );
 
@@ -174,7 +175,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
         box = new QGroupBox( tr( "Text Colors" ), page );
         box->setLayout( new QVBoxLayout );
-        box->layout()->setMargin(5);
+        QtUtil::setMargin(box->layout(), 5);
         box->layout()->setSpacing(5);
         page->layout()->addWidget( box );
 
@@ -185,7 +186,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
 
         box = new QGroupBox( tr( "Text Highlight Colors" ), page );
         box->setLayout( new QVBoxLayout );
-        box->layout()->setMargin(5);
+        QtUtil::setMargin(box->layout(), 5);
         box->layout()->setSpacing(5);
         page->layout()->addWidget( box );
         box->layout()->addWidget( listbox = new ColorOptionListBox( box, QStringLiteral("HIGHLIGHT_COLOR") ) );
@@ -213,7 +214,7 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
         auto box = new QWidget( page );
         auto gridLayout = new GridLayout;
         gridLayout->setSpacing(5);
-        gridLayout->setMargin(0);
+        QtUtil::setMargin(gridLayout, 0);
         gridLayout->setMaxCount( 2 );
         box->setLayout( gridLayout );
         page->layout()->addWidget( box );

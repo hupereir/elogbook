@@ -21,6 +21,7 @@
 #include "GridLayout.h"
 #include "LineEditor.h"
 #include "NewAttachmentDialog.h"
+#include "QtUtil.h"
 
 #include <QLayout>
 #include <QLabel>
@@ -34,7 +35,7 @@ Dialog( parent )
     setWindowTitle( tr( "New Attachment" ) );
 
     GridLayout* gridLayout = new GridLayout;
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setSpacing(5);
     gridLayout->setMaxCount(2);
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );

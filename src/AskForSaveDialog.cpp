@@ -41,12 +41,12 @@ AskForSaveDialog::AskForSaveDialog( QWidget* parent, const QString& message, Ret
     // create vbox layout
     QVBoxLayout* layout=new QVBoxLayout;
     layout->setSpacing(5);
-    layout->setMargin(10);
+    QtUtil::setMargin(layout, 10);
     setLayout( layout );
 
     QHBoxLayout *hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
-    hLayout->setMargin(10);
+    QtUtil::setMargin(hLayout, 10);
     layout->addLayout( hLayout, 1 );
     QLabel* label = new QLabel( this );
     label->setPixmap( IconEngine::get( IconNames::DialogWarning ).pixmap( iconSize() ) );

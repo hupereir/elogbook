@@ -17,15 +17,16 @@
 *
 *******************************************************************************/
 
-#include "AttachmentWindow.h"
-
 #include "Application.h"
+#include "AttachmentWindow.h"
 #include "EditionWindow.h"
 #include "IconEngine.h"
 #include "IconNames.h"
-#include "Logbook.h"
 #include "LogEntry.h"
+#include "Logbook.h"
+#include "QtUtil.h"
 #include "TreeView.h"
+
 
 #include <QShortcut>
 #include <QLayout>
@@ -39,8 +40,8 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     setWindowTitle( tr( "Attachments" ) );
     setOptionName( QStringLiteral("ATTACHMENT_WINDOW") );
 
-    layout()->setMargin(0);
-    buttonLayout().setMargin(5);
+    QtUtil::setMargin(layout(), 0);
+    QtUtil::setMargin(&buttonLayout(), 5);
 
     mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
     connect( frame_, &AttachmentFrame::attachmentSelected, this, &AttachmentWindow::_displayEntry );

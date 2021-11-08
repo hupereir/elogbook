@@ -47,7 +47,7 @@ int main (int argc, char *argv[])
     // TODO use command-line arguments
     if( argc < 2 )
     {
-        Debug::Throw(0) << "usage: uncompress-logbook <input file>" << endl;
+        Debug::Throw(0) << "usage: uncompress-logbook <input file>" << Qt::endl;
         return 0;
     }
 
@@ -72,7 +72,7 @@ int main (int argc, char *argv[])
 
     // debug level
     Debug::setLevel( XmlOptions::get().get<int>( QStringLiteral("DEBUG_LEVEL") ) );
-    if( Debug::level() ) Debug::Throw() << XmlOptions::get() << endl;
+    if( Debug::level() ) Debug::Throw() << XmlOptions::get() << Qt::endl;
 
     // the core application is needed to have locale, fonts, etc. set properly, notably for QSting
     // not having it might result in lost accents and special characters.
@@ -83,27 +83,27 @@ int main (int argc, char *argv[])
     ErrorHandler::initialize();
 
     // try open input logbook
-    Debug::Throw(0) << "uncompress-logbook - reading from: " << input << endl;
+    Debug::Throw(0) << "uncompress-logbook - reading from: " << input << Qt::endl;
     Logbook logbook;
     logbook.setFile( input.expanded() );
     if( !logbook.read() )
     {
-        Debug::Throw(0) << "uncompress-logbook - error reading logbook" << endl;
+        Debug::Throw(0) << "uncompress-logbook - error reading logbook" << Qt::endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "uncompress-logbook - number of files: " << logbook.children().size() << endl;
-    Debug::Throw(0) << "uncompress-logbook - number of entries: " << logbook.entries().size() << endl;
+    Debug::Throw(0) << "uncompress-logbook - number of files: " << logbook.children().size() << Qt::endl;
+    Debug::Throw(0) << "uncompress-logbook - number of entries: " << logbook.entries().size() << Qt::endl;
 
     // perform copy
-    Debug::Throw(0) << "uncompress-logbook - uncompressing" << endl;
+    Debug::Throw(0) << "uncompress-logbook - uncompressing" << Qt::endl;
     logbook.setUseCompression( false );
     logbook.setModifiedRecursive( true );
 
     // copy logbook to ouput
     if( !logbook.write() )
-    { Debug::Throw(0) << "uncompress-logbook - error writing to file " << input << endl; }
+    { Debug::Throw(0) << "uncompress-logbook - error writing to file " << input << Qt::endl; }
 
     return 0;
 }
@@ -111,6 +111,6 @@ int main (int argc, char *argv[])
 //_____________________________________________
 void interrupt( int sig )
 {
-    Debug::Throw() << "uncompress-logbook::interrupt - Recieved signal " << sig << endl;
+    Debug::Throw() << "uncompress-logbook::interrupt - Recieved signal " << sig << Qt::endl;
     exit(0);
 }

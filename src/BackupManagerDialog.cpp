@@ -19,8 +19,9 @@
 
 #include "BackupManagerDialog.h"
 #include "BackupManagerWidget.h"
-#include "IconNames.h"
 #include "IconEngine.h"
+#include "IconNames.h"
+#include "QtUtil.h"
 
 //__________________________________________________________________________________
 BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
@@ -31,7 +32,7 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
     setOptionName( QStringLiteral("BACKUP_MANAGER_DIALOG") );
 
     setLayout( new QVBoxLayout );
-    layout()->setMargin(5);
+    QtUtil::setMargin(layout(), 5);
     layout()->addWidget( managerWidget_ = new BackupManagerWidget( this ) );
 
     // add close button

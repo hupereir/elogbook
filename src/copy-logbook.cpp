@@ -47,7 +47,7 @@ int main (int argc, char *argv[])
     // TODO use command-line arguments
     if( argc < 3 )
     {
-        Debug::Throw(0) << "usage: copy-logbook <input logbook> <output logbook>" << endl;
+        Debug::Throw(0) << "usage: copy-logbook <input logbook> <output logbook>" << Qt::endl;
         return 0;
     }
 
@@ -73,7 +73,7 @@ int main (int argc, char *argv[])
 
     // debug level
     Debug::setLevel( XmlOptions::get().get<int>( QStringLiteral("DEBUG_LEVEL") ) );
-    if( Debug::level() ) Debug::Throw() << XmlOptions::get() << endl;
+    if( Debug::level() ) Debug::Throw() << XmlOptions::get() << Qt::endl;
 
     // compression
     bool useCompression( XmlOptions::get().get<bool>( QStringLiteral("USE_COMPRESSION") ) );
@@ -87,22 +87,22 @@ int main (int argc, char *argv[])
     ErrorHandler::initialize();
 
     // try open input logbook
-    Debug::Throw(0) << "copy-logbook - reading from: " << input << endl;
+    Debug::Throw(0) << "copy-logbook - reading from: " << input << Qt::endl;
     Logbook logbook;
     logbook.setFile( input.expanded() );
     logbook.setUseCompression( useCompression );
     if( !logbook.read() )
     {
-        Debug::Throw(0) << "copy-logbook - error reading logbook" << endl;
+        Debug::Throw(0) << "copy-logbook - error reading logbook" << Qt::endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "copy-logbook - number of files: " << logbook.children().size() << endl;
-    Debug::Throw(0) << "copy-logbook - number of entries: " << logbook.entries().size() << endl;
+    Debug::Throw(0) << "copy-logbook - number of files: " << logbook.children().size() << Qt::endl;
+    Debug::Throw(0) << "copy-logbook - number of entries: " << logbook.entries().size() << Qt::endl;
 
     // perform copy
-    Debug::Throw(0) << "copy-logbook - writing to: " << output << endl;
+    Debug::Throw(0) << "copy-logbook - writing to: " << output << Qt::endl;
     logbook.setFile( output.expanded() );
     logbook.setModifiedRecursive( true );
 
@@ -113,13 +113,13 @@ int main (int argc, char *argv[])
         // check file is not a directory
         if( fullname.isDirectory() )
         {
-            Debug::Throw(0) << "copy-logbook - selected file is a directory. <Save Logbook> canceled." << endl;
+            Debug::Throw(0) << "copy-logbook - selected file is a directory. <Save Logbook> canceled." << Qt::endl;
             return 0;
         }
 
         // check file is writable
         if( !fullname.isWritable() ) {
-            Debug::Throw(0) << "copy-logbook - selected file is not writable. <Save Logbook> canceled." << endl;
+            Debug::Throw(0) << "copy-logbook - selected file is not writable. <Save Logbook> canceled." << Qt::endl;
             return 0;
         }
 
@@ -127,7 +127,7 @@ int main (int argc, char *argv[])
 
         File path( fullname.path() );
         if( !path.isDirectory() ) {
-            Debug::Throw(0) << "copy-logbook - selected path is not valid. <Save Logbook> canceled." << endl;
+            Debug::Throw(0) << "copy-logbook - selected path is not valid. <Save Logbook> canceled." << Qt::endl;
             return 0;
         }
 
@@ -135,7 +135,7 @@ int main (int argc, char *argv[])
 
     // copy logbook to ouput
     if( !logbook.write() )
-    { Debug::Throw(0) << "copy-logbook - error writing to file " << output << endl; }
+    { Debug::Throw(0) << "copy-logbook - error writing to file " << output << Qt::endl; }
 
     return 0;
 }
@@ -143,6 +143,6 @@ int main (int argc, char *argv[])
 //_____________________________________________
 void interrupt( int sig )
 {
-    Debug::Throw() << "copy-logbook::interrupt - Recieved signal " << sig << endl;
+    Debug::Throw() << "copy-logbook::interrupt - Recieved signal " << sig << Qt::endl;
     exit(0);
 }

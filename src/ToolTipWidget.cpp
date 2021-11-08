@@ -41,7 +41,7 @@ ToolTipWidget::ToolTipWidget( QWidget* parent ):
     setFollowMouse( true );
  
     auto vLayout = new QVBoxLayout;
-    vLayout->setMargin( 10 );
+    QtUtil::setMargin(vLayout, 10);
     vLayout->setSpacing( 5 );
     setLayout( vLayout );
  
@@ -49,7 +49,7 @@ ToolTipWidget::ToolTipWidget( QWidget* parent ):
     vLayout->addWidget( titleLabel_ = new QLabel( this ) );
     titleLabel_->setAlignment( Qt::AlignCenter );
     titleLabel_->setFont( QtUtil::titleFont( titleLabel_->font() ) );
-    titleLabel_->setMargin( 1 );
+    QtUtil::setMargin(titleLabel_, 1);
 
     // separator
     auto separator = new QFrame( this );
@@ -61,7 +61,7 @@ ToolTipWidget::ToolTipWidget( QWidget* parent ):
     gridLayout->setMaxCount( 2 );
     gridLayout->setColumnAlignment( 0, Qt::AlignVCenter|Qt::AlignRight );
     gridLayout->setColumnAlignment( 1, Qt::AlignVCenter|Qt::AlignLeft );
-    gridLayout->setMargin( 0 );
+    QtUtil::setMargin(gridLayout, 0);
     gridLayout->setSpacing( 5 );
     vLayout->addLayout( gridLayout );
 

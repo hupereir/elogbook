@@ -17,10 +17,11 @@
 *
 *******************************************************************************/
 
-#include "DeleteAttachmentDialog.h"
 #include "Debug.h"
-#include "IconNames.h"
+#include "DeleteAttachmentDialog.h"
 #include "IconEngine.h"
+#include "IconNames.h"
+#include "QtUtil.h"
 
 #include <QButtonGroup>
 #include <QGroupBox>
@@ -40,7 +41,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
 
     QHBoxLayout *hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
-    hLayout->setMargin(0);
+    QtUtil::setMargin(hLayout, 0);
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel( this );
@@ -51,7 +52,7 @@ DeleteAttachmentDialog::DeleteAttachmentDialog( QWidget* parent, const Attachmen
     QWidget *groupBox = new QWidget( this );
     mainLayout().addWidget( groupBox );
     groupBox->setLayout( new QVBoxLayout );
-    groupBox->layout()->setMargin(5);
+    QtUtil::setMargin(groupBox->layout(), 5);
     groupBox->layout()->setSpacing(5);
 
     groupBox->layout()->addWidget( fromDiskButton_ = new QRadioButton( tr( "From disk" ), groupBox ) );

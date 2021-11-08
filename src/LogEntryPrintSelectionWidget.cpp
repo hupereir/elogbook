@@ -50,7 +50,7 @@ LogEntryPrintSelectionWidget::LogEntryPrintSelectionWidget( QWidget* parent ):
         group->addButton( iter.value() );
     }
 
-    connect( group, QOverload<int>::of(&QButtonGroup::buttonClicked), this, [this](int){ _updateMode(); } );
+    connect( group, &QButtonGroup::buttonClicked, this, [this](QAbstractButton*){ _updateMode(); } );
     layout->addStretch(1);
 }
 

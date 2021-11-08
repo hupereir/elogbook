@@ -17,14 +17,15 @@
 *
 *******************************************************************************/
 
-#include "LogbookInformationDialog.h"
-
 #include "Debug.h"
-#include "IconNames.h"
 #include "IconEngine.h"
+#include "IconNames.h"
 #include "Logbook.h"
+#include "LogbookInformationDialog.h"
+#include "QtUtil.h"
 #include "TextEditor.h"
 #include "Util.h"
+
 
 #include <QLayout>
 #include <QLabel>
@@ -39,7 +40,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     setOptionName( QStringLiteral("LOGBOOK_INFORMATION_DIALOG") );
 
     QHBoxLayout* hLayout = new QHBoxLayout;
-    hLayout->setMargin(5);
+    QtUtil::setMargin(hLayout, 5);
     mainLayout().addLayout( hLayout );
 
     QLabel* label = new QLabel(this);
@@ -47,7 +48,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
     QGridLayout *gridLayout( new QGridLayout );
-    gridLayout->setMargin(0);
+    QtUtil::setMargin(gridLayout, 0);
     hLayout->addLayout( gridLayout, 0 );
 
     gridLayout->addWidget( label = new QLabel( tr( "Title:" ), this ), 0, 0 );

@@ -44,7 +44,7 @@ int main (int argc, char *argv[])
     // read argument
     if( argc < 3 )
     {
-        Debug::Throw(0) << "usage: synchronize-logbook <first logbook> <second logbook>" << endl;
+        Debug::Throw(0) << "usage: synchronize-logbook <first logbook> <second logbook>" << Qt::endl;
         return 0;
     }
 
@@ -70,7 +70,7 @@ int main (int argc, char *argv[])
 
     // debug level
     Debug::setLevel( XmlOptions::get().get<int>( QStringLiteral("DEBUG_LEVEL") ) );
-    if( Debug::level() ) Debug::Throw() << XmlOptions::get() << endl;
+    if( Debug::level() ) Debug::Throw() << XmlOptions::get() << Qt::endl;
 
     // compression
     bool useCompression( XmlOptions::get().get<bool>( QStringLiteral("USE_COMPRESSION") ) );
@@ -84,50 +84,50 @@ int main (int argc, char *argv[])
     ErrorHandler::initialize();
 
     // try open first Logbook
-    Debug::Throw(0) << "synchronize-logbook - reading first logbook from: " << first << endl;
+    Debug::Throw(0) << "synchronize-logbook - reading first logbook from: " << first << Qt::endl;
     Logbook firstLogbook;
     firstLogbook.setFile( first.expanded() );
     firstLogbook.setUseCompression( useCompression );
     if( !firstLogbook.read() )
     {
-        Debug::Throw(0) << "synchronize-logbook - error reading first logbook" << endl;
+        Debug::Throw(0) << "synchronize-logbook - error reading first logbook" << Qt::endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "synchronize-logbook - number of files in first logbook: " << firstLogbook.children().size() << endl;
-    Debug::Throw(0) << "synchronize-logbook - number of entries in first logbook: " << firstLogbook.entries().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of files in first logbook: " << firstLogbook.children().size() << Qt::endl;
+    Debug::Throw(0) << "synchronize-logbook - number of entries in first logbook: " << firstLogbook.entries().size() << Qt::endl;
 
     // try open second logbook
-    Debug::Throw(0) << "synchronize-logbook - reading second logbook from: " << second << endl;
+    Debug::Throw(0) << "synchronize-logbook - reading second logbook from: " << second << Qt::endl;
     Logbook secondLogbook;
     secondLogbook.setFile( second.expanded() );
     secondLogbook.setUseCompression( useCompression );
     if( !secondLogbook.read() )
     {
-        Debug::Throw(0) << "synchronize-logbook - error reading second logbook" << endl;
+        Debug::Throw(0) << "synchronize-logbook - error reading second logbook" << Qt::endl;
         return 0;
     }
 
     // debug
-    Debug::Throw(0) << "synchronize-logbook - number of files in second logbook: " << secondLogbook.children().size() << endl;
-    Debug::Throw(0) << "synchronize-logbook - number of entries in second logbook: " << secondLogbook.entries().size() << endl;
+    Debug::Throw(0) << "synchronize-logbook - number of files in second logbook: " << secondLogbook.children().size() << Qt::endl;
+    Debug::Throw(0) << "synchronize-logbook - number of entries in second logbook: " << secondLogbook.entries().size() << Qt::endl;
 
     // check whether first logbook is read-only
     if( firstLogbook.isReadOnly() )
     {
 
-        Debug::Throw(0) << "synchronize-logbook - first logbook is read-only. It will not be synchronized to the second logbook." << endl;
+        Debug::Throw(0) << "synchronize-logbook - first logbook is read-only. It will not be synchronized to the second logbook." << Qt::endl;
 
     } else {
 
-        Debug::Throw(0) << "synchronize-logbook - updating first logbook from second" << endl;
+        Debug::Throw(0) << "synchronize-logbook - updating first logbook from second" << Qt::endl;
         const int nDuplicated( firstLogbook.synchronize( secondLogbook ).size() );
-        Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << endl;
+        Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << Qt::endl;
 
         if( !firstLogbook.write() )
         {
-            Debug::Throw(0) << "synchronize-logbook - error writing first logbook" << endl;
+            Debug::Throw(0) << "synchronize-logbook - error writing first logbook" << Qt::endl;
             return 0;
         }
 
@@ -137,18 +137,18 @@ int main (int argc, char *argv[])
     if( secondLogbook.isReadOnly() )
     {
 
-        Debug::Throw(0) << "synchronize-logbook - second logbook is read-only. It will not be synchronized to the first logbook." << endl;
+        Debug::Throw(0) << "synchronize-logbook - second logbook is read-only. It will not be synchronized to the first logbook." << Qt::endl;
 
     } else {
 
-        Debug::Throw(0) << "synchronize-logbook - updating second logbook from first" << endl;
+        Debug::Throw(0) << "synchronize-logbook - updating second logbook from first" << Qt::endl;
         const int nDuplicated( secondLogbook.synchronize( firstLogbook ).size() );
 
-        Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << endl;
+        Debug::Throw(0) << "synchronize-logbook - number of duplicated entries: " << nDuplicated << Qt::endl;
 
         if( !secondLogbook.write() )
         {
-            Debug::Throw(0) << "error writting to second logbook" << endl;
+            Debug::Throw(0) << "error writting to second logbook" << Qt::endl;
             return 0;
         }
 
@@ -160,6 +160,6 @@ int main (int argc, char *argv[])
 //_____________________________________________
 void interrupt( int sig )
 {
-    Debug::Throw() << "interrupt - Recieved signal " << sig << endl;
+    Debug::Throw() << "interrupt - Recieved signal " << sig << Qt::endl;
     exit(0);
 }

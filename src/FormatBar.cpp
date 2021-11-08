@@ -155,7 +155,7 @@ FormatBar::FormatBar( QWidget* parent, const QString& optionName ):
 void FormatBar::setTarget( TextEditor& editor )
 {
 
-    Debug::Throw() << "FormatBar::setTarget - key: " << editor.key() << endl;
+    Debug::Throw() << "FormatBar::setTarget - key: " << editor.key() << Qt::endl;
     editor_ = &editor;
 
     // first update

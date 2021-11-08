@@ -51,7 +51,7 @@ namespace
 
             } catch( std::bad_alloc& exception ) {
 
-                Debug::Throw() << "safeUncompress - caught bad_alloc exception: " << exception.what() << endl;
+                Debug::Throw() << "safeUncompress - caught bad_alloc exception: " << exception.what() << Qt::endl;
                 return QByteArray();
 
             }
@@ -170,7 +170,7 @@ bool Logbook::read()
     const auto tagName( docElement.tagName() );
     if( tagName != Xml::Logbook )
     {
-        Debug::Throw(0) << "Logbook::read - invalid tag name: " << tagName << endl;
+        Debug::Throw(0) << "Logbook::read - invalid tag name: " << tagName << Qt::endl;
         return false;
     }
 
@@ -240,7 +240,7 @@ bool Logbook::read()
             auto fileAttribute( element.attribute( Xml::File ) );
             if( fileAttribute.isEmpty() )
             {
-                Debug::Throw(0) << "Logbook::read - no file given for child" << endl;
+                Debug::Throw(0) << "Logbook::read - no file given for child" << Qt::endl;
                 continue;
             }
 
@@ -256,7 +256,7 @@ bool Logbook::read()
             child->read();
             children_.append( child );
 
-        } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << endl;
+        } else Debug::Throw(0) << "Logbook::read - unrecognized tagName: " << tagName << Qt::endl;
 
     }
 
@@ -299,7 +299,7 @@ bool Logbook::write( File file )
         // update stateFrame
         if( !QFile( file ).open( QIODevice::WriteOnly ) )
         {
-            Debug::Throw(0) << "Logbook::write - unable to write to file " << file << endl;
+            Debug::Throw(0) << "Logbook::write - unable to write to file " << file << Qt::endl;
             return false;
         }
 

@@ -17,8 +17,9 @@
 *
 *******************************************************************************/
 
-#include "LogbookPrintHelper.h"
 #include "LogEntryPrintHelper.h"
+#include "LogbookPrintHelper.h"
+#include "QtUtil.h"
 #include "Util.h"
 
 #include <QList>
@@ -201,7 +202,6 @@ void LogbookPrintHelper::_printTable( QPrinter* printer, QPainter* painter, QPoi
         QTextCursor cursor( &document );
         QTextTableFormat tableFormat;
         tableFormat.setBorderStyle( QTextFrameFormat::BorderStyle_None );
-
         tableFormat.setMargin(0);
         tableFormat.setPadding(0);
         tableFormat.setBorder(0);

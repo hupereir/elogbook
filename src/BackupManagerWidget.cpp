@@ -18,11 +18,12 @@
 *******************************************************************************/
 
 #include "BackupManagerWidget.h"
-
-#include "IconNames.h"
 #include "IconEngine.h"
+#include "IconNames.h"
+#include "QtUtil.h"
 #include "QuestionDialog.h"
 #include "TreeView.h"
+
 
 //____________________________________________________________________________
 BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
@@ -31,7 +32,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
 {
     Debug::Throw( QStringLiteral("BackupManagerWidget::BackupManagerWidget") );
     auto hLayout = new QHBoxLayout;
-    hLayout->setMargin(0);
+    QtUtil::setMargin(hLayout, 0);
     setLayout( hLayout );
 
     // add tree
@@ -42,7 +43,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
 
     // buttons
     buttonLayout_ = new QVBoxLayout;
-    buttonLayout_->setMargin(0);
+    QtUtil::setMargin(buttonLayout_, 0);
     hLayout->addLayout( buttonLayout_ );
 
     buttonLayout_->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( IconNames::Add ), tr( "New" ), this ) );

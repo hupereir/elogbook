@@ -101,7 +101,7 @@ void FileCheck::timerEvent( QTimerEvent* event )
 void FileCheck::_addFile( const QString& file )
 {
 
-    Debug::Throw() << "FileCheck::addFile: " << file << endl;
+    Debug::Throw() << "FileCheck::addFile: " << file << Qt::endl;
     if( files_.find( file ) == files_.end() )
     {
         files_.insert( file );
@@ -113,7 +113,7 @@ void FileCheck::_addFile( const QString& file )
 //______________________________________________________
 void FileCheck::_removeFile( const QString& file, bool )
 {
-    Debug::Throw() << "FileCheck::removeFile: " << file << endl;
+    Debug::Throw() << "FileCheck::removeFile: " << file << Qt::endl;
     files_.remove( file );
     _fileSystemWatcher().removePath( file );
     return;

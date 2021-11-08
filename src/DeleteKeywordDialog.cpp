@@ -17,10 +17,11 @@
 *
 *******************************************************************************/
 
-#include "DeleteKeywordDialog.h"
 #include "Debug.h"
-#include "IconNames.h"
+#include "DeleteKeywordDialog.h"
 #include "IconEngine.h"
+#include "IconNames.h"
+#include "QtUtil.h"
 
 #include <QButtonGroup>
 #include <QLabel>
@@ -58,7 +59,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const Keyword::List& 
     //! try load Question icon
     auto hLayout( new QHBoxLayout );
     hLayout->setSpacing(10);
-    hLayout->setMargin(0);
+    QtUtil::setMargin(hLayout, 0);
     mainLayout().addLayout( hLayout );
 
     auto label = new QLabel( this );
@@ -69,7 +70,7 @@ DeleteKeywordDialog::DeleteKeywordDialog( QWidget* parent, const Keyword::List& 
     auto box = new QWidget( this );
     mainLayout().addWidget( box );
     box->setLayout( new QVBoxLayout );
-    box->layout()->setMargin(5);
+    QtUtil::setMargin(box->layout(), 5);
     box->layout()->setSpacing(5);
 
 
