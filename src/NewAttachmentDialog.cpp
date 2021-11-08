@@ -17,10 +17,10 @@
 *
 *******************************************************************************/
 
+#include "NewAttachmentDialog.h"
 #include "Debug.h"
 #include "GridLayout.h"
 #include "LineEditor.h"
-#include "NewAttachmentDialog.h"
 #include "QtUtil.h"
 
 #include <QLayout>

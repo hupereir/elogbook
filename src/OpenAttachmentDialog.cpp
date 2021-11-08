@@ -17,13 +17,13 @@
 *
 *******************************************************************************/
 
+#include "OpenAttachmentDialog.h"
 #include "BaseIconNames.h"
 #include "Debug.h"
 #include "ElidedLabel.h"
 #include "File.h"
 #include "GridLayout.h"
 #include "IconEngine.h"
-#include "OpenAttachmentDialog.h"
 #include "OpenWithComboBox.h"
 #include "QtUtil.h"
 #include "TextEditor.h"

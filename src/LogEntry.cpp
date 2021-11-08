@@ -18,16 +18,16 @@
 *******************************************************************************/
 
 #include "LogEntry.h"
-
-#include "Debug.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
+#include "Debug.h"
 #include "Logbook.h"
 #include "TextFormat.h"
 #include "XmlColor.h"
 #include "XmlDef.h"
 #include "XmlTextFormatBlock.h"
 #include "XmlTimeStamp.h"
+
 
 //__________________________________
 const QString LogEntry::MimeType = QStringLiteral("logbook/log-entry-list");

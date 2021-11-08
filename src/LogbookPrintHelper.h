@@ -19,14 +19,14 @@
 *
 *******************************************************************************/
 
-#include "Counter.h"
 #include "BasePrintHelper.h"
+#include "Counter.h"
 #include "Debug.h"
 #include "Keyword.h"
-#include "Logbook.h"
-#include "LogEntryModel.h"
 #include "LogEntry.h"
+#include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
+#include "Logbook.h"
 
 #include <QObject>
 #include <QPainter>

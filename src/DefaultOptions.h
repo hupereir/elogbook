@@ -20,14 +20,14 @@
 *
 *******************************************************************************/
 
-#include "LogEntryModel.h"
 #include "AttachmentModel.h"
 #include "Color.h"
 #include "CppUtil.h"
 #include "File.h"
-#include "Logbook.h"
 #include "LogEntry.h"
+#include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
+#include "Logbook.h"
 #include "Util.h"
 #include "XmlOptions.h"
 

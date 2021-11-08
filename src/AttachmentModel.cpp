@@ -18,11 +18,11 @@
 *******************************************************************************/
 
 #include "AttachmentModel.h"
-
 #include "Attachment.h"
-#include "MimeTypeIconProvider.h"
 #include "IconEngine.h"
+#include "MimeTypeIconProvider.h"
 #include "TimeStamp.h"
+
 
 //_______________________________________________________________
 AttachmentModel::AttachmentModel( QObject* parent ):

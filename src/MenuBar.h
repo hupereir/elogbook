@@ -20,8 +20,8 @@
 *
 *******************************************************************************/
 
-#include "Debug.h"
 #include "Counter.h"
+#include "Debug.h"
 
 #include <QMenuBar>
 #include <QHash>

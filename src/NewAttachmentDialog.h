@@ -23,8 +23,8 @@
 #include "Attachment.h"
 #include "BrowsedLineEditor.h"
 #include "Dialog.h"
-#include "TextEditor.h"
 #include "File.h"
+#include "TextEditor.h"
 
 #include <QCheckBox>
 #include <QComboBox>

@@ -18,7 +18,6 @@
 *******************************************************************************/
 
 #include "LogEntryHtmlHelper.h"
-
 #include "Attachment.h"
 #include "Color.h"
 #include "ColorMenu.h"
@@ -28,6 +27,7 @@
 #include "Logbook.h"
 #include "TextFormat.h"
 #include "TextPosition.h"
+
 
 //__________________________________________________________________________________
 void LogEntryHtmlHelper::print( QIODevice* device )

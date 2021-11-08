@@ -17,8 +17,8 @@
 *
 *******************************************************************************/
 
-#include "Application.h"
 #include "AttachmentWindow.h"
+#include "Application.h"
 #include "EditionWindow.h"
 #include "IconEngine.h"
 #include "IconNames.h"

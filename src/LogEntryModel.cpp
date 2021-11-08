@@ -18,19 +18,19 @@
 *******************************************************************************/
 
 #include "LogEntryModel.h"
-
 #include "Application.h"
 #include "Attachment.h"
 #include "ColorMenu.h"
 #include "CppUtil.h"
-#include "Pixmap.h"
-#include "IconNames.h"
 #include "IconEngine.h"
+#include "IconNames.h"
 #include "LogEntry.h"
+#include "Pixmap.h"
+#include "QtUtil.h"
 #include "Singleton.h"
 #include "TimeStamp.h"
-#include "QtUtil.h"
 #include "XmlOptions.h"
+
 
 
 #include <QIcon>

@@ -18,11 +18,11 @@
 *******************************************************************************/
 
 #include "ColorMenu.h"
-
 #include "BaseIconNames.h"
 #include "CppUtil.h"
 #include "IconEngine.h"
 #include "IconSize.h"
+
 
 #include <QColorDialog>
 #include <QPainter>

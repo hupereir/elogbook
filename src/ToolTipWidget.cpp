@@ -18,7 +18,6 @@
 *******************************************************************************/
 
 #include "ToolTipWidget.h"
-
 #include "Application.h"
 #include "Debug.h"
 #include "GridLayout.h"
@@ -27,6 +26,7 @@
 #include "Singleton.h"
 #include "TimeStamp.h"
 #include "XmlOptions.h"
+
 
 #include <QFrame>
 #include <QLayout>

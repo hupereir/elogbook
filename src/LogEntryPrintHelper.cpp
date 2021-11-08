@@ -17,11 +17,11 @@
 *
 *******************************************************************************/
 
+#include "LogEntryPrintHelper.h"
 #include "Attachment.h"
 #include "Color.h"
 #include "ColorMenu.h"
 #include "LogEntry.h"
-#include "LogEntryPrintHelper.h"
 #include "Logbook.h"
 #include "QtUtil.h"
 #include "TextFormat.h"

@@ -18,16 +18,16 @@
 *******************************************************************************/
 
 #include "LogEntryInformationDialog.h"
-
-#include "GridLayoutItem.h"
 #include "Debug.h"
 #include "GridLayout.h"
-#include "IconNames.h"
+#include "GridLayoutItem.h"
 #include "IconEngine.h"
-#include "Logbook.h"
+#include "IconNames.h"
 #include "LogEntry.h"
+#include "Logbook.h"
 #include "Options.h"
 #include "QtUtil.h"
+
 
 #include <QLabel>
 #include <QLayout>

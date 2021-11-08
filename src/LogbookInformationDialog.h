@@ -20,10 +20,10 @@
 *
 *******************************************************************************/
 
-#include "LineEditor.h"
 #include "BrowsedLineEditor.h"
 #include "Dialog.h"
 #include "File.h"
+#include "LineEditor.h"
 #include "TextEditor.h"
 
 #include <QCheckBox>

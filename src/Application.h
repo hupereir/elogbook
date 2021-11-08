@@ -28,8 +28,8 @@
 #include "Counter.h"
 #include "FileList.h"
 #include "IconEngine.h"
-#include "ScratchFileMonitor.h"
 #include "MainWindow.h"
+#include "ScratchFileMonitor.h"
 
 #include <memory>
 

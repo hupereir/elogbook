@@ -21,19 +21,19 @@
 *******************************************************************************/
 
 #include "AskForSaveDialog.h"
-#include "Counter.h"
 #include "BaseMainWindow.h"
+#include "Counter.h"
 #include "Debug.h"
 #include "FileCheck.h"
 #include "FileRecord.h"
 #include "Key.h"
 #include "KeywordList.h"
 #include "KeywordModel.h"
-#include "Logbook.h"
 #include "LogEntry.h"
 #include "LogEntryList.h"
 #include "LogEntryModel.h"
 #include "LogEntryPrintSelectionWidget.h"
+#include "Logbook.h"
 #include "SearchWidget.h"
 #include "TreeView.h"
 

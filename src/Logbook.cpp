@@ -18,16 +18,16 @@
 *******************************************************************************/
 
 #include "Logbook.h"
-
 #include "Attachment.h"
 #include "CppUtil.h"
 #include "Debug.h"
 #include "FileCheck.h"
 #include "LogEntry.h"
-#include "XmlOptions.h"
 #include "Util.h"
 #include "XmlDef.h"
+#include "XmlOptions.h"
 #include "XmlTimeStamp.h"
+
 
 #include <QDomDocument>
 #include <QFile>

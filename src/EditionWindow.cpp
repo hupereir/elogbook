@@ -17,6 +17,7 @@
 *
 *******************************************************************************/
 
+#include "EditionWindow.h"
 #include "Application.h"
 #include "AttachmentFrame.h"
 #include "AttachmentWindow.h"
@@ -28,7 +29,6 @@
 #include "ColorMenu.h"
 #include "Command.h"
 #include "CppUtil.h"
-#include "EditionWindow.h"
 #include "EditionWindow_p.h"
 #include "File.h"
 #include "FormatBar.h"
@@ -2105,4 +2105,3 @@ void Private::ColorWidget::paintEvent( QPaintEvent* )
     painter.drawComplexControl(QStyle::CC_ToolButton, option);
 
 }
-

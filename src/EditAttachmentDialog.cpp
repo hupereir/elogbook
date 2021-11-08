@@ -17,8 +17,8 @@
 *
 *******************************************************************************/
 
-#include "Debug.h"
 #include "EditAttachmentDialog.h"
+#include "Debug.h"
 #include "File.h"
 #include "GridLayout.h"
 #include "LineEditor.h"

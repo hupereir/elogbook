@@ -18,7 +18,6 @@
 *******************************************************************************/
 
 #include "Application.h"
-
 #include "AttachmentWindow.h"
 #include "ConfigurationDialog.h"
 #include "Debug.h"
@@ -28,12 +27,13 @@
 #include "Logbook.h"
 #include "MainWindow.h"
 #include "MenuBar.h"
-#include "RecentFilesMenu.h"
-#include "ScratchFileMonitor.h"
 #include "QtUtil.h"
 #include "QuestionDialog.h"
+#include "RecentFilesMenu.h"
+#include "ScratchFileMonitor.h"
 #include "XmlFileList.h"
 #include "XmlOptions.h"
+
 
 #include <QMessageBox>
 

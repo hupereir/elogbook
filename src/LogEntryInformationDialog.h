@@ -20,8 +20,8 @@
 *
 *******************************************************************************/
 
-#include "Dialog.h"
 #include "Counter.h"
+#include "Dialog.h"
 
 class LogEntry;
 

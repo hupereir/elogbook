@@ -21,9 +21,9 @@
 *******************************************************************************/
 
 #include "Counter.h"
-#include "ToolBar.h"
-#include "TextFormatBlock.h"
 #include "TextFormat.h"
+#include "TextFormatBlock.h"
+#include "ToolBar.h"
 
 #include <QAction>
 #include <QFont>

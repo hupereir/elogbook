@@ -26,4 +26,3 @@ QSize KeywordList::sizeHint() const
 //______________________________________________________________________
 void KeywordList::setDefaultWidth( int value )
 { defaultWidth_ = value; }
-

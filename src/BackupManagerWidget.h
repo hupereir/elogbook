@@ -24,8 +24,8 @@
 #include "BackupModel.h"
 #include "Counter.h"
 #include "Key.h"
-#include "Logbook.h"
 #include "ListModel.h"
+#include "Logbook.h"
 
 #include <QWidget>
 #include <QPushButton>

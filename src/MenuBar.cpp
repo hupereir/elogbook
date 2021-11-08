@@ -18,10 +18,8 @@
 *******************************************************************************/
 
 #include "MenuBar.h"
-
 #include "Application.h"
 #include "AttachmentWindow.h"
-#include "ToolBar.h"
 #include "DebugMenu.h"
 #include "DefaultHelpText.h"
 #include "EditionWindow.h"
@@ -32,11 +30,13 @@
 #include "IconNames.h"
 #include "Logbook.h"
 #include "MainWindow.h"
-#include "RecentFilesMenu.h"
 #include "QtUtil.h"
+#include "RecentFilesMenu.h"
 #include "Singleton.h"
+#include "ToolBar.h"
 #include "Util.h"
 #include "XmlOptions.h"
+
 
 //_______________________________________________
 MenuBar::MenuBar( QWidget* parent, MainWindow* mainWindow ):

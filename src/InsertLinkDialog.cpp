@@ -17,8 +17,8 @@
 *
 *******************************************************************************/
 
-#include "Debug.h"
 #include "InsertLinkDialog.h"
+#include "Debug.h"
 #include "QtUtil.h"
 
 #include <QLabel>

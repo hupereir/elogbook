@@ -17,8 +17,8 @@
 *
 *******************************************************************************/
 
-#include "Debug.h"
 #include "DeleteAttachmentDialog.h"
+#include "Debug.h"
 #include "IconEngine.h"
 #include "IconNames.h"
 #include "QtUtil.h"

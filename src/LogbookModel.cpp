@@ -18,8 +18,8 @@
 *******************************************************************************/
 
 #include "LogbookModel.h"
-#include "Logbook.h"
 #include "LogEntry.h"
+#include "Logbook.h"
 
 //_______________________________________________________________________________________
 QVariant LogbookModel::data( const QModelIndex& index, int role ) const

@@ -20,8 +20,8 @@
 *
 *******************************************************************************/
 
-#include "Counter.h"
 #include "Color.h"
+#include "Counter.h"
 #include "Keyword.h"
 #include "ListModel.h"
 

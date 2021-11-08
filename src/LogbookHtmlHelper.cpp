@@ -18,9 +18,9 @@
 *******************************************************************************/
 
 #include "LogbookHtmlHelper.h"
-#include "LogEntryHtmlHelper.h"
 #include "HtmlHeaderNode.h"
 #include "HtmlTextNode.h"
+#include "LogEntryHtmlHelper.h"
 
 //__________________________________________________________________________________
 void LogbookHtmlHelper::print( QIODevice* device )

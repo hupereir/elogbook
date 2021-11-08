@@ -18,12 +18,10 @@
 *******************************************************************************/
 
 #include "FormatBar.h"
-
 #include "Application.h"
 #include "BaseIconNames.h"
 #include "ColorMenu.h"
 #include "CppUtil.h"
-#include "ToolButton.h"
 #include "Debug.h"
 #include "FormatBarIconNames.h"
 #include "IconEngine.h"
@@ -32,7 +30,9 @@
 #include "TextBlockRange.h"
 #include "TextEditor.h"
 #include "TextPosition.h"
+#include "ToolButton.h"
 #include "XmlOptions.h"
+
 
 #include <QPainter>
 #include <QStyleOptionToolButton>

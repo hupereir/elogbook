@@ -17,6 +17,7 @@
 *
 *******************************************************************************/
 
+#include "LogbookStatisticsDialog.h"
 #include "Debug.h"
 #include "GridLayout.h"
 #include "GridLayoutItem.h"
@@ -24,7 +25,6 @@
 #include "IconNames.h"
 #include "LogEntry.h"
 #include "Logbook.h"
-#include "LogbookStatisticsDialog.h"
 #include "QtUtil.h"
 #include "TreeView.h"
 #include "Util.h"

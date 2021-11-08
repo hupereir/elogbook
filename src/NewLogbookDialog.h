@@ -20,12 +20,12 @@
 *
 *******************************************************************************/
 
-#include "LineEditor.h"
 #include "BrowsedLineEditor.h"
-#include "Dialog.h"
-#include "TextEditor.h"
-#include "File.h"
 #include "Debug.h"
+#include "Dialog.h"
+#include "File.h"
+#include "LineEditor.h"
+#include "TextEditor.h"
 
 #include <QString>
 

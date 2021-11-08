@@ -21,8 +21,8 @@
 *******************************************************************************/
 
 #include "Attachment.h"
-#include "TextEditor.h"
 #include "Dialog.h"
+#include "TextEditor.h"
 
 //* edit attachment popup dialog
 class EditAttachmentDialog: public Dialog

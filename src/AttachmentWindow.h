@@ -20,10 +20,10 @@
 *
 *******************************************************************************/
 
-#include "Dialog.h"
-#include "Counter.h"
 #include "AttachmentFrame.h"
+#include "Counter.h"
 #include "Debug.h"
+#include "Dialog.h"
 
 #include <QEvent>
 

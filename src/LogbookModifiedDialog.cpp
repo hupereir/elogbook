@@ -18,13 +18,13 @@
 *******************************************************************************/
 
 #include "LogbookModifiedDialog.h"
-
 #include "CppUtil.h"
-#include "IconNames.h"
 #include "IconEngine.h"
+#include "IconNames.h"
 #include "QtUtil.h"
 #include "TreeView.h"
 #include "XmlOptions.h"
+
 
 #include <QLabel>
 #include <QLayout>

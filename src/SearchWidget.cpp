@@ -17,6 +17,7 @@
 *
 *******************************************************************************/
 
+#include "SearchWidget.h"
 #include "Application.h"
 #include "Color.h"
 #include "ComboBox.h"
@@ -24,7 +25,6 @@
 #include "IconEngine.h"
 #include "IconNames.h"
 #include "QtUtil.h"
-#include "SearchWidget.h"
 #include "Singleton.h"
 #include "XmlOptions.h"
 

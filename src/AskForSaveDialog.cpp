@@ -18,10 +18,10 @@
 *******************************************************************************/
 
 #include "AskForSaveDialog.h"
-#include "IconNames.h"
 #include "IconEngine.h"
-#include "XmlOptions.h"
+#include "IconNames.h"
 #include "QtUtil.h"
+#include "XmlOptions.h"
 
 #include <QDialogButtonBox>
 #include <QFrame>

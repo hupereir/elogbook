@@ -19,9 +19,9 @@
 
 
 #include "LogbookPrintOptionWidget.h"
-
 #include "Logbook.h"
 #include "XmlOptions.h"
+
 
 #include <QLayout>
 

@@ -17,8 +17,8 @@
 *
 *******************************************************************************/
 
-#include "Debug.h"
 #include "DeleteKeywordDialog.h"
+#include "Debug.h"
 #include "IconEngine.h"
 #include "IconNames.h"
 #include "QtUtil.h"

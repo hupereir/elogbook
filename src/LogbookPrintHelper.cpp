@@ -17,8 +17,8 @@
 *
 *******************************************************************************/
 
-#include "LogEntryPrintHelper.h"
 #include "LogbookPrintHelper.h"
+#include "LogEntryPrintHelper.h"
 #include "QtUtil.h"
 #include "Util.h"
 

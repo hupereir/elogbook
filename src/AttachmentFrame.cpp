@@ -17,9 +17,9 @@
 *
 *******************************************************************************/
 
+#include "AttachmentFrame.h"
 #include "Application.h"
 #include "Attachment.h"
-#include "AttachmentFrame.h"
 #include "AttachmentWindow.h"
 #include "Command.h"
 #include "ContextMenu.h"

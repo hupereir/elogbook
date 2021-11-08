@@ -17,11 +17,11 @@
 *
 *******************************************************************************/
 
+#include "LogbookInformationDialog.h"
 #include "Debug.h"
 #include "IconEngine.h"
 #include "IconNames.h"
 #include "Logbook.h"
-#include "LogbookInformationDialog.h"
 #include "QtUtil.h"
 #include "TextEditor.h"
 #include "Util.h"
