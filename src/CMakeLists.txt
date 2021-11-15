@@ -102,7 +102,7 @@ if(ASPELL_FOUND)
   target_link_libraries(elogbook base-spellcheck)
 endif()
 
-target_link_libraries(elogbook Qt5::Widgets Qt5::Network Qt5::PrintSupport Qt5::Xml)
+target_link_libraries(elogbook Qt::Widgets Qt::Network Qt::PrintSupport Qt::Xml)
 install(TARGETS elogbook DESTINATION ${BIN_INSTALL_DIR})
 
 ########### next target ###############
@@ -116,7 +116,7 @@ if(UNIX)
     base
     base-qt
     base-server)
-  target_link_libraries(copy-logbook Qt5::Widgets Qt5::Xml)
+  target_link_libraries(copy-logbook Qt::Widgets Qt::Xml)
   install(TARGETS copy-logbook DESTINATION ${BIN_INSTALL_DIR})
 endif()
 
@@ -131,7 +131,7 @@ if(UNIX)
     base
     base-qt
     base-server)
-  target_link_libraries(compress-logbook Qt5::Widgets Qt5::Xml)
+  target_link_libraries(compress-logbook Qt::Widgets Qt::Xml)
   install(TARGETS compress-logbook DESTINATION ${BIN_INSTALL_DIR})
 endif()
 
@@ -146,7 +146,7 @@ if(UNIX)
     base
     base-qt
     base-server)
-  target_link_libraries(uncompress-logbook Qt5::Widgets Qt5::Xml)
+  target_link_libraries(uncompress-logbook Qt::Widgets Qt::Xml)
   install(TARGETS uncompress-logbook DESTINATION ${BIN_INSTALL_DIR})
 endif()
 
@@ -161,6 +161,6 @@ if(UNIX)
     base
     base-qt
     base-server)
-  target_link_libraries(synchronize-logbook Qt5::Widgets Qt5::Xml)
+  target_link_libraries(synchronize-logbook Qt::Widgets Qt::Xml)
   install(TARGETS synchronize-logbook DESTINATION ${BIN_INSTALL_DIR})
 endif()
