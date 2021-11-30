@@ -246,12 +246,14 @@ TextFormat::Block::List FormatBar::get() const
             if( textFormat.fontOverline() ) format |= TextFormat::Overline;
 
             // retrieve text color
-            QColor foreground( textFormat.foreground().color() );
-            if( foreground == textColor ) foreground = QColor();
-
+            const auto foregroundBrush = textFormat.foreground();
+            QColor foreground( foregroundBrush.color() );
+            if( foregroundBrush.style() == Qt::NoBrush || foreground == textColor ) foreground = QColor();
+                
             // retrieve text color
-            QColor background( textFormat.background().color() );
-            if( background == baseColor ) background = QColor();
+            const auto backgroundBrush = textFormat.background();
+            QColor background( backgroundBrush.color() );
+            if( backgroundBrush.style() == Qt::NoBrush || background == baseColor ) background = QColor();
 
             const QString href( textFormat.anchorHref() );
 
