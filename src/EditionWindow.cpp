@@ -56,7 +56,6 @@
 #include "RecentFilesMenu.h"
 #include "SelectLineWidget.h"
 #include "Singleton.h"
-#include "SpellDialog.h"
 #include "ToolBar.h"
 #include "ToolBarSpacerItem.h"
 #include "Util.h"
@@ -64,6 +63,7 @@
 
 
 #if WITH_ASPELL
+#include "SpellDialog.h"
 #endif
 
 #include <QApplication>
