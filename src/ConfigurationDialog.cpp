@@ -138,22 +138,20 @@ ConfigurationDialog::ConfigurationDialog( QWidget* parent ):
     // printing
     page = &addPage( IconEngine::get( IconNames::PreferencesPrinting ), tr( "Printing" ), tr( "Logbook and logbook entries printing configuration" ) );
     {
-        auto hLayout = new QHBoxLayout;
-        QtUtil::setMargin(hLayout, 0);
-        hLayout->setSpacing(5);
-        page->layout()->addItem( hLayout );
 
         auto box = new QGroupBox( tr( "Logbook" ), page );
-        hLayout->addWidget( box );
+        page->layout()->addWidget( box );
         box->setLayout( new QVBoxLayout );
-        LogbookPrintOptionWidget* logbookPrintOptionWidget = new LogbookPrintOptionWidget( box );
+
+        auto logbookPrintOptionWidget = new LogbookPrintOptionWidget( box );
         QtUtil::setMargin(logbookPrintOptionWidget->layout(), 0);
         box->layout()->addWidget( logbookPrintOptionWidget );
         addOptionWidget( logbookPrintOptionWidget );
 
-        hLayout->addWidget( box = new QGroupBox( tr( "Logbook Entries" ), page ) );
+        page->layout()->addWidget( box = new QGroupBox( tr( "Logbook Entries" ), page ) );
         box->setLayout( new QVBoxLayout );
-        LogEntryPrintOptionWidget* logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
+
+        auto logEntryPrintOptionWidget = new LogEntryPrintOptionWidget( box );
         QtUtil::setMargin(logEntryPrintOptionWidget->layout(), 0);
         box->layout()->addWidget( logEntryPrintOptionWidget );
         addOptionWidget( logEntryPrintOptionWidget );
