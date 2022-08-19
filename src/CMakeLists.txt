@@ -1,6 +1,9 @@
 ########### Qt configuration #########
+if(USE_QT6)
+find_package(Qt6 COMPONENTS Widgets Network Xml PrintSupport REQUIRED)
+else()
 find_package(Qt5 COMPONENTS Widgets Network Xml PrintSupport REQUIRED)
-
+endif()
 if( WIN32 AND NOT USE_SHARED_LIBS )
   fix_win32_static_compilation()
 endif()

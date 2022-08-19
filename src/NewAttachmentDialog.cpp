@@ -49,7 +49,11 @@ Dialog( parent )
 
     gridLayout->addWidget( new QLabel( tr( "Destination directory:" ), this ) );
     gridLayout->addWidget( destinationDirectoryEditor_ = new BrowsedLineEditor( this ) );
+    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     destinationDirectoryEditor_->setFileMode( QFileDialog::DirectoryOnly );
+    #else
+    destinationDirectoryEditor_->setFileMode( QFileDialog::Directory );
+    #endif
     destinationDirectoryEditor_->setToolTip( tr( "Attachment directory where attached file is stored (either copied or linked)" ) );
 
     // action

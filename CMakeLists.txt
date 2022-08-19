@@ -8,6 +8,7 @@ set(ELOGBOOK_VERSION_PATCH 3)
 set(ELOGBOOK_VERSION ${ELOGBOOK_VERSION_MAJOR}.${ELOGBOOK_VERSION_MINOR}.${ELOGBOOK_VERSION_PATCH})
 
 ########### options ###############
+option( USE_QT6 "Use QT6 Libraries" OFF )
 option( USE_SHARED_LIBS "Use Shared Libraries" OFF )
 
 ########### modules #################

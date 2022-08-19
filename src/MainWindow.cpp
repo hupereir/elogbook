@@ -1219,7 +1219,7 @@ void MainWindow::_installActions()
 
     // print preview
     addAction( printPreviewAction_ = new QAction( IconEngine::get( IconNames::PrintPreview ), tr("Print Preview..."), this ) );
-    printPreviewAction_->setShortcut( Qt::SHIFT + Qt::CTRL + Qt::Key_P );
+    printPreviewAction_->setShortcut( Qt::SHIFT|Qt::CTRL|Qt::Key_P );
     connect( printPreviewAction_, &QAction::triggered, this, &MainWindow::_printPreview );
 
     // export to HTML
@@ -1845,7 +1845,7 @@ void MainWindow::_print( LogbookPrintHelper& helper )
     QPrinter printer( QPrinter::HighResolution );
 
     // generate document name
-    printer.setDocName( QStringLiteral( "elogbook_%1_%2_%3").arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() ) );
+    printer.setDocName( QStringLiteral( "elogbook_%1_%2_%3").arg( Util::user()).arg( TimeStamp::now().unixTime() ).arg( Util::pid() ) );
 
     // create options widget
     auto optionWidget = new PrinterOptionWidget;
@@ -1983,7 +1983,7 @@ void MainWindow::_toHtml()
     dialog.setOptionWidgets( { logEntrySelectionWidget, logbookOptionWidget, logEntryOptionWidget } );
 
     // generate file name
-    QString buffer = QStringLiteral( "eLogbook_%1_%2_%3.html").arg( Util::user(), TimeStamp::now().unixTime(), Util::pid() );
+    QString buffer = QStringLiteral( "eLogbook_%1_%2_%3.html").arg( Util::user()).arg( TimeStamp::now().unixTime()).arg( Util::pid() );
     dialog.setFile( File( buffer ).addPath( Util::tmp() ) );
 
     // execute dialog

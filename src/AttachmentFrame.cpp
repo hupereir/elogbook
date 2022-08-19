@@ -292,7 +292,11 @@ void AttachmentFrame::_new()
 }
 
 //_____________________________________________
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 void AttachmentFrame::enterEvent( QEvent* event )
+#else
+void AttachmentFrame::enterEvent( QEnterEvent* event )
+#endif
 {
 
     Debug::Throw( QStringLiteral("AttachmentFrame::enterEvent.\n") );

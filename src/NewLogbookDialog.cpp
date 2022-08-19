@@ -54,7 +54,11 @@ Dialog( parent )
     // attachment directory
     gridLayout->addWidget( label = new QLabel( tr( "Attachment directory:" ), this ), 3, 0 );
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 3, 1 );
+    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
+    #else
+    attachmentDirectory_->setFileMode( QFileDialog::Directory );
+    #endif
     attachmentDirectory_->setAcceptMode( QFileDialog::AcceptSave );
     attachmentDirectory_->setToolTip( tr( "Default directory where attached files are stored (either copied or linked)" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
