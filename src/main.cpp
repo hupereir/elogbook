@@ -52,6 +52,7 @@ int main (int argc, char *argv[])
 
     // resources
     Q_INIT_RESOURCE( pixmaps );
+    Q_INIT_RESOURCE( basePixmaps );
 
     // create Application
     QApplication application( argc, argv );

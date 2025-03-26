@@ -945,6 +945,7 @@ void EditionWindow::_createFindWidget()
     {
 
         findWidget_ = new BaseFindWidget( container_ );
+        findWidget_->enableHighlightAll(false);
         container_->layout()->addWidget( findWidget_ );
         connect( findWidget_, &BaseFindWidget::find, this, &EditionWindow::_find );
         connect( this, &EditionWindow::matchFound, findWidget_, &BaseFindWidget::matchFound );
