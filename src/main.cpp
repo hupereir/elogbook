@@ -21,6 +21,7 @@
 #include "Debug.h"
 #include "DefaultOptions.h"
 #include "ErrorHandler.h"
+#include "QtUtil.h"
 #include "Singleton.h"
 #include "SystemOptions.h"
 #include "XmlFileRecord.h"
@@ -51,8 +52,8 @@ int main (int argc, char *argv[])
     if( Debug::level() ) Debug::Throw() << XmlOptions::get() << Qt::endl;
 
     // resources
+    QtUtil::initializeResources();
     Q_INIT_RESOURCE( pixmaps );
-    Q_INIT_RESOURCE( basePixmaps );
 
     // create Application
     QApplication application( argc, argv );
