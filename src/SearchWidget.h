@@ -21,6 +21,7 @@ s*
 *******************************************************************************/
 
 #include "Counter.h"
+#include "IntegralType.h"
 
 #include <QCheckBox>
 #include <QHash>
@@ -51,7 +52,7 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
         Color = 1<<4
     };
 
-    Q_DECLARE_FLAGS( SearchModes, SearchMode )
+    using SearchModes = Base::underlying_type_t<SearchMode>;
 
     //*@name accessors
     //@{
@@ -136,7 +137,5 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
     QPalette notFoundPalette_;
 
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( SearchWidget::SearchModes )
 
 #endif

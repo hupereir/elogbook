@@ -22,6 +22,7 @@
 
 #include "Color.h"
 #include "Functors.h"
+#include "IntegralType.h"
 #include "Key.h"
 #include "Keyword.h"
 #include "TextFormatBlock.h"
@@ -51,7 +52,7 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
         All = HeaderMask | TextMask | AttachmentsMask
     };
 
-    Q_DECLARE_FLAGS( Mask, MaskFlag )
+    using Mask = Base::underlying_type_t<MaskFlag>;
 
     //* empty creator
     explicit LogEntry();
@@ -289,7 +290,5 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     TextFormat::Block::List formats_;
 
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( LogEntry::Mask )
 
 #endif

@@ -25,6 +25,7 @@
 #include "Debug.h"
 #include "File.h"
 #include "Functors.h"
+#include "IntegralType.h"
 #include "Key.h"
 #include "TimeStamp.h"
 #include "XmlError.h"
@@ -89,7 +90,7 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
         All = HeaderMask|TableOfContentMask|ContentMask
     };
 
-    Q_DECLARE_FLAGS( Mask, MaskFlag )
+    using Mask = Base::underlying_type_t<MaskFlag>;
 
     //* constructor from file
     explicit Logbook( const File& = File() );
@@ -505,7 +506,5 @@ class Logbook:public QObject, private Base::Counter<Logbook>, public Base::Key
     XmlError error_;
 
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( Logbook::Mask )
 
 #endif
