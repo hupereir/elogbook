@@ -61,63 +61,63 @@ namespace Private
     class LocalTextEditor;
 }
 
-//* log entry edition/creation object
+//! log entry edition/creation object
 class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>, public Base::Key
 {
 
-    //* Qt meta object declaration
+    //! Qt meta object declaration
     Q_OBJECT
 
     public:
 
     using Editor = LineEditor;
 
-    //* creator
+    //! creator
     explicit EditionWindow( QWidget*, bool readOnly = true );
 
-    //*@name accessors
+    //!@name accessors
     //@{
 
-    //* returns current entry
+    //! returns current entry
     LogEntry* entry() const
     {
         Base::KeySet<LogEntry> entries( this );
         return( entries.size() ) ? *entries.begin():nullptr;
     }
 
-    //* entry title
+    //! entry title
     QString entryTitle() const
     { return titleEditor_ ? titleEditor_->text():QString(); }
 
-    //* retrieve active display
+    //! retrieve active display
     const TextEditor& activeEditor() const;
 
-    //* check if this editor is readOnly or not
+    //! check if this editor is readOnly or not
     bool isReadOnly() const
     { return readOnly_; }
 
-    //* closed flag
+    //! closed flag
     bool isClosed() const
     { return closed_; }
 
-    //* check if current entry has been modified or not
+    //! check if current entry has been modified or not
     bool modified() const;
 
-    //* computes window title
+    //! computes window title
     QString windowTitle() const;
 
     //@}
 
-    //*@name modifiers
+    //!@name modifiers
     //@{
 
-    //* display all entries informations
+    //! display all entries informations
     void displayEntry( const Keyword&, LogEntry* = nullptr );
 
-    //* display all entries informations
+    //! display all entries informations
     void displayEntry( LogEntry* = nullptr );
 
-    //* retrieve attachment list
+    //! retrieve attachment list
     AttachmentFrame& attachmentFrame()
     {
         Base::KeySet<AttachmentFrame> frames( this );
@@ -125,151 +125,151 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
         return **frames.begin();
     }
 
-    //* status bar
+    //! status bar
     BaseStatusBar& statusBar()
     { return *statusBar_; }
 
-    //* retrieve active display
+    //! retrieve active display
     TextEditor& activeEditor();
 
-    //* set readOnly state of the EditionWindow
+    //! set readOnly state of the EditionWindow
     void setReadOnly( bool );
 
-    //* color menu
+    //! color menu
     void setColorMenu( ColorMenu* );
 
-    //* closed flag
+    //! closed flag
     void setIsClosed( bool );
 
-    //* update keyword Widget from current entry
+    //! update keyword Widget from current entry
     void displayKeyword();
 
-    //* update title Widget from current entry
+    //! update title Widget from current entry
     void displayTitle();
 
-    //* update color Widget from current entry
+    //! update color Widget from current entry
     void displayColor();
 
-    //* check if current entry has been modified or not
+    //! check if current entry has been modified or not
     void setModified( bool );
 
-    //* force keyword visibility
+    //! force keyword visibility
     void setForceShowKeyword( bool value );
 
-    //* change active display manualy
+    //! change active display manualy
     void setActiveEditor( TextEditor& );
 
-    //* creates dialog to ask for LogEntry save.
+    //! creates dialog to ask for LogEntry save.
     AskForSaveDialog::ReturnCode askForSave();
 
-    //* save to logbook
+    //! save to logbook
     /** logbook is updated with the content of the current entry,
     but the logbook itself is not saved */
     void writeEntryToLogbook( bool updateSelection );
 
 
-    //* update read-only state
+    //! update read-only state
     void updateReadOnlyState();
 
-    //* change window title
+    //! change window title
     void updateWindowTitle()
     { setWindowTitle( windowTitle() ); }
 
-    //* find text from dialog
+    //! find text from dialog
     void findFromDialog();
 
-    //* replace text from dialog
+    //! replace text from dialog
     void replaceFromDialog();
 
-    //* select line from dialog
+    //! select line from dialog
     void selectLineFromDialog();
 
     //@}
 
-    //* used to count modified EditionWindows
+    //! used to count modified EditionWindows
     class ModifiedFTor
     {
         public:
 
-        //* predicate
+        //! predicate
         bool operator() (const EditionWindow* frame )
         { return frame->modified() && !frame->isReadOnly() && !frame->isClosed(); }
 
     };
 
-    //* used to count alive frames, that are not subject to delayed deletion
+    //! used to count alive frames, that are not subject to delayed deletion
     using AliveFTor = Base::Functor::UnaryFalse<EditionWindow, &EditionWindow::isClosed>;
 
-    //*@name actions
+    //!@name actions
     //@{
 
-    //* new entry action
+    //! new entry action
     QAction& newEntryAction() const
     { return *newEntryAction_; }
 
-    //* previous entry action
+    //! previous entry action
     QAction& previousEntryAction() const
     { return *previousEntryAction_; }
 
-    //* next entry action
+    //! next entry action
     QAction& nextEntryAction() const
     { return *nextEntryAction_; }
 
-    //* save
+    //! save
     QAction& saveAction() const
     { return *saveAction_; }
 
     #if WITH_ASPELL
-    //* check spelling of current entry
+    //! check spelling of current entry
     QAction& spellcheckAction() const
     { return *spellcheckAction_; }
     #endif
 
-    //* entry information
+    //! entry information
     QAction& entryInformationAction() const
     { return *entryInformationAction_; }
 
-    //* revert logbook to saved version
+    //! revert logbook to saved version
     QAction& reloadAction() const
     { return *reloadAction_; }
 
-    //* print
+    //! print
     QAction& printAction() const
     { return *printAction_; }
 
-    //* print preview
+    //! print preview
     QAction& printPreviewAction() const
     { return *printPreviewAction_; }
 
-    //* html
+    //! html
     QAction& htmlAction() const
     { return *htmlAction_; }
 
-    //* split view horizontal
+    //! split view horizontal
     QAction& splitViewHorizontalAction() const
     { return *splitViewHorizontalAction_; }
 
-    //* split view vertical
+    //! split view vertical
     QAction& splitViewVerticalAction() const
     { return *splitViewVerticalAction_; }
 
-    //* split view vertical
+    //! split view vertical
     QAction& cloneWindowAction() const
     { return *cloneWindowAction_; }
 
-    //* close view
+    //! close view
     QAction& closeAction() const
     { return *closeAction_; }
 
-    //* uniconify
+    //! uniconify
     QAction& uniconifyAction() const
     { return *uniconifyAction_; }
 
-    //* show keyword
+    //! show keyword
     QAction& showKeywordAction() const
     { return *showKeywordAction_; }
 
-    //* add hyperLink
+    //! add hyperLink
     QAction& insertLinkAction() const
     { return *insertLinkAction_; }
 
@@ -277,362 +277,365 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
 
     Q_SIGNALS:
 
-    //* emitted when new scratch file is created
+    //! emitted when new scratch file is created
     void scratchFileCreated( const File& );
 
-    //*@name re-implemented from text editor
+    //!@name re-implemented from text editor
     //@{
 
-    //* emitted from TextDisplay when no match is found for find/replace request
+    //! emitted from TextDisplay when no match is found for find/replace request
     void noMatchFound();
 
-    //* emitted from TextDisplay when no match is found for find/replace request
+    //! emitted from TextDisplay when no match is found for find/replace request
     void matchFound();
 
-    //* emitted when selected line is not found
+    //! emitted when selected line is not found
     void lineNotFound();
 
-    //* emitted when selected line is found
+    //! emitted when selected line is found
     void lineFound();
 
     //@}
 
     protected:
 
-    //*@name event filters
+    //!@name event filters
     //@{
 
-    //* close window event handler
+    //! close window event handler
     void closeEvent( QCloseEvent* ) override;
 
-    //* timer event
+    //! timer event
     void timerEvent( QTimerEvent* ) override;
 
     //@}
 
     private:
 
-    //* Save Current entry
+    //! Save Current entry
     void _save( bool updateSelection = true );
 
-    //* reload entry
+    //! reload entry
     void _reloadEntry();
 
-    //* Print current document
+    //! Print current document
     void _print();
 
-    //* Print current document
+    //! Print current document
     void _print( LogEntryPrintHelper& );
 
-    //* Print current document
+    //! Print current document
     void _printPreview();
 
-    //* export to html
+    //! export to html
     void _toHtml();
 
-    //* creates a new entry
+    //! creates a new entry
     void _newEntry();
 
-    //* splitter moved
+    //! splitter moved
     void _splitterMoved();
 
-    //* select previous entry
+    //! select previous entry
     void _previousEntry();
 
-    //* select next entry
+    //! select next entry
     void _nextEntry();
 
-    //* show entry info
+    //! show entry info
     void _entryInformation();
 
-    //* Delete Current entry
+    //! Delete Current entry
     void _deleteEntry();
 
-    //* check spelling of current entry
+    //! check spelling of current entry
     void _spellCheck();
 
-    //* undo in focused editor (text/title/keyword)
+    //! undo in focused editor (text/title/keyword)
     void _undo();
 
-    //* redo in focused editor (text/title/keyword);
+    //! redo in focused editor (text/title/keyword);
     void _redo();
 
-    //* clone editor
+    //! clone editor
     void _cloneWindow();
 
-    //* find
+    //! find
     void _find( const TextSelection &);
 
-    //* find
+    //! find
     void _replace( const TextSelection &);
 
-    //* find
+    //! find
     void _replaceInSelection( const TextSelection &);
 
-    //* find
+    //! find
     void _replaceInWindow( const TextSelection &);
 
-    //* select line
+    //! select line
     void _selectLine( int );
 
-    //* restore focus on active display, when closing embedded dialog
+    //! restore focus on active display, when closing embedded dialog
     void _restoreFocus();
 
-    //* unlock read-only editors
+    //! unlock read-only editors
     void _unlock();
 
-    //* insert link
+    //! insert link
     void _insertLink();
 
-    //* insert link
+    //! insert link
     void _editLink();
 
-    //* insert link
+    //! insert link
     void _removeLink();
 
-    //* view link
+    //! view link
     void _openLink();
 
-    //* view link
+    //! view link
     void _openLink( const QString &);
 
-    //* update replace in selection action
+    //! update replace in selection action
     void _updateReplaceInSelection();
 
-    //* read only actions
+    //! read only actions
     void _updateReadOnlyActions();
 
-    //* update (enable/disable) save action
+    //! update (enable/disable) save action
     void _updateSaveAction();
 
-    //* update (enable/disable) redo action
+    //! update (enable/disable) redo action
     void _updateUndoRedoActions();
 
-    //* update (enable/disable) redo action
+    //! update (enable/disable) redo action
     void _updateUndoRedoActions( QWidget*, QWidget* );
 
-    //* update (enable/disable) insert link action
+    //! update (enable/disable) insert link action
     void _updateInsertLinkActions();
 
-    //* Set entry as modified, change window title
+    //! Set entry as modified, change window title
     void _textModified( bool );
 
-    //* display cursor position
+    //! display cursor position
     void _displayCursorPosition();
 
-    //* display cursor position
+    //! display cursor position
     void _displayCursorPosition( int, int newPosition )
     { _displayCursorPosition( TextPosition( 0, newPosition ) ); }
 
-    //* close
+    //! close
     void _close();
 
-    //* clone current file
+    //! clone current file
     void _splitView()
     { _splitView( Qt::Vertical ); }
 
-    //* clone current file horizontal
+    //! clone current file horizontal
     void _splitViewHorizontal()
     { _splitView( Qt::Horizontal ); }
 
-    //* clone current file horizontal
+    //! clone current file horizontal
     void _splitViewVertical()
     { _splitView( Qt::Vertical ); }
 
-    //* display focus changed
+    //! display focus changed
     void _displayFocusChanged( TextEditor* );
 
-    //* overwrite mode changed
+    //! overwrite mode changed
     void _modifiersChanged( TextEditor::Modifiers );
 
-    //* toggle show keyword
+    //! toggle show keyword
     void _toggleShowKeyword( bool );
 
-    //* configuration
+    //! configuration
     void _updateConfiguration();
 
-    //*@name display management
+    //!@name display management
     //@{
 
-    //* split view
+    //! split view
     Private::LocalTextEditor& _splitView( Qt::Orientation  );
 
-    //* create new splitter
+    //! create new splitter
     QSplitter& _newSplitter( Qt::Orientation   );
 
-    //* create new TextEditor
+    //! create new TextEditor
     Private::LocalTextEditor& _newTextEditor( QWidget* parent );
 
     //@}
 
-    //* close a given editor
+    //! close a given editor
     void _closeEditor( TextEditor& );
 
-    //* display cursor position
+    //! display cursor position
     void _displayCursorPosition( const TextPosition& position );
 
-    //* true if has associated main window
+    //! true if has associated main window
     bool _hasMainWindow() const;
 
-    //* retrieve associated MainWindow
+    //! retrieve associated MainWindow
     MainWindow& _mainWindow() const;
 
-    //* update text Widget from current entry
+    //! update text Widget from current entry
     void _displayText();
 
-    //* update attachment list Widget from current entry
+    //! update attachment list Widget from current entry
     void _displayAttachments();
 
-    //* true if status bar is set
+    //! true if status bar is set
     bool _hasStatusBar() const
     { return (bool) statusBar_; }
 
-    //* change keyword (and other widgets) visibility
+    //! change keyword (and other widgets) visibility
     void _setKeywordVisible( bool );
 
-    //* install actions
+    //! change color widget visibility
+    void _setColorWidgetVisible( bool );
+
+    //! install actions
     void _installActions();
 
-    //* create find dialog
+    //! create find dialog
     void _createFindWidget();
 
-    //* create replace dialog
+    //! create replace dialog
     void _createReplaceWidget();
 
-    //* create select line widget
+    //! create select line widget
     void _createSelectLineWidget();
 
-    //* if true, LogEntry associated to EditionWindow cannot be modified
+    //! if true, LogEntry associated to EditionWindow cannot be modified
     bool readOnly_ = false;
 
-    //* "closed" flag
+    //! "closed" flag
     /** this flag is used for delayed deletion of EditionWindows, when direct deletion might cause flags */
     bool closed_ = false;
 
-    //* true if keyword is forced visible
+    //! true if keyword is forced visible
     bool forceShowKeyword_ = false;
 
-    //* keyword
+    //! keyword
     Keyword keyword_;
 
-    //* message widget
+    //! message widget
     MessageWidget* messageWidget_ = nullptr;
 
-    //* keyword label
+    //! keyword label
     QLabel* keywordLabel_ = nullptr;
 
-    //* title label
+    //! title label
     QLabel* titleLabel_ = nullptr;
 
-    //* Keyword object
+    //! Keyword object
     Editor* keywordEditor_ = nullptr;
 
-    //* LogEntry title Object
+    //! LogEntry title Object
     Editor *titleEditor_ = nullptr;
 
-    //* color menu
+    //! color menu
     ColorMenu* colorMenu_ = nullptr;
 
-    //* color widget
+    //! color widget
     Private::ColorWidget* colorWidget_ = nullptr;
 
-    //* LogEntry text Object
+    //! LogEntry text Object
     Private::LocalTextEditor* activeEditor_ = nullptr;
 
-    //* embedded widgets container
+    //! embedded widgets container
     QWidget* container_ = nullptr;
 
-    //* text format bar
+    //! text format bar
     FormatBar* formatBar_ = nullptr;
 
-    //* statusbar
+    //! statusbar
     BaseStatusBar* statusBar_ = nullptr;
 
-    //* menu
+    //! menu
     MenuBar* menuBar_ = nullptr;
 
-    //*@name widgets (re-implemented from TextEditor)
+    //!@name widgets (re-implemented from TextEditor)
     //@{
 
-    //* find widget
+    //! find widget
     BaseFindWidget* findWidget_ = nullptr;
 
-    //* replace widget
+    //! replace widget
     BaseReplaceWidget* replaceWidget_ = nullptr;
 
-    //* line number dialog
+    //! line number dialog
     SelectLineWidget* selectLineWidget_ = nullptr;
 
     //@}
 
-    //*@name actions
+    //!@name actions
     //@{
 
-    //* list of buttons to disactivate in case of read-only
+    //! list of buttons to disactivate in case of read-only
     using ActionList = QList< QAction* >;
 
-    //* list of buttons to disactivate in case of read-only
+    //! list of buttons to disactivate in case of read-only
     ActionList readOnlyActions_;
 
-    //* undo
+    //! undo
     QAction* undoAction_ = nullptr;
 
-    //* redo
+    //! redo
     QAction* redoAction_ = nullptr;
 
-    //* new entry
+    //! new entry
     QAction* newEntryAction_ = nullptr;
 
-    //* previous entry action
+    //! previous entry action
     QAction* previousEntryAction_ = nullptr;
 
-    //* next entry action
+    //! next entry action
     QAction* nextEntryAction_ = nullptr;
 
-    //* save
+    //! save
     QAction* saveAction_ = nullptr;
 
     #if WITH_ASPELL
     QAction* spellcheckAction_ = nullptr;
     #endif
 
-    //* entry information
+    //! entry information
     QAction* entryInformationAction_ = nullptr;
 
-    //* reload
+    //! reload
     QAction* reloadAction_ = nullptr;
 
-    //* print
+    //! print
     QAction* printAction_ = nullptr;
 
-    //* print preview
+    //! print preview
     QAction* printPreviewAction_ = nullptr;
 
-    //* export to html
+    //! export to html
     QAction* htmlAction_ = nullptr;
 
-    //* split view horizontal
+    //! split view horizontal
     QAction* splitViewHorizontalAction_ = nullptr;
 
-    //* split view vertical
+    //! split view vertical
     QAction* splitViewVerticalAction_ = nullptr;
 
-    //* new window action
+    //! new window action
     QAction* cloneWindowAction_ = nullptr;
 
-    //* close view (or window) action
+    //! close view (or window) action
     QAction* closeAction_ = nullptr;
 
-    //* delete enty
+    //! delete enty
     QAction* deleteEntryAction_ = nullptr;
 
-    //* uniconify
+    //! uniconify
     QAction* uniconifyAction_ = nullptr;
 
-    //* show keyword
+    //! show keyword
     QAction* showKeywordAction_ = nullptr;
 
-    //* hyperlink action
+    //! hyperlink action
     QAction* insertLinkAction_ = nullptr;
 
     //@}

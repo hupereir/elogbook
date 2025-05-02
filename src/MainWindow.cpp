@@ -147,6 +147,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // create keyword list
     vLayout->addWidget( keywordList_ = new KeywordList( keywordContainer_ ), 1 );
+    QtUtil::setWidgetSides( keywordList_, Qt::TopEdge|Qt::BottomEdge );
     keywordList_->setFindEnabled( false );
     keywordList_->setModel( &keywordModel_ );
     keywordList_->setRootIsDecorated( true );
@@ -232,6 +233,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // create logEntry list
     vLayout->addWidget( entryList_ = new LogEntryList( right ), 1 );
+    QtUtil::setWidgetSides( entryList_, Qt::TopEdge|Qt::BottomEdge );
     entryList_->setFindEnabled( false );
     entryList_->setModel( &entryModel_ );
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
@@ -244,7 +246,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     entryList_->header()->setSectionResizeMode(LogEntryModel::Creation, QHeaderView::Stretch);
     entryList_->header()->setSectionResizeMode(LogEntryModel::Modification, QHeaderView::Stretch);
-    
+
     // replace item delegate
     if( entryList_->itemDelegate() ) entryList_->itemDelegate()->deleteLater();
     entryList_->setItemDelegate( new TextEditionDelegate( this ) );
@@ -809,7 +811,7 @@ void MainWindow::saveUnchecked()
     }
 
     // check logbook filename, go to Save As if no file is given and redirect is true
-    if( logbook_->file().isEmpty() ) 
+    if( logbook_->file().isEmpty() )
     {
         _saveAs();
         return;
@@ -817,7 +819,7 @@ void MainWindow::saveUnchecked()
 
     // check logbook filename is writable
     auto fullname = logbook_->file().expanded();
-    if( fullname.exists() ) 
+    if( fullname.exists() )
     {
 
         // check file is not a directory
@@ -1095,7 +1097,7 @@ void MainWindow::_installActions()
 
     showKeywordListHeaderAction_ = new QAction( tr("Show Header"), this );
     connect( showKeywordListHeaderAction_, &QAction::triggered, this, &MainWindow::_toggleShowKeywordListHeader );
-    
+
     showEntryListHeaderAction_ = new QAction( tr("Show Header"), this );
     connect( showEntryListHeaderAction_, &QAction::triggered, this, &MainWindow::_toggleShowEntryListHeader );
 
@@ -2595,19 +2597,19 @@ void MainWindow::_findEntries() const
 void MainWindow::_toggleShowKeywordListHeader()
 {
     Debug::Throw( QStringLiteral("MainWindow::_toggleShowKeywordListHeader.\n") );
-    
+
     // toggle header visibility
     const bool show( !keywordList_->header()->isVisible() );
     keywordList_->header()->setVisible( show );
-    
+
     // update actions
     showKeywordListHeaderAction_->setText( show ? tr("Hide Header"):tr("Show Header") );
     keywordListColumnSortingAction_->setEnabled( !show );
-    
+
     // update option
     XmlOptions::get().set<bool>( QStringLiteral( "SHOW_KEYWORDLIST_HEADER"), show );
 }
-    
+
 //____________________________________________
 void MainWindow::_toggleShowEntryListHeader()
 {
@@ -2616,15 +2618,15 @@ void MainWindow::_toggleShowEntryListHeader()
     // toggle header visibility
     const bool show( !entryList_->header()->isVisible() );
     entryList_->header()->setVisible( show );
-    
+
     showEntryListHeaderAction_->setText( show ? tr("Hide Header"):tr("Show Header") );
     entryListColumnSortingAction_->setEnabled( !show );
     entryListColumnSelectionAction_->setEnabled( !show );
-    
+
     // update option
     XmlOptions::get().set<bool>( QStringLiteral( "SHOW_ENTRYLIST_HEADER"), show );
 }
-    
+
 //____________________________________________
 void MainWindow::_newEntry()
 {
@@ -2640,7 +2642,7 @@ void MainWindow::_newEntry()
     }
 
     if( editionWindow )
-    { 
+    {
         editionWindow->setIsClosed( false );
         editionWindow->setReadOnly( false );
     } else {
@@ -3724,13 +3726,13 @@ void MainWindow::_updateConfiguration()
         if( keywordList_ ) keywordList_->header()->setVisible(show);
         showKeywordListHeaderAction_->setText(show ? tr("Hide Header"):tr("Show Header"));
     }
-    
+
     {
         const auto show = XmlOptions::get().get<bool>( QStringLiteral("SHOW_ENTRYLIST_HEADER") );
         if( entryList_ ) entryList_->header()->setVisible(show);
         showEntryListHeaderAction_->setText(show ? tr("Hide Header"):tr("Show Header"));
     }
-    
+
 }
 
 //_______________________________________________

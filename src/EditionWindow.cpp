@@ -137,7 +137,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // hide everything
     _setKeywordVisible( false );
-    colorWidget_->hide();
+    _setColorWidgetVisible( false );
 
     // splitter for EditionWindow and attachment list
     auto splitter = new QSplitter( main );
@@ -457,13 +457,12 @@ void EditionWindow::displayColor()
     const QColor color( entry()->color() );
     if( !color.isValid() )
     {
-
-        colorWidget_->hide();
+        _setColorWidgetVisible(false);
 
     } else {
 
         colorWidget_->setColor( color );
-        colorWidget_->show();
+        _setColorWidgetVisible(true);
 
     }
 
@@ -1122,6 +1121,7 @@ Private::LocalTextEditor& EditionWindow::_newTextEditor( QWidget* parent )
 
     // create TextEditor
     auto editor = new Private::LocalTextEditor( parent );
+    QtUtil::setWidgetSides(editor, Qt::TopEdge);
 
     // connections
     connect( &editor->insertLinkAction(), &QAction::triggered, this, &EditionWindow::_insertLink );
@@ -1229,27 +1229,18 @@ void EditionWindow::_displayAttachments()
     auto entry( this->entry() );
     if( !entry )
     {
-
         frame.visibilityAction().setChecked( false );
         return;
-
     }
 
     // get associated attachments
     Base::KeySet<Attachment> attachments( entry );
     if( attachments.empty() ) {
-
         frame.visibilityAction().setChecked( false );
-
     } else {
-
         frame.visibilityAction().setChecked( true );
         frame.add( Base::makeT<AttachmentModel::List>( attachments ) );
-
     }
-
-    return;
-
 }
 
 //_____________________________________________
@@ -1259,6 +1250,29 @@ void EditionWindow::_setKeywordVisible( bool value )
     keywordLabel_->setVisible( value );
     keywordEditor_->setVisible( value );
     titleLabel_->setVisible( value );
+
+    // get widget sides from properties
+    Qt::Edges borders( QtUtil::widgetSides(titleEditor_) );
+    borders |= Qt::BottomEdge;
+
+    // adjust sides
+    borders.setFlag(Qt::LeftEdge, value );
+    borders.setFlag(Qt::TopEdge, value );
+    QtUtil::setWidgetSides( titleEditor_, borders );
+}
+
+//_____________________________________________
+void EditionWindow::_setColorWidgetVisible( bool value )
+{
+    Debug::Throw( QStringLiteral("EditionWindow::_setColorWidgetVisible.\n") );
+    colorWidget_->setVisible( value );
+
+    // get widget sides from properties
+    Qt::Edges borders( QtUtil::widgetSides(titleEditor_) );
+
+    // adjust sides
+    borders.setFlag(Qt::RightEdge, value );
+    QtUtil::setWidgetSides( titleEditor_, borders );
 }
 
 //_____________________________________________
