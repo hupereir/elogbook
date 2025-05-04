@@ -147,7 +147,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // create keyword list
     vLayout->addWidget( keywordList_ = new KeywordList( keywordContainer_ ), 1 );
-    QtUtil::setWidgetSides( keywordList_, Qt::TopEdge|Qt::BottomEdge );
+    QtUtil::setWidgetSides( keywordList_, Qt::TopEdge );
     keywordList_->setFindEnabled( false );
     keywordList_->setModel( &keywordModel_ );
     keywordList_->setRootIsDecorated( true );
@@ -233,7 +233,7 @@ MainWindow::MainWindow( QWidget *parent ):
 
     // create logEntry list
     vLayout->addWidget( entryList_ = new LogEntryList( right ), 1 );
-    QtUtil::setWidgetSides( entryList_, Qt::TopEdge|Qt::BottomEdge );
+    QtUtil::setWidgetSides( entryList_, Qt::TopEdge );
     entryList_->setFindEnabled( false );
     entryList_->setModel( &entryModel_ );
     entryList_->setSelectionMode( QAbstractItemView::ContiguousSelection );
