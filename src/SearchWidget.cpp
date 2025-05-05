@@ -155,6 +155,14 @@ void SearchWidget::noMatchFound()
 }
 
 //________________________________________________________________________
+void SearchWidget::setVisible( bool value )
+{
+    const bool changed = (value != isVisible());
+    QWidget::setVisible(value);
+    if( changed ) emit visibilityChanged(value);
+}
+
+//________________________________________________________________________
 void SearchWidget::changeEvent( QEvent* event )
 {
     switch( event->type() )

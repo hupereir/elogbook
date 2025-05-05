@@ -29,19 +29,19 @@ s*
 
 class ComboBox;
 
-//* selects entries from keyword/title/text/...
+//! selects entries from keyword/title/text/...
 class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
 {
 
-    //* Qt meta object declaration
+    //! Qt meta object declaration
     Q_OBJECT
 
     public:
 
-    //* constructor
+    //! constructor
     explicit SearchWidget( QWidget* );
 
-    //* search mode enumeration
+    //! search mode enumeration
     enum SearchMode
     {
         None = 0,
@@ -54,86 +54,92 @@ class SearchWidget: public QWidget, private Base::Counter<SearchWidget>
 
     using SearchModes = Base::underlying_type_t<SearchMode>;
 
-    //*@name accessors
+    //!@name accessors
     //@{
 
-    //* editor
+    //! editor
     ComboBox& editor() const
     { return *editor_; }
 
     //@}
 
-    //*@name modifiers
+    //!@name modifiers
     //@{
 
-    //* change text
+    //! change text
     void setText( const QString& );
 
-    //* take action when at least one match is found
+    //! take action when at least one match is found
     void matchFound();
 
-    //* take action when no match is found
+    //! take action when no match is found
     void noMatchFound();
+
+    //! visibility
+    void setVisible(bool) override;
 
     //@}
 
     Q_SIGNALS:
 
-    //* emitted when the Find button is pressed
+    //! emitted when widget visibility is changed
+    void visibilityChanged(bool);
+
+    //! emitted when the Find button is pressed
     void selectEntries( QString, SearchWidget::SearchModes );
 
-    //* emitted when the Show All button is pressed
+    //! emitted when the Show All button is pressed
     void showAllEntries();
 
     protected:
 
-    //* change event
+    //! change event
     void changeEvent( QEvent* ) override;
 
     private:
 
-    //* find button
+    //! find button
     void _updateFindButton( const QString& );
 
-    //* restore palette
+    //! restore palette
     void _restorePalette();
 
-    //* configuration
+    //! configuration
     void _updateConfiguration();
 
-    //* save configuration
+    //! save configuration
     void _saveMask();
 
-    //* send SelectEntries request
+    //! send SelectEntries request
     void _selectionRequest();
 
-    //* enable all entries button
+    //! enable all entries button
     void _enableAllEntriesButton()
     { allEntriesButton_->setEnabled( true ); }
 
-    //* disable all entries button
+    //! disable all entries button
     void _disableAllEntriesButton()
     { allEntriesButton_->setEnabled( false ); }
 
-    //* create not found palette
+    //! create not found palette
     void _updateNotFoundPalette();
 
-    //* checkboxes
+    //! checkboxes
     using CheckBoxMap = QHash<SearchMode, QCheckBox* >;
 
-    //* find button
+    //! find button
     QPushButton* findButton_ = nullptr;
 
-    //* show all entries button
+    //! show all entries button
     QPushButton* allEntriesButton_ = nullptr;
 
-    //* checkboxes
+    //! checkboxes
     CheckBoxMap checkboxes_;
 
-    //* selection text widget
+    //! selection text widget
     ComboBox *editor_ = nullptr;
 
-    //* not found palette
+    //! not found palette
     QPalette notFoundPalette_;
 
 };
