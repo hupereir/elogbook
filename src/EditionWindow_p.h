@@ -20,37 +20,28 @@
 *
 *******************************************************************************/
 
+#include "LineEditorButton.h"
+
 namespace Private
 {
 
-    //* color widget
-    class ColorWidget: public QToolButton, private Base::Counter<ColorWidget>
+    //! color widget
+    class ColorWidget: public LineEditorButton
     {
 
         Q_OBJECT
 
         public:
 
-        //* constructor
-        explicit ColorWidget( QWidget* );
+        //! constructor
+        explicit ColorWidget( QWidget* = nullptr );
 
-        //* color
+        //! color
         void setColor( const QColor& );
-
-        //* size hint
-        QSize sizeHint() const override;
-
-        //* size hint
-        QSize minimumSizeHint() const override;
-
-        protected:
-
-        //* paint event
-        void paintEvent( QPaintEvent* ) override;
 
     };
 
-    //* local QSplitter object, derived from Counter
+    //! local QSplitter object, derived from Counter
     class LocalSplitter: public QSplitter, private Base::Counter<LocalSplitter>
     {
 
@@ -58,7 +49,7 @@ namespace Private
 
         public:
 
-        //* constructor
+        //! constructor
         explicit LocalSplitter( QWidget* parent ):
             QSplitter( parent ),
             Counter( QStringLiteral("LocalSplitter") )
@@ -66,7 +57,7 @@ namespace Private
 
     };
 
-    //* local text editor, to deal with HTML edition
+    //! local text editor, to deal with HTML edition
     class LocalTextEditor: public TextEditor
     {
 
@@ -74,58 +65,58 @@ namespace Private
 
         public:
 
-        //* constructor
+        //! constructor
         explicit LocalTextEditor( QWidget* );
 
-        //* insert link action
+        //! insert link action
         QAction& insertLinkAction() const
         { return *insertLinkAction_; }
 
-        //* edit link action
+        //! edit link action
         QAction& editLinkAction() const
         { return *editLinkAction_; }
 
-        //* remove link action
+        //! remove link action
         QAction& removeLinkAction() const
         { return *removeLinkAction_; }
 
-        //* view link action
+        //! view link action
         QAction& openLinkAction() const
         { return *openLinkAction_; }
 
-        //* return cursor at context menu
+        //! return cursor at context menu
         QTextCursor cursorAtContextMenu() const
         { return cursorForPosition( _contextMenuPosition() );  }
 
         protected:
 
-        //* insert from mime data
+        //! insert from mime data
         void insertFromMimeData( const QMimeData* ) override;
 
-        //* install actions in context menu
+        //! install actions in context menu
         void installContextMenuActions( BaseContextMenu*, bool = true ) override;
 
         private:
 
-        //* configuration
+        //! configuration
         void _updateConfiguration();
 
-        //* install actions
+        //! install actions
         void _installActions();
 
-        //* true when links are to be inserted automatically
+        //! true when links are to be inserted automatically
         bool autoInsertLinks_ = true;
 
-        //* insert link
+        //! insert link
         QAction* insertLinkAction_ = nullptr;
 
-        //* edit link
+        //! edit link
         QAction* editLinkAction_ = nullptr;
 
-        //*  remove
+        //!  remove
         QAction* removeLinkAction_ = nullptr;
 
-        //* open link
+        //! open link
         QAction* openLinkAction_ = nullptr;
 
     };

@@ -91,7 +91,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     auto layout = new QVBoxLayout;
     QtUtil::setMargin(layout, 0);
-    layout->setSpacing(2);
+    layout->setSpacing(0);
     main->setLayout( layout );
 
     // message widget
@@ -114,21 +114,25 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
     layout->addLayout( gridLayout );
 
     // title label and editor
-    gridLayout->addWidget( titleLabel_ = new QLabel( tr( "Subject:" ), main ), 0, 0, 1, 1 );
+    gridLayout->addWidget( titleLabel_ = new QLabel( tr( "Subject: " ), main ), 0, 0, 1, 1 );
     gridLayout->addWidget( titleEditor_ = new Editor( main ), 0, 1, 1, 1 );
+
     titleEditor_->setPlaceholderText( tr( "Entry subject" ) );
     titleLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     titleLabel_->setBuddy( titleEditor_ );
 
     // colorWidget
-    gridLayout->addWidget( colorWidget_ = new Private::ColorWidget( main ), 0, 2, 1, 1 );
+    colorWidget_ = new Private::ColorWidget;
     colorWidget_->setToolTip( tr( "Change entry color.\nThis is used to tag entries in the main window list" ) );
     colorWidget_->setAutoRaise( true );
     colorWidget_->setPopupMode( QToolButton::InstantPopup );
+    titleEditor_->addRightWidget(colorWidget_);
 
     // keywoard label and editor
-    gridLayout->addWidget( keywordLabel_ = new QLabel( tr( " Keyword:" ), main ), 1, 0, 1, 1 );
-    gridLayout->addWidget( keywordEditor_ = new Editor( main ), 1, 1, 1, 2 );
+    gridLayout->addWidget( keywordLabel_ = new QLabel( tr( " Keyword: " ), main ), 1, 0, 1, 1 );
+    gridLayout->addWidget( keywordEditor_ = new Editor( main ), 1, 1, 1, 1 );
+    QtUtil::setWidgetSides( keywordEditor_, Qt::TopEdge|Qt::LeftEdge);
+
     keywordEditor_->setPlaceholderText( tr( "Entry keyword" ) );
     keywordLabel_->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     keywordLabel_->setBuddy( keywordEditor_ );
@@ -137,7 +141,7 @@ EditionWindow::EditionWindow( QWidget* parent, bool readOnly ):
 
     // hide everything
     _setKeywordVisible( false );
-    _setColorWidgetVisible( false );
+    colorWidget_->setVisible( false );
 
     // splitter for EditionWindow and attachment list
     auto splitter = new QSplitter( main );
@@ -457,12 +461,12 @@ void EditionWindow::displayColor()
     const QColor color( entry()->color() );
     if( !color.isValid() )
     {
-        _setColorWidgetVisible(false);
+        colorWidget_->setVisible( false );
 
     } else {
 
         colorWidget_->setColor( color );
-        _setColorWidgetVisible(true);
+        colorWidget_->setVisible( true );
 
     }
 
@@ -1253,25 +1257,9 @@ void EditionWindow::_setKeywordVisible( bool value )
 
     // get widget sides from properties
     Qt::Edges borders( QtUtil::widgetSides(titleEditor_) );
-    borders |= Qt::BottomEdge;
 
     // adjust sides
     borders.setFlag(Qt::LeftEdge, value );
-    borders.setFlag(Qt::TopEdge, value );
-    QtUtil::setWidgetSides( titleEditor_, borders );
-}
-
-//_____________________________________________
-void EditionWindow::_setColorWidgetVisible( bool value )
-{
-    Debug::Throw( QStringLiteral("EditionWindow::_setColorWidgetVisible.\n") );
-    colorWidget_->setVisible( value );
-
-    // get widget sides from properties
-    Qt::Edges borders( QtUtil::widgetSides(titleEditor_) );
-
-    // adjust sides
-    borders.setFlag(Qt::RightEdge, value );
     QtUtil::setWidgetSides( titleEditor_, borders );
 }
 
@@ -2058,14 +2046,12 @@ void Private::LocalTextEditor::_installActions()
 
 //___________________________________________________________________________________
 Private::ColorWidget::ColorWidget( QWidget* parent ):
-    QToolButton( parent ),
-    Counter( QStringLiteral("ColorWidget") )
+    LineEditorButton( parent )
 { Debug::Throw( QStringLiteral("ColorWidget::ColorWidget.\n") ); }
 
 //___________________________________________________________________________________
 void Private::ColorWidget::setColor( const QColor& color )
 {
-
     // create pixmap
     QPixmap pixmap( IconSize::get( IconSize::Huge ) );
     pixmap.fill( Qt::transparent );
@@ -2083,40 +2069,4 @@ void Private::ColorWidget::setColor( const QColor& color )
     painter.end();
 
     setIcon( QIcon( pixmap ) );
-}
-
-//___________________________________________________________________________________
-QSize Private::ColorWidget::sizeHint() const
-{
-    // the const_cast is use to temporarily remove the menu
-    // in order to keep the size of the toolbutton minimum
-    QMenu* menu( ColorWidget::menu() );
-    const_cast<Private::ColorWidget*>( this )->setMenu( nullptr );
-    QSize out( QToolButton::sizeHint() );
-    const_cast<Private::ColorWidget*>( this )->setMenu(menu);
-    return out;
-}
-
-//___________________________________________________________________________________
-QSize Private::ColorWidget::minimumSizeHint() const
-{
-    // this is an ugly hack to keep the size of the toolbutton minimum
-    QMenu* menu( ColorWidget::menu() );
-    const_cast<Private::ColorWidget*>( this )->setMenu(0);
-    QSize out( QToolButton::minimumSizeHint() );
-    const_cast<Private::ColorWidget*>( this )->setMenu(menu);
-    return out;
-}
-
-//___________________________________________________________________________________
-void Private::ColorWidget::paintEvent( QPaintEvent* )
-{
-    QStylePainter painter(this);
-    QStyleOptionToolButton option;
-    initStyleOption(&option);
-
-    // first draw normal frame and not text/icon
-    option.features &= (~QStyleOptionToolButton::HasMenu);
-    painter.drawComplexControl(QStyle::CC_ToolButton, option);
-
 }

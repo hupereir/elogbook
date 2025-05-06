@@ -490,9 +490,6 @@ class EditionWindow: public BaseMainWindow, private Base::Counter<EditionWindow>
     //! change keyword (and other widgets) visibility
     void _setKeywordVisible( bool );
 
-    //! change color widget visibility
-    void _setColorWidgetVisible( bool );
-
     //! install actions
     void _installActions();
 
