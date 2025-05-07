@@ -62,7 +62,7 @@ class NewLogbookDialog: public Dialog
 
     //* attachment directory
     File attachmentDirectory() const
-    { return File( attachmentDirectory_->editor().text() ).expand(); }
+    { return File( attachmentDirectory_->text() ).expand(); }
 
     //* comments
     void setComments( const QString& comments )

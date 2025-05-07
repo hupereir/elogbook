@@ -40,5 +40,5 @@ Dialog( parent, OkButton|CancelButton|Separator )
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( editor_ );
 
-    editor_->editor().setText( value );
+    editor_->setText( value );
 }

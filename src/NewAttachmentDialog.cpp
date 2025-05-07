@@ -87,13 +87,13 @@ Dialog( parent )
 //____________________________________________________
 File NewAttachmentDialog::file() const
 {
-    File out( fileEditor_->editor().text() );
+    File out( fileEditor_->text() );
     return isUrl() ? out : out.expand();
 }
 
 //____________________________________________________
 File NewAttachmentDialog::destinationDirectory() const
-{ return File( destinationDirectoryEditor_->editor().text() ).expand(); }
+{ return File( destinationDirectoryEditor_->text() ).expand(); }
 
 //____________________________________________________
 bool NewAttachmentDialog::isUrl() const

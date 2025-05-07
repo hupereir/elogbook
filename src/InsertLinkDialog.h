@@ -36,12 +36,12 @@ class InsertLinkDialog: public Dialog
     explicit InsertLinkDialog( QWidget*, const QString& = QString() );
 
     QString link()
-    { return editor_->editor().text(); }
+    { return editor_->text(); }
 
     private:
 
     //* editor
-    BrowsedLineEditor* editor_;
+    BrowsedLineEditor* editor_ = nullptr;
 
 };
 

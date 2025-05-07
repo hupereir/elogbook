@@ -50,7 +50,7 @@ class LogbookInformationDialog: public Dialog
 
     //* attachment directory
     File attachmentDirectory() const
-    { return File( attachmentDirectory_->editor().text() ); }
+    { return File( attachmentDirectory_->text() ); }
 
     //* read only
     bool readOnly() const
