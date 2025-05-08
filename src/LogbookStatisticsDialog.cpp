@@ -44,6 +44,10 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     setWindowTitle( tr( "Logbook Statistics" ) );
     setOptionName( QStringLiteral("LOGBOOK_STATISTICS_DIALOG") );
 
+    layout()->setSpacing(0);
+    QtUtil::setMargin(layout(), 0);
+    QtUtil::setMargin(&buttonLayout(), 10);
+
     auto hLayout = new QHBoxLayout;
     QtUtil::setMargin(hLayout, 5);
     mainLayout().addLayout( hLayout );
@@ -108,6 +112,8 @@ LogbookStatisticsDialog::LogbookStatisticsDialog( QWidget* parent, Logbook* logb
     listView->setSortingEnabled( false );
     listView->setOptionName( QStringLiteral("LOGBOOK_STATISTICS") );
     mainLayout().addWidget( listView, 1 );
+
+    QtUtil::setWidgetSides(listView, Qt::TopEdge|Qt::BottomEdge);
 
     listView->header()->setSectionResizeMode( LogbookModel::Created, QHeaderView::Stretch);
     listView->header()->setSectionResizeMode( LogbookModel::Modified, QHeaderView::Stretch);

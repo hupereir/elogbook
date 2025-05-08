@@ -300,7 +300,7 @@ void AttachmentFrame::enterEvent( QEnterEvent* event )
 {
 
     Debug::Throw( QStringLiteral("AttachmentFrame::enterEvent.\n") );
-    if( thread_->isRunning() || !hasList() ) return;
+    if( thread_->isRunning() || !treeView_ ) return;
 
     // create file records
     FileRecord::List records;

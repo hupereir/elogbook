@@ -58,10 +58,6 @@ class AttachmentFrame: public QWidget, public Base::Key
     QSize sizeHint() const override;
 
     //* list
-    bool hasList() const
-    { return (bool) treeView_; }
-
-    //* list
     TreeView& list() const
     { return *treeView_; }
 
@@ -159,7 +155,7 @@ class AttachmentFrame: public QWidget, public Base::Key
     #else
     void enterEvent( QEnterEvent* ) override;
     #endif
-        
+
     private:
 
     //* process records from thread

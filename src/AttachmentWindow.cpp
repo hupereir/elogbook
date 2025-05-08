@@ -40,10 +40,13 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
     setWindowTitle( tr( "Attachments" ) );
     setOptionName( QStringLiteral("ATTACHMENT_WINDOW") );
 
+    layout()->setSpacing(0);
     QtUtil::setMargin(layout(), 0);
-    QtUtil::setMargin(&buttonLayout(), 5);
+    QtUtil::setMargin(&buttonLayout(), 10);
 
     mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
+    QtUtil::setWidgetSides(&frame_->list(), Qt::TopEdge|Qt::BottomEdge);
+
     connect( frame_, &AttachmentFrame::attachmentSelected, this, &AttachmentWindow::_displayEntry );
 
     frame_->contextMenu().insertAction( &frame_->newAction(), &frame_->list().findAction() );

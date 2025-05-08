@@ -39,15 +39,19 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     setWindowTitle( tr( "Logbook Informations" ) );
     setOptionName( QStringLiteral("LOGBOOK_INFORMATION_DIALOG") );
 
-    QHBoxLayout* hLayout = new QHBoxLayout;
+    layout()->setSpacing(0);
+    QtUtil::setMargin(layout(), 0);
+    QtUtil::setMargin(&buttonLayout(), 10);
+
+    auto hLayout = new QHBoxLayout;
     QtUtil::setMargin(hLayout, 5);
     mainLayout().addLayout( hLayout );
 
-    QLabel* label = new QLabel(this);
+    auto label = new QLabel(this);
     label->setPixmap( IconEngine::get( IconNames::DialogInformation ).pixmap( iconSize() ) );
     hLayout->addWidget( label, 0, Qt::AlignTop );
 
-    QGridLayout *gridLayout( new QGridLayout );
+    auto gridLayout = new QGridLayout;
     QtUtil::setMargin(gridLayout, 0);
     hLayout->addLayout( gridLayout, 0 );
 
@@ -90,6 +94,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
     comments_->setPlainText( logbook->comments() );
     comments_->setToolTip( tr( "Logbook comments" ) );
+    QtUtil::setWidgetSides(comments_, Qt::TopEdge|Qt::BottomEdge);
     label->setBuddy( comments_ );
 
     // connections
