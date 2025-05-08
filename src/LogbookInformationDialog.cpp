@@ -90,7 +90,7 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
     gridLayout->setColumnStretch( 1, 1 );
 
     // comments
-    mainLayout().addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );
+    mainLayout().addWidget( label = new QLabel( tr( " Comments:" ), this ), 0 );
     mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
     comments_->setPlainText( logbook->comments() );
     comments_->setToolTip( tr( "Logbook comments" ) );
