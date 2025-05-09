@@ -41,10 +41,10 @@ LogbookInformationDialog::LogbookInformationDialog( QWidget* parent, Logbook* lo
 
     layout()->setSpacing(0);
     QtUtil::setMargin(layout(), 0);
-    QtUtil::setMargin(&buttonLayout(), 10);
+    QtUtil::setMargin(&buttonLayout(), defaultMargin());
 
     auto hLayout = new QHBoxLayout;
-    QtUtil::setMargin(hLayout, 5);
+    QtUtil::setMargin(hLayout, defaultMargin());
     mainLayout().addLayout( hLayout );
 
     auto label = new QLabel(this);

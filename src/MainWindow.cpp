@@ -2528,6 +2528,7 @@ void MainWindow::_editLogbookInformations()
     // create dialog
     LogbookInformationDialog dialog( this, logbook_.get() );
     if( !dialog.centerOnWidget( qApp->activeWindow() ).exec() ) return;
+    Debug::Throw( QStringLiteral("MainWindow::_editLogbookInformations - modifying.\n") );
 
     // keep track of logbook modifications
     bool modified( false );
@@ -2535,6 +2536,7 @@ void MainWindow::_editLogbookInformations()
     modified |= logbook_->setAuthor( dialog.author() );
     modified |= logbook_->setComments( dialog.comments() );
     modified |= logbook_->setReadOnly( dialog.readOnly() );
+    Debug::Throw() <<"MainWindow::_editLogbookInformations - modified: " << modified << Qt::endl;
 
     // retrieve logbook directory
     File directory = dialog.attachmentDirectory();
@@ -2551,6 +2553,8 @@ void MainWindow::_editLogbookInformations()
     if( !logbook_->file().isEmpty() ) save();
 
     updateWindowTitle();
+
+    Debug::Throw() <<"MainWindow::_editLogbookInformations - done." << Qt::endl;
 
 }
 

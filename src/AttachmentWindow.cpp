@@ -42,7 +42,7 @@ AttachmentWindow::AttachmentWindow( QWidget* parent ):
 
     layout()->setSpacing(0);
     QtUtil::setMargin(layout(), 0);
-    QtUtil::setMargin(&buttonLayout(), 10);
+    QtUtil::setMargin(&buttonLayout(), defaultMargin());
 
     mainLayout().addWidget( frame_ = new AttachmentFrame( this, true ) );
     QtUtil::setWidgetSides(&frame_->list(), Qt::TopEdge|Qt::BottomEdge);
