@@ -30,29 +30,36 @@ Dialog( parent )
 {
 
     Debug::Throw( QStringLiteral("NewLogbookDialog::NewLogbookDialog.\n") );
+
     setWindowTitle( tr( "New Logbook" ) );
-    QGridLayout *gridLayout( new QGridLayout );
+    setOptionName( QStringLiteral("NEW_LOGBOOK_DIALOG") );
+
+    layout()->setSpacing(0);
+    QtUtil::setMargin(layout(), 0);
+    QtUtil::setMargin(&buttonLayout(), defaultMargin());
+
+    auto gridLayout( new QGridLayout );
     QtUtil::setMargin(gridLayout, 0);
     gridLayout->setSpacing(5);
     mainLayout().addLayout( gridLayout, 0 );
 
     // title
     QLabel* label;
-    gridLayout->addWidget( label = new QLabel( tr( "Title:" ), this ), 0, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( " Title:" ), this ), 0, 0 );
     gridLayout->addWidget( title_ = new LineEditor( this ), 0, 1 );
     title_->setToolTip( tr( "Logbook title" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( title_ );
 
     // logbook author
-    gridLayout->addWidget( label = new QLabel( tr( "Author:" ), this ), 1, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( " Author:" ), this ), 1, 0 );
     gridLayout->addWidget( author_ = new LineEditor( this ), 1, 1 );
     author_->setToolTip( tr("Logbook author" ) );
     label->setAlignment( Qt::AlignVCenter|Qt::AlignRight );
     label->setBuddy( author_ );
 
     // attachment directory
-    gridLayout->addWidget( label = new QLabel( tr( "Attachment directory:" ), this ), 3, 0 );
+    gridLayout->addWidget( label = new QLabel( tr( " Attachment directory:" ), this ), 3, 0 );
     gridLayout->addWidget( attachmentDirectory_ = new BrowsedLineEditor( this ), 3, 1 );
     #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     attachmentDirectory_->setFileMode( QFileDialog::DirectoryOnly );
@@ -66,15 +73,11 @@ Dialog( parent )
 
     gridLayout->setColumnStretch( 1, 1 );
 
-    // separator
-    QFrame* frame;
-    mainLayout().addWidget( frame = new QFrame );
-    frame->setFrameStyle( QFrame::HLine );
-
     // comments
-    mainLayout().addWidget( label = new QLabel( tr( "Comments:" ), this ), 0 );
+    mainLayout().addWidget( label = new QLabel( tr( " Comments:" ), this ), 0 );
     mainLayout().addWidget( comments_ = new TextEditor( this ), 1 );
     comments_->setToolTip( tr( "Logbook comments" ) );
+    QtUtil::setWidgetSides(comments_, Qt::TopEdge|Qt::BottomEdge);
     label->setBuddy( comments_ );
 
     adjustSize();

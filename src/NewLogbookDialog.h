@@ -29,7 +29,7 @@
 
 #include <QString>
 
-//* new attachment popup dialog
+//! new attachment popup dialog
 class NewLogbookDialog: public Dialog
 {
 
@@ -37,56 +37,56 @@ class NewLogbookDialog: public Dialog
 
     public:
 
-    //* constructor
+    //! constructor
     explicit NewLogbookDialog( QWidget* );
 
-    //* title
+    //! title
     void setTitle( const QString& title )
     { title_->setText( title ); }
 
-    //* title
+    //! title
     QString title() const
     { return title_->text(); }
 
-    //* author
+    //! author
     void setAuthor( const QString& author )
     { author_->setText( author ); }
 
-    //* filename
+    //! filename
     QString author() const
     { return author_->text(); }
 
-    //* attachment directory
+    //! attachment directory
     void setAttachmentDirectory( const File& file )
     { attachmentDirectory_->setFile( file ); }
 
-    //* attachment directory
+    //! attachment directory
     File attachmentDirectory() const
     { return File( attachmentDirectory_->text() ).expand(); }
 
-    //* comments
+    //! comments
     void setComments( const QString& comments )
     {
         Debug::Throw( QStringLiteral("NewLogbookDialog::setComments.\n") );
         comments_->setPlainText( comments );
     }
 
-    //* comments
+    //! comments
     QString comments() const
     { return comments_->toPlainText(); }
 
     private:
 
-    //* title line edit
+    //! title line edit
     LineEditor *title_ = nullptr;
 
-    //* author line edit
+    //! author line edit
     LineEditor *author_ = nullptr;
 
-    //* destination directory browsed line edti
+    //! destination directory browsed line edti
     BrowsedLineEditor *attachmentDirectory_ = nullptr;
 
-    //* comments
+    //! comments
     TextEditor* comments_ = nullptr;
 
 };

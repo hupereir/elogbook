@@ -40,70 +40,84 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
 
     public:
 
-    //* constructor
+    //! constructor
     explicit BackupManagerWidget( QWidget*, Logbook* = nullptr );
 
-    //* button layout
-    QVBoxLayout& buttonLayout()
+    //!@name accessors
+    //@{
+
+    //! list
+    TreeView& list() const
+    { return *list_; }
+
+    //! button layout
+    QVBoxLayout& buttonLayout() const
     { return *buttonLayout_; }
 
-    //* update
+    //@}
+
+    //!@name modifiers
+    //@{
+
+    //! update
     void updateBackups();
+
+    //@}
 
     Q_SIGNALS:
 
-    //* emitted when backups are changed (from clean action)
+    //! emitted when backups are changed (from clean action)
     void saveLogbookRequested();
 
-    //* emitted when backup is removed
+    //! emitted when backup is removed
     void removeBackupRequested( Backup );
 
-    //* emitted when backup is removed
+    //! emitted when backup is removed
     void removeBackupsRequested( Backup::List );
 
-    //* emitted when backup is restored
+    //! emitted when backup is restored
     void restoreBackupRequested( Backup );
 
-    //* emitted when backup is merged
+    //! emitted when backup is merged
     void mergeBackupRequested( Backup );
 
-    //* emitted when backup is requested
+    //! emitted when backup is requested
     void backupRequested();
 
     private:
 
-    //* update actions
+    //! update actions
     void _updateActions();
 
-    //* clean
+    //! clean
     void _clean();
 
-    //* remove backup
+    //! remove backup
     void _remove();
 
-    //* restore
+    //! restore
     void _restore();
 
-    //* merge
+    //! merge
     void _merge();
 
-    //* get associated logbook
+    //! get associated logbook
     Logbook* _logbook() const
     {
         Base::KeySet<Logbook> logbooks( this );
         return logbooks.empty() ? 0L:*logbooks.begin();
     }
 
-    //* model
+    //! model
     BackupModel model_;
 
-    //* list
+    //! list
     TreeView* list_ = nullptr;
 
-    //* button layout
+    //! button layout
     QVBoxLayout* buttonLayout_ = nullptr;
 
-    //*@name buttons
+    //!@name buttons
     //@{
     QPushButton* cleanButton_ = nullptr;
     QPushButton* removeButton_ = nullptr;
@@ -112,7 +126,7 @@ class BackupManagerWidget: public QWidget, private Base::Counter<BackupManagerWi
     QPushButton* newBackupButton_ = nullptr;
     //@}
 
-    //*@name actions
+    //!@name actions
     //@{
     QAction* removeAction_ = nullptr;
     //@}

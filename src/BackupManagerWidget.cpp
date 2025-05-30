@@ -44,6 +44,7 @@ BackupManagerWidget::BackupManagerWidget( QWidget* parent, Logbook* logbook ):
     // buttons
     buttonLayout_ = new QVBoxLayout;
     QtUtil::setMargin(buttonLayout_, 0);
+    buttonLayout_->setSpacing(5);
     hLayout->addLayout( buttonLayout_ );
 
     buttonLayout_->addWidget( newBackupButton_ = new QPushButton( IconEngine::get( IconNames::Add ), tr( "New" ), this ) );

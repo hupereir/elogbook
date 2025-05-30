@@ -25,7 +25,7 @@
 
 class BackupManagerWidget;
 
-//* QDialog used to select opened files
+//! QDialog used to select opened files
 class BackupManagerDialog: public BaseDialog
 {
 
@@ -33,16 +33,16 @@ class BackupManagerDialog: public BaseDialog
 
     public:
 
-    //* constructor
+    //! constructor
     explicit BackupManagerDialog( QWidget* );
 
-    //* widget
+    //! widget
     BackupManagerWidget& managerWidget() const
     { return *managerWidget_; }
 
     private:
 
-    //* manager widget
+    //! manager widget
     BackupManagerWidget* managerWidget_ = nullptr;
 
 };

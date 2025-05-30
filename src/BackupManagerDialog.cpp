@@ -22,6 +22,7 @@
 #include "IconEngine.h"
 #include "IconNames.h"
 #include "QtUtil.h"
+#include "TreeView.h"
 
 //__________________________________________________________________________________
 BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
@@ -32,11 +33,17 @@ BackupManagerDialog::BackupManagerDialog( QWidget* parent ):
     setOptionName( QStringLiteral("BACKUP_MANAGER_DIALOG") );
 
     setLayout( new QVBoxLayout );
-    QtUtil::setMargin(layout(), 5);
+    QtUtil::setMargin(layout(), 0);
     layout()->addWidget( managerWidget_ = new BackupManagerWidget( this ) );
 
+    QtUtil::setMargin(managerWidget_->layout(),0);
+    QtUtil::setWidgetSides(&managerWidget_->list(), Qt::RightEdge|Qt::TopEdge);
+
+    managerWidget_->layout()->setSpacing(0);
+    QtUtil::setMargin(&managerWidget_->buttonLayout(),5);
+
     // add close button
-    QPushButton* closeButton = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "Close" ), managerWidget_ );
+    auto closeButton = new QPushButton( IconEngine::get( IconNames::DialogClose ), tr( "Close" ), managerWidget_ );
     connect( closeButton, &QAbstractButton::clicked, this, &QWidget::close );
     managerWidget_->buttonLayout().addWidget( closeButton );
 
