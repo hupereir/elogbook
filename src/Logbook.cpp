@@ -104,15 +104,11 @@ Logbook::Logbook( const File &file ):
 //_________________________________
 Logbook::~Logbook()
 {
-    Debug::Throw( QStringLiteral("Logbook::~Logbook.\n") );
-
-    // delete log children
-    children_.clear();
+    Debug::Throw(QStringLiteral("Logbook::~Logbook.\n") );
 
     // delete associated entries
     Base::KeySet<LogEntry> entries( this );
     for( const auto& entry:entries ) delete entry;
-
 }
 
 //_________________________________
