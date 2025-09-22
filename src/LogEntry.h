@@ -101,19 +101,19 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { return keywords_; }
 
     //* Log entry last author
-    QString author() const
+    const QString& author() const
     { return author_; }
 
     //* LogEntry color
-    Base::Color color() const
+    const Base::Color& color() const
     { return color_; }
 
     //* entry text format
-    TextFormat::Block::List formats() const
+    const TextFormat::Block::List& formats() const
     { return formats_; }
 
     //* LogEntry text
-    QString text() const
+    const QString& text() const
     { return text_; }
 
 

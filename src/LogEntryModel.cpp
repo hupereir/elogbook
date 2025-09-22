@@ -172,9 +172,22 @@ QVariant LogEntryModel::data( const QModelIndex& index, int role ) const
 
         }
 
+        case Qt::BackgroundRole:
+        {
+            if( entry->color().isValid() )
+            {
+                return Base::Color( entry->color() ).addAlpha(0.07).get();
+            }
+            return QVariant();
+
+            break;
+        }
+
         default: break;
 
     }
+
+
 
     return QVariant();
 
