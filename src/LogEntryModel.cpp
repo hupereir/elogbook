@@ -424,8 +424,9 @@ bool LogEntryModel::SortFTor::operator () ( LogEntry* first, LogEntry* second ) 
         case Modification: return first->modification() < second->modification();
         case Author: return first->author() < second->author();
         case Color: return  first->color() < second->color();
+        case HasAttachment: return  first->hasAttachments() < second->hasAttachments();
 
-        default: return true;
+        default: return false;
 
     }
 

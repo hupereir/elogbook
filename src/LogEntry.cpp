@@ -137,8 +137,8 @@ QDomElement LogEntry::domElement( QDomDocument& document ) const
     for( const auto& format:formats_ )
     {
         if( !format.isEmpty() && (
-            (format.foreground().isValid() && format.foreground() != QPalette().color( QPalette::Text ) ) 
-            || (format.background().isValid() && format.background() != QPalette().color( QPalette::Base ) ) 
+            (format.foreground().isValid() && format.foreground() != QPalette().color( QPalette::Text ) )
+            || (format.background().isValid() && format.background() != QPalette().color( QPalette::Base ) )
             || format.format() != TextFormat::Default ) )
         { out.appendChild( TextFormat::XmlBlock( format ).domElement( document ) ); }
      }
@@ -174,6 +174,10 @@ LogEntry* LogEntry::copy() const
 
     return out;
 }
+
+//__________________________________
+bool LogEntry::hasAttachments() const
+{ return !Base::KeySet<Attachment>( this ).empty(); }
 
 //__________________________________
 bool LogEntry::matchTitle( const QString &buffer ) const

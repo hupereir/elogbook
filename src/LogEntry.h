@@ -117,6 +117,9 @@ class LogEntry:private Base::Counter<LogEntry>, public Base::Key
     { return text_; }
 
 
+    //* returns true if entry has at least one attachment
+    bool hasAttachments() const;
+
     //* returns true if entry title matches buffer
     bool matchTitle( const QString &) const;
 
